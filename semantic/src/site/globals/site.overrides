@@ -818,15 +818,25 @@ a:hover {
   .ui.grid {
     margin: 0;
     .assigning-row {
-      background-color: @surfacesMed;
+      background-color: @surfacesLight;
+      align-items: center;
+      min-height: 40px;
+      margin-bottom: 5px;
+      .ui.label {
+        line-height: 1.5;
+      }
+      .centered-flex-box-row {
+        display: flex;
+      }
+    }
+    .reviewer-row {
+      margin-bottom: 5px;
+      // max-width: 700px;
     }
   }
   .ui.grid > .row {
     border-radius: 6px;
     padding: 0px;
-    margin-right: 10px;
-    margin-left: 10px;
-    margin-bottom: 10px;
   }
 }
 // Notes tab

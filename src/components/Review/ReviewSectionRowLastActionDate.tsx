@@ -45,7 +45,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
     }
   }
 
-  return <Grid.Column>{getContent()}</Grid.Column>
+  return <Grid.Column width={3}>{getContent()}</Grid.Column>
 }
 
 const LastDate: React.FC<{ title: string; indicator?: React.ReactNode }> = ({

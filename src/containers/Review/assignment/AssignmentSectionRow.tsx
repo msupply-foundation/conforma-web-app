@@ -136,18 +136,14 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
       ?.levels.find(({ number }) => reviewLevel === number)?.name || strings.LEVEL_NOT_FOUND
 
   return (
-    <Grid
-      columns={2}
-      className="section-single-row-box-container"
-      // style={{  }}
-    >
+    <Grid columns={2} className="section-single-row-box-container">
       <Grid.Row className="assigning-row">
-        <Grid.Column className="review-level" width={5}>
+        <Grid.Column className="review-level" width={7}>
           <Label className="simple-label">
             {strings.REVIEW_FILTER_LEVEL}: <strong>{levelName}</strong>
           </Label>
         </Grid.Column>
-        <Grid.Column className="centered-flex-box-row" width={11}>
+        <Grid.Column className="centered-flex-box-row" width={9}>
           {originalAssignee ? (
             <AssigneeLabel
               assignee={originalAssignee}

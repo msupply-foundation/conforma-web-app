@@ -34,7 +34,11 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
         <Segment key={id}>
           <Header className="section-title" as="h5" content={title} />
           {Object.entries(assignmentGroupedLevel).map(([level, assignments]) => (
-            <div key={`assignment-group-level-${level}`}>
+            <div
+              className="flex-column"
+              key={`assignment-group-level-${level}`}
+              // style={{ gap: 10 }}
+            >
               <AssignmentSectionRow
                 assignments={assignments}
                 sectionCode={code}
