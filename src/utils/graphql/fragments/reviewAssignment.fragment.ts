@@ -12,6 +12,7 @@ export default gql`
     isFinalDecision
     isSelfAssignable
     allowedSections
+    assignedSections
     reviewQuestionAssignments {
       nodes {
         id
