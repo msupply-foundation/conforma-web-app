@@ -14,6 +14,7 @@ type PromiseReturnType = ReturnType<UseRemakePreviousReviewMutationReturnType[0]
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
 type UseRemakePreviousReview = (props: {
   reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
   previousAssignment: AssignmentDetails
 }) => () => PromiseReturnType
 
@@ -22,13 +23,14 @@ type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 // Need to duplicate or create new review responses for all assigned questions
 const useRemakePreviousReview: UseRemakePreviousReview = ({
   reviewStructure,
+  reviewAssignment,
   previousAssignment,
 }) => {
   const [createReview] = useCreateReviewMutation()
-  const { assignmentId: reviewAssignmentId } = reviewStructure.assignment as ReviewAssignment
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
     reviewStructure,
+    reviewAssignment,
     previousAssignment,
   })
 
@@ -80,7 +82,7 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
       reviewResponsesUsingId: {
         create: reviewResponseCreate,
       },
-      reviewAssignmentId,
+      reviewAssignmentId: reviewAssignment.id,
       // create new empty decision (do we need to duplicate comment from latest decision ?)
       reviewDecisionsUsingId: {
         create: [{ decision: Decision.NoDecision }],

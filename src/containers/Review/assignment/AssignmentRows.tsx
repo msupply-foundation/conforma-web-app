@@ -50,6 +50,7 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
                     key={`review-row-section-${code}-assignment-${assignment.id}`}
                     sectionId={id}
                     reviewStructure={reviewStructuresState[assignment.id]}
+                    reviewAssignment={assignment}
                     previousAssignment={assignmentInPreviousStage}
                   />
                 ) : null
