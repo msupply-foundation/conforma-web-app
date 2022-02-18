@@ -28,7 +28,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   } = parameters
 
   useEffect(() => {
-    if ((!value && defaultText) || (!hasEdited && defaultText)) {
+    if (defaultText && (!hasEdited || !value)) {
       onSave({ text: defaultText })
       setValue(defaultText)
     } else onUpdate(value)
