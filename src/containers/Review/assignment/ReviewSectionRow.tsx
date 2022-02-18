@@ -19,12 +19,14 @@ type ReviewSectionRowProps = {
   sectionId: number
   previousAssignment: AssignmentDetails
   reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
 }
 
 const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   sectionId,
   previousAssignment,
   reviewStructure,
+  reviewAssignment,
 }) => {
   const section = reviewStructure.sortedSections?.find(
     (section) => section.details.id === sectionId
@@ -40,6 +42,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
 
   const props: ReviewSectionComponentProps = {
     reviewStructure,
+    reviewAssignment,
     section,
     previousAssignment,
     action: section?.assignment?.action || ReviewAction.unknown,

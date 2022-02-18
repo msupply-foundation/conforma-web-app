@@ -74,7 +74,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     // elements,
     assignee: assignedSections[sectionCode]?.newAssignee,
   })
-
   if (!assignmentOptions) return null
 
   const onAssigneeSelection = async (assignee: number) => {
@@ -125,11 +124,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     ({ text }) => text != strings.ASSIGNMENT_YOURSELF
   )
 
-  const isSubmitted =
-    assignments.find(
-      (assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned
-    )?.review?.current.reviewStatus === ReviewStatus.Submitted || false
-
   const levelName =
     structure.stages
       .find(({ stage: { number } }) => number === structure.info.current.stage.number)
@@ -147,7 +141,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
           {originalAssignee ? (
             <AssigneeLabel
               assignee={originalAssignee}
-              isSubmitted={isSubmitted}
+              isCompleted={assignmentOptions.isCompleted}
               isSelfAssigned={isSelfAssignment}
               isReassignment={isReassignment}
               setIsReassignment={setIsReassignment}

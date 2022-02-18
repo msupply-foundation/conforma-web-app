@@ -1,5 +1,5 @@
 import React, { SetStateAction } from 'react'
-import { Container, Grid, Header, Segment } from 'semantic-ui-react'
+import { Header, Segment } from 'semantic-ui-react'
 import { useReviewStructureState } from '../../../contexts/ReviewStructuresState'
 import {
   AssignmentDetails,
@@ -49,6 +49,7 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
                     key={`review-row-section-${code}-assignment-${assignment.id}`}
                     sectionId={id}
                     reviewStructure={reviewStructuresState[assignment.id]}
+                    reviewAssignment={assignment}
                     previousAssignment={assignmentInPreviousStage}
                   />
                 ) : null
