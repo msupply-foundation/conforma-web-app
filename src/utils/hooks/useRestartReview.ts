@@ -26,6 +26,7 @@ const useRestartReview: UseRestartReview = ({ reviewStructure, reviewAssignment 
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
     reviewStructure,
+    reviewAssignment,
   })
 
   const shouldCreateConsolidationReviewResponse = (element: PageElement) => {
