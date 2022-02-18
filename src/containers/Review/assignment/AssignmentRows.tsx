@@ -31,12 +31,11 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
   return (
     <>
       {Object.values(fullStructure.sections).map(({ details: { id, title, code } }) => (
-        <Segment className="stripes" key={id}>
+        <Segment key={id}>
           <Header className="section-title" as="h5" content={title} />
           {Object.entries(assignmentGroupedLevel).map(([level, assignments]) => (
-            <>
+            <div className="flex-column" key={`assignment-group-level-${level}`}>
               <AssignmentSectionRow
-                key={`assignment-row-section-${code}-level-${level}`}
                 assignments={assignments}
                 sectionCode={code}
                 reviewLevel={Number(level)}
@@ -55,7 +54,7 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
                   />
                 ) : null
               )}
-            </>
+            </div>
           ))}
         </Segment>
       ))}

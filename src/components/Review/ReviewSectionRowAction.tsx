@@ -69,7 +69,11 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
     }
   }
 
-  return <Grid.Column textAlign="right">{getContent()}</Grid.Column>
+  return (
+    <Grid.Column textAlign="right" width={3} style={{ width: '100%' }}>
+      {getContent()}
+    </Grid.Column>
+  )
 }
 
 const getApplicantChangesUpdatedCount = (reviewProgress?: ReviewProgress) =>

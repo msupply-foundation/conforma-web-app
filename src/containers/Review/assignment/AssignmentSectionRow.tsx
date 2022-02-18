@@ -131,13 +131,13 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
 
   return (
     <Grid columns={2} className="section-single-row-box-container">
-      <Grid.Row>
-        <Grid.Column className="review-level">
+      <Grid.Row className="assigning-row">
+        <Grid.Column className="review-level" width={7}>
           <Label className="simple-label">
             {strings.REVIEW_FILTER_LEVEL}: <strong>{levelName}</strong>
           </Label>
         </Grid.Column>
-        <Grid.Column className="centered-flex-box-row">
+        <Grid.Column className="centered-flex-box-row" width={9}>
           {originalAssignee ? (
             <AssigneeLabel
               assignee={originalAssignee}

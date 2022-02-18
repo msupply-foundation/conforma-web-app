@@ -67,7 +67,11 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
         )
     }
   }
-  return <Grid.Column className="assigned-column">{getLabel()}</Grid.Column>
+  return (
+    <Grid.Column className="assigned-column" width={5}>
+      {getLabel()}
+    </Grid.Column>
+  )
 }
 
 export default ReviewSectionRowAssigned
