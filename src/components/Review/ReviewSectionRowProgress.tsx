@@ -44,7 +44,7 @@ const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
     }
   }
 
-  return isAssignedToCurrentUser ? <Grid.Column width={5}>{getContent()}</Grid.Column> : null
+  return <Grid.Column width={5}>{getContent()}</Grid.Column>
 }
 
 export default ReviewSectionRowProgress
