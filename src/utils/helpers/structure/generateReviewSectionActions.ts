@@ -134,6 +134,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
     const isReviewable =
       (totalReviewable || 0) > 0 &&
       assignmentStatus === ReviewAssignmentStatus.Assigned &&
+      !!assignedSections &&
       assignedSections.includes(section.details.code)
 
     const isAssignedToCurrentUser =
