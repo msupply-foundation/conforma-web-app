@@ -61,7 +61,7 @@ const ReviewPage: React.FC<{
 
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
     defaultActiveSectionCodes: [],
-    allSections: Object.keys(fullApplicationStructure.sections).map((section) => section),
+    allSections: Object.keys(fullApplicationStructure.sections),
   })
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
