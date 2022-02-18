@@ -392,6 +392,7 @@ interface ReviewAssignment {
 
 type ReviewSectionComponentProps = {
   reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
   section: SectionState
   previousAssignment: AssignmentDetails
   action: ReviewAction

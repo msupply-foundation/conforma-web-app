@@ -1,21 +1,24 @@
 import { Decision, ReviewInput, Trigger, useCreateReviewMutation } from '../generated/graphql'
-import { FullStructure } from '../types'
+import { AssignmentDetails, FullStructure } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
 
 // below lines are used to get return type of the function that is returned by useCreateReviewMutation
 type UseCreateReviewMutationReturnType = ReturnType<typeof useCreateReviewMutation>
 type PromiseReturnType = ReturnType<UseCreateReviewMutationReturnType[0]>
 // hook used to start a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseCreateReview = (reviewStructure: FullStructure) => () => PromiseReturnType
+type UseCreateReview = (props: {
+  reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
+}) => () => PromiseReturnType
 
 type ConstructReviewInput = (structure: FullStructure) => ReviewInput
 
-const useCreateReview: UseCreateReview = (reviewStructure) => {
+const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment }) => {
   const [createReview] = useCreateReviewMutation()
-  const reviewAssignmentId = reviewStructure.assignment?.assignmentId
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
     reviewStructure,
+    reviewAssignment,
   })
 
   const constructReviewInput: ConstructReviewInput = (structure) => {
@@ -28,12 +31,9 @@ const useCreateReview: UseCreateReview = (reviewStructure) => {
     const reviewResponseCreate = reviewableElements.map(
       ({ lowerLevelReviewLatestResponse, response, reviewQuestionAssignmentId }) => {
         // link to applicaiton response or review response based on review level
-        const applicationResponseId =
-          (reviewStructure.assignment?.assigneeLevel || 1) > 1 ? undefined : response?.id
+        const applicationResponseId = reviewAssignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
-          (reviewStructure.assignment?.assigneeLevel || 1) === 1
-            ? undefined
-            : lowerLevelReviewLatestResponse?.id
+          reviewAssignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
         return {
           applicationResponseId,
           reviewResponseLinkId,
@@ -44,7 +44,7 @@ const useCreateReview: UseCreateReview = (reviewStructure) => {
     // See comment at the bottom of file for resulting shape
     return {
       trigger: Trigger.OnReviewCreate,
-      reviewAssignmentId,
+      reviewAssignmentId: reviewAssignment.id,
       reviewResponsesUsingId: {
         create: reviewResponseCreate,
       },
@@ -56,6 +56,9 @@ const useCreateReview: UseCreateReview = (reviewStructure) => {
   }
 
   return async () => {
+    console.log('Call async')
+    console.log('getStructure', await getFullReviewStructureAsync())
+
     const result = await createReview({
       variables: {
         // See comment at the bottom of file for resulting shape

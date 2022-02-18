@@ -84,6 +84,7 @@ const getConsolidatorChangesRequestedCount = (progress?: ChangeRequestsProgress)
 // Possible generate action button: START REVIEW, CONTINUE REVIEW, UPDATE REVIEW, RE-REVIEW or MAKE DECISION
 const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   reviewStructure,
+  reviewAssignment,
   section: { details, reviewProgress, consolidationProgress, changeRequestsProgress },
   previousAssignment,
   action,
@@ -98,12 +99,13 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 
   const remakeReview = useRemakePreviousReview({
     reviewStructure,
+    reviewAssignment,
     previousAssignment,
   })
 
-  const restartReview = useRestartReview(reviewStructure)
+  const restartReview = useRestartReview({ reviewStructure, reviewAssignment })
 
-  const createReview = useCreateReview(reviewStructure)
+  const createReview = useCreateReview({ reviewStructure, reviewAssignment })
 
   const getButtonName = () => {
     switch (action) {
