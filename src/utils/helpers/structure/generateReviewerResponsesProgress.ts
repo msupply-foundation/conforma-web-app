@@ -15,26 +15,21 @@ const initial: ReviewProgress = {
 
 const generateReviewerResponsesProgress = (newStructure: FullStructure) => {
   newStructure?.sortedPages?.forEach((page) =>
-    generatePageReviewProgress(page, newStructure.assignment?.assignedSections)
+    generatePageReviewProgress(page, newStructure.assignment?.assignedSections as string[])
   )
   newStructure?.sortedSections?.forEach((section) =>
-    generateSectionReviewProgress(section, newStructure.assignment?.assignedSections)
+    generateSectionReviewProgress(section, newStructure.assignment?.assignedSections as string[])
   )
 }
 
-const generateSectionReviewProgress = (
-  section: SectionState,
-  assignedSections?: string[] | null
-) => {
-  section.reviewProgress =
-    !!assignedSections && assignedSections.includes(section.details.code)
-      ? getReviewProgress(Object.values(section.pages))
-      : initial
+const generateSectionReviewProgress = (section: SectionState, assignedSections: string[]) => {
+  section.reviewProgress = assignedSections.includes(section.details.code)
+    ? getReviewProgress(Object.values(section.pages))
+    : initial
 }
 
-const generatePageReviewProgress = (page: Page, assignedSections?: string[] | null) => {
-  if (!assignedSections || !assignedSections.includes(page.sectionCode))
-    page.reviewProgress = initial
+const generatePageReviewProgress = (page: Page, assignedSections: string[]) => {
+  if (!assignedSections.includes(page.sectionCode)) page.reviewProgress = initial
   else {
     const totalReviewable = page.state.filter(
       ({

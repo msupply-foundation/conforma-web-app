@@ -381,7 +381,7 @@ interface ReviewAssignment {
   assigneeStage: number
   assignmentStatus: ReviewAssignmentStatus
   assignmentDate: Date
-  assignedSections: string[] | null
+  assignedSections: string[]
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
   isLocked: boolean
