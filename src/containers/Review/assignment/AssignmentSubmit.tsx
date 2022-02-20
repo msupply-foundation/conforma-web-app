@@ -63,9 +63,9 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
           })
       }
     })
-    reassignmentGroupedSections.forEach(({ sectionCodes, reassignment, unassignmentId }) =>
-      reassignSections({ sectionCodes, reassignment, unassignmentId })
-    )
+    // reassignmentGroupedSections.forEach(({ sectionCodes, reassignment, unassignmentId }) =>
+    //   reassignSections({ sectionCodes, reassignment, unassignmentId })
+    // )
 
     // First assignment - grouping sections that belong to same assignment
     let assignmentGroupedSections: {
@@ -91,13 +91,16 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
         if (assignment) assignmentGroupedSections.push({ sectionCodes: [sectionCode], assignment })
       }
     })
-    assignmentGroupedSections.forEach(({ sectionCodes, assignment }) => {
-      assignSectionsToUser({
-        sectionCodes,
-        assignment,
-        reviewStructure: reviewStructuresState[assignment.id],
-      })
-    })
+    // assignmentGroupedSections.forEach(({ sectionCodes, assignment }) => {
+    //   assignSectionsToUser({
+    //     sectionCodes,
+    //     assignment,
+    //     reviewStructure: reviewStructuresState[assignment.id],
+    //   })
+    // })
+
+    console.log('reassignmentGroupedSections', reassignmentGroupedSections)
+    console.log('assignmentGroupedSections', assignmentGroupedSections)
   }
 
   return (
