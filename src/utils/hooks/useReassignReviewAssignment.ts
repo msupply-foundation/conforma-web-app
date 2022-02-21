@@ -19,7 +19,7 @@ type UseReassignReviewAssignment = (structure: FullStructure) => {
   reassignSections: (props: {
     // Section code if empty all sections are assigned
     sectionCodes: string[]
-    unassignmentId?: number
+    unassignment?: AssignmentDetails
     reassignment: AssignmentDetails
   }) => PromiseReturnType
 }
@@ -27,8 +27,9 @@ type UseReassignReviewAssignment = (structure: FullStructure) => {
 type ConstructAssignSectionPatch = (
   reviewLevel: number,
   isFinalDecision: boolean,
-  sectionCodes: string[]
-) => ReviewAssignmentPatch
+  sectionCodes: string[],
+  unassignment?: AssignmentDetails
+) => { reassignmentPatch: ReviewAssignmentPatch; unassignmentPatch: any }
 
 const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
   const {
@@ -39,7 +40,8 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
   const constructUnassignSectionPatch: ConstructAssignSectionPatch = (
     reviewLevel,
     isFinalDecision,
-    sectionCodes
+    sectionCodes,
+    unassignment
   ) => {
     const elements = Object.values(structure?.elementsById || {})
 
@@ -62,28 +64,64 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
       templateElementId: element.element.id,
     }))
 
+    const unassignedSectionCodes: string[] =
+      unassignment?.assignedSections.filter((code) => !sectionCodes.includes(code)) || []
+
+    const unassignedStatus =
+      unassignedSectionCodes?.length > 0
+        ? ReviewAssignmentStatus.Assigned
+        : ReviewAssignmentStatus.Available
+
+    const unassignmentPatch = unassignment
+      ? {
+          status: unassignedStatus,
+          // isLocked: false,
+          assignerId: unassignment?.id,
+          trigger: Trigger.OnReviewUnassign,
+          timeUpdated: new Date().toISOString(),
+          assignedSections: unassignedSectionCodes,
+          // reviewQuestionAssignmentsUsingId: {
+          //   create: createReviewQuestionAssignments,
+          // },
+        }
+      : {}
+
+    if (unassignedStatus === ReviewAssignmentStatus.Available)
+      delete unassignmentPatch.assignedSections
+
     return {
-      status: ReviewAssignmentStatus.Assigned,
-      isLocked: false,
-      assignerId: currentUser?.userId || null,
-      trigger: Trigger.OnReviewReassign,
-      // OnReviewReassign to trigger action on new ReviewAssignment assigned change status of Review - if existing - back to DRAFT
-      // onReviewUnassign also set in mutation to trigger core action on previous ReviewAssignment unassigned changeStatus of review to LOCKED
-      timeUpdated: new Date().toISOString(),
-      reviewQuestionAssignmentsUsingId: {
-        create: createReviewQuestionAssignments,
+      reassignmentPatch: {
+        status: ReviewAssignmentStatus.Assigned,
+        isLocked: false,
+        assignerId: currentUser?.userId || null,
+        trigger: Trigger.OnReviewReassign,
+        // OnReviewReassign to trigger action on new ReviewAssignment assigned change status of Review - if existing - back to DRAFT
+        // onReviewUnassign also set in mutation to trigger core action on previous ReviewAssignment unassigned changeStatus of review to LOCKED
+        timeUpdated: new Date().toISOString(),
+        assignedSections: sectionCodes,
+        reviewQuestionAssignmentsUsingId: {
+          create: createReviewQuestionAssignments,
+        },
       },
+      unassignmentPatch,
     }
   }
 
   return {
-    reassignSections: async ({ sectionCodes, unassignmentId = 0, reassignment }) => {
+    reassignSections: async ({ sectionCodes, unassignment, reassignment }) => {
       const { id, isFinalDecision, level } = reassignment
+      const { reassignmentPatch, unassignmentPatch } = constructUnassignSectionPatch(
+        level,
+        isFinalDecision,
+        sectionCodes,
+        unassignment
+      )
       const result = await reassignReview({
         variables: {
-          unassignmentId,
+          unassignmentId: unassignment?.id || 0,
           reassignmentId: id,
-          reassignmentPatch: constructUnassignSectionPatch(level, isFinalDecision, sectionCodes),
+          reassignmentPatch,
+          unassignmentPatch,
         },
       })
 

@@ -24,11 +24,14 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   const { assignSectionsToUser } = useUpdateReviewAssignment(fullStructure)
   const { reassignSections } = useReasignReviewAssignment(fullStructure)
 
+  console.log('reviewStructuresState', reviewStructuresState)
+
   const submitAssignments = () => {
     // Re-assignment - grouping sections that belong to same (new) assignment
     let reassignmentGroupedSections: {
       sectionCodes: string[]
-      unassignmentId: number
+      unassignment: AssignmentDetails
+      // unassignmentId: number
       reassignment: AssignmentDetails
     }[] = []
 
@@ -51,7 +54,7 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
 
       if (found) {
         found.sectionCodes.push(sectionCode)
-        if (!!unassignment && found?.unassignmentId != unassignment.id)
+        if (!!unassignment && found?.unassignment.id != unassignment.id)
           console.log('Unassignment for more than one previous assignee - Failed')
       } else {
         const reassignment = assignmentsFiltered.find(({ reviewer: { id } }) => id === newAssignee)
@@ -59,13 +62,14 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
           reassignmentGroupedSections.push({
             sectionCodes: [sectionCode],
             reassignment,
-            unassignmentId: unassignment.id,
+            unassignment,
+            // unassignmentId: unassignment.id,
           })
       }
     })
-    // reassignmentGroupedSections.forEach(({ sectionCodes, reassignment, unassignmentId }) =>
-    //   reassignSections({ sectionCodes, reassignment, unassignmentId })
-    // )
+    reassignmentGroupedSections.forEach(({ sectionCodes, reassignment, unassignment }) => {
+      reassignSections({ sectionCodes, reassignment, unassignment })
+    })
 
     // First assignment - grouping sections that belong to same assignment
     let assignmentGroupedSections: {
@@ -91,13 +95,13 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
         if (assignment) assignmentGroupedSections.push({ sectionCodes: [sectionCode], assignment })
       }
     })
-    // assignmentGroupedSections.forEach(({ sectionCodes, assignment }) => {
-    //   assignSectionsToUser({
-    //     sectionCodes,
-    //     assignment,
-    //     reviewStructure: reviewStructuresState[assignment.id],
-    //   })
-    // })
+    assignmentGroupedSections.forEach(({ sectionCodes, assignment }) => {
+      assignSectionsToUser({
+        sectionCodes,
+        assignment,
+        reviewStructure: reviewStructuresState[assignment.id],
+      })
+    })
 
     console.log('reassignmentGroupedSections', reassignmentGroupedSections)
     console.log('assignmentGroupedSections', assignmentGroupedSections)

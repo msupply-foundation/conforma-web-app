@@ -5,6 +5,7 @@ export default gql`
     $unassignmentId: Int!
     $reassignmentId: Int!
     $reassignmentPatch: ReviewAssignmentPatch!
+    $unassignmentPatch: ReviewAssignmentPatch
   ) {
     reassignmentUpdate: updateReviewAssignment(
       input: { id: $reassignmentId, patch: $reassignmentPatch }
@@ -14,10 +15,7 @@ export default gql`
       }
     }
     unassignmentUpdate: updateReviewAssignment(
-      input: {
-        id: $unassignmentId
-        patch: { status: AVAILABLE, isLocked: true, trigger: ON_REVIEW_UNASSIGN }
-      }
+      input: { id: $unassignmentId, patch: $unassignmentPatch }
     ) {
       reviewAssignment {
         ...ReviewAssignment

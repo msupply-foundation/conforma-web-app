@@ -90,6 +90,8 @@ const AssignmentTab: React.FC<{
     else assignmentGroupedLevel[level].push(assignment)
   })
 
+  console.log('assignedSections', assignedSections)
+
   return (
     <ReviewStateProvider fullApplicationStructure={fullStructure} assignments={assignmentsFiltered}>
       <Container id="assignment-tab">
