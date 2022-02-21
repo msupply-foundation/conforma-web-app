@@ -40,12 +40,10 @@ const useGetAssignmentOptions = () => {
       ({ isCurrentUserAssigner, isSelfAssignable }) => isCurrentUserAssigner || isSelfAssignable
     )
 
-    const currentlyAssigned = assignments.find((assignment) =>
-      assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
-      // Restriction only apply to level one that isn't lastLevel
-      (assignment.review?.level || 1 > 1 || assignment.isLastLevel)
-        ? true
-        : matchAssignmentToSection(assignment, sectionCode)
+    const currentlyAssigned = assignments.find(
+      ({ assignedSections, current: { assignmentStatus } }) =>
+        assignmentStatus === ReviewAssignmentStatus.Assigned &&
+        assignedSections.includes(sectionCode)
     )
 
     if (!previousAssignee && currentlyAssigned)
@@ -72,12 +70,7 @@ const useGetAssignmentOptions = () => {
 
     return assigneeOptions
   }
-  // Find at least one reviewQuestion assignment in assignment that matches sectionCode
-  const matchAssignmentToSection = (assignment: AssignmentDetails, sectionCode: string) =>
-    assignment.reviewQuestionAssignments.some(
-      (reviewQuestionAssignment) =>
-        reviewQuestionAssignment.templateElement?.section?.code === sectionCode
-    )
+
   return getAssignmentOptions
 }
 
