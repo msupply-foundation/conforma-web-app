@@ -75,7 +75,6 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
     const unassignmentPatch = unassignment
       ? {
           status: unassignedStatus,
-          // isLocked: false,
           assignerId: unassignment?.id,
           trigger: Trigger.OnReviewUnassign,
           timeUpdated: new Date().toISOString(),

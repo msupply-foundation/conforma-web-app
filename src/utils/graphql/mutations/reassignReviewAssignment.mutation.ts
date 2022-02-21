@@ -5,7 +5,7 @@ export default gql`
     $unassignmentId: Int!
     $reassignmentId: Int!
     $reassignmentPatch: ReviewAssignmentPatch!
-    $unassignmentPatch: ReviewAssignmentPatch
+    $unassignmentPatch: ReviewAssignmentPatch!
   ) {
     reassignmentUpdate: updateReviewAssignment(
       input: { id: $reassignmentId, patch: $reassignmentPatch }
