@@ -7572,7 +7572,7 @@ export type ReviewAssignment = Node & {
   applicationId: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections: Array<Maybe<Scalars['String']>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -38403,7 +38403,7 @@ export type UpdateTemplateStageMutationResult = Apollo.MutationResult<UpdateTemp
 export type UpdateTemplateStageMutationOptions = Apollo.BaseMutationOptions<UpdateTemplateStageMutation, UpdateTemplateStageMutationVariables>;
 export const UnassignReviewAssignmentDocument = gql`
     mutation unassignReviewAssignment($unassignmentId: Int!) {
-  updateReviewAssignment(input: {id: $unassignmentId, patch: {status: AVAILABLE, trigger: ON_REVIEW_UNASSIGN}}) {
+  updateReviewAssignment(input: {id: $unassignmentId, patch: {status: AVAILABLE, trigger: ON_REVIEW_UNASSIGN, reviewQuestionAssignmentsUsingId: {deleteOthers: true}}}) {
     reviewAssignment {
       ...ReviewAssignment
     }
