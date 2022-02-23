@@ -116,7 +116,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
           </div>
         </Route>
         <Route exact path={`${path}/:reviewId`}>
-          <ReviewPageWrapper {...{ structure }} />
+          <ReviewPageWrapper {...{ structure: fullStructure }} />
         </Route>
         <Route>
           <NoMatch />
