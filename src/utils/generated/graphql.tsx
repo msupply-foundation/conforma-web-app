@@ -262,6 +262,7 @@ export type Query = Node & {
   reviewReviewerId?: Maybe<Scalars['Int']>;
   reviewStage?: Maybe<Scalars['Int']>;
   reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
+  rqaTemplateSectionCode?: Maybe<Scalars['String']>;
   submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
@@ -1886,6 +1887,12 @@ export type QueryReviewTimeStageCreatedArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryRqaTemplateSectionCodeArgs = {
+  templateElementId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QuerySubmittedAssignedQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
@@ -3384,6 +3391,8 @@ export type ReviewQuestionAssignmentFilter = {
   templateElementId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewAssignmentId` field. */
   reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `sectionCode` field. */
+  sectionCode?: Maybe<StringFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ReviewQuestionAssignmentToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -8003,6 +8012,8 @@ export enum ReviewQuestionAssignmentsOrderBy {
   TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
   ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
   ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  SectionCodeAsc = 'SECTION_CODE_ASC',
+  SectionCodeDesc = 'SECTION_CODE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -8015,6 +8026,8 @@ export type ReviewQuestionAssignmentCondition = {
   templateElementId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewAssignmentId` field. */
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sectionCode` field. */
+  sectionCode?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `ReviewQuestionAssignment` values. */
@@ -8037,6 +8050,7 @@ export type ReviewQuestionAssignment = Node & {
   id: Scalars['Int'];
   templateElementId: Scalars['Int'];
   reviewAssignmentId: Scalars['Int'];
+  sectionCode?: Maybe<Scalars['String']>;
   /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
   templateElement?: Maybe<TemplateElement>;
   /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
@@ -20436,6 +20450,7 @@ export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionA
 export type UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
+  sectionCode?: Maybe<Scalars['String']>;
   templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
@@ -20528,6 +20543,7 @@ export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionA
 export type UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+  sectionCode?: Maybe<Scalars['String']>;
   templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
@@ -21248,6 +21264,7 @@ export type UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseRevie
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+  sectionCode?: Maybe<Scalars['String']>;
   templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
@@ -25397,6 +25414,7 @@ export type ReviewQuestionAssignmentPatch = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+  sectionCode?: Maybe<Scalars['String']>;
   templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
@@ -25407,6 +25425,7 @@ export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignment
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+  sectionCode?: Maybe<Scalars['String']>;
   templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
@@ -25830,6 +25849,7 @@ export type TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignment
 export type ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+  sectionCode?: Maybe<Scalars['String']>;
   templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
@@ -25889,6 +25909,7 @@ export type ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmen
 export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
+  sectionCode?: Maybe<Scalars['String']>;
   templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
@@ -30526,6 +30547,7 @@ export type ReviewQuestionAssignmentInput = {
   id?: Maybe<Scalars['Int']>;
   templateElementId?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+  sectionCode?: Maybe<Scalars['String']>;
   templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
@@ -36485,6 +36507,7 @@ export type ReassignReviewAssignmentMutationVariables = Exact<{
   unassignmentId: Scalars['Int'];
   reassignmentId: Scalars['Int'];
   reassignmentPatch: ReviewAssignmentPatch;
+  unassignmentPatch: ReviewAssignmentPatch;
 }>;
 
 
@@ -38067,13 +38090,13 @@ export type DeleteNoteMutationHookResult = ReturnType<typeof useDeleteNoteMutati
 export type DeleteNoteMutationResult = Apollo.MutationResult<DeleteNoteMutation>;
 export type DeleteNoteMutationOptions = Apollo.BaseMutationOptions<DeleteNoteMutation, DeleteNoteMutationVariables>;
 export const ReassignReviewAssignmentDocument = gql`
-    mutation reassignReviewAssignment($unassignmentId: Int!, $reassignmentId: Int!, $reassignmentPatch: ReviewAssignmentPatch!) {
+    mutation reassignReviewAssignment($unassignmentId: Int!, $reassignmentId: Int!, $reassignmentPatch: ReviewAssignmentPatch!, $unassignmentPatch: ReviewAssignmentPatch!) {
   reassignmentUpdate: updateReviewAssignment(input: {id: $reassignmentId, patch: $reassignmentPatch}) {
     reviewAssignment {
       ...ReviewAssignment
     }
   }
-  unassignmentUpdate: updateReviewAssignment(input: {id: $unassignmentId, patch: {status: AVAILABLE, isLocked: true, trigger: ON_REVIEW_UNASSIGN}}) {
+  unassignmentUpdate: updateReviewAssignment(input: {id: $unassignmentId, patch: $unassignmentPatch}) {
     reviewAssignment {
       ...ReviewAssignment
     }
@@ -38098,6 +38121,7 @@ export type ReassignReviewAssignmentMutationFn = Apollo.MutationFunction<Reassig
  *      unassignmentId: // value for 'unassignmentId'
  *      reassignmentId: // value for 'reassignmentId'
  *      reassignmentPatch: // value for 'reassignmentPatch'
+ *      unassignmentPatch: // value for 'unassignmentPatch'
  *   },
  * });
  */
