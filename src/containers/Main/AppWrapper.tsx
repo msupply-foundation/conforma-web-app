@@ -8,7 +8,6 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
 import { Loading } from '../../components'
-import ToastDemo from '../../components/ToastTest'
 
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()
@@ -26,9 +25,6 @@ const AppWrapper: React.FC = () => {
     <Router>
       <UserProvider>
         <Switch>
-          <Route exact path="/toast-demo">
-            <ToastDemo />
-          </Route>
           <Route exact path="/login">
             <Login />
           </Route>
