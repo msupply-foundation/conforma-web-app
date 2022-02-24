@@ -33,11 +33,11 @@ import {
 } from '../../types'
 
 const getSectionIds = ({
-  fullApplicationStructure,
+  reviewStructure,
   filteredSectionIds,
 }: UseGetReviewStructureForSectionProps) =>
   filteredSectionIds ||
-  Object.values(fullApplicationStructure.sections).map((section) => section.details.id) ||
+  Object.values(reviewStructure.sections).map((section) => section.details.id) ||
   []
 
 interface CompileVariablesForReviewResponseQueryProps extends UseGetReviewStructureForSectionProps {
@@ -53,12 +53,12 @@ type GenerateReviewStructure = (
 const compileVariablesForReviewResponseQuery = ({
   reviewAssignment,
   sectionIds,
-  fullApplicationStructure,
+  reviewStructure,
   currentUser,
 }: CompileVariablesForReviewResponseQueryProps) =>
   reviewAssignment
     ? {
-        applicationId: fullApplicationStructure.info.id,
+        applicationId: reviewStructure.info.id,
         reviewAssignmentId: reviewAssignment.id as number,
         sectionIds,
         userId: currentUser?.userId as number,
@@ -71,14 +71,16 @@ const compileVariablesForReviewResponseQuery = ({
 
 const generateReviewStructure: GenerateReviewStructure = ({
   data,
-  fullApplicationStructure,
   reviewAssignment,
+  reviewStructure,
   currentUser,
   sectionIds,
 }) => {
   // requires deep clone one we have concurrent useGetFullReviewStructure that could possibly
   // mutate fullApplicationStructure
-  let newStructure: FullStructure = cloneDeep(fullApplicationStructure)
+  let newStructure: FullStructure = cloneDeep(reviewStructure)
+
+  if (!reviewAssignment) return newStructure
 
   const { reviewQuestionAssignments, level } = reviewAssignment
 
@@ -111,7 +113,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // since the reviews with isChangeRequest (and not changed) need to be removed from done accountings
   generateReviewerChangesRequestedProgress(newStructure)
 
-  if (newStructure.assignment?.finalDecision) generateFinalDecisionProgress(newStructure)
+  if (newStructure.assignment?.isFinalDecision) generateFinalDecisionProgress(newStructure)
   else if (level === 1) {
     generateReviewerResponsesProgress(newStructure)
     generateReviewValidity(newStructure)
@@ -143,8 +145,15 @@ const setIsNewApplicationResponse = (structure: FullStructure) => {
 }
 
 const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: AssignmentDetails) => {
-  const { isLastLevel, isLocked, isFinalDecision, isSelfAssignable, review, level } =
-    reviewAssignment
+  const {
+    isLastLevel,
+    isLocked,
+    isFinalDecision,
+    isSelfAssignable,
+    review,
+    level,
+    current: { stage },
+  } = reviewAssignment
 
   const isPreviousStageConsolidation = Object.values(structure.elementsById || {}).some(
     ({ lowerLevelReviewLatestResponse }) => !!lowerLevelReviewLatestResponse
@@ -153,17 +162,18 @@ const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: Assi
   // review info comes from reviewAssignment that's passed to this hook
   structure.thisReview = review
   structure.assignment = {
+    assignmentId: reviewAssignment.id,
     assignee: reviewAssignment.reviewer,
     assigneeLevel: level,
+    assigneeStage: stage.number,
     assignmentStatus: reviewAssignment.current.assignmentStatus as ReviewAssignmentStatus,
+    assignmentDate: reviewAssignment.current.timeStatusUpdated,
+    assignedSections: reviewAssignment.assignedSections,
     isLastLevel,
     isLocked,
     isSelfAssignable,
-    finalDecision: isFinalDecision
-      ? {
-          decisionOnReview: !isPreviousStageConsolidation,
-        }
-      : null,
+    isFinalDecision,
+    isFinalDecisionOnConsolidation: isPreviousStageConsolidation,
     canSubmitReviewAs: null,
   }
 }
@@ -231,7 +241,7 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   const previousOriginalReviewResponses = (data?.previousOriginalReviewResponses?.nodes ||
     []) as ReviewResponse[]
 
-  const isFinalDecision = !!structure.assignment?.finalDecision
+  const isFinalDecision = !!structure.assignment?.isFinalDecision
 
   // add thisReviewLatestResponse and thisReviewPreviousResponse
   // includes for a consolidation also has reviewResponsesByReviewResponseLinkId with Consolidator decision

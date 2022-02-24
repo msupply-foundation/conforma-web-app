@@ -44,7 +44,7 @@ const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
     }
   }
 
-  return <Grid.Column>{getContent()}</Grid.Column>
+  return <Grid.Column width={5}>{getContent()}</Grid.Column>
 }
 
 export default ReviewSectionRowProgress

@@ -5,7 +5,7 @@ import {
   Decision,
   ReviewResponseDecision,
 } from '../generated/graphql'
-import { AssignmentDetails, FullStructure, PageElement } from '../types'
+import { AssignmentDetails, FullStructure, PageElement, ReviewAssignment } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
 
 // below lines are used to get return type of the function that is returned by useRestartReviewMutation
@@ -13,8 +13,8 @@ type UseRemakePreviousReviewMutationReturnType = ReturnType<typeof useCreateRevi
 type PromiseReturnType = ReturnType<UseRemakePreviousReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
 type UseRemakePreviousReview = (props: {
-  structure: FullStructure
-  assignment: AssignmentDetails
+  reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
   previousAssignment: AssignmentDetails
 }) => () => PromiseReturnType
 
@@ -22,15 +22,16 @@ type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 
 // Need to duplicate or create new review responses for all assigned questions
 const useRemakePreviousReview: UseRemakePreviousReview = ({
-  structure,
-  assignment,
+  reviewStructure,
+  reviewAssignment,
   previousAssignment,
 }) => {
   const [createReview] = useCreateReviewMutation()
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullApplicationStructure: structure,
-    reviewAssignment: previousAssignment,
+    reviewStructure,
+    reviewAssignment,
+    previousAssignment,
   })
 
   const shouldRemakeFinalDecisionReviewResponse = (element: PageElement) => {
@@ -81,7 +82,7 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
       reviewResponsesUsingId: {
         create: reviewResponseCreate,
       },
-      reviewAssignmentId: assignment.id,
+      reviewAssignmentId: reviewAssignment.id,
       // create new empty decision (do we need to duplicate comment from latest decision ?)
       reviewDecisionsUsingId: {
         create: [{ decision: Decision.NoDecision }],

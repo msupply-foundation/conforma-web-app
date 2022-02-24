@@ -1,15 +1,5 @@
-import {
-  AssignmentDetails,
-  AssignmentOptions,
-  AssignmentOption,
-  PageElement,
-  User,
-} from '../../../utils/types'
-import {
-  ReviewAssignmentStatus,
-  ReviewStatus,
-  TemplateElementCategory,
-} from '../../../utils/generated/graphql'
+import { AssignmentDetails, AssignmentOptions, AssignmentOption } from '../../../utils/types'
+import { ReviewAssignmentStatus, ReviewStatus } from '../../../utils/generated/graphql'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const NOT_ASSIGNED = 0
@@ -34,38 +24,26 @@ const useGetAssignmentOptions = () => {
   interface GetAssignmentOptionsProps {
     assignments: AssignmentDetails[]
     sectionCode: string
-    elements: PageElement[]
     assignee?: number
   }
 
-  const getAssignmentOptions = (
-    { assignments, sectionCode, elements, assignee: previousAssignee }: GetAssignmentOptionsProps,
-    currentUser: User | null
-  ): AssignmentOptions | null => {
+  const getAssignmentOptions = ({
+    assignments,
+    sectionCode,
+    assignee: previousAssignee,
+  }: GetAssignmentOptionsProps): AssignmentOptions | null => {
     const currentSectionAssignable = assignments.filter(
-      ({ assignableSectionRestrictions }) =>
-        assignableSectionRestrictions.length === 0 ||
-        assignableSectionRestrictions.includes(sectionCode)
+      ({ allowedSections }) => allowedSections.length === 0 || allowedSections.includes(sectionCode)
     )
 
     const currentUserAssignable = currentSectionAssignable.filter(
       ({ isCurrentUserAssigner, isSelfAssignable }) => isCurrentUserAssigner || isSelfAssignable
     )
 
-    // Dont' want to render assignment section row if they have no actions
-    if (currentUserAssignable.length === 0) return null
-    const numberOfAssignableElements = elements.filter(
-      ({ element }) =>
-        (!sectionCode || element.sectionCode === sectionCode) &&
-        element.category === TemplateElementCategory.Question
-    ).length
-
-    if (numberOfAssignableElements === 0) return null
-
     const currentlyAssigned = assignments.find(
-      (assignment) =>
-        assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned &&
-        matchAssignmentToSection(assignment, sectionCode)
+      ({ assignedSections, current: { assignmentStatus } }) =>
+        assignmentStatus === ReviewAssignmentStatus.Assigned &&
+        assignedSections.includes(sectionCode)
     )
 
     if (!previousAssignee && currentlyAssigned)
@@ -92,12 +70,7 @@ const useGetAssignmentOptions = () => {
 
     return assigneeOptions
   }
-  // Find at least one reviewQuestion assignment in assignment that matches sectionCode
-  const matchAssignmentToSection = (assignment: AssignmentDetails, sectionCode: string) =>
-    assignment.reviewQuestionAssignments.some(
-      (reviewQuestionAssignment) =>
-        reviewQuestionAssignment.templateElement?.section?.code === sectionCode
-    )
+
   return getAssignmentOptions
 }
 

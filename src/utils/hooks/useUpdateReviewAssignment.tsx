@@ -19,6 +19,7 @@ type UseUpdateReviewAssignment = (structure: FullStructure) => {
     // Section code is optional if omitted all sections are assigned
     sectionCodes: string[]
     assignment: AssignmentDetails
+    reviewStructure: FullStructure
   }) => PromiseReturnType
 }
 
@@ -26,7 +27,9 @@ type ConstructAssignSectionPatch = (
   reviewLevel: number,
   isFinalDecision: boolean,
   isSelfAssignment: boolean,
-  sectionCodes: string[]
+  sectionCodes: string[],
+  assignedSections: string[],
+  reviewStructure: FullStructure
 ) => ReviewAssignmentPatch
 
 const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
@@ -43,23 +46,41 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
     reviewLevel,
     isFinalDecision,
     isSelfAssignable,
-    sectionCodes
+    sectionCodes,
+    assignedSections,
+    reviewStructure
   ) => {
-    const elements = Object.values(structure?.elementsById || {})
+    const elements = Object.values(reviewStructure?.elementsById || {}).filter(
+      ({ element }) => element.category === TemplateElementCategory.Question
+    )
 
-    // Will get assignment questions filtering elements by:
+    if (sectionCodes.length === 0) {
+      // Will set all sections in assignedSections
+      assignedSections = elements.reduce(
+        (assignedSections: string[], { element: { sectionCode } }) => {
+          if (!assignedSections.includes(sectionCode)) assignedSections.push(sectionCode)
+          return assignedSections.sort()
+        },
+        []
+      )
+    } else {
+      // Will combine new sections with previous
+      assignedSections = sectionCodes.reduce(
+        (assignedSections: string[], code) =>
+          assignedSections.includes(code) ? assignedSections : [...assignedSections, code],
+        assignedSections
+      )
+    }
+
+    // Also set array of questions assigned filtering elements by assignedSections:
     // - level 1 (or finalDecision) -> if existing response linked
     // - level 1+ -> if existing review linked
     // - question category
     // - section codes (if none - then will consider all sections)
-    //
-    // TODO: Would be nice to replace this to use something similar
-    // to what is in addIsPendingReview (useGetReviewStructureForSection/helpers)
     const assignableElements = elements.filter(
       ({ element, response, lowerLevelReviewLatestResponse }) =>
         (reviewLevel === 1 || isFinalDecision ? !!response : !!lowerLevelReviewLatestResponse) &&
-        (sectionCodes.length === 0 || sectionCodes.includes(element.sectionCode)) &&
-        element.category === TemplateElementCategory.Question
+        (sectionCodes.length === 0 || assignedSections.includes(element.sectionCode))
     )
 
     const createReviewQuestionAssignments = assignableElements.map((element) => ({
@@ -74,12 +95,13 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
       reviewQuestionAssignmentsUsingId: {
         create: createReviewQuestionAssignments,
       },
+      assignedSections,
     }
   }
 
   return {
-    assignSectionsToUser: async ({ sectionCodes, assignment }) => {
-      const { id, isFinalDecision, isSelfAssignable, level } = assignment
+    assignSectionsToUser: async ({ sectionCodes, assignment, reviewStructure }) => {
+      const { id, isFinalDecision, isSelfAssignable, level, assignedSections } = assignment
       const result = await updateAssignment({
         variables: {
           assignmentId: id,
@@ -87,7 +109,9 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
             level,
             isFinalDecision,
             isSelfAssignable,
-            sectionCodes
+            sectionCodes,
+            assignedSections,
+            reviewStructure
           ),
         },
       })

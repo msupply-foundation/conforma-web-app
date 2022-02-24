@@ -3,21 +3,40 @@ import { Container, Label, Message } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
 import Assignment from './Assignment'
 import { useUserState } from '../../../contexts/UserState'
-import { AssignmentDetails, Filters, FullStructure } from '../../../utils/types'
+import {
+  AssignmentDetails,
+  Filters,
+  FullStructure,
+  LevelAssignments,
+  SectionAssignee,
+} from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Stage } from '../../../components/Review'
 import { getPreviousStageAssignment } from '../../../utils/helpers/assignment/getPreviousStageAssignment'
 import useGetReviewInfo from '../../../utils/hooks/useGetReviewInfo'
 import { NoMatch } from '../../../components'
 import ReviewLevel, { ALL_LEVELS } from './ReviewLevel'
+import { ReviewStateProvider } from '../../../contexts/ReviewStructuresState'
+import AssignmentRows from './AssignmentRows'
+import AssignmentSubmit from './AssignmentSubmit'
 
 const AssignmentTab: React.FC<{
-  structure: FullStructure
-}> = ({ structure: fullStructure }) => {
+  fullApplicationStructure: FullStructure
+}> = ({ fullApplicationStructure: fullStructure }) => {
   const { strings } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
+  const [enableSubmit, setEnableSubmit] = useState<boolean>(false)
+  const [assignedSections, setAssignedSections] = useState<SectionAssignee>(
+    Object.values(fullStructure.sections).reduce(
+      (assignedSections, { details: { code } }) => ({
+        ...assignedSections,
+        [code]: { newAssignee: undefined },
+      }),
+      {}
+    )
+  )
 
   const { error, loading, assignments } = useGetReviewInfo({
     applicationId: fullStructure.info.id,
@@ -62,29 +81,55 @@ const AssignmentTab: React.FC<{
     },
   } = fullStructure
 
+  const assignmentsFiltered = getFilteredLevel(assignments)
+
+  const assignmentGroupedLevel: LevelAssignments = {}
+  assignmentsFiltered.forEach((assignment) => {
+    const { level } = assignment
+    if (!assignmentGroupedLevel[level]) assignmentGroupedLevel[level] = [assignment]
+    else assignmentGroupedLevel[level].push(assignment)
+  })
+
   return (
-    <Container id="assignment-tab">
-      <div className="flex-row-space-between-center" id="review-filters-container">
-        <ReviewLevel
-          filters={filters}
-          setFilters={setFilters}
-          structure={fullStructure}
-          assignments={assignments}
-        />
-        <div className="centered-flex-box-row">
-          <Label className="uppercase-label" content={strings.REVIEW_OVERVIEW_STAGE} />
-          <Stage name={stageName} colour={stageColour || ''} />
+    <ReviewStateProvider fullApplicationStructure={fullStructure} assignments={assignmentsFiltered}>
+      <Container id="assignment-tab">
+        <div className="flex-row-space-between-center" id="review-filters-container">
+          <ReviewLevel
+            filters={filters}
+            setFilters={setFilters}
+            structure={fullStructure}
+            assignments={assignments}
+          />
+          <div className="centered-flex-box-row">
+            <Label className="uppercase-label" content={strings.REVIEW_OVERVIEW_STAGE} />
+            <Stage name={stageName} colour={stageColour || ''} />
+          </div>
         </div>
-      </div>
-      {filters && (
-        <Assignment
-          filters={filters}
-          assignmentsByStageAndLevel={getFilteredLevel(assignments)}
+        {/* Creates each reviewStructuse in context ReviewsStateContext */}
+        {assignmentsFiltered.map((assignment) => (
+          <Assignment
+            key={`assginment_struct_${assignment.id}`}
+            assignment={assignment}
+            structure={fullStructure}
+          />
+        ))}
+        {/* Then render each Assignmnet/Review section rows using the reviewStructures generated */}
+        <AssignmentRows
+          fullStructure={fullStructure}
           assignmentInPreviousStage={assignmentInPreviousStage}
-          fullApplicationStructure={fullStructure}
+          assignmentGroupedLevel={assignmentGroupedLevel}
+          assignedSections={assignedSections}
+          setAssignedSections={setAssignedSections}
+          setEnableSubmit={setEnableSubmit}
         />
-      )}
-    </Container>
+        <AssignmentSubmit
+          fullStructure={fullStructure}
+          assignedSections={assignedSections}
+          assignmentsFiltered={assignmentsFiltered}
+          enableSubmit={enableSubmit}
+        />
+      </Container>
+    </ReviewStateProvider>
   )
 }
 
