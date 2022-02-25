@@ -32,6 +32,7 @@ const EvaluationOutputType: React.FC<EvaluationOutputTypeProps> = ({
         title="Specify Type"
         checked={!!type}
         setChecked={() => setType(!type ? DEFAULT_TYPE : undefined)}
+        minLabelWidth={110}
       />
       {type && (
         <ComponentLibrary.Selector

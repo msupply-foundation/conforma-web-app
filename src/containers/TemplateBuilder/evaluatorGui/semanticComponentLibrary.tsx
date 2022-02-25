@@ -32,13 +32,14 @@ const ComponentLibrary: ComponentLibraryType = {
 
     return (
       <div className="io-wrapper">
-        <div className="io-component key">{title}</div>
+        {title && <div className="io-component key">{title}</div>}
         <Input
           value={innerValue}
+          // type="number"
           className="io-component value"
           size="small"
           onChange={async (_, { value }) => {
-            if (!value.match(/^[\d]+$/)) return
+            if (!value.match(/^-?[\d]+$/)) return
             setInnerValue(value)
           }}
           onBlur={() => {
@@ -63,8 +64,14 @@ const ComponentLibrary: ComponentLibraryType = {
       options={selections}
     />
   ),
-  Checkbox: ({ checked, setChecked, title = '', disabled = false }) => (
-    <CheckboxIO title={title} value={checked} setValue={setChecked} disabled={disabled} />
+  Checkbox: ({ checked, setChecked, title = '', disabled = false, ...props }) => (
+    <CheckboxIO
+      title={title}
+      value={checked}
+      setValue={setChecked}
+      disabled={disabled}
+      {...props}
+    />
   ),
   Error: ({ error, info }) => (
     <div>
