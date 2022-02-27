@@ -7,7 +7,7 @@ import JsonIO from '../shared/JsonIO'
 import TextIO from '../shared/TextIO'
 import { ComponentLibraryType } from './types'
 
-// All 'sets' are done onBlur (loose focus), to avoid excessible evaluations (especially for api types)
+// All 'sets' are done onBlur (loose focus), to avoid excessive evaluations (especially for api types)
 const ComponentLibrary: ComponentLibraryType = {
   TextInput: ({ text, setText, title = '', disabled = false, isTextArea = false }) => (
     <div className="long">

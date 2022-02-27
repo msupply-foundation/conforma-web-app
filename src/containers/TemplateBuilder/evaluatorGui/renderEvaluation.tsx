@@ -107,8 +107,8 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
                 evaluatorParameters={evaluatorParameters}
               />
             </ComponentLibrary.FlexRow>
-            <EvaluationFallback evaluation={typedEvaluation} setEvaluation={setEvaluation} />
             <EvaluationOutputType evaluation={typedEvaluation} setEvaluation={setEvaluation} />
+            <EvaluationFallback evaluation={typedEvaluation} setEvaluation={setEvaluation} />
             {gui.render(typedEvaluation, setEvaluation, ComponentLibrary, evaluatorParameters)}
           </ComponentLibrary.OperatorContainer>
         </ComponentLibrary.FlexRow>
