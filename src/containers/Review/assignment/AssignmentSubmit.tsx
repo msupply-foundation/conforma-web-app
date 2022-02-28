@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useReviewStructureState } from '../../../contexts/ReviewStructuresState'
 import useUpdateReviewAssignment from '../../../utils/hooks/useUpdateReviewAssignment'
-import useReasignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
+import useReassignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 
 interface AssignmentSubmitProps {
@@ -22,22 +22,22 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   const { strings } = useLanguageProvider()
   const { reviewStructuresState } = useReviewStructureState()
   const { assignSectionsToUser } = useUpdateReviewAssignment(fullStructure)
-  const { reassignSections } = useReasignReviewAssignment(fullStructure)
-
-  console.log('reviewStructuresState', reviewStructuresState)
+  const { reassignSections } = useReassignReviewAssignment(fullStructure)
 
   const submitAssignments = () => {
     // Re-assignment - grouping sections that belong to same (new) assignment
     let reassignmentGroupedSections: {
       sectionCodes: string[]
       unassignment: AssignmentDetails
-      // unassignmentId: number
       reassignment: AssignmentDetails
     }[] = []
 
     const reassignedSections = Object.entries(assignedSections).filter(
       ([_, { previousAssignee }]) => !!previousAssignee
     )
+
+    console.log('reassignedSections', reassignedSections)
+    console.log('reviewStructuresState', reviewStructuresState)
 
     reassignedSections.forEach(([sectionCode, sectionAssignee]) => {
       const { newAssignee, previousAssignee } = sectionAssignee
@@ -63,7 +63,6 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
             sectionCodes: [sectionCode],
             reassignment,
             unassignment,
-            // unassignmentId: unassignment.id,
           })
       }
     })

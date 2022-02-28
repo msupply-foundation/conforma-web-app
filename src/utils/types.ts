@@ -142,8 +142,6 @@ interface AssignmentDetails {
   isLastLevel: boolean
   isSelfAssignable: boolean
   isLocked: boolean
-  totalAssignedQuestions: number
-  reviewQuestionAssignments: ReviewQuestionAssignment[]
   allowedSections: string[]
   assignedSections: string[]
 }
@@ -328,7 +326,6 @@ type PageElement = {
   isNewReviewResponse?: boolean
   review?: ReviewQuestionDecision
   isPendingReview?: boolean
-  reviewQuestionAssignmentId: number
   isAssigned?: boolean
   isChangeRequest?: boolean
   isChanged?: boolean

@@ -83,18 +83,11 @@ const useUpdateReviewAssignment: UseUpdateReviewAssignment = (structure) => {
         (sectionCodes.length === 0 || assignedSections.includes(element.sectionCode))
     )
 
-    const createReviewQuestionAssignments = assignableElements.map((element) => ({
-      templateElementId: element.element.id,
-    }))
-
     return {
       status: ReviewAssignmentStatus.Assigned,
       assignerId: currentUser?.userId || null,
       trigger: isSelfAssignable ? Trigger.OnReviewSelfAssign : Trigger.OnReviewAssign,
       timeUpdated: new Date().toISOString(),
-      reviewQuestionAssignmentsUsingId: {
-        create: createReviewQuestionAssignments,
-      },
       assignedSections,
     }
   }
