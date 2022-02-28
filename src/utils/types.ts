@@ -6,7 +6,6 @@ import {
   PermissionPolicyType,
   ReviewAssignmentStatus,
   ReviewDecision,
-  ReviewQuestionAssignment,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,

@@ -2,7 +2,6 @@ import { cloneDeep } from '@apollo/client/utilities'
 import {
   GetReviewResponsesQuery,
   ReviewResponse,
-  ReviewQuestionAssignment,
   TemplateElement,
   ReviewResponseStatus,
   ReviewStatus,
@@ -83,13 +82,13 @@ const generateReviewStructure: GenerateReviewStructure = ({
 
   if (!reviewAssignment) return newStructure
 
-  const { reviewQuestionAssignments, level } = reviewAssignment
+  const { level } = reviewAssignment
 
-  // This is usefull for linking assignments to elements
+  // This is useful for linking assignments to elements
   newStructure = addElementsById(newStructure)
   newStructure = addSortedSectionsAndPages(newStructure)
 
-  newStructure = addIsAssigned(newStructure, reviewQuestionAssignments)
+  newStructure = addIsAssigned(newStructure, reviewAssignment)
 
   // Update fields element.isNewApplicantRsponse for applications re-submitted to a reviewer
   setIsNewApplicationResponse(newStructure)
