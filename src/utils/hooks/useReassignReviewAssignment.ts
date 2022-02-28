@@ -31,7 +31,7 @@ type ConstructAssignSectionPatch = (
   unassignment?: AssignmentDetails
 ) => { reassignmentPatch: ReviewAssignmentPatch; unassignmentPatch: any }
 
-const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
+const useReassignReviewAssignment: UseReassignReviewAssignment = (structure) => {
   const {
     userState: { currentUser },
   } = useUserState()
@@ -43,8 +43,6 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
     sectionCodes,
     unassignment
   ) => {
-    const elements = Object.values(structure?.elementsById || {})
-
     // Will get assignment questions filtering elements by:
     // - level 1 (or finalDecision) -> if existing response linked
     // - level 1+ -> if existing review linked
@@ -53,15 +51,14 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
     //
     // TODO: Would be nice to replace this to use something similar
     // to what is in addIsPendingReview (useGetReviewStructureForSection/helpers)
-    const assignableElements = elements.filter(
-      ({ element, response, lowerLevelReviewLatestResponse }) =>
-        (reviewLevel === 1 || isFinalDecision ? !!response : !!lowerLevelReviewLatestResponse) &&
-        (sectionCodes.length === 0 || sectionCodes.includes(element.sectionCode)) &&
-        element.category === TemplateElementCategory.Question
-    )
+
+    console.log('sectionCodes', sectionCodes)
+    console.log('unassignment', unassignment)
 
     const unassignedSectionCodes: string[] =
       unassignment?.assignedSections.filter((code) => !sectionCodes.includes(code)) || []
+
+    console.log('unassignedSectionCodes', unassignedSectionCodes)
 
     const unassignedStatus =
       unassignedSectionCodes?.length > 0
@@ -106,19 +103,23 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
         unassignment
       )
 
-      const result = await reassignReview({
-        variables: {
-          unassignmentId: unassignment?.id || 0,
-          reassignmentId: id,
-          reassignmentPatch,
-          unassignmentPatch,
-        },
-      })
+      // console.log('reassignmentPatch', reassignmentPatch)
+      // console.log('unassignmentPatch', unassignmentPatch)
 
-      if (result.errors) throw new Error(result.errors.toString())
+      const result = {}
+      // await reassignReview({
+      //   variables: {
+      //     unassignmentId: unassignment?.id || 0,
+      //     reassignmentId: id,
+      //     reassignmentPatch,
+      //     unassignmentPatch,
+      //   },
+      // })
+
+      // if (result.errors) throw new Error(result.errors.toString())
       return result
     },
   }
 }
 
-export default useReasignReviewAssignment
+export default useReassignReviewAssignment
