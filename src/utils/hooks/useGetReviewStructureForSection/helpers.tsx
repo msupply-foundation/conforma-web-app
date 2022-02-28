@@ -241,6 +241,8 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   const previousOriginalReviewResponses = (data?.previousOriginalReviewResponses?.nodes ||
     []) as ReviewResponse[]
 
+  console.log('thisReviewResponses', thisReviewResponses)
+
   const isFinalDecision = !!structure.assignment?.isFinalDecision
 
   // add thisReviewLatestResponse and thisReviewPreviousResponse

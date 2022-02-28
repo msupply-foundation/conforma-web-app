@@ -41,6 +41,8 @@ const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment })
         }
       }
     )
+
+    console.log('reviewResponseCreate', reviewResponseCreate)
     // See comment at the bottom of file for resulting shape
     return {
       trigger: Trigger.OnReviewCreate,
