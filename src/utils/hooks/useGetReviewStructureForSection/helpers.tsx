@@ -29,6 +29,7 @@ import {
   PageElement,
   AssignmentDetails,
   ReviewAssignment,
+  ElementsById,
 } from '../../types'
 
 const getSectionIds = ({
@@ -314,15 +315,17 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
 const addIsAssigned = (newStructure: FullStructure, reviewAssignment: AssignmentDetails) => {
   console.log('newStructure', newStructure)
   console.log('reviewAssignment', reviewAssignment)
-  // reviewQuestionAssignment.forEach(({ templateElement, id }) => {
-  //   const { id: templateElementId } = templateElement as TemplateElement
-  //   const assignedElement = newStructure?.elementsById?.[templateElementId || '']
+  const assignedSections = reviewAssignment.assignedSections
+  const assignedElements = Object.entries(newStructure?.elementsById as ElementsById).filter(
+    ([id, element]) => assignedSections.includes(element.element.sectionCode)
+  )
+  console.log('assignedElements', assignedElements)
+  assignedElements.forEach(([id, element]) => {
+    const assignedElement = newStructure?.elementsById?.[id || '']
+    if (!assignedElement) return
 
-  //   if (!assignedElement) return
-
-  //   assignedElement.isAssigned = true
-  //   assignedElement.reviewQuestionAssignmentId = id
-  // })
+    assignedElement.isAssigned = true
+  })
   return newStructure
 }
 

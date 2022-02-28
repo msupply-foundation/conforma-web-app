@@ -56,9 +56,6 @@ const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment })
   }
 
   return async () => {
-    console.log('Call async')
-    console.log('getStructure', await getFullReviewStructureAsync())
-
     const result = await createReview({
       variables: {
         // See comment at the bottom of file for resulting shape
