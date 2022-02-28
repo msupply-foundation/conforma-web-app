@@ -11,6 +11,7 @@ Need to use useCreateReview hook for this mutation, it creates the following sha
     "create": [
       {
         "applicationResponseId": 11,
+        "reviewQuestionAssignmentId": 11
       }
     ]
   },

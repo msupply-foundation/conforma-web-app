@@ -2,6 +2,7 @@ import { cloneDeep } from '@apollo/client/utilities'
 import {
   GetReviewResponsesQuery,
   ReviewResponse,
+  ReviewQuestionAssignment,
   TemplateElement,
   ReviewResponseStatus,
   ReviewStatus,
@@ -81,13 +82,13 @@ const generateReviewStructure: GenerateReviewStructure = ({
 
   if (!reviewAssignment) return newStructure
 
-  const { level } = reviewAssignment
+  const { reviewQuestionAssignments, level } = reviewAssignment
 
-  // This is useful for linking assignments to elements
+  // This is usefull for linking assignments to elements
   newStructure = addElementsById(newStructure)
   newStructure = addSortedSectionsAndPages(newStructure)
 
-  newStructure = addIsAssigned(newStructure, reviewAssignment)
+  newStructure = addIsAssigned(newStructure, reviewQuestionAssignments)
 
   // Update fields element.isNewApplicantRsponse for applications re-submitted to a reviewer
   setIsNewApplicationResponse(newStructure)
@@ -311,18 +312,19 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   return structure
 }
 
-const addIsAssigned = (newStructure: FullStructure, reviewAssignment: AssignmentDetails) => {
-  console.log('newStructure', newStructure)
-  console.log('reviewAssignment', reviewAssignment)
-  // reviewQuestionAssignment.forEach(({ templateElement, id }) => {
-  //   const { id: templateElementId } = templateElement as TemplateElement
-  //   const assignedElement = newStructure?.elementsById?.[templateElementId || '']
+const addIsAssigned = (
+  newStructure: FullStructure,
+  reviewQuestionAssignment: ReviewQuestionAssignment[]
+) => {
+  reviewQuestionAssignment.forEach(({ templateElement, id }) => {
+    const { id: templateElementId } = templateElement as TemplateElement
+    const assignedElement = newStructure?.elementsById?.[templateElementId || '']
 
-  //   if (!assignedElement) return
+    if (!assignedElement) return
 
-  //   assignedElement.isAssigned = true
-  //   assignedElement.reviewQuestionAssignmentId = id
-  // })
+    assignedElement.isAssigned = true
+    assignedElement.reviewQuestionAssignmentId = id
+  })
   return newStructure
 }
 
