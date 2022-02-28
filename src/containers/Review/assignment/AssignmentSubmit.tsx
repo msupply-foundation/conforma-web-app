@@ -24,8 +24,6 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   const { assignSectionsToUser } = useUpdateReviewAssignment(fullStructure)
   const { reassignSections } = useReasignReviewAssignment(fullStructure)
 
-  console.log('reviewStructuresState', reviewStructuresState)
-
   const submitAssignments = () => {
     // Re-assignment - grouping sections that belong to same (new) assignment
     let reassignmentGroupedSections: {
@@ -63,7 +61,6 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
             sectionCodes: [sectionCode],
             reassignment,
             unassignment,
-            // unassignmentId: unassignment.id,
           })
       }
     })

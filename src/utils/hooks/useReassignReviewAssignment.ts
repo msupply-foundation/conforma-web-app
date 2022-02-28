@@ -105,8 +105,6 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
         sectionCodes,
         unassignment
       )
-      console.log('reassignmentPatch', reassignmentPatch)
-      console.log('unassignmentPatch', unassignmentPatch)
 
       const result = await reassignReview({
         variables: {
