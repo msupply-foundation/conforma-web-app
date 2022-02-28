@@ -3,8 +3,6 @@ import { AssignmentDetails } from '../types'
 import {
   Review,
   ReviewAssignment,
-  ReviewAssignmentStatus,
-  ReviewQuestionAssignment,
   ReviewStatus,
   useGetReviewInfoQuery,
   User,

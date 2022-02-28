@@ -186,7 +186,6 @@ const PageElements: React.FC<PageElementProps> = ({
 
   // Review & Consolidation
   if (isReview) {
-    console.log('visibleElements', visibleElements)
     return (
       <div className="flex-column">
         <Form>
