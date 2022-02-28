@@ -241,8 +241,6 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   const previousOriginalReviewResponses = (data?.previousOriginalReviewResponses?.nodes ||
     []) as ReviewResponse[]
 
-  console.log('thisReviewResponses', thisReviewResponses)
-
   const isFinalDecision = !!structure.assignment?.isFinalDecision
 
   // add thisReviewLatestResponse and thisReviewPreviousResponse
@@ -315,14 +313,11 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
 }
 
 const addIsAssigned = (newStructure: FullStructure, reviewAssignment: AssignmentDetails) => {
-  console.log('newStructure', newStructure)
-  console.log('reviewAssignment', reviewAssignment)
   const assignedSections = reviewAssignment.assignedSections
   const assignedElements = Object.entries(newStructure?.elementsById as ElementsById).filter(
-    ([id, element]) => assignedSections.includes(element.element.sectionCode)
+    ([_, element]) => assignedSections.includes(element.element.sectionCode)
   )
-  console.log('assignedElements', assignedElements)
-  assignedElements.forEach(([id, element]) => {
+  assignedElements.forEach(([id, _]) => {
     const assignedElement = newStructure?.elementsById?.[id || '']
     if (!assignedElement) return
 

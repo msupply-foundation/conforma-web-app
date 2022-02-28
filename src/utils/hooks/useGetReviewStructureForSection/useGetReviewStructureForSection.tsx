@@ -17,8 +17,6 @@ const useGetReviewStructureForSections = (props: UseGetReviewStructureForSection
   const sectionIds = getSectionIds(props)
   const variables = compileVariablesForReviewResponseQuery({ ...props, sectionIds, currentUser })
 
-  console.log('variables', variables)
-
   const { data, error } = useGetReviewResponsesQuery({
     variables,
     fetchPolicy: 'network-only',
@@ -28,8 +26,6 @@ const useGetReviewStructureForSections = (props: UseGetReviewStructureForSection
   useEffect(() => {
     if (error) return
     if (!data) return
-
-    console.log('DATA', data)
 
     setReviewStructure(generateReviewStructure({ ...props, currentUser, data, sectionIds }))
   }, [data, error])

@@ -5,7 +5,7 @@ import {
   Decision,
   ReviewResponseDecision,
 } from '../generated/graphql'
-import { AssignmentDetails, FullStructure, PageElement, ReviewAssignment } from '../types'
+import { AssignmentDetails, FullStructure, PageElement } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
 
 // below lines are used to get return type of the function that is returned by useRestartReviewMutation
