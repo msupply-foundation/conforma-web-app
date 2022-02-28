@@ -6,7 +6,6 @@ import {
   PermissionPolicyType,
   ReviewAssignmentStatus,
   ReviewDecision,
-  ReviewQuestionAssignment,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -143,7 +142,6 @@ interface AssignmentDetails {
   isSelfAssignable: boolean
   isLocked: boolean
   totalAssignedQuestions: number
-  reviewQuestionAssignments: ReviewQuestionAssignment[]
   allowedSections: string[]
   assignedSections: string[]
 }

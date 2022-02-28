@@ -22,6 +22,7 @@ const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment })
   })
 
   const constructReviewInput: ConstructReviewInput = (structure) => {
+    console.log('structure', structure)
     const elements = Object.values(structure?.elementsById || {})
     // Only create review for elements that are pendingReview and are assigned
     const reviewableElements = elements.filter(
@@ -29,7 +30,7 @@ const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment })
     )
 
     const reviewResponseCreate = reviewableElements.map(
-      ({ lowerLevelReviewLatestResponse, response, reviewQuestionAssignmentId }) => {
+      ({ lowerLevelReviewLatestResponse, response }) => {
         // link to applicaiton response or review response based on review level
         const applicationResponseId = reviewAssignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
@@ -37,7 +38,6 @@ const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment })
         return {
           applicationResponseId,
           reviewResponseLinkId,
-          reviewQuestionAssignmentId,
         }
       }
     )
@@ -80,7 +80,6 @@ export default useCreateReview
     "create": [
       {
         "applicationResponseId": 11,
-        "reviewQuestionAssignmentId": 11
       }
     ]
   },

@@ -124,7 +124,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
         allowedSections: (allowedSections as string[]) || [],
         assignedSections: assignedSections as string[],
         totalAssignedQuestions,
-        reviewQuestionAssignments,
         review: review
           ? {
               id: review.id,
