@@ -25,9 +25,8 @@ type UseReassignReviewAssignment = (structure: FullStructure) => {
 }
 
 type ConstructAssignSectionPatch = (
-  reviewLevel: number,
-  isFinalDecision: boolean,
   sectionCodes: string[],
+  reassignment: AssignmentDetails,
   unassignment?: AssignmentDetails
 ) => { reassignmentPatch: ReviewAssignmentPatch; unassignmentPatch: any }
 
@@ -38,27 +37,14 @@ const useReassignReviewAssignment: UseReassignReviewAssignment = (structure) => 
   const [reassignReview] = useReassignReviewAssignmentMutation()
 
   const constructUnassignSectionPatch: ConstructAssignSectionPatch = (
-    reviewLevel,
-    isFinalDecision,
     sectionCodes,
+    reassignment,
     unassignment
   ) => {
-    // Will get assignment questions filtering elements by:
-    // - level 1 (or finalDecision) -> if existing response linked
-    // - level 1+ -> if existing review linked
-    // - question category
-    // - section codes (if none - then will consider all sections)
-    //
-    // TODO: Would be nice to replace this to use something similar
-    // to what is in addIsPendingReview (useGetReviewStructureForSection/helpers)
-
-    console.log('sectionCodes', sectionCodes)
-    console.log('unassignment', unassignment)
-
     const unassignedSectionCodes: string[] =
       unassignment?.assignedSections.filter((code) => !sectionCodes.includes(code)) || []
 
-    console.log('unassignedSectionCodes', unassignedSectionCodes)
+    const assignedSectionCodes: string[] = [...reassignment?.assignedSections, ...sectionCodes]
 
     const unassignedStatus =
       unassignedSectionCodes?.length > 0
@@ -87,7 +73,7 @@ const useReassignReviewAssignment: UseReassignReviewAssignment = (structure) => 
         // OnReviewReassign to trigger action on new ReviewAssignment assigned change status of Review - if existing - back to DRAFT
         // onReviewUnassign also set in mutation to trigger core action on previous ReviewAssignment unassigned changeStatus of review to LOCKED
         timeUpdated: new Date().toISOString(),
-        assignedSections: sectionCodes,
+        assignedSections: assignedSectionCodes,
       },
       unassignmentPatch,
     }
@@ -97,26 +83,21 @@ const useReassignReviewAssignment: UseReassignReviewAssignment = (structure) => 
     reassignSections: async ({ sectionCodes, unassignment, reassignment }) => {
       const { id, isFinalDecision, level } = reassignment
       const { reassignmentPatch, unassignmentPatch } = constructUnassignSectionPatch(
-        level,
-        isFinalDecision,
         sectionCodes,
+        reassignment,
         unassignment
       )
 
-      // console.log('reassignmentPatch', reassignmentPatch)
-      // console.log('unassignmentPatch', unassignmentPatch)
+      const result = await reassignReview({
+        variables: {
+          unassignmentId: unassignment?.id || 0,
+          reassignmentId: id,
+          reassignmentPatch,
+          unassignmentPatch,
+        },
+      })
 
-      const result = {}
-      // await reassignReview({
-      //   variables: {
-      //     unassignmentId: unassignment?.id || 0,
-      //     reassignmentId: id,
-      //     reassignmentPatch,
-      //     unassignmentPatch,
-      //   },
-      // })
-
-      // if (result.errors) throw new Error(result.errors.toString())
+      if (result.errors) throw new Error(result.errors.toString())
       return result
     },
   }
