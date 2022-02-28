@@ -29,7 +29,7 @@ const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment })
     )
 
     const reviewResponseCreate = reviewableElements.map(
-      ({ lowerLevelReviewLatestResponse, response, reviewQuestionAssignmentId }) => {
+      ({ lowerLevelReviewLatestResponse, response }) => {
         // link to applicaiton response or review response based on review level
         const applicationResponseId = reviewAssignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
@@ -37,7 +37,6 @@ const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment })
         return {
           applicationResponseId,
           reviewResponseLinkId,
-          reviewQuestionAssignmentId,
         }
       }
     )
