@@ -140,9 +140,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
             }
           : null,
       }
-
-      migrationCode_2_0_0(assignment)
-
       return assignment
     })
 
@@ -154,28 +151,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
     error: fetchingError || error?.message,
     loading: loading || isFetching,
     assignments,
-  }
-}
-
-const migrationCode_2_0_0 = (assignment: AssignmentDetails) => {
-  const {
-    current: { assignmentStatus },
-    assignedSections,
-    reviewQuestionAssignments,
-  } = assignment
-  if (assignmentStatus === ReviewAssignmentStatus.Assigned) {
-    // When Assigned without assignedSections and with assigned questions - showing incosistency
-    // due to previous versions (<2.0.0) wasn't using the assignedSections field. Update!
-    if (assignedSections.length === 0 && reviewQuestionAssignments.length !== 0) {
-      assignment.assignedSections = reviewQuestionAssignments.reduce(
-        (assignedSections: string[], { templateElement }) => {
-          const code = templateElement?.section?.code as string
-          if (!assignedSections.includes(code)) assignedSections.push(code)
-          return assignedSections.sort()
-        },
-        []
-      )
-    }
   }
 }
 
