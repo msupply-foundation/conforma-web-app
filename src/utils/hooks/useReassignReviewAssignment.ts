@@ -81,7 +81,7 @@ const useReassignReviewAssignment: UseReassignReviewAssignment = (structure) => 
 
   return {
     reassignSections: async ({ sectionCodes, unassignment, reassignment }) => {
-      const { id, isFinalDecision, level } = reassignment
+      const { id } = reassignment
       const { reassignmentPatch, unassignmentPatch } = constructUnassignSectionPatch(
         sectionCodes,
         reassignment,

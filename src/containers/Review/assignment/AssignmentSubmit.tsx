@@ -101,9 +101,6 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
         reviewStructure: reviewStructuresState[assignment.id],
       })
     })
-
-    console.log('reassignmentGroupedSections', reassignmentGroupedSections)
-    console.log('assignmentGroupedSections', assignmentGroupedSections)
   }
 
   return (

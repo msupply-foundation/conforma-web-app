@@ -2,7 +2,6 @@ import { cloneDeep } from '@apollo/client/utilities'
 import {
   GetReviewResponsesQuery,
   ReviewResponse,
-  TemplateElement,
   ReviewResponseStatus,
   ReviewStatus,
   ReviewAssignmentStatus,
@@ -315,7 +314,9 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
 const addIsAssigned = (newStructure: FullStructure, reviewAssignment: AssignmentDetails) => {
   const assignedSections = reviewAssignment.assignedSections
   const assignedElements = Object.entries(newStructure?.elementsById as ElementsById).filter(
-    ([_, element]) => assignedSections.includes(element.element.sectionCode)
+    ([_, element]) =>
+      assignedSections.includes(element.element.sectionCode) &&
+      element.element.category === 'QUESTION'
   )
   assignedElements.forEach(([id, _]) => {
     const assignedElement = newStructure?.elementsById?.[id || '']

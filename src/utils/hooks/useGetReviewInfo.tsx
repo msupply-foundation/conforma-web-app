@@ -39,7 +39,7 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
       assignerId: currentUser?.userId as number,
     },
     notifyOnNetworkStatusChange: true,
-    // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
+    // if this is removed, there might be an infinite loading when looking at a review for the first time, after clearing cache
     // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
     // ended up removing totalCount from query and keeping this as nextFetchPolicy (was still seeing glitched with totalCount and had "can't update unmounted component error")
     fetchPolicy: 'network-only',
@@ -89,12 +89,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
         isSelfAssignable,
         isLocked,
       } = reviewAssignment
-
-      // Extra field just to use in initial example - might conflict with future queries
-      // to get reviewQuestionAssignment
-      // const reviewQuestionAssignments = (reviewAssignment.reviewQuestionAssignments.nodes ||
-      //   []) as ReviewQuestionAssignment[]
-      // const totalAssignedQuestions = reviewQuestionAssignments.length
 
       const stage = {
         id: assignmentStage?.id as number,
