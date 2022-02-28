@@ -60,10 +60,6 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
         element.category === TemplateElementCategory.Question
     )
 
-    const createReviewQuestionAssignments = assignableElements.map((element) => ({
-      templateElementId: element.element.id,
-    }))
-
     const unassignedSectionCodes: string[] =
       unassignment?.assignedSections.filter((code) => !sectionCodes.includes(code)) || []
 
@@ -79,9 +75,6 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
           trigger: Trigger.OnReviewUnassign,
           timeUpdated: new Date().toISOString(),
           assignedSections: unassignedSectionCodes,
-          // reviewQuestionAssignmentsUsingId: {
-          //   create: createReviewQuestionAssignments,
-          // },
         }
       : {}
 
@@ -98,9 +91,6 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
         // onReviewUnassign also set in mutation to trigger core action on previous ReviewAssignment unassigned changeStatus of review to LOCKED
         timeUpdated: new Date().toISOString(),
         assignedSections: sectionCodes,
-        reviewQuestionAssignmentsUsingId: {
-          create: createReviewQuestionAssignments,
-        },
       },
       unassignmentPatch,
     }

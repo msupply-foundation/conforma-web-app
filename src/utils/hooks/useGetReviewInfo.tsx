@@ -94,9 +94,9 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
 
       // Extra field just to use in initial example - might conflict with future queries
       // to get reviewQuestionAssignment
-      const reviewQuestionAssignments = (reviewAssignment.reviewQuestionAssignments.nodes ||
-        []) as ReviewQuestionAssignment[]
-      const totalAssignedQuestions = reviewQuestionAssignments.length
+      // const reviewQuestionAssignments = (reviewAssignment.reviewQuestionAssignments.nodes ||
+      //   []) as ReviewQuestionAssignment[]
+      // const totalAssignedQuestions = reviewQuestionAssignments.length
 
       const stage = {
         id: assignmentStage?.id as number,
@@ -123,7 +123,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
         isLocked: !!isLocked,
         allowedSections: (allowedSections as string[]) || [],
         assignedSections: assignedSections as string[],
-        totalAssignedQuestions,
         review: review
           ? {
               id: review.id,

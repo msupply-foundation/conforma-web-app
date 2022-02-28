@@ -53,13 +53,7 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
     // For re-assignment this would be slightly different, we need to consider latest review response of this level
     // not necessarily this thisReviewLatestResponse (would be just latestReviewResponse, from all reviews at this level)
     const reviewResponseCreate = reviewableElements.map(
-      ({
-        isPendingReview,
-        thisReviewLatestResponse,
-        response,
-        reviewQuestionAssignmentId,
-        lowerLevelReviewLatestResponse,
-      }) => {
+      ({ isPendingReview, thisReviewLatestResponse, response, lowerLevelReviewLatestResponse }) => {
         const applicationResponseId = previousAssignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
           previousAssignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
@@ -71,7 +65,6 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
           comment: shouldCreateNew ? null : thisReviewLatestResponse?.comment,
           applicationResponseId,
           reviewResponseLinkId,
-          reviewQuestionAssignmentId,
         }
       }
     )
@@ -114,7 +107,6 @@ export default useRemakePreviousReview
         "comment": null,
         "applicationResponseId": 34, // this or reviewResponseLinkId
         "reviewResponseLinkId": 34,  // this or applicationResponseId
-        "reviewQuestionAssignmentId": 11
       }
     ]
   },

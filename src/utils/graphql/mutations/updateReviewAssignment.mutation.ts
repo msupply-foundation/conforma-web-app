@@ -7,18 +7,6 @@ export default gql`
         id
         status
         timeUpdated
-        reviewQuestionAssignments {
-          nodes {
-            id
-            templateElement {
-              id
-              section {
-                id
-                code
-              }
-            }
-          }
-        }
       }
     }
   }
