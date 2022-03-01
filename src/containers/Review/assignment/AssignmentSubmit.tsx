@@ -36,9 +36,6 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
       ([_, { previousAssignee }]) => !!previousAssignee
     )
 
-    console.log('reassignedSections', reassignedSections)
-    console.log('reviewStructuresState', reviewStructuresState)
-
     reassignedSections.forEach(([sectionCode, sectionAssignee]) => {
       const { newAssignee, previousAssignee } = sectionAssignee
       const found = reassignmentGroupedSections.find(
