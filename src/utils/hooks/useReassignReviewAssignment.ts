@@ -3,7 +3,6 @@ import {
   useReassignReviewAssignmentMutation,
   ReviewAssignmentStatus,
   ReviewAssignmentPatch,
-  TemplateElementCategory,
   Trigger,
 } from '../generated/graphql'
 import { AssignmentDetails, FullStructure } from '../types'
@@ -30,7 +29,7 @@ type ConstructAssignSectionPatch = (
   unassignment?: AssignmentDetails
 ) => { reassignmentPatch: ReviewAssignmentPatch; unassignmentPatch: any }
 
-const useReassignReviewAssignment: UseReassignReviewAssignment = (structure) => {
+const useReassignReviewAssignment: UseReassignReviewAssignment = () => {
   const {
     userState: { currentUser },
   } = useUserState()
