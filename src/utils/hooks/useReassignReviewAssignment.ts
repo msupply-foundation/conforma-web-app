@@ -36,7 +36,7 @@ const useReassignReviewAssignment: UseReassignReviewAssignment = (structure) => 
   } = useUserState()
   const [reassignReview] = useReassignReviewAssignmentMutation()
 
-  const constructUnassignSectionPatch: ConstructAssignSectionPatch = (
+  const constructReassignmentSectionPatches: ConstructAssignSectionPatch = (
     sectionCodes,
     reassignment,
     unassignment
@@ -82,7 +82,7 @@ const useReassignReviewAssignment: UseReassignReviewAssignment = (structure) => 
   return {
     reassignSections: async ({ sectionCodes, unassignment, reassignment }) => {
       const { id } = reassignment
-      const { reassignmentPatch, unassignmentPatch } = constructUnassignSectionPatch(
+      const { reassignmentPatch, unassignmentPatch } = constructReassignmentSectionPatches(
         sectionCodes,
         reassignment,
         unassignment
