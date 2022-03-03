@@ -51,13 +51,7 @@ const useRestartReview: UseRestartReview = ({ reviewStructure, reviewAssignment 
     // For re-assignment this would be slightly different, we need to consider latest review response of this level
     // not necessarily this thisReviewLatestResponse (would be just latestReviewResponse, from all reviews at this level)
     const reviewResponseCreate = reviewableElements.map(
-      ({
-        isPendingReview,
-        thisReviewLatestResponse,
-        response,
-        reviewQuestionAssignmentId,
-        lowerLevelReviewLatestResponse,
-      }) => {
+      ({ isPendingReview, thisReviewLatestResponse, response, lowerLevelReviewLatestResponse }) => {
         const applicationResponseId = reviewAssignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
           reviewAssignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
@@ -69,7 +63,6 @@ const useRestartReview: UseRestartReview = ({ reviewStructure, reviewAssignment 
           comment: shouldCreateNew ? null : thisReviewLatestResponse?.comment,
           applicationResponseId,
           reviewResponseLinkId,
-          reviewQuestionAssignmentId,
         }
       }
     )
@@ -112,7 +105,6 @@ export default useRestartReview
         "comment": null,
         "applicationResponseId": 34, // this or reviewResponseLinkId
         "reviewResponseLinkId": 34,  // this or applicationResponseId
-        "reviewQuestionAssignmentId": 11
       }
     ]
   },

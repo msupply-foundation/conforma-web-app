@@ -13,17 +13,5 @@ export default gql`
     isSelfAssignable
     allowedSections
     assignedSections
-    reviewQuestionAssignments {
-      nodes {
-        id
-        templateElement {
-          id
-          section {
-            id
-            code
-          }
-        }
-      }
-    }
   }
 `

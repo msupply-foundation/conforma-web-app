@@ -3,7 +3,6 @@ import {
   useReassignReviewAssignmentMutation,
   ReviewAssignmentStatus,
   ReviewAssignmentPatch,
-  TemplateElementCategory,
   Trigger,
 } from '../generated/graphql'
 import { AssignmentDetails, FullStructure } from '../types'
@@ -19,71 +18,81 @@ type UseReassignReviewAssignment = (structure: FullStructure) => {
   reassignSections: (props: {
     // Section code if empty all sections are assigned
     sectionCodes: string[]
-    unassignmentId?: number
+    unassignment?: AssignmentDetails
     reassignment: AssignmentDetails
   }) => PromiseReturnType
 }
 
 type ConstructAssignSectionPatch = (
-  reviewLevel: number,
-  isFinalDecision: boolean,
-  sectionCodes: string[]
-) => ReviewAssignmentPatch
+  sectionCodes: string[],
+  reassignment: AssignmentDetails,
+  unassignment?: AssignmentDetails
+) => { reassignmentPatch: ReviewAssignmentPatch; unassignmentPatch: any }
 
-const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
+const useReassignReviewAssignment: UseReassignReviewAssignment = () => {
   const {
     userState: { currentUser },
   } = useUserState()
   const [reassignReview] = useReassignReviewAssignmentMutation()
 
-  const constructUnassignSectionPatch: ConstructAssignSectionPatch = (
-    reviewLevel,
-    isFinalDecision,
-    sectionCodes
+  const constructReassignmentSectionPatches: ConstructAssignSectionPatch = (
+    sectionCodes,
+    reassignment,
+    unassignment
   ) => {
-    const elements = Object.values(structure?.elementsById || {})
+    const unassignedSectionCodes: string[] =
+      unassignment?.assignedSections.filter((code) => !sectionCodes.includes(code)) || []
 
-    // Will get assignment questions filtering elements by:
-    // - level 1 (or finalDecision) -> if existing response linked
-    // - level 1+ -> if existing review linked
-    // - question category
-    // - section codes (if none - then will consider all sections)
-    //
-    // TODO: Would be nice to replace this to use something similar
-    // to what is in addIsPendingReview (useGetReviewStructureForSection/helpers)
-    const assignableElements = elements.filter(
-      ({ element, response, lowerLevelReviewLatestResponse }) =>
-        (reviewLevel === 1 || isFinalDecision ? !!response : !!lowerLevelReviewLatestResponse) &&
-        (sectionCodes.length === 0 || sectionCodes.includes(element.sectionCode)) &&
-        element.category === TemplateElementCategory.Question
-    )
+    const assignedSectionCodes: string[] = [...reassignment?.assignedSections, ...sectionCodes]
 
-    const createReviewQuestionAssignments = assignableElements.map((element) => ({
-      templateElementId: element.element.id,
-    }))
+    const unassignedStatus =
+      unassignedSectionCodes?.length > 0
+        ? ReviewAssignmentStatus.Assigned
+        : ReviewAssignmentStatus.Available
+
+    const unassignmentPatch = unassignment
+      ? {
+          status: unassignedStatus,
+          assignerId: unassignment?.id,
+          trigger: Trigger.OnReviewUnassign,
+          timeUpdated: new Date().toISOString(),
+          assignedSections: unassignedSectionCodes,
+        }
+      : {}
+
+    if (unassignedStatus === ReviewAssignmentStatus.Available)
+      delete unassignmentPatch.assignedSections
 
     return {
-      status: ReviewAssignmentStatus.Assigned,
-      isLocked: false,
-      assignerId: currentUser?.userId || null,
-      trigger: Trigger.OnReviewReassign,
-      // OnReviewReassign to trigger action on new ReviewAssignment assigned change status of Review - if existing - back to DRAFT
-      // onReviewUnassign also set in mutation to trigger core action on previous ReviewAssignment unassigned changeStatus of review to LOCKED
-      timeUpdated: new Date().toISOString(),
-      reviewQuestionAssignmentsUsingId: {
-        create: createReviewQuestionAssignments,
+      reassignmentPatch: {
+        status: ReviewAssignmentStatus.Assigned,
+        isLocked: false,
+        assignerId: currentUser?.userId || null,
+        trigger: Trigger.OnReviewReassign,
+        // OnReviewReassign to trigger action on new ReviewAssignment assigned change status of Review - if existing - back to DRAFT
+        // onReviewUnassign also set in mutation to trigger core action on previous ReviewAssignment unassigned changeStatus of review to LOCKED
+        timeUpdated: new Date().toISOString(),
+        assignedSections: assignedSectionCodes,
       },
+      unassignmentPatch,
     }
   }
 
   return {
-    reassignSections: async ({ sectionCodes, unassignmentId = 0, reassignment }) => {
-      const { id, isFinalDecision, level } = reassignment
+    reassignSections: async ({ sectionCodes, unassignment, reassignment }) => {
+      const { id } = reassignment
+      const { reassignmentPatch, unassignmentPatch } = constructReassignmentSectionPatches(
+        sectionCodes,
+        reassignment,
+        unassignment
+      )
+
       const result = await reassignReview({
         variables: {
-          unassignmentId,
+          unassignmentId: unassignment?.id || 0,
           reassignmentId: id,
-          reassignmentPatch: constructUnassignSectionPatch(level, isFinalDecision, sectionCodes),
+          reassignmentPatch,
+          unassignmentPatch,
         },
       })
 
@@ -93,4 +102,4 @@ const useReasignReviewAssignment: UseReassignReviewAssignment = (structure) => {
   }
 }
 
-export default useReasignReviewAssignment
+export default useReassignReviewAssignment

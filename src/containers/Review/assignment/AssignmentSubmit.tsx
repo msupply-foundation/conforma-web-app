@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useReviewStructureState } from '../../../contexts/ReviewStructuresState'
 import useUpdateReviewAssignment from '../../../utils/hooks/useUpdateReviewAssignment'
-import useReasignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
+import useReassignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 
 interface AssignmentSubmitProps {
@@ -22,13 +22,13 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   const { strings } = useLanguageProvider()
   const { reviewStructuresState } = useReviewStructureState()
   const { assignSectionsToUser } = useUpdateReviewAssignment(fullStructure)
-  const { reassignSections } = useReasignReviewAssignment(fullStructure)
+  const { reassignSections } = useReassignReviewAssignment(fullStructure)
 
   const submitAssignments = () => {
     // Re-assignment - grouping sections that belong to same (new) assignment
     let reassignmentGroupedSections: {
       sectionCodes: string[]
-      unassignmentId: number
+      unassignment: AssignmentDetails
       reassignment: AssignmentDetails
     }[] = []
 
@@ -51,7 +51,7 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
 
       if (found) {
         found.sectionCodes.push(sectionCode)
-        if (!!unassignment && found?.unassignmentId != unassignment.id)
+        if (!!unassignment && found?.unassignment.id != unassignment.id)
           console.log('Unassignment for more than one previous assignee - Failed')
       } else {
         const reassignment = assignmentsFiltered.find(({ reviewer: { id } }) => id === newAssignee)
@@ -59,13 +59,13 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
           reassignmentGroupedSections.push({
             sectionCodes: [sectionCode],
             reassignment,
-            unassignmentId: unassignment.id,
+            unassignment,
           })
       }
     })
-    reassignmentGroupedSections.forEach(({ sectionCodes, reassignment, unassignmentId }) =>
-      reassignSections({ sectionCodes, reassignment, unassignmentId })
-    )
+    reassignmentGroupedSections.forEach(({ sectionCodes, reassignment, unassignment }) => {
+      reassignSections({ sectionCodes, reassignment, unassignment })
+    })
 
     // First assignment - grouping sections that belong to same assignment
     let assignmentGroupedSections: {

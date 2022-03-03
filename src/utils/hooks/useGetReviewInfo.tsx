@@ -3,8 +3,6 @@ import { AssignmentDetails } from '../types'
 import {
   Review,
   ReviewAssignment,
-  ReviewAssignmentStatus,
-  ReviewQuestionAssignment,
   ReviewStatus,
   useGetReviewInfoQuery,
   User,
@@ -41,7 +39,7 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
       assignerId: currentUser?.userId as number,
     },
     notifyOnNetworkStatusChange: true,
-    // if this is removed, there might be an infinite loading when looking at a review for the frist time, after clearing cache
+    // if this is removed, there might be an infinite loading when looking at a review for the first time, after clearing cache
     // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
     // ended up removing totalCount from query and keeping this as nextFetchPolicy (was still seeing glitched with totalCount and had "can't update unmounted component error")
     fetchPolicy: 'network-only',
@@ -92,12 +90,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
         isLocked,
       } = reviewAssignment
 
-      // Extra field just to use in initial example - might conflict with future queries
-      // to get reviewQuestionAssignment
-      const reviewQuestionAssignments = (reviewAssignment.reviewQuestionAssignments.nodes ||
-        []) as ReviewQuestionAssignment[]
-      const totalAssignedQuestions = reviewQuestionAssignments.length
-
       const stage = {
         id: assignmentStage?.id as number,
         name: assignmentStage?.title as string,
@@ -123,8 +115,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
         isLocked: !!isLocked,
         allowedSections: (allowedSections as string[]) || [],
         assignedSections: assignedSections as string[],
-        totalAssignedQuestions,
-        reviewQuestionAssignments,
         review: review
           ? {
               id: review.id,
@@ -140,9 +130,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
             }
           : null,
       }
-
-      migrationCode_2_0_0(assignment)
-
       return assignment
     })
 
@@ -154,28 +141,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
     error: fetchingError || error?.message,
     loading: loading || isFetching,
     assignments,
-  }
-}
-
-const migrationCode_2_0_0 = (assignment: AssignmentDetails) => {
-  const {
-    current: { assignmentStatus },
-    assignedSections,
-    reviewQuestionAssignments,
-  } = assignment
-  if (assignmentStatus === ReviewAssignmentStatus.Assigned) {
-    // When Assigned without assignedSections and with assigned questions - showing incosistency
-    // due to previous versions (<2.0.0) wasn't using the assignedSections field. Update!
-    if (assignedSections.length === 0 && reviewQuestionAssignments.length !== 0) {
-      assignment.assignedSections = reviewQuestionAssignments.reduce(
-        (assignedSections: string[], { templateElement }) => {
-          const code = templateElement?.section?.code as string
-          if (!assignedSections.includes(code)) assignedSections.push(code)
-          return assignedSections.sort()
-        },
-        []
-      )
-    }
   }
 }
 
