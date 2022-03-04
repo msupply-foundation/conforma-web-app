@@ -20,9 +20,15 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   const { strings } = useLanguageProvider()
   const { submitAssignments } = useUpdateAssignment({
     fullStructure,
-    assignedSections,
-    assignmentsFiltered,
   })
+
+  const handleSubmit = () => {
+    try {
+      submitAssignments(assignedSections, assignmentsFiltered)
+    } catch (err) {
+      //
+    }
+  }
 
   return (
     <div style={{ marginTop: 10 }}>
@@ -30,7 +36,7 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
         primary
         content={strings.BUTTON_SUBMIT}
         compact
-        onClick={submitAssignments}
+        onClick={handleSubmit}
         disabled={!enableSubmit}
       />
     </div>

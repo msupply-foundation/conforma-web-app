@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { useUnassignReviewAssignmentMutation } from '../../../utils/generated/graphql'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
@@ -36,23 +35,16 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     option: strings.BUTTON_SUBMIT,
   }
 
-  console.log('assignments', assignments)
-  console.log('assignedSectionsState', assignedSectionsState)
-  // const { submitAssignments } = useUpdateAssignment({
-  //   fullStructure: structure,
-  //   assignedSections,
-  //   assignmentsFiltered,
-  // })
+  // console.log('assignments', assignments)
+  // console.log('assignedSectionsState', assignedSectionsState)
+  const { submitAssignments } = useUpdateAssignment({
+    fullStructure: structure,
+  })
   const getAssignmentOptions = useGetAssignmentOptions()
   const [isReassignment, setIsReassignment] = useState(false)
   const [assignmentError, setAssignmentError] = useState(false)
   const [unassignmentError, setUnassignmentError] = useState(false)
   const [showUnassignmentModal, setShowUnassignmentModal] = useState<ModalProps>({ open: false })
-  const [unassignSectionFromUser] = useUnassignReviewAssignmentMutation({
-    onCompleted: () => {
-      structure.reload()
-    },
-  })
   const [assignedSections, setAssignedSections] = assignedSectionsState
   const [originalAssignee, setOriginalAssignee] = useState<string>()
 
@@ -116,9 +108,12 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     const unassignment = assignments.find(
       (assignment) => assignment.reviewer.id === assignmentOptions.selected
     )
+    const sectionToUnassign: SectionAssignee = {
+      [sectionCode]: { previousAssignee: unassignment?.reviewer.id, newAssignee: undefined },
+    }
     if (!unassignment) return
     try {
-      await unassignSectionFromUser({ variables: { unassignmentId: unassignment.id } })
+      await submitAssignments(sectionToUnassign, [unassignment])
     } catch (e) {
       console.log(e)
       setUnassignmentError(true)
