@@ -2,16 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import {
-  ReviewAssignmentStatus,
-  ReviewStatus,
-  useUnassignReviewAssignmentMutation,
-} from '../../../utils/generated/graphql'
+import { useUnassignReviewAssignmentMutation } from '../../../utils/generated/graphql'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
 import Reassignment from './Reassignment'
 import AssigneeLabel from './AssigneeLabel'
+import useUpdateAssignment from '../../../utils/hooks/useUpdateAssignment'
 
 const NOT_ASSIGNED = 0
 
@@ -38,6 +35,14 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     message: strings.UNASSIGN_MESSAGE,
     option: strings.BUTTON_SUBMIT,
   }
+
+  console.log('assignments', assignments)
+  console.log('assignedSectionsState', assignedSectionsState)
+  // const { submitAssignments } = useUpdateAssignment({
+  //   fullStructure: structure,
+  //   assignedSections,
+  //   assignmentsFiltered,
+  // })
   const getAssignmentOptions = useGetAssignmentOptions()
   const [isReassignment, setIsReassignment] = useState(false)
   const [assignmentError, setAssignmentError] = useState(false)
