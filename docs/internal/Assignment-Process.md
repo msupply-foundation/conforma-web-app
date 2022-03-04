@@ -1,6 +1,6 @@
 # Assignment Process
 
-The logic of assigning a review spans between both web app and server — front end is only concerned with queries and mutations to review_assignment and review_question_assignment tables, whereas back end does most of the grunt work (through actions and triggers) and generates records in those tables based on user permissions and states of application and its review.
+The logic of assigning a review spans between both web app and server — front end is only concerned with queries and mutations to review_assignment table, whereas back end does most of the grunt work (through actions and triggers) and generates records in those tables based on user permissions and states of application and its review.
 
 ## Schema
 
@@ -23,12 +23,12 @@ Review assignment can have the following statuses
 
 - `Available` -> Can be assigned by assigner
 - `Assigned` -> indicates that the reviewer is able to create a review (or one already exists)
-  - At least one `review_question_assignment` was linked to review_assignment
+  - At least one section is included in field `assined_sections` on review_assignment
 
 To also determine if this assignment can be Self-assigned, 3 other fields come on the scene:
 
 - `is_self_assignable` -> Can be self assigned (if not locked - how we prevent other self-assigners after one is already assigned)
-- `is_locked` -> Can be used to either prevent self-assignment or to generate a Review with status = LOCKED when assignment status is ASSIGNED\*
+- `is_locked` -> Can be used to either prevent self-assignment or to generate a Review with status = LOCKED & assignment status is ASSIGNED\*
 
 Another possibility for assignment is using the flag:
 
@@ -84,9 +84,11 @@ What happens as a result of this mutation is:
 
 1. `review_assignment.trigger` is set to ON_REVIEW_SELF_ASSIGN.
 2. Changes `review_assignment.status` to **Assigned**.
-3. Sets assignerId of current user in the new assignment.
-4. Adds `review_question_assignment` (for each question of ALL sections) to `review_assignment`
-5. Other updates done on the server-side:
+3. Sets all `assigned_sections` on record
+
+- it means that all elements of type QUESTION in these sections are also assigned
+
+4. Other updates done on the server-side:
 
 - Update other `review_assignment` with `is_self_assignment` as **True** to have field `is_locked` to **True**. So other self-assignments for same application get locked.
 
@@ -97,7 +99,10 @@ A GraphQL mutation `updateReviewAssignment` is created on the front-end when the
 1. `review_assignment.trigger` is set to ON_REVIEW_ASSIGN.
 2. Changes status of `review_assignment` to **Assigned**.
 3. Sets assignerId of current user in the new assignment.
-4. Adds `review_question_assignment` (for each question on the section assigned) to `review_assignment`.
+4. Sets all `assigned_sections` on record
+
+- it means that all elements of type QUESTION in these sections are also assigned
+
 5. Other updates done on the server-side:
    - If an existing `review` was connected to this assignment will change the `review.status` from **Discontinued** to **Draft**.
    - Update other `review_assignment` with `is_self_assignment` as **True** to have field `is_locked` to **True**. So other self-assignments for same application get locked.
@@ -109,15 +114,26 @@ A GraphQL mutation `reassignReviewAssignment` runs on the front-end when one ass
 - selects **re-assign** in the drop down
 - selects the new reviewer in drop down for a section (or all sections).
 
-1. `review_assignment.trigger` for previous assignment is set to ON_REVIEW_UNASSIGN.
-2. `review_assignment.trigger` for new assignment is set to ON_REVIEW_REASSIGN.
-3. Changes status of previous `review_assignment` to **Available** and flag `is_locked` to **True**.
-4. Changes status of new `review_assignment` to **Assigned**.
-5. Sets assignerId of current user in the new assignment.
-6. Adds `review_question_assignment` (for each question on the section assigned) to `review_assignment`.
+1. If all sections were unassigned from previous assignemnt
+
+- Run the unassignment with `review_assignment.trigger` for previous assignment set to ON_REVIEW_UNASSIGN.
+- Set the status of previous `review_assignment` to **Available**.
+- Updates the assignerId?
+
+2. Else if some sections are still assigned to previous assignment
+
+- Just update the previous assignment `assigned_sections` but keep status as **Assigned**.
+
+3. Updates the new assignment
+
+- Set the `review_assignment.trigger` to ON_REVIEW_REASSIGN.
+- Changes status of new `review_assignment` to **Assigned**.
+- Sets assignerId of current user in the new assignment.
+- Sets `assigned_sections` on record - it means that all elements of type QUESTION in these sections are also assigned
+
 7. Other updates done on the server-side:
-   - If an existing `review` was connected to previous assignment will change the `review.status` from **Draft** to **Discontinued**.
-   - If an existing `review` was connected to new assignment will change the `review.status` from **Discontinued** to **Draft**.
+   - If an existing `review` was connected to previous assignment UNASSIGNED it will change the `review.status` from **Draft** to **Discontinued**.
+   - If an existing `review` was connected to new assignment REASSIGNED it will change the `review.status` from **Discontinued** to **Draft**.
 
 **Note**: No need to change other assignment flag `is_locked` since it has been assigned to reviewers already.
 
@@ -130,7 +146,8 @@ A GraphQL mutation `unassignReviewAssignment` runs on the front-end when one ass
 
 1. `review_assignment.trigger` is set to ON_REVIEW_UNASSIGN.
 2. Changes status of `review_assignment` to **Available** and flag `is_locked` to **False**.
-3. Other updates done on the server-side:
+3. Set `assigned_sections` to empty array
+4. Other updates done on the server-side:
    - If an existing `review` was connected to this assignment will change the `review.status` from **Draft** to **Discontinued**.
    - Update other `review_assignment` with `is_self_assignment` as **True** to have field `is_locked` to **False**. So other self-assignments for same application are unlocked.
 
