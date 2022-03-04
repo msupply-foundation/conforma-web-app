@@ -5,6 +5,11 @@ import { useReviewStructureState } from '../../../contexts/ReviewStructuresState
 import useUpdateReviewAssignment from '../../../utils/hooks/useUpdateReviewAssignment'
 import useReassignReviewAssignment from '../../../utils/hooks/useReassignReviewAssignment'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
+import {
+  ReviewAssignmentStatus,
+  useUpdateReviewAssignmentMutation,
+} from '../../../utils/generated/graphql'
+import { FetchResult } from '@apollo/client'
 
 interface AssignmentSubmitProps {
   fullStructure: FullStructure
@@ -23,81 +28,65 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   const { reviewStructuresState } = useReviewStructureState()
   const { assignSectionsToUser } = useUpdateReviewAssignment(fullStructure)
   const { reassignSections } = useReassignReviewAssignment(fullStructure)
+  const [updateReviewAssignment] = useUpdateReviewAssignmentMutation()
 
-  const submitAssignments = () => {
-    // Re-assignment - grouping sections that belong to same (new) assignment
-    let reassignmentGroupedSections: {
-      sectionCodes: string[]
-      unassignment: AssignmentDetails
-      reassignment: AssignmentDetails
-    }[] = []
-
-    const reassignedSections = Object.entries(assignedSections).filter(
-      ([_, { previousAssignee }]) => !!previousAssignee
+  const isChanging = (reviewerId: number, assignedSections: SectionAssignee) => {
+    return !!Object.values(assignedSections).find(
+      (section) => section.newAssignee === reviewerId || section.previousAssignee === reviewerId
     )
+  }
 
-    reassignedSections.forEach(([sectionCode, sectionAssignee]) => {
-      const { newAssignee, previousAssignee } = sectionAssignee
-      const found = reassignmentGroupedSections.find(
-        ({
-          reassignment: {
-            reviewer: { id },
-          },
-        }) => id === newAssignee
-      )
-      const unassignment = assignmentsFiltered.find(
-        ({ reviewer: { id } }) => id === previousAssignee
-      )
+  interface AssignmentPatch {
+    status: ReviewAssignmentStatus
+    assignedSections?: string[]
+  }
 
-      if (found) {
-        found.sectionCodes.push(sectionCode)
-        if (!!unassignment && found?.unassignment.id != unassignment.id)
-          console.log('Unassignment for more than one previous assignee - Failed')
-      } else {
-        const reassignment = assignmentsFiltered.find(({ reviewer: { id } }) => id === newAssignee)
-        if (reassignment && unassignment)
-          reassignmentGroupedSections.push({
-            sectionCodes: [sectionCode],
-            reassignment,
-            unassignment,
+  const createAssignmentPatch = (
+    assignment: AssignmentDetails,
+    assignedSections: SectionAssignee
+  ) => {
+    const reviewerId = assignment.reviewer.id
+    const assignedSectionsCodes = new Set(assignment.assignedSections)
+    const removedSections = Object.entries(assignedSections)
+      .filter(([_, { previousAssignee }]) => previousAssignee === reviewerId)
+      .map((section) => section[0])
+    const addedSections = Object.entries(assignedSections)
+      .filter(([_, { newAssignee }]) => newAssignee === reviewerId)
+      .map((section) => section[0])
+
+    removedSections.forEach((code) => assignedSectionsCodes.delete(code))
+    addedSections.forEach((code) => assignedSectionsCodes.add(code))
+
+    const patch: AssignmentPatch = {
+      status:
+        assignedSectionsCodes.size === 0
+          ? ReviewAssignmentStatus.Available
+          : ReviewAssignmentStatus.Assigned,
+    }
+    if (assignedSectionsCodes.size > 0) patch.assignedSections = Array.from(assignedSectionsCodes)
+    return patch
+  }
+
+  const submitAssignments = async () => {
+    const results: Promise<any>[] = []
+    // Deduce which review assignments will change and create patches
+    assignmentsFiltered.forEach((assignment) => {
+      if (isChanging(assignment.reviewer.id, assignedSections)) {
+        const assignmentPatch = createAssignmentPatch(assignment, assignedSections)
+        results.push(
+          updateReviewAssignment({
+            variables: {
+              assignmentId: assignment.id,
+              assignmentPatch,
+            },
           })
+        )
       }
     })
-    reassignmentGroupedSections.forEach(({ sectionCodes, reassignment, unassignment }) => {
-      reassignSections({ sectionCodes, reassignment, unassignment })
-    })
+    await Promise.all(results)
+    fullStructure.reload()
 
-    // First assignment - grouping sections that belong to same assignment
-    let assignmentGroupedSections: {
-      sectionCodes: string[]
-      assignment: AssignmentDetails
-    }[] = []
-
-    const firstAssignedSections = Object.entries(assignedSections).filter(
-      ([_, { previousAssignee }]) => previousAssignee === undefined
-    )
-
-    firstAssignedSections.forEach(([sectionCode, { newAssignee }]) => {
-      const found = assignmentGroupedSections.find(
-        ({
-          assignment: {
-            reviewer: { id },
-          },
-        }) => id === newAssignee
-      )
-      if (found) found.sectionCodes.push(sectionCode)
-      else {
-        const assignment = assignmentsFiltered.find(({ reviewer: { id } }) => id === newAssignee)
-        if (assignment) assignmentGroupedSections.push({ sectionCodes: [sectionCode], assignment })
-      }
-    })
-    assignmentGroupedSections.forEach(({ sectionCodes, assignment }) => {
-      assignSectionsToUser({
-        sectionCodes,
-        assignment,
-        reviewStructure: reviewStructuresState[assignment.id],
-      })
-    })
+    if (results.some((result) => result?.errors)) throw new Error('Error updating assignments')
   }
 
   return (
