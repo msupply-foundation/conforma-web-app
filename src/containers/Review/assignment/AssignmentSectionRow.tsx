@@ -35,8 +35,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     option: strings.BUTTON_SUBMIT,
   }
 
-  // console.log('assignments', assignments)
-  // console.log('assignedSectionsState', assignedSectionsState)
   const { submitAssignments } = useUpdateAssignment({
     fullStructure: structure,
   })

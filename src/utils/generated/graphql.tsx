@@ -35476,31 +35476,6 @@ export type DeleteNoteMutation = (
   )> }
 );
 
-export type ReassignReviewAssignmentMutationVariables = Exact<{
-  unassignmentId: Scalars['Int'];
-  reassignmentId: Scalars['Int'];
-  reassignmentPatch: ReviewAssignmentPatch;
-  unassignmentPatch: ReviewAssignmentPatch;
-}>;
-
-
-export type ReassignReviewAssignmentMutation = (
-  { __typename?: 'Mutation' }
-  & { reassignmentUpdate?: Maybe<(
-    { __typename?: 'UpdateReviewAssignmentPayload' }
-    & { reviewAssignment?: Maybe<(
-      { __typename?: 'ReviewAssignment' }
-      & ReviewAssignmentFragment
-    )> }
-  )>, unassignmentUpdate?: Maybe<(
-    { __typename?: 'UpdateReviewAssignmentPayload' }
-    & { reviewAssignment?: Maybe<(
-      { __typename?: 'ReviewAssignment' }
-      & ReviewAssignmentFragment
-    )> }
-  )> }
-);
-
 export type RestartApplicationMutationVariables = Exact<{
   serial: Scalars['String'];
   applicationPatch: ApplicationPatch;
@@ -35657,22 +35632,6 @@ export type UpdateTemplateStageMutation = (
           & Pick<TemplateStageReviewLevel, 'description' | 'id' | 'name' | 'number'>
         )>> }
       ) }
-    )> }
-  )> }
-);
-
-export type UnassignReviewAssignmentMutationVariables = Exact<{
-  unassignmentId: Scalars['Int'];
-}>;
-
-
-export type UnassignReviewAssignmentMutation = (
-  { __typename?: 'Mutation' }
-  & { updateReviewAssignment?: Maybe<(
-    { __typename?: 'UpdateReviewAssignmentPayload' }
-    & { reviewAssignment?: Maybe<(
-      { __typename?: 'ReviewAssignment' }
-      & ReviewAssignmentFragment
     )> }
   )> }
 );
@@ -37035,48 +36994,6 @@ export function useDeleteNoteMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteNoteMutationHookResult = ReturnType<typeof useDeleteNoteMutation>;
 export type DeleteNoteMutationResult = Apollo.MutationResult<DeleteNoteMutation>;
 export type DeleteNoteMutationOptions = Apollo.BaseMutationOptions<DeleteNoteMutation, DeleteNoteMutationVariables>;
-export const ReassignReviewAssignmentDocument = gql`
-    mutation reassignReviewAssignment($unassignmentId: Int!, $reassignmentId: Int!, $reassignmentPatch: ReviewAssignmentPatch!, $unassignmentPatch: ReviewAssignmentPatch!) {
-  reassignmentUpdate: updateReviewAssignment(input: {id: $reassignmentId, patch: $reassignmentPatch}) {
-    reviewAssignment {
-      ...ReviewAssignment
-    }
-  }
-  unassignmentUpdate: updateReviewAssignment(input: {id: $unassignmentId, patch: $unassignmentPatch}) {
-    reviewAssignment {
-      ...ReviewAssignment
-    }
-  }
-}
-    ${ReviewAssignmentFragmentDoc}`;
-export type ReassignReviewAssignmentMutationFn = Apollo.MutationFunction<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>;
-
-/**
- * __useReassignReviewAssignmentMutation__
- *
- * To run a mutation, you first call `useReassignReviewAssignmentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useReassignReviewAssignmentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [reassignReviewAssignmentMutation, { data, loading, error }] = useReassignReviewAssignmentMutation({
- *   variables: {
- *      unassignmentId: // value for 'unassignmentId'
- *      reassignmentId: // value for 'reassignmentId'
- *      reassignmentPatch: // value for 'reassignmentPatch'
- *      unassignmentPatch: // value for 'unassignmentPatch'
- *   },
- * });
- */
-export function useReassignReviewAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>) {
-        return Apollo.useMutation<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>(ReassignReviewAssignmentDocument, baseOptions);
-      }
-export type ReassignReviewAssignmentMutationHookResult = ReturnType<typeof useReassignReviewAssignmentMutation>;
-export type ReassignReviewAssignmentMutationResult = Apollo.MutationResult<ReassignReviewAssignmentMutation>;
-export type ReassignReviewAssignmentMutationOptions = Apollo.BaseMutationOptions<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>;
 export const RestartApplicationDocument = gql`
     mutation restartApplication($serial: String!, $applicationPatch: ApplicationPatch!) {
   updateApplicationBySerial(input: {serial: $serial, patch: $applicationPatch}) {
@@ -37371,40 +37288,6 @@ export function useUpdateTemplateStageMutation(baseOptions?: Apollo.MutationHook
 export type UpdateTemplateStageMutationHookResult = ReturnType<typeof useUpdateTemplateStageMutation>;
 export type UpdateTemplateStageMutationResult = Apollo.MutationResult<UpdateTemplateStageMutation>;
 export type UpdateTemplateStageMutationOptions = Apollo.BaseMutationOptions<UpdateTemplateStageMutation, UpdateTemplateStageMutationVariables>;
-export const UnassignReviewAssignmentDocument = gql`
-    mutation unassignReviewAssignment($unassignmentId: Int!) {
-  updateReviewAssignment(input: {id: $unassignmentId, patch: {status: AVAILABLE, trigger: ON_REVIEW_UNASSIGN}}) {
-    reviewAssignment {
-      ...ReviewAssignment
-    }
-  }
-}
-    ${ReviewAssignmentFragmentDoc}`;
-export type UnassignReviewAssignmentMutationFn = Apollo.MutationFunction<UnassignReviewAssignmentMutation, UnassignReviewAssignmentMutationVariables>;
-
-/**
- * __useUnassignReviewAssignmentMutation__
- *
- * To run a mutation, you first call `useUnassignReviewAssignmentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnassignReviewAssignmentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unassignReviewAssignmentMutation, { data, loading, error }] = useUnassignReviewAssignmentMutation({
- *   variables: {
- *      unassignmentId: // value for 'unassignmentId'
- *   },
- * });
- */
-export function useUnassignReviewAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<UnassignReviewAssignmentMutation, UnassignReviewAssignmentMutationVariables>) {
-        return Apollo.useMutation<UnassignReviewAssignmentMutation, UnassignReviewAssignmentMutationVariables>(UnassignReviewAssignmentDocument, baseOptions);
-      }
-export type UnassignReviewAssignmentMutationHookResult = ReturnType<typeof useUnassignReviewAssignmentMutation>;
-export type UnassignReviewAssignmentMutationResult = Apollo.MutationResult<UnassignReviewAssignmentMutation>;
-export type UnassignReviewAssignmentMutationOptions = Apollo.BaseMutationOptions<UnassignReviewAssignmentMutation, UnassignReviewAssignmentMutationVariables>;
 export const UpdateApplicationDocument = gql`
     mutation updateApplication($serial: String!, $applicationTrigger: Trigger = ON_APPLICATION_SUBMIT, $responses: [ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate!]) {
   updateApplicationBySerial(input: {serial: $serial, patch: {trigger: $applicationTrigger, applicationResponsesUsingId: {updateById: $responses}}}) {
