@@ -1,8 +1,6 @@
 import React from 'react'
-import { Dropdown, Message } from 'semantic-ui-react'
-import { useLanguageProvider } from '../../../contexts/Localisation'
+import { Dropdown } from 'semantic-ui-react'
 interface AssigneeProps {
-  assignmentError: boolean
   assignmentOptions: {
     isCompleted: boolean
     selected: number
@@ -16,16 +14,9 @@ interface AssigneeProps {
   onChangeMethod: (selected: number) => void
 }
 
-const AssigneeDropdown: React.FC<AssigneeProps> = ({
-  assignmentError,
-  assignmentOptions,
-  onChangeMethod,
-}) => {
-  const { strings } = useLanguageProvider()
-
+const AssigneeDropdown: React.FC<AssigneeProps> = ({ assignmentOptions, onChangeMethod }) => {
   const { isCompleted, options, selected } = assignmentOptions
 
-  if (assignmentError) return <Message error title={strings.ERROR_GENERIC} />
   return (
     <Dropdown
       className="reviewer-dropdown"

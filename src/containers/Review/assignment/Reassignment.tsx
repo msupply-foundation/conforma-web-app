@@ -58,7 +58,6 @@ const Reassignment: React.FC<ReassignmentProps> = ({
     <Grid.Column className="centered-flex-box-row">
       <Label className="simple-label" content={strings.LABEL_REASSIGN_TO} />
       <AssigneeDropdown
-        assignmentError={reassignmentError}
         assignmentOptions={assignmentOptions}
         sectionCode={sectionCode}
         onChangeMethod={(selected: number) => onReassignment(selected)}

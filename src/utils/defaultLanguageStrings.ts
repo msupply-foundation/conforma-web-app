@@ -46,6 +46,7 @@ export default {
   ASSIGNED_TO: 'assigned to',
   ASSIGNMENT_NOT_ASSIGNED: 'Not assigned',
   ASSIGNMENT_YOURSELF: 'Yourself',
+  ASSIGNMENT_ERROR: 'There was a problem updating the assignments',
   COLUMN_SERIAL: 'Serial',
   COLUMN_LAST_ACTIVE_DATE: 'Last Active',
   COLUMN_DEADLINE_DATE: 'Deadline',

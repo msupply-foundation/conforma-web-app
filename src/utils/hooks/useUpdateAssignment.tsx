@@ -1,8 +1,11 @@
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../utils/types'
 import {
   ReviewAssignmentStatus,
+  UpdateReviewAssignmentMutation,
   useUpdateReviewAssignmentMutation,
 } from '../../utils/generated/graphql'
+import { FetchResult } from '@apollo/client'
+import useToast from '../../utils/hooks/useToast'
 
 const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }) => {
   const [updateReviewAssignment] = useUpdateReviewAssignmentMutation()
@@ -11,24 +14,29 @@ const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }
     assignedSections: SectionAssignee,
     assignmentsFiltered: AssignmentDetails[]
   ) => {
-    const results: Promise<any>[] = []
-    // Deduce which review assignments will change and create patches, then
+    const results: Promise<
+      FetchResult<UpdateReviewAssignmentMutation, Record<string, any>, Record<string, any>>
+    >[] = []
+    // Deduce which review assignments need to change and create patches, then
     // mutate one by one
-    assignmentsFiltered.forEach((assignment) => {
-      if (isChanging(assignment.reviewer.id, assignedSections)) {
-        const assignmentPatch = createAssignmentPatch(assignment, assignedSections)
-        results.push(
-          updateReviewAssignment({
-            variables: {
-              assignmentId: assignment.id,
-              assignmentPatch,
-            },
-          })
-        )
-      }
-    })
-    await Promise.all(results)
-    // Check for Errors?
+    try {
+      assignmentsFiltered.forEach((assignment) => {
+        if (isChanging(assignment.reviewer.id, assignedSections)) {
+          const assignmentPatch = createAssignmentPatch(assignment, assignedSections)
+          results.push(
+            updateReviewAssignment({
+              variables: {
+                assignmentId: assignment.id,
+                assignmentPatch,
+              },
+            })
+          )
+        }
+      })
+      await Promise.all(results)
+    } catch (err) {
+      throw new Error('Assignment update error')
+    }
     fullStructure.reload()
   }
 
