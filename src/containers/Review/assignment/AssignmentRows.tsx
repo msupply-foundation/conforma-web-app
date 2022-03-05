@@ -17,6 +17,7 @@ interface AssignmentRowsProps {
   assignedSections: SectionAssignee
   setAssignedSections: React.Dispatch<SetStateAction<SectionAssignee>>
   setEnableSubmit: React.Dispatch<SetStateAction<boolean>>
+  setAssignmentError: React.Dispatch<SetStateAction<string | null>>
 }
 const AssignmentRows: React.FC<AssignmentRowsProps> = ({
   fullStructure,
@@ -25,6 +26,7 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
   assignedSections,
   setAssignedSections,
   setEnableSubmit,
+  setAssignmentError,
 }) => {
   const { reviewStructuresState } = useReviewStructureState()
 
@@ -42,6 +44,7 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
                 structure={fullStructure}
                 assignedSectionsState={[assignedSections, setAssignedSections]}
                 setEnableSubmit={setEnableSubmit}
+                setAssignmentError={setAssignmentError}
               />
               {(assignments as AssignmentDetails[]).map((assignment) =>
                 reviewStructuresState[assignment.id] ? (

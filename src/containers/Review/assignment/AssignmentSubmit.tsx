@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { SetStateAction } from 'react'
 import { Button } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
@@ -9,6 +9,7 @@ interface AssignmentSubmitProps {
   assignedSections: SectionAssignee
   assignmentsFiltered: AssignmentDetails[]
   enableSubmit: boolean
+  setAssignmentError: React.Dispatch<SetStateAction<string | null>>
 }
 
 const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
@@ -16,17 +17,19 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   assignedSections,
   assignmentsFiltered,
   enableSubmit,
+  setAssignmentError,
 }) => {
   const { strings } = useLanguageProvider()
   const { submitAssignments } = useUpdateAssignment({
     fullStructure,
   })
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
-      submitAssignments(assignedSections, assignmentsFiltered)
+      await submitAssignments(assignedSections, assignmentsFiltered)
     } catch (err) {
-      //
+      console.log(err)
+      setAssignmentError(strings.ASSIGNMENT_ERROR_GENERAL)
     }
   }
 

@@ -5,15 +5,16 @@ import {
   useUpdateReviewAssignmentMutation,
 } from '../../utils/generated/graphql'
 import { FetchResult } from '@apollo/client'
-import useToast from '../../utils/hooks/useToast'
 
 const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }) => {
   const [updateReviewAssignment] = useUpdateReviewAssignmentMutation()
 
   const submitAssignments = async (
-    assignedSections: SectionAssignee,
+    assignedSections: SectionAssignee | null,
     assignmentsFiltered: AssignmentDetails[]
   ) => {
+    // NOTE: If "assignedSections ==  null", then ALL sections will be
+    // UNASSIGNED from the review assignments in assignmentsFiltered
     const results: Promise<
       FetchResult<UpdateReviewAssignmentMutation, Record<string, any>, Record<string, any>>
     >[] = []
@@ -43,10 +44,12 @@ const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }
   return { submitAssignments }
 }
 
-const isChanging = (reviewerId: number, assignedSections: SectionAssignee) => {
-  return !!Object.values(assignedSections).find(
-    (section) => section.newAssignee === reviewerId || section.previousAssignee === reviewerId
-  )
+const isChanging = (reviewerId: number, assignedSections: SectionAssignee | null) => {
+  if (!assignedSections) return true
+  else
+    return !!Object.values(assignedSections).find(
+      (section) => section.newAssignee === reviewerId || section.previousAssignee === reviewerId
+    )
 }
 interface AssignmentPatch {
   status: ReviewAssignmentStatus
@@ -55,8 +58,9 @@ interface AssignmentPatch {
 
 const createAssignmentPatch = (
   assignment: AssignmentDetails,
-  assignedSections: SectionAssignee
+  assignedSections: SectionAssignee | null
 ) => {
+  if (!assignedSections) return { status: ReviewAssignmentStatus.Available }
   const reviewerId = assignment.reviewer.id
   const assignedSectionsCodes = new Set(assignment.assignedSections)
   const removedSections = Object.entries(assignedSections)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, SetStateAction } from 'react'
 import { Grid, Label, ModalProps } from 'semantic-ui-react'
 import ModalConfirmation from '../../../components/Main/ModalConfirmation'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -17,7 +17,8 @@ type AssignmentSectionRowProps = {
   reviewLevel: number
   structure: FullStructure
   assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
-  setEnableSubmit: React.Dispatch<React.SetStateAction<boolean>>
+  setEnableSubmit: React.Dispatch<SetStateAction<boolean>>
+  setAssignmentError: React.Dispatch<SetStateAction<string | null>>
 }
 // Component renders options calculated in getAssignmentOptions, and will execute assignment mutation on drop down change
 const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
@@ -27,6 +28,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   structure,
   assignedSectionsState,
   setEnableSubmit,
+  setAssignmentError,
 }) => {
   const { strings } = useLanguageProvider()
   const UNASSIGN_MESSAGE = {
@@ -40,8 +42,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   })
   const getAssignmentOptions = useGetAssignmentOptions()
   const [isReassignment, setIsReassignment] = useState(false)
-  const [assignmentError, setAssignmentError] = useState(false)
-  const [unassignmentError, setUnassignmentError] = useState(false)
   const [showUnassignmentModal, setShowUnassignmentModal] = useState<ModalProps>({ open: false })
   const [assignedSections, setAssignedSections] = assignedSectionsState
   const [originalAssignee, setOriginalAssignee] = useState<string>()
@@ -106,15 +106,22 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     const unassignment = assignments.find(
       (assignment) => assignment.reviewer.id === assignmentOptions.selected
     )
-    const sectionToUnassign: SectionAssignee = {
-      [sectionCode]: { previousAssignee: unassignment?.reviewer.id, newAssignee: undefined },
-    }
+    const sectionToUnassign = null
+    // NOTE: We currently unassign ALL sections from a reviewer at once. If we
+    // want to change this to only unassign the selected section, then enable
+    // the commented-out lines below instead of the line above. Ideally this
+    // would be user-selectable
+
+    // const sectionToUnassign: SectionAssignee = {
+    //   [sectionCode]: { previousAssignee: unassignment?.reviewer.id, newAssignee: undefined },
+    // }
+    setShowUnassignmentModal({ open: false })
     if (!unassignment) return
     try {
       await submitAssignments(sectionToUnassign, [unassignment])
     } catch (e) {
       console.log(e)
-      setUnassignmentError(true)
+      setAssignmentError(strings.ASSIGNMENT_ERROR_UNASSIGN)
     }
   }
 
@@ -149,7 +156,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
             <>
               <Label className="simple-label" content={strings.LABEL_REVIEWER} />
               <AssigneeDropdown
-                assignmentError={assignmentError || unassignmentError}
                 assignmentOptions={assignmentOptions}
                 sectionCode={sectionCode}
                 onChangeMethod={(selected: number) => onAssigneeSelection(selected)}
