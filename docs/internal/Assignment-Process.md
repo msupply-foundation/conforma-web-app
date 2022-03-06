@@ -23,7 +23,7 @@ Review assignment can have the following statuses
 
 - `Available` -> Can be assigned by assigner
 - `Assigned` -> indicates that the reviewer is able to create a review (or one already exists)
-  - At least one section is included in field `assined_sections` on review_assignment
+  - At least one section is included in field `assigned_sections` on review_assignment
 
 To also determine if this assignment can be Self-assigned, 3 other fields come on the scene:
 

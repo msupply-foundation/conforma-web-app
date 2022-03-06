@@ -60,17 +60,17 @@ The GraphQL query (`getApplication` and `getApplicationList`) simply gets applic
 
 ### Review home page (or list)
 
-On server side we calculate the count of each of the following fields (used to define each available action on the front-end) based on status of `review_assignment` and `review`.
-The GraphQL queries (`getReviewInfo` and `getApplicationList`) will fetch ALL `review_assignment` related to the current application `serial`, for all reviewer `user` of the selected `stage` and `level` (or all levels if that's selected).s
-
-On most recent changes the **Assignment tab** was changed to only display one level at each time - and only for the current stage. That was required for simplification of the results displayed and to facilitate on the assignment/re-assignment process. The **Submit** button was also included to validate the assignment/re-assignment.
+The **Assignment tab** shows review assignments for the current stage, with a selector to choose between the current review level, or all levels for this stage.
 
 Each section displays:
 
-- 1 row for the level selected (or one per level when "All levels" is selected)
-- 1 row for the review of the assigned (or one per level assigned when "All levels" is selected)
+- 1 row regarding the assignment the level selected (or one per level when "All levels" is selected)
+- 1 row for the associated review (or one row per level assigned when "All levels" is selected)
 
-For each `review_assignment` with status ASSIGNED and with `review` status SUBMITTED there is the default action to `View`.
+On server side we calculate the count of each of the following fields (used to define each available action on the front-end) based on status of `review_assignment` and `review`.
+The GraphQL queries (`getReviewInfo` and `getApplicationList`) will fetch ALL `review_assignment` related to the current application `serial`, for all reviewers `user` of the selected `stage` and `level` (or all levels if this option is selected).
+
+For each `review_assignment` with status ASSIGNED and with review status SUBMITTED, there is the default action to `View`.
 
 Otherwise if `review_assignment` and `review` is associated to the current user, will generate one of the following actions and display in each of the assigned sections:
 
