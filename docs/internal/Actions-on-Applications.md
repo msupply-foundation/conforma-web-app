@@ -42,7 +42,7 @@ The options are per section of the application, but will show on the application
 - `Assign` -> When there is still a section without some reviewer assigned
 - `Re-assign` -> When there is a reviewer already assigned to each section
 
-**Note**: When re-assigning section(s) if the review has been started the `review_responses` are kept. So for example, if the re-assignment happens to set it back to the original reviewer their review_reponses previously added would still be valid.
+**Note**: When re-assigning section(s), any `review_responses` that have already been created (due to the reviewer starting their review) are kept. This would mean that if the original reviewer was re-assigned back at some point, they could continue the same partially-completed review.
 
 ## Generating and display of actions
 
