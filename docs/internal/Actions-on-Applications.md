@@ -39,8 +39,8 @@ Actions more specific to the Consolidator user are available after there is a re
 
 The options are per section of the application, but will show on the application list as the top most possible one (combining the actions available for all sections in the application):
 
-- `Assign` -> When no reviewer is assigned yet (to all sections)
-- `Re-assign` -> When reviewer is to each section of the application
+- `Assign` -> When there is still a section without some reviewer assigned
+- `Re-assign` -> When there is a reviewer already assigned to each section
 
 **Note**: When re-assigning section(s) if the review has been started the `review_responses` are kept. So for example, if the re-assignment happens to set it back to the original reviewer their review_reponses previously added would still be valid.
 
