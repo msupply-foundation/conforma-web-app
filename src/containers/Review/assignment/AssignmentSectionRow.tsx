@@ -73,7 +73,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
 
   const onAssigneeSelection = async (assignee: number) => {
     // When review isLastLevel then all sections are assigned to same user (similar to consolidation)
-    if (isLastLevel(assignee)) {
+    if (isLastLevel()) {
       let allSectionsToUserId: SectionAssignee = {}
       Object.keys(assignedSections).forEach(
         (sectionCode) => (allSectionsToUserId[sectionCode] = { newAssignee: assignee as number })
@@ -86,11 +86,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
       })
   }
 
-  const isLastLevel = (selected: number): boolean => {
-    const assignment = assignments.find((assignment) => assignment.reviewer.id === selected)
-    if (!assignment) return false
-    return assignment.isLastLevel
-  }
+  const isLastLevel = (): boolean => assignments.length > 0 && assignments[0].isLastLevel
 
   const setIsUnassignment = () => {
     if (!showUnassignmentModal.open)
