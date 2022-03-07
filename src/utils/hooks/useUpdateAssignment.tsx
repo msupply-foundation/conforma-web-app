@@ -5,9 +5,13 @@ import {
   useUpdateReviewAssignmentMutation,
 } from '../../utils/generated/graphql'
 import { FetchResult } from '@apollo/client'
+import { useUserState } from '../../contexts/UserState'
 
 const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }) => {
   const [updateReviewAssignment] = useUpdateReviewAssignmentMutation()
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const submitAssignments = async (
     assignedSections: SectionAssignee | null,
@@ -23,7 +27,11 @@ const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }
     try {
       assignmentsFiltered.forEach((assignment) => {
         if (isChanging(assignment.reviewer.id, assignedSections)) {
-          const assignmentPatch = createAssignmentPatch(assignment, assignedSections)
+          const assignmentPatch = createAssignmentPatch(
+            assignment,
+            assignedSections,
+            currentUser?.userId as number
+          )
           results.push(
             updateReviewAssignment({
               variables: {
@@ -54,13 +62,15 @@ const isChanging = (reviewerId: number, assignedSections: SectionAssignee | null
 interface AssignmentPatch {
   status: ReviewAssignmentStatus
   assignedSections?: string[]
+  assignerId: number
 }
 
 const createAssignmentPatch = (
   assignment: AssignmentDetails,
-  assignedSections: SectionAssignee | null
-) => {
-  if (!assignedSections) return { status: ReviewAssignmentStatus.Available }
+  assignedSections: SectionAssignee | null,
+  assignerId: number
+): AssignmentPatch => {
+  if (!assignedSections) return { status: ReviewAssignmentStatus.Available, assignerId }
   const reviewerId = assignment.reviewer.id
   const assignedSectionsCodes = new Set(assignment.assignedSections)
   const removedSections = Object.entries(assignedSections)
@@ -78,6 +88,7 @@ const createAssignmentPatch = (
       assignedSectionsCodes.size === 0
         ? ReviewAssignmentStatus.Available
         : ReviewAssignmentStatus.Assigned,
+    assignerId,
   }
   if (assignedSectionsCodes.size > 0) patch.assignedSections = Array.from(assignedSectionsCodes)
   return patch

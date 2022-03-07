@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Container, Label, Message } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
 import Assignment from './Assignment'

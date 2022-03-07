@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Label, Grid } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentDetails, PageElement, SectionAssignee } from '../../../utils/types'
+import { AssignmentDetails, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
 
