@@ -22,7 +22,6 @@ const Reassignment: React.FC<ReassignmentProps> = ({
 }) => {
   const { strings } = useLanguageProvider()
   const getAssignmentOptions = useGetAssignmentOptions()
-  const [reassignmentError, setReassignmentError] = useState(false)
   const [assignedSections, setAssignedSections] = assignedSectionsState
   const assignmentOptions = getAssignmentOptions({
     assignments,

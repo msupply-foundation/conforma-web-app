@@ -153,14 +153,16 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
               setIsUnassignment={setIsUnassignment}
             />
           ) : (
-            <>
-              <Label className="simple-label" content={strings.LABEL_REVIEWER} />
-              <AssigneeDropdown
-                assignmentOptions={assignmentOptions}
-                sectionCode={sectionCode}
-                onChangeMethod={(selected: number) => onAssigneeSelection(selected)}
-              />
-            </>
+            assignmentOptions.options.length > 1 && (
+              <>
+                <Label className="simple-label" content={strings.LABEL_REVIEWER} />
+                <AssigneeDropdown
+                  assignmentOptions={assignmentOptions}
+                  sectionCode={sectionCode}
+                  onChangeMethod={(selected: number) => onAssigneeSelection(selected)}
+                />
+              </>
+            )
           )}
         </Grid.Column>
       </Grid.Row>
