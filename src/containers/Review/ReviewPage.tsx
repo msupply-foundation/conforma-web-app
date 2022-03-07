@@ -274,7 +274,6 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   page,
 }) => {
   const { strings } = useLanguageProvider()
-  // const [updateReviewResponse] = useUpdateReviewResponseMutation()
   const updateReviewResponse = useUpdateReviewResponse()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
