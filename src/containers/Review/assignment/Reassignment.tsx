@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Label, Grid } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentDetails, PageElement, SectionAssignee } from '../../../utils/types'
+import { AssignmentDetails, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
 
@@ -22,7 +22,6 @@ const Reassignment: React.FC<ReassignmentProps> = ({
 }) => {
   const { strings } = useLanguageProvider()
   const getAssignmentOptions = useGetAssignmentOptions()
-  const [reassignmentError, setReassignmentError] = useState(false)
   const [assignedSections, setAssignedSections] = assignedSectionsState
   const assignmentOptions = getAssignmentOptions({
     assignments,
@@ -58,7 +57,6 @@ const Reassignment: React.FC<ReassignmentProps> = ({
     <Grid.Column className="centered-flex-box-row">
       <Label className="simple-label" content={strings.LABEL_REASSIGN_TO} />
       <AssigneeDropdown
-        assignmentError={reassignmentError}
         assignmentOptions={assignmentOptions}
         sectionCode={sectionCode}
         onChangeMethod={(selected: number) => onReassignment(selected)}

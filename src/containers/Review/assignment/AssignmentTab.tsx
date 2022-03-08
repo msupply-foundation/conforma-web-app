@@ -37,6 +37,7 @@ const AssignmentTab: React.FC<{
       {}
     )
   )
+  const [assignmentError, setAssignmentError] = useState<string | null>(null)
 
   const { error, loading, assignments } = useGetReviewInfo({
     applicationId: fullStructure.info.id,
@@ -93,6 +94,15 @@ const AssignmentTab: React.FC<{
   return (
     <ReviewStateProvider fullApplicationStructure={fullStructure} assignments={assignmentsFiltered}>
       <Container id="assignment-tab">
+        {assignmentError && (
+          <Message
+            icon="warning"
+            size="small"
+            error
+            header={strings.ASSIGNMENT_ERROR_TITLE}
+            content={assignmentError}
+          />
+        )}
         <div className="flex-row-space-between-center" id="review-filters-container">
           <ReviewLevel
             filters={filters}
@@ -121,12 +131,14 @@ const AssignmentTab: React.FC<{
           assignedSections={assignedSections}
           setAssignedSections={setAssignedSections}
           setEnableSubmit={setEnableSubmit}
+          setAssignmentError={setAssignmentError}
         />
         <AssignmentSubmit
           fullStructure={fullStructure}
           assignedSections={assignedSections}
           assignmentsFiltered={assignmentsFiltered}
           enableSubmit={enableSubmit}
+          setAssignmentError={setAssignmentError}
         />
       </Container>
     </ReviewStateProvider>
