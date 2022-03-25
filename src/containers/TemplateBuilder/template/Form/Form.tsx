@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Loading } from '../../../../components'
 
 import Elements from './Elements'
+import { useFormStructureState } from './FormWrapper'
 
 import Pages from './Pages'
 import Sections from './Sections'
@@ -22,7 +23,7 @@ const contextNotDefined = () => {
 }
 const defaultFormState: FormState = {
   selectedSectionId: -1,
-  selectedPageNumber: -1,
+  selectedPageNumber: 1,
   setSelectedSectionId: contextNotDefined,
   setSelectedPageNumber: contextNotDefined,
   unselect: contextNotDefined,
@@ -30,11 +31,17 @@ const defaultFormState: FormState = {
 const FormContext = createContext<FormState>(defaultFormState)
 
 const Form: React.FC = () => {
+  const { moveStructure } = useFormStructureState()
   const [state, setState] = useState<FormState>(defaultFormState)
 
   useEffect(() => {
     setState({
-      ...defaultFormState,
+      // Select first section on refresh if none is loaded
+      selectedSectionId:
+        Object.values(moveStructure.sections).find(
+          ({ index }) => index === moveStructure.firstSectionIndex
+        )?.id ?? -1,
+      selectedPageNumber: 1,
       setSelectedPageNumber: (selectedPageNumber) =>
         setState((state) => ({ ...state, selectedPageNumber })),
       setSelectedSectionId: (selectedSectionId) =>
@@ -48,9 +55,11 @@ const Form: React.FC = () => {
 
   return (
     <FormContext.Provider value={state}>
-      <Sections />
-      <Pages />
-      <Elements />
+      <div className="flex-column-start-stretch">
+        <Sections />
+        <Pages />
+        <Elements />
+      </div>
     </FormContext.Provider>
   )
 }

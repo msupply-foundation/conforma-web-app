@@ -105,7 +105,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 )}
               </div>
 
-              {element.helpText && (
+              {element.helpText && element.isVisible && (
                 <div className="help-tips hide-on-mobile">
                   <div className="help-tips-content">
                     <Markdown text={element.helpText} />

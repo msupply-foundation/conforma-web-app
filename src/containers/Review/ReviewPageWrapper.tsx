@@ -2,36 +2,42 @@ import React from 'react'
 import { Route, Switch } from 'react-router'
 import { Container, Message } from 'semantic-ui-react'
 import { Loading, NoMatch, ReviewContainer } from '../../components'
-import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import { AssignmentDetails, FullStructure } from '../../utils/types'
+import { FullStructure } from '../../utils/types'
 import ReviewPage from './ReviewPage'
 import { getPreviousStageAssignment } from '../../utils/helpers/assignment/getPreviousStageAssignment'
+import useGetReviewInfo from '../../utils/hooks/useGetReviewInfo'
+import { useUserState } from '../../contexts/UserState'
 
 const ReviewPageWrapper: React.FC<{
   structure: FullStructure
-  reviewAssignments: AssignmentDetails[]
-}> = ({ structure, reviewAssignments }) => {
+}> = ({ structure: fullStructure }) => {
   const { strings } = useLanguageProvider()
   const {
     query: { reviewId },
     match: { path },
   } = useRouter()
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
-  // Get application structure with evaluated properties (i.e visibility)
-  const { error, fullStructure: fullApplicationStructure } = useGetApplicationStructure({
-    structure,
-    firstRunValidation: false,
-    shouldCalculateProgress: false,
-    shouldGetDraftResponses: false,
+  const {
+    error,
+    loading,
+    assignments: reviewAssignments,
+  } = useGetReviewInfo({
+    applicationId: fullStructure.info.id,
+    serial: fullStructure.info.serial,
+    userId: currentUser?.userId as number,
   })
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (loading || !fullStructure) return <Loading />
 
-  if (!fullApplicationStructure) return <Loading />
+  if (!reviewAssignments) return <NoMatch />
 
-  const { info } = fullApplicationStructure
+  const { info } = fullStructure
 
   // Find the review id used in URL in reviewAssignments
   const reviewAssignment = reviewAssignments.find(
@@ -52,7 +58,9 @@ const ReviewPageWrapper: React.FC<{
       <Container id="review-page-summary">
         <Switch>
           <Route exact path={path}>
-            <ReviewPage {...{ fullApplicationStructure, reviewAssignment, previousAssignment }} />
+            <ReviewPage
+              {...{ fullApplicationStructure: fullStructure, reviewAssignment, previousAssignment }}
+            />
           </Route>
           <Route>
             <NoMatch />

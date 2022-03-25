@@ -9,16 +9,22 @@ type TextIOprops = {
   text?: string
   title?: string
   setText?: (text: string, resetValue: (text: string) => void) => void
+  markNeedsUpdate?: () => void
   disabled?: boolean
   disabledMessage?: string
   icon?: string
   color?: string
+  labelNegative?: boolean
   link?: string
   isTextArea?: boolean
   isPropUpdated?: boolean
-  textAreaDefaulRows?: number
+  textAreaDefaultRows?: number
   iconColor?: SemanticCOLORS
+  minLabelWidth?: number
+  maxLabelWidth?: number
+  labelTextAlign?: string
   onIconClick?: () => void
+  additionalStyles?: object
 }
 
 const getDefaultRows = (text: string, textAreaDefaulRows: number) => {
@@ -29,21 +35,29 @@ const getDefaultRows = (text: string, textAreaDefaulRows: number) => {
 const TextIO: React.FC<TextIOprops> = ({
   text = '',
   setText,
+  markNeedsUpdate = () => {},
   disabled = false,
   title = '',
   icon,
   disabledMessage,
   color,
+  labelNegative = false,
   link,
   isTextArea = false,
-  textAreaDefaulRows = 4,
+  textAreaDefaultRows = 4,
   isPropUpdated = false,
   iconColor,
+  minLabelWidth = 50,
+  maxLabelWidth,
+  labelTextAlign = 'center',
+  additionalStyles = {},
   onIconClick,
 }) => {
-  const [defaultRows] = useState(getDefaultRows(text, textAreaDefaulRows))
+  const [defaultRows] = useState(getDefaultRows(text, textAreaDefaultRows))
   const [innerValue, setInnerValue] = useState(text)
-  const style = color ? { color } : {}
+  const style: any = { minWidth: minLabelWidth, maxWidth: maxLabelWidth, textAlign: labelTextAlign }
+  if (color) style.color = color
+  const ioCSS = labelNegative ? 'io-component-negative' : 'io-component'
 
   useEffect(() => {
     if (isPropUpdated) setInnerValue(text)
@@ -53,7 +67,7 @@ const TextIO: React.FC<TextIOprops> = ({
     if (setText) return null
 
     return (
-      <div className="io-component value" style={{ whiteSpace: isTextArea ? 'normal' : 'nowrap' }}>
+      <div className={ioCSS + ' value'} style={{ whiteSpace: isTextArea ? 'normal' : 'nowrap' }}>
         {text}
       </div>
     )
@@ -64,7 +78,7 @@ const TextIO: React.FC<TextIOprops> = ({
 
     if (isTextArea) {
       return (
-        <div className="io-component value">
+        <div className={ioCSS + ' value'}>
           <Form>
             <TextArea
               disabled={disabled}
@@ -73,6 +87,7 @@ const TextIO: React.FC<TextIOprops> = ({
               onBlur={() => setText(innerValue, setInnerValue)}
               onChange={(_, { value }) => {
                 setInnerValue(String(value))
+                markNeedsUpdate()
               }}
             />
           </Form>
@@ -84,10 +99,11 @@ const TextIO: React.FC<TextIOprops> = ({
       <Input
         value={innerValue}
         disabled={disabled}
-        className="io-component value"
+        className={ioCSS + ' value'}
         size="small"
         onChange={(_, { value }) => {
           setInnerValue(value)
+          markNeedsUpdate()
         }}
         // Dont' want to try and query api on every key change of query text
         onBlur={() => setText(innerValue, setInnerValue)}
@@ -110,9 +126,10 @@ const TextIO: React.FC<TextIOprops> = ({
   }
 
   const renderLabel = () => {
+    const keyClass = labelNegative ? 'io-component-negative key-negative' : 'io-component key'
     if (link) {
       return (
-        <div style={style} className="io-component key">
+        <div style={style} className={keyClass}>
           <a style={style} target="_blank" href={link}>
             {title} {icon && renderIcon()}
           </a>
@@ -120,7 +137,7 @@ const TextIO: React.FC<TextIOprops> = ({
       )
     }
     return (
-      <div style={style} className="io-component key">
+      <div style={style} className={keyClass}>
         {title} {icon && renderIcon()}
       </div>
     )
@@ -131,7 +148,7 @@ const TextIO: React.FC<TextIOprops> = ({
       content={disabledMessage}
       disabled={!disabled || !disabledMessage}
       trigger={
-        <div className="io-wrapper">
+        <div className="io-wrapper" style={additionalStyles}>
           {renderLabel()}
           {renderText()}
           {renderInput()}

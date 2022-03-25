@@ -37,7 +37,8 @@ These fields are common to all element types and have their own field in the `te
   - default: `{"value": true}`
 - **is_editable**: `JSON` -- dynamic query determining whether can be edited (Would only be false in rare circumstances)
   - default: `{"value": true}`
-- **defaultValue**: `JSON` - the default value for the response. Can be a dynamic query. Note: several plugins have their own "default" parameter, which may be easier to use in many situations but doesn't support dynamic lookups. If you need a dynamic value, use this field. For this field, the returned object must conform to the object shape for the respective question type (i.e. it needs a `text` field) -- see individual element types for response shape
+- **defaultValue**: `JSON` - the default value for the response. Note: several plugins have their own "default" parameter, which may be easier to use in many situations. What's the difference? In this one, the default response is generated when the application is first created, and from then on it behaves just like a normal question element. The default parameter for individual elements is calculated when the element is rendered, so it can change in response to other changes. If you need a default value to be made from answers the user provided earlier in the form, that would be the one to use. See individual elements for the respective details.  
+**Important**: When you use this `defaultValue` parameter, it must conform to the shape of the saved response for that question type, since it is saved directly as a response when created, not processed in the form itself -- see individual element types for correct response shape
 - **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
   - default: `{"value": true}` or just `true`
 - **validation_message**: `string` -- the message that shows in the UI when validation fails.  
@@ -63,6 +64,7 @@ _Free-form, single-line text input element_
 - **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
 - **description**: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
+- **default**: `string` -- default response, will change dynamically in response to form changes until the user has edited it [Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
 - **maxWidth**: `number` -- the maximum width (in pixels) for the text input box (defaults to fill the width of the container)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length.  
@@ -103,6 +105,7 @@ _Free-form, multi-line text input element_
 - **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
 - **description**: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
+- **default**: `string` -- default response, will change dynamically in response to form changes until the user has edited it [Optional]
 - **lines**: `number` -- height of the TextArea input, in number of lines/rows (default: 5)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length. (See Note in ShortText above for how to integrate `maxLength` with validation.)
 

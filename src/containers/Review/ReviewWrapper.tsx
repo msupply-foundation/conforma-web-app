@@ -1,56 +1,161 @@
-import React from 'react'
+import React, { SyntheticEvent, useState } from 'react'
 import { Route, Switch } from 'react-router'
-import { Message } from 'semantic-ui-react'
+import { Container, Message, Tab, Label, Icon, Header, StrictTabProps } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
-import { useUserState } from '../../contexts/UserState'
-import useGetReviewInfo from '../../utils/hooks/useGetReviewInfo'
+import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
-import ReviewHomeWrapper from './ReviewHomeWrapper'
+import { OverviewTab, AssignmentTab, NotesTab, DocumentsTab, ReviewProgress } from './'
+import { NotesState } from './notes/NotesTab'
 
 interface ReviewWrapperProps {
   structure: FullStructure
 }
 
+const tabIdentifiers = ['overview', 'assignment', 'notes', 'documents']
+
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const { strings } = useLanguageProvider()
   const {
     match: { path },
+    query: { tab },
+    updateQuery,
   } = useRouter()
-  const {
-    userState: { currentUser },
-  } = useUserState()
+  const { error, fullStructure } = useGetApplicationStructure({
+    structure,
+    firstRunValidation: false,
+    shouldCalculateProgress: false,
+    shouldGetDraftResponses: false,
+  })
+
+  // State values for NOTES tab, need to instantiate here to preserve state
+  // between tab switches:
+  const [notesState, setNotesState] = useState<NotesState>({
+    sortDesc: true,
+    filesOnlyFilter: false,
+    showForm: false,
+    files: [],
+    comment: '',
+  })
 
   usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
 
-  // I think we need an option to selecte review assgnments where
-  // userId is reviewerId or assignerId or both or not match it at all (just by row level permission restrictions)
-  const { error, loading, assignments } = useGetReviewInfo({
-    applicationId: structure.info.id,
-    userId: currentUser?.userId as number,
-  })
+  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
 
-  if (error) return <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
+  if (!fullStructure) return <Loading />
 
-  if (loading) return <Loading />
+  const {
+    info: { template, org, name },
+  } = fullStructure
 
-  if (!assignments || assignments.length === 0) return <NoMatch />
+  const getTabFromQuery = (tabQuery: string | undefined) => {
+    const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
+    return index === -1 ? 0 : index
+  }
+
+  const handleTabChange = (_: SyntheticEvent, data: StrictTabProps) => {
+    updateQuery({ tab: tabIdentifiers[data.activeIndex as number] })
+  }
+
+  const tabPanes = [
+    {
+      menuItem: strings.REVIEW_TAB_OVERVIEW,
+      render: () => (
+        <Tab.Pane>
+          <OverviewTab structure={fullStructure} isActive={getTabFromQuery(tab) === 0} />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: strings.REVIEW_TAB_ASSIGNMENT,
+      render: () => (
+        <Tab.Pane>
+          <AssignmentTab fullApplicationStructure={fullStructure} />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: strings.REVIEW_TAB_NOTES,
+      render: () => (
+        <Tab.Pane>
+          <NotesTab structure={fullStructure} state={notesState} setState={setNotesState} />
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: strings.REVIEW_TAB_DOCUMENTS,
+      render: () => (
+        <Tab.Pane>
+          <DocumentsTab structure={fullStructure} />
+        </Tab.Pane>
+      ),
+    },
+  ]
 
   return (
-    <Switch>
-      <Route exact path={path}>
-        <ReviewHomeWrapper {...{ assignments, structure }} />
-      </Route>
-      <Route exact path={`${path}/:reviewId`}>
-        <ReviewPageWrapper {...{ structure, reviewAssignments: assignments }} />
-      </Route>
-      <Route>
-        <NoMatch />
-      </Route>
-    </Switch>
+    <Container id="review-area">
+      <Switch>
+        <Route exact path={path}>
+          <ReviewHomeHeader
+            templateCode={template.code}
+            applicationName={name}
+            orgName={org?.name as string}
+          />
+          <div id="review-home-content">
+            <ReviewProgress structure={structure} />
+            <div id="review-tabs">
+              <Tab
+                panes={tabPanes}
+                onTabChange={handleTabChange}
+                activeIndex={getTabFromQuery(tab)}
+              />
+            </div>
+          </div>
+        </Route>
+        <Route exact path={`${path}/:reviewId`}>
+          <ReviewPageWrapper {...{ structure: fullStructure }} />
+        </Route>
+        <Route>
+          <NoMatch />
+        </Route>
+      </Switch>
+    </Container>
+  )
+}
+
+interface ReviewHomeProps {
+  templateCode: string
+  applicationName: string
+  orgName?: string
+}
+
+const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
+  templateCode,
+  applicationName,
+  orgName,
+}) => {
+  const {
+    push,
+    query: { tab },
+    updateQuery,
+  } = useRouter()
+
+  if (!tab) {
+    updateQuery({ tab: tabIdentifiers[0] })
+  }
+
+  return (
+    <div id="review-home-header">
+      <Label
+        className="simple-label clickable"
+        onClick={() => push(`/applications?type=${templateCode}`)}
+        icon={<Icon name="chevron left" className="dark-grey" />}
+      />
+      <Header as="h3" content={applicationName} subheader={orgName} />
+    </div>
   )
 }
 

@@ -74,7 +74,10 @@ const Permissions: React.FC = () => {
   }
   return (
     <div className="flex-column-start-stretch">
-      <PermissionsHeader type={PermissionPolicyType.Apply} header={'Apply'} />
+      <Header as="h3" className="">
+        Apply
+      </Header>
+      <PermissionsHeader type={PermissionPolicyType.Apply} header={''} />
       <PermissionNameList type={PermissionPolicyType.Apply} />
       <div className="spacer-20" />
       <div className="flex-row-start-center">
@@ -83,69 +86,77 @@ const Permissions: React.FC = () => {
         </Header>
         <IconButton
           name="add square"
+          size="large"
           disabled={!isDraft}
           disabledMessage={disabledMessage}
           onClick={addStage}
         />
       </div>
       {templateStages.map((stage) => (
-        <div key={stage.id} className="config-container">
-          <div className="flex-row-start-center">
-            <div className="flex-row-start-center-wrap">
-              <TextIO
-                title="Name"
-                text={stage?.title || ''}
-                setText={(title) => updateStage(stage.id, { title })}
-                disabled={!isDraft}
-                disabledMessage={disabledMessage}
-              />
-              <TextIO title="Number" text={String(stage?.number)} />
-              <TextIO
-                title="Colour"
-                link={colourLink}
-                text={stage?.colour || ''}
-                color={stage?.colour || ''}
-                setText={(colour) => updateStage(stage.id, { colour })}
-                disabled={!isDraft}
-                disabledMessage={disabledMessage}
-              />
-
-              <div className="longer">
+        <>
+          <div key={stage.id} className="config-container-outline">
+            <div className="flex-row-start-start">
+              <div className="flex-row-start-center-wrap">
                 <TextIO
-                  title="Description"
-                  text={stage?.description || ''}
-                  setText={(description) => updateStage(stage.id, { description })}
+                  title="Name"
+                  text={stage?.title || ''}
+                  setText={(title) => updateStage(stage.id, { title })}
                   disabled={!isDraft}
                   disabledMessage={disabledMessage}
                 />
+                <TextIO
+                  title="Number"
+                  text={String(stage?.number)}
+                  disabled
+                  disabledMessage="Stage number determined by order"
+                />
+                <TextIO
+                  title="Colour"
+                  link={colourLink}
+                  text={stage?.colour || ''}
+                  color={stage?.colour || ''}
+                  setText={(colour) => updateStage(stage.id, { colour })}
+                  disabled={!isDraft}
+                  disabledMessage={disabledMessage}
+                />
+
+                <div className="longer">
+                  <TextIO
+                    title="Description"
+                    text={stage?.description || ''}
+                    setText={(description) => updateStage(stage.id, { description })}
+                    disabled={!isDraft}
+                    disabledMessage={disabledMessage}
+                  />
+                </div>
               </div>
+              <Stage name={stage?.title || ''} colour={stage?.colour || 'grey'} />
+              {canRemoveStage(stage) && (
+                <IconButton
+                  name="window close"
+                  disabled={!isDraft}
+                  disabledMessage={disabledMessage}
+                  onClick={() => removeStage(stage?.id || 0)}
+                />
+              )}
             </div>
-            <div className="flex-grow-1" />
-            <Stage name={stage?.title || ''} colour={stage?.colour || 'grey'} />
-            {canRemoveStage(stage) && (
-              <IconButton
-                name="window close"
-                disabled={!isDraft}
-                disabledMessage={disabledMessage}
-                onClick={() => removeStage(stage?.id || 0)}
-              />
-            )}
+            <div className="spacer-10" />
+            <PermissionsHeader
+              type={PermissionPolicyType.Assign}
+              header={'Level 1 Assign:'}
+              stageNumber={stage?.number || 0}
+              levelNumber={1}
+            />
+            <PermissionNameList
+              stageNumber={stage?.number || 0}
+              levelNumber={1}
+              type={PermissionPolicyType.Assign}
+            />
+            <div className="spacer-10" />
+            <PermissionReviewLevel stage={stage} />
           </div>
-          <div className="spacer-10" />
-          <PermissionsHeader
-            type={PermissionPolicyType.Assign}
-            header={'Level 1 Assign'}
-            stageNumber={stage?.number || 0}
-            levelNumber={1}
-          />
-          <PermissionNameList
-            stageNumber={stage?.number || 0}
-            levelNumber={1}
-            type={PermissionPolicyType.Assign}
-          />
-          <div className="spacer-10" />
-          <PermissionReviewLevel stage={stage} />
-        </div>
+          <div className="spacer-20" />
+        </>
       ))}
     </div>
   )

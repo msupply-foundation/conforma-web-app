@@ -6,7 +6,6 @@ import {
   PermissionPolicyType,
   ReviewAssignmentStatus,
   ReviewDecision,
-  ReviewQuestionAssignment,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -31,6 +30,8 @@ export {
   ApplicationListRow,
   ApplicationProps,
   AssignmentDetails,
+  AssignmentOptions,
+  AssignmentOption,
   CellProps,
   ChangeRequestsProgress,
   ColumnDetails,
@@ -47,6 +48,8 @@ export {
   Filters,
   FullStructure,
   HistoryElement,
+  LevelDetails,
+  LevelAssignments,
   LooseString,
   MethodRevalidate,
   MethodToCallProps,
@@ -64,6 +67,7 @@ export {
   ReviewSectionComponentProps,
   SectionAndPage,
   SectionDetails,
+  SectionAssignee,
   SectionAssignment,
   SectionState,
   SectionsStructure,
@@ -124,24 +128,34 @@ interface AssignmentDetails {
   reviewerId?: number
   review: ReviewDetails | null
   reviewer: GraphQLUser
-  current: AssignmentStageAndStatus
+  current: {
+    stage: StageDetails
+    assignmentStatus: ReviewAssignmentStatus | null
+    timeStageCreated: Date
+    timeStatusUpdated: Date
+    // Doesn't store ReviewStatus
+  }
   isCurrentUserAssigner: boolean
   isCurrentUserReviewer: boolean
   isFinalDecision: boolean
   isLastLevel: boolean
   isSelfAssignable: boolean
   isLocked: boolean
-  totalAssignedQuestions: number
-  reviewQuestionAssignments: ReviewQuestionAssignment[]
-  assignableSectionRestrictions: (string | null)[]
+  allowedSections: string[]
+  assignedSections: string[]
 }
 
-interface AssignmentStageAndStatus {
-  stage: StageDetails
-  assignmentStatus: ReviewAssignmentStatus | null
-  timeStageCreated: Date
-  timeStatusUpdated: Date
-  // Doesn't store ReviewStatus
+interface AssignmentOptions {
+  selected: number
+  isCompleted: boolean
+  options: AssignmentOption[]
+}
+
+interface AssignmentOption {
+  key: number
+  value: number
+  text: string
+  disabled?: boolean
 }
 
 interface BasicStringObject {
@@ -237,8 +251,8 @@ interface EvaluatorParameters {
 type ElementsById = { [templateElementId: string]: PageElement }
 
 interface Filters {
-  selectedReviewer: number
-  selectedStage: number
+  selectedLevel: number
+  currentStage: number
 }
 
 interface FullStructure {
@@ -250,11 +264,15 @@ interface FullStructure {
   info: ApplicationDetails
   canApplicantMakeChanges: boolean
   sections: SectionsStructure
-  stages: StageDetails[]
+  stages: {
+    stage: StageDetails
+    levels: LevelDetails[]
+  }[]
   responsesByCode?: ResponsesByCode
   firstIncompleteReviewPage?: SectionAndPage
   sortedSections?: SectionState[]
   sortedPages?: Page[]
+  reload: () => void
 }
 
 interface HistoryElement {
@@ -307,7 +325,6 @@ type PageElement = {
   isNewReviewResponse?: boolean
   review?: ReviewQuestionDecision
   isPendingReview?: boolean
-  reviewQuestionAssignmentId: number
   isAssigned?: boolean
   isChangeRequest?: boolean
   isChanged?: boolean
@@ -354,28 +371,29 @@ interface ResponsesByCode {
 }
 
 interface ReviewAssignment {
+  assignmentId: number
   assignee: GraphQLUser
   assigneeLevel: number
+  assigneeStage: number
   assignmentStatus: ReviewAssignmentStatus
+  assignmentDate: Date
+  assignedSections: string[]
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
   isLocked: boolean
   isSelfAssignable: boolean
-  finalDecision: {
-    decisionOnReview: boolean
-  } | null
+  isFinalDecision: boolean
+  isFinalDecisionOnConsolidation: boolean
 }
 
 type ReviewSectionComponentProps = {
-  fullStructure: FullStructure
+  reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
   section: SectionState
-  assignment: AssignmentDetails
   previousAssignment: AssignmentDetails
-  thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
-  shouldAssignState: [number, React.Dispatch<React.SetStateAction<number>>]
 }
 
 interface ReviewDetails {
@@ -464,6 +482,13 @@ interface ChangeRequestsProgress {
   doneChangeRequests: number
 }
 
+interface SectionAssignee {
+  [sectionCode: string]: {
+    newAssignee: number | undefined
+    previousAssignee?: number
+  }
+}
+
 interface SectionAssignment {
   action: ReviewAction
   isAssignedToCurrentUser: boolean
@@ -509,6 +534,15 @@ interface StageDetails {
   number: number
   colour: string
   description?: string
+}
+
+interface LevelDetails {
+  name: string
+  number: number
+}
+
+interface LevelAssignments {
+  [level: number]: AssignmentDetails[]
 }
 
 interface TemplateCategoryDetails {
@@ -603,8 +637,9 @@ interface LoginPayload {
 }
 
 interface UseGetReviewStructureForSectionProps {
-  fullApplicationStructure: FullStructure
-  reviewAssignment: AssignmentDetails
+  reviewStructure: FullStructure
+  reviewAssignment?: AssignmentDetails
+  previousAssignment?: AssignmentDetails
   filteredSectionIds?: number[]
   awaitMode?: boolean
 }

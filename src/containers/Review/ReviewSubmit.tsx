@@ -22,7 +22,6 @@ type ReviewSubmitProps = {
 const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   const {
     structure: { thisReview, assignment, canApplicantMakeChanges },
-    previousAssignment,
   } = props
 
   const reviewDecision = thisReview?.reviewDecision
@@ -95,7 +94,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
 
   // Need to refetch review status before submission, in case it's pending
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullApplicationStructure: structure,
+    reviewStructure: structure,
     reviewAssignment: assignment,
   })
 
@@ -103,7 +102,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
   // TODO: Show on message
   const [submissionError, setSubmissionError] = useState<boolean>(false)
-  const submitReview = useSubmitReview(Number(structure.thisReview?.id))
+  const submitReview = useSubmitReview(Number(structure.thisReview?.id), structure.reload)
   const setAttemptSubmission = () => (structure.attemptSubmission = true)
   const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
 

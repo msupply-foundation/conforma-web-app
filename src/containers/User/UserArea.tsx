@@ -111,6 +111,14 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, outcomes }) => {
       value: '/admin/localisations',
     },
   ]
+  // Only include Snapshots menu item in Dev mode
+  if (process.env.NODE_ENV === 'development')
+    adminOptions.splice(1, 0, {
+      key: 'snapshots',
+      text: 'Snapshots',
+      value: '/admin/snapshots',
+    })
+
   // Add Admin templates to Admin menu
   adminOptions.push(
     ...templates

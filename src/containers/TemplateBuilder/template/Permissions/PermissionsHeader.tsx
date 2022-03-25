@@ -12,6 +12,7 @@ type PermissionsHeaderProps = {
   header: string
   stageNumber?: number
   levelNumber?: number
+  labelNegative?: boolean
 }
 
 type GetMatchingTemplatePermissions = (props: {
@@ -40,6 +41,7 @@ const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
   header,
   stageNumber,
   levelNumber,
+  labelNegative,
 }) => {
   const [selectedPermissionNameId, setSelectedPermissionNameId] = useState(-1)
   const {
@@ -81,7 +83,7 @@ const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
 
   return (
     <div className="flex-row-start-center">
-      <Header as="h5" className="no-margin-no-padding">
+      <Header as="h5" className="no-margin-no-padding right-margin-space-10">
         {header}
       </Header>
       <DropdownIO
@@ -92,6 +94,7 @@ const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
         getValue={'id'}
         getText={'name'}
         disabled={!isDraft}
+        labelNegative={labelNegative}
         placeholder={
           availablePermissionNames.length === 0
             ? 'No Permission Names Available'

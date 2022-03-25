@@ -21,7 +21,7 @@ const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({
   reviewResponse,
   children,
 }) => {
-  const backgroundClass = isCurrentReview ? 'changeable-background' : ''
+  const backgroundClass = isCurrentReview ? 'highlight-background' : ''
   const dimClass = shouldDim ? 'dim' : ''
 
   if (!reviewResponse) return null

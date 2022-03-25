@@ -9,13 +9,8 @@ import {
   Trigger,
   useGetAllActionsQuery,
 } from '../../../../utils/generated/graphql'
-import { ApplicationDetails } from '../../../../utils/types'
-import CheckboxIO from '../../shared/CheckboxIO'
 import DropdownIO from '../../shared/DropdownIO'
-import { EvaluationHeader } from '../../shared/Evaluation'
 import { IconButton } from '../../shared/IconButton'
-import { useOperationState } from '../../shared/OperationContext'
-import TextIO from '../../shared/TextIO'
 import { stringSort } from '../Permissions/PermissionNameInfo/PermissionNameInfo'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import TriggerDisplay from './TriggerDisplay'
@@ -101,7 +96,7 @@ const Actions: React.FC = () => {
 
   return (
     <div className="flew-column-start-start">
-      <div className="flex-row-start-center">
+      <div className="flex-row-start-center flex-gap-20">
         <Header as="h4" className="no-margin-no-padding">
           Triggers
         </Header>
@@ -110,20 +105,21 @@ const Actions: React.FC = () => {
           isPropUpdated={true}
           value={String(selectedTrigger)}
           disabled={!isDraft}
-          placeholder={
-            availableTriggers.length === 0 ? 'All triggers are in use' : 'Select  To Add'
-          }
+          placeholder={availableTriggers.length === 0 ? 'All triggers are in use' : 'Select To Add'}
           disabledMessage={disabledMessage}
+          minLabelWidth={0}
           setValue={(trigger) => {
             setSelectedTrigger(trigger as Trigger)
           }}
           options={availableTriggers}
+          additionalStyles={{ margin: 0 }}
         />
         {selectedTrigger && (
           <IconButton
             name="add square"
             onClick={addTrigger}
             disabled={!isDraft}
+            size="large"
             disabledMessage={disabledMessage}
           />
         )}
