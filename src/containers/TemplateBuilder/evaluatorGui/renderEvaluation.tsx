@@ -12,6 +12,7 @@ import {
 } from './typeHelpers'
 import { EvaluationType, ParseAndRenderEvaluationType, RenderEvaluationElementType } from './types'
 import EvaluationOutputType from './EvaluationOutputType'
+import EvaluationFallback from './EvaluationFallback'
 
 export const renderEvaluation: ParseAndRenderEvaluationType = (
   evaluation,
@@ -25,55 +26,55 @@ export const renderEvaluation: ParseAndRenderEvaluationType = (
   return renderEvaluationElement(evaluation, _setEvaluation, ComponentLibrary, evaluatorParameters)
 }
 
-const Evaluate: React.FC<{ typedEvaluation: EvaluationType; evaluatorParameters?: IParameters }> =
-  ({ typedEvaluation, evaluatorParameters }) => {
-    const [evaluationResult, setEvaluationResult] = useState<ValueNode | undefined | null>(
-      undefined
-    )
+const Evaluate: React.FC<{
+  typedEvaluation: EvaluationType
+  evaluatorParameters?: IParameters
+}> = ({ typedEvaluation, evaluatorParameters }) => {
+  const [evaluationResult, setEvaluationResult] = useState<ValueNode | undefined | null>(undefined)
 
-    const evaluateNode = async () => {
-      try {
-        const result = await evaluateExpression(
-          convertTypedEvaluationToBaseType(typedEvaluation),
-          evaluatorParameters
-        )
-        setEvaluationResult(result)
-      } catch (e) {
-        setEvaluationResult('Problem Executing Evaluation')
-      }
+  const evaluateNode = async () => {
+    try {
+      const result = await evaluateExpression(
+        convertTypedEvaluationToBaseType(typedEvaluation),
+        evaluatorParameters
+      )
+      setEvaluationResult(result)
+    } catch (e) {
+      setEvaluationResult('Problem Executing Evaluation')
     }
-
-    return (
-      <>
-        <Icon
-          className="clickable"
-          name="play"
-          size="large"
-          onClick={() => evaluateNode()}
-          style={{ marginBottom: 8 }}
-        />
-        <Modal
-          className="config-modal"
-          open={evaluationResult !== undefined}
-          onClose={() => setEvaluationResult(undefined)}
-        >
-          <div className="config-modal-container ">
-            <Header>Evaluation Result</Header>
-            {evaluationResult === undefined && <Loading />}
-            {evaluationResult !== undefined && (
-              <pre>{JSON.stringify(evaluationResult, null, ' ')}</pre>
-            )}
-            {typeof evaluationResult === 'string' && (
-              <>
-                <Header as="h4">Markdown</Header>
-                <Markdown text={evaluationResult} />
-              </>
-            )}
-          </div>
-        </Modal>
-      </>
-    )
   }
+
+  return (
+    <>
+      <Icon
+        className="clickable"
+        name="play"
+        size="large"
+        onClick={() => evaluateNode()}
+        style={{ marginBottom: 8 }}
+      />
+      <Modal
+        className="config-modal"
+        open={evaluationResult !== undefined}
+        onClose={() => setEvaluationResult(undefined)}
+      >
+        <div className="config-modal-container ">
+          <Header>Evaluation Result</Header>
+          {evaluationResult === undefined && <Loading />}
+          {evaluationResult !== undefined && (
+            <pre>{JSON.stringify(evaluationResult, null, ' ')}</pre>
+          )}
+          {typeof evaluationResult === 'string' && (
+            <>
+              <Header as="h4">Markdown</Header>
+              <Markdown text={evaluationResult} />
+            </>
+          )}
+        </div>
+      </Modal>
+    </>
+  )
+}
 
 export const renderEvaluationElement: RenderEvaluationElementType = (
   evaluation,
@@ -107,6 +108,7 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
               />
             </ComponentLibrary.FlexRow>
             <EvaluationOutputType evaluation={typedEvaluation} setEvaluation={setEvaluation} />
+            <EvaluationFallback evaluation={typedEvaluation} setEvaluation={setEvaluation} />
             {gui.render(typedEvaluation, setEvaluation, ComponentLibrary, evaluatorParameters)}
           </ComponentLibrary.OperatorContainer>
         </ComponentLibrary.FlexRow>
