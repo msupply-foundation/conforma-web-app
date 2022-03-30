@@ -65,8 +65,26 @@ export type Query = Node & {
   files?: Maybe<FilesConnection>;
   /** Reads and enables pagination through a set of `Filter`. */
   filters?: Maybe<FiltersConnection>;
+  /** Reads and enables pagination through a set of `Licence`. */
+  licences?: Maybe<LicencesConnection>;
+  /** Reads and enables pagination through a set of `LicenceApplicationJoin`. */
+  licenceApplicationJoins?: Maybe<LicenceApplicationJoinsConnection>;
   /** Reads and enables pagination through a set of `LookupTable`. */
   lookupTables?: Maybe<LookupTablesConnection>;
+  /** Reads and enables pagination through a set of `LookupTableAdministrationRoute`. */
+  lookupTableAdministrationRoutes?: Maybe<LookupTableAdministrationRoutesConnection>;
+  /** Reads and enables pagination through a set of `LookupTableContainer`. */
+  lookupTableContainers?: Maybe<LookupTableContainersConnection>;
+  /** Reads and enables pagination through a set of `LookupTableCountryname`. */
+  lookupTableCountrynames?: Maybe<LookupTableCountrynamesConnection>;
+  /** Reads and enables pagination through a set of `LookupTableDosageForm`. */
+  lookupTableDosageForms?: Maybe<LookupTableDosageFormsConnection>;
+  /** Reads and enables pagination through a set of `LookupTableIngredient`. */
+  lookupTableIngredients?: Maybe<LookupTableIngredientsConnection>;
+  /** Reads and enables pagination through a set of `LookupTableTestAddNewLookupTable`. */
+  lookupTableTestAddNewLookupTables?: Maybe<LookupTableTestAddNewLookupTablesConnection>;
+  /** Reads and enables pagination through a set of `LookupTableTherapeuticCategory`. */
+  lookupTableTherapeuticCategories?: Maybe<LookupTableTherapeuticCategoriesConnection>;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications?: Maybe<NotificationsConnection>;
   /** Reads and enables pagination through a set of `Organisation`. */
@@ -87,6 +105,10 @@ export type Query = Node & {
   permissionsAlls?: Maybe<PermissionsAllsConnection>;
   /** Reads and enables pagination through a set of `PostgresRowLevel`. */
   postgresRowLevels?: Maybe<PostgresRowLevelsConnection>;
+  /** Reads and enables pagination through a set of `Product`. */
+  products?: Maybe<ProductsConnection>;
+  /** Reads and enables pagination through a set of `ProductApplicationJoin`. */
+  productApplicationJoins?: Maybe<ProductApplicationJoinsConnection>;
   /** Reads and enables pagination through a set of `Review`. */
   reviews?: Maybe<ReviewsConnection>;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
@@ -95,16 +117,14 @@ export type Query = Node & {
   reviewAssignmentAssignerJoins?: Maybe<ReviewAssignmentAssignerJoinsConnection>;
   /** Reads and enables pagination through a set of `ReviewDecision`. */
   reviewDecisions?: Maybe<ReviewDecisionsConnection>;
-  /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
-  reviewQuestionAssignments?: Maybe<ReviewQuestionAssignmentsConnection>;
-  /** Reads and enables pagination through a set of `ReviewQuestionAssignmentSection`. */
-  reviewQuestionAssignmentSections?: Maybe<ReviewQuestionAssignmentSectionsConnection>;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
   reviewResponses?: Maybe<ReviewResponsesConnection>;
   /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
   reviewStatusHistories?: Maybe<ReviewStatusHistoriesConnection>;
   /** Reads and enables pagination through a set of `SchemaColumn`. */
   schemaColumns?: Maybe<SchemaColumnsConnection>;
+  /** Reads and enables pagination through a set of `SystemInfo`. */
+  systemInfos?: Maybe<SystemInfosConnection>;
   /** Reads and enables pagination through a set of `Template`. */
   templates?: Maybe<TemplatesConnection>;
   /** Reads and enables pagination through a set of `TemplateAction`. */
@@ -135,6 +155,8 @@ export type Query = Node & {
   userOrgJoins?: Maybe<UserOrgJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations?: Maybe<UserOrganisationsConnection>;
+  /** Reads and enables pagination through a set of `UserOrganisationApplicationJoin`. */
+  userOrganisationApplicationJoins?: Maybe<UserOrganisationApplicationJoinsConnection>;
   /** Reads and enables pagination through a set of `Verification`. */
   verifications?: Maybe<VerificationsConnection>;
   actionPlugin?: Maybe<ActionPlugin>;
@@ -154,7 +176,16 @@ export type Query = Node & {
   fileByUniqueId?: Maybe<File>;
   filter?: Maybe<Filter>;
   filterByCode?: Maybe<Filter>;
+  licence?: Maybe<Licence>;
+  licenceApplicationJoin?: Maybe<LicenceApplicationJoin>;
   lookupTable?: Maybe<LookupTable>;
+  lookupTableAdministrationRoute?: Maybe<LookupTableAdministrationRoute>;
+  lookupTableContainer?: Maybe<LookupTableContainer>;
+  lookupTableCountryname?: Maybe<LookupTableCountryname>;
+  lookupTableDosageForm?: Maybe<LookupTableDosageForm>;
+  lookupTableIngredient?: Maybe<LookupTableIngredient>;
+  lookupTableTestAddNewLookupTable?: Maybe<LookupTableTestAddNewLookupTable>;
+  lookupTableTherapeuticCategory?: Maybe<LookupTableTherapeuticCategory>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
   organisationByName?: Maybe<Organisation>;
@@ -169,13 +200,15 @@ export type Query = Node & {
   permissionNameByName?: Maybe<PermissionName>;
   permissionPolicy?: Maybe<PermissionPolicy>;
   permissionPolicyByName?: Maybe<PermissionPolicy>;
+  product?: Maybe<Product>;
+  productApplicationJoin?: Maybe<ProductApplicationJoin>;
   review?: Maybe<Review>;
   reviewAssignment?: Maybe<ReviewAssignment>;
   reviewAssignmentAssignerJoin?: Maybe<ReviewAssignmentAssignerJoin>;
   reviewDecision?: Maybe<ReviewDecision>;
-  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   reviewResponse?: Maybe<ReviewResponse>;
   reviewStatusHistory?: Maybe<ReviewStatusHistory>;
+  systemInfo?: Maybe<SystemInfo>;
   template?: Maybe<Template>;
   templateAction?: Maybe<TemplateAction>;
   templateCategory?: Maybe<TemplateCategory>;
@@ -194,6 +227,7 @@ export type Query = Node & {
   userByUsername?: Maybe<User>;
   userApplicationJoin?: Maybe<UserApplicationJoin>;
   userOrganisation?: Maybe<UserOrganisation>;
+  userOrganisationApplicationJoin?: Maybe<UserOrganisationApplicationJoin>;
   verification?: Maybe<Verification>;
   verificationByUniqueId?: Maybe<Verification>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
@@ -248,8 +282,26 @@ export type Query = Node & {
   fileByNodeId?: Maybe<File>;
   /** Reads a single `Filter` using its globally unique `ID`. */
   filterByNodeId?: Maybe<Filter>;
+  /** Reads a single `Licence` using its globally unique `ID`. */
+  licenceByNodeId?: Maybe<Licence>;
+  /** Reads a single `LicenceApplicationJoin` using its globally unique `ID`. */
+  licenceApplicationJoinByNodeId?: Maybe<LicenceApplicationJoin>;
   /** Reads a single `LookupTable` using its globally unique `ID`. */
   lookupTableByNodeId?: Maybe<LookupTable>;
+  /** Reads a single `LookupTableAdministrationRoute` using its globally unique `ID`. */
+  lookupTableAdministrationRouteByNodeId?: Maybe<LookupTableAdministrationRoute>;
+  /** Reads a single `LookupTableContainer` using its globally unique `ID`. */
+  lookupTableContainerByNodeId?: Maybe<LookupTableContainer>;
+  /** Reads a single `LookupTableCountryname` using its globally unique `ID`. */
+  lookupTableCountrynameByNodeId?: Maybe<LookupTableCountryname>;
+  /** Reads a single `LookupTableDosageForm` using its globally unique `ID`. */
+  lookupTableDosageFormByNodeId?: Maybe<LookupTableDosageForm>;
+  /** Reads a single `LookupTableIngredient` using its globally unique `ID`. */
+  lookupTableIngredientByNodeId?: Maybe<LookupTableIngredient>;
+  /** Reads a single `LookupTableTestAddNewLookupTable` using its globally unique `ID`. */
+  lookupTableTestAddNewLookupTableByNodeId?: Maybe<LookupTableTestAddNewLookupTable>;
+  /** Reads a single `LookupTableTherapeuticCategory` using its globally unique `ID`. */
+  lookupTableTherapeuticCategoryByNodeId?: Maybe<LookupTableTherapeuticCategory>;
   /** Reads a single `Notification` using its globally unique `ID`. */
   notificationByNodeId?: Maybe<Notification>;
   /** Reads a single `Organisation` using its globally unique `ID`. */
@@ -266,6 +318,10 @@ export type Query = Node & {
   permissionNameByNodeId?: Maybe<PermissionName>;
   /** Reads a single `PermissionPolicy` using its globally unique `ID`. */
   permissionPolicyByNodeId?: Maybe<PermissionPolicy>;
+  /** Reads a single `Product` using its globally unique `ID`. */
+  productByNodeId?: Maybe<Product>;
+  /** Reads a single `ProductApplicationJoin` using its globally unique `ID`. */
+  productApplicationJoinByNodeId?: Maybe<ProductApplicationJoin>;
   /** Reads a single `Review` using its globally unique `ID`. */
   reviewByNodeId?: Maybe<Review>;
   /** Reads a single `ReviewAssignment` using its globally unique `ID`. */
@@ -274,12 +330,12 @@ export type Query = Node & {
   reviewAssignmentAssignerJoinByNodeId?: Maybe<ReviewAssignmentAssignerJoin>;
   /** Reads a single `ReviewDecision` using its globally unique `ID`. */
   reviewDecisionByNodeId?: Maybe<ReviewDecision>;
-  /** Reads a single `ReviewQuestionAssignment` using its globally unique `ID`. */
-  reviewQuestionAssignmentByNodeId?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ReviewResponse` using its globally unique `ID`. */
   reviewResponseByNodeId?: Maybe<ReviewResponse>;
   /** Reads a single `ReviewStatusHistory` using its globally unique `ID`. */
   reviewStatusHistoryByNodeId?: Maybe<ReviewStatusHistory>;
+  /** Reads a single `SystemInfo` using its globally unique `ID`. */
+  systemInfoByNodeId?: Maybe<SystemInfo>;
   /** Reads a single `Template` using its globally unique `ID`. */
   templateByNodeId?: Maybe<Template>;
   /** Reads a single `TemplateAction` using its globally unique `ID`. */
@@ -308,6 +364,8 @@ export type Query = Node & {
   userApplicationJoinByNodeId?: Maybe<UserApplicationJoin>;
   /** Reads a single `UserOrganisation` using its globally unique `ID`. */
   userOrganisationByNodeId?: Maybe<UserOrganisation>;
+  /** Reads a single `UserOrganisationApplicationJoin` using its globally unique `ID`. */
+  userOrganisationApplicationJoinByNodeId?: Maybe<UserOrganisationApplicationJoin>;
   /** Reads a single `Verification` using its globally unique `ID`. */
   verificationByNodeId?: Maybe<Verification>;
 };
@@ -528,6 +586,32 @@ export type QueryFiltersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLicencesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LicencesOrderBy>>;
+  condition?: Maybe<LicenceCondition>;
+  filter?: Maybe<LicenceFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLicenceApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LicenceApplicationJoinsOrderBy>>;
+  condition?: Maybe<LicenceApplicationJoinCondition>;
+  filter?: Maybe<LicenceApplicationJoinFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLookupTablesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -537,6 +621,97 @@ export type QueryLookupTablesArgs = {
   orderBy?: Maybe<Array<LookupTablesOrderBy>>;
   condition?: Maybe<LookupTableCondition>;
   filter?: Maybe<LookupTableFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableAdministrationRoutesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTableAdministrationRoutesOrderBy>>;
+  condition?: Maybe<LookupTableAdministrationRouteCondition>;
+  filter?: Maybe<LookupTableAdministrationRouteFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableContainersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTableContainersOrderBy>>;
+  condition?: Maybe<LookupTableContainerCondition>;
+  filter?: Maybe<LookupTableContainerFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableCountrynamesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTableCountrynamesOrderBy>>;
+  condition?: Maybe<LookupTableCountrynameCondition>;
+  filter?: Maybe<LookupTableCountrynameFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableDosageFormsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTableDosageFormsOrderBy>>;
+  condition?: Maybe<LookupTableDosageFormCondition>;
+  filter?: Maybe<LookupTableDosageFormFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableIngredientsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTableIngredientsOrderBy>>;
+  condition?: Maybe<LookupTableIngredientCondition>;
+  filter?: Maybe<LookupTableIngredientFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableTestAddNewLookupTablesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTableTestAddNewLookupTablesOrderBy>>;
+  condition?: Maybe<LookupTableTestAddNewLookupTableCondition>;
+  filter?: Maybe<LookupTableTestAddNewLookupTableFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableTherapeuticCategoriesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTableTherapeuticCategoriesOrderBy>>;
+  condition?: Maybe<LookupTableTherapeuticCategoryCondition>;
+  filter?: Maybe<LookupTableTherapeuticCategoryFilter>;
 };
 
 
@@ -671,6 +846,32 @@ export type QueryPostgresRowLevelsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryProductsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ProductsOrderBy>>;
+  condition?: Maybe<ProductCondition>;
+  filter?: Maybe<ProductFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryProductApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ProductApplicationJoinsOrderBy>>;
+  condition?: Maybe<ProductApplicationJoinCondition>;
+  filter?: Maybe<ProductApplicationJoinFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -723,32 +924,6 @@ export type QueryReviewDecisionsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewQuestionAssignmentsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
-  condition?: Maybe<ReviewQuestionAssignmentCondition>;
-  filter?: Maybe<ReviewQuestionAssignmentFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewQuestionAssignmentSectionsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewQuestionAssignmentSectionsOrderBy>>;
-  condition?: Maybe<ReviewQuestionAssignmentSectionCondition>;
-  filter?: Maybe<ReviewQuestionAssignmentSectionFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryReviewResponsesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -784,6 +959,19 @@ export type QuerySchemaColumnsArgs = {
   orderBy?: Maybe<Array<SchemaColumnsOrderBy>>;
   condition?: Maybe<SchemaColumnCondition>;
   filter?: Maybe<SchemaColumnFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySystemInfosArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<SystemInfosOrderBy>>;
+  condition?: Maybe<SystemInfoCondition>;
+  filter?: Maybe<SystemInfoFilter>;
 };
 
 
@@ -983,6 +1171,19 @@ export type QueryUserOrganisationsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryUserOrganisationApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UserOrganisationApplicationJoinsOrderBy>>;
+  condition?: Maybe<UserOrganisationApplicationJoinCondition>;
+  filter?: Maybe<UserOrganisationApplicationJoinFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryVerificationsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -1098,7 +1299,61 @@ export type QueryFilterByCodeArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLicenceArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLicenceApplicationJoinArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLookupTableArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableAdministrationRouteArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableContainerArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableCountrynameArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableDosageFormArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableIngredientArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableTestAddNewLookupTableArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableTherapeuticCategoryArgs = {
   id: Scalars['Int'];
 };
 
@@ -1190,6 +1445,18 @@ export type QueryPermissionPolicyByNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryProductArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryProductApplicationJoinArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewArgs = {
   id: Scalars['Int'];
 };
@@ -1214,12 +1481,6 @@ export type QueryReviewDecisionArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewQuestionAssignmentArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryReviewResponseArgs = {
   id: Scalars['Int'];
 };
@@ -1227,6 +1488,12 @@ export type QueryReviewResponseArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewStatusHistoryArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySystemInfoArgs = {
   id: Scalars['Int'];
 };
 
@@ -1338,6 +1605,12 @@ export type QueryUserApplicationJoinArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUserOrganisationArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserOrganisationApplicationJoinArgs = {
   id: Scalars['Int'];
 };
 
@@ -1654,7 +1927,61 @@ export type QueryFilterByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLicenceByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLicenceApplicationJoinByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLookupTableByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableAdministrationRouteByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableContainerByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableCountrynameByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableDosageFormByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableIngredientByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableTestAddNewLookupTableByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableTherapeuticCategoryByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -1708,6 +2035,18 @@ export type QueryPermissionPolicyByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryProductByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryProductApplicationJoinByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -1732,12 +2071,6 @@ export type QueryReviewDecisionByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewQuestionAssignmentByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryReviewResponseByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -1745,6 +2078,12 @@ export type QueryReviewResponseByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewStatusHistoryByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySystemInfoByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -1829,6 +2168,12 @@ export type QueryUserApplicationJoinByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUserOrganisationByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserOrganisationApplicationJoinByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -2665,10 +3010,6 @@ export type TemplateElementFilter = {
   applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
   applicationResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewQuestionAssignments` relation. */
-  reviewQuestionAssignments?: Maybe<TemplateElementToManyReviewQuestionAssignmentFilter>;
-  /** Some related `reviewQuestionAssignments` exist. */
-  reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<TemplateElementToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -2815,8 +3156,6 @@ export type ReviewResponseFilter = {
   comment?: Maybe<StringFilter>;
   /** Filter by the object’s `decision` field. */
   decision?: Maybe<ReviewResponseDecisionFilter>;
-  /** Filter by the object’s `reviewQuestionAssignmentId` field. */
-  reviewQuestionAssignmentId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationResponseId` field. */
   applicationResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewResponseLinkId` field. */
@@ -2849,10 +3188,6 @@ export type ReviewResponseFilter = {
   reviewResponsesByOriginalReviewResponseId?: Maybe<ReviewResponseToManyReviewResponseFilter>;
   /** Some related `reviewResponsesByOriginalReviewResponseId` exist. */
   reviewResponsesByOriginalReviewResponseIdExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewQuestionAssignment` relation. */
-  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** A related `reviewQuestionAssignment` exists. */
-  reviewQuestionAssignmentExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `applicationResponse` relation. */
   applicationResponse?: Maybe<ApplicationResponseFilter>;
   /** A related `applicationResponse` exists. */
@@ -2986,32 +3321,107 @@ export type ReviewResponseToManyReviewResponseFilter = {
   none?: Maybe<ReviewResponseFilter>;
 };
 
-/** A filter to be used against `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewQuestionAssignmentFilter = {
+/** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateElementId` field. */
-  templateElementId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewAssignmentId` field. */
   reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `levelNumber` field. */
+  levelNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `timeStageCreated` field. */
+  timeStageCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLastStage` field. */
+  isLastStage?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isFinalDecision` field. */
+  isFinalDecision?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ReviewStatusFilter>;
+  /** Filter by the object’s `timeStatusCreated` field. */
+  timeStatusCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
-  reviewResponses?: Maybe<ReviewQuestionAssignmentToManyReviewResponseFilter>;
+  reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
   reviewResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `templateElement` relation. */
-  templateElement?: Maybe<TemplateElementFilter>;
+  /** Filter by the object’s `reviewDecisions` relation. */
+  reviewDecisions?: Maybe<ReviewToManyReviewDecisionFilter>;
+  /** Some related `reviewDecisions` exist. */
+  reviewDecisionsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewStatusHistories` relation. */
+  reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
+  /** Some related `reviewStatusHistories` exist. */
+  reviewStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `notifications` relation. */
+  notifications?: Maybe<ReviewToManyNotificationFilter>;
+  /** Some related `notifications` exist. */
+  notificationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignment` relation. */
   reviewAssignment?: Maybe<ReviewAssignmentFilter>;
+  /** A related `reviewAssignment` exists. */
+  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewer` relation. */
+  reviewer?: Maybe<UserFilter>;
+  /** A related `reviewer` exists. */
+  reviewerExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
+  and?: Maybe<Array<ReviewFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
+  or?: Maybe<Array<ReviewFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ReviewQuestionAssignmentFilter>;
+  not?: Maybe<ReviewFilter>;
 };
 
+/** A filter to be used against ReviewStatus fields. All fields are combined with a logical ‘and.’ */
+export type ReviewStatusFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ReviewStatus>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ReviewStatus>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ReviewStatus>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ReviewStatus>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ReviewStatus>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ReviewStatus>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ReviewStatus>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ReviewStatus>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ReviewStatus>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ReviewStatus>;
+};
+
+export enum ReviewStatus {
+  Draft = 'DRAFT',
+  Submitted = 'SUBMITTED',
+  ChangesRequested = 'CHANGES_REQUESTED',
+  Pending = 'PENDING',
+  Locked = 'LOCKED',
+  Discontinued = 'DISCONTINUED'
+}
+
 /** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewQuestionAssignmentToManyReviewResponseFilter = {
+export type ReviewToManyReviewResponseFilter = {
   /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   every?: Maybe<ReviewResponseFilter>;
   /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -3020,157 +3430,154 @@ export type ReviewQuestionAssignmentToManyReviewResponseFilter = {
   none?: Maybe<ReviewResponseFilter>;
 };
 
-/** A filter to be used against `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `assignerId` field. */
-  assignerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerId` field. */
-  reviewerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `organisationId` field. */
-  organisationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageId` field. */
-  stageId?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageNumber` field. */
-  stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `timeStageCreated` field. */
-  timeStageCreated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ReviewAssignmentStatusFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateId` field. */
-  templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `allowedSections` field. */
-  allowedSections?: Maybe<StringListFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `timeUpdated` field. */
-  timeUpdated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `levelNumber` field. */
-  levelNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `levelId` field. */
-  levelId?: Maybe<IntFilter>;
-  /** Filter by the object’s `isLastLevel` field. */
-  isLastLevel?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isLastStage` field. */
-  isLastStage?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isLocked` field. */
-  isLocked?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isFinalDecision` field. */
-  isFinalDecision?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isSelfAssignable` field. */
-  isSelfAssignable?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `reviewAssignmentAssignerJoins` relation. */
-  reviewAssignmentAssignerJoins?: Maybe<ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter>;
-  /** Some related `reviewAssignmentAssignerJoins` exist. */
-  reviewAssignmentAssignerJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewQuestionAssignments` relation. */
-  reviewQuestionAssignments?: Maybe<ReviewAssignmentToManyReviewQuestionAssignmentFilter>;
-  /** Some related `reviewQuestionAssignments` exist. */
-  reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviews` relation. */
-  reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
-  /** Some related `reviews` exist. */
-  reviewsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `assigner` relation. */
-  assigner?: Maybe<UserFilter>;
-  /** A related `assigner` exists. */
-  assignerExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewer` relation. */
-  reviewer?: Maybe<UserFilter>;
-  /** Filter by the object’s `organisation` relation. */
-  organisation?: Maybe<OrganisationFilter>;
-  /** A related `organisation` exists. */
-  organisationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `stage` relation. */
-  stage?: Maybe<TemplateStageFilter>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** Filter by the object’s `template` relation. */
-  template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `level` relation. */
-  level?: Maybe<TemplateStageReviewLevelFilter>;
-  /** A related `level` exists. */
-  levelExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewAssignmentFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewAssignmentFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewAssignmentFilter>;
+/** A filter to be used against many `ReviewDecision` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewToManyReviewDecisionFilter = {
+  /** Every related `ReviewDecision` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewDecisionFilter>;
+  /** Some related `ReviewDecision` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewDecisionFilter>;
+  /** No related `ReviewDecision` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewDecisionFilter>;
 };
 
-/** A filter to be used against ReviewAssignmentStatus fields. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentStatusFilter = {
+/** A filter to be used against `ReviewDecision` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewDecisionFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `decision` field. */
+  decision?: Maybe<DecisionFilter>;
+  /** Filter by the object’s `comment` field. */
+  comment?: Maybe<StringFilter>;
+  /** Filter by the object’s `timeUpdated` field. */
+  timeUpdated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `review` relation. */
+  review?: Maybe<ReviewFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewDecisionFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewDecisionFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewDecisionFilter>;
+};
+
+/** A filter to be used against Decision fields. All fields are combined with a logical ‘and.’ */
+export type DecisionFilter = {
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
   isNull?: Maybe<Scalars['Boolean']>;
   /** Equal to the specified value. */
-  equalTo?: Maybe<ReviewAssignmentStatus>;
+  equalTo?: Maybe<Decision>;
   /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ReviewAssignmentStatus>;
+  notEqualTo?: Maybe<Decision>;
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ReviewAssignmentStatus>;
+  distinctFrom?: Maybe<Decision>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ReviewAssignmentStatus>;
+  notDistinctFrom?: Maybe<Decision>;
   /** Included in the specified list. */
-  in?: Maybe<Array<ReviewAssignmentStatus>>;
+  in?: Maybe<Array<Decision>>;
   /** Not included in the specified list. */
-  notIn?: Maybe<Array<ReviewAssignmentStatus>>;
+  notIn?: Maybe<Array<Decision>>;
   /** Less than the specified value. */
-  lessThan?: Maybe<ReviewAssignmentStatus>;
+  lessThan?: Maybe<Decision>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
+  lessThanOrEqualTo?: Maybe<Decision>;
   /** Greater than the specified value. */
-  greaterThan?: Maybe<ReviewAssignmentStatus>;
+  greaterThan?: Maybe<Decision>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
+  greaterThanOrEqualTo?: Maybe<Decision>;
 };
 
-export enum ReviewAssignmentStatus {
-  Available = 'AVAILABLE',
-  Assigned = 'ASSIGNED'
+export enum Decision {
+  ListOfQuestions = 'LIST_OF_QUESTIONS',
+  Conform = 'CONFORM',
+  NonConform = 'NON_CONFORM',
+  ChangesRequested = 'CHANGES_REQUESTED',
+  NoDecision = 'NO_DECISION'
 }
 
-/** A filter to be used against many `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter = {
-  /** Every related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewAssignmentAssignerJoinFilter>;
-  /** Some related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewAssignmentAssignerJoinFilter>;
-  /** No related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewAssignmentAssignerJoinFilter>;
+/** A filter to be used against many `ReviewStatusHistory` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewToManyReviewStatusHistoryFilter = {
+  /** Every related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewStatusHistoryFilter>;
+  /** Some related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewStatusHistoryFilter>;
+  /** No related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewStatusHistoryFilter>;
 };
 
-/** A filter to be used against `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentAssignerJoinFilter = {
+/** A filter to be used against `ReviewStatusHistory` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewStatusHistoryFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `assignerId` field. */
-  assignerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `organisationId` field. */
-  organisationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<IntFilter>;
-  /** Filter by the object’s `assigner` relation. */
-  assigner?: Maybe<UserFilter>;
-  /** A related `assigner` exists. */
-  assignerExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `organisation` relation. */
-  organisation?: Maybe<OrganisationFilter>;
-  /** A related `organisation` exists. */
-  organisationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewAssignment` relation. */
-  reviewAssignment?: Maybe<ReviewAssignmentFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ReviewStatusFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isCurrent` field. */
+  isCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `review` relation. */
+  review?: Maybe<ReviewFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewAssignmentAssignerJoinFilter>>;
+  and?: Maybe<Array<ReviewStatusHistoryFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewAssignmentAssignerJoinFilter>>;
+  or?: Maybe<Array<ReviewStatusHistoryFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ReviewAssignmentAssignerJoinFilter>;
+  not?: Maybe<ReviewStatusHistoryFilter>;
+};
+
+/** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewToManyNotificationFilter = {
+  /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<NotificationFilter>;
+  /** Some related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<NotificationFilter>;
+  /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<NotificationFilter>;
+};
+
+/** A filter to be used against `Notification` object types. All fields are combined with a logical ‘and.’ */
+export type NotificationFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `emailRecipients` field. */
+  emailRecipients?: Maybe<StringFilter>;
+  /** Filter by the object’s `subject` field. */
+  subject?: Maybe<StringFilter>;
+  /** Filter by the object’s `message` field. */
+  message?: Maybe<StringFilter>;
+  /** Filter by the object’s `attachments` field. */
+  attachments?: Maybe<StringListFilter>;
+  /** Filter by the object’s `emailSent` field. */
+  emailSent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isRead` field. */
+  isRead?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `review` relation. */
+  review?: Maybe<ReviewFilter>;
+  /** A related `review` exists. */
+  reviewExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<NotificationFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<NotificationFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<NotificationFilter>;
 };
 
 /** A filter to be used against `User` object types. All fields are combined with a logical ‘and.’ */
@@ -3191,6 +3598,8 @@ export type UserFilter = {
   dateOfBirth?: Maybe<DateFilter>;
   /** Filter by the object’s `passwordHash` field. */
   passwordHash?: Maybe<StringFilter>;
+  /** Filter by the object’s `phone` field. */
+  phone?: Maybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
   userOrganisations?: Maybe<UserToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
@@ -3290,6 +3699,10 @@ export type UserOrganisationFilter = {
   organisationId?: Maybe<IntFilter>;
   /** Filter by the object’s `userRole` field. */
   userRole?: Maybe<StringFilter>;
+  /** Filter by the object’s `userOrganisationApplicationJoins` relation. */
+  userOrganisationApplicationJoins?: Maybe<UserOrganisationToManyUserOrganisationApplicationJoinFilter>;
+  /** Some related `userOrganisationApplicationJoins` exist. */
+  userOrganisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** Filter by the object’s `organisation` relation. */
@@ -3300,6 +3713,324 @@ export type UserOrganisationFilter = {
   or?: Maybe<Array<UserOrganisationFilter>>;
   /** Negates the expression. */
   not?: Maybe<UserOrganisationFilter>;
+};
+
+/** A filter to be used against many `UserOrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type UserOrganisationToManyUserOrganisationApplicationJoinFilter = {
+  /** Every related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<UserOrganisationApplicationJoinFilter>;
+  /** Some related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<UserOrganisationApplicationJoinFilter>;
+  /** No related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<UserOrganisationApplicationJoinFilter>;
+};
+
+/** A filter to be used against `UserOrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type UserOrganisationApplicationJoinFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `userOrganisationId` field. */
+  userOrganisationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Filter by the object’s `userOrganisation` relation. */
+  userOrganisation?: Maybe<UserOrganisationFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<UserOrganisationApplicationJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<UserOrganisationApplicationJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<UserOrganisationApplicationJoinFilter>;
+};
+
+/** A filter to be used against `Application` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `sessionId` field. */
+  sessionId?: Maybe<StringFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcomeFilter>;
+  /** Filter by the object’s `isActive` field. */
+  isActive?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isConfig` field. */
+  isConfig?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `stage` field. */
+  stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ApplicationStatusFilter>;
+  /** Filter by the object’s `applicationNotes` relation. */
+  applicationNotes?: Maybe<ApplicationToManyApplicationNoteFilter>;
+  /** Some related `applicationNotes` exist. */
+  applicationNotesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationStageHistories` relation. */
+  applicationStageHistories?: Maybe<ApplicationToManyApplicationStageHistoryFilter>;
+  /** Some related `applicationStageHistories` exist. */
+  applicationStageHistoriesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationResponses` relation. */
+  applicationResponses?: Maybe<ApplicationToManyApplicationResponseFilter>;
+  /** Some related `applicationResponses` exist. */
+  applicationResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `triggerSchedules` relation. */
+  triggerSchedules?: Maybe<ApplicationToManyTriggerScheduleFilter>;
+  /** Some related `triggerSchedules` exist. */
+  triggerSchedulesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignments` relation. */
+  reviewAssignments?: Maybe<ApplicationToManyReviewAssignmentFilter>;
+  /** Some related `reviewAssignments` exist. */
+  reviewAssignmentsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviews` relation. */
+  reviews?: Maybe<ApplicationToManyReviewFilter>;
+  /** Some related `reviews` exist. */
+  reviewsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `filesByApplicationSerial` relation. */
+  filesByApplicationSerial?: Maybe<ApplicationToManyFileFilter>;
+  /** Some related `filesByApplicationSerial` exist. */
+  filesByApplicationSerialExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `notifications` relation. */
+  notifications?: Maybe<ApplicationToManyNotificationFilter>;
+  /** Some related `notifications` exist. */
+  notificationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `verifications` relation. */
+  verifications?: Maybe<ApplicationToManyVerificationFilter>;
+  /** Some related `verifications` exist. */
+  verificationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `activityLogs` relation. */
+  activityLogs?: Maybe<ApplicationToManyActivityLogFilter>;
+  /** Some related `activityLogs` exist. */
+  activityLogsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `userOrganisationApplicationJoins` relation. */
+  userOrganisationApplicationJoins?: Maybe<ApplicationToManyUserOrganisationApplicationJoinFilter>;
+  /** Some related `userOrganisationApplicationJoins` exist. */
+  userOrganisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `userApplicationJoins` relation. */
+  userApplicationJoins?: Maybe<ApplicationToManyUserApplicationJoinFilter>;
+  /** Some related `userApplicationJoins` exist. */
+  userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `organisationApplicationJoins` relation. */
+  organisationApplicationJoins?: Maybe<ApplicationToManyOrganisationApplicationJoinFilter>;
+  /** Some related `organisationApplicationJoins` exist. */
+  organisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `productApplicationJoins` relation. */
+  productApplicationJoins?: Maybe<ApplicationToManyProductApplicationJoinFilter>;
+  /** Some related `productApplicationJoins` exist. */
+  productApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `licenceApplicationJoins` relation. */
+  licenceApplicationJoins?: Maybe<ApplicationToManyLicenceApplicationJoinFilter>;
+  /** Some related `licenceApplicationJoins` exist. */
+  licenceApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `org` relation. */
+  org?: Maybe<OrganisationFilter>;
+  /** A related `org` exists. */
+  orgExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationFilter>;
+};
+
+/** A filter to be used against ApplicationOutcome fields. All fields are combined with a logical ‘and.’ */
+export type ApplicationOutcomeFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ApplicationOutcome>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ApplicationOutcome>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ApplicationOutcome>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ApplicationOutcome>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ApplicationOutcome>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ApplicationOutcome>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ApplicationOutcome>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ApplicationOutcome>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ApplicationOutcome>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ApplicationOutcome>;
+};
+
+export enum ApplicationOutcome {
+  Pending = 'PENDING',
+  Approved = 'APPROVED',
+  Rejected = 'REJECTED',
+  Expired = 'EXPIRED',
+  Withdrawn = 'WITHDRAWN'
+}
+
+/** A filter to be used against ApplicationStatus fields. All fields are combined with a logical ‘and.’ */
+export type ApplicationStatusFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ApplicationStatus>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ApplicationStatus>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ApplicationStatus>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ApplicationStatus>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ApplicationStatus>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ApplicationStatus>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ApplicationStatus>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ApplicationStatus>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ApplicationStatus>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ApplicationStatus>;
+};
+
+export enum ApplicationStatus {
+  Draft = 'DRAFT',
+  Submitted = 'SUBMITTED',
+  ChangesRequired = 'CHANGES_REQUIRED',
+  ReSubmitted = 'RE_SUBMITTED',
+  Completed = 'COMPLETED'
+}
+
+/** A filter to be used against many `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyApplicationNoteFilter = {
+  /** Every related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ApplicationNoteFilter>;
+  /** Some related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ApplicationNoteFilter>;
+  /** No related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ApplicationNoteFilter>;
+};
+
+/** A filter to be used against `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationNoteFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `comment` field. */
+  comment?: Maybe<StringFilter>;
+  /** Filter by the object’s `files` relation. */
+  files?: Maybe<ApplicationNoteToManyFileFilter>;
+  /** Some related `files` exist. */
+  filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** Filter by the object’s `org` relation. */
+  org?: Maybe<OrganisationFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationNoteFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationNoteFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationNoteFilter>;
+};
+
+/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationNoteToManyFileFilter = {
+  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<FileFilter>;
+  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<FileFilter>;
+  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<FileFilter>;
+};
+
+/** A filter to be used against `File` object types. All fields are combined with a logical ‘and.’ */
+export type FileFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `uniqueId` field. */
+  uniqueId?: Maybe<StringFilter>;
+  /** Filter by the object’s `originalFilename` field. */
+  originalFilename?: Maybe<StringFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationSerial` field. */
+  applicationSerial?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationResponseId` field. */
+  applicationResponseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationNoteId` field. */
+  applicationNoteId?: Maybe<IntFilter>;
+  /** Filter by the object’s `isOutputDoc` field. */
+  isOutputDoc?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `filePath` field. */
+  filePath?: Maybe<StringFilter>;
+  /** Filter by the object’s `thumbnailPath` field. */
+  thumbnailPath?: Maybe<StringFilter>;
+  /** Filter by the object’s `mimetype` field. */
+  mimetype?: Maybe<StringFilter>;
+  /** Filter by the object’s `submitted` field. */
+  submitted?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationByApplicationSerial` relation. */
+  applicationByApplicationSerial?: Maybe<ApplicationFilter>;
+  /** A related `applicationByApplicationSerial` exists. */
+  applicationByApplicationSerialExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationResponse` relation. */
+  applicationResponse?: Maybe<ApplicationResponseFilter>;
+  /** A related `applicationResponse` exists. */
+  applicationResponseExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationNote` relation. */
+  applicationNote?: Maybe<ApplicationNoteFilter>;
+  /** A related `applicationNote` exists. */
+  applicationNoteExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<FileFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<FileFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<FileFilter>;
 };
 
 /** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
@@ -3570,172 +4301,8 @@ export type OrganisationToManyApplicationFilter = {
   none?: Maybe<ApplicationFilter>;
 };
 
-/** A filter to be used against `Application` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateId` field. */
-  templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `orgId` field. */
-  orgId?: Maybe<IntFilter>;
-  /** Filter by the object’s `sessionId` field. */
-  sessionId?: Maybe<StringFilter>;
-  /** Filter by the object’s `serial` field. */
-  serial?: Maybe<StringFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `outcome` field. */
-  outcome?: Maybe<ApplicationOutcomeFilter>;
-  /** Filter by the object’s `isActive` field. */
-  isActive?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isConfig` field. */
-  isConfig?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `stage` field. */
-  stage?: Maybe<StringFilter>;
-  /** Filter by the object’s `stageNumber` field. */
-  stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ApplicationStatusFilter>;
-  /** Filter by the object’s `applicationNotes` relation. */
-  applicationNotes?: Maybe<ApplicationToManyApplicationNoteFilter>;
-  /** Some related `applicationNotes` exist. */
-  applicationNotesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationStageHistories` relation. */
-  applicationStageHistories?: Maybe<ApplicationToManyApplicationStageHistoryFilter>;
-  /** Some related `applicationStageHistories` exist. */
-  applicationStageHistoriesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationResponses` relation. */
-  applicationResponses?: Maybe<ApplicationToManyApplicationResponseFilter>;
-  /** Some related `applicationResponses` exist. */
-  applicationResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `triggerSchedules` relation. */
-  triggerSchedules?: Maybe<ApplicationToManyTriggerScheduleFilter>;
-  /** Some related `triggerSchedules` exist. */
-  triggerSchedulesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewAssignments` relation. */
-  reviewAssignments?: Maybe<ApplicationToManyReviewAssignmentFilter>;
-  /** Some related `reviewAssignments` exist. */
-  reviewAssignmentsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviews` relation. */
-  reviews?: Maybe<ApplicationToManyReviewFilter>;
-  /** Some related `reviews` exist. */
-  reviewsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `filesByApplicationSerial` relation. */
-  filesByApplicationSerial?: Maybe<ApplicationToManyFileFilter>;
-  /** Some related `filesByApplicationSerial` exist. */
-  filesByApplicationSerialExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `notifications` relation. */
-  notifications?: Maybe<ApplicationToManyNotificationFilter>;
-  /** Some related `notifications` exist. */
-  notificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `verifications` relation. */
-  verifications?: Maybe<ApplicationToManyVerificationFilter>;
-  /** Some related `verifications` exist. */
-  verificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `activityLogs` relation. */
-  activityLogs?: Maybe<ApplicationToManyActivityLogFilter>;
-  /** Some related `activityLogs` exist. */
-  activityLogsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `organisationApplicationJoins` relation. */
-  organisationApplicationJoins?: Maybe<ApplicationToManyOrganisationApplicationJoinFilter>;
-  /** Some related `organisationApplicationJoins` exist. */
-  organisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `userApplicationJoins` relation. */
-  userApplicationJoins?: Maybe<ApplicationToManyUserApplicationJoinFilter>;
-  /** Some related `userApplicationJoins` exist. */
-  userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `template` relation. */
-  template?: Maybe<TemplateFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `org` relation. */
-  org?: Maybe<OrganisationFilter>;
-  /** A related `org` exists. */
-  orgExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ApplicationFilter>;
-};
-
-/** A filter to be used against ApplicationOutcome fields. All fields are combined with a logical ‘and.’ */
-export type ApplicationOutcomeFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<ApplicationOutcome>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ApplicationOutcome>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ApplicationOutcome>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ApplicationOutcome>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<ApplicationOutcome>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<ApplicationOutcome>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<ApplicationOutcome>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ApplicationOutcome>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<ApplicationOutcome>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ApplicationOutcome>;
-};
-
-export enum ApplicationOutcome {
-  Pending = 'PENDING',
-  Approved = 'APPROVED',
-  Rejected = 'REJECTED',
-  Expired = 'EXPIRED',
-  Withdrawn = 'WITHDRAWN'
-}
-
-/** A filter to be used against ApplicationStatus fields. All fields are combined with a logical ‘and.’ */
-export type ApplicationStatusFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<ApplicationStatus>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ApplicationStatus>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ApplicationStatus>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ApplicationStatus>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<ApplicationStatus>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<ApplicationStatus>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<ApplicationStatus>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ApplicationStatus>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<ApplicationStatus>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ApplicationStatus>;
-};
-
-export enum ApplicationStatus {
-  Draft = 'DRAFT',
-  Submitted = 'SUBMITTED',
-  ChangesRequired = 'CHANGES_REQUIRED',
-  ReSubmitted = 'RE_SUBMITTED',
-  Completed = 'COMPLETED'
-}
-
 /** A filter to be used against many `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationToManyApplicationNoteFilter = {
+export type OrganisationToManyApplicationNoteFilter = {
   /** Every related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   every?: Maybe<ApplicationNoteFilter>;
   /** Some related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -3744,178 +4311,175 @@ export type ApplicationToManyApplicationNoteFilter = {
   none?: Maybe<ApplicationNoteFilter>;
 };
 
-/** A filter to be used against `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationNoteFilter = {
+/** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationToManyReviewAssignmentFilter = {
+  /** Every related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewAssignmentFilter>;
+  /** Some related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewAssignmentFilter>;
+  /** No related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewAssignmentFilter>;
+};
+
+/** A filter to be used against `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
+  /** Filter by the object’s `assignerId` field. */
+  assignerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `organisationId` field. */
+  organisationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageId` field. */
+  stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `timeStageCreated` field. */
+  timeStageCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `orgId` field. */
-  orgId?: Maybe<IntFilter>;
-  /** Filter by the object’s `timestamp` field. */
-  timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `comment` field. */
-  comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `files` relation. */
-  files?: Maybe<ApplicationNoteToManyFileFilter>;
-  /** Some related `files` exist. */
-  filesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** Filter by the object’s `org` relation. */
-  org?: Maybe<OrganisationFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationNoteFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationNoteFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ApplicationNoteFilter>;
-};
-
-/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationNoteToManyFileFilter = {
-  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<FileFilter>;
-  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<FileFilter>;
-  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<FileFilter>;
-};
-
-/** A filter to be used against `File` object types. All fields are combined with a logical ‘and.’ */
-export type FileFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `uniqueId` field. */
-  uniqueId?: Maybe<StringFilter>;
-  /** Filter by the object’s `originalFilename` field. */
-  originalFilename?: Maybe<StringFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationSerial` field. */
-  applicationSerial?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationResponseId` field. */
-  applicationResponseId?: Maybe<IntFilter>;
-  /** Filter by the object’s `description` field. */
-  description?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationNoteId` field. */
-  applicationNoteId?: Maybe<IntFilter>;
-  /** Filter by the object’s `isOutputDoc` field. */
-  isOutputDoc?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `filePath` field. */
-  filePath?: Maybe<StringFilter>;
-  /** Filter by the object’s `thumbnailPath` field. */
-  thumbnailPath?: Maybe<StringFilter>;
-  /** Filter by the object’s `mimetype` field. */
-  mimetype?: Maybe<StringFilter>;
-  /** Filter by the object’s `submitted` field. */
-  submitted?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `timestamp` field. */
-  timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `allowedSections` field. */
+  allowedSections?: Maybe<StringListFilter>;
+  /** Filter by the object’s `assignedSections` field. */
+  assignedSections?: Maybe<StringListFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `timeUpdated` field. */
+  timeUpdated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `levelNumber` field. */
+  levelNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `levelId` field. */
+  levelId?: Maybe<IntFilter>;
+  /** Filter by the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLastStage` field. */
+  isLastStage?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLocked` field. */
+  isLocked?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isFinalDecision` field. */
+  isFinalDecision?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isSelfAssignable` field. */
+  isSelfAssignable?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `reviewAssignmentAssignerJoins` relation. */
+  reviewAssignmentAssignerJoins?: Maybe<ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter>;
+  /** Some related `reviewAssignmentAssignerJoins` exist. */
+  reviewAssignmentAssignerJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviews` relation. */
+  reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
+  /** Some related `reviews` exist. */
+  reviewsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `assigner` relation. */
+  assigner?: Maybe<UserFilter>;
+  /** A related `assigner` exists. */
+  assignerExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewer` relation. */
+  reviewer?: Maybe<UserFilter>;
+  /** Filter by the object’s `organisation` relation. */
+  organisation?: Maybe<OrganisationFilter>;
+  /** A related `organisation` exists. */
+  organisationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `stage` relation. */
+  stage?: Maybe<TemplateStageFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** A related `template` exists. */
   templateExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationByApplicationSerial` relation. */
-  applicationByApplicationSerial?: Maybe<ApplicationFilter>;
-  /** A related `applicationByApplicationSerial` exists. */
-  applicationByApplicationSerialExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationResponse` relation. */
-  applicationResponse?: Maybe<ApplicationResponseFilter>;
-  /** A related `applicationResponse` exists. */
-  applicationResponseExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationNote` relation. */
-  applicationNote?: Maybe<ApplicationNoteFilter>;
-  /** A related `applicationNote` exists. */
-  applicationNoteExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `level` relation. */
+  level?: Maybe<TemplateStageReviewLevelFilter>;
+  /** A related `level` exists. */
+  levelExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<FileFilter>>;
+  and?: Maybe<Array<ReviewAssignmentFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<FileFilter>>;
+  or?: Maybe<Array<ReviewAssignmentFilter>>;
   /** Negates the expression. */
-  not?: Maybe<FileFilter>;
+  not?: Maybe<ReviewAssignmentFilter>;
 };
 
-/** A filter to be used against many `ApplicationStageHistory` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationToManyApplicationStageHistoryFilter = {
-  /** Every related `ApplicationStageHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ApplicationStageHistoryFilter>;
-  /** Some related `ApplicationStageHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ApplicationStageHistoryFilter>;
-  /** No related `ApplicationStageHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ApplicationStageHistoryFilter>;
+/** A filter to be used against ReviewAssignmentStatus fields. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentStatusFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ReviewAssignmentStatus>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ReviewAssignmentStatus>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ReviewAssignmentStatus>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ReviewAssignmentStatus>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ReviewAssignmentStatus>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ReviewAssignmentStatus>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ReviewAssignmentStatus>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ReviewAssignmentStatus>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ReviewAssignmentStatus>;
 };
 
-/** A filter to be used against `ApplicationStageHistory` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationStageHistoryFilter = {
+export enum ReviewAssignmentStatus {
+  Available = 'AVAILABLE',
+  Assigned = 'ASSIGNED'
+}
+
+/** A filter to be used against many `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter = {
+  /** Every related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewAssignmentAssignerJoinFilter>;
+  /** Some related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewAssignmentAssignerJoinFilter>;
+  /** No related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewAssignmentAssignerJoinFilter>;
+};
+
+/** A filter to be used against `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentAssignerJoinFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageId` field. */
-  stageId?: Maybe<IntFilter>;
-  /** Filter by the object’s `timeCreated` field. */
-  timeCreated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `isCurrent` field. */
-  isCurrent?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `applicationStatusHistories` relation. */
-  applicationStatusHistories?: Maybe<ApplicationStageHistoryToManyApplicationStatusHistoryFilter>;
-  /** Some related `applicationStatusHistories` exist. */
-  applicationStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** Filter by the object’s `stage` relation. */
-  stage?: Maybe<TemplateStageFilter>;
+  /** Filter by the object’s `assignerId` field. */
+  assignerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `organisationId` field. */
+  organisationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `assigner` relation. */
+  assigner?: Maybe<UserFilter>;
+  /** A related `assigner` exists. */
+  assignerExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `organisation` relation. */
+  organisation?: Maybe<OrganisationFilter>;
+  /** A related `organisation` exists. */
+  organisationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignment` relation. */
+  reviewAssignment?: Maybe<ReviewAssignmentFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationStageHistoryFilter>>;
+  and?: Maybe<Array<ReviewAssignmentAssignerJoinFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationStageHistoryFilter>>;
+  or?: Maybe<Array<ReviewAssignmentAssignerJoinFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ApplicationStageHistoryFilter>;
+  not?: Maybe<ReviewAssignmentAssignerJoinFilter>;
 };
 
-/** A filter to be used against many `ApplicationStatusHistory` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationStageHistoryToManyApplicationStatusHistoryFilter = {
-  /** Every related `ApplicationStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ApplicationStatusHistoryFilter>;
-  /** Some related `ApplicationStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ApplicationStatusHistoryFilter>;
-  /** No related `ApplicationStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ApplicationStatusHistoryFilter>;
-};
-
-/** A filter to be used against `ApplicationStatusHistory` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationStatusHistoryFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationStageHistoryId` field. */
-  applicationStageHistoryId?: Maybe<IntFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ApplicationStatusFilter>;
-  /** Filter by the object’s `timeCreated` field. */
-  timeCreated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `isCurrent` field. */
-  isCurrent?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationStageHistory` relation. */
-  applicationStageHistory?: Maybe<ApplicationStageHistoryFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationStatusHistoryFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationStatusHistoryFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ApplicationStatusHistoryFilter>;
+/** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentToManyReviewFilter = {
+  /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewFilter>;
+  /** Some related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewFilter>;
+  /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewFilter>;
 };
 
 /** A filter to be used against `TemplateStage` object types. All fields are combined with a logical ‘and.’ */
@@ -4010,6 +4574,68 @@ export type TemplateStageToManyApplicationStageHistoryFilter = {
   none?: Maybe<ApplicationStageHistoryFilter>;
 };
 
+/** A filter to be used against `ApplicationStageHistory` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationStageHistoryFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageId` field. */
+  stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isCurrent` field. */
+  isCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `applicationStatusHistories` relation. */
+  applicationStatusHistories?: Maybe<ApplicationStageHistoryToManyApplicationStatusHistoryFilter>;
+  /** Some related `applicationStatusHistories` exist. */
+  applicationStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Filter by the object’s `stage` relation. */
+  stage?: Maybe<TemplateStageFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationStageHistoryFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationStageHistoryFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationStageHistoryFilter>;
+};
+
+/** A filter to be used against many `ApplicationStatusHistory` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationStageHistoryToManyApplicationStatusHistoryFilter = {
+  /** Every related `ApplicationStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ApplicationStatusHistoryFilter>;
+  /** Some related `ApplicationStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ApplicationStatusHistoryFilter>;
+  /** No related `ApplicationStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ApplicationStatusHistoryFilter>;
+};
+
+/** A filter to be used against `ApplicationStatusHistory` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationStatusHistoryFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationStageHistoryId` field. */
+  applicationStageHistoryId?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ApplicationStatusFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isCurrent` field. */
+  isCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationStageHistory` relation. */
+  applicationStageHistory?: Maybe<ApplicationStageHistoryFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationStatusHistoryFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationStatusHistoryFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationStatusHistoryFilter>;
+};
+
 /** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
 export type TemplateStageToManyReviewAssignmentFilter = {
   /** Every related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -4018,6 +4644,56 @@ export type TemplateStageToManyReviewAssignmentFilter = {
   some?: Maybe<ReviewAssignmentFilter>;
   /** No related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ReviewAssignmentFilter>;
+};
+
+/** A filter to be used against many `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationToManyReviewAssignmentAssignerJoinFilter = {
+  /** Every related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewAssignmentAssignerJoinFilter>;
+  /** Some related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewAssignmentAssignerJoinFilter>;
+  /** No related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewAssignmentAssignerJoinFilter>;
+};
+
+/** A filter to be used against many `OrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationToManyOrganisationApplicationJoinFilter = {
+  /** Every related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<OrganisationApplicationJoinFilter>;
+  /** Some related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<OrganisationApplicationJoinFilter>;
+  /** No related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<OrganisationApplicationJoinFilter>;
+};
+
+/** A filter to be used against `OrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type OrganisationApplicationJoinFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `organisationId` field. */
+  organisationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Filter by the object’s `organisation` relation. */
+  organisation?: Maybe<OrganisationFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<OrganisationApplicationJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<OrganisationApplicationJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<OrganisationApplicationJoinFilter>;
+};
+
+/** A filter to be used against many `ApplicationStageHistory` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyApplicationStageHistoryFilter = {
+  /** Every related `ApplicationStageHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ApplicationStageHistoryFilter>;
+  /** Some related `ApplicationStageHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ApplicationStageHistoryFilter>;
+  /** No related `ApplicationStageHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ApplicationStageHistoryFilter>;
 };
 
 /** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -4090,265 +4766,6 @@ export type ApplicationToManyReviewFilter = {
   some?: Maybe<ReviewFilter>;
   /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ReviewFilter>;
-};
-
-/** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<IntFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerId` field. */
-  reviewerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `levelNumber` field. */
-  levelNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageNumber` field. */
-  stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `timeStageCreated` field. */
-  timeStageCreated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `isLastLevel` field. */
-  isLastLevel?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isLastStage` field. */
-  isLastStage?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isFinalDecision` field. */
-  isFinalDecision?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ReviewStatusFilter>;
-  /** Filter by the object’s `timeStatusCreated` field. */
-  timeStatusCreated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `reviewResponses` relation. */
-  reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
-  /** Some related `reviewResponses` exist. */
-  reviewResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewDecisions` relation. */
-  reviewDecisions?: Maybe<ReviewToManyReviewDecisionFilter>;
-  /** Some related `reviewDecisions` exist. */
-  reviewDecisionsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewStatusHistories` relation. */
-  reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
-  /** Some related `reviewStatusHistories` exist. */
-  reviewStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `notifications` relation. */
-  notifications?: Maybe<ReviewToManyNotificationFilter>;
-  /** Some related `notifications` exist. */
-  notificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewAssignment` relation. */
-  reviewAssignment?: Maybe<ReviewAssignmentFilter>;
-  /** A related `reviewAssignment` exists. */
-  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewer` relation. */
-  reviewer?: Maybe<UserFilter>;
-  /** A related `reviewer` exists. */
-  reviewerExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewFilter>;
-};
-
-/** A filter to be used against ReviewStatus fields. All fields are combined with a logical ‘and.’ */
-export type ReviewStatusFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<ReviewStatus>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ReviewStatus>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ReviewStatus>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ReviewStatus>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<ReviewStatus>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<ReviewStatus>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<ReviewStatus>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ReviewStatus>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<ReviewStatus>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ReviewStatus>;
-};
-
-export enum ReviewStatus {
-  Draft = 'DRAFT',
-  Submitted = 'SUBMITTED',
-  ChangesRequested = 'CHANGES_REQUESTED',
-  Pending = 'PENDING',
-  Locked = 'LOCKED',
-  Discontinued = 'DISCONTINUED'
-}
-
-/** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewToManyReviewResponseFilter = {
-  /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewResponseFilter>;
-  /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewResponseFilter>;
-  /** No related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewResponseFilter>;
-};
-
-/** A filter to be used against many `ReviewDecision` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewToManyReviewDecisionFilter = {
-  /** Every related `ReviewDecision` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewDecisionFilter>;
-  /** Some related `ReviewDecision` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewDecisionFilter>;
-  /** No related `ReviewDecision` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewDecisionFilter>;
-};
-
-/** A filter to be used against `ReviewDecision` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewDecisionFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewId` field. */
-  reviewId?: Maybe<IntFilter>;
-  /** Filter by the object’s `decision` field. */
-  decision?: Maybe<DecisionFilter>;
-  /** Filter by the object’s `comment` field. */
-  comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `timeUpdated` field. */
-  timeUpdated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `review` relation. */
-  review?: Maybe<ReviewFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewDecisionFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewDecisionFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewDecisionFilter>;
-};
-
-/** A filter to be used against Decision fields. All fields are combined with a logical ‘and.’ */
-export type DecisionFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<Decision>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<Decision>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<Decision>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<Decision>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<Decision>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<Decision>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<Decision>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<Decision>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<Decision>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<Decision>;
-};
-
-export enum Decision {
-  ListOfQuestions = 'LIST_OF_QUESTIONS',
-  Conform = 'CONFORM',
-  NonConform = 'NON_CONFORM',
-  ChangesRequested = 'CHANGES_REQUESTED',
-  NoDecision = 'NO_DECISION'
-}
-
-/** A filter to be used against many `ReviewStatusHistory` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewToManyReviewStatusHistoryFilter = {
-  /** Every related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewStatusHistoryFilter>;
-  /** Some related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewStatusHistoryFilter>;
-  /** No related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewStatusHistoryFilter>;
-};
-
-/** A filter to be used against `ReviewStatusHistory` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewStatusHistoryFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewId` field. */
-  reviewId?: Maybe<IntFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ReviewStatusFilter>;
-  /** Filter by the object’s `timeCreated` field. */
-  timeCreated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `isCurrent` field. */
-  isCurrent?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `review` relation. */
-  review?: Maybe<ReviewFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewStatusHistoryFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewStatusHistoryFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewStatusHistoryFilter>;
-};
-
-/** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewToManyNotificationFilter = {
-  /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<NotificationFilter>;
-  /** Some related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<NotificationFilter>;
-  /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<NotificationFilter>;
-};
-
-/** A filter to be used against `Notification` object types. All fields are combined with a logical ‘and.’ */
-export type NotificationFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewId` field. */
-  reviewId?: Maybe<IntFilter>;
-  /** Filter by the object’s `emailRecipients` field. */
-  emailRecipients?: Maybe<StringFilter>;
-  /** Filter by the object’s `subject` field. */
-  subject?: Maybe<StringFilter>;
-  /** Filter by the object’s `message` field. */
-  message?: Maybe<StringFilter>;
-  /** Filter by the object’s `attachments` field. */
-  attachments?: Maybe<StringListFilter>;
-  /** Filter by the object’s `emailSent` field. */
-  emailSent?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isRead` field. */
-  isRead?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `review` relation. */
-  review?: Maybe<ReviewFilter>;
-  /** A related `review` exists. */
-  reviewExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<NotificationFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<NotificationFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<NotificationFilter>;
 };
 
 /** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
@@ -4489,34 +4906,14 @@ export enum EventType {
   Permission = 'PERMISSION'
 }
 
-/** A filter to be used against many `OrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationToManyOrganisationApplicationJoinFilter = {
-  /** Every related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<OrganisationApplicationJoinFilter>;
-  /** Some related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<OrganisationApplicationJoinFilter>;
-  /** No related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<OrganisationApplicationJoinFilter>;
-};
-
-/** A filter to be used against `OrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationApplicationJoinFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `organisationId` field. */
-  organisationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** Filter by the object’s `organisation` relation. */
-  organisation?: Maybe<OrganisationFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<OrganisationApplicationJoinFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<OrganisationApplicationJoinFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<OrganisationApplicationJoinFilter>;
+/** A filter to be used against many `UserOrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyUserOrganisationApplicationJoinFilter = {
+  /** Every related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<UserOrganisationApplicationJoinFilter>;
+  /** Some related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<UserOrganisationApplicationJoinFilter>;
+  /** No related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<UserOrganisationApplicationJoinFilter>;
 };
 
 /** A filter to be used against many `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -4549,44 +4946,192 @@ export type UserApplicationJoinFilter = {
   not?: Maybe<UserApplicationJoinFilter>;
 };
 
-/** A filter to be used against many `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationToManyApplicationNoteFilter = {
-  /** Every related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ApplicationNoteFilter>;
-  /** Some related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ApplicationNoteFilter>;
-  /** No related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ApplicationNoteFilter>;
-};
-
-/** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationToManyReviewAssignmentFilter = {
-  /** Every related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewAssignmentFilter>;
-  /** Some related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewAssignmentFilter>;
-  /** No related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewAssignmentFilter>;
-};
-
-/** A filter to be used against many `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationToManyReviewAssignmentAssignerJoinFilter = {
-  /** Every related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewAssignmentAssignerJoinFilter>;
-  /** Some related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewAssignmentAssignerJoinFilter>;
-  /** No related `ReviewAssignmentAssignerJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewAssignmentAssignerJoinFilter>;
-};
-
 /** A filter to be used against many `OrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationToManyOrganisationApplicationJoinFilter = {
+export type ApplicationToManyOrganisationApplicationJoinFilter = {
   /** Every related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   every?: Maybe<OrganisationApplicationJoinFilter>;
   /** Some related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: Maybe<OrganisationApplicationJoinFilter>;
   /** No related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<OrganisationApplicationJoinFilter>;
+};
+
+/** A filter to be used against many `ProductApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyProductApplicationJoinFilter = {
+  /** Every related `ProductApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ProductApplicationJoinFilter>;
+  /** Some related `ProductApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ProductApplicationJoinFilter>;
+  /** No related `ProductApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ProductApplicationJoinFilter>;
+};
+
+/** A filter to be used against `ProductApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ProductApplicationJoinFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `productId` field. */
+  productId?: Maybe<IntFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Filter by the object’s `product` relation. */
+  product?: Maybe<ProductFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ProductApplicationJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ProductApplicationJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ProductApplicationJoinFilter>;
+};
+
+/** A filter to be used against `Product` object types. All fields are combined with a logical ‘and.’ */
+export type ProductFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `origin` field. */
+  origin?: Maybe<StringFilter>;
+  /** Filter by the object’s `packSize` field. */
+  packSize?: Maybe<StringFilter>;
+  /** Filter by the object’s `companyId` field. */
+  companyId?: Maybe<IntFilter>;
+  /** Filter by the object’s `components` field. */
+  components?: Maybe<StringFilter>;
+  /** Filter by the object’s `shelfLife` field. */
+  shelfLife?: Maybe<JsonFilter>;
+  /** Filter by the object’s `dosageForm` field. */
+  dosageForm?: Maybe<StringFilter>;
+  /** Filter by the object’s `expiryDate` field. */
+  expiryDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `companyName` field. */
+  companyName?: Maybe<StringFilter>;
+  /** Filter by the object’s `formulationsOld` field. */
+  formulationsOld?: Maybe<JsonFilter>;
+  /** Filter by the object’s `genericName` field. */
+  genericName?: Maybe<StringFilter>;
+  /** Filter by the object’s `productName` field. */
+  productName?: Maybe<StringFilter>;
+  /** Filter by the object’s `registration` field. */
+  registration?: Maybe<StringFilter>;
+  /** Filter by the object’s `universalCode` field. */
+  universalCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `universalType` field. */
+  universalType?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationLevel` field. */
+  applicationLevel?: Maybe<StringFilter>;
+  /** Filter by the object’s `primaryContainer` field. */
+  primaryContainer?: Maybe<StringFilter>;
+  /** Filter by the object’s `registrationDate` field. */
+  registrationDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `administrationUnit` field. */
+  administrationUnit?: Maybe<StringFilter>;
+  /** Filter by the object’s `routeAdministration` field. */
+  routeAdministration?: Maybe<StringFilter>;
+  /** Filter by the object’s `country` field. */
+  country?: Maybe<StringFilter>;
+  /** Filter by the object’s `indications` field. */
+  indications?: Maybe<StringFilter>;
+  /** Filter by the object’s `therapeuticCategory` field. */
+  therapeuticCategory?: Maybe<StringFilter>;
+  /** Filter by the object’s `formulations` field. */
+  formulations?: Maybe<JsonFilter>;
+  /** Filter by the object’s `indicationsEvidence` field. */
+  indicationsEvidence?: Maybe<StringFilter>;
+  /** Filter by the object’s `packagingDescription` field. */
+  packagingDescription?: Maybe<StringFilter>;
+  /** Filter by the object’s `productApplicationJoins` relation. */
+  productApplicationJoins?: Maybe<ProductToManyProductApplicationJoinFilter>;
+  /** Some related `productApplicationJoins` exist. */
+  productApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ProductFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ProductFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ProductFilter>;
+};
+
+/** A filter to be used against many `ProductApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ProductToManyProductApplicationJoinFilter = {
+  /** Every related `ProductApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ProductApplicationJoinFilter>;
+  /** Some related `ProductApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ProductApplicationJoinFilter>;
+  /** No related `ProductApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ProductApplicationJoinFilter>;
+};
+
+/** A filter to be used against many `LicenceApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyLicenceApplicationJoinFilter = {
+  /** Every related `LicenceApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<LicenceApplicationJoinFilter>;
+  /** Some related `LicenceApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<LicenceApplicationJoinFilter>;
+  /** No related `LicenceApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<LicenceApplicationJoinFilter>;
+};
+
+/** A filter to be used against `LicenceApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type LicenceApplicationJoinFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `licenceId` field. */
+  licenceId?: Maybe<IntFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Filter by the object’s `licence` relation. */
+  licence?: Maybe<LicenceFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LicenceApplicationJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LicenceApplicationJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LicenceApplicationJoinFilter>;
+};
+
+/** A filter to be used against `Licence` object types. All fields are combined with a logical ‘and.’ */
+export type LicenceFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `type` field. */
+  type?: Maybe<StringFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `companyId` field. */
+  companyId?: Maybe<IntFilter>;
+  /** Filter by the object’s `expiryDate` field. */
+  expiryDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `companyName` field. */
+  companyName?: Maybe<StringFilter>;
+  /** Filter by the object’s `productType` field. */
+  productType?: Maybe<StringFilter>;
+  /** Filter by the object’s `registration` field. */
+  registration?: Maybe<StringFilter>;
+  /** Filter by the object’s `licenseType` field. */
+  licenseType?: Maybe<StringFilter>;
+  /** Filter by the object’s `licenceApplicationJoins` relation. */
+  licenceApplicationJoins?: Maybe<LicenceToManyLicenceApplicationJoinFilter>;
+  /** Some related `licenceApplicationJoins` exist. */
+  licenceApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LicenceFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LicenceFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LicenceFilter>;
+};
+
+/** A filter to be used against many `LicenceApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type LicenceToManyLicenceApplicationJoinFilter = {
+  /** Every related `LicenceApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<LicenceApplicationJoinFilter>;
+  /** Some related `LicenceApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<LicenceApplicationJoinFilter>;
+  /** No related `LicenceApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<LicenceApplicationJoinFilter>;
 };
 
 /** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -4679,26 +5224,6 @@ export type UserToManyUserApplicationJoinFilter = {
   none?: Maybe<UserApplicationJoinFilter>;
 };
 
-/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentToManyReviewQuestionAssignmentFilter = {
-  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewQuestionAssignmentFilter>;
-};
-
-/** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewAssignmentToManyReviewFilter = {
-  /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewFilter>;
-  /** Some related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewFilter>;
-  /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewFilter>;
-};
-
 /** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationResponseToManyFileFilter = {
   /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -4707,16 +5232,6 @@ export type ApplicationResponseToManyFileFilter = {
   some?: Maybe<FileFilter>;
   /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<FileFilter>;
-};
-
-/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateElementToManyReviewQuestionAssignmentFilter = {
-  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewQuestionAssignmentFilter>;
-  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
 /** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -5513,8 +6028,6 @@ export type TemplateElement = Node & {
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
   applicationResponses: ApplicationResponsesConnection;
-  /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
-  reviewQuestionAssignments: ReviewQuestionAssignmentsConnection;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
   reviewResponses: ReviewResponsesConnection;
   parametersString?: Maybe<Scalars['String']>;
@@ -5530,18 +6043,6 @@ export type TemplateElementApplicationResponsesArgs = {
   orderBy?: Maybe<Array<ApplicationResponsesOrderBy>>;
   condition?: Maybe<ApplicationResponseCondition>;
   filter?: Maybe<ApplicationResponseFilter>;
-};
-
-
-export type TemplateElementReviewQuestionAssignmentsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
-  condition?: Maybe<ReviewQuestionAssignmentCondition>;
-  filter?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
 
@@ -5709,10 +6210,16 @@ export type Application = Node & {
   verifications: VerificationsConnection;
   /** Reads and enables pagination through a set of `ActivityLog`. */
   activityLogs: ActivityLogsConnection;
-  /** Reads and enables pagination through a set of `OrganisationApplicationJoin`. */
-  organisationApplicationJoins: OrganisationApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `UserOrganisationApplicationJoin`. */
+  userOrganisationApplicationJoins: UserOrganisationApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `UserApplicationJoin`. */
   userApplicationJoins: UserApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `OrganisationApplicationJoin`. */
+  organisationApplicationJoins: OrganisationApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `ProductApplicationJoin`. */
+  productApplicationJoins: ProductApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `LicenceApplicationJoin`. */
+  licenceApplicationJoins: LicenceApplicationJoinsConnection;
   stage?: Maybe<Scalars['String']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
@@ -5839,15 +6346,15 @@ export type ApplicationActivityLogsArgs = {
 };
 
 
-export type ApplicationOrganisationApplicationJoinsArgs = {
+export type ApplicationUserOrganisationApplicationJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<OrganisationApplicationJoinsOrderBy>>;
-  condition?: Maybe<OrganisationApplicationJoinCondition>;
-  filter?: Maybe<OrganisationApplicationJoinFilter>;
+  orderBy?: Maybe<Array<UserOrganisationApplicationJoinsOrderBy>>;
+  condition?: Maybe<UserOrganisationApplicationJoinCondition>;
+  filter?: Maybe<UserOrganisationApplicationJoinFilter>;
 };
 
 
@@ -5862,6 +6369,42 @@ export type ApplicationUserApplicationJoinsArgs = {
   filter?: Maybe<UserApplicationJoinFilter>;
 };
 
+
+export type ApplicationOrganisationApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<OrganisationApplicationJoinsOrderBy>>;
+  condition?: Maybe<OrganisationApplicationJoinCondition>;
+  filter?: Maybe<OrganisationApplicationJoinFilter>;
+};
+
+
+export type ApplicationProductApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ProductApplicationJoinsOrderBy>>;
+  condition?: Maybe<ProductApplicationJoinCondition>;
+  filter?: Maybe<ProductApplicationJoinFilter>;
+};
+
+
+export type ApplicationLicenceApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LicenceApplicationJoinsOrderBy>>;
+  condition?: Maybe<LicenceApplicationJoinCondition>;
+  filter?: Maybe<LicenceApplicationJoinFilter>;
+};
+
 export type User = Node & {
   __typename?: 'User';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -5874,6 +6417,7 @@ export type User = Node & {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
@@ -6082,6 +6626,20 @@ export type UserOrganisation = Node & {
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
   organisation?: Maybe<Organisation>;
+  /** Reads and enables pagination through a set of `UserOrganisationApplicationJoin`. */
+  userOrganisationApplicationJoins: UserOrganisationApplicationJoinsConnection;
+};
+
+
+export type UserOrganisationUserOrganisationApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UserOrganisationApplicationJoinsOrderBy>>;
+  condition?: Maybe<UserOrganisationApplicationJoinCondition>;
+  filter?: Maybe<UserOrganisationApplicationJoinFilter>;
 };
 
 export type Organisation = Node & {
@@ -6789,6 +7347,8 @@ export enum ReviewAssignmentsOrderBy {
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
+  AssignedSectionsAsc = 'ASSIGNED_SECTIONS_ASC',
+  AssignedSectionsDesc = 'ASSIGNED_SECTIONS_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   TimeUpdatedAsc = 'TIME_UPDATED_ASC',
@@ -6835,6 +7395,8 @@ export type ReviewAssignmentCondition = {
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `allowedSections` field. */
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `assignedSections` field. */
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `timeUpdated` field. */
@@ -6883,6 +7445,7 @@ export type ReviewAssignment = Node & {
   applicationId: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections: Array<Maybe<Scalars['String']>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -6908,8 +7471,6 @@ export type ReviewAssignment = Node & {
   level?: Maybe<TemplateStageReviewLevel>;
   /** Reads and enables pagination through a set of `ReviewAssignmentAssignerJoin`. */
   reviewAssignmentAssignerJoins: ReviewAssignmentAssignerJoinsConnection;
-  /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
-  reviewQuestionAssignments: ReviewQuestionAssignmentsConnection;
   /** Reads and enables pagination through a set of `Review`. */
   reviews: ReviewsConnection;
 };
@@ -6924,18 +7485,6 @@ export type ReviewAssignmentReviewAssignmentAssignerJoinsArgs = {
   orderBy?: Maybe<Array<ReviewAssignmentAssignerJoinsOrderBy>>;
   condition?: Maybe<ReviewAssignmentAssignerJoinCondition>;
   filter?: Maybe<ReviewAssignmentAssignerJoinFilter>;
-};
-
-
-export type ReviewAssignmentReviewQuestionAssignmentsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
-  condition?: Maybe<ReviewQuestionAssignmentCondition>;
-  filter?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
 
@@ -7304,217 +7853,72 @@ export type ReviewAssignmentAssignerJoinsEdge = {
   node?: Maybe<ReviewAssignmentAssignerJoin>;
 };
 
-/** Methods to use when ordering `ReviewQuestionAssignment`. */
-export enum ReviewQuestionAssignmentsOrderBy {
+/** Methods to use when ordering `Review`. */
+export enum ReviewsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
-  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
   ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
   ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `ReviewQuestionAssignment` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ReviewQuestionAssignmentCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateElementId` field. */
-  templateElementId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `ReviewQuestionAssignment` values. */
-export type ReviewQuestionAssignmentsConnection = {
-  __typename?: 'ReviewQuestionAssignmentsConnection';
-  /** A list of `ReviewQuestionAssignment` objects. */
-  nodes: Array<Maybe<ReviewQuestionAssignment>>;
-  /** A list of edges which contains the `ReviewQuestionAssignment` and cursor to aid in pagination. */
-  edges: Array<ReviewQuestionAssignmentsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ReviewQuestionAssignment` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type ReviewQuestionAssignment = Node & {
-  __typename?: 'ReviewQuestionAssignment';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  templateElementId: Scalars['Int'];
-  reviewAssignmentId: Scalars['Int'];
-  /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
-  templateElement?: Maybe<TemplateElement>;
-  /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
-  reviewAssignment?: Maybe<ReviewAssignment>;
-  /** Reads and enables pagination through a set of `ReviewResponse`. */
-  reviewResponses: ReviewResponsesConnection;
-};
-
-
-export type ReviewQuestionAssignmentReviewResponsesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
-  condition?: Maybe<ReviewResponseCondition>;
-  filter?: Maybe<ReviewResponseFilter>;
-};
-
-/** Methods to use when ordering `ReviewResponse`. */
-export enum ReviewResponsesOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  CommentAsc = 'COMMENT_ASC',
-  CommentDesc = 'COMMENT_DESC',
-  DecisionAsc = 'DECISION_ASC',
-  DecisionDesc = 'DECISION_DESC',
-  ReviewQuestionAssignmentIdAsc = 'REVIEW_QUESTION_ASSIGNMENT_ID_ASC',
-  ReviewQuestionAssignmentIdDesc = 'REVIEW_QUESTION_ASSIGNMENT_ID_DESC',
-  ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
-  ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
-  ReviewResponseLinkIdAsc = 'REVIEW_RESPONSE_LINK_ID_ASC',
-  ReviewResponseLinkIdDesc = 'REVIEW_RESPONSE_LINK_ID_DESC',
-  OriginalReviewResponseIdAsc = 'ORIGINAL_REVIEW_RESPONSE_ID_ASC',
-  OriginalReviewResponseIdDesc = 'ORIGINAL_REVIEW_RESPONSE_ID_DESC',
-  ReviewIdAsc = 'REVIEW_ID_ASC',
-  ReviewIdDesc = 'REVIEW_ID_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ReviewerIdAsc = 'REVIEWER_ID_ASC',
+  ReviewerIdDesc = 'REVIEWER_ID_DESC',
+  LevelNumberAsc = 'LEVEL_NUMBER_ASC',
+  LevelNumberDesc = 'LEVEL_NUMBER_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
-  TimeCreatedAsc = 'TIME_CREATED_ASC',
-  TimeCreatedDesc = 'TIME_CREATED_DESC',
-  TimeUpdatedAsc = 'TIME_UPDATED_ASC',
-  TimeUpdatedDesc = 'TIME_UPDATED_DESC',
-  TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
-  TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
-  IsVisibleToApplicantAsc = 'IS_VISIBLE_TO_APPLICANT_ASC',
-  IsVisibleToApplicantDesc = 'IS_VISIBLE_TO_APPLICANT_DESC',
-  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
-  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
-  RecommendedApplicantVisibilityAsc = 'RECOMMENDED_APPLICANT_VISIBILITY_ASC',
-  RecommendedApplicantVisibilityDesc = 'RECOMMENDED_APPLICANT_VISIBILITY_DESC',
-  StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC',
+  TimeStageCreatedAsc = 'TIME_STAGE_CREATED_ASC',
+  TimeStageCreatedDesc = 'TIME_STAGE_CREATED_DESC',
+  IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
+  IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
+  IsLastStageAsc = 'IS_LAST_STAGE_ASC',
+  IsLastStageDesc = 'IS_LAST_STAGE_DESC',
+  IsFinalDecisionAsc = 'IS_FINAL_DECISION_ASC',
+  IsFinalDecisionDesc = 'IS_FINAL_DECISION_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A condition to be used against `ReviewResponse` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ReviewResponseCondition = {
+/** A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `comment` field. */
-  comment?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `decision` field. */
-  decision?: Maybe<ReviewResponseDecision>;
-  /** Checks for equality with the object’s `reviewQuestionAssignmentId` field. */
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationResponseId` field. */
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewResponseLinkId` field. */
-  reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `originalReviewResponseId` field. */
-  originalReviewResponseId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewId` field. */
-  reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewerId` field. */
+  reviewerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `levelNumber` field. */
+  levelNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `timeCreated` field. */
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `timeUpdated` field. */
-  timeUpdated?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `timeSubmitted` field. */
-  timeSubmitted?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `isVisibleToApplicant` field. */
-  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `templateElementId` field. */
-  templateElementId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `recommendedApplicantVisibility` field. */
-  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
-  /** Checks for equality with the object’s `status` field. */
-  status?: Maybe<ReviewResponseStatus>;
+  /** Checks for equality with the object’s `timeStageCreated` field. */
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isLastStage` field. */
+  isLastStage?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isFinalDecision` field. */
+  isFinalDecision?: Maybe<Scalars['Boolean']>;
 };
 
-/** A connection to a list of `ReviewResponse` values. */
-export type ReviewResponsesConnection = {
-  __typename?: 'ReviewResponsesConnection';
-  /** A list of `ReviewResponse` objects. */
-  nodes: Array<Maybe<ReviewResponse>>;
-  /** A list of edges which contains the `ReviewResponse` and cursor to aid in pagination. */
-  edges: Array<ReviewResponsesEdge>;
+/** A connection to a list of `Review` values. */
+export type ReviewsConnection = {
+  __typename?: 'ReviewsConnection';
+  /** A list of `Review` objects. */
+  nodes: Array<Maybe<Review>>;
+  /** A list of edges which contains the `Review` and cursor to aid in pagination. */
+  edges: Array<ReviewsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `ReviewResponse` you could get from the connection. */
+  /** The count of *all* `Review` you could get from the connection. */
   totalCount: Scalars['Int'];
-};
-
-export type ReviewResponse = Node & {
-  __typename?: 'ReviewResponse';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalReviewResponseId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  timeUpdated?: Maybe<Scalars['Datetime']>;
-  timeSubmitted?: Maybe<Scalars['Datetime']>;
-  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
-  status?: Maybe<ReviewResponseStatus>;
-  /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
-  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
-  /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
-  applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
-  reviewResponseLink?: Maybe<ReviewResponse>;
-  /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
-  originalReviewResponse?: Maybe<ReviewResponse>;
-  /** Reads a single `Review` that is related to this `ReviewResponse`. */
-  review?: Maybe<Review>;
-  /** Reads a single `TemplateElement` that is related to this `ReviewResponse`. */
-  templateElement?: Maybe<TemplateElement>;
-  /** Reads and enables pagination through a set of `ReviewResponse`. */
-  reviewResponsesByReviewResponseLinkId: ReviewResponsesConnection;
-  /** Reads and enables pagination through a set of `ReviewResponse`. */
-  reviewResponsesByOriginalReviewResponseId: ReviewResponsesConnection;
-};
-
-
-export type ReviewResponseReviewResponsesByReviewResponseLinkIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
-  condition?: Maybe<ReviewResponseCondition>;
-  filter?: Maybe<ReviewResponseFilter>;
-};
-
-
-export type ReviewResponseReviewResponsesByOriginalReviewResponseIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
-  condition?: Maybe<ReviewResponseCondition>;
-  filter?: Maybe<ReviewResponseFilter>;
 };
 
 export type Review = Node & {
@@ -7597,6 +8001,158 @@ export type ReviewNotificationsArgs = {
   orderBy?: Maybe<Array<NotificationsOrderBy>>;
   condition?: Maybe<NotificationCondition>;
   filter?: Maybe<NotificationFilter>;
+};
+
+/** Methods to use when ordering `ReviewResponse`. */
+export enum ReviewResponsesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  CommentAsc = 'COMMENT_ASC',
+  CommentDesc = 'COMMENT_DESC',
+  DecisionAsc = 'DECISION_ASC',
+  DecisionDesc = 'DECISION_DESC',
+  ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
+  ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
+  ReviewResponseLinkIdAsc = 'REVIEW_RESPONSE_LINK_ID_ASC',
+  ReviewResponseLinkIdDesc = 'REVIEW_RESPONSE_LINK_ID_DESC',
+  OriginalReviewResponseIdAsc = 'ORIGINAL_REVIEW_RESPONSE_ID_ASC',
+  OriginalReviewResponseIdDesc = 'ORIGINAL_REVIEW_RESPONSE_ID_DESC',
+  ReviewIdAsc = 'REVIEW_ID_ASC',
+  ReviewIdDesc = 'REVIEW_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
+  TimeCreatedAsc = 'TIME_CREATED_ASC',
+  TimeCreatedDesc = 'TIME_CREATED_DESC',
+  TimeUpdatedAsc = 'TIME_UPDATED_ASC',
+  TimeUpdatedDesc = 'TIME_UPDATED_DESC',
+  TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
+  TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
+  IsVisibleToApplicantAsc = 'IS_VISIBLE_TO_APPLICANT_ASC',
+  IsVisibleToApplicantDesc = 'IS_VISIBLE_TO_APPLICANT_DESC',
+  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
+  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
+  RecommendedApplicantVisibilityAsc = 'RECOMMENDED_APPLICANT_VISIBILITY_ASC',
+  RecommendedApplicantVisibilityDesc = 'RECOMMENDED_APPLICANT_VISIBILITY_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `ReviewResponse` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ReviewResponseCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `comment` field. */
+  comment?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `decision` field. */
+  decision?: Maybe<ReviewResponseDecision>;
+  /** Checks for equality with the object’s `applicationResponseId` field. */
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewResponseLinkId` field. */
+  reviewResponseLinkId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `originalReviewResponseId` field. */
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewId` field. */
+  reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeUpdated` field. */
+  timeUpdated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeSubmitted` field. */
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `isVisibleToApplicant` field. */
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `templateElementId` field. */
+  templateElementId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `recommendedApplicantVisibility` field. */
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: Maybe<ReviewResponseStatus>;
+};
+
+/** A connection to a list of `ReviewResponse` values. */
+export type ReviewResponsesConnection = {
+  __typename?: 'ReviewResponsesConnection';
+  /** A list of `ReviewResponse` objects. */
+  nodes: Array<Maybe<ReviewResponse>>;
+  /** A list of edges which contains the `ReviewResponse` and cursor to aid in pagination. */
+  edges: Array<ReviewResponsesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewResponse` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ReviewResponse = Node & {
+  __typename?: 'ReviewResponse';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  comment?: Maybe<Scalars['String']>;
+  decision?: Maybe<ReviewResponseDecision>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewResponseLinkId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  templateElementId?: Maybe<Scalars['Int']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+  status?: Maybe<ReviewResponseStatus>;
+  /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
+  applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
+  reviewResponseLink?: Maybe<ReviewResponse>;
+  /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
+  originalReviewResponse?: Maybe<ReviewResponse>;
+  /** Reads a single `Review` that is related to this `ReviewResponse`. */
+  review?: Maybe<Review>;
+  /** Reads a single `TemplateElement` that is related to this `ReviewResponse`. */
+  templateElement?: Maybe<TemplateElement>;
+  /** Reads and enables pagination through a set of `ReviewResponse`. */
+  reviewResponsesByReviewResponseLinkId: ReviewResponsesConnection;
+  /** Reads and enables pagination through a set of `ReviewResponse`. */
+  reviewResponsesByOriginalReviewResponseId: ReviewResponsesConnection;
+};
+
+
+export type ReviewResponseReviewResponsesByReviewResponseLinkIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
+  condition?: Maybe<ReviewResponseCondition>;
+  filter?: Maybe<ReviewResponseFilter>;
+};
+
+
+export type ReviewResponseReviewResponsesByOriginalReviewResponseIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
+  condition?: Maybe<ReviewResponseCondition>;
+  filter?: Maybe<ReviewResponseFilter>;
+};
+
+/** A `ReviewResponse` edge in the connection. */
+export type ReviewResponsesEdge = {
+  __typename?: 'ReviewResponsesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewResponse` at the end of the edge. */
+  node?: Maybe<ReviewResponse>;
 };
 
 /** Methods to use when ordering `ReviewDecision`. */
@@ -7826,92 +8382,6 @@ export type NotificationsEdge = {
   node?: Maybe<Notification>;
 };
 
-/** A `ReviewResponse` edge in the connection. */
-export type ReviewResponsesEdge = {
-  __typename?: 'ReviewResponsesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewResponse` at the end of the edge. */
-  node?: Maybe<ReviewResponse>;
-};
-
-/** A `ReviewQuestionAssignment` edge in the connection. */
-export type ReviewQuestionAssignmentsEdge = {
-  __typename?: 'ReviewQuestionAssignmentsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewQuestionAssignment` at the end of the edge. */
-  node?: Maybe<ReviewQuestionAssignment>;
-};
-
-/** Methods to use when ordering `Review`. */
-export enum ReviewsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
-  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
-  TriggerAsc = 'TRIGGER_ASC',
-  TriggerDesc = 'TRIGGER_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  ReviewerIdAsc = 'REVIEWER_ID_ASC',
-  ReviewerIdDesc = 'REVIEWER_ID_DESC',
-  LevelNumberAsc = 'LEVEL_NUMBER_ASC',
-  LevelNumberDesc = 'LEVEL_NUMBER_DESC',
-  StageNumberAsc = 'STAGE_NUMBER_ASC',
-  StageNumberDesc = 'STAGE_NUMBER_DESC',
-  TimeStageCreatedAsc = 'TIME_STAGE_CREATED_ASC',
-  TimeStageCreatedDesc = 'TIME_STAGE_CREATED_DESC',
-  IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
-  IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
-  IsLastStageAsc = 'IS_LAST_STAGE_ASC',
-  IsLastStageDesc = 'IS_LAST_STAGE_DESC',
-  IsFinalDecisionAsc = 'IS_FINAL_DECISION_ASC',
-  IsFinalDecisionDesc = 'IS_FINAL_DECISION_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ReviewCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `trigger` field. */
-  trigger?: Maybe<Trigger>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewerId` field. */
-  reviewerId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `levelNumber` field. */
-  levelNumber?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `stageNumber` field. */
-  stageNumber?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `timeStageCreated` field. */
-  timeStageCreated?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `isLastLevel` field. */
-  isLastLevel?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `isLastStage` field. */
-  isLastStage?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `isFinalDecision` field. */
-  isFinalDecision?: Maybe<Scalars['Boolean']>;
-};
-
-/** A connection to a list of `Review` values. */
-export type ReviewsConnection = {
-  __typename?: 'ReviewsConnection';
-  /** A list of `Review` objects. */
-  nodes: Array<Maybe<Review>>;
-  /** A list of edges which contains the `Review` and cursor to aid in pagination. */
-  edges: Array<ReviewsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Review` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
 /** A `Review` edge in the connection. */
 export type ReviewsEdge = {
   __typename?: 'ReviewsEdge';
@@ -7986,6 +8456,64 @@ export type OrganisationApplicationJoinsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `OrganisationApplicationJoin` at the end of the edge. */
   node?: Maybe<OrganisationApplicationJoin>;
+};
+
+/** Methods to use when ordering `UserOrganisationApplicationJoin`. */
+export enum UserOrganisationApplicationJoinsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  UserOrganisationIdAsc = 'USER_ORGANISATION_ID_ASC',
+  UserOrganisationIdDesc = 'USER_ORGANISATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `UserOrganisationApplicationJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type UserOrganisationApplicationJoinCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `userOrganisationId` field. */
+  userOrganisationId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `UserOrganisationApplicationJoin` values. */
+export type UserOrganisationApplicationJoinsConnection = {
+  __typename?: 'UserOrganisationApplicationJoinsConnection';
+  /** A list of `UserOrganisationApplicationJoin` objects. */
+  nodes: Array<Maybe<UserOrganisationApplicationJoin>>;
+  /** A list of edges which contains the `UserOrganisationApplicationJoin` and cursor to aid in pagination. */
+  edges: Array<UserOrganisationApplicationJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UserOrganisationApplicationJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type UserOrganisationApplicationJoin = Node & {
+  __typename?: 'UserOrganisationApplicationJoin';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  applicationId: Scalars['Int'];
+  userOrganisationId: Scalars['Int'];
+  /** Reads a single `Application` that is related to this `UserOrganisationApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `UserOrganisation` that is related to this `UserOrganisationApplicationJoin`. */
+  userOrganisation?: Maybe<UserOrganisation>;
+};
+
+/** A `UserOrganisationApplicationJoin` edge in the connection. */
+export type UserOrganisationApplicationJoinsEdge = {
+  __typename?: 'UserOrganisationApplicationJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `UserOrganisationApplicationJoin` at the end of the edge. */
+  node?: Maybe<UserOrganisationApplicationJoin>;
 };
 
 /** A `UserOrganisation` edge in the connection. */
@@ -8308,6 +8836,197 @@ export type ActivityLogsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `ActivityLog` at the end of the edge. */
   node?: Maybe<ActivityLog>;
+};
+
+/** Methods to use when ordering `ProductApplicationJoin`. */
+export enum ProductApplicationJoinsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ProductIdAsc = 'PRODUCT_ID_ASC',
+  ProductIdDesc = 'PRODUCT_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `ProductApplicationJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ProductApplicationJoinCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `productId` field. */
+  productId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `ProductApplicationJoin` values. */
+export type ProductApplicationJoinsConnection = {
+  __typename?: 'ProductApplicationJoinsConnection';
+  /** A list of `ProductApplicationJoin` objects. */
+  nodes: Array<Maybe<ProductApplicationJoin>>;
+  /** A list of edges which contains the `ProductApplicationJoin` and cursor to aid in pagination. */
+  edges: Array<ProductApplicationJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ProductApplicationJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ProductApplicationJoin = Node & {
+  __typename?: 'ProductApplicationJoin';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  applicationId: Scalars['Int'];
+  productId: Scalars['Int'];
+  /** Reads a single `Application` that is related to this `ProductApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Product` that is related to this `ProductApplicationJoin`. */
+  product?: Maybe<Product>;
+};
+
+export type Product = Node & {
+  __typename?: 'Product';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  origin?: Maybe<Scalars['String']>;
+  packSize?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  components?: Maybe<Scalars['String']>;
+  shelfLife?: Maybe<Scalars['JSON']>;
+  dosageForm?: Maybe<Scalars['String']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  formulationsOld?: Maybe<Scalars['JSON']>;
+  genericName?: Maybe<Scalars['String']>;
+  productName?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  universalCode?: Maybe<Scalars['String']>;
+  universalType?: Maybe<Scalars['String']>;
+  applicationLevel?: Maybe<Scalars['String']>;
+  primaryContainer?: Maybe<Scalars['String']>;
+  registrationDate?: Maybe<Scalars['Datetime']>;
+  administrationUnit?: Maybe<Scalars['String']>;
+  routeAdministration?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  indications?: Maybe<Scalars['String']>;
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  formulations?: Maybe<Scalars['JSON']>;
+  indicationsEvidence?: Maybe<Scalars['String']>;
+  packagingDescription?: Maybe<Scalars['String']>;
+  /** Reads and enables pagination through a set of `ProductApplicationJoin`. */
+  productApplicationJoins: ProductApplicationJoinsConnection;
+};
+
+
+export type ProductProductApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ProductApplicationJoinsOrderBy>>;
+  condition?: Maybe<ProductApplicationJoinCondition>;
+  filter?: Maybe<ProductApplicationJoinFilter>;
+};
+
+/** A `ProductApplicationJoin` edge in the connection. */
+export type ProductApplicationJoinsEdge = {
+  __typename?: 'ProductApplicationJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ProductApplicationJoin` at the end of the edge. */
+  node?: Maybe<ProductApplicationJoin>;
+};
+
+/** Methods to use when ordering `LicenceApplicationJoin`. */
+export enum LicenceApplicationJoinsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  LicenceIdAsc = 'LICENCE_ID_ASC',
+  LicenceIdDesc = 'LICENCE_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LicenceApplicationJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LicenceApplicationJoinCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `licenceId` field. */
+  licenceId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `LicenceApplicationJoin` values. */
+export type LicenceApplicationJoinsConnection = {
+  __typename?: 'LicenceApplicationJoinsConnection';
+  /** A list of `LicenceApplicationJoin` objects. */
+  nodes: Array<Maybe<LicenceApplicationJoin>>;
+  /** A list of edges which contains the `LicenceApplicationJoin` and cursor to aid in pagination. */
+  edges: Array<LicenceApplicationJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LicenceApplicationJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LicenceApplicationJoin = Node & {
+  __typename?: 'LicenceApplicationJoin';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  applicationId: Scalars['Int'];
+  licenceId: Scalars['Int'];
+  /** Reads a single `Application` that is related to this `LicenceApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Licence` that is related to this `LicenceApplicationJoin`. */
+  licence?: Maybe<Licence>;
+};
+
+export type Licence = Node & {
+  __typename?: 'Licence';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  productType?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
+  /** Reads and enables pagination through a set of `LicenceApplicationJoin`. */
+  licenceApplicationJoins: LicenceApplicationJoinsConnection;
+};
+
+
+export type LicenceLicenceApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LicenceApplicationJoinsOrderBy>>;
+  condition?: Maybe<LicenceApplicationJoinCondition>;
+  filter?: Maybe<LicenceApplicationJoinFilter>;
+};
+
+/** A `LicenceApplicationJoin` edge in the connection. */
+export type LicenceApplicationJoinsEdge = {
+  __typename?: 'LicenceApplicationJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LicenceApplicationJoin` at the end of the edge. */
+  node?: Maybe<LicenceApplicationJoin>;
 };
 
 /** A `ApplicationResponse` edge in the connection. */
@@ -9701,6 +10420,75 @@ export type FiltersEdge = {
   node?: Maybe<Filter>;
 };
 
+/** Methods to use when ordering `Licence`. */
+export enum LicencesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
+  CompanyIdAsc = 'COMPANY_ID_ASC',
+  CompanyIdDesc = 'COMPANY_ID_DESC',
+  ExpiryDateAsc = 'EXPIRY_DATE_ASC',
+  ExpiryDateDesc = 'EXPIRY_DATE_DESC',
+  CompanyNameAsc = 'COMPANY_NAME_ASC',
+  CompanyNameDesc = 'COMPANY_NAME_DESC',
+  ProductTypeAsc = 'PRODUCT_TYPE_ASC',
+  ProductTypeDesc = 'PRODUCT_TYPE_DESC',
+  RegistrationAsc = 'REGISTRATION_ASC',
+  RegistrationDesc = 'REGISTRATION_DESC',
+  LicenseTypeAsc = 'LICENSE_TYPE_ASC',
+  LicenseTypeDesc = 'LICENSE_TYPE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `Licence` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LicenceCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `companyId` field. */
+  companyId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `expiryDate` field. */
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `companyName` field. */
+  companyName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `productType` field. */
+  productType?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `registration` field. */
+  registration?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `licenseType` field. */
+  licenseType?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `Licence` values. */
+export type LicencesConnection = {
+  __typename?: 'LicencesConnection';
+  /** A list of `Licence` objects. */
+  nodes: Array<Maybe<Licence>>;
+  /** A list of edges which contains the `Licence` and cursor to aid in pagination. */
+  edges: Array<LicencesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Licence` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Licence` edge in the connection. */
+export type LicencesEdge = {
+  __typename?: 'LicencesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Licence` at the end of the edge. */
+  node?: Maybe<Licence>;
+};
+
 /** Methods to use when ordering `LookupTable`. */
 export enum LookupTablesOrderBy {
   Natural = 'NATURAL',
@@ -9776,6 +10564,503 @@ export type LookupTablesEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `LookupTable` at the end of the edge. */
   node?: Maybe<LookupTable>;
+};
+
+/** Methods to use when ordering `LookupTableAdministrationRoute`. */
+export enum LookupTableAdministrationRoutesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LookupTableAdministrationRoute` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LookupTableAdministrationRouteCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `LookupTableAdministrationRoute` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableAdministrationRouteFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableAdministrationRouteFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableAdministrationRouteFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableAdministrationRouteFilter>;
+};
+
+/** A connection to a list of `LookupTableAdministrationRoute` values. */
+export type LookupTableAdministrationRoutesConnection = {
+  __typename?: 'LookupTableAdministrationRoutesConnection';
+  /** A list of `LookupTableAdministrationRoute` objects. */
+  nodes: Array<Maybe<LookupTableAdministrationRoute>>;
+  /** A list of edges which contains the `LookupTableAdministrationRoute` and cursor to aid in pagination. */
+  edges: Array<LookupTableAdministrationRoutesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTableAdministrationRoute` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LookupTableAdministrationRoute = Node & {
+  __typename?: 'LookupTableAdministrationRoute';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  code?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+/** A `LookupTableAdministrationRoute` edge in the connection. */
+export type LookupTableAdministrationRoutesEdge = {
+  __typename?: 'LookupTableAdministrationRoutesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTableAdministrationRoute` at the end of the edge. */
+  node?: Maybe<LookupTableAdministrationRoute>;
+};
+
+/** Methods to use when ordering `LookupTableContainer`. */
+export enum LookupTableContainersOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LookupTableContainer` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LookupTableContainerCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `LookupTableContainer` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableContainerFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableContainerFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableContainerFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableContainerFilter>;
+};
+
+/** A connection to a list of `LookupTableContainer` values. */
+export type LookupTableContainersConnection = {
+  __typename?: 'LookupTableContainersConnection';
+  /** A list of `LookupTableContainer` objects. */
+  nodes: Array<Maybe<LookupTableContainer>>;
+  /** A list of edges which contains the `LookupTableContainer` and cursor to aid in pagination. */
+  edges: Array<LookupTableContainersEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTableContainer` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LookupTableContainer = Node & {
+  __typename?: 'LookupTableContainer';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  code?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+/** A `LookupTableContainer` edge in the connection. */
+export type LookupTableContainersEdge = {
+  __typename?: 'LookupTableContainersEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTableContainer` at the end of the edge. */
+  node?: Maybe<LookupTableContainer>;
+};
+
+/** Methods to use when ordering `LookupTableCountryname`. */
+export enum LookupTableCountrynamesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  EsoAsc = 'ESO_ASC',
+  EsoDesc = 'ESO_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LookupTableCountryname` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LookupTableCountrynameCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `eso` field. */
+  eso?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `LookupTableCountryname` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableCountrynameFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `eso` field. */
+  eso?: Maybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableCountrynameFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableCountrynameFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableCountrynameFilter>;
+};
+
+/** A connection to a list of `LookupTableCountryname` values. */
+export type LookupTableCountrynamesConnection = {
+  __typename?: 'LookupTableCountrynamesConnection';
+  /** A list of `LookupTableCountryname` objects. */
+  nodes: Array<Maybe<LookupTableCountryname>>;
+  /** A list of edges which contains the `LookupTableCountryname` and cursor to aid in pagination. */
+  edges: Array<LookupTableCountrynamesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTableCountryname` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LookupTableCountryname = Node & {
+  __typename?: 'LookupTableCountryname';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  eso?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+};
+
+/** A `LookupTableCountryname` edge in the connection. */
+export type LookupTableCountrynamesEdge = {
+  __typename?: 'LookupTableCountrynamesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTableCountryname` at the end of the edge. */
+  node?: Maybe<LookupTableCountryname>;
+};
+
+/** Methods to use when ordering `LookupTableDosageForm`. */
+export enum LookupTableDosageFormsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LookupTableDosageForm` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LookupTableDosageFormCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `LookupTableDosageForm` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableDosageFormFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableDosageFormFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableDosageFormFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableDosageFormFilter>;
+};
+
+/** A connection to a list of `LookupTableDosageForm` values. */
+export type LookupTableDosageFormsConnection = {
+  __typename?: 'LookupTableDosageFormsConnection';
+  /** A list of `LookupTableDosageForm` objects. */
+  nodes: Array<Maybe<LookupTableDosageForm>>;
+  /** A list of edges which contains the `LookupTableDosageForm` and cursor to aid in pagination. */
+  edges: Array<LookupTableDosageFormsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTableDosageForm` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LookupTableDosageForm = Node & {
+  __typename?: 'LookupTableDosageForm';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+};
+
+/** A `LookupTableDosageForm` edge in the connection. */
+export type LookupTableDosageFormsEdge = {
+  __typename?: 'LookupTableDosageFormsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTableDosageForm` at the end of the edge. */
+  node?: Maybe<LookupTableDosageForm>;
+};
+
+/** Methods to use when ordering `LookupTableIngredient`. */
+export enum LookupTableIngredientsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ActiveIngredientAsc = 'ACTIVE_INGREDIENT_ASC',
+  ActiveIngredientDesc = 'ACTIVE_INGREDIENT_DESC',
+  ApiManufacturerAsc = 'API_MANUFACTURER_ASC',
+  ApiManufacturerDesc = 'API_MANUFACTURER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LookupTableIngredient` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LookupTableIngredientCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `activeIngredient` field. */
+  activeIngredient?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `apiManufacturer` field. */
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `LookupTableIngredient` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableIngredientFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `activeIngredient` field. */
+  activeIngredient?: Maybe<StringFilter>;
+  /** Filter by the object’s `apiManufacturer` field. */
+  apiManufacturer?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableIngredientFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableIngredientFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableIngredientFilter>;
+};
+
+/** A connection to a list of `LookupTableIngredient` values. */
+export type LookupTableIngredientsConnection = {
+  __typename?: 'LookupTableIngredientsConnection';
+  /** A list of `LookupTableIngredient` objects. */
+  nodes: Array<Maybe<LookupTableIngredient>>;
+  /** A list of edges which contains the `LookupTableIngredient` and cursor to aid in pagination. */
+  edges: Array<LookupTableIngredientsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTableIngredient` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LookupTableIngredient = Node & {
+  __typename?: 'LookupTableIngredient';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  activeIngredient?: Maybe<Scalars['String']>;
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** A `LookupTableIngredient` edge in the connection. */
+export type LookupTableIngredientsEdge = {
+  __typename?: 'LookupTableIngredientsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTableIngredient` at the end of the edge. */
+  node?: Maybe<LookupTableIngredient>;
+};
+
+/** Methods to use when ordering `LookupTableTestAddNewLookupTable`. */
+export enum LookupTableTestAddNewLookupTablesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ActiveIngredientAsc = 'ACTIVE_INGREDIENT_ASC',
+  ActiveIngredientDesc = 'ACTIVE_INGREDIENT_DESC',
+  ApiManufacturerAsc = 'API_MANUFACTURER_ASC',
+  ApiManufacturerDesc = 'API_MANUFACTURER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LookupTableTestAddNewLookupTable` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LookupTableTestAddNewLookupTableCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `activeIngredient` field. */
+  activeIngredient?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `apiManufacturer` field. */
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `LookupTableTestAddNewLookupTable` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableTestAddNewLookupTableFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `activeIngredient` field. */
+  activeIngredient?: Maybe<StringFilter>;
+  /** Filter by the object’s `apiManufacturer` field. */
+  apiManufacturer?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableTestAddNewLookupTableFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableTestAddNewLookupTableFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableTestAddNewLookupTableFilter>;
+};
+
+/** A connection to a list of `LookupTableTestAddNewLookupTable` values. */
+export type LookupTableTestAddNewLookupTablesConnection = {
+  __typename?: 'LookupTableTestAddNewLookupTablesConnection';
+  /** A list of `LookupTableTestAddNewLookupTable` objects. */
+  nodes: Array<Maybe<LookupTableTestAddNewLookupTable>>;
+  /** A list of edges which contains the `LookupTableTestAddNewLookupTable` and cursor to aid in pagination. */
+  edges: Array<LookupTableTestAddNewLookupTablesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTableTestAddNewLookupTable` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LookupTableTestAddNewLookupTable = Node & {
+  __typename?: 'LookupTableTestAddNewLookupTable';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  activeIngredient?: Maybe<Scalars['String']>;
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** A `LookupTableTestAddNewLookupTable` edge in the connection. */
+export type LookupTableTestAddNewLookupTablesEdge = {
+  __typename?: 'LookupTableTestAddNewLookupTablesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTableTestAddNewLookupTable` at the end of the edge. */
+  node?: Maybe<LookupTableTestAddNewLookupTable>;
+};
+
+/** Methods to use when ordering `LookupTableTherapeuticCategory`. */
+export enum LookupTableTherapeuticCategoriesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TherapeuticCategoryAsc = 'THERAPEUTIC_CATEGORY_ASC',
+  TherapeuticCategoryDesc = 'THERAPEUTIC_CATEGORY_DESC',
+  PharmacologicClassAsc = 'PHARMACOLOGIC_CLASS_ASC',
+  PharmacologicClassDesc = 'PHARMACOLOGIC_CLASS_DESC',
+  FormularyKeyDrugTypesAsc = 'FORMULARY_KEY_DRUG_TYPES_ASC',
+  FormularyKeyDrugTypesDesc = 'FORMULARY_KEY_DRUG_TYPES_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `LookupTableTherapeuticCategory` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LookupTableTherapeuticCategoryCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `therapeuticCategory` field. */
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `pharmacologicClass` field. */
+  pharmacologicClass?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `formularyKeyDrugTypes` field. */
+  formularyKeyDrugTypes?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `LookupTableTherapeuticCategory` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableTherapeuticCategoryFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `therapeuticCategory` field. */
+  therapeuticCategory?: Maybe<StringFilter>;
+  /** Filter by the object’s `pharmacologicClass` field. */
+  pharmacologicClass?: Maybe<StringFilter>;
+  /** Filter by the object’s `formularyKeyDrugTypes` field. */
+  formularyKeyDrugTypes?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableTherapeuticCategoryFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableTherapeuticCategoryFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableTherapeuticCategoryFilter>;
+};
+
+/** A connection to a list of `LookupTableTherapeuticCategory` values. */
+export type LookupTableTherapeuticCategoriesConnection = {
+  __typename?: 'LookupTableTherapeuticCategoriesConnection';
+  /** A list of `LookupTableTherapeuticCategory` objects. */
+  nodes: Array<Maybe<LookupTableTherapeuticCategory>>;
+  /** A list of edges which contains the `LookupTableTherapeuticCategory` and cursor to aid in pagination. */
+  edges: Array<LookupTableTherapeuticCategoriesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTableTherapeuticCategory` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type LookupTableTherapeuticCategory = Node & {
+  __typename?: 'LookupTableTherapeuticCategory';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  pharmacologicClass?: Maybe<Scalars['String']>;
+  formularyKeyDrugTypes?: Maybe<Scalars['String']>;
+};
+
+/** A `LookupTableTherapeuticCategory` edge in the connection. */
+export type LookupTableTherapeuticCategoriesEdge = {
+  __typename?: 'LookupTableTherapeuticCategoriesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTableTherapeuticCategory` at the end of the edge. */
+  node?: Maybe<LookupTableTherapeuticCategory>;
 };
 
 /** Methods to use when ordering `Organisation`. */
@@ -10459,77 +11744,141 @@ export type PostgresRowLevelsEdge = {
   node?: Maybe<PostgresRowLevel>;
 };
 
-/** Methods to use when ordering `ReviewQuestionAssignmentSection`. */
-export enum ReviewQuestionAssignmentSectionsOrderBy {
+/** Methods to use when ordering `Product`. */
+export enum ProductsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
-  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
-  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
-  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
-  TemplateSectionIdAsc = 'TEMPLATE_SECTION_ID_ASC',
-  TemplateSectionIdDesc = 'TEMPLATE_SECTION_ID_DESC'
+  OriginAsc = 'ORIGIN_ASC',
+  OriginDesc = 'ORIGIN_DESC',
+  PackSizeAsc = 'PACK_SIZE_ASC',
+  PackSizeDesc = 'PACK_SIZE_DESC',
+  CompanyIdAsc = 'COMPANY_ID_ASC',
+  CompanyIdDesc = 'COMPANY_ID_DESC',
+  ComponentsAsc = 'COMPONENTS_ASC',
+  ComponentsDesc = 'COMPONENTS_DESC',
+  ShelfLifeAsc = 'SHELF_LIFE_ASC',
+  ShelfLifeDesc = 'SHELF_LIFE_DESC',
+  DosageFormAsc = 'DOSAGE_FORM_ASC',
+  DosageFormDesc = 'DOSAGE_FORM_DESC',
+  ExpiryDateAsc = 'EXPIRY_DATE_ASC',
+  ExpiryDateDesc = 'EXPIRY_DATE_DESC',
+  CompanyNameAsc = 'COMPANY_NAME_ASC',
+  CompanyNameDesc = 'COMPANY_NAME_DESC',
+  FormulationsOldAsc = 'FORMULATIONS_OLD_ASC',
+  FormulationsOldDesc = 'FORMULATIONS_OLD_DESC',
+  GenericNameAsc = 'GENERIC_NAME_ASC',
+  GenericNameDesc = 'GENERIC_NAME_DESC',
+  ProductNameAsc = 'PRODUCT_NAME_ASC',
+  ProductNameDesc = 'PRODUCT_NAME_DESC',
+  RegistrationAsc = 'REGISTRATION_ASC',
+  RegistrationDesc = 'REGISTRATION_DESC',
+  UniversalCodeAsc = 'UNIVERSAL_CODE_ASC',
+  UniversalCodeDesc = 'UNIVERSAL_CODE_DESC',
+  UniversalTypeAsc = 'UNIVERSAL_TYPE_ASC',
+  UniversalTypeDesc = 'UNIVERSAL_TYPE_DESC',
+  ApplicationLevelAsc = 'APPLICATION_LEVEL_ASC',
+  ApplicationLevelDesc = 'APPLICATION_LEVEL_DESC',
+  PrimaryContainerAsc = 'PRIMARY_CONTAINER_ASC',
+  PrimaryContainerDesc = 'PRIMARY_CONTAINER_DESC',
+  RegistrationDateAsc = 'REGISTRATION_DATE_ASC',
+  RegistrationDateDesc = 'REGISTRATION_DATE_DESC',
+  AdministrationUnitAsc = 'ADMINISTRATION_UNIT_ASC',
+  AdministrationUnitDesc = 'ADMINISTRATION_UNIT_DESC',
+  RouteAdministrationAsc = 'ROUTE_ADMINISTRATION_ASC',
+  RouteAdministrationDesc = 'ROUTE_ADMINISTRATION_DESC',
+  CountryAsc = 'COUNTRY_ASC',
+  CountryDesc = 'COUNTRY_DESC',
+  IndicationsAsc = 'INDICATIONS_ASC',
+  IndicationsDesc = 'INDICATIONS_DESC',
+  TherapeuticCategoryAsc = 'THERAPEUTIC_CATEGORY_ASC',
+  TherapeuticCategoryDesc = 'THERAPEUTIC_CATEGORY_DESC',
+  FormulationsAsc = 'FORMULATIONS_ASC',
+  FormulationsDesc = 'FORMULATIONS_DESC',
+  IndicationsEvidenceAsc = 'INDICATIONS_EVIDENCE_ASC',
+  IndicationsEvidenceDesc = 'INDICATIONS_EVIDENCE_DESC',
+  PackagingDescriptionAsc = 'PACKAGING_DESCRIPTION_ASC',
+  PackagingDescriptionDesc = 'PACKAGING_DESCRIPTION_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A condition to be used against `ReviewQuestionAssignmentSection` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ReviewQuestionAssignmentSectionCondition = {
+/** A condition to be used against `Product` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ProductCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateElementId` field. */
-  templateElementId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateSectionId` field. */
-  templateSectionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `origin` field. */
+  origin?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `packSize` field. */
+  packSize?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `companyId` field. */
+  companyId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `components` field. */
+  components?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `shelfLife` field. */
+  shelfLife?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `dosageForm` field. */
+  dosageForm?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `expiryDate` field. */
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `companyName` field. */
+  companyName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `formulationsOld` field. */
+  formulationsOld?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `genericName` field. */
+  genericName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `productName` field. */
+  productName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `registration` field. */
+  registration?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `universalCode` field. */
+  universalCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `universalType` field. */
+  universalType?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationLevel` field. */
+  applicationLevel?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `primaryContainer` field. */
+  primaryContainer?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `registrationDate` field. */
+  registrationDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `administrationUnit` field. */
+  administrationUnit?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `routeAdministration` field. */
+  routeAdministration?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `country` field. */
+  country?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `indications` field. */
+  indications?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `therapeuticCategory` field. */
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `formulations` field. */
+  formulations?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `indicationsEvidence` field. */
+  indicationsEvidence?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `packagingDescription` field. */
+  packagingDescription?: Maybe<Scalars['String']>;
 };
 
-/** A filter to be used against `ReviewQuestionAssignmentSection` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewQuestionAssignmentSectionFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateElementId` field. */
-  templateElementId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateSectionId` field. */
-  templateSectionId?: Maybe<IntFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewQuestionAssignmentSectionFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewQuestionAssignmentSectionFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewQuestionAssignmentSectionFilter>;
-};
-
-/** A connection to a list of `ReviewQuestionAssignmentSection` values. */
-export type ReviewQuestionAssignmentSectionsConnection = {
-  __typename?: 'ReviewQuestionAssignmentSectionsConnection';
-  /** A list of `ReviewQuestionAssignmentSection` objects. */
-  nodes: Array<Maybe<ReviewQuestionAssignmentSection>>;
-  /** A list of edges which contains the `ReviewQuestionAssignmentSection` and cursor to aid in pagination. */
-  edges: Array<ReviewQuestionAssignmentSectionsEdge>;
+/** A connection to a list of `Product` values. */
+export type ProductsConnection = {
+  __typename?: 'ProductsConnection';
+  /** A list of `Product` objects. */
+  nodes: Array<Maybe<Product>>;
+  /** A list of edges which contains the `Product` and cursor to aid in pagination. */
+  edges: Array<ProductsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `ReviewQuestionAssignmentSection` you could get from the connection. */
+  /** The count of *all* `Product` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-export type ReviewQuestionAssignmentSection = {
-  __typename?: 'ReviewQuestionAssignmentSection';
-  id?: Maybe<Scalars['Int']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
-};
-
-/** A `ReviewQuestionAssignmentSection` edge in the connection. */
-export type ReviewQuestionAssignmentSectionsEdge = {
-  __typename?: 'ReviewQuestionAssignmentSectionsEdge';
+/** A `Product` edge in the connection. */
+export type ProductsEdge = {
+  __typename?: 'ProductsEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewQuestionAssignmentSection` at the end of the edge. */
-  node?: Maybe<ReviewQuestionAssignmentSection>;
+  /** The `Product` at the end of the edge. */
+  node?: Maybe<Product>;
 };
 
 /** Methods to use when ordering `SchemaColumn`. */
@@ -10726,6 +12075,83 @@ export type SchemaColumnsEdge = {
   node?: Maybe<SchemaColumn>;
 };
 
+/** Methods to use when ordering `SystemInfo`. */
+export enum SystemInfosOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  ValueAsc = 'VALUE_ASC',
+  ValueDesc = 'VALUE_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `SystemInfo` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type SystemInfoCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `value` field. */
+  value?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/** A filter to be used against `SystemInfo` object types. All fields are combined with a logical ‘and.’ */
+export type SystemInfoFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `value` field. */
+  value?: Maybe<JsonFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<SystemInfoFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<SystemInfoFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<SystemInfoFilter>;
+};
+
+/** A connection to a list of `SystemInfo` values. */
+export type SystemInfosConnection = {
+  __typename?: 'SystemInfosConnection';
+  /** A list of `SystemInfo` objects. */
+  nodes: Array<Maybe<SystemInfo>>;
+  /** A list of edges which contains the `SystemInfo` and cursor to aid in pagination. */
+  edges: Array<SystemInfosEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SystemInfo` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type SystemInfo = Node & {
+  __typename?: 'SystemInfo';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  value?: Maybe<Scalars['JSON']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/** A `SystemInfo` edge in the connection. */
+export type SystemInfosEdge = {
+  __typename?: 'SystemInfosEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `SystemInfo` at the end of the edge. */
+  node?: Maybe<SystemInfo>;
+};
+
 /** Methods to use when ordering `TemplateCategory`. */
 export enum TemplateCategoriesOrderBy {
   Natural = 'NATURAL',
@@ -10867,6 +12293,8 @@ export enum UsersOrderBy {
   DateOfBirthDesc = 'DATE_OF_BIRTH_DESC',
   PasswordHashAsc = 'PASSWORD_HASH_ASC',
   PasswordHashDesc = 'PASSWORD_HASH_DESC',
+  PhoneAsc = 'PHONE_ASC',
+  PhoneDesc = 'PHONE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -10889,6 +12317,8 @@ export type UserCondition = {
   dateOfBirth?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `passwordHash` field. */
   passwordHash?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `phone` field. */
+  phone?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `User` values. */
@@ -11320,8 +12750,26 @@ export type Mutation = {
   createFile?: Maybe<CreateFilePayload>;
   /** Creates a single `Filter`. */
   createFilter?: Maybe<CreateFilterPayload>;
+  /** Creates a single `Licence`. */
+  createLicence?: Maybe<CreateLicencePayload>;
+  /** Creates a single `LicenceApplicationJoin`. */
+  createLicenceApplicationJoin?: Maybe<CreateLicenceApplicationJoinPayload>;
   /** Creates a single `LookupTable`. */
   createLookupTable?: Maybe<CreateLookupTablePayload>;
+  /** Creates a single `LookupTableAdministrationRoute`. */
+  createLookupTableAdministrationRoute?: Maybe<CreateLookupTableAdministrationRoutePayload>;
+  /** Creates a single `LookupTableContainer`. */
+  createLookupTableContainer?: Maybe<CreateLookupTableContainerPayload>;
+  /** Creates a single `LookupTableCountryname`. */
+  createLookupTableCountryname?: Maybe<CreateLookupTableCountrynamePayload>;
+  /** Creates a single `LookupTableDosageForm`. */
+  createLookupTableDosageForm?: Maybe<CreateLookupTableDosageFormPayload>;
+  /** Creates a single `LookupTableIngredient`. */
+  createLookupTableIngredient?: Maybe<CreateLookupTableIngredientPayload>;
+  /** Creates a single `LookupTableTestAddNewLookupTable`. */
+  createLookupTableTestAddNewLookupTable?: Maybe<CreateLookupTableTestAddNewLookupTablePayload>;
+  /** Creates a single `LookupTableTherapeuticCategory`. */
+  createLookupTableTherapeuticCategory?: Maybe<CreateLookupTableTherapeuticCategoryPayload>;
   /** Creates a single `Notification`. */
   createNotification?: Maybe<CreateNotificationPayload>;
   /** Creates a single `Organisation`. */
@@ -11338,6 +12786,10 @@ export type Mutation = {
   createPermissionName?: Maybe<CreatePermissionNamePayload>;
   /** Creates a single `PermissionPolicy`. */
   createPermissionPolicy?: Maybe<CreatePermissionPolicyPayload>;
+  /** Creates a single `Product`. */
+  createProduct?: Maybe<CreateProductPayload>;
+  /** Creates a single `ProductApplicationJoin`. */
+  createProductApplicationJoin?: Maybe<CreateProductApplicationJoinPayload>;
   /** Creates a single `Review`. */
   createReview?: Maybe<CreateReviewPayload>;
   /** Creates a single `ReviewAssignment`. */
@@ -11346,12 +12798,12 @@ export type Mutation = {
   createReviewAssignmentAssignerJoin?: Maybe<CreateReviewAssignmentAssignerJoinPayload>;
   /** Creates a single `ReviewDecision`. */
   createReviewDecision?: Maybe<CreateReviewDecisionPayload>;
-  /** Creates a single `ReviewQuestionAssignment`. */
-  createReviewQuestionAssignment?: Maybe<CreateReviewQuestionAssignmentPayload>;
   /** Creates a single `ReviewResponse`. */
   createReviewResponse?: Maybe<CreateReviewResponsePayload>;
   /** Creates a single `ReviewStatusHistory`. */
   createReviewStatusHistory?: Maybe<CreateReviewStatusHistoryPayload>;
+  /** Creates a single `SystemInfo`. */
+  createSystemInfo?: Maybe<CreateSystemInfoPayload>;
   /** Creates a single `Template`. */
   createTemplate?: Maybe<CreateTemplatePayload>;
   /** Creates a single `TemplateAction`. */
@@ -11380,6 +12832,8 @@ export type Mutation = {
   createUserApplicationJoin?: Maybe<CreateUserApplicationJoinPayload>;
   /** Creates a single `UserOrganisation`. */
   createUserOrganisation?: Maybe<CreateUserOrganisationPayload>;
+  /** Creates a single `UserOrganisationApplicationJoin`. */
+  createUserOrganisationApplicationJoin?: Maybe<CreateUserOrganisationApplicationJoinPayload>;
   /** Creates a single `Verification`. */
   createVerification?: Maybe<CreateVerificationPayload>;
   /** Updates a single `ActionPlugin` using its globally unique id and a patch. */
@@ -11440,10 +12894,46 @@ export type Mutation = {
   updateFilter?: Maybe<UpdateFilterPayload>;
   /** Updates a single `Filter` using a unique key and a patch. */
   updateFilterByCode?: Maybe<UpdateFilterPayload>;
+  /** Updates a single `Licence` using its globally unique id and a patch. */
+  updateLicenceByNodeId?: Maybe<UpdateLicencePayload>;
+  /** Updates a single `Licence` using a unique key and a patch. */
+  updateLicence?: Maybe<UpdateLicencePayload>;
+  /** Updates a single `LicenceApplicationJoin` using its globally unique id and a patch. */
+  updateLicenceApplicationJoinByNodeId?: Maybe<UpdateLicenceApplicationJoinPayload>;
+  /** Updates a single `LicenceApplicationJoin` using a unique key and a patch. */
+  updateLicenceApplicationJoin?: Maybe<UpdateLicenceApplicationJoinPayload>;
   /** Updates a single `LookupTable` using its globally unique id and a patch. */
   updateLookupTableByNodeId?: Maybe<UpdateLookupTablePayload>;
   /** Updates a single `LookupTable` using a unique key and a patch. */
   updateLookupTable?: Maybe<UpdateLookupTablePayload>;
+  /** Updates a single `LookupTableAdministrationRoute` using its globally unique id and a patch. */
+  updateLookupTableAdministrationRouteByNodeId?: Maybe<UpdateLookupTableAdministrationRoutePayload>;
+  /** Updates a single `LookupTableAdministrationRoute` using a unique key and a patch. */
+  updateLookupTableAdministrationRoute?: Maybe<UpdateLookupTableAdministrationRoutePayload>;
+  /** Updates a single `LookupTableContainer` using its globally unique id and a patch. */
+  updateLookupTableContainerByNodeId?: Maybe<UpdateLookupTableContainerPayload>;
+  /** Updates a single `LookupTableContainer` using a unique key and a patch. */
+  updateLookupTableContainer?: Maybe<UpdateLookupTableContainerPayload>;
+  /** Updates a single `LookupTableCountryname` using its globally unique id and a patch. */
+  updateLookupTableCountrynameByNodeId?: Maybe<UpdateLookupTableCountrynamePayload>;
+  /** Updates a single `LookupTableCountryname` using a unique key and a patch. */
+  updateLookupTableCountryname?: Maybe<UpdateLookupTableCountrynamePayload>;
+  /** Updates a single `LookupTableDosageForm` using its globally unique id and a patch. */
+  updateLookupTableDosageFormByNodeId?: Maybe<UpdateLookupTableDosageFormPayload>;
+  /** Updates a single `LookupTableDosageForm` using a unique key and a patch. */
+  updateLookupTableDosageForm?: Maybe<UpdateLookupTableDosageFormPayload>;
+  /** Updates a single `LookupTableIngredient` using its globally unique id and a patch. */
+  updateLookupTableIngredientByNodeId?: Maybe<UpdateLookupTableIngredientPayload>;
+  /** Updates a single `LookupTableIngredient` using a unique key and a patch. */
+  updateLookupTableIngredient?: Maybe<UpdateLookupTableIngredientPayload>;
+  /** Updates a single `LookupTableTestAddNewLookupTable` using its globally unique id and a patch. */
+  updateLookupTableTestAddNewLookupTableByNodeId?: Maybe<UpdateLookupTableTestAddNewLookupTablePayload>;
+  /** Updates a single `LookupTableTestAddNewLookupTable` using a unique key and a patch. */
+  updateLookupTableTestAddNewLookupTable?: Maybe<UpdateLookupTableTestAddNewLookupTablePayload>;
+  /** Updates a single `LookupTableTherapeuticCategory` using its globally unique id and a patch. */
+  updateLookupTableTherapeuticCategoryByNodeId?: Maybe<UpdateLookupTableTherapeuticCategoryPayload>;
+  /** Updates a single `LookupTableTherapeuticCategory` using a unique key and a patch. */
+  updateLookupTableTherapeuticCategory?: Maybe<UpdateLookupTableTherapeuticCategoryPayload>;
   /** Updates a single `Notification` using its globally unique id and a patch. */
   updateNotificationByNodeId?: Maybe<UpdateNotificationPayload>;
   /** Updates a single `Notification` using a unique key and a patch. */
@@ -11488,6 +12978,14 @@ export type Mutation = {
   updatePermissionPolicy?: Maybe<UpdatePermissionPolicyPayload>;
   /** Updates a single `PermissionPolicy` using a unique key and a patch. */
   updatePermissionPolicyByName?: Maybe<UpdatePermissionPolicyPayload>;
+  /** Updates a single `Product` using its globally unique id and a patch. */
+  updateProductByNodeId?: Maybe<UpdateProductPayload>;
+  /** Updates a single `Product` using a unique key and a patch. */
+  updateProduct?: Maybe<UpdateProductPayload>;
+  /** Updates a single `ProductApplicationJoin` using its globally unique id and a patch. */
+  updateProductApplicationJoinByNodeId?: Maybe<UpdateProductApplicationJoinPayload>;
+  /** Updates a single `ProductApplicationJoin` using a unique key and a patch. */
+  updateProductApplicationJoin?: Maybe<UpdateProductApplicationJoinPayload>;
   /** Updates a single `Review` using its globally unique id and a patch. */
   updateReviewByNodeId?: Maybe<UpdateReviewPayload>;
   /** Updates a single `Review` using a unique key and a patch. */
@@ -11504,10 +13002,6 @@ export type Mutation = {
   updateReviewDecisionByNodeId?: Maybe<UpdateReviewDecisionPayload>;
   /** Updates a single `ReviewDecision` using a unique key and a patch. */
   updateReviewDecision?: Maybe<UpdateReviewDecisionPayload>;
-  /** Updates a single `ReviewQuestionAssignment` using its globally unique id and a patch. */
-  updateReviewQuestionAssignmentByNodeId?: Maybe<UpdateReviewQuestionAssignmentPayload>;
-  /** Updates a single `ReviewQuestionAssignment` using a unique key and a patch. */
-  updateReviewQuestionAssignment?: Maybe<UpdateReviewQuestionAssignmentPayload>;
   /** Updates a single `ReviewResponse` using its globally unique id and a patch. */
   updateReviewResponseByNodeId?: Maybe<UpdateReviewResponsePayload>;
   /** Updates a single `ReviewResponse` using a unique key and a patch. */
@@ -11516,6 +13010,10 @@ export type Mutation = {
   updateReviewStatusHistoryByNodeId?: Maybe<UpdateReviewStatusHistoryPayload>;
   /** Updates a single `ReviewStatusHistory` using a unique key and a patch. */
   updateReviewStatusHistory?: Maybe<UpdateReviewStatusHistoryPayload>;
+  /** Updates a single `SystemInfo` using its globally unique id and a patch. */
+  updateSystemInfoByNodeId?: Maybe<UpdateSystemInfoPayload>;
+  /** Updates a single `SystemInfo` using a unique key and a patch. */
+  updateSystemInfo?: Maybe<UpdateSystemInfoPayload>;
   /** Updates a single `Template` using its globally unique id and a patch. */
   updateTemplateByNodeId?: Maybe<UpdateTemplatePayload>;
   /** Updates a single `Template` using a unique key and a patch. */
@@ -11580,6 +13078,10 @@ export type Mutation = {
   updateUserOrganisationByNodeId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `UserOrganisation` using a unique key and a patch. */
   updateUserOrganisation?: Maybe<UpdateUserOrganisationPayload>;
+  /** Updates a single `UserOrganisationApplicationJoin` using its globally unique id and a patch. */
+  updateUserOrganisationApplicationJoinByNodeId?: Maybe<UpdateUserOrganisationApplicationJoinPayload>;
+  /** Updates a single `UserOrganisationApplicationJoin` using a unique key and a patch. */
+  updateUserOrganisationApplicationJoin?: Maybe<UpdateUserOrganisationApplicationJoinPayload>;
   /** Updates a single `Verification` using its globally unique id and a patch. */
   updateVerificationByNodeId?: Maybe<UpdateVerificationPayload>;
   /** Updates a single `Verification` using a unique key and a patch. */
@@ -11644,10 +13146,46 @@ export type Mutation = {
   deleteFilter?: Maybe<DeleteFilterPayload>;
   /** Deletes a single `Filter` using a unique key. */
   deleteFilterByCode?: Maybe<DeleteFilterPayload>;
+  /** Deletes a single `Licence` using its globally unique id. */
+  deleteLicenceByNodeId?: Maybe<DeleteLicencePayload>;
+  /** Deletes a single `Licence` using a unique key. */
+  deleteLicence?: Maybe<DeleteLicencePayload>;
+  /** Deletes a single `LicenceApplicationJoin` using its globally unique id. */
+  deleteLicenceApplicationJoinByNodeId?: Maybe<DeleteLicenceApplicationJoinPayload>;
+  /** Deletes a single `LicenceApplicationJoin` using a unique key. */
+  deleteLicenceApplicationJoin?: Maybe<DeleteLicenceApplicationJoinPayload>;
   /** Deletes a single `LookupTable` using its globally unique id. */
   deleteLookupTableByNodeId?: Maybe<DeleteLookupTablePayload>;
   /** Deletes a single `LookupTable` using a unique key. */
   deleteLookupTable?: Maybe<DeleteLookupTablePayload>;
+  /** Deletes a single `LookupTableAdministrationRoute` using its globally unique id. */
+  deleteLookupTableAdministrationRouteByNodeId?: Maybe<DeleteLookupTableAdministrationRoutePayload>;
+  /** Deletes a single `LookupTableAdministrationRoute` using a unique key. */
+  deleteLookupTableAdministrationRoute?: Maybe<DeleteLookupTableAdministrationRoutePayload>;
+  /** Deletes a single `LookupTableContainer` using its globally unique id. */
+  deleteLookupTableContainerByNodeId?: Maybe<DeleteLookupTableContainerPayload>;
+  /** Deletes a single `LookupTableContainer` using a unique key. */
+  deleteLookupTableContainer?: Maybe<DeleteLookupTableContainerPayload>;
+  /** Deletes a single `LookupTableCountryname` using its globally unique id. */
+  deleteLookupTableCountrynameByNodeId?: Maybe<DeleteLookupTableCountrynamePayload>;
+  /** Deletes a single `LookupTableCountryname` using a unique key. */
+  deleteLookupTableCountryname?: Maybe<DeleteLookupTableCountrynamePayload>;
+  /** Deletes a single `LookupTableDosageForm` using its globally unique id. */
+  deleteLookupTableDosageFormByNodeId?: Maybe<DeleteLookupTableDosageFormPayload>;
+  /** Deletes a single `LookupTableDosageForm` using a unique key. */
+  deleteLookupTableDosageForm?: Maybe<DeleteLookupTableDosageFormPayload>;
+  /** Deletes a single `LookupTableIngredient` using its globally unique id. */
+  deleteLookupTableIngredientByNodeId?: Maybe<DeleteLookupTableIngredientPayload>;
+  /** Deletes a single `LookupTableIngredient` using a unique key. */
+  deleteLookupTableIngredient?: Maybe<DeleteLookupTableIngredientPayload>;
+  /** Deletes a single `LookupTableTestAddNewLookupTable` using its globally unique id. */
+  deleteLookupTableTestAddNewLookupTableByNodeId?: Maybe<DeleteLookupTableTestAddNewLookupTablePayload>;
+  /** Deletes a single `LookupTableTestAddNewLookupTable` using a unique key. */
+  deleteLookupTableTestAddNewLookupTable?: Maybe<DeleteLookupTableTestAddNewLookupTablePayload>;
+  /** Deletes a single `LookupTableTherapeuticCategory` using its globally unique id. */
+  deleteLookupTableTherapeuticCategoryByNodeId?: Maybe<DeleteLookupTableTherapeuticCategoryPayload>;
+  /** Deletes a single `LookupTableTherapeuticCategory` using a unique key. */
+  deleteLookupTableTherapeuticCategory?: Maybe<DeleteLookupTableTherapeuticCategoryPayload>;
   /** Deletes a single `Notification` using its globally unique id. */
   deleteNotificationByNodeId?: Maybe<DeleteNotificationPayload>;
   /** Deletes a single `Notification` using a unique key. */
@@ -11692,6 +13230,14 @@ export type Mutation = {
   deletePermissionPolicy?: Maybe<DeletePermissionPolicyPayload>;
   /** Deletes a single `PermissionPolicy` using a unique key. */
   deletePermissionPolicyByName?: Maybe<DeletePermissionPolicyPayload>;
+  /** Deletes a single `Product` using its globally unique id. */
+  deleteProductByNodeId?: Maybe<DeleteProductPayload>;
+  /** Deletes a single `Product` using a unique key. */
+  deleteProduct?: Maybe<DeleteProductPayload>;
+  /** Deletes a single `ProductApplicationJoin` using its globally unique id. */
+  deleteProductApplicationJoinByNodeId?: Maybe<DeleteProductApplicationJoinPayload>;
+  /** Deletes a single `ProductApplicationJoin` using a unique key. */
+  deleteProductApplicationJoin?: Maybe<DeleteProductApplicationJoinPayload>;
   /** Deletes a single `Review` using its globally unique id. */
   deleteReviewByNodeId?: Maybe<DeleteReviewPayload>;
   /** Deletes a single `Review` using a unique key. */
@@ -11708,10 +13254,6 @@ export type Mutation = {
   deleteReviewDecisionByNodeId?: Maybe<DeleteReviewDecisionPayload>;
   /** Deletes a single `ReviewDecision` using a unique key. */
   deleteReviewDecision?: Maybe<DeleteReviewDecisionPayload>;
-  /** Deletes a single `ReviewQuestionAssignment` using its globally unique id. */
-  deleteReviewQuestionAssignmentByNodeId?: Maybe<DeleteReviewQuestionAssignmentPayload>;
-  /** Deletes a single `ReviewQuestionAssignment` using a unique key. */
-  deleteReviewQuestionAssignment?: Maybe<DeleteReviewQuestionAssignmentPayload>;
   /** Deletes a single `ReviewResponse` using its globally unique id. */
   deleteReviewResponseByNodeId?: Maybe<DeleteReviewResponsePayload>;
   /** Deletes a single `ReviewResponse` using a unique key. */
@@ -11720,6 +13262,10 @@ export type Mutation = {
   deleteReviewStatusHistoryByNodeId?: Maybe<DeleteReviewStatusHistoryPayload>;
   /** Deletes a single `ReviewStatusHistory` using a unique key. */
   deleteReviewStatusHistory?: Maybe<DeleteReviewStatusHistoryPayload>;
+  /** Deletes a single `SystemInfo` using its globally unique id. */
+  deleteSystemInfoByNodeId?: Maybe<DeleteSystemInfoPayload>;
+  /** Deletes a single `SystemInfo` using a unique key. */
+  deleteSystemInfo?: Maybe<DeleteSystemInfoPayload>;
   /** Deletes a single `Template` using its globally unique id. */
   deleteTemplateByNodeId?: Maybe<DeleteTemplatePayload>;
   /** Deletes a single `Template` using a unique key. */
@@ -11784,6 +13330,10 @@ export type Mutation = {
   deleteUserOrganisationByNodeId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `UserOrganisation` using a unique key. */
   deleteUserOrganisation?: Maybe<DeleteUserOrganisationPayload>;
+  /** Deletes a single `UserOrganisationApplicationJoin` using its globally unique id. */
+  deleteUserOrganisationApplicationJoinByNodeId?: Maybe<DeleteUserOrganisationApplicationJoinPayload>;
+  /** Deletes a single `UserOrganisationApplicationJoin` using a unique key. */
+  deleteUserOrganisationApplicationJoin?: Maybe<DeleteUserOrganisationApplicationJoinPayload>;
   /** Deletes a single `Verification` using its globally unique id. */
   deleteVerificationByNodeId?: Maybe<DeleteVerificationPayload>;
   /** Deletes a single `Verification` using a unique key. */
@@ -11873,8 +13423,62 @@ export type MutationCreateFilterArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLicenceArgs = {
+  input: CreateLicenceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLicenceApplicationJoinArgs = {
+  input: CreateLicenceApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateLookupTableArgs = {
   input: CreateLookupTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableAdministrationRouteArgs = {
+  input: CreateLookupTableAdministrationRouteInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableContainerArgs = {
+  input: CreateLookupTableContainerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableCountrynameArgs = {
+  input: CreateLookupTableCountrynameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableDosageFormArgs = {
+  input: CreateLookupTableDosageFormInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableIngredientArgs = {
+  input: CreateLookupTableIngredientInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableTestAddNewLookupTableArgs = {
+  input: CreateLookupTableTestAddNewLookupTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableTherapeuticCategoryArgs = {
+  input: CreateLookupTableTherapeuticCategoryInput;
 };
 
 
@@ -11927,6 +13531,18 @@ export type MutationCreatePermissionPolicyArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateProductArgs = {
+  input: CreateProductInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateProductApplicationJoinArgs = {
+  input: CreateProductApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateReviewArgs = {
   input: CreateReviewInput;
 };
@@ -11951,12 +13567,6 @@ export type MutationCreateReviewDecisionArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateReviewQuestionAssignmentArgs = {
-  input: CreateReviewQuestionAssignmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateReviewResponseArgs = {
   input: CreateReviewResponseInput;
 };
@@ -11965,6 +13575,12 @@ export type MutationCreateReviewResponseArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateReviewStatusHistoryArgs = {
   input: CreateReviewStatusHistoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateSystemInfoArgs = {
+  input: CreateSystemInfoInput;
 };
 
 
@@ -12049,6 +13665,12 @@ export type MutationCreateUserApplicationJoinArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserOrganisationArgs = {
   input: CreateUserOrganisationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateUserOrganisationApplicationJoinArgs = {
+  input: CreateUserOrganisationApplicationJoinInput;
 };
 
 
@@ -12233,6 +13855,30 @@ export type MutationUpdateFilterByCodeArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLicenceByNodeIdArgs = {
+  input: UpdateLicenceByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLicenceArgs = {
+  input: UpdateLicenceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLicenceApplicationJoinByNodeIdArgs = {
+  input: UpdateLicenceApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLicenceApplicationJoinArgs = {
+  input: UpdateLicenceApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateLookupTableByNodeIdArgs = {
   input: UpdateLookupTableByNodeIdInput;
 };
@@ -12241,6 +13887,90 @@ export type MutationUpdateLookupTableByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateLookupTableArgs = {
   input: UpdateLookupTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableAdministrationRouteByNodeIdArgs = {
+  input: UpdateLookupTableAdministrationRouteByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableAdministrationRouteArgs = {
+  input: UpdateLookupTableAdministrationRouteInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableContainerByNodeIdArgs = {
+  input: UpdateLookupTableContainerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableContainerArgs = {
+  input: UpdateLookupTableContainerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableCountrynameByNodeIdArgs = {
+  input: UpdateLookupTableCountrynameByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableCountrynameArgs = {
+  input: UpdateLookupTableCountrynameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableDosageFormByNodeIdArgs = {
+  input: UpdateLookupTableDosageFormByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableDosageFormArgs = {
+  input: UpdateLookupTableDosageFormInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableIngredientByNodeIdArgs = {
+  input: UpdateLookupTableIngredientByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableIngredientArgs = {
+  input: UpdateLookupTableIngredientInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableTestAddNewLookupTableByNodeIdArgs = {
+  input: UpdateLookupTableTestAddNewLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableTestAddNewLookupTableArgs = {
+  input: UpdateLookupTableTestAddNewLookupTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableTherapeuticCategoryByNodeIdArgs = {
+  input: UpdateLookupTableTherapeuticCategoryByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableTherapeuticCategoryArgs = {
+  input: UpdateLookupTableTherapeuticCategoryInput;
 };
 
 
@@ -12377,6 +14107,30 @@ export type MutationUpdatePermissionPolicyByNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateProductByNodeIdArgs = {
+  input: UpdateProductByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateProductArgs = {
+  input: UpdateProductInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateProductApplicationJoinByNodeIdArgs = {
+  input: UpdateProductApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateProductApplicationJoinArgs = {
+  input: UpdateProductApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateReviewByNodeIdArgs = {
   input: UpdateReviewByNodeIdInput;
 };
@@ -12425,18 +14179,6 @@ export type MutationUpdateReviewDecisionArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewQuestionAssignmentByNodeIdArgs = {
-  input: UpdateReviewQuestionAssignmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewQuestionAssignmentArgs = {
-  input: UpdateReviewQuestionAssignmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateReviewResponseByNodeIdArgs = {
   input: UpdateReviewResponseByNodeIdInput;
 };
@@ -12457,6 +14199,18 @@ export type MutationUpdateReviewStatusHistoryByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateReviewStatusHistoryArgs = {
   input: UpdateReviewStatusHistoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateSystemInfoByNodeIdArgs = {
+  input: UpdateSystemInfoByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateSystemInfoArgs = {
+  input: UpdateSystemInfoInput;
 };
 
 
@@ -12653,6 +14407,18 @@ export type MutationUpdateUserOrganisationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserOrganisationApplicationJoinByNodeIdArgs = {
+  input: UpdateUserOrganisationApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserOrganisationApplicationJoinArgs = {
+  input: UpdateUserOrganisationApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateVerificationByNodeIdArgs = {
   input: UpdateVerificationByNodeIdInput;
 };
@@ -12845,6 +14611,30 @@ export type MutationDeleteFilterByCodeArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLicenceByNodeIdArgs = {
+  input: DeleteLicenceByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLicenceArgs = {
+  input: DeleteLicenceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLicenceApplicationJoinByNodeIdArgs = {
+  input: DeleteLicenceApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLicenceApplicationJoinArgs = {
+  input: DeleteLicenceApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteLookupTableByNodeIdArgs = {
   input: DeleteLookupTableByNodeIdInput;
 };
@@ -12853,6 +14643,90 @@ export type MutationDeleteLookupTableByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteLookupTableArgs = {
   input: DeleteLookupTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableAdministrationRouteByNodeIdArgs = {
+  input: DeleteLookupTableAdministrationRouteByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableAdministrationRouteArgs = {
+  input: DeleteLookupTableAdministrationRouteInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableContainerByNodeIdArgs = {
+  input: DeleteLookupTableContainerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableContainerArgs = {
+  input: DeleteLookupTableContainerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableCountrynameByNodeIdArgs = {
+  input: DeleteLookupTableCountrynameByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableCountrynameArgs = {
+  input: DeleteLookupTableCountrynameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableDosageFormByNodeIdArgs = {
+  input: DeleteLookupTableDosageFormByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableDosageFormArgs = {
+  input: DeleteLookupTableDosageFormInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableIngredientByNodeIdArgs = {
+  input: DeleteLookupTableIngredientByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableIngredientArgs = {
+  input: DeleteLookupTableIngredientInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableTestAddNewLookupTableByNodeIdArgs = {
+  input: DeleteLookupTableTestAddNewLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableTestAddNewLookupTableArgs = {
+  input: DeleteLookupTableTestAddNewLookupTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableTherapeuticCategoryByNodeIdArgs = {
+  input: DeleteLookupTableTherapeuticCategoryByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableTherapeuticCategoryArgs = {
+  input: DeleteLookupTableTherapeuticCategoryInput;
 };
 
 
@@ -12989,6 +14863,30 @@ export type MutationDeletePermissionPolicyByNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteProductByNodeIdArgs = {
+  input: DeleteProductByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteProductArgs = {
+  input: DeleteProductInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteProductApplicationJoinByNodeIdArgs = {
+  input: DeleteProductApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteProductApplicationJoinArgs = {
+  input: DeleteProductApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteReviewByNodeIdArgs = {
   input: DeleteReviewByNodeIdInput;
 };
@@ -13037,18 +14935,6 @@ export type MutationDeleteReviewDecisionArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewQuestionAssignmentByNodeIdArgs = {
-  input: DeleteReviewQuestionAssignmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewQuestionAssignmentArgs = {
-  input: DeleteReviewQuestionAssignmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteReviewResponseByNodeIdArgs = {
   input: DeleteReviewResponseByNodeIdInput;
 };
@@ -13069,6 +14955,18 @@ export type MutationDeleteReviewStatusHistoryByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteReviewStatusHistoryArgs = {
   input: DeleteReviewStatusHistoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteSystemInfoByNodeIdArgs = {
+  input: DeleteSystemInfoByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteSystemInfoArgs = {
+  input: DeleteSystemInfoInput;
 };
 
 
@@ -13261,6 +15159,18 @@ export type MutationDeleteUserOrganisationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserOrganisationArgs = {
   input: DeleteUserOrganisationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserOrganisationApplicationJoinByNodeIdArgs = {
+  input: DeleteUserOrganisationApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserOrganisationApplicationJoinArgs = {
+  input: DeleteUserOrganisationApplicationJoinInput;
 };
 
 
@@ -14430,6 +16340,7 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -14499,6 +16410,7 @@ export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFke
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `UserOrganisationInput` mutation. */
@@ -14542,6 +16454,7 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -14724,6 +16637,7 @@ export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisat
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `UserOrganisationInput` mutation. */
@@ -15046,8 +16960,11 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `template` in the `ApplicationInput` mutation. */
@@ -15431,8 +17348,11 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationInput` mutation. */
@@ -15476,6 +17396,7 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -15547,8 +17468,11 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationInput` mutation. */
@@ -15664,8 +17588,11 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationNote` in the `ApplicationInput` mutation. */
@@ -15787,8 +17714,11 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationStageHistory` in the `ApplicationInput` mutation. */
@@ -15908,8 +17838,11 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationResponse` in the `ApplicationInput` mutation. */
@@ -16066,7 +17999,6 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
 };
 
@@ -16165,7 +18097,6 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
 };
 
@@ -16270,8 +18201,11 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `triggerSchedule` in the `ApplicationInput` mutation. */
@@ -16428,6 +18362,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateI
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -16445,7 +18380,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateI
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -16490,6 +18424,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -16584,6 +18519,7 @@ export type UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -16636,6 +18572,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -16653,7 +18590,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -16698,6 +18634,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -16750,6 +18687,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -16767,7 +18705,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -16960,6 +18897,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -16977,7 +18915,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -17234,6 +19171,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17251,7 +19189,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -17312,8 +19249,11 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `ApplicationInput` mutation. */
@@ -17355,6 +19295,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   status?: Maybe<ReviewAssignmentStatus>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17372,7 +19313,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -17558,6 +19498,7 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17671,6 +19612,7 @@ export type UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJ
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17792,6 +19734,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17809,7 +19752,6 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -17889,6 +19831,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -17905,7 +19848,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -18076,6 +20018,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -18093,216 +20036,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `reviewQuestionAssignment` in the `ReviewAssignmentInput` mutation. */
-export type ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewQuestionAssignment` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect>>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewQuestionAssignmentNodeIdConnect>>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete>>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewQuestionAssignmentNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate>>;
-  /** A `ReviewQuestionAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput>>;
-};
-
-/** The fields on `reviewQuestionAssignment` to look up the row to connect. */
-export type ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type ReviewQuestionAssignmentNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `reviewQuestionAssignment` to look up the row to delete. */
-export type ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type ReviewQuestionAssignmentNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `reviewQuestionAssignment` to look up the row to update. */
-export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
-  patch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
-export type UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `templateElement` in the `ReviewQuestionAssignmentInput` mutation. */
-export type ReviewQuestionAssignmentTemplateElementIdFkeyInput = {
-  /** The primary key(s) for `templateElement` for the far side of the relationship. */
-  connectById?: Maybe<TemplateElementTemplateElementPkeyConnect>;
-  /** The primary key(s) for `templateElement` for the far side of the relationship. */
-  connectByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect>;
-  /** The primary key(s) for `templateElement` for the far side of the relationship. */
-  connectByNodeId?: Maybe<TemplateElementNodeIdConnect>;
-  /** The primary key(s) for `templateElement` for the far side of the relationship. */
-  deleteById?: Maybe<TemplateElementTemplateElementPkeyDelete>;
-  /** The primary key(s) for `templateElement` for the far side of the relationship. */
-  deleteByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete>;
-  /** The primary key(s) for `templateElement` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<TemplateElementNodeIdDelete>;
-  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
-  updateById?: Maybe<TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate>;
-  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
-  updateByTemplateCodeAndCodeAndTemplateVersion?: Maybe<TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate>;
-  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate>;
-  /** A `TemplateElementInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput>;
-};
-
-/** The fields on `templateElement` to look up the row to update. */
-export type TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate = {
-  /** An object where the defined keys will be set on the `templateElement` being updated. */
-  patch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `templateElement` being updated. */
-export type UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
-  index?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  category?: Maybe<TemplateElementCategory>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
-  isRequired?: Maybe<Scalars['JSON']>;
-  isEditable?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  defaultValue?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
-  helpText?: Maybe<Scalars['String']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
-  templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `reviewQuestionAssignment` in the `TemplateElementInput` mutation. */
-export type ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewQuestionAssignment` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect>>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewQuestionAssignmentNodeIdConnect>>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete>>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewQuestionAssignmentNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate>>;
-  /** A `ReviewQuestionAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput>>;
-};
-
-/** The fields on `reviewQuestionAssignment` to look up the row to update. */
-export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
-  patch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
-export type UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `reviewAssignment` in the `ReviewQuestionAssignmentInput` mutation. */
-export type ReviewQuestionAssignmentReviewAssignmentIdFkeyInput = {
-  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
-  connectById?: Maybe<ReviewAssignmentReviewAssignmentPkeyConnect>;
-  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ReviewAssignmentNodeIdConnect>;
-  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<ReviewAssignmentReviewAssignmentPkeyDelete>;
-  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ReviewAssignmentNodeIdDelete>;
-  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
-  updateById?: Maybe<ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate>;
-  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate>;
-  /** A `ReviewAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput>;
-};
-
-/** The fields on `reviewAssignment` to look up the row to update. */
-export type ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
-  patch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `reviewAssignment` being updated. */
-export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  timeStageCreated?: Maybe<Scalars['Datetime']>;
-  status?: Maybe<ReviewAssignmentStatus>;
-  applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  trigger?: Maybe<Trigger>;
-  timeUpdated?: Maybe<Scalars['Datetime']>;
-  levelNumber?: Maybe<Scalars['Int']>;
-  levelId?: Maybe<Scalars['Int']>;
-  isLastLevel?: Maybe<Scalars['Boolean']>;
-  isLastStage?: Maybe<Scalars['Boolean']>;
-  isLocked?: Maybe<Scalars['Boolean']>;
-  isFinalDecision?: Maybe<Scalars['Boolean']>;
-  isSelfAssignable?: Maybe<Scalars['Boolean']>;
-  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
-  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
-  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
-  templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -18411,8 +20144,11 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `review` in the `ApplicationInput` mutation. */
@@ -18504,6 +20240,7 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -18747,8 +20484,11 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `file` in the `ApplicationInput` mutation. */
@@ -18904,7 +20644,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -18916,94 +20655,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
-  reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
-  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
-  templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `reviewQuestionAssignment` in the `ReviewResponseInput` mutation. */
-export type ReviewResponseReviewQuestionAssignmentIdFkeyInput = {
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  connectById?: Maybe<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ReviewQuestionAssignmentNodeIdConnect>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete>;
-  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ReviewQuestionAssignmentNodeIdDelete>;
-  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
-  updateById?: Maybe<ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate>;
-  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate>;
-  /** A `ReviewQuestionAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput>;
-};
-
-/** The fields on `reviewQuestionAssignment` to look up the row to update. */
-export type ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
-  patch: UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
-export type UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `reviewResponse` in the `ReviewQuestionAssignmentInput` mutation. */
-export type ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewResponse` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewResponseReviewResponsePkeyConnect>>;
-  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewResponseNodeIdConnect>>;
-  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewResponseReviewResponsePkeyDelete>>;
-  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewResponseNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate>>;
-  /** A `ReviewResponseInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput>>;
-};
-
-/** The fields on `reviewResponse` to look up the row to update. */
-export type ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewResponse` being updated. */
-  patch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `reviewResponse` being updated. */
-export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalReviewResponseId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  timeUpdated?: Maybe<Scalars['Datetime']>;
-  timeSubmitted?: Maybe<Scalars['Datetime']>;
-  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
-  status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -19415,7 +21066,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseL
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -19427,7 +21077,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseL
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -19465,7 +21114,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewR
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -19477,7 +21125,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewR
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -19564,7 +21211,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
@@ -19576,7 +21222,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -19636,7 +21281,6 @@ export type UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElemen
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
 };
 
@@ -19672,7 +21316,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElement
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
@@ -19684,7 +21327,6 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElement
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -19705,7 +21347,6 @@ export type ReviewResponsePatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
@@ -19718,7 +21359,6 @@ export type ReviewResponsePatch = {
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -19731,7 +21371,6 @@ export type ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
@@ -19743,7 +21382,6 @@ export type ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput = {
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -19789,7 +21427,6 @@ export type TemplateElementPatch = {
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
 };
 
@@ -19814,7 +21451,6 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
 };
 
@@ -19831,7 +21467,6 @@ export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
@@ -19843,7 +21478,6 @@ export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -20167,6 +21801,7 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -20280,8 +21915,11 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `notification` in the `ApplicationInput` mutation. */
@@ -20603,8 +22241,11 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `activityLog` in the `ApplicationInput` mutation. */
@@ -20725,69 +22366,72 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
-/** Input for the nested mutation of `organisationApplicationJoin` in the `ApplicationInput` mutation. */
-export type OrganisationApplicationJoinApplicationIdFkeyInverseInput = {
-  /** Flag indicating whether all other `organisationApplicationJoin` records that match this relationship should be removed. */
+/** Input for the nested mutation of `userOrganisationApplicationJoin` in the `ApplicationInput` mutation. */
+export type UserOrganisationApplicationJoinApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `userOrganisationApplicationJoin` records that match this relationship should be removed. */
   deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect>>;
-  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<OrganisationApplicationJoinNodeIdConnect>>;
-  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete>>;
-  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<OrganisationApplicationJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `organisationApplicationJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `organisationApplicationJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
-  /** A `OrganisationApplicationJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<UserOrganisationApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<UserOrganisationApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingUserOrganisationApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+  /** A `UserOrganisationApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<UserOrganisationApplicationJoinApplicationIdFkeyUserOrganisationApplicationJoinCreateInput>>;
 };
 
-/** The fields on `organisationApplicationJoin` to look up the row to connect. */
-export type OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect = {
+/** The fields on `userOrganisationApplicationJoin` to look up the row to connect. */
+export type UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyConnect = {
   id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to connect. */
-export type OrganisationApplicationJoinNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `organisationApplicationJoin` to be connected. */
+export type UserOrganisationApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `userOrganisationApplicationJoin` to be connected. */
   nodeId: Scalars['ID'];
 };
 
-/** The fields on `organisationApplicationJoin` to look up the row to delete. */
-export type OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete = {
+/** The fields on `userOrganisationApplicationJoin` to look up the row to delete. */
+export type UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyDelete = {
   id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to delete. */
-export type OrganisationApplicationJoinNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `organisationApplicationJoin` to be deleted. */
+export type UserOrganisationApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `userOrganisationApplicationJoin` to be deleted. */
   nodeId: Scalars['ID'];
 };
 
-/** The fields on `organisationApplicationJoin` to look up the row to update. */
-export type OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
-  patch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
+/** The fields on `userOrganisationApplicationJoin` to look up the row to update. */
+export type UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingUserOrganisationApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
+  patch: UpdateUserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch;
   id: Scalars['Int'];
 };
 
-/** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
-export type UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch = {
+/** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
+export type UpdateUserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
+  userOrganisationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInput>;
+  userOrganisationToUserOrganisationId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInput>;
 };
 
-/** Input for the nested mutation of `application` in the `OrganisationApplicationJoinInput` mutation. */
-export type OrganisationApplicationJoinApplicationIdFkeyInput = {
+/** Input for the nested mutation of `application` in the `UserOrganisationApplicationJoinInput` mutation. */
+export type UserOrganisationApplicationJoinApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
@@ -20801,24 +22445,24 @@ export type OrganisationApplicationJoinApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  updateById?: Maybe<ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySerial?: Maybe<ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  updateBySerial?: Maybe<ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateByNodeId?: Maybe<OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  updateByNodeId?: Maybe<UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
-  create?: Maybe<OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput>;
+  create?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
+export type ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
-export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch = {
+export type UpdateApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
@@ -20843,8 +22487,11 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `userApplicationJoin` in the `ApplicationInput` mutation. */
@@ -20961,19 +22608,385 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `organisationApplicationJoin` in the `ApplicationInput` mutation. */
+export type OrganisationApplicationJoinApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `organisationApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<OrganisationApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<OrganisationApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `organisationApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `organisationApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+  /** A `OrganisationApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput>>;
+};
+
+/** The fields on `organisationApplicationJoin` to look up the row to connect. */
+export type OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type OrganisationApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `organisationApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `organisationApplicationJoin` to look up the row to delete. */
+export type OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type OrganisationApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `organisationApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `organisationApplicationJoin` to look up the row to update. */
+export type OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
+  patch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
+export type UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `application` in the `OrganisationApplicationJoinInput` mutation. */
+export type OrganisationApplicationJoinApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+export type ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `productApplicationJoin` in the `ApplicationInput` mutation. */
+export type ProductApplicationJoinApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `productApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `productApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<ProductApplicationJoinProductApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `productApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ProductApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `productApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ProductApplicationJoinProductApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `productApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ProductApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `productApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `productApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+  /** A `ProductApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput>>;
+};
+
+/** The fields on `productApplicationJoin` to look up the row to connect. */
+export type ProductApplicationJoinProductApplicationJoinPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ProductApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `productApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `productApplicationJoin` to look up the row to delete. */
+export type ProductApplicationJoinProductApplicationJoinPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ProductApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `productApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `productApplicationJoin` to look up the row to update. */
+export type ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `productApplicationJoin` being updated. */
+  patch: UpdateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `productApplicationJoin` being updated. */
+export type UpdateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  productId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
+  productToProductId?: Maybe<ProductApplicationJoinProductIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `application` in the `ProductApplicationJoinInput` mutation. */
+export type ProductApplicationJoinApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<ProductApplicationJoinApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `licenceApplicationJoin` in the `ApplicationInput` mutation. */
+export type LicenceApplicationJoinApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `licenceApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `licenceApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<LicenceApplicationJoinLicenceApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `licenceApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LicenceApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `licenceApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LicenceApplicationJoinLicenceApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `licenceApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LicenceApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `licenceApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingLicenceApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `licenceApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+  /** A `LicenceApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput>>;
+};
+
+/** The fields on `licenceApplicationJoin` to look up the row to connect. */
+export type LicenceApplicationJoinLicenceApplicationJoinPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LicenceApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `licenceApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `licenceApplicationJoin` to look up the row to delete. */
+export type LicenceApplicationJoinLicenceApplicationJoinPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LicenceApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `licenceApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `licenceApplicationJoin` to look up the row to update. */
+export type LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingLicenceApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `licenceApplicationJoin` being updated. */
+  patch: UpdateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `licenceApplicationJoin` being updated. */
+export type UpdateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  licenceId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInput>;
+  licenceToLicenceId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `application` in the `LicenceApplicationJoinInput` mutation. */
+export type LicenceApplicationJoinApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyPatch;
   serial: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+export type LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
@@ -21006,12 +23019,15 @@ export type ApplicationPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The `application` to be created by this mutation. */
-export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+export type LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
@@ -21036,199 +23052,456 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
-/** Input for the nested mutation of `user` in the `UserApplicationJoinInput` mutation. */
-export type UserApplicationJoinUserIdFkeyInput = {
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  connectById?: Maybe<UserUserPkeyConnect>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  connectByNodeId?: Maybe<UserNodeIdConnect>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  deleteById?: Maybe<UserUserPkeyDelete>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<UserNodeIdDelete>;
-  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
-  updateById?: Maybe<UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate>;
-  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
-  updateByUsername?: Maybe<UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate>;
-  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
-  updateByNodeId?: Maybe<UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate>;
-  /** A `UserInput` object that will be created and connected to this object. */
-  create?: Maybe<UserApplicationJoinUserIdFkeyUserCreateInput>;
+/** Input for the nested mutation of `licence` in the `LicenceApplicationJoinInput` mutation. */
+export type LicenceApplicationJoinLicenceIdFkeyInput = {
+  /** The primary key(s) for `licence` for the far side of the relationship. */
+  connectById?: Maybe<LicenceLicencePkeyConnect>;
+  /** The primary key(s) for `licence` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LicenceNodeIdConnect>;
+  /** The primary key(s) for `licence` for the far side of the relationship. */
+  deleteById?: Maybe<LicenceLicencePkeyDelete>;
+  /** The primary key(s) for `licence` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LicenceNodeIdDelete>;
+  /** The primary key(s) and patch data for `licence` for the far side of the relationship. */
+  updateById?: Maybe<LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate>;
+  /** The primary key(s) and patch data for `licence` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate>;
+  /** A `LicenceInput` object that will be created and connected to this object. */
+  create?: Maybe<LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput>;
 };
 
-/** The fields on `user` to look up the row to update. */
-export type UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate = {
-  /** An object where the defined keys will be set on the `user` being updated. */
-  patch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+/** The fields on `licence` to look up the row to connect. */
+export type LicenceLicencePkeyConnect = {
   id: Scalars['Int'];
 };
 
-/** An object where the defined keys will be set on the `user` being updated. */
-export type UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['Date']>;
-  passwordHash?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
-  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
-  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
+/** The globally unique `ID` look up for the row to connect. */
+export type LicenceNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `licence` to be connected. */
+  nodeId: Scalars['ID'];
 };
 
-/** Input for the nested mutation of `userApplicationJoin` in the `UserInput` mutation. */
-export type UserApplicationJoinUserIdFkeyInverseInput = {
-  /** Flag indicating whether all other `userApplicationJoin` records that match this relationship should be removed. */
+/** The fields on `licence` to look up the row to delete. */
+export type LicenceLicencePkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LicenceNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `licence` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `licence` to look up the row to update. */
+export type LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate = {
+  /** An object where the defined keys will be set on the `licence` being updated. */
+  patch: UpdateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `licence` being updated. */
+export type UpdateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  productType?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `licenceApplicationJoin` in the `LicenceInput` mutation. */
+export type LicenceApplicationJoinLicenceIdFkeyInverseInput = {
+  /** Flag indicating whether all other `licenceApplicationJoin` records that match this relationship should be removed. */
   deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<UserApplicationJoinUserApplicationJoinPkeyConnect>>;
-  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<UserApplicationJoinNodeIdConnect>>;
-  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<UserApplicationJoinUserApplicationJoinPkeyDelete>>;
-  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<UserApplicationJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `userApplicationJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `userApplicationJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate>>;
-  /** A `UserApplicationJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput>>;
+  /** The primary key(s) for `licenceApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<LicenceApplicationJoinLicenceApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `licenceApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LicenceApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `licenceApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LicenceApplicationJoinLicenceApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `licenceApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LicenceApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `licenceApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `licenceApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate>>;
+  /** A `LicenceApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput>>;
 };
 
-/** The fields on `userApplicationJoin` to look up the row to update. */
-export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
-  patch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+/** The fields on `licenceApplicationJoin` to look up the row to update. */
+export type LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `licenceApplicationJoin` being updated. */
+  patch: UpdateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
   id: Scalars['Int'];
 };
 
-/** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
-export type UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch = {
+/** An object where the defined keys will be set on the `licenceApplicationJoin` being updated. */
+export type UpdateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
-  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
+  applicationToApplicationId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInput>;
+  licenceToLicenceId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `userApplicationJoin` to be connected. */
+export type LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `licenceApplicationJoin` to be connected. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
-  patch: UserApplicationJoinPatch;
+  /** An object where the defined keys will be set on the `licenceApplicationJoin` being updated. */
+  patch: LicenceApplicationJoinPatch;
 };
 
-/** Represents an update to a `UserApplicationJoin`. Fields that are set will be updated. */
-export type UserApplicationJoinPatch = {
+/** Represents an update to a `LicenceApplicationJoin`. Fields that are set will be updated. */
+export type LicenceApplicationJoinPatch = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  licenceId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInput>;
+  licenceToLicenceId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInput>;
+};
+
+/** The `licenceApplicationJoin` to be created by this mutation. */
+export type LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInput>;
+  licenceToLicenceId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `licence` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `licence` being updated. */
+  patch: LicencePatch;
+};
+
+/** Represents an update to a `Licence`. Fields that are set will be updated. */
+export type LicencePatch = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  productType?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInverseInput>;
+};
+
+/** The `licence` to be created by this mutation. */
+export type LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  productType?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `licenceApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `licenceApplicationJoin` being updated. */
+  patch: LicenceApplicationJoinPatch;
+};
+
+/** The `licenceApplicationJoin` to be created by this mutation. */
+export type LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  licenceId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInput>;
+  licenceToLicenceId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The `application` to be created by this mutation. */
+export type ProductApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
-  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
-/** The `userApplicationJoin` to be created by this mutation. */
-export type UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput = {
+/** Input for the nested mutation of `product` in the `ProductApplicationJoinInput` mutation. */
+export type ProductApplicationJoinProductIdFkeyInput = {
+  /** The primary key(s) for `product` for the far side of the relationship. */
+  connectById?: Maybe<ProductProductPkeyConnect>;
+  /** The primary key(s) for `product` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ProductNodeIdConnect>;
+  /** The primary key(s) for `product` for the far side of the relationship. */
+  deleteById?: Maybe<ProductProductPkeyDelete>;
+  /** The primary key(s) for `product` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ProductNodeIdDelete>;
+  /** The primary key(s) and patch data for `product` for the far side of the relationship. */
+  updateById?: Maybe<ProductOnProductApplicationJoinForProductApplicationJoinProductIdFkeyUsingProductPkeyUpdate>;
+  /** The primary key(s) and patch data for `product` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinProductIdFkeyNodeIdUpdate>;
+  /** A `ProductInput` object that will be created and connected to this object. */
+  create?: Maybe<ProductApplicationJoinProductIdFkeyProductCreateInput>;
+};
+
+/** The fields on `product` to look up the row to connect. */
+export type ProductProductPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ProductNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `product` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `product` to look up the row to delete. */
+export type ProductProductPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ProductNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `product` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `product` to look up the row to update. */
+export type ProductOnProductApplicationJoinForProductApplicationJoinProductIdFkeyUsingProductPkeyUpdate = {
+  /** An object where the defined keys will be set on the `product` being updated. */
+  patch: UpdateProductOnProductApplicationJoinForProductApplicationJoinProductIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `product` being updated. */
+export type UpdateProductOnProductApplicationJoinForProductApplicationJoinProductIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  origin?: Maybe<Scalars['String']>;
+  packSize?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  components?: Maybe<Scalars['String']>;
+  shelfLife?: Maybe<Scalars['JSON']>;
+  dosageForm?: Maybe<Scalars['String']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  formulationsOld?: Maybe<Scalars['JSON']>;
+  genericName?: Maybe<Scalars['String']>;
+  productName?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  universalCode?: Maybe<Scalars['String']>;
+  universalType?: Maybe<Scalars['String']>;
+  applicationLevel?: Maybe<Scalars['String']>;
+  primaryContainer?: Maybe<Scalars['String']>;
+  registrationDate?: Maybe<Scalars['Datetime']>;
+  administrationUnit?: Maybe<Scalars['String']>;
+  routeAdministration?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  indications?: Maybe<Scalars['String']>;
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  formulations?: Maybe<Scalars['JSON']>;
+  indicationsEvidence?: Maybe<Scalars['String']>;
+  packagingDescription?: Maybe<Scalars['String']>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinProductIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `productApplicationJoin` in the `ProductInput` mutation. */
+export type ProductApplicationJoinProductIdFkeyInverseInput = {
+  /** Flag indicating whether all other `productApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `productApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<ProductApplicationJoinProductApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `productApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ProductApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `productApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ProductApplicationJoinProductApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `productApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ProductApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `productApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinProductIdFkeyUsingProductApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `productApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ProductOnProductApplicationJoinForProductApplicationJoinProductIdFkeyNodeIdUpdate>>;
+  /** A `ProductApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ProductApplicationJoinProductIdFkeyProductApplicationJoinCreateInput>>;
+};
+
+/** The fields on `productApplicationJoin` to look up the row to update. */
+export type ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinProductIdFkeyUsingProductApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `productApplicationJoin` being updated. */
+  patch: UpdateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinProductIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `productApplicationJoin` being updated. */
+export type UpdateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinProductIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
-  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
-};
-
-/** The fields on `user` to look up the row to update. */
-export type UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate = {
-  /** An object where the defined keys will be set on the `user` being updated. */
-  patch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
-  username: Scalars['String'];
+  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
+  productToProductId?: Maybe<ProductApplicationJoinProductIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `user` to be connected. */
+export type ProductOnProductApplicationJoinForProductApplicationJoinProductIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `productApplicationJoin` to be connected. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `user` being updated. */
-  patch: UserPatch;
+  /** An object where the defined keys will be set on the `productApplicationJoin` being updated. */
+  patch: ProductApplicationJoinPatch;
 };
 
-/** Represents an update to a `User`. Fields that are set will be updated. */
-export type UserPatch = {
+/** Represents an update to a `ProductApplicationJoin`. Fields that are set will be updated. */
+export type ProductApplicationJoinPatch = {
   id?: Maybe<Scalars['Int']>;
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['Date']>;
-  passwordHash?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
-  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
-  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
+  applicationId?: Maybe<Scalars['Int']>;
+  productId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
+  productToProductId?: Maybe<ProductApplicationJoinProductIdFkeyInput>;
 };
 
-/** The `user` to be created by this mutation. */
-export type UserApplicationJoinUserIdFkeyUserCreateInput = {
+/** The `productApplicationJoin` to be created by this mutation. */
+export type ProductApplicationJoinProductIdFkeyProductApplicationJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['Date']>;
-  passwordHash?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
-  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
-  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
+  productToProductId?: Maybe<ProductApplicationJoinProductIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `userApplicationJoin` to be connected. */
+export type ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinProductIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `product` to be connected. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
-  patch: UserApplicationJoinPatch;
+  /** An object where the defined keys will be set on the `product` being updated. */
+  patch: ProductPatch;
 };
 
-/** The `userApplicationJoin` to be created by this mutation. */
-export type UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput = {
+/** Represents an update to a `Product`. Fields that are set will be updated. */
+export type ProductPatch = {
   id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
-  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
+  origin?: Maybe<Scalars['String']>;
+  packSize?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  components?: Maybe<Scalars['String']>;
+  shelfLife?: Maybe<Scalars['JSON']>;
+  dosageForm?: Maybe<Scalars['String']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  formulationsOld?: Maybe<Scalars['JSON']>;
+  genericName?: Maybe<Scalars['String']>;
+  productName?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  universalCode?: Maybe<Scalars['String']>;
+  universalType?: Maybe<Scalars['String']>;
+  applicationLevel?: Maybe<Scalars['String']>;
+  primaryContainer?: Maybe<Scalars['String']>;
+  registrationDate?: Maybe<Scalars['Datetime']>;
+  administrationUnit?: Maybe<Scalars['String']>;
+  routeAdministration?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  indications?: Maybe<Scalars['String']>;
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  formulations?: Maybe<Scalars['JSON']>;
+  indicationsEvidence?: Maybe<Scalars['String']>;
+  packagingDescription?: Maybe<Scalars['String']>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinProductIdFkeyInverseInput>;
+};
+
+/** The `product` to be created by this mutation. */
+export type ProductApplicationJoinProductIdFkeyProductCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  origin?: Maybe<Scalars['String']>;
+  packSize?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  components?: Maybe<Scalars['String']>;
+  shelfLife?: Maybe<Scalars['JSON']>;
+  dosageForm?: Maybe<Scalars['String']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  formulationsOld?: Maybe<Scalars['JSON']>;
+  genericName?: Maybe<Scalars['String']>;
+  productName?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  universalCode?: Maybe<Scalars['String']>;
+  universalType?: Maybe<Scalars['String']>;
+  applicationLevel?: Maybe<Scalars['String']>;
+  primaryContainer?: Maybe<Scalars['String']>;
+  registrationDate?: Maybe<Scalars['Datetime']>;
+  administrationUnit?: Maybe<Scalars['String']>;
+  routeAdministration?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  indications?: Maybe<Scalars['String']>;
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  formulations?: Maybe<Scalars['JSON']>;
+  indicationsEvidence?: Maybe<Scalars['String']>;
+  packagingDescription?: Maybe<Scalars['String']>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinProductIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `productApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `productApplicationJoin` being updated. */
+  patch: ProductApplicationJoinPatch;
+};
+
+/** The `productApplicationJoin` to be created by this mutation. */
+export type ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  productId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
+  productToProductId?: Maybe<ProductApplicationJoinProductIdFkeyInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -21272,8 +23545,11 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `OrganisationApplicationJoinInput` mutation. */
@@ -21466,6 +23742,438 @@ export type OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJ
 };
 
 /** The fields on `application` to look up the row to update. */
+export type ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The `application` to be created by this mutation. */
+export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `user` in the `UserApplicationJoinInput` mutation. */
+export type UserApplicationJoinUserIdFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: Maybe<UserUserPkeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByNodeId?: Maybe<UserNodeIdConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: Maybe<UserUserPkeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<UserNodeIdDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: Maybe<UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByNodeId?: Maybe<UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate>;
+  /** A `UserInput` object that will be created and connected to this object. */
+  create?: Maybe<UserApplicationJoinUserIdFkeyUserCreateInput>;
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `user` being updated. */
+export type UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `userApplicationJoin` in the `UserInput` mutation. */
+export type UserApplicationJoinUserIdFkeyInverseInput = {
+  /** Flag indicating whether all other `userApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<UserApplicationJoinUserApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<UserApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<UserApplicationJoinUserApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<UserApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `userApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `userApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate>>;
+  /** A `UserApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput>>;
+};
+
+/** The fields on `userApplicationJoin` to look up the row to update. */
+export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
+  patch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
+export type UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
+  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `userApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
+  patch: UserApplicationJoinPatch;
+};
+
+/** Represents an update to a `UserApplicationJoin`. Fields that are set will be updated. */
+export type UserApplicationJoinPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
+  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
+};
+
+/** The `userApplicationJoin` to be created by this mutation. */
+export type UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
+  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `user` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UserPatch;
+};
+
+/** Represents an update to a `User`. Fields that are set will be updated. */
+export type UserPatch = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
+};
+
+/** The `user` to be created by this mutation. */
+export type UserApplicationJoinUserIdFkeyUserCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `userApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
+  patch: UserApplicationJoinPatch;
+};
+
+/** The `userApplicationJoin` to be created by this mutation. */
+export type UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
+  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The `application` to be created by this mutation. */
+export type UserOrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `userOrganisation` in the `UserOrganisationApplicationJoinInput` mutation. */
+export type UserOrganisationApplicationJoinUserOrganisationIdFkeyInput = {
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  connectById?: Maybe<UserOrganisationUserOrganisationPkeyConnect>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<UserOrganisationNodeIdConnect>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  deleteById?: Maybe<UserOrganisationUserOrganisationPkeyDelete>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<UserOrganisationNodeIdDelete>;
+  /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
+  updateById?: Maybe<UserOrganisationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyUsingUserOrganisationPkeyUpdate>;
+  /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyNodeIdUpdate>;
+  /** A `UserOrganisationInput` object that will be created and connected to this object. */
+  create?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyUserOrganisationCreateInput>;
+};
+
+/** The fields on `userOrganisation` to look up the row to update. */
+export type UserOrganisationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyUsingUserOrganisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `userOrganisation` being updated. */
+  patch: UpdateUserOrganisationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `userOrganisation` being updated. */
+export type UpdateUserOrganisationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
+  userRole?: Maybe<Scalars['String']>;
+  userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `userOrganisationApplicationJoin` in the `UserOrganisationInput` mutation. */
+export type UserOrganisationApplicationJoinUserOrganisationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `userOrganisationApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<UserOrganisationApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<UserOrganisationApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyUsingUserOrganisationApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<UserOrganisationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyNodeIdUpdate>>;
+  /** A `UserOrganisationApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<UserOrganisationApplicationJoinUserOrganisationIdFkeyUserOrganisationApplicationJoinCreateInput>>;
+};
+
+/** The fields on `userOrganisationApplicationJoin` to look up the row to update. */
+export type UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyUsingUserOrganisationApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
+  patch: UpdateUserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
+export type UpdateUserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInput>;
+  userOrganisationToUserOrganisationId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserOrganisationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `userOrganisationApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
+  patch: UserOrganisationApplicationJoinPatch;
+};
+
+/** Represents an update to a `UserOrganisationApplicationJoin`. Fields that are set will be updated. */
+export type UserOrganisationApplicationJoinPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userOrganisationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInput>;
+  userOrganisationToUserOrganisationId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInput>;
+};
+
+/** The `userOrganisationApplicationJoin` to be created by this mutation. */
+export type UserOrganisationApplicationJoinUserOrganisationIdFkeyUserOrganisationApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInput>;
+  userOrganisationToUserOrganisationId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinUserOrganisationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `userOrganisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `userOrganisation` being updated. */
+  patch: UserOrganisationPatch;
+};
+
+/** Represents an update to a `UserOrganisation`. Fields that are set will be updated. */
+export type UserOrganisationPatch = {
+  id?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
+  userRole?: Maybe<Scalars['String']>;
+  userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInverseInput>;
+};
+
+/** The `userOrganisation` to be created by this mutation. */
+export type UserOrganisationApplicationJoinUserOrganisationIdFkeyUserOrganisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
+  userRole?: Maybe<Scalars['String']>;
+  userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `userOrganisationApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
+  patch: UserOrganisationApplicationJoinPatch;
+};
+
+/** The `userOrganisationApplicationJoin` to be created by this mutation. */
+export type UserOrganisationApplicationJoinApplicationIdFkeyUserOrganisationApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  userOrganisationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInput>;
+  userOrganisationToUserOrganisationId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
 export type ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
@@ -21506,8 +24214,11 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -21584,8 +24295,11 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `verification` to look up the row to update. */
@@ -21673,8 +24387,11 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -21726,6 +24443,7 @@ export type NotificationUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -21920,7 +24638,6 @@ export type ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput 
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -21932,7 +24649,6 @@ export type ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput 
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -21953,7 +24669,6 @@ export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -21965,73 +24680,11 @@ export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewResponse` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewResponse` being updated. */
-  patch: ReviewResponsePatch;
-};
-
-/** The `reviewResponse` to be created by this mutation. */
-export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  comment?: Maybe<Scalars['String']>;
-  decision?: Maybe<ReviewResponseDecision>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalReviewResponseId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  timeUpdated?: Maybe<Scalars['Datetime']>;
-  timeSubmitted?: Maybe<Scalars['Datetime']>;
-  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
-  status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
-  reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
-  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
-  templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
-  patch: ReviewQuestionAssignmentPatch;
-};
-
-/** Represents an update to a `ReviewQuestionAssignment`. Fields that are set will be updated. */
-export type ReviewQuestionAssignmentPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
-};
-
-/** The `reviewQuestionAssignment` to be created by this mutation. */
-export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -22047,7 +24700,6 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -22059,7 +24711,6 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -22172,8 +24823,11 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `file` to look up the row to update. */
@@ -22239,6 +24893,7 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -22322,8 +24977,11 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -22356,7 +25014,7 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate = {
+export type ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
@@ -22376,6 +25034,7 @@ export type ReviewAssignmentPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -22393,126 +25052,7 @@ export type ReviewAssignmentPatch = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-};
-
-/** The `reviewAssignment` to be created by this mutation. */
-export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  timeStageCreated?: Maybe<Scalars['Datetime']>;
-  status: ReviewAssignmentStatus;
-  applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  trigger?: Maybe<Trigger>;
-  timeUpdated?: Maybe<Scalars['Datetime']>;
-  levelNumber?: Maybe<Scalars['Int']>;
-  levelId?: Maybe<Scalars['Int']>;
-  isLastLevel?: Maybe<Scalars['Boolean']>;
-  isLastStage?: Maybe<Scalars['Boolean']>;
-  isLocked?: Maybe<Scalars['Boolean']>;
-  isFinalDecision?: Maybe<Scalars['Boolean']>;
-  isSelfAssignable?: Maybe<Scalars['Boolean']>;
-  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
-  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
-  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
-  templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
-  patch: ReviewQuestionAssignmentPatch;
-};
-
-/** The `reviewQuestionAssignment` to be created by this mutation. */
-export type ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
-};
-
-/** The fields on `templateElement` to look up the row to update. */
-export type TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate = {
-  /** An object where the defined keys will be set on the `templateElement` being updated. */
-  patch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
-  templateCode: Scalars['String'];
-  code: Scalars['String'];
-  templateVersion: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `templateElement` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `templateElement` being updated. */
-  patch: TemplateElementPatch;
-};
-
-/** The `templateElement` to be created by this mutation. */
-export type ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  code: Scalars['String'];
-  index?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  category?: Maybe<TemplateElementCategory>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  visibilityCondition?: Maybe<Scalars['JSON']>;
-  isRequired?: Maybe<Scalars['JSON']>;
-  isEditable?: Maybe<Scalars['JSON']>;
-  validation?: Maybe<Scalars['JSON']>;
-  defaultValue?: Maybe<Scalars['JSON']>;
-  validationMessage?: Maybe<Scalars['String']>;
-  helpText?: Maybe<Scalars['String']>;
-  parameters?: Maybe<Scalars['JSON']>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
-  templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
-  patch: ReviewQuestionAssignmentPatch;
-};
-
-/** The `reviewQuestionAssignment` to be created by this mutation. */
-export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
-  patch: ReviewAssignmentPatch;
 };
 
 /** The `reviewAssignment` to be created by this mutation. */
@@ -22528,6 +25068,7 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -22545,7 +25086,6 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -22657,6 +25197,7 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -22673,7 +25214,6 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -22728,6 +25268,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -22745,7 +25286,6 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -22803,6 +25343,7 @@ export type ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -22859,6 +25400,7 @@ export type FileUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -22966,6 +25508,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   status: ReviewAssignmentStatus;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -22983,7 +25526,6 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -23028,8 +25570,11 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -23052,6 +25597,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -23069,7 +25615,6 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -23367,6 +25912,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -23384,7 +25930,6 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -23509,6 +26054,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -23526,7 +26072,6 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -23555,6 +26100,7 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -23588,6 +26134,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -23605,7 +26152,6 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -23634,6 +26180,7 @@ export type ApplicationNoteUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -23693,6 +26240,7 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -23726,6 +26274,7 @@ export type ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput = {
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -23743,7 +26292,6 @@ export type ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -23859,8 +26407,11 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -23925,7 +26476,6 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
 };
 
@@ -24005,7 +26555,6 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
 };
 
@@ -24075,8 +26624,11 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -24139,8 +26691,11 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -24204,8 +26759,11 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `organisation` to look up the row to update. */
@@ -24288,8 +26846,11 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `user` to look up the row to update. */
@@ -24317,6 +26878,7 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -24371,8 +26933,11 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -24545,8 +27110,11 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -24740,16 +27308,6 @@ export type OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyN
   patch: UserOrganisationPatch;
 };
 
-/** Represents an update to a `UserOrganisation`. Fields that are set will be updated. */
-export type UserOrganisationPatch = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  userRole?: Maybe<Scalars['String']>;
-  userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
-};
-
 /** The `userOrganisation` to be created by this mutation. */
 export type UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -24757,6 +27315,7 @@ export type UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput = {
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** The fields on `organisation` to look up the row to update. */
@@ -24843,6 +27402,7 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -24871,6 +27431,7 @@ export type UserOrganisationUserIdFkeyUserOrganisationCreateInput = {
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** The fields on `user` to look up the row to update. */
@@ -24898,6 +27459,7 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -25651,8 +28213,11 @@ export type ApplicationInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The output of our create `Application` mutation. */
@@ -26080,6 +28645,87 @@ export type CreateFilterPayloadFilterEdgeArgs = {
   orderBy?: Maybe<Array<FiltersOrderBy>>;
 };
 
+/** All input for the create `Licence` mutation. */
+export type CreateLicenceInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Licence` to be created by this mutation. */
+  licence: LicenceInput;
+};
+
+/** An input for mutations affecting `Licence` */
+export type LicenceInput = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  productType?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
+  licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInverseInput>;
+};
+
+/** The output of our create `Licence` mutation. */
+export type CreateLicencePayload = {
+  __typename?: 'CreateLicencePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Licence` that was created by this mutation. */
+  licence?: Maybe<Licence>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Licence`. May be used by Relay 1. */
+  licenceEdge?: Maybe<LicencesEdge>;
+};
+
+
+/** The output of our create `Licence` mutation. */
+export type CreateLicencePayloadLicenceEdgeArgs = {
+  orderBy?: Maybe<Array<LicencesOrderBy>>;
+};
+
+/** All input for the create `LicenceApplicationJoin` mutation. */
+export type CreateLicenceApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LicenceApplicationJoin` to be created by this mutation. */
+  licenceApplicationJoin: LicenceApplicationJoinInput;
+};
+
+/** An input for mutations affecting `LicenceApplicationJoin` */
+export type LicenceApplicationJoinInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  licenceId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInput>;
+  licenceToLicenceId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInput>;
+};
+
+/** The output of our create `LicenceApplicationJoin` mutation. */
+export type CreateLicenceApplicationJoinPayload = {
+  __typename?: 'CreateLicenceApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LicenceApplicationJoin` that was created by this mutation. */
+  licenceApplicationJoin?: Maybe<LicenceApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `LicenceApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Licence` that is related to this `LicenceApplicationJoin`. */
+  licence?: Maybe<Licence>;
+  /** An edge for our `LicenceApplicationJoin`. May be used by Relay 1. */
+  licenceApplicationJoinEdge?: Maybe<LicenceApplicationJoinsEdge>;
+};
+
+
+/** The output of our create `LicenceApplicationJoin` mutation. */
+export type CreateLicenceApplicationJoinPayloadLicenceApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<LicenceApplicationJoinsOrderBy>>;
+};
+
 /** All input for the create `LookupTable` mutation. */
 export type CreateLookupTableInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -26113,6 +28759,245 @@ export type CreateLookupTablePayload = {
 /** The output of our create `LookupTable` mutation. */
 export type CreateLookupTablePayloadLookupTableEdgeArgs = {
   orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
+/** All input for the create `LookupTableAdministrationRoute` mutation. */
+export type CreateLookupTableAdministrationRouteInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableAdministrationRoute` to be created by this mutation. */
+  lookupTableAdministrationRoute: LookupTableAdministrationRouteInput;
+};
+
+/** An input for mutations affecting `LookupTableAdministrationRoute` */
+export type LookupTableAdministrationRouteInput = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `LookupTableAdministrationRoute` mutation. */
+export type CreateLookupTableAdministrationRoutePayload = {
+  __typename?: 'CreateLookupTableAdministrationRoutePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableAdministrationRoute` that was created by this mutation. */
+  lookupTableAdministrationRoute?: Maybe<LookupTableAdministrationRoute>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableAdministrationRoute`. May be used by Relay 1. */
+  lookupTableAdministrationRouteEdge?: Maybe<LookupTableAdministrationRoutesEdge>;
+};
+
+
+/** The output of our create `LookupTableAdministrationRoute` mutation. */
+export type CreateLookupTableAdministrationRoutePayloadLookupTableAdministrationRouteEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableAdministrationRoutesOrderBy>>;
+};
+
+/** All input for the create `LookupTableContainer` mutation. */
+export type CreateLookupTableContainerInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableContainer` to be created by this mutation. */
+  lookupTableContainer: LookupTableContainerInput;
+};
+
+/** An input for mutations affecting `LookupTableContainer` */
+export type LookupTableContainerInput = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `LookupTableContainer` mutation. */
+export type CreateLookupTableContainerPayload = {
+  __typename?: 'CreateLookupTableContainerPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableContainer` that was created by this mutation. */
+  lookupTableContainer?: Maybe<LookupTableContainer>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableContainer`. May be used by Relay 1. */
+  lookupTableContainerEdge?: Maybe<LookupTableContainersEdge>;
+};
+
+
+/** The output of our create `LookupTableContainer` mutation. */
+export type CreateLookupTableContainerPayloadLookupTableContainerEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableContainersOrderBy>>;
+};
+
+/** All input for the create `LookupTableCountryname` mutation. */
+export type CreateLookupTableCountrynameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableCountryname` to be created by this mutation. */
+  lookupTableCountryname: LookupTableCountrynameInput;
+};
+
+/** An input for mutations affecting `LookupTableCountryname` */
+export type LookupTableCountrynameInput = {
+  id?: Maybe<Scalars['Int']>;
+  eso?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `LookupTableCountryname` mutation. */
+export type CreateLookupTableCountrynamePayload = {
+  __typename?: 'CreateLookupTableCountrynamePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableCountryname` that was created by this mutation. */
+  lookupTableCountryname?: Maybe<LookupTableCountryname>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableCountryname`. May be used by Relay 1. */
+  lookupTableCountrynameEdge?: Maybe<LookupTableCountrynamesEdge>;
+};
+
+
+/** The output of our create `LookupTableCountryname` mutation. */
+export type CreateLookupTableCountrynamePayloadLookupTableCountrynameEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableCountrynamesOrderBy>>;
+};
+
+/** All input for the create `LookupTableDosageForm` mutation. */
+export type CreateLookupTableDosageFormInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableDosageForm` to be created by this mutation. */
+  lookupTableDosageForm: LookupTableDosageFormInput;
+};
+
+/** An input for mutations affecting `LookupTableDosageForm` */
+export type LookupTableDosageFormInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `LookupTableDosageForm` mutation. */
+export type CreateLookupTableDosageFormPayload = {
+  __typename?: 'CreateLookupTableDosageFormPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableDosageForm` that was created by this mutation. */
+  lookupTableDosageForm?: Maybe<LookupTableDosageForm>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableDosageForm`. May be used by Relay 1. */
+  lookupTableDosageFormEdge?: Maybe<LookupTableDosageFormsEdge>;
+};
+
+
+/** The output of our create `LookupTableDosageForm` mutation. */
+export type CreateLookupTableDosageFormPayloadLookupTableDosageFormEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableDosageFormsOrderBy>>;
+};
+
+/** All input for the create `LookupTableIngredient` mutation. */
+export type CreateLookupTableIngredientInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableIngredient` to be created by this mutation. */
+  lookupTableIngredient: LookupTableIngredientInput;
+};
+
+/** An input for mutations affecting `LookupTableIngredient` */
+export type LookupTableIngredientInput = {
+  id?: Maybe<Scalars['Int']>;
+  activeIngredient?: Maybe<Scalars['String']>;
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `LookupTableIngredient` mutation. */
+export type CreateLookupTableIngredientPayload = {
+  __typename?: 'CreateLookupTableIngredientPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableIngredient` that was created by this mutation. */
+  lookupTableIngredient?: Maybe<LookupTableIngredient>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableIngredient`. May be used by Relay 1. */
+  lookupTableIngredientEdge?: Maybe<LookupTableIngredientsEdge>;
+};
+
+
+/** The output of our create `LookupTableIngredient` mutation. */
+export type CreateLookupTableIngredientPayloadLookupTableIngredientEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableIngredientsOrderBy>>;
+};
+
+/** All input for the create `LookupTableTestAddNewLookupTable` mutation. */
+export type CreateLookupTableTestAddNewLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTestAddNewLookupTable` to be created by this mutation. */
+  lookupTableTestAddNewLookupTable: LookupTableTestAddNewLookupTableInput;
+};
+
+/** An input for mutations affecting `LookupTableTestAddNewLookupTable` */
+export type LookupTableTestAddNewLookupTableInput = {
+  id?: Maybe<Scalars['Int']>;
+  activeIngredient?: Maybe<Scalars['String']>;
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `LookupTableTestAddNewLookupTable` mutation. */
+export type CreateLookupTableTestAddNewLookupTablePayload = {
+  __typename?: 'CreateLookupTableTestAddNewLookupTablePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTestAddNewLookupTable` that was created by this mutation. */
+  lookupTableTestAddNewLookupTable?: Maybe<LookupTableTestAddNewLookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableTestAddNewLookupTable`. May be used by Relay 1. */
+  lookupTableTestAddNewLookupTableEdge?: Maybe<LookupTableTestAddNewLookupTablesEdge>;
+};
+
+
+/** The output of our create `LookupTableTestAddNewLookupTable` mutation. */
+export type CreateLookupTableTestAddNewLookupTablePayloadLookupTableTestAddNewLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableTestAddNewLookupTablesOrderBy>>;
+};
+
+/** All input for the create `LookupTableTherapeuticCategory` mutation. */
+export type CreateLookupTableTherapeuticCategoryInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTherapeuticCategory` to be created by this mutation. */
+  lookupTableTherapeuticCategory: LookupTableTherapeuticCategoryInput;
+};
+
+/** An input for mutations affecting `LookupTableTherapeuticCategory` */
+export type LookupTableTherapeuticCategoryInput = {
+  id?: Maybe<Scalars['Int']>;
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  pharmacologicClass?: Maybe<Scalars['String']>;
+  formularyKeyDrugTypes?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `LookupTableTherapeuticCategory` mutation. */
+export type CreateLookupTableTherapeuticCategoryPayload = {
+  __typename?: 'CreateLookupTableTherapeuticCategoryPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTherapeuticCategory` that was created by this mutation. */
+  lookupTableTherapeuticCategory?: Maybe<LookupTableTherapeuticCategory>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableTherapeuticCategory`. May be used by Relay 1. */
+  lookupTableTherapeuticCategoryEdge?: Maybe<LookupTableTherapeuticCategoriesEdge>;
+};
+
+
+/** The output of our create `LookupTableTherapeuticCategory` mutation. */
+export type CreateLookupTableTherapeuticCategoryPayloadLookupTableTherapeuticCategoryEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableTherapeuticCategoriesOrderBy>>;
 };
 
 /** All input for the create `Notification` mutation. */
@@ -26458,6 +29343,104 @@ export type CreatePermissionPolicyPayloadPermissionPolicyEdgeArgs = {
   orderBy?: Maybe<Array<PermissionPoliciesOrderBy>>;
 };
 
+/** All input for the create `Product` mutation. */
+export type CreateProductInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Product` to be created by this mutation. */
+  product: ProductInput;
+};
+
+/** An input for mutations affecting `Product` */
+export type ProductInput = {
+  id?: Maybe<Scalars['Int']>;
+  origin?: Maybe<Scalars['String']>;
+  packSize?: Maybe<Scalars['String']>;
+  companyId?: Maybe<Scalars['Int']>;
+  components?: Maybe<Scalars['String']>;
+  shelfLife?: Maybe<Scalars['JSON']>;
+  dosageForm?: Maybe<Scalars['String']>;
+  expiryDate?: Maybe<Scalars['Datetime']>;
+  companyName?: Maybe<Scalars['String']>;
+  formulationsOld?: Maybe<Scalars['JSON']>;
+  genericName?: Maybe<Scalars['String']>;
+  productName?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  universalCode?: Maybe<Scalars['String']>;
+  universalType?: Maybe<Scalars['String']>;
+  applicationLevel?: Maybe<Scalars['String']>;
+  primaryContainer?: Maybe<Scalars['String']>;
+  registrationDate?: Maybe<Scalars['Datetime']>;
+  administrationUnit?: Maybe<Scalars['String']>;
+  routeAdministration?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  indications?: Maybe<Scalars['String']>;
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  formulations?: Maybe<Scalars['JSON']>;
+  indicationsEvidence?: Maybe<Scalars['String']>;
+  packagingDescription?: Maybe<Scalars['String']>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinProductIdFkeyInverseInput>;
+};
+
+/** The output of our create `Product` mutation. */
+export type CreateProductPayload = {
+  __typename?: 'CreateProductPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Product` that was created by this mutation. */
+  product?: Maybe<Product>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Product`. May be used by Relay 1. */
+  productEdge?: Maybe<ProductsEdge>;
+};
+
+
+/** The output of our create `Product` mutation. */
+export type CreateProductPayloadProductEdgeArgs = {
+  orderBy?: Maybe<Array<ProductsOrderBy>>;
+};
+
+/** All input for the create `ProductApplicationJoin` mutation. */
+export type CreateProductApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ProductApplicationJoin` to be created by this mutation. */
+  productApplicationJoin: ProductApplicationJoinInput;
+};
+
+/** An input for mutations affecting `ProductApplicationJoin` */
+export type ProductApplicationJoinInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  productId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
+  productToProductId?: Maybe<ProductApplicationJoinProductIdFkeyInput>;
+};
+
+/** The output of our create `ProductApplicationJoin` mutation. */
+export type CreateProductApplicationJoinPayload = {
+  __typename?: 'CreateProductApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ProductApplicationJoin` that was created by this mutation. */
+  productApplicationJoin?: Maybe<ProductApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `ProductApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Product` that is related to this `ProductApplicationJoin`. */
+  product?: Maybe<Product>;
+  /** An edge for our `ProductApplicationJoin`. May be used by Relay 1. */
+  productApplicationJoinEdge?: Maybe<ProductApplicationJoinsEdge>;
+};
+
+
+/** The output of our create `ProductApplicationJoin` mutation. */
+export type CreateProductApplicationJoinPayloadProductApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<ProductApplicationJoinsOrderBy>>;
+};
+
 /** All input for the create `Review` mutation. */
 export type CreateReviewInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -26534,6 +29517,7 @@ export type ReviewAssignmentInput = {
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
@@ -26551,7 +29535,6 @@ export type ReviewAssignmentInput = {
   templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
@@ -26671,47 +29654,6 @@ export type CreateReviewDecisionPayloadReviewDecisionEdgeArgs = {
   orderBy?: Maybe<Array<ReviewDecisionsOrderBy>>;
 };
 
-/** All input for the create `ReviewQuestionAssignment` mutation. */
-export type CreateReviewQuestionAssignmentInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewQuestionAssignment` to be created by this mutation. */
-  reviewQuestionAssignment: ReviewQuestionAssignmentInput;
-};
-
-/** An input for mutations affecting `ReviewQuestionAssignment` */
-export type ReviewQuestionAssignmentInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateElementId?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
-};
-
-/** The output of our create `ReviewQuestionAssignment` mutation. */
-export type CreateReviewQuestionAssignmentPayload = {
-  __typename?: 'CreateReviewQuestionAssignmentPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewQuestionAssignment` that was created by this mutation. */
-  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
-  templateElement?: Maybe<TemplateElement>;
-  /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
-  reviewAssignment?: Maybe<ReviewAssignment>;
-  /** An edge for our `ReviewQuestionAssignment`. May be used by Relay 1. */
-  reviewQuestionAssignmentEdge?: Maybe<ReviewQuestionAssignmentsEdge>;
-};
-
-
-/** The output of our create `ReviewQuestionAssignment` mutation. */
-export type CreateReviewQuestionAssignmentPayloadReviewQuestionAssignmentEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
-};
-
 /** All input for the create `ReviewResponse` mutation. */
 export type CreateReviewResponseInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -26725,7 +29667,6 @@ export type ReviewResponseInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
-  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalReviewResponseId?: Maybe<Scalars['Int']>;
@@ -26738,7 +29679,6 @@ export type ReviewResponseInput = {
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
-  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
@@ -26755,8 +29695,6 @@ export type CreateReviewResponsePayload = {
   reviewResponse?: Maybe<ReviewResponse>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
-  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
@@ -26814,6 +29752,41 @@ export type CreateReviewStatusHistoryPayload = {
 /** The output of our create `ReviewStatusHistory` mutation. */
 export type CreateReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs = {
   orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
+};
+
+/** All input for the create `SystemInfo` mutation. */
+export type CreateSystemInfoInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `SystemInfo` to be created by this mutation. */
+  systemInfo: SystemInfoInput;
+};
+
+/** An input for mutations affecting `SystemInfo` */
+export type SystemInfoInput = {
+  id?: Maybe<Scalars['Int']>;
+  name: Scalars['String'];
+  value?: Maybe<Scalars['JSON']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/** The output of our create `SystemInfo` mutation. */
+export type CreateSystemInfoPayload = {
+  __typename?: 'CreateSystemInfoPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `SystemInfo` that was created by this mutation. */
+  systemInfo?: Maybe<SystemInfo>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `SystemInfo`. May be used by Relay 1. */
+  systemInfoEdge?: Maybe<SystemInfosEdge>;
+};
+
+
+/** The output of our create `SystemInfo` mutation. */
+export type CreateSystemInfoPayloadSystemInfoEdgeArgs = {
+  orderBy?: Maybe<Array<SystemInfosOrderBy>>;
 };
 
 /** All input for the create `Template` mutation. */
@@ -26983,7 +29956,6 @@ export type TemplateElementInput = {
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
-  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
 };
 
@@ -27321,6 +30293,7 @@ export type UserInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -27409,6 +30382,7 @@ export type UserOrganisationInput = {
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** The output of our create `UserOrganisation` mutation. */
@@ -27432,6 +30406,46 @@ export type CreateUserOrganisationPayload = {
 /** The output of our create `UserOrganisation` mutation. */
 export type CreateUserOrganisationPayloadUserOrganisationEdgeArgs = {
   orderBy?: Maybe<Array<UserOrganisationsOrderBy>>;
+};
+
+/** All input for the create `UserOrganisationApplicationJoin` mutation. */
+export type CreateUserOrganisationApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `UserOrganisationApplicationJoin` to be created by this mutation. */
+  userOrganisationApplicationJoin: UserOrganisationApplicationJoinInput;
+};
+
+/** An input for mutations affecting `UserOrganisationApplicationJoin` */
+export type UserOrganisationApplicationJoinInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userOrganisationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInput>;
+  userOrganisationToUserOrganisationId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInput>;
+};
+
+/** The output of our create `UserOrganisationApplicationJoin` mutation. */
+export type CreateUserOrganisationApplicationJoinPayload = {
+  __typename?: 'CreateUserOrganisationApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `UserOrganisationApplicationJoin` that was created by this mutation. */
+  userOrganisationApplicationJoin?: Maybe<UserOrganisationApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `UserOrganisationApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `UserOrganisation` that is related to this `UserOrganisationApplicationJoin`. */
+  userOrganisation?: Maybe<UserOrganisation>;
+  /** An edge for our `UserOrganisationApplicationJoin`. May be used by Relay 1. */
+  userOrganisationApplicationJoinEdge?: Maybe<UserOrganisationApplicationJoinsEdge>;
+};
+
+
+/** The output of our create `UserOrganisationApplicationJoin` mutation. */
+export type CreateUserOrganisationApplicationJoinPayloadUserOrganisationApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<UserOrganisationApplicationJoinsOrderBy>>;
 };
 
 /** All input for the create `Verification` mutation. */
@@ -28048,6 +31062,86 @@ export type UpdateFilterByCodeInput = {
   code: Scalars['String'];
 };
 
+/** All input for the `updateLicenceByNodeId` mutation. */
+export type UpdateLicenceByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Licence` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Licence` being updated. */
+  patch: LicencePatch;
+};
+
+/** The output of our update `Licence` mutation. */
+export type UpdateLicencePayload = {
+  __typename?: 'UpdateLicencePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Licence` that was updated by this mutation. */
+  licence?: Maybe<Licence>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Licence`. May be used by Relay 1. */
+  licenceEdge?: Maybe<LicencesEdge>;
+};
+
+
+/** The output of our update `Licence` mutation. */
+export type UpdateLicencePayloadLicenceEdgeArgs = {
+  orderBy?: Maybe<Array<LicencesOrderBy>>;
+};
+
+/** All input for the `updateLicence` mutation. */
+export type UpdateLicenceInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Licence` being updated. */
+  patch: LicencePatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateLicenceApplicationJoinByNodeId` mutation. */
+export type UpdateLicenceApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LicenceApplicationJoin` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LicenceApplicationJoin` being updated. */
+  patch: LicenceApplicationJoinPatch;
+};
+
+/** The output of our update `LicenceApplicationJoin` mutation. */
+export type UpdateLicenceApplicationJoinPayload = {
+  __typename?: 'UpdateLicenceApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LicenceApplicationJoin` that was updated by this mutation. */
+  licenceApplicationJoin?: Maybe<LicenceApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `LicenceApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Licence` that is related to this `LicenceApplicationJoin`. */
+  licence?: Maybe<Licence>;
+  /** An edge for our `LicenceApplicationJoin`. May be used by Relay 1. */
+  licenceApplicationJoinEdge?: Maybe<LicenceApplicationJoinsEdge>;
+};
+
+
+/** The output of our update `LicenceApplicationJoin` mutation. */
+export type UpdateLicenceApplicationJoinPayloadLicenceApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<LicenceApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `updateLicenceApplicationJoin` mutation. */
+export type UpdateLicenceApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LicenceApplicationJoin` being updated. */
+  patch: LicenceApplicationJoinPatch;
+  id: Scalars['Int'];
+};
+
 /** All input for the `updateLookupTableByNodeId` mutation. */
 export type UpdateLookupTableByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -28091,6 +31185,322 @@ export type UpdateLookupTableInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** An object where the defined keys will be set on the `LookupTable` being updated. */
   patch: LookupTablePatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateLookupTableAdministrationRouteByNodeId` mutation. */
+export type UpdateLookupTableAdministrationRouteByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableAdministrationRoute` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTableAdministrationRoute` being updated. */
+  patch: LookupTableAdministrationRoutePatch;
+};
+
+/** Represents an update to a `LookupTableAdministrationRoute`. Fields that are set will be updated. */
+export type LookupTableAdministrationRoutePatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `LookupTableAdministrationRoute` mutation. */
+export type UpdateLookupTableAdministrationRoutePayload = {
+  __typename?: 'UpdateLookupTableAdministrationRoutePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableAdministrationRoute` that was updated by this mutation. */
+  lookupTableAdministrationRoute?: Maybe<LookupTableAdministrationRoute>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableAdministrationRoute`. May be used by Relay 1. */
+  lookupTableAdministrationRouteEdge?: Maybe<LookupTableAdministrationRoutesEdge>;
+};
+
+
+/** The output of our update `LookupTableAdministrationRoute` mutation. */
+export type UpdateLookupTableAdministrationRoutePayloadLookupTableAdministrationRouteEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableAdministrationRoutesOrderBy>>;
+};
+
+/** All input for the `updateLookupTableAdministrationRoute` mutation. */
+export type UpdateLookupTableAdministrationRouteInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTableAdministrationRoute` being updated. */
+  patch: LookupTableAdministrationRoutePatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateLookupTableContainerByNodeId` mutation. */
+export type UpdateLookupTableContainerByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableContainer` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTableContainer` being updated. */
+  patch: LookupTableContainerPatch;
+};
+
+/** Represents an update to a `LookupTableContainer`. Fields that are set will be updated. */
+export type LookupTableContainerPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `LookupTableContainer` mutation. */
+export type UpdateLookupTableContainerPayload = {
+  __typename?: 'UpdateLookupTableContainerPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableContainer` that was updated by this mutation. */
+  lookupTableContainer?: Maybe<LookupTableContainer>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableContainer`. May be used by Relay 1. */
+  lookupTableContainerEdge?: Maybe<LookupTableContainersEdge>;
+};
+
+
+/** The output of our update `LookupTableContainer` mutation. */
+export type UpdateLookupTableContainerPayloadLookupTableContainerEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableContainersOrderBy>>;
+};
+
+/** All input for the `updateLookupTableContainer` mutation. */
+export type UpdateLookupTableContainerInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTableContainer` being updated. */
+  patch: LookupTableContainerPatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateLookupTableCountrynameByNodeId` mutation. */
+export type UpdateLookupTableCountrynameByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableCountryname` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTableCountryname` being updated. */
+  patch: LookupTableCountrynamePatch;
+};
+
+/** Represents an update to a `LookupTableCountryname`. Fields that are set will be updated. */
+export type LookupTableCountrynamePatch = {
+  id?: Maybe<Scalars['Int']>;
+  eso?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `LookupTableCountryname` mutation. */
+export type UpdateLookupTableCountrynamePayload = {
+  __typename?: 'UpdateLookupTableCountrynamePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableCountryname` that was updated by this mutation. */
+  lookupTableCountryname?: Maybe<LookupTableCountryname>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableCountryname`. May be used by Relay 1. */
+  lookupTableCountrynameEdge?: Maybe<LookupTableCountrynamesEdge>;
+};
+
+
+/** The output of our update `LookupTableCountryname` mutation. */
+export type UpdateLookupTableCountrynamePayloadLookupTableCountrynameEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableCountrynamesOrderBy>>;
+};
+
+/** All input for the `updateLookupTableCountryname` mutation. */
+export type UpdateLookupTableCountrynameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTableCountryname` being updated. */
+  patch: LookupTableCountrynamePatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateLookupTableDosageFormByNodeId` mutation. */
+export type UpdateLookupTableDosageFormByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableDosageForm` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTableDosageForm` being updated. */
+  patch: LookupTableDosageFormPatch;
+};
+
+/** Represents an update to a `LookupTableDosageForm`. Fields that are set will be updated. */
+export type LookupTableDosageFormPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `LookupTableDosageForm` mutation. */
+export type UpdateLookupTableDosageFormPayload = {
+  __typename?: 'UpdateLookupTableDosageFormPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableDosageForm` that was updated by this mutation. */
+  lookupTableDosageForm?: Maybe<LookupTableDosageForm>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableDosageForm`. May be used by Relay 1. */
+  lookupTableDosageFormEdge?: Maybe<LookupTableDosageFormsEdge>;
+};
+
+
+/** The output of our update `LookupTableDosageForm` mutation. */
+export type UpdateLookupTableDosageFormPayloadLookupTableDosageFormEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableDosageFormsOrderBy>>;
+};
+
+/** All input for the `updateLookupTableDosageForm` mutation. */
+export type UpdateLookupTableDosageFormInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTableDosageForm` being updated. */
+  patch: LookupTableDosageFormPatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateLookupTableIngredientByNodeId` mutation. */
+export type UpdateLookupTableIngredientByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableIngredient` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTableIngredient` being updated. */
+  patch: LookupTableIngredientPatch;
+};
+
+/** Represents an update to a `LookupTableIngredient`. Fields that are set will be updated. */
+export type LookupTableIngredientPatch = {
+  id?: Maybe<Scalars['Int']>;
+  activeIngredient?: Maybe<Scalars['String']>;
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `LookupTableIngredient` mutation. */
+export type UpdateLookupTableIngredientPayload = {
+  __typename?: 'UpdateLookupTableIngredientPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableIngredient` that was updated by this mutation. */
+  lookupTableIngredient?: Maybe<LookupTableIngredient>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableIngredient`. May be used by Relay 1. */
+  lookupTableIngredientEdge?: Maybe<LookupTableIngredientsEdge>;
+};
+
+
+/** The output of our update `LookupTableIngredient` mutation. */
+export type UpdateLookupTableIngredientPayloadLookupTableIngredientEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableIngredientsOrderBy>>;
+};
+
+/** All input for the `updateLookupTableIngredient` mutation. */
+export type UpdateLookupTableIngredientInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTableIngredient` being updated. */
+  patch: LookupTableIngredientPatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateLookupTableTestAddNewLookupTableByNodeId` mutation. */
+export type UpdateLookupTableTestAddNewLookupTableByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableTestAddNewLookupTable` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTableTestAddNewLookupTable` being updated. */
+  patch: LookupTableTestAddNewLookupTablePatch;
+};
+
+/** Represents an update to a `LookupTableTestAddNewLookupTable`. Fields that are set will be updated. */
+export type LookupTableTestAddNewLookupTablePatch = {
+  id?: Maybe<Scalars['Int']>;
+  activeIngredient?: Maybe<Scalars['String']>;
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `LookupTableTestAddNewLookupTable` mutation. */
+export type UpdateLookupTableTestAddNewLookupTablePayload = {
+  __typename?: 'UpdateLookupTableTestAddNewLookupTablePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTestAddNewLookupTable` that was updated by this mutation. */
+  lookupTableTestAddNewLookupTable?: Maybe<LookupTableTestAddNewLookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableTestAddNewLookupTable`. May be used by Relay 1. */
+  lookupTableTestAddNewLookupTableEdge?: Maybe<LookupTableTestAddNewLookupTablesEdge>;
+};
+
+
+/** The output of our update `LookupTableTestAddNewLookupTable` mutation. */
+export type UpdateLookupTableTestAddNewLookupTablePayloadLookupTableTestAddNewLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableTestAddNewLookupTablesOrderBy>>;
+};
+
+/** All input for the `updateLookupTableTestAddNewLookupTable` mutation. */
+export type UpdateLookupTableTestAddNewLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTableTestAddNewLookupTable` being updated. */
+  patch: LookupTableTestAddNewLookupTablePatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateLookupTableTherapeuticCategoryByNodeId` mutation. */
+export type UpdateLookupTableTherapeuticCategoryByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableTherapeuticCategory` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTableTherapeuticCategory` being updated. */
+  patch: LookupTableTherapeuticCategoryPatch;
+};
+
+/** Represents an update to a `LookupTableTherapeuticCategory`. Fields that are set will be updated. */
+export type LookupTableTherapeuticCategoryPatch = {
+  id?: Maybe<Scalars['Int']>;
+  therapeuticCategory?: Maybe<Scalars['String']>;
+  pharmacologicClass?: Maybe<Scalars['String']>;
+  formularyKeyDrugTypes?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `LookupTableTherapeuticCategory` mutation. */
+export type UpdateLookupTableTherapeuticCategoryPayload = {
+  __typename?: 'UpdateLookupTableTherapeuticCategoryPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTherapeuticCategory` that was updated by this mutation. */
+  lookupTableTherapeuticCategory?: Maybe<LookupTableTherapeuticCategory>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableTherapeuticCategory`. May be used by Relay 1. */
+  lookupTableTherapeuticCategoryEdge?: Maybe<LookupTableTherapeuticCategoriesEdge>;
+};
+
+
+/** The output of our update `LookupTableTherapeuticCategory` mutation. */
+export type UpdateLookupTableTherapeuticCategoryPayloadLookupTableTherapeuticCategoryEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableTherapeuticCategoriesOrderBy>>;
+};
+
+/** All input for the `updateLookupTableTherapeuticCategory` mutation. */
+export type UpdateLookupTableTherapeuticCategoryInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTableTherapeuticCategory` being updated. */
+  patch: LookupTableTherapeuticCategoryPatch;
   id: Scalars['Int'];
 };
 
@@ -28501,6 +31911,86 @@ export type UpdatePermissionPolicyByNameInput = {
   name: Scalars['String'];
 };
 
+/** All input for the `updateProductByNodeId` mutation. */
+export type UpdateProductByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Product` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Product` being updated. */
+  patch: ProductPatch;
+};
+
+/** The output of our update `Product` mutation. */
+export type UpdateProductPayload = {
+  __typename?: 'UpdateProductPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Product` that was updated by this mutation. */
+  product?: Maybe<Product>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Product`. May be used by Relay 1. */
+  productEdge?: Maybe<ProductsEdge>;
+};
+
+
+/** The output of our update `Product` mutation. */
+export type UpdateProductPayloadProductEdgeArgs = {
+  orderBy?: Maybe<Array<ProductsOrderBy>>;
+};
+
+/** All input for the `updateProduct` mutation. */
+export type UpdateProductInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Product` being updated. */
+  patch: ProductPatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateProductApplicationJoinByNodeId` mutation. */
+export type UpdateProductApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ProductApplicationJoin` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ProductApplicationJoin` being updated. */
+  patch: ProductApplicationJoinPatch;
+};
+
+/** The output of our update `ProductApplicationJoin` mutation. */
+export type UpdateProductApplicationJoinPayload = {
+  __typename?: 'UpdateProductApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ProductApplicationJoin` that was updated by this mutation. */
+  productApplicationJoin?: Maybe<ProductApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `ProductApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Product` that is related to this `ProductApplicationJoin`. */
+  product?: Maybe<Product>;
+  /** An edge for our `ProductApplicationJoin`. May be used by Relay 1. */
+  productApplicationJoinEdge?: Maybe<ProductApplicationJoinsEdge>;
+};
+
+
+/** The output of our update `ProductApplicationJoin` mutation. */
+export type UpdateProductApplicationJoinPayloadProductApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<ProductApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `updateProductApplicationJoin` mutation. */
+export type UpdateProductApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ProductApplicationJoin` being updated. */
+  patch: ProductApplicationJoinPatch;
+  id: Scalars['Int'];
+};
+
 /** All input for the `updateReviewByNodeId` mutation. */
 export type UpdateReviewByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -28681,48 +32171,6 @@ export type UpdateReviewDecisionInput = {
   id: Scalars['Int'];
 };
 
-/** All input for the `updateReviewQuestionAssignmentByNodeId` mutation. */
-export type UpdateReviewQuestionAssignmentByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewQuestionAssignment` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `ReviewQuestionAssignment` being updated. */
-  patch: ReviewQuestionAssignmentPatch;
-};
-
-/** The output of our update `ReviewQuestionAssignment` mutation. */
-export type UpdateReviewQuestionAssignmentPayload = {
-  __typename?: 'UpdateReviewQuestionAssignmentPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewQuestionAssignment` that was updated by this mutation. */
-  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
-  templateElement?: Maybe<TemplateElement>;
-  /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
-  reviewAssignment?: Maybe<ReviewAssignment>;
-  /** An edge for our `ReviewQuestionAssignment`. May be used by Relay 1. */
-  reviewQuestionAssignmentEdge?: Maybe<ReviewQuestionAssignmentsEdge>;
-};
-
-
-/** The output of our update `ReviewQuestionAssignment` mutation. */
-export type UpdateReviewQuestionAssignmentPayloadReviewQuestionAssignmentEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
-};
-
-/** All input for the `updateReviewQuestionAssignment` mutation. */
-export type UpdateReviewQuestionAssignmentInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `ReviewQuestionAssignment` being updated. */
-  patch: ReviewQuestionAssignmentPatch;
-  id: Scalars['Int'];
-};
-
 /** All input for the `updateReviewResponseByNodeId` mutation. */
 export type UpdateReviewResponseByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -28742,8 +32190,6 @@ export type UpdateReviewResponsePayload = {
   reviewResponse?: Maybe<ReviewResponse>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
-  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
@@ -28810,6 +32256,52 @@ export type UpdateReviewStatusHistoryInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** An object where the defined keys will be set on the `ReviewStatusHistory` being updated. */
   patch: ReviewStatusHistoryPatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateSystemInfoByNodeId` mutation. */
+export type UpdateSystemInfoByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `SystemInfo` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `SystemInfo` being updated. */
+  patch: SystemInfoPatch;
+};
+
+/** Represents an update to a `SystemInfo`. Fields that are set will be updated. */
+export type SystemInfoPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['JSON']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+/** The output of our update `SystemInfo` mutation. */
+export type UpdateSystemInfoPayload = {
+  __typename?: 'UpdateSystemInfoPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `SystemInfo` that was updated by this mutation. */
+  systemInfo?: Maybe<SystemInfo>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `SystemInfo`. May be used by Relay 1. */
+  systemInfoEdge?: Maybe<SystemInfosEdge>;
+};
+
+
+/** The output of our update `SystemInfo` mutation. */
+export type UpdateSystemInfoPayloadSystemInfoEdgeArgs = {
+  orderBy?: Maybe<Array<SystemInfosOrderBy>>;
+};
+
+/** All input for the `updateSystemInfo` mutation. */
+export type UpdateSystemInfoInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `SystemInfo` being updated. */
+  patch: SystemInfoPatch;
   id: Scalars['Int'];
 };
 
@@ -29416,6 +32908,48 @@ export type UpdateUserOrganisationInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `updateUserOrganisationApplicationJoinByNodeId` mutation. */
+export type UpdateUserOrganisationApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `UserOrganisationApplicationJoin` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `UserOrganisationApplicationJoin` being updated. */
+  patch: UserOrganisationApplicationJoinPatch;
+};
+
+/** The output of our update `UserOrganisationApplicationJoin` mutation. */
+export type UpdateUserOrganisationApplicationJoinPayload = {
+  __typename?: 'UpdateUserOrganisationApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `UserOrganisationApplicationJoin` that was updated by this mutation. */
+  userOrganisationApplicationJoin?: Maybe<UserOrganisationApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `UserOrganisationApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `UserOrganisation` that is related to this `UserOrganisationApplicationJoin`. */
+  userOrganisation?: Maybe<UserOrganisation>;
+  /** An edge for our `UserOrganisationApplicationJoin`. May be used by Relay 1. */
+  userOrganisationApplicationJoinEdge?: Maybe<UserOrganisationApplicationJoinsEdge>;
+};
+
+
+/** The output of our update `UserOrganisationApplicationJoin` mutation. */
+export type UpdateUserOrganisationApplicationJoinPayloadUserOrganisationApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<UserOrganisationApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `updateUserOrganisationApplicationJoin` mutation. */
+export type UpdateUserOrganisationApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `UserOrganisationApplicationJoin` being updated. */
+  patch: UserOrganisationApplicationJoinPatch;
+  id: Scalars['Int'];
+};
+
 /** All input for the `updateVerificationByNodeId` mutation. */
 export type UpdateVerificationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -29958,6 +33492,80 @@ export type DeleteFilterByCodeInput = {
   code: Scalars['String'];
 };
 
+/** All input for the `deleteLicenceByNodeId` mutation. */
+export type DeleteLicenceByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Licence` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Licence` mutation. */
+export type DeleteLicencePayload = {
+  __typename?: 'DeleteLicencePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Licence` that was deleted by this mutation. */
+  licence?: Maybe<Licence>;
+  deletedLicenceNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Licence`. May be used by Relay 1. */
+  licenceEdge?: Maybe<LicencesEdge>;
+};
+
+
+/** The output of our delete `Licence` mutation. */
+export type DeleteLicencePayloadLicenceEdgeArgs = {
+  orderBy?: Maybe<Array<LicencesOrderBy>>;
+};
+
+/** All input for the `deleteLicence` mutation. */
+export type DeleteLicenceInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteLicenceApplicationJoinByNodeId` mutation. */
+export type DeleteLicenceApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LicenceApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LicenceApplicationJoin` mutation. */
+export type DeleteLicenceApplicationJoinPayload = {
+  __typename?: 'DeleteLicenceApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LicenceApplicationJoin` that was deleted by this mutation. */
+  licenceApplicationJoin?: Maybe<LicenceApplicationJoin>;
+  deletedLicenceApplicationJoinNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `LicenceApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Licence` that is related to this `LicenceApplicationJoin`. */
+  licence?: Maybe<Licence>;
+  /** An edge for our `LicenceApplicationJoin`. May be used by Relay 1. */
+  licenceApplicationJoinEdge?: Maybe<LicenceApplicationJoinsEdge>;
+};
+
+
+/** The output of our delete `LicenceApplicationJoin` mutation. */
+export type DeleteLicenceApplicationJoinPayloadLicenceApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<LicenceApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `deleteLicenceApplicationJoin` mutation. */
+export type DeleteLicenceApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
 /** All input for the `deleteLookupTableByNodeId` mutation. */
 export type DeleteLookupTableByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -29988,6 +33596,251 @@ export type DeleteLookupTablePayloadLookupTableEdgeArgs = {
 
 /** All input for the `deleteLookupTable` mutation. */
 export type DeleteLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteLookupTableAdministrationRouteByNodeId` mutation. */
+export type DeleteLookupTableAdministrationRouteByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableAdministrationRoute` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LookupTableAdministrationRoute` mutation. */
+export type DeleteLookupTableAdministrationRoutePayload = {
+  __typename?: 'DeleteLookupTableAdministrationRoutePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableAdministrationRoute` that was deleted by this mutation. */
+  lookupTableAdministrationRoute?: Maybe<LookupTableAdministrationRoute>;
+  deletedLookupTableAdministrationRouteNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableAdministrationRoute`. May be used by Relay 1. */
+  lookupTableAdministrationRouteEdge?: Maybe<LookupTableAdministrationRoutesEdge>;
+};
+
+
+/** The output of our delete `LookupTableAdministrationRoute` mutation. */
+export type DeleteLookupTableAdministrationRoutePayloadLookupTableAdministrationRouteEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableAdministrationRoutesOrderBy>>;
+};
+
+/** All input for the `deleteLookupTableAdministrationRoute` mutation. */
+export type DeleteLookupTableAdministrationRouteInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteLookupTableContainerByNodeId` mutation. */
+export type DeleteLookupTableContainerByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableContainer` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LookupTableContainer` mutation. */
+export type DeleteLookupTableContainerPayload = {
+  __typename?: 'DeleteLookupTableContainerPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableContainer` that was deleted by this mutation. */
+  lookupTableContainer?: Maybe<LookupTableContainer>;
+  deletedLookupTableContainerNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableContainer`. May be used by Relay 1. */
+  lookupTableContainerEdge?: Maybe<LookupTableContainersEdge>;
+};
+
+
+/** The output of our delete `LookupTableContainer` mutation. */
+export type DeleteLookupTableContainerPayloadLookupTableContainerEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableContainersOrderBy>>;
+};
+
+/** All input for the `deleteLookupTableContainer` mutation. */
+export type DeleteLookupTableContainerInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteLookupTableCountrynameByNodeId` mutation. */
+export type DeleteLookupTableCountrynameByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableCountryname` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LookupTableCountryname` mutation. */
+export type DeleteLookupTableCountrynamePayload = {
+  __typename?: 'DeleteLookupTableCountrynamePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableCountryname` that was deleted by this mutation. */
+  lookupTableCountryname?: Maybe<LookupTableCountryname>;
+  deletedLookupTableCountrynameNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableCountryname`. May be used by Relay 1. */
+  lookupTableCountrynameEdge?: Maybe<LookupTableCountrynamesEdge>;
+};
+
+
+/** The output of our delete `LookupTableCountryname` mutation. */
+export type DeleteLookupTableCountrynamePayloadLookupTableCountrynameEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableCountrynamesOrderBy>>;
+};
+
+/** All input for the `deleteLookupTableCountryname` mutation. */
+export type DeleteLookupTableCountrynameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteLookupTableDosageFormByNodeId` mutation. */
+export type DeleteLookupTableDosageFormByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableDosageForm` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LookupTableDosageForm` mutation. */
+export type DeleteLookupTableDosageFormPayload = {
+  __typename?: 'DeleteLookupTableDosageFormPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableDosageForm` that was deleted by this mutation. */
+  lookupTableDosageForm?: Maybe<LookupTableDosageForm>;
+  deletedLookupTableDosageFormNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableDosageForm`. May be used by Relay 1. */
+  lookupTableDosageFormEdge?: Maybe<LookupTableDosageFormsEdge>;
+};
+
+
+/** The output of our delete `LookupTableDosageForm` mutation. */
+export type DeleteLookupTableDosageFormPayloadLookupTableDosageFormEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableDosageFormsOrderBy>>;
+};
+
+/** All input for the `deleteLookupTableDosageForm` mutation. */
+export type DeleteLookupTableDosageFormInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteLookupTableIngredientByNodeId` mutation. */
+export type DeleteLookupTableIngredientByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableIngredient` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LookupTableIngredient` mutation. */
+export type DeleteLookupTableIngredientPayload = {
+  __typename?: 'DeleteLookupTableIngredientPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableIngredient` that was deleted by this mutation. */
+  lookupTableIngredient?: Maybe<LookupTableIngredient>;
+  deletedLookupTableIngredientNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableIngredient`. May be used by Relay 1. */
+  lookupTableIngredientEdge?: Maybe<LookupTableIngredientsEdge>;
+};
+
+
+/** The output of our delete `LookupTableIngredient` mutation. */
+export type DeleteLookupTableIngredientPayloadLookupTableIngredientEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableIngredientsOrderBy>>;
+};
+
+/** All input for the `deleteLookupTableIngredient` mutation. */
+export type DeleteLookupTableIngredientInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteLookupTableTestAddNewLookupTableByNodeId` mutation. */
+export type DeleteLookupTableTestAddNewLookupTableByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableTestAddNewLookupTable` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LookupTableTestAddNewLookupTable` mutation. */
+export type DeleteLookupTableTestAddNewLookupTablePayload = {
+  __typename?: 'DeleteLookupTableTestAddNewLookupTablePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTestAddNewLookupTable` that was deleted by this mutation. */
+  lookupTableTestAddNewLookupTable?: Maybe<LookupTableTestAddNewLookupTable>;
+  deletedLookupTableTestAddNewLookupTableNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableTestAddNewLookupTable`. May be used by Relay 1. */
+  lookupTableTestAddNewLookupTableEdge?: Maybe<LookupTableTestAddNewLookupTablesEdge>;
+};
+
+
+/** The output of our delete `LookupTableTestAddNewLookupTable` mutation. */
+export type DeleteLookupTableTestAddNewLookupTablePayloadLookupTableTestAddNewLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableTestAddNewLookupTablesOrderBy>>;
+};
+
+/** All input for the `deleteLookupTableTestAddNewLookupTable` mutation. */
+export type DeleteLookupTableTestAddNewLookupTableInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteLookupTableTherapeuticCategoryByNodeId` mutation. */
+export type DeleteLookupTableTherapeuticCategoryByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableTherapeuticCategory` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `LookupTableTherapeuticCategory` mutation. */
+export type DeleteLookupTableTherapeuticCategoryPayload = {
+  __typename?: 'DeleteLookupTableTherapeuticCategoryPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTherapeuticCategory` that was deleted by this mutation. */
+  lookupTableTherapeuticCategory?: Maybe<LookupTableTherapeuticCategory>;
+  deletedLookupTableTherapeuticCategoryNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableTherapeuticCategory`. May be used by Relay 1. */
+  lookupTableTherapeuticCategoryEdge?: Maybe<LookupTableTherapeuticCategoriesEdge>;
+};
+
+
+/** The output of our delete `LookupTableTherapeuticCategory` mutation. */
+export type DeleteLookupTableTherapeuticCategoryPayloadLookupTableTherapeuticCategoryEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableTherapeuticCategoriesOrderBy>>;
+};
+
+/** All input for the `deleteLookupTableTherapeuticCategory` mutation. */
+export type DeleteLookupTableTherapeuticCategoryInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
@@ -30335,6 +34188,80 @@ export type DeletePermissionPolicyByNameInput = {
   name: Scalars['String'];
 };
 
+/** All input for the `deleteProductByNodeId` mutation. */
+export type DeleteProductByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Product` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Product` mutation. */
+export type DeleteProductPayload = {
+  __typename?: 'DeleteProductPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Product` that was deleted by this mutation. */
+  product?: Maybe<Product>;
+  deletedProductNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Product`. May be used by Relay 1. */
+  productEdge?: Maybe<ProductsEdge>;
+};
+
+
+/** The output of our delete `Product` mutation. */
+export type DeleteProductPayloadProductEdgeArgs = {
+  orderBy?: Maybe<Array<ProductsOrderBy>>;
+};
+
+/** All input for the `deleteProduct` mutation. */
+export type DeleteProductInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteProductApplicationJoinByNodeId` mutation. */
+export type DeleteProductApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ProductApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `ProductApplicationJoin` mutation. */
+export type DeleteProductApplicationJoinPayload = {
+  __typename?: 'DeleteProductApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ProductApplicationJoin` that was deleted by this mutation. */
+  productApplicationJoin?: Maybe<ProductApplicationJoin>;
+  deletedProductApplicationJoinNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `ProductApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Product` that is related to this `ProductApplicationJoin`. */
+  product?: Maybe<Product>;
+  /** An edge for our `ProductApplicationJoin`. May be used by Relay 1. */
+  productApplicationJoinEdge?: Maybe<ProductApplicationJoinsEdge>;
+};
+
+
+/** The output of our delete `ProductApplicationJoin` mutation. */
+export type DeleteProductApplicationJoinPayloadProductApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<ProductApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `deleteProductApplicationJoin` mutation. */
+export type DeleteProductApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
 /** All input for the `deleteReviewByNodeId` mutation. */
 export type DeleteReviewByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -30503,45 +34430,6 @@ export type DeleteReviewDecisionInput = {
   id: Scalars['Int'];
 };
 
-/** All input for the `deleteReviewQuestionAssignmentByNodeId` mutation. */
-export type DeleteReviewQuestionAssignmentByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewQuestionAssignment` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The output of our delete `ReviewQuestionAssignment` mutation. */
-export type DeleteReviewQuestionAssignmentPayload = {
-  __typename?: 'DeleteReviewQuestionAssignmentPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewQuestionAssignment` that was deleted by this mutation. */
-  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
-  deletedReviewQuestionAssignmentNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
-  templateElement?: Maybe<TemplateElement>;
-  /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
-  reviewAssignment?: Maybe<ReviewAssignment>;
-  /** An edge for our `ReviewQuestionAssignment`. May be used by Relay 1. */
-  reviewQuestionAssignmentEdge?: Maybe<ReviewQuestionAssignmentsEdge>;
-};
-
-
-/** The output of our delete `ReviewQuestionAssignment` mutation. */
-export type DeleteReviewQuestionAssignmentPayloadReviewQuestionAssignmentEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
-};
-
-/** All input for the `deleteReviewQuestionAssignment` mutation. */
-export type DeleteReviewQuestionAssignmentInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
 /** All input for the `deleteReviewResponseByNodeId` mutation. */
 export type DeleteReviewResponseByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -30560,8 +34448,6 @@ export type DeleteReviewResponsePayload = {
   deletedReviewResponseNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
-  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
@@ -30621,6 +34507,41 @@ export type DeleteReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs = {
 
 /** All input for the `deleteReviewStatusHistory` mutation. */
 export type DeleteReviewStatusHistoryInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteSystemInfoByNodeId` mutation. */
+export type DeleteSystemInfoByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `SystemInfo` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `SystemInfo` mutation. */
+export type DeleteSystemInfoPayload = {
+  __typename?: 'DeleteSystemInfoPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `SystemInfo` that was deleted by this mutation. */
+  systemInfo?: Maybe<SystemInfo>;
+  deletedSystemInfoNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `SystemInfo`. May be used by Relay 1. */
+  systemInfoEdge?: Maybe<SystemInfosEdge>;
+};
+
+
+/** The output of our delete `SystemInfo` mutation. */
+export type DeleteSystemInfoPayloadSystemInfoEdgeArgs = {
+  orderBy?: Maybe<Array<SystemInfosOrderBy>>;
+};
+
+/** All input for the `deleteSystemInfo` mutation. */
+export type DeleteSystemInfoInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
@@ -31179,6 +35100,45 @@ export type DeleteUserOrganisationInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `deleteUserOrganisationApplicationJoinByNodeId` mutation. */
+export type DeleteUserOrganisationApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `UserOrganisationApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `UserOrganisationApplicationJoin` mutation. */
+export type DeleteUserOrganisationApplicationJoinPayload = {
+  __typename?: 'DeleteUserOrganisationApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `UserOrganisationApplicationJoin` that was deleted by this mutation. */
+  userOrganisationApplicationJoin?: Maybe<UserOrganisationApplicationJoin>;
+  deletedUserOrganisationApplicationJoinNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `UserOrganisationApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `UserOrganisation` that is related to this `UserOrganisationApplicationJoin`. */
+  userOrganisation?: Maybe<UserOrganisation>;
+  /** An edge for our `UserOrganisationApplicationJoin`. May be used by Relay 1. */
+  userOrganisationApplicationJoinEdge?: Maybe<UserOrganisationApplicationJoinsEdge>;
+};
+
+
+/** The output of our delete `UserOrganisationApplicationJoin` mutation. */
+export type DeleteUserOrganisationApplicationJoinPayloadUserOrganisationApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<UserOrganisationApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `deleteUserOrganisationApplicationJoin` mutation. */
+export type DeleteUserOrganisationApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
 /** All input for the `deleteVerificationByNodeId` mutation. */
 export type DeleteVerificationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -31336,22 +35296,7 @@ export type OrganisationFragment = (
 
 export type ReviewAssignmentFragment = (
   { __typename?: 'ReviewAssignment' }
-  & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'isLocked' | 'isLastLevel' | 'isFinalDecision' | 'isSelfAssignable' | 'allowedSections'>
-  & { reviewQuestionAssignments: (
-    { __typename?: 'ReviewQuestionAssignmentsConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'ReviewQuestionAssignment' }
-      & Pick<ReviewQuestionAssignment, 'id'>
-      & { templateElement?: Maybe<(
-        { __typename?: 'TemplateElement' }
-        & Pick<TemplateElement, 'id'>
-        & { section?: Maybe<(
-          { __typename?: 'TemplateSection' }
-          & Pick<TemplateSection, 'id' | 'code'>
-        )> }
-      )> }
-    )>> }
-  ) }
+  & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated' | 'levelNumber' | 'reviewerId' | 'isLocked' | 'isLastLevel' | 'isFinalDecision' | 'isSelfAssignable' | 'allowedSections' | 'assignedSections'>
 );
 
 export type ReviewResponseFragmentFragment = (
@@ -31531,30 +35476,6 @@ export type DeleteNoteMutation = (
   )> }
 );
 
-export type ReassignReviewAssignmentMutationVariables = Exact<{
-  unassignmentId: Scalars['Int'];
-  reassignmentId: Scalars['Int'];
-  reassignmentPatch: ReviewAssignmentPatch;
-}>;
-
-
-export type ReassignReviewAssignmentMutation = (
-  { __typename?: 'Mutation' }
-  & { reassignmentUpdate?: Maybe<(
-    { __typename?: 'UpdateReviewAssignmentPayload' }
-    & { reviewAssignment?: Maybe<(
-      { __typename?: 'ReviewAssignment' }
-      & ReviewAssignmentFragment
-    )> }
-  )>, unassignmentUpdate?: Maybe<(
-    { __typename?: 'UpdateReviewAssignmentPayload' }
-    & { reviewAssignment?: Maybe<(
-      { __typename?: 'ReviewAssignment' }
-      & ReviewAssignmentFragment
-    )> }
-  )> }
-);
-
 export type RestartApplicationMutationVariables = Exact<{
   serial: Scalars['String'];
   applicationPatch: ApplicationPatch;
@@ -31715,22 +35636,6 @@ export type UpdateTemplateStageMutation = (
   )> }
 );
 
-export type UnassignReviewAssignmentMutationVariables = Exact<{
-  unassignmentId: Scalars['Int'];
-}>;
-
-
-export type UnassignReviewAssignmentMutation = (
-  { __typename?: 'Mutation' }
-  & { updateReviewAssignment?: Maybe<(
-    { __typename?: 'UpdateReviewAssignmentPayload' }
-    & { reviewAssignment?: Maybe<(
-      { __typename?: 'ReviewAssignment' }
-      & ReviewAssignmentFragment
-    )> }
-  )> }
-);
-
 export type UpdateApplicationMutationVariables = Exact<{
   serial: Scalars['String'];
   applicationTrigger?: Maybe<Trigger>;
@@ -31815,21 +35720,6 @@ export type UpdateReviewAssignmentMutation = (
     & { reviewAssignment?: Maybe<(
       { __typename?: 'ReviewAssignment' }
       & Pick<ReviewAssignment, 'id' | 'status' | 'timeUpdated'>
-      & { reviewQuestionAssignments: (
-        { __typename?: 'ReviewQuestionAssignmentsConnection' }
-        & { nodes: Array<Maybe<(
-          { __typename?: 'ReviewQuestionAssignment' }
-          & Pick<ReviewQuestionAssignment, 'id'>
-          & { templateElement?: Maybe<(
-            { __typename?: 'TemplateElement' }
-            & Pick<TemplateElement, 'id'>
-            & { section?: Maybe<(
-              { __typename?: 'TemplateSection' }
-              & Pick<TemplateSection, 'id' | 'code'>
-            )> }
-          )> }
-        )>> }
-      ) }
     )> }
   )> }
 );
@@ -32873,18 +36763,7 @@ export const ReviewAssignmentFragmentDoc = gql`
   isFinalDecision
   isSelfAssignable
   allowedSections
-  reviewQuestionAssignments {
-    nodes {
-      id
-      templateElement {
-        id
-        section {
-          id
-          code
-        }
-      }
-    }
-  }
+  assignedSections
 }
     `;
 export const StageFragmentDoc = gql`
@@ -33115,47 +36994,6 @@ export function useDeleteNoteMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteNoteMutationHookResult = ReturnType<typeof useDeleteNoteMutation>;
 export type DeleteNoteMutationResult = Apollo.MutationResult<DeleteNoteMutation>;
 export type DeleteNoteMutationOptions = Apollo.BaseMutationOptions<DeleteNoteMutation, DeleteNoteMutationVariables>;
-export const ReassignReviewAssignmentDocument = gql`
-    mutation reassignReviewAssignment($unassignmentId: Int!, $reassignmentId: Int!, $reassignmentPatch: ReviewAssignmentPatch!) {
-  reassignmentUpdate: updateReviewAssignment(input: {id: $reassignmentId, patch: $reassignmentPatch}) {
-    reviewAssignment {
-      ...ReviewAssignment
-    }
-  }
-  unassignmentUpdate: updateReviewAssignment(input: {id: $unassignmentId, patch: {status: AVAILABLE, isLocked: true, trigger: ON_REVIEW_UNASSIGN}}) {
-    reviewAssignment {
-      ...ReviewAssignment
-    }
-  }
-}
-    ${ReviewAssignmentFragmentDoc}`;
-export type ReassignReviewAssignmentMutationFn = Apollo.MutationFunction<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>;
-
-/**
- * __useReassignReviewAssignmentMutation__
- *
- * To run a mutation, you first call `useReassignReviewAssignmentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useReassignReviewAssignmentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [reassignReviewAssignmentMutation, { data, loading, error }] = useReassignReviewAssignmentMutation({
- *   variables: {
- *      unassignmentId: // value for 'unassignmentId'
- *      reassignmentId: // value for 'reassignmentId'
- *      reassignmentPatch: // value for 'reassignmentPatch'
- *   },
- * });
- */
-export function useReassignReviewAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>) {
-        return Apollo.useMutation<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>(ReassignReviewAssignmentDocument, baseOptions);
-      }
-export type ReassignReviewAssignmentMutationHookResult = ReturnType<typeof useReassignReviewAssignmentMutation>;
-export type ReassignReviewAssignmentMutationResult = Apollo.MutationResult<ReassignReviewAssignmentMutation>;
-export type ReassignReviewAssignmentMutationOptions = Apollo.BaseMutationOptions<ReassignReviewAssignmentMutation, ReassignReviewAssignmentMutationVariables>;
 export const RestartApplicationDocument = gql`
     mutation restartApplication($serial: String!, $applicationPatch: ApplicationPatch!) {
   updateApplicationBySerial(input: {serial: $serial, patch: $applicationPatch}) {
@@ -33450,40 +37288,6 @@ export function useUpdateTemplateStageMutation(baseOptions?: Apollo.MutationHook
 export type UpdateTemplateStageMutationHookResult = ReturnType<typeof useUpdateTemplateStageMutation>;
 export type UpdateTemplateStageMutationResult = Apollo.MutationResult<UpdateTemplateStageMutation>;
 export type UpdateTemplateStageMutationOptions = Apollo.BaseMutationOptions<UpdateTemplateStageMutation, UpdateTemplateStageMutationVariables>;
-export const UnassignReviewAssignmentDocument = gql`
-    mutation unassignReviewAssignment($unassignmentId: Int!) {
-  updateReviewAssignment(input: {id: $unassignmentId, patch: {status: AVAILABLE, trigger: ON_REVIEW_UNASSIGN}}) {
-    reviewAssignment {
-      ...ReviewAssignment
-    }
-  }
-}
-    ${ReviewAssignmentFragmentDoc}`;
-export type UnassignReviewAssignmentMutationFn = Apollo.MutationFunction<UnassignReviewAssignmentMutation, UnassignReviewAssignmentMutationVariables>;
-
-/**
- * __useUnassignReviewAssignmentMutation__
- *
- * To run a mutation, you first call `useUnassignReviewAssignmentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUnassignReviewAssignmentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [unassignReviewAssignmentMutation, { data, loading, error }] = useUnassignReviewAssignmentMutation({
- *   variables: {
- *      unassignmentId: // value for 'unassignmentId'
- *   },
- * });
- */
-export function useUnassignReviewAssignmentMutation(baseOptions?: Apollo.MutationHookOptions<UnassignReviewAssignmentMutation, UnassignReviewAssignmentMutationVariables>) {
-        return Apollo.useMutation<UnassignReviewAssignmentMutation, UnassignReviewAssignmentMutationVariables>(UnassignReviewAssignmentDocument, baseOptions);
-      }
-export type UnassignReviewAssignmentMutationHookResult = ReturnType<typeof useUnassignReviewAssignmentMutation>;
-export type UnassignReviewAssignmentMutationResult = Apollo.MutationResult<UnassignReviewAssignmentMutation>;
-export type UnassignReviewAssignmentMutationOptions = Apollo.BaseMutationOptions<UnassignReviewAssignmentMutation, UnassignReviewAssignmentMutationVariables>;
 export const UpdateApplicationDocument = gql`
     mutation updateApplication($serial: String!, $applicationTrigger: Trigger = ON_APPLICATION_SUBMIT, $responses: [ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationResponsePkeyUpdate!]) {
   updateApplicationBySerial(input: {serial: $serial, patch: {trigger: $applicationTrigger, applicationResponsesUsingId: {updateById: $responses}}}) {
@@ -33619,18 +37423,6 @@ export const UpdateReviewAssignmentDocument = gql`
       id
       status
       timeUpdated
-      reviewQuestionAssignments {
-        nodes {
-          id
-          templateElement {
-            id
-            section {
-              id
-              code
-            }
-          }
-        }
-      }
     }
   }
 }

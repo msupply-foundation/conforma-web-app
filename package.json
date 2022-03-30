@@ -1,6 +1,6 @@
 {
   "name": "application-manager-web-app",
-  "version": "1.0.0",
+  "version": "0.2.0-0",
   "main": "index.tsx",
   "license": "MIT",
   "repository": {
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.1.4",
-    "@openmsupply/expression-evaluator": "^1.9.5",
+    "@openmsupply/expression-evaluator": "^1.11.1",
     "@types/papaparse": "^5.3.2",
     "@types/pluralize": "^0.0.29",
     "apollo3-cache-persist": "^0.8.0",

@@ -13,8 +13,8 @@ type UseRemakePreviousReviewMutationReturnType = ReturnType<typeof useCreateRevi
 type PromiseReturnType = ReturnType<UseRemakePreviousReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
 type UseRemakePreviousReview = (props: {
-  structure: FullStructure
-  assignment: AssignmentDetails
+  reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
   previousAssignment: AssignmentDetails
 }) => () => PromiseReturnType
 
@@ -22,15 +22,16 @@ type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 
 // Need to duplicate or create new review responses for all assigned questions
 const useRemakePreviousReview: UseRemakePreviousReview = ({
-  structure,
-  assignment,
+  reviewStructure,
+  reviewAssignment,
   previousAssignment,
 }) => {
   const [createReview] = useCreateReviewMutation()
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullApplicationStructure: structure,
-    reviewAssignment: previousAssignment,
+    reviewStructure,
+    reviewAssignment,
+    previousAssignment,
   })
 
   const shouldRemakeFinalDecisionReviewResponse = (element: PageElement) => {
@@ -52,13 +53,7 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
     // For re-assignment this would be slightly different, we need to consider latest review response of this level
     // not necessarily this thisReviewLatestResponse (would be just latestReviewResponse, from all reviews at this level)
     const reviewResponseCreate = reviewableElements.map(
-      ({
-        isPendingReview,
-        thisReviewLatestResponse,
-        response,
-        reviewQuestionAssignmentId,
-        lowerLevelReviewLatestResponse,
-      }) => {
+      ({ isPendingReview, thisReviewLatestResponse, response, lowerLevelReviewLatestResponse }) => {
         const applicationResponseId = previousAssignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
           previousAssignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
@@ -70,7 +65,6 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
           comment: shouldCreateNew ? null : thisReviewLatestResponse?.comment,
           applicationResponseId,
           reviewResponseLinkId,
-          reviewQuestionAssignmentId,
         }
       }
     )
@@ -81,7 +75,7 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
       reviewResponsesUsingId: {
         create: reviewResponseCreate,
       },
-      reviewAssignmentId: assignment.id,
+      reviewAssignmentId: reviewAssignment.id,
       // create new empty decision (do we need to duplicate comment from latest decision ?)
       reviewDecisionsUsingId: {
         create: [{ decision: Decision.NoDecision }],
@@ -113,7 +107,6 @@ export default useRemakePreviousReview
         "comment": null,
         "applicationResponseId": 34, // this or reviewResponseLinkId
         "reviewResponseLinkId": 34,  // this or applicationResponseId
-        "reviewQuestionAssignmentId": 11
       }
     ]
   },

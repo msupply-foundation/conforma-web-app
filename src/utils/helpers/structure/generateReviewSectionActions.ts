@@ -112,7 +112,9 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   reviewAssignment: {
     assignee,
     assigneeLevel,
-    finalDecision,
+    assignedSections,
+    isFinalDecision,
+    isFinalDecisionOnConsolidation,
     assignmentStatus,
     isSelfAssignable,
     isLocked,
@@ -120,9 +122,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
   thisReview,
   currentUserId,
 }) => {
-  const isFinalDecision = !!finalDecision
-  const isFinalDecisionOnReview = !!finalDecision?.decisionOnReview
-  const isConsolidation = assigneeLevel > 1 || (isFinalDecision && !isFinalDecisionOnReview)
+  const isConsolidation = assigneeLevel > 1 || (isFinalDecision && isFinalDecisionOnConsolidation)
 
   sections.forEach((section) => {
     const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
@@ -132,7 +132,9 @@ const generateReviewSectionActions: GenerateSectionActions = ({
     const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
 
     const isReviewable =
-      (totalReviewable || 0) > 0 && assignmentStatus === ReviewAssignmentStatus.Assigned
+      (totalReviewable || 0) > 0 &&
+      assignmentStatus === ReviewAssignmentStatus.Assigned &&
+      assignedSections.includes(section.details.code)
 
     const isAssignedToCurrentUser =
       assignee?.id === currentUserId && (isReviewable || isFinalDecision)
@@ -140,7 +142,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
     const checkMethodProps = {
       isReviewable,
       isAssignedToCurrentUser,
-      isFinalDecision: !!finalDecision,
+      isFinalDecision: !!isFinalDecision,
       reviewLevel: assigneeLevel,
       reviewAssignmentStatus: assignmentStatus,
       isReviewExisting: !!thisReview,

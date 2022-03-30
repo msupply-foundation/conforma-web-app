@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Label, Grid } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentDetails, PageElement, SectionAssignee } from '../../../utils/types'
+import { AssignmentDetails, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
 import useGetAssignmentOptions from './useGetAssignmentOptions'
 
 interface ReassignmentProps {
   assignments: AssignmentDetails[]
   sectionCode: string
-  elements: PageElement[]
   isLastLevel: (selectedIndex: number) => boolean
   previousAssignee: number
   assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
@@ -17,24 +16,18 @@ interface ReassignmentProps {
 const Reassignment: React.FC<ReassignmentProps> = ({
   assignments,
   sectionCode,
-  elements,
   isLastLevel,
   previousAssignee,
   assignedSectionsState,
 }) => {
   const { strings } = useLanguageProvider()
   const getAssignmentOptions = useGetAssignmentOptions()
-  const [reassignmentError, setReassignmentError] = useState(false)
   const [assignedSections, setAssignedSections] = assignedSectionsState
-  const assignmentOptions = getAssignmentOptions(
-    {
-      assignments,
-      sectionCode,
-      elements,
-      assignee: previousAssignee,
-    },
-    null
-  )
+  const assignmentOptions = getAssignmentOptions({
+    assignments,
+    sectionCode,
+    assignee: previousAssignee,
+  })
   if (!assignmentOptions) return null
 
   const onReassignment = async (value: number) => {
@@ -64,7 +57,6 @@ const Reassignment: React.FC<ReassignmentProps> = ({
     <Grid.Column className="centered-flex-box-row">
       <Label className="simple-label" content={strings.LABEL_REASSIGN_TO} />
       <AssigneeDropdown
-        assignmentError={reassignmentError}
         assignmentOptions={assignmentOptions}
         sectionCode={sectionCode}
         onChangeMethod={(selected: number) => onReassignment(selected)}

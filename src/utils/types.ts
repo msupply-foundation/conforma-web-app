@@ -6,7 +6,6 @@ import {
   PermissionPolicyType,
   ReviewAssignmentStatus,
   ReviewDecision,
-  ReviewQuestionAssignment,
   ReviewResponse,
   ReviewResponseDecision,
   ReviewStatus,
@@ -50,6 +49,7 @@ export {
   FullStructure,
   HistoryElement,
   LevelDetails,
+  LevelAssignments,
   LooseString,
   MethodRevalidate,
   MethodToCallProps,
@@ -141,9 +141,8 @@ interface AssignmentDetails {
   isLastLevel: boolean
   isSelfAssignable: boolean
   isLocked: boolean
-  totalAssignedQuestions: number
-  reviewQuestionAssignments: ReviewQuestionAssignment[]
-  assignableSectionRestrictions: (string | null)[]
+  allowedSections: string[]
+  assignedSections: string[]
 }
 
 interface AssignmentOptions {
@@ -326,7 +325,6 @@ type PageElement = {
   isNewReviewResponse?: boolean
   review?: ReviewQuestionDecision
   isPendingReview?: boolean
-  reviewQuestionAssignmentId: number
   isAssigned?: boolean
   isChangeRequest?: boolean
   isChanged?: boolean
@@ -373,24 +371,26 @@ interface ResponsesByCode {
 }
 
 interface ReviewAssignment {
+  assignmentId: number
   assignee: GraphQLUser
   assigneeLevel: number
+  assigneeStage: number
   assignmentStatus: ReviewAssignmentStatus
+  assignmentDate: Date
+  assignedSections: string[]
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
   isLocked: boolean
   isSelfAssignable: boolean
-  finalDecision: {
-    decisionOnReview: boolean
-  } | null
+  isFinalDecision: boolean
+  isFinalDecisionOnConsolidation: boolean
 }
 
 type ReviewSectionComponentProps = {
-  fullStructure: FullStructure
+  reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
   section: SectionState
-  assignment: AssignmentDetails
   previousAssignment: AssignmentDetails
-  thisReview?: ReviewDetails | null
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
@@ -541,6 +541,10 @@ interface LevelDetails {
   number: number
 }
 
+interface LevelAssignments {
+  [level: number]: AssignmentDetails[]
+}
+
 interface TemplateCategoryDetails {
   title: string
   icon: SemanticICONS | undefined
@@ -633,8 +637,9 @@ interface LoginPayload {
 }
 
 interface UseGetReviewStructureForSectionProps {
-  fullApplicationStructure: FullStructure
-  reviewAssignment: AssignmentDetails
+  reviewStructure: FullStructure
+  reviewAssignment?: AssignmentDetails
+  previousAssignment?: AssignmentDetails
   filteredSectionIds?: number[]
   awaitMode?: boolean
 }

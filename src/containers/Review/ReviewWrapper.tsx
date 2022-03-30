@@ -73,7 +73,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       menuItem: strings.REVIEW_TAB_ASSIGNMENT,
       render: () => (
         <Tab.Pane>
-          <AssignmentTab structure={fullStructure} />
+          <AssignmentTab fullApplicationStructure={fullStructure} />
         </Tab.Pane>
       ),
     },
@@ -116,7 +116,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
           </div>
         </Route>
         <Route exact path={`${path}/:reviewId`}>
-          <ReviewPageWrapper {...{ structure }} />
+          <ReviewPageWrapper {...{ structure: fullStructure }} />
         </Route>
         <Route>
           <NoMatch />

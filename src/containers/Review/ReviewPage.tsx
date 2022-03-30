@@ -28,7 +28,6 @@ import {
   ReviewResponseDecision,
   ReviewResponseStatus,
   ReviewStatus,
-  useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import useLocalisedEnums from '../../utils/hooks/useLocalisedEnums'
@@ -41,6 +40,7 @@ import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
+import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetails
@@ -52,16 +52,16 @@ const ReviewPage: React.FC<{
     userState: { currentUser },
   } = useUserState()
 
-  const { push, query } = useRouter()
+  const { push } = useRouter()
 
-  const { fullReviewStructure, error } = useGetReviewStructureForSections({
+  const { reviewStructure, error } = useGetReviewStructureForSections({
     reviewAssignment,
-    fullApplicationStructure,
+    reviewStructure: fullApplicationStructure,
   })
 
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
     defaultActiveSectionCodes: [],
-    allSections: Object.keys(fullApplicationStructure.sections).map((section) => section),
+    allSections: Object.keys(fullApplicationStructure.sections),
   })
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
@@ -69,7 +69,7 @@ const ReviewPage: React.FC<{
   const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
-  if (!fullReviewStructure) return <Loading />
+  if (!reviewStructure) return <Loading />
 
   const messages = {
     REVIEW_STATUS_PENDING: {
@@ -81,15 +81,15 @@ const ReviewPage: React.FC<{
 
   if (
     reviewAssignment?.reviewer?.id !== currentUser?.userId &&
-    fullReviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Submitted &&
-    fullReviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Discontinued
+    reviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Submitted &&
+    reviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Discontinued
   ) {
     const {
       info: {
         name,
         current: { stage },
       },
-    } = fullReviewStructure
+    } = reviewStructure
 
     return (
       <>
@@ -110,7 +110,7 @@ const ReviewPage: React.FC<{
     thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
-  } = fullReviewStructure
+  } = reviewStructure
 
   if (
     thisReview?.current.reviewStatus === ReviewStatus.Pending &&
@@ -124,11 +124,11 @@ const ReviewPage: React.FC<{
       option,
       onClick: () => {
         setShowWarningModal({ open: false })
-        push(`/application/${fullReviewStructure.info.serial}/review`)
+        push(`/application/${reviewStructure.info.serial}/review`)
       },
       onClose: () => {
         setShowWarningModal({ open: false })
-        push(`/application/${fullReviewStructure.info.serial}/review`)
+        push(`/application/${reviewStructure.info.serial}/review`)
       },
     })
   }
@@ -211,8 +211,8 @@ const ReviewPage: React.FC<{
               />
             )}
             responsesByCode={responsesByCode as ResponsesByCode}
-            applicationData={fullApplicationStructure.info}
-            stages={fullApplicationStructure.stages.map(({ stage }) => stage)}
+            applicationData={reviewStructure.info}
+            stages={reviewStructure.stages.map(({ stage }) => stage)}
             serial={serial}
             isReview
             isConsolidation={section.assignment?.isConsolidation}
@@ -228,7 +228,7 @@ const ReviewPage: React.FC<{
           serial={serial}
         />
         <ReviewSubmit
-          structure={fullReviewStructure}
+          structure={reviewStructure}
           assignment={reviewAssignment}
           previousAssignment={previousAssignment}
           scrollTo={scrollTo}
@@ -274,7 +274,7 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   page,
 }) => {
   const { strings } = useLanguageProvider()
-  const [updateReviewResponse] = useUpdateReviewResponseMutation()
+  const updateReviewResponse = useUpdateReviewResponse()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
 
@@ -288,14 +288,16 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
 
   const massApprove = () => {
     responsesToReview.forEach((reviewResponse) => {
-      if (!reviewResponse) return
-      updateReviewResponse({
-        variables: {
-          id: reviewResponse.id,
-          decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
-          stageNumber,
-        },
-      })
+      if (reviewResponse)
+        updateReviewResponse(
+          {
+            ...reviewResponse,
+            decision: isConsolidation
+              ? ReviewResponseDecision.Agree
+              : ReviewResponseDecision.Approve,
+          },
+          stageNumber
+        )
     })
   }
 

@@ -12,17 +12,6 @@ export default gql`
     isFinalDecision
     isSelfAssignable
     allowedSections
-    reviewQuestionAssignments {
-      nodes {
-        id
-        templateElement {
-          id
-          section {
-            id
-            code
-          }
-        }
-      }
-    }
+    assignedSections
   }
 `
