@@ -86,7 +86,7 @@ export const exportLanguages = async (includeDisabled = true) => {
     ['KEYS'],
     ...translationRows,
     [],
-    ['ORPHANS', 'Translations found in language files that are no longer in use'],
+    ['__ORPHANS__', 'Translations found in language files that are no longer in use'],
     ...orphanRows,
   ]
   const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map((row) => row.join(',')).join('\n')
