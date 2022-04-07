@@ -109,7 +109,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
             <Button
               primary
               inverted
-              content={strings.CANCEL}
+              content={strings.OPTION_CANCEL}
               onClick={() => setIsActiveEdit(false)}
               className="button-med"
             />

@@ -6,7 +6,7 @@ const usePageTitle = (title: string) => {
   const [pageTitle, setPageTitle] = useState(title)
 
   useEffect(() => {
-    const newTitle = `${title} | ${strings.APP_NAME}`
+    const newTitle = `${title} | ${strings._APP_NAME}`
     setPageTitle(newTitle)
     document.title = newTitle
   }, [title])

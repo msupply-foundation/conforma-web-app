@@ -75,7 +75,7 @@ const ReviewPage: React.FC<{
     REVIEW_STATUS_PENDING: {
       title: strings.REVIEW_STATUS_PENDING_TITLE,
       message: strings.REVIEW_STATUS_PENDING_MESSAGE,
-      option: strings.OK,
+      option: strings.OPTION_OK,
     },
   }
 

@@ -128,7 +128,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   const levelName =
     structure.stages
       .find(({ stage: { number } }) => number === structure.info.current.stage.number)
-      ?.levels.find(({ number }) => reviewLevel === number)?.name || strings.LEVEL_NOT_FOUND
+      ?.levels.find(({ number }) => reviewLevel === number)?.name || strings.ERROR_LEVEL_NOT_FOUND
 
   return (
     <Grid columns={2} className="section-single-row-box-container">
