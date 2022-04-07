@@ -196,7 +196,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           startMessage: startMessage as string,
         },
         stages: templateStages.map((stage) => getStageAndLevels(stage)),
-        sections: buildSectionsStructure({ sectionDetails, baseElements }),
+        sections: buildSectionsStructure({ sectionDetails, baseElements, page: strings.PAGE }),
         canApplicantMakeChanges,
         attemptSubmission: false,
         reload: reloadApplication,
