@@ -1,4 +1,5 @@
 import { ElementBase, SectionDetails, SectionsStructure } from '../../types'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 interface BuildSectionsStructureProps {
   sectionDetails: SectionDetails[]
   baseElements: ElementBase[]
@@ -18,6 +19,7 @@ const buildSectionsStructure = ({
   sectionDetails,
   baseElements,
 }: BuildSectionsStructureProps): SectionsStructure => {
+  const { strings } = useLanguageProvider()
   // Create the sections and pages structure to display each section's element
   // Will also add the responses for each element, and can add reviews if received by props
   return sectionDetails.reduce((sectionsStructure: SectionsStructure, section) => {
@@ -33,7 +35,7 @@ const buildSectionsStructure = ({
       // Will build the array of elements
       const state = elements.map((element) => ({ element }))
 
-      const pageName = `Page ${pageNumber}`
+      const pageName = `${strings.PAGE} ${pageNumber}`
       return {
         ...pages,
         [pageNumber]: { name: pageName, number: pageNumber, state, sectionCode: section.code },

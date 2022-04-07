@@ -78,17 +78,17 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     REVIEW_DECISION_SET_FAIL: {
       title: strings.REVIEW_DECISION_SET_FAIL_TITLE,
       message: strings.REVIEW_DECISION_SET_FAIL_MESSAGE,
-      option: strings.OK,
+      option: strings.OPTION_OK,
     },
     REVIEW_DECISION_MISMATCH: {
       title: strings.REVIEW_DECISION_MISMATCH_TITLE,
       message: strings.REVIEW_DECISION_MISMATCH_MESSAGE,
-      option: strings.OK,
+      option: strings.OPTION_OK,
     },
     REVIEW_STATUS_PENDING: {
       title: strings.REVIEW_STATUS_PENDING_TITLE,
       message: strings.REVIEW_STATUS_PENDING_MESSAGE,
-      option: strings.OK,
+      option: strings.OPTION_OK,
     },
   }
 

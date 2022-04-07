@@ -61,7 +61,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
   useEffect(() => {
     if (triggersError) {
-      setStructureError(strings.TRIGGER_ERROR)
+      setStructureError(strings.ERROR_TRIGGER)
       console.error('Trigger error:', triggersError)
       return
     }

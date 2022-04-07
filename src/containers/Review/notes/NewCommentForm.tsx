@@ -99,7 +99,7 @@ const NewCommentForm: React.FC<{
             className="wide-button"
             onClick={() => setState({ ...state, showForm: false, comment: '', files: [] })}
           >
-            {strings.CANCEL}
+            {strings.OPTION_CANCEL}
           </Button>
           <p className="smaller-text">
             <em>{loadingMessage}</em>
