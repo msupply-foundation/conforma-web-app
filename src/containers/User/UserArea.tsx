@@ -195,8 +195,8 @@ const BrandArea: React.FC = () => {
       </Link>
       <div>
         {/* <Link to="/">
-          <h2 className="brand-area-text">{strings.APP_NAME}</h2>
-          <h3 className="brand-area-text">{strings.APP_NAME_SUBHEADER}</h3>
+          <h2 className="brand-area-text">{strings._APP_NAME}</h2>
+          <h3 className="brand-area-text">{strings._APP_NAME_SUBHEADER}</h3>
         </Link> */}
       </div>
     </div>

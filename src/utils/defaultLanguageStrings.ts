@@ -1,4 +1,6 @@
 export default {
+  _APP_NAME: 'conforma',
+  _APP_NAME_SUBHEADER: 'Application Manager',
   ACTION_ASSIGN: 'Assign',
   ACTION_CONTINUE: 'Continue',
   ACTION_START: 'Start',
@@ -15,8 +17,6 @@ export default {
   ACTION_VIEW: 'View',
   ACTION_MAKE_CHANGES: 'Make changes',
   ACTION_EDIT_DRAFT: 'Edit draft',
-  APP_NAME: 'conforma',
-  APP_NAME_SUBHEADER: 'Application Manager',
   APP_LINK_LINKED_APPLICATIONS: 'Linked Applications',
   APP_LINK_NAME: 'Name',
   APP_LINK_SERIAL: 'Serial',
