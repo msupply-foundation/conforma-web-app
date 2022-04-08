@@ -2,6 +2,7 @@ import { ElementBase, SectionDetails, SectionsStructure } from '../../types'
 interface BuildSectionsStructureProps {
   sectionDetails: SectionDetails[]
   baseElements: ElementBase[]
+  page: string
 }
 
 /**
@@ -17,6 +18,7 @@ interface BuildSectionsStructureProps {
 const buildSectionsStructure = ({
   sectionDetails,
   baseElements,
+  page,
 }: BuildSectionsStructureProps): SectionsStructure => {
   // Create the sections and pages structure to display each section's element
   // Will also add the responses for each element, and can add reviews if received by props
@@ -33,7 +35,7 @@ const buildSectionsStructure = ({
       // Will build the array of elements
       const state = elements.map((element) => ({ element }))
 
-      const pageName = `Page ${pageNumber}`
+      const pageName = `${page} ${pageNumber}`
       return {
         ...pages,
         [pageNumber]: { name: pageName, number: pageNumber, state, sectionCode: section.code },

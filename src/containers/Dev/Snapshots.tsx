@@ -52,7 +52,11 @@ const Snapshots: React.FC = () => {
         headers: { Authorization: `Bearer ${JWT}` },
       })
 
-      if (resultJson.success) return setIsLoading(false)
+      if (resultJson.success) {
+        await getList()
+        setIsLoading(false)
+        return
+      }
 
       setSnapshotError(resultJson)
     } catch (error) {
