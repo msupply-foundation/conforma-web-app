@@ -64,8 +64,6 @@ export const importLanguages = async (
 
   if (uploadObjects.length === 0) return { success: false, message: 'No languages found in file' }
 
-  console.log('objects', uploadObjects)
-
   // Upload one by one
   const results = []
   try {

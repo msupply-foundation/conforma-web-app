@@ -16,12 +16,15 @@ export const AdminLocalisations: React.FC = () => {
   const [importDisabled, setImportDisabled] = useState(true)
   const [installedLanguages, setInstalledLanguages] = useState<LanguageOption[]>([])
   const [toastComponent, showToast] = useToast({ position: 'top-left' })
+  const [refreshLanguages, setRefreshLanguages] = useState(true)
 
   useEffect(() => {
+    if (!refreshLanguages) return
     getRequest(`${config.serverREST}/public/get-prefs`).then((prefs) =>
       setInstalledLanguages(prefs.languageOptions)
     )
-  }, [])
+    setRefreshLanguages(false)
+  }, [refreshLanguages])
 
   const handleSelect = async (language: LanguageOption, index: number) => {
     const enabled = language.enabled
@@ -59,6 +62,7 @@ export const AdminLocalisations: React.FC = () => {
       }
       importLanguages(event.target.result as string, importDisabled).then(
         ({ success, message }) => {
+          setRefreshLanguages(true)
           if (success) {
             showToast({
               title: 'Languages successfully installed',
