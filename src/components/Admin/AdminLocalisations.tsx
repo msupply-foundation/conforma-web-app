@@ -1,3 +1,11 @@
+/*
+TO-DO:
+Check "enabled" setting is followed
+Delete/uninstall options (requires warning modal)
+(Maybe:) usePrefs context with Refresh option
+  - Should also be reflected in "Select Lanaguage" menu
+*/
+
 import React, { useEffect, useState, useRef } from 'react'
 import { Header, Button, Checkbox } from 'semantic-ui-react'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
