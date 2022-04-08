@@ -50,7 +50,7 @@ export const importLanguages = async (
     if (key === ('' as string)) break // End of strings
     row.forEach((item, index) => {
       if (index === 0 || index === 1) return
-      languageObjects[index].translations[key] = item
+      if (item) languageObjects[index].translations[key] = item
     })
   }
 
@@ -62,24 +62,33 @@ export const importLanguages = async (
       strings: translations,
     }))
 
+  if (uploadObjects.length === 0) return { success: false, message: 'No languages found in file' }
+
+  console.log('objects', uploadObjects)
+
   // Upload one by one
-  const uploadResults: Promise<any>[] = []
-  uploadObjects.forEach((language) => {
-    console.log('language', language)
-    const result = postRequest({
-      url: config.serverREST + '/admin/install-language',
-      jsonBody: language,
-      headers: { 'Content-Type': 'application/json' },
-    })
-    uploadResults.push(result)
-  })
+  const results = []
+  try {
+    for (const language of uploadObjects) {
+      results.push(
+        await postRequest({
+          url: config.serverREST + '/admin/install-language',
+          jsonBody: language,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      )
+    }
+  } catch {
+    return { success: false, message: 'Problem installing one or more languages' }
+  }
 
-  const results = await Promise.all(uploadResults)
-
-  console.log(results)
-
-  return {
-    success: true,
-    message: 'All good, bro',
+  if (results.every((res) => res.success)) {
+    return {
+      success: true,
+      message: '',
+    }
+  } else {
+    console.log(results)
+    return { success: false, message: 'Problem installing one or more languages' }
   }
 }

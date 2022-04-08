@@ -57,12 +57,20 @@ export const AdminLocalisations: React.FC = () => {
         showToast({ title: 'Error', text: 'Problem processing file', style: 'error' })
         return
       }
-      importLanguages(event.target.result as string, importDisabled).then(({ success }) => {
-        if (!success) {
-          showToast({ title: 'Error', text: 'Problem processing file', style: 'error' })
-          return
+      importLanguages(event.target.result as string, importDisabled).then(
+        ({ success, message }) => {
+          if (success) {
+            showToast({
+              title: 'Languages successfully installed',
+              style: 'success',
+            })
+            return
+          } else {
+            showToast({ title: 'Error', text: message, style: 'error' })
+            return
+          }
         }
-      })
+      )
     }
     reader.readAsText(file)
   }

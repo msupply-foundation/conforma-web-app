@@ -69,7 +69,10 @@ export const exportLanguages = async (includeDisabled = true) => {
   const row5Enabled = ['Enabled?', true, ...languageOptions.map((opt) => opt.enabled)]
   const translationRows = Object.keys(defaultLanguageStrings).map((key) => [
     key,
-    ...Object.values(translationsObject[key as keyof LanguageStrings]).map((str) => `"${str}"`),
+    ...Object.values(translationsObject[key as keyof LanguageStrings]).map(
+      // Escape double-quotes
+      (str) => `"${str.replace(/"/g, '""')}"`
+    ),
   ])
   const orphanRows = orphanKeys.map((key) => [
     key,
@@ -95,19 +98,18 @@ export const exportLanguages = async (includeDisabled = true) => {
   hiddenLink.setAttribute('href', encodedUri)
   hiddenLink.setAttribute('download', `conforma_localisations_${DateTime.now().toISODate()}.csv`)
   document.body.appendChild(hiddenLink) // Required for FF
-  hiddenLink.click() // This will download the data file named "my_data.csv".
+  hiddenLink.click() // This will download the data file.
 }
 
 const getTranslations = (
   defaultString: string,
   key: keyof LanguageStrings,
   languageObject: LanguageObject[]
-) => {
+): { [key: string]: string } => {
   const valueObj: any = { default: defaultString }
   languageObject.forEach(({ code, translations }) => {
     valueObj[code] = translations[key] || ''
     delete translations[key]
   })
-
   return valueObj
 }
