@@ -84,12 +84,15 @@ export const importLanguages = async (
   }
 
   if (results.every((res) => res.success)) {
+    const installedLanguageCodes = languageObjects
+      .slice(2)
+      .map(({ code }) => code)
+      .join(', ')
     return {
       success: true,
-      message: '',
+      message: installedLanguageCodes,
     }
   } else {
-    console.log(results)
     return { success: false, message: 'Problem installing one or more languages' }
   }
 }

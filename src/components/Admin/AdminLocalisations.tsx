@@ -103,7 +103,7 @@ export const AdminLocalisations: React.FC = () => {
           if (success) {
             showToast({
               title: 'Languages successfully installed',
-              text: '',
+              text: message,
               style: 'success',
             })
             return
@@ -131,13 +131,9 @@ export const AdminLocalisations: React.FC = () => {
           style={{ position: 'relative' }}
           onMouseEnter={() => setHoverIndex(index)}
           onMouseLeave={() => setHoverIndex(null)}
+          key={language.code}
         >
-          <LanguageRow
-            language={language}
-            key={language.code}
-            index={index}
-            handleSelect={handleSelect}
-          />
+          <LanguageRow language={language} index={index} handleSelect={handleSelect} />
           {hoverIndex === index && (
             <Icon
               name="times circle outline"
