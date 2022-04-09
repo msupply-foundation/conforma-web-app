@@ -151,16 +151,20 @@ export const AdminLocalisations: React.FC = () => {
           )}
         </div>
       ))}
-      <Header as="h5">Export language files as spreadsheet (CSV):</Header>
+      <Header as="h5">{strings.LOCALISATION_EXPORT_MESSAGE + ':'}</Header>
       <div className="flex-row-start-center" style={{ gap: 20 }}>
-        <Button primary content="Export" onClick={() => exportLanguages(exportDisabled)} />
+        <Button
+          primary
+          content={strings.LABEL_EXPORT}
+          onClick={() => exportLanguages(exportDisabled)}
+        />
         <Checkbox
           checked={exportDisabled}
           onChange={() => setExportDisabled(!exportDisabled)}
-          label="Include disabled languages"
+          label={strings.LOCALISATION_INCLUDE_DISABLED}
         />
       </div>
-      <Header as="h5">Import language files:</Header>
+      <Header as="h5">{strings.LOCALISATION_IMPORT_MESSAGE}</Header>
       <div className="flex-row-start-center" style={{ gap: 20 }}>
         <input
           type="file"
@@ -171,11 +175,15 @@ export const AdminLocalisations: React.FC = () => {
           accept=".csv"
           onChange={handleFileImport}
         />
-        <Button primary content="Import" onClick={() => fileInputRef?.current?.click()} />
+        <Button
+          primary
+          content={strings.LABEL_IMPORT}
+          onClick={() => fileInputRef?.current?.click()}
+        />
         <Checkbox
           checked={importDisabled}
           onChange={() => setImportDisabled(!importDisabled)}
-          label="Include disabled languages"
+          label={strings.LOCALISATION_INCLUDE_DISABLED}
         />
       </div>
     </div>

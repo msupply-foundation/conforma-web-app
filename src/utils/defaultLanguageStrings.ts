@@ -205,6 +205,8 @@ export default {
   LOCALISATION_INCLUDE_DISABLED: 'Include disabled languages',
   LOCALISATION_NO_LANG_FOUND: 'No languages found in file',
   LOCALISATION_INSTALL_PROBLEM: 'Problem installing one or more languages',
+  LOCALISATION_EXPORT_MESSAGE: 'Export languages as spreadsheet (CSV)',
+  LOCALISATION_IMPORT_MESSAGE: 'Import languages from spreadsheet',
   LOGIN_WELCOME: 'Welcome, %1',
   LOGIN_ORG_SELECT: 'Please select an organisation',
   LOGIN_REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
