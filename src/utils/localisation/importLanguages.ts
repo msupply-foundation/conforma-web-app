@@ -10,7 +10,8 @@ interface ImportReturn {
 
 export const importLanguages = async (
   data: string,
-  importDisabled: boolean
+  importDisabled: boolean,
+  strings: LanguageStrings
 ): Promise<ImportReturn> => {
   // Parse csv data
   const rows = Papa.parse(data).data as string[][]
@@ -65,7 +66,8 @@ export const importLanguages = async (
       strings: translations,
     }))
 
-  if (uploadObjects.length === 0) return { success: false, message: 'No languages found in file' }
+  if (uploadObjects.length === 0)
+    return { success: false, message: strings.LOCALISATION_NO_LANG_FOUND }
 
   // Upload one by one
   const results = []
@@ -80,7 +82,7 @@ export const importLanguages = async (
       )
     }
   } catch {
-    return { success: false, message: 'Problem installing one or more languages' }
+    return { success: false, message: strings.LOCALISATION_INSTALL_PROBLEM }
   }
 
   if (results.every((res) => res.success)) {
@@ -93,6 +95,6 @@ export const importLanguages = async (
       message: installedLanguageCodes,
     }
   } else {
-    return { success: false, message: 'Problem installing one or more languages' }
+    return { success: false, message: strings.LOCALISATION_INSTALL_PROBLEM }
   }
 }

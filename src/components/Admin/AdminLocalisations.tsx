@@ -58,10 +58,13 @@ export const AdminLocalisations: React.FC = () => {
   const handleRemove = async (language: LanguageOption) => {
     setShowModalWarning({
       open: true,
-      title: 'Are you sure?',
-      message: `This will uninstall language ${language.languageName} (${language.code}) from your system`,
-      option: 'Confirm',
-      optionCancel: 'Cancel',
+      title: strings.LOCALISATION_DELETE_WARNING_TITLE,
+      message: strings.LOCALISATION_DELETE_WARNING_MESSAGE.replace(
+        '%1',
+        language.languageName
+      ).replace('%2', language.code),
+      option: strings.BUTTON_CONFIRM,
+      optionCancel: strings.OPTION_CANCEL,
       onCancel: () => setShowModalWarning({ open: false }),
       onClick: async () => {
         setShowModalWarning({ open: false })
@@ -72,14 +75,17 @@ export const AdminLocalisations: React.FC = () => {
           console.log('Language removed')
           setRefreshLanguages(true)
           showToast({
-            title: `${language.languageName} (${language.code}) successfully removed`,
+            title: strings.LOCALISATION_REMOVE_SUCCESS.replace('%1', language.languageName).replace(
+              '%2',
+              language.code
+            ),
             text: '',
             style: 'success',
           })
         } else {
           showToast({
             title: 'Error',
-            text: result?.message ?? 'Problem removing language',
+            text: result?.message ?? strings.LOCALISATION_REMOVE_PROBLEM,
             style: 'error',
           })
           console.error(result.message)
@@ -94,15 +100,15 @@ export const AdminLocalisations: React.FC = () => {
     const reader = new FileReader()
     reader.onload = (event) => {
       if (!event.target?.result) {
-        showToast({ title: 'Error', text: 'Problem processing file', style: 'error' })
+        showToast({ title: 'Error', text: strings.LOCALISATION_FILE_PROBLEM, style: 'error' })
         return
       }
-      importLanguages(event.target.result as string, importDisabled).then(
+      importLanguages(event.target.result as string, importDisabled, strings).then(
         ({ success, message }) => {
           setRefreshLanguages(true)
           if (success) {
             showToast({
-              title: 'Languages successfully installed',
+              title: strings.LOCALISATION_INSTALL_SUCCESS,
               text: message,
               style: 'success',
             })
@@ -138,6 +144,7 @@ export const AdminLocalisations: React.FC = () => {
             <Icon
               name="times circle outline"
               size="large"
+              className="clickable"
               style={{ position: 'absolute', right: 4, top: -4, color: 'grey' }}
               onClick={() => handleRemove(language)}
             />
@@ -181,7 +188,6 @@ const LanguageRow: React.FC<{
   index: number
 }> = ({ language, handleSelect, index }) => {
   return (
-    // <div className="flex-row">
     <div
       className="flex-row-start-center"
       style={{
@@ -202,7 +208,5 @@ const LanguageRow: React.FC<{
       </div>
       <p style={{ fontSize: '2em', flexGrow: 1, textAlign: 'right' }}>{language.flag}</p>
     </div>
-    // {/* <Icon name="delete" /> */}
-    // </div>
   )
 }
