@@ -3,6 +3,7 @@ import config from '../../config'
 import { LanguageOption, LanguageStrings } from '../../contexts/Localisation'
 import defaultLanguageStrings from '../../utils/defaultLanguageStrings'
 import { mapValues } from 'lodash'
+import Papa from 'papaparse'
 import { DateTime } from 'luxon'
 
 export interface LanguageObject extends LanguageOption {
@@ -69,14 +70,11 @@ export const exportLanguages = async (includeDisabled = true) => {
   const row5Enabled = ['Enabled?', '', ...languageOptions.map((opt) => opt.enabled)]
   const translationRows = Object.keys(defaultLanguageStrings).map((key) => [
     key,
-    ...Object.values(translationsObject[key as keyof LanguageStrings]).map(
-      // Escape double-quotes and wrap whole string in quotes
-      (str) => `"${str.replace(/"/g, '""')}"`
-    ),
+    ...Object.values(translationsObject[key as keyof LanguageStrings]),
   ])
   const orphanRows = orphanKeys.map((key) => [
     key,
-    ...Object.values(orphansObject[key as keyof LanguageStrings]).map((str) => `"${str}"`),
+    ...Object.values(orphansObject[key as keyof LanguageStrings]),
   ])
 
   const csvRows = [
@@ -92,7 +90,7 @@ export const exportLanguages = async (includeDisabled = true) => {
     ['__ORPHANS__', 'Translations found in language files that are no longer in use'],
     ...orphanRows,
   ]
-  const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map((row) => row.join(',')).join('\n')
+  const csvContent = 'data:text/csv;charset=utf-8,' + Papa.unparse(csvRows)
   const encodedUri = encodeURI(csvContent)
   const hiddenLink = document.createElement('a')
   hiddenLink.setAttribute('href', encodedUri)
