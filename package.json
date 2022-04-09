@@ -29,7 +29,7 @@
     "lodash": "^4.17.21",
     "luxon": "^1.27.0",
     "nanoid": "^3.1.22",
-    "papaparse": "^5.3.1",
+    "papaparse": "^5.3.2",
     "pluralize": "^8.0.0",
     "query-string": "^6.13.5",
     "react": "^16.13.1",
