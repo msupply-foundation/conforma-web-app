@@ -1,18 +1,11 @@
-/*
-TO-DO:
-Check "enabled" setting is followed
-Delete/uninstall options (requires warning modal)
-(Maybe:) usePrefs context with Refresh option
-  - Should also be reflected in "Select Lanaguage" menu
-*/
-
 import React, { useEffect, useState, useRef } from 'react'
-import { Header, Button, Checkbox } from 'semantic-ui-react'
+import { Header, Button, Checkbox, Icon, ModalProps } from 'semantic-ui-react'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import config from '../../config'
 import { LanguageOption, useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import useToast from '../../utils/hooks/useToast'
+import ModalWarning from '../Main/ModalWarning'
 import { exportLanguages } from '../../utils/localisation/exportLanguages'
 import { importLanguages } from '../../utils/localisation/importLanguages'
 
@@ -24,7 +17,9 @@ export const AdminLocalisations: React.FC = () => {
   const [importDisabled, setImportDisabled] = useState(true)
   const [installedLanguages, setInstalledLanguages] = useState<LanguageOption[]>([])
   const [toastComponent, showToast] = useToast({ position: 'top-left' })
+  const [showModalWarning, setShowModalWarning] = useState<ModalProps>({ open: false })
   const [refreshLanguages, setRefreshLanguages] = useState(true)
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
   useEffect(() => {
     if (!refreshLanguages) return
@@ -60,6 +55,40 @@ export const AdminLocalisations: React.FC = () => {
     }
   }
 
+  const handleRemove = async (language: LanguageOption) => {
+    setShowModalWarning({
+      open: true,
+      title: 'Are you sure?',
+      message: `This will uninstall language ${language.languageName} (${language.code}) from your system`,
+      option: 'Confirm',
+      optionCancel: 'Cancel',
+      onCancel: () => setShowModalWarning({ open: false }),
+      onClick: async () => {
+        setShowModalWarning({ open: false })
+        const result = await postRequest({
+          url: `${config.serverREST}/admin/remove-language?code=${language.code}`,
+        })
+        if (result.success) {
+          console.log('Language removed')
+          setRefreshLanguages(true)
+          showToast({
+            title: `${language.languageName} (${language.code}) successfully removed`,
+            text: '',
+            style: 'success',
+          })
+        } else {
+          showToast({
+            title: 'Error',
+            text: result?.message ?? 'Problem removing language',
+            style: 'error',
+          })
+          console.error(result.message)
+        }
+      },
+      onClose: () => setShowModalWarning({ open: false }),
+    })
+  }
+
   const handleFileImport = async (e: any) => {
     const file = e.target.files[0]
     const reader = new FileReader()
@@ -74,6 +103,7 @@ export const AdminLocalisations: React.FC = () => {
           if (success) {
             showToast({
               title: 'Languages successfully installed',
+              text: '',
               style: 'success',
             })
             return
@@ -90,18 +120,33 @@ export const AdminLocalisations: React.FC = () => {
   return (
     <div id="localisation-panel">
       {toastComponent}
+      <ModalWarning {...showModalWarning} />
       <Header as="h1">Localisation</Header>
       <Header as="h4">Currently installed languages</Header>
       <div className="flex-row">
         <p className="smaller-text">Enabled</p>
       </div>
       {installedLanguages.map((language, index) => (
-        <LanguageRow
-          language={language}
-          key={language.code}
-          index={index}
-          handleSelect={handleSelect}
-        />
+        <div
+          style={{ position: 'relative' }}
+          onMouseEnter={() => setHoverIndex(index)}
+          onMouseLeave={() => setHoverIndex(null)}
+        >
+          <LanguageRow
+            language={language}
+            key={language.code}
+            index={index}
+            handleSelect={handleSelect}
+          />
+          {hoverIndex === index && (
+            <Icon
+              name="times circle outline"
+              size="large"
+              style={{ position: 'absolute', right: 4, top: -4, color: 'grey' }}
+              onClick={() => handleRemove(language)}
+            />
+          )}
+        </div>
       ))}
       <Header as="h5">Export language files as spreadsheet (CSV):</Header>
       <div className="flex-row-start-center" style={{ gap: 20 }}>
@@ -140,11 +185,12 @@ const LanguageRow: React.FC<{
   index: number
 }> = ({ language, handleSelect, index }) => {
   return (
+    // <div className="flex-row">
     <div
       className="flex-row-start-center"
       style={{
         gap: 20,
-        maxWidth: '80%',
+        width: '90%',
         backgroundColor: 'white',
         marginBottom: 5,
         padding: 10,
@@ -160,5 +206,7 @@ const LanguageRow: React.FC<{
       </div>
       <p style={{ fontSize: '2em', flexGrow: 1, textAlign: 'right' }}>{language.flag}</p>
     </div>
+    // {/* <Icon name="delete" /> */}
+    // </div>
   )
 }

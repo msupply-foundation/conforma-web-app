@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Header, Icon, Modal, ModalProps } from 'semantic-ui-react'
 
 const ModalWarning: React.FC<ModalProps> = (showModal) => {
-  const { title, message, option, onClick, ...modalProps } = showModal
+  const { title, message, option, optionCancel, onClick, onCancel, ...modalProps } = showModal
 
   // TOOD: Use more props from ModalProps for more general configuration of modal (e.g. Shorthand for different actions)
   return (
@@ -15,6 +15,7 @@ const ModalWarning: React.FC<ModalProps> = (showModal) => {
         <p>{message}</p>
       </Modal.Content>
       <Modal.Actions>
+        {optionCancel && <Button content={optionCancel} onClick={onCancel} />}
         <Button
           color="green"
           inverted

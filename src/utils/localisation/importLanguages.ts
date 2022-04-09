@@ -41,7 +41,10 @@ export const importLanguages = async (
   rows[3].map((flag, index) => (languageObjects[index].flag = flag))
 
   // Row 4 -- Enabled
-  rows[4].map((enabled, index) => (languageObjects[index].enabled = Boolean(enabled)))
+  rows[4].map(
+    (enabled, index) =>
+      (languageObjects[index].enabled = enabled.toLowerCase() === 'true' ? true : false)
+  )
 
   // Iterate over language rows
   for (let i = 7; i < rows.length; i++) {
@@ -56,7 +59,7 @@ export const importLanguages = async (
 
   const uploadObjects = languageObjects
     .slice(2) // First two are keys and default strings
-    // .filter((language) => !importDisabled && )
+    .filter((language) => (importDisabled ? true : language.enabled))
     .map(({ languageName, description, code, flag, enabled, translations }) => ({
       language: { languageName, description, code, flag, enabled },
       strings: translations,

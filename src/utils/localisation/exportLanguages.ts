@@ -66,11 +66,11 @@ export const exportLanguages = async (includeDisabled = true) => {
   ]
   const row3code = ['Code:', '', ...languageOptions.map((opt) => opt.code)]
   const row4Flag = ['Flag:', '', ...languageOptions.map((opt) => opt.flag)]
-  const row5Enabled = ['Enabled?', true, ...languageOptions.map((opt) => opt.enabled)]
+  const row5Enabled = ['Enabled?', '', ...languageOptions.map((opt) => opt.enabled)]
   const translationRows = Object.keys(defaultLanguageStrings).map((key) => [
     key,
     ...Object.values(translationsObject[key as keyof LanguageStrings]).map(
-      // Escape double-quotes
+      // Escape double-quotes and wrap whole string in quotes
       (str) => `"${str.replace(/"/g, '""')}"`
     ),
   ])
