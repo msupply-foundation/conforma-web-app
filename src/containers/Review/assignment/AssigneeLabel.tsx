@@ -34,11 +34,11 @@ const AssigneeLabel: React.FC<AssigneeLabelProps> = ({
                 {strings.ACTION_RE_ASSIGN}
               </a>
               <span>{' | '}</span>
+              <a className="user-action clickable" onClick={setIsUnassignment}>
+                {strings.ACTION_UNASSIGN}
+              </a>
             </>
           )}
-          <a className="user-action clickable" onClick={setIsUnassignment}>
-            {strings.ACTION_UNASSIGN}
-          </a>
         </>
       )}
     </>

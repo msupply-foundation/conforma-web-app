@@ -48,7 +48,7 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
 
   useEffect(() => {
     if (triggersError) {
-      setFetchingError(strings.TRIGGER_ERROR)
+      setFetchingError(strings.ERROR_TRIGGER)
       console.error('Trigger error:', triggersError)
       return
     }

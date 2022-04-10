@@ -82,6 +82,7 @@ export const getTypedEvaluation: GetEvaluationType = (evaluation) => {
     resultEvaluation.type = 'operator'
     resultEvaluation.asOperator.operator = evaluation.operator
     resultEvaluation.asOperator.type = evaluation.type
+    resultEvaluation.asOperator.fallback = evaluation.fallback
     if (operator in nonGenericEvaluations) {
       return nonGenericEvaluations[operator as NonGenericTypes].toTyped(
         evaluation,
@@ -150,10 +151,12 @@ export const convertTypedEvaluationToBaseType: ConvertTypedEvaluationToBaseType 
       const operatorResult: {
         operator: Operator
         type?: string
+        fallback?: any
         children: EvaluatorNode[]
       } = {
         operator: evaluation.asOperator.operator,
         type: evaluation.asOperator.type,
+        fallback: evaluation.asOperator.fallback,
         children: [],
       }
       evaluation.asOperator.children.forEach((evaluation) => {

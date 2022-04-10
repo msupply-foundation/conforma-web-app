@@ -61,12 +61,11 @@ const useGetAssignmentOptions = () => {
       options: [...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment))],
     }
 
-    if (!previousAssignee)
-      assigneeOptions.options.push({
-        key: NOT_ASSIGNED,
-        value: NOT_ASSIGNED,
-        text: strings.ASSIGNMENT_NOT_ASSIGNED,
-      })
+    assigneeOptions.options.push({
+      key: NOT_ASSIGNED,
+      value: NOT_ASSIGNED,
+      text: strings.ASSIGNMENT_NOT_ASSIGNED,
+    })
 
     return assigneeOptions
   }

@@ -28,7 +28,6 @@ import {
   ReviewResponseDecision,
   ReviewResponseStatus,
   ReviewStatus,
-  useUpdateReviewResponseMutation,
 } from '../../utils/generated/graphql'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import useLocalisedEnums from '../../utils/hooks/useLocalisedEnums'
@@ -41,6 +40,7 @@ import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
+import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetails
@@ -75,7 +75,7 @@ const ReviewPage: React.FC<{
     REVIEW_STATUS_PENDING: {
       title: strings.REVIEW_STATUS_PENDING_TITLE,
       message: strings.REVIEW_STATUS_PENDING_MESSAGE,
-      option: strings.OK,
+      option: strings.OPTION_OK,
     },
   }
 
@@ -274,7 +274,7 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   page,
 }) => {
   const { strings } = useLanguageProvider()
-  const [updateReviewResponse] = useUpdateReviewResponseMutation()
+  const updateReviewResponse = useUpdateReviewResponse()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
 
@@ -288,14 +288,16 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
 
   const massApprove = () => {
     responsesToReview.forEach((reviewResponse) => {
-      if (!reviewResponse) return
-      updateReviewResponse({
-        variables: {
-          id: reviewResponse.id,
-          decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
-          stageNumber,
-        },
-      })
+      if (reviewResponse)
+        updateReviewResponse(
+          {
+            ...reviewResponse,
+            decision: isConsolidation
+              ? ReviewResponseDecision.Agree
+              : ReviewResponseDecision.Approve,
+          },
+          stageNumber
+        )
     })
   }
 

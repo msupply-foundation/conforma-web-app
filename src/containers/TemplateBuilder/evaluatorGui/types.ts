@@ -25,6 +25,7 @@ export type ComponentLibraryType = {
     setChecked: (checked: boolean) => void
     title?: string
     disabled?: boolean
+    minLabelWidth?: number
   }>
   ObjectInput: React.FC<{
     object: object
@@ -79,6 +80,7 @@ export type EvaluationVariations =
 export type OperatorType = {
   operator: Operator
   type?: string
+  fallback?: any
   children: EvaluationType[]
 }
 
