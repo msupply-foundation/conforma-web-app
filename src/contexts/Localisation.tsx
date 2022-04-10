@@ -126,14 +126,32 @@ export function LanguageProvider({
     }
   }
 
+  // If the selected language is no longer valid (either disabled or uninstalled), then try default, or fallback to first available
+  const getValidLanguageCode = () => {
+    if (languageOptions.some((lang) => lang.enabled && lang.code === selectedLanguageCode))
+      return selectedLanguageCode
+    if (languageOptions.some((lang) => lang.enabled && lang.code === defaultLanguageCode))
+      return defaultLanguageCode
+    else {
+      console.log('Invalid language code, falling back to first available')
+      return languageOptions.filter(({ enabled }) => enabled)[0].code
+    }
+  }
+
   // Fetch new language when language code changes
   useEffect(() => {
+    if (selectedLanguageCode === 'default') {
+      setSelectedLanguageCode(defaultLanguageCode)
+      return
+    }
     updateLanguageState(selectedLanguageCode)
   }, [selectedLanguageCode])
 
   // Update options whenever refetched from Prefs
   useEffect(() => {
-    setLanguageState({ ...languageState, languageOptions: languageOptions })
+    setLanguageState((state) => ({ ...state, languageOptions }))
+    const validCode = getValidLanguageCode()
+    if (validCode !== selectedLanguageCode) setSelectedLanguageCode(validCode)
   }, [languageOptions])
 
   return (

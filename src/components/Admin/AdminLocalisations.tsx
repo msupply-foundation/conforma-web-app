@@ -13,15 +13,13 @@ export const AdminLocalisations: React.FC = () => {
   const {
     strings,
     refetchPrefs: refetchLanguages,
-    languageOptionsFull,
+    languageOptionsFull: languageOptions,
     selectedLanguage,
     setLanguage,
     refetchStrings,
   } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
   const fileInputRef = useRef<any>(null)
-  const [installedLanguages, setInstalledLanguages] =
-    useState<LanguageOption[]>(languageOptionsFull)
   const [exportDisabled, setExportDisabled] = useState(true)
   const [importDisabled, setImportDisabled] = useState(true)
   const [toastComponent, showToast] = useToast({ position: 'top-left' })
@@ -29,29 +27,14 @@ export const AdminLocalisations: React.FC = () => {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
   const handleSelect = async (language: LanguageOption, index: number) => {
-    const enabled = language.enabled
-    const currentLanguages = [...installedLanguages]
-    const newLanguages = [...installedLanguages]
-    const updatedLanguage = { ...language, enabled: !enabled }
-    newLanguages[index] = updatedLanguage
-    setInstalledLanguages(newLanguages)
-    updateOnServer(updatedLanguage, currentLanguages)
-  }
-
-  const updateOnServer = async (
-    updatedLanguage: LanguageOption,
-    currentLanguages: LanguageOption[]
-  ) => {
+    const enabled = !language.enabled
     const result = await postRequest({
-      url: `${config.serverREST}/admin/enable-language?code=${updatedLanguage.code}&enabled=${updatedLanguage.enabled}`,
+      url: `${config.serverREST}/admin/enable-language?code=${language.code}&enabled=${enabled}`,
     })
     if (result.success) {
       console.log('Language updated')
-      // if (updatedLanguage.code === selectedLanguage.code && !updatedLanguage.enabled)
-      //   setLanguage('default')
+      refetchLanguages()
     } else {
-      // revert local state
-      setInstalledLanguages(currentLanguages)
       showToast({ title: 'Error', text: result.message, style: 'error' })
       console.error(result.message)
     }
@@ -91,8 +74,7 @@ export const AdminLocalisations: React.FC = () => {
           })
           console.error(result.message)
         }
-        await refetchLanguages()
-        // if (language.code === selectedLanguage.code) setLanguage('default')
+        refetchLanguages()
       },
       onClose: () => setShowModalWarning({ open: false }),
     })
@@ -135,7 +117,7 @@ export const AdminLocalisations: React.FC = () => {
       <div className="flex-row">
         <p className="smaller-text">Enabled</p>
       </div>
-      {installedLanguages.map((language, index) => (
+      {languageOptions.map((language, index) => (
         <div
           style={{ position: 'relative' }}
           onMouseEnter={() => setHoverIndex(index)}
