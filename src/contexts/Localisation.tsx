@@ -137,6 +137,8 @@ export function LanguageProvider({
     }
   }
 
+  // Reload language options from prefs, and (optionally) refresh the current
+  // strings
   const refetchLanguages = async (reloadStrings = false) => {
     if (reloadStrings) setShouldRefetchStrings(true)
     refetchPrefs()
