@@ -20,6 +20,7 @@ type LanguageProviderProps = {
   children: React.ReactNode
   languageOptions: LanguageOption[]
   defaultLanguageCode: string
+  refetchPrefs: () => void
 }
 
 export type LanguageOption = {
@@ -44,18 +45,22 @@ const initialContext: {
   strings: LanguageStrings
   selectedLanguage: LanguageOption
   languageOptions: LanguageOption[]
+  languageOptionsFull: LanguageOption[]
   loading: boolean
   error: any
   setLanguage: Function
   getPluginStrings: Function
+  refetchPrefs: Function
 } = {
   strings: {} as LanguageStrings,
   selectedLanguage: initSelectedLanguage,
   languageOptions: [],
+  languageOptionsFull: [],
   loading: true,
   error: null,
   setLanguage: () => {},
   getPluginStrings: () => {},
+  refetchPrefs: () => {},
 }
 
 const LanguageProviderContext = createContext(initialContext)
@@ -64,6 +69,7 @@ export function LanguageProvider({
   children,
   languageOptions,
   defaultLanguageCode,
+  refetchPrefs,
 }: LanguageProviderProps) {
   const [languageState, setLanguageState] = useState<LanguageState>({
     languageOptions,
@@ -123,16 +129,25 @@ export function LanguageProvider({
     updateLanguageState(selectedLanguageCode)
   }, [selectedLanguageCode])
 
+  // Update options whenever refetched from Prefs
+  useEffect(() => {
+    setLanguageState({ ...languageState, languageOptions: languageOptions })
+  }, [languageOptions])
+
   return (
     <LanguageProviderContext.Provider
       value={{
         strings: languageState.strings,
         selectedLanguage: languageState.selectedLanguage,
-        languageOptions: languageState.languageOptions,
+        languageOptions: languageState.languageOptions.filter(
+          (lang: LanguageOption) => lang?.enabled
+        ),
+        languageOptionsFull: languageState.languageOptions,
         loading: languageState.loading,
         error: languageState.error,
         setLanguage: setSelectedLanguageCode,
         getPluginStrings,
+        refetchPrefs,
       }}
     >
       {children}

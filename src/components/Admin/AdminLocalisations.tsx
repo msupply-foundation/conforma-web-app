@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Header, Button, Checkbox, Icon, ModalProps } from 'semantic-ui-react'
-import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
+import { postRequest } from '../../utils/helpers/fetchMethods'
 import config from '../../config'
 import { LanguageOption, useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -10,24 +10,22 @@ import { exportLanguages } from '../../utils/localisation/exportLanguages'
 import { importLanguages } from '../../utils/localisation/importLanguages'
 
 export const AdminLocalisations: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const {
+    strings,
+    refetchPrefs: refetchLanguages,
+    languageOptionsFull,
+    selectedLanguage,
+    setLanguage,
+  } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
   const fileInputRef = useRef<any>(null)
+  const [installedLanguages, setInstalledLanguages] =
+    useState<LanguageOption[]>(languageOptionsFull)
   const [exportDisabled, setExportDisabled] = useState(true)
   const [importDisabled, setImportDisabled] = useState(true)
-  const [installedLanguages, setInstalledLanguages] = useState<LanguageOption[]>([])
   const [toastComponent, showToast] = useToast({ position: 'top-left' })
   const [showModalWarning, setShowModalWarning] = useState<ModalProps>({ open: false })
-  const [refreshLanguages, setRefreshLanguages] = useState(true)
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
-
-  useEffect(() => {
-    if (!refreshLanguages) return
-    getRequest(`${config.serverREST}/public/get-prefs`).then((prefs) =>
-      setInstalledLanguages(prefs.languageOptions)
-    )
-    setRefreshLanguages(false)
-  }, [refreshLanguages])
 
   const handleSelect = async (language: LanguageOption, index: number) => {
     const enabled = language.enabled
@@ -37,6 +35,7 @@ export const AdminLocalisations: React.FC = () => {
     newLanguages[index] = updatedLanguage
     setInstalledLanguages(newLanguages)
     updateOnServer(updatedLanguage, currentLanguages)
+    setLanguage('en_nz')
   }
 
   const updateOnServer = async (
@@ -73,7 +72,7 @@ export const AdminLocalisations: React.FC = () => {
         })
         if (result.success) {
           console.log('Language removed')
-          setRefreshLanguages(true)
+          refetchLanguages()
           showToast({
             title: strings.LOCALISATION_REMOVE_SUCCESS.replace('%1', language.languageName).replace(
               '%2',
@@ -105,7 +104,7 @@ export const AdminLocalisations: React.FC = () => {
       }
       importLanguages(event.target.result as string, importDisabled, strings).then(
         ({ success, message }) => {
-          setRefreshLanguages(true)
+          refetchLanguages()
           if (success) {
             showToast({
               title: strings.LOCALISATION_INSTALL_SUCCESS,
