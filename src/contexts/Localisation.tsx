@@ -50,8 +50,7 @@ const initialContext: {
   error: any
   setLanguage: Function
   getPluginStrings: Function
-  refetchPrefs: Function
-  refetchStrings: Function
+  refetchLanguages: Function
 } = {
   strings: {} as LanguageStrings,
   selectedLanguage: initSelectedLanguage,
@@ -61,8 +60,7 @@ const initialContext: {
   error: null,
   setLanguage: () => {},
   getPluginStrings: () => {},
-  refetchPrefs: () => {},
-  refetchStrings: () => {},
+  refetchLanguages: () => {},
 }
 
 const LanguageProviderContext = createContext(initialContext)
@@ -83,6 +81,7 @@ export function LanguageProvider({
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(
     savedLanguageCode ?? defaultLanguageCode
   )
+  const [shouldRefetchStrings, setShouldRefetchStrings] = useState(false)
 
   // Helper function provided to plugins to determine where to read their
   // language strings from
@@ -138,20 +137,23 @@ export function LanguageProvider({
     }
   }
 
+  const refetchLanguages = async (reloadStrings = false) => {
+    if (reloadStrings) setShouldRefetchStrings(true)
+    refetchPrefs()
+  }
+
   // Fetch new language when language code changes
   useEffect(() => {
-    if (selectedLanguageCode === 'default') {
-      setSelectedLanguageCode(defaultLanguageCode)
-      return
-    }
     updateLanguageState(selectedLanguageCode)
   }, [selectedLanguageCode])
 
-  // Update options whenever refetched from Prefs
+  // Update language state whenever Options refetched from Prefs
   useEffect(() => {
     setLanguageState((state) => ({ ...state, languageOptions }))
     const validCode = getValidLanguageCode()
     if (validCode !== selectedLanguageCode) setSelectedLanguageCode(validCode)
+    else if (shouldRefetchStrings) updateLanguageState(validCode)
+    setShouldRefetchStrings(false)
   }, [languageOptions])
 
   return (
@@ -167,8 +169,7 @@ export function LanguageProvider({
         error: languageState.error,
         setLanguage: setSelectedLanguageCode,
         getPluginStrings,
-        refetchPrefs,
-        refetchStrings: () => updateLanguageState(selectedLanguageCode),
+        refetchLanguages,
       }}
     >
       {children}

@@ -10,14 +10,7 @@ import { exportLanguages } from '../../utils/localisation/exportLanguages'
 import { importLanguages } from '../../utils/localisation/importLanguages'
 
 export const AdminLocalisations: React.FC = () => {
-  const {
-    strings,
-    refetchPrefs: refetchLanguages,
-    languageOptionsFull: languageOptions,
-    selectedLanguage,
-    setLanguage,
-    refetchStrings,
-  } = useLanguageProvider()
+  const { strings, refetchLanguages, languageOptionsFull: languageOptions } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
   const fileInputRef = useRef<any>(null)
   const [exportDisabled, setExportDisabled] = useState(true)
@@ -90,18 +83,16 @@ export const AdminLocalisations: React.FC = () => {
       }
       importLanguages(event.target.result as string, importDisabled, strings).then(
         ({ success, message }) => {
-          refetchLanguages()
           if (success) {
             showToast({
               title: strings.LOCALISATION_INSTALL_SUCCESS,
               text: message,
               style: 'success',
             })
-            return
           } else {
             showToast({ title: 'Error', text: message, style: 'error' })
-            return
           }
+          refetchLanguages(true)
         }
       )
     }
