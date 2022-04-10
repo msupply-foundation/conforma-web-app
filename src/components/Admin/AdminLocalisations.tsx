@@ -16,6 +16,7 @@ export const AdminLocalisations: React.FC = () => {
     languageOptionsFull,
     selectedLanguage,
     setLanguage,
+    refetchStrings,
   } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
   const fileInputRef = useRef<any>(null)
@@ -35,7 +36,6 @@ export const AdminLocalisations: React.FC = () => {
     newLanguages[index] = updatedLanguage
     setInstalledLanguages(newLanguages)
     updateOnServer(updatedLanguage, currentLanguages)
-    setLanguage('en_nz')
   }
 
   const updateOnServer = async (
@@ -45,8 +45,11 @@ export const AdminLocalisations: React.FC = () => {
     const result = await postRequest({
       url: `${config.serverREST}/admin/enable-language?code=${updatedLanguage.code}&enabled=${updatedLanguage.enabled}`,
     })
-    if (result.success) console.log('Language updated')
-    else {
+    if (result.success) {
+      console.log('Language updated')
+      // if (updatedLanguage.code === selectedLanguage.code && !updatedLanguage.enabled)
+      //   setLanguage('default')
+    } else {
       // revert local state
       setInstalledLanguages(currentLanguages)
       showToast({ title: 'Error', text: result.message, style: 'error' })
@@ -72,7 +75,6 @@ export const AdminLocalisations: React.FC = () => {
         })
         if (result.success) {
           console.log('Language removed')
-          refetchLanguages()
           showToast({
             title: strings.LOCALISATION_REMOVE_SUCCESS.replace('%1', language.languageName).replace(
               '%2',
@@ -89,6 +91,8 @@ export const AdminLocalisations: React.FC = () => {
           })
           console.error(result.message)
         }
+        await refetchLanguages()
+        // if (language.code === selectedLanguage.code) setLanguage('default')
       },
       onClose: () => setShowModalWarning({ open: false }),
     })

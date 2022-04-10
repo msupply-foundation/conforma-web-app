@@ -15,9 +15,11 @@ const usePrefs = () => {
     loading: true,
   })
 
-  useEffect(() => fetchPrefs(), [])
+  useEffect(() => {
+    fetchPrefs()
+  }, [])
 
-  const fetchPrefs = () => {
+  const fetchPrefs = async () => {
     getRequest(`${config.serverREST}/public/get-prefs`)
       .then((result) => {
         const { languageOptions, preferences } = result

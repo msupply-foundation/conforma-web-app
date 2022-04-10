@@ -51,6 +51,7 @@ const initialContext: {
   setLanguage: Function
   getPluginStrings: Function
   refetchPrefs: Function
+  refetchStrings: Function
 } = {
   strings: {} as LanguageStrings,
   selectedLanguage: initSelectedLanguage,
@@ -61,6 +62,7 @@ const initialContext: {
   setLanguage: () => {},
   getPluginStrings: () => {},
   refetchPrefs: () => {},
+  refetchStrings: () => {},
 }
 
 const LanguageProviderContext = createContext(initialContext)
@@ -148,6 +150,7 @@ export function LanguageProvider({
         setLanguage: setSelectedLanguageCode,
         getPluginStrings,
         refetchPrefs,
+        refetchStrings: () => updateLanguageState(selectedLanguageCode),
       }}
     >
       {children}
