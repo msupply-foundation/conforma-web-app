@@ -9,6 +9,7 @@ import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
 import { Loading } from '../../components'
 import ToastDemo from '../../components/ToastTest'
+import { ToastProvider } from '../../contexts/ToastProvider'
 
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()
@@ -24,31 +25,33 @@ const AppWrapper: React.FC = () => {
 
   return (
     <Router>
-      <UserProvider>
-        <Switch>
-          <Route exact path="/toast-demo">
-            <ToastDemo />
-          </Route>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/register">
-            <NonRegisteredLogin option="register" />
-          </Route>
-          <Route exact path="/reset-password">
-            <NonRegisteredLogin option="reset-password" />
-          </Route>
-          <Route exact path="/verify">
-            <Verify />
-          </Route>
-          <Route exact path="/logout">
-            <Logout />
-          </Route>
-          <Route>
-            <AuthenticatedContent />
-          </Route>
-        </Switch>
-      </UserProvider>
+      <ToastProvider>
+        <UserProvider>
+          <Switch>
+            <Route exact path="/toast-demo">
+              <ToastDemo />
+            </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <Route exact path="/register">
+              <NonRegisteredLogin option="register" />
+            </Route>
+            <Route exact path="/reset-password">
+              <NonRegisteredLogin option="reset-password" />
+            </Route>
+            <Route exact path="/verify">
+              <Verify />
+            </Route>
+            <Route exact path="/logout">
+              <Logout />
+            </Route>
+            <Route>
+              <AuthenticatedContent />
+            </Route>
+          </Switch>
+        </UserProvider>
+      </ToastProvider>
     </Router>
   )
 }

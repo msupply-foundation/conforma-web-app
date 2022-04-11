@@ -39,10 +39,82 @@ interface ToastProps {
   offset?: Offset
 }
 
-const ToastProviderContext = createContext(initialContext)
-
-export function ToastProvider({ children }: { children: React.ReactNode }) {
-  return <ToastProviderContext.Provider value="">{children}</ToastProviderContext.Provider>
+interface MessageStyleProps {
+  icon?: SemanticICONS
+  success: boolean
+  positive: boolean
+  info: boolean
+  negative: boolean
+  error: boolean
+  warning: boolean
+  position?: Position
 }
 
-export const useToast = () => useContext(ToastProviderContext)
+interface MessageState extends MessageStyleProps {
+  header: string
+  content: string
+  onDismiss?: () => void
+  onClick?: () => void
+  floating: boolean
+}
+
+type ToastReturn = [any, (state?: ToastProps) => void]
+type TimeoutType = ReturnType<typeof setTimeout>
+
+interface ToastProviderValue {
+  showToast: (state: ToastProps) => void
+  setToastSettings: (state: ToastProps) => void
+}
+
+const ToastProviderContext = createContext<ToastProviderValue>({
+  showToast: () => {},
+  setToastSettings: () => {},
+})
+
+const ToastBlock = ({ state }: { state: MessageState[] }) => {
+  return (
+    <div id="toast-block">
+      {state.map((toastState) => (
+        <div className="toast-container">
+          <Transition visible={true} animation="scale" duration={350}>
+            <Message
+              className="toast-message"
+              //   style={absolutePosition}
+              {...toastState}
+              //   hidden={!showToast}
+            />
+          </Transition>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export function ToastProvider({ children }: { children: React.ReactNode }) {
+  const [newToastSettings, setNewToastSettings] = useState<ToastProps>({})
+  const [currentToasts, setCurrentToasts] = useState<MessageState[]>([])
+
+  const showToast = (state: ToastProps) => {
+    // Add a Message component to current toasts
+  }
+
+  const setToastSettings = (state: ToastProps) => {
+    setNewToastSettings(state)
+  }
+  return (
+    <ToastProviderContext.Provider value={{ showToast, setToastSettings }}>
+      <ToastBlock state={currentToasts} />
+      {children}
+    </ToastProviderContext.Provider>
+  )
+}
+
+export const useToast = (toastSettings: ToastProps | undefined) => {
+  const { showToast, setToastSettings } = useContext(ToastProviderContext)
+
+  useEffect(() => {
+    if (toastSettings) setToastSettings(toastSettings)
+  }, [])
+
+  return { showToast, setToastSettings }
+}
