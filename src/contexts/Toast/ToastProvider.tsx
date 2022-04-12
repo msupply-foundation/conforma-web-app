@@ -1,3 +1,5 @@
+// TO-DO: Fix box-shadow effect
+
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { Message, Transition } from 'semantic-ui-react'
 import { ToastProps, MessageProps, Position, bottomLeft } from './types'

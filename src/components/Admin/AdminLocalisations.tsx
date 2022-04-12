@@ -4,7 +4,7 @@ import { postRequest } from '../../utils/helpers/fetchMethods'
 import config from '../../config'
 import { LanguageOption, useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
-import useToast from '../../utils/hooks/useToast'
+import { useToast, topLeft } from '../../contexts/Toast'
 import ModalWarning from '../Main/ModalWarning'
 import { exportLanguages } from '../../utils/localisation/exportLanguages'
 import { importLanguages } from '../../utils/localisation/importLanguages'
@@ -15,7 +15,7 @@ export const AdminLocalisations: React.FC = () => {
   const fileInputRef = useRef<any>(null)
   const [exportDisabled, setExportDisabled] = useState(true)
   const [importDisabled, setImportDisabled] = useState(true)
-  const [toastComponent, showToast] = useToast({ position: 'top-left' })
+  const showToast = useToast({ position: topLeft, timeout: 0 })
   const [showModalWarning, setShowModalWarning] = useState<ModalProps>({ open: false })
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
@@ -92,7 +92,7 @@ export const AdminLocalisations: React.FC = () => {
           } else {
             showToast({ title: 'Error', text: message, style: 'error' })
           }
-          refetchLanguages(true)
+          setTimeout(() => refetchLanguages(true), 3000)
         }
       )
     }
@@ -101,7 +101,6 @@ export const AdminLocalisations: React.FC = () => {
 
   return (
     <div id="localisation-panel">
-      {toastComponent}
       <ModalWarning {...showModalWarning} />
       <Header as="h1">Localisation</Header>
       <Header as="h4">Currently installed languages</Header>
