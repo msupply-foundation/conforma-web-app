@@ -8,6 +8,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
 import { Loading } from '../../components'
+
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()
 
