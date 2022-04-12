@@ -9,9 +9,11 @@ import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpda
 import { LookupTableRoutes } from '../../LookupTable'
 import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
+import DevRoutes from '../Dev/DevRoutes'
 import LayoutHelpers from '../../components/LayoutHelpers'
 import Outcomes from '../Outcomes/Outcomes'
-import ToastDemo from '../../components/ToastTest'
+import config from '../../config'
+const { isProductionBuild } = config
 
 const SiteLayout: React.FC = () => {
   return (
@@ -21,9 +23,6 @@ const SiteLayout: React.FC = () => {
         <DevOptions />
         <Container id="content-area" fluid>
           <Switch>
-            <Route exact path="/toast-demo-auth">
-              <ToastDemo />
-            </Route>
             <Route exact path="/">
               <Dashboard />
             </Route>
@@ -53,7 +52,11 @@ const SiteLayout: React.FC = () => {
             <Route path="/outcomes">
               <Outcomes />
             </Route>
-            <Route exact path="/products/:productId"></Route>
+            {!isProductionBuild && (
+              <Route path="/dev">
+                <DevRoutes />
+              </Route>
+            )}
             <Route>
               <NoMatch />
             </Route>

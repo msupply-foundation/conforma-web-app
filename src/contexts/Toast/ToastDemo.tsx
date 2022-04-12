@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Dropdown, Button, Form, Checkbox } from 'semantic-ui-react'
 
-import { useToast, ToastStyle, Position } from '../contexts/Toast'
+import { useToast, ToastStyle, Position } from '.'
 
-const ToastDemo: React.FC<any> = () => {
+export const ToastDemo: React.FC<any> = () => {
   const [title, setTitle] = useState('Message Title')
   const [text, setText] = useState('Message Text')
   const [position, setPosition] = useState<Position>(Position.bottomLeft)
@@ -73,24 +73,6 @@ const ToastDemo: React.FC<any> = () => {
             step={500}
             onChange={(e) => setTimeDelay(Number(e.target.value))}
           />
-          <div className="flex-row" style={{ gap: 10 }}>
-            <Form.Input
-              label="X Offset"
-              type="number"
-              value={offset.x}
-              step={1}
-              onChange={(e) => setOffset({ ...offset, x: Number(e.target.value) })}
-              style={{ maxWidth: 100 }}
-            />
-            <Form.Input
-              label="Y Offset"
-              type="number"
-              value={offset.y}
-              step={1}
-              onChange={(e) => setOffset({ ...offset, y: Number(e.target.value) })}
-              style={{ maxWidth: 100 }}
-            />
-          </div>
           <Button
             primary
             content="Toast it!"

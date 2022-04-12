@@ -16,6 +16,7 @@ const config = {
   pluginsFolder: 'formElementPlugins',
   nonRegisteredUser: 'nonRegistered',
   localStorageJWTKey: 'persistJWT',
+  isProductionBuild,
 }
 
 export default config
