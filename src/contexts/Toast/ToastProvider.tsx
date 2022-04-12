@@ -3,14 +3,22 @@ import React, {
   useContext,
   useEffect,
   useState,
-  Dispatch,
+  useRef,
   SetStateAction,
 } from 'react'
 import config from '../../config'
 import strings from '../../utils/defaultLanguageStrings'
 import { Message, SemanticICONS, Transition } from 'semantic-ui-react'
 import styleConstants from '../../utils/data/styleConstants'
-import { ToastProps, MessageProps, ToastStyle, Position, Offset, MessageStyleProps } from './types'
+import {
+  ToastProps,
+  MessageProps,
+  ToastStyle,
+  Position,
+  Offset,
+  MessageStyleProps,
+  TimeoutType,
+} from './types'
 // import { Toast } from './ToastElements'
 import { getStyleProps } from './helpers'
 import { nanoid } from 'nanoid'
@@ -49,11 +57,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   }
 
   const showToast = (newToast: Partial<ToastProps> = {}) => {
-    setCurrentToasts([...currentToasts, { ...newToastSettings, ...newToast, uid: nanoid(8) }])
+    setCurrentToasts((prevState) => [
+      ...prevState,
+      { ...newToastSettings, ...newToast, uid: nanoid(8) },
+    ])
   }
 
   const removeToast = (uid: string) => {
-    setCurrentToasts(currentToasts.filter((toast) => toast.uid !== uid))
+    setCurrentToasts((prevState) => prevState.filter((toast) => toast.uid !== uid))
   }
 
   return (
@@ -84,26 +95,24 @@ export const useToast = (toastSettings: Partial<ToastProps> = {}) => {
 
 export const Toast = ({ toast, removeToast }: { toast: ToastProps; removeToast: () => void }) => {
   const [visible, setVisible] = useState(false)
-  //   const [timeoutId, setTimeoutId] = useState<TimeoutType>(0)
+  const timerId = useRef<TimeoutType>(0)
   const { timeout } = toast
-
-  //   console.log('timeoutId', timeoutId)
 
   useEffect(() => {
     console.log('Launching', toast.uid)
     setTimeout(() => setVisible(true), 50)
-    setTimeout(() => setVisible(false), timeout)
-    setTimeout(() => removeToast(), timeout + 400)
-    // setTimeoutId()
+    timerId.current = setTimeout(() => {
+      setVisible(false)
+      setTimeout(() => removeToast(), 400)
+    }, timeout)
   }, [])
 
   const closeToast = () => {
     setVisible(false)
-    // clearTimeout(timeoutId)
-    // setTimeout(() => {
-    //   console.log('Removing', toast.uid)
-    //   removeToast()
-    // }, 400)
+    clearTimeout(timerId.current)
+    setTimeout(() => {
+      removeToast()
+    }, 50)
   }
 
   const messageState: MessageProps = {
