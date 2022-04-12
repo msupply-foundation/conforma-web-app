@@ -71,7 +71,7 @@ export const useToast = (toastSettings: Partial<ToastProps> = {}) => {
     updateDefaults(toastSettings)
   }, [])
 
-  return { showToast }
+  return showToast
 }
 
 export const Toast = ({ toast, removeToast }: { toast: ToastProps; removeToast: () => void }) => {

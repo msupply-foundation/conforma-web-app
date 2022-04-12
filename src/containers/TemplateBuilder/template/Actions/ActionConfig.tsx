@@ -1,7 +1,7 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { Icon, Label, Message, Modal, Header } from 'semantic-ui-react'
+import { Icon, Label, Modal, Header } from 'semantic-ui-react'
 import { TemplateAction } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
@@ -13,7 +13,7 @@ import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
-import useToast from '../../../../utils/hooks/useToast'
+import { useToast } from '../../../../contexts/Toast'
 
 type ActionConfigProps = {
   templateAction: TemplateAction | null
@@ -50,10 +50,9 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const { allActionsByCode, applicationData } = useActionState()
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
-  const [toastComponent, showToast] = useToast({
+  const showToast = useToast({
     title: strings.TEMPLATE_MESSAGE_SAVE_SUCCESS,
     style: 'success',
-    offset: { x: 0, y: 75 }, // Inside Modal
   })
 
   useEffect(() => {
@@ -220,7 +219,6 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           </div>
         </div>
       </div>
-      {toastComponent}
     </Modal>
   )
 }

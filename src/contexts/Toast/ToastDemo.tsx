@@ -12,7 +12,7 @@ export const ToastDemo: React.FC<any> = () => {
   const [style, setStyle] = useState<ToastStyle>('basic')
   const [timeDelay, setTimeDelay] = useState<number>(4000)
   const [offset, setOffset] = useState({ x: 0, y: 0 })
-  const { showToast } = useToast({ title: 'Hello', style: 'positive' })
+  const showToast = useToast({ title: 'Hello', style: 'positive' })
 
   const positionOptions = [
     'bottom-left',

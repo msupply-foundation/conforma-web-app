@@ -2238,15 +2238,15 @@ a:hover {
   }
 }
 
-@toastTopMargin: @headerHeight + 20px;
-@toastBottomMargin: @footerHeight + 20px;
+@toastTopMargin: 40px;
+@toastBottomMargin: 40px;
 @toastHorizontalMargin: 20px;
 
 #toast-container {
   width: 100vw;
   height: 100vh;
-  position: absolute;
-  z-index: 1000;
+  position: fixed;
+  z-index: 1001; // one higher than Modal dimmer
   pointer-events: none;
   .block {
     position: absolute;
