@@ -9,17 +9,16 @@ export type ToastStyle =
   | 'negative'
   | 'error'
 
-export type Position =
-  | 'bottom-left'
-  | 'bottom-middle'
-  | 'bottom-right'
-  | 'top-left'
-  | 'top-middle'
-  | 'top-right'
+export enum Position {
+  bottomLeft = 'bottom-left',
+  bottomMiddle = 'bottom-middle',
+  bottomRight = 'bottom-right',
+  topLeft = 'top-left',
+  topMiddle = 'top-middle',
+  topRight = 'top-right',
+}
 
-export type Offset = { x: number | string; y: number | string }
-
-export type TimeoutType = ReturnType<typeof setTimeout>
+export const { bottomLeft, bottomMiddle, bottomRight, topLeft, topMiddle, topRight } = Position
 
 export interface ToastProps {
   title: string
@@ -28,8 +27,8 @@ export interface ToastProps {
   timeout: number
   clickable: boolean
   showCloseIcon: boolean // also makes it close-able
+  onClick?: () => void
   position: Position
-  offset: Offset
   uid: string
 }
 

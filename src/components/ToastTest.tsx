@@ -6,13 +6,13 @@ import { useToast, ToastStyle, Position } from '../contexts/Toast'
 const ToastDemo: React.FC<any> = () => {
   const [title, setTitle] = useState('Message Title')
   const [text, setText] = useState('Message Text')
-  const [position, setPosition] = useState<Position>('bottom-left')
+  const [position, setPosition] = useState<Position>(Position.bottomLeft)
   const [clickable, setClickable] = useState(true)
   const [showCloseIcon, setShowCloseIcon] = useState(false)
   const [style, setStyle] = useState<ToastStyle>('basic')
   const [timeDelay, setTimeDelay] = useState<number>(4000)
   const [offset, setOffset] = useState({ x: 0, y: 0 })
-  const { showToast } = useToast()
+  const { showToast } = useToast({ title: 'Hello', style: 'positive' })
 
   const positionOptions = [
     'bottom-left',
@@ -26,6 +26,7 @@ const ToastDemo: React.FC<any> = () => {
   const styleOptions = ['basic', 'info', 'warning', 'positive', 'success', 'negative', 'error'].map(
     (style) => ({ text: style, value: style })
   )
+
   return (
     <div className="flex-column-center" style={{ marginTop: 30 }}>
       <div style={{ maxWidth: 400 }}>
@@ -67,7 +68,7 @@ const ToastDemo: React.FC<any> = () => {
           <Form.Input
             label="Timeout"
             type="number"
-            min={500}
+            min={0}
             value={timeDelay}
             step={500}
             onChange={(e) => setTimeDelay(Number(e.target.value))}
@@ -93,8 +94,8 @@ const ToastDemo: React.FC<any> = () => {
           <Button
             primary
             content="Toast it!"
-            onClick={() =>
-              showToast({
+            onClick={() => {
+              const toastData: any = {
                 title,
                 text,
                 position,
@@ -102,9 +103,11 @@ const ToastDemo: React.FC<any> = () => {
                 showCloseIcon,
                 style,
                 timeout: timeDelay,
-                offset,
-              })
-            }
+                // onClick: () => console.log('CLICKED'),
+              }
+              // if (Math.random() > 0.5) toastData.title = title
+              showToast(toastData)
+            }}
           />
         </Form>
       </div>

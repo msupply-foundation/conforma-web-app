@@ -1,82 +1,63 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-  SetStateAction,
-} from 'react'
-import config from '../../config'
-import strings from '../../utils/defaultLanguageStrings'
-import { Message, SemanticICONS, Transition } from 'semantic-ui-react'
-import styleConstants from '../../utils/data/styleConstants'
-import {
-  ToastProps,
-  MessageProps,
-  ToastStyle,
-  Position,
-  Offset,
-  MessageStyleProps,
-  TimeoutType,
-} from './types'
-// import { Toast } from './ToastElements'
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
+import { Message, Transition } from 'semantic-ui-react'
+import { ToastProps, MessageProps, Position, bottomLeft } from './types'
 import { getStyleProps } from './helpers'
 import { nanoid } from 'nanoid'
 
-const { HEADER_OFFSET, BOTTOM_OFFSET } = styleConstants
+const TRANSITION_DURATION = 350 // ms
 
-const TOAST_VERTICAL_MARGIN = '20px'
-const TOAST_HORIZONTAL_MARGIN = '20px'
-
+const setTimeout = window.setTimeout // To ensure return type is number
 interface ToastProviderValue {
-  showToast: (state: Partial<ToastProps>) => void
-  setToastSettings: (state: Partial<ToastProps>) => void
+  showToast: (...state: Partial<ToastProps>[]) => void
+  updateDefaults: (state: Partial<ToastProps>) => void
 }
 
 const ToastProviderContext = createContext<ToastProviderValue>({
   showToast: () => {},
-  setToastSettings: () => {},
+  updateDefaults: () => {},
 })
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
-  const [newToastSettings, setNewToastSettings] = useState<ToastProps>({
+  const [toastDefaults, setToastDefaults] = useState<ToastProps>({
     title: '',
     text: '',
     style: 'basic',
     timeout: 5000,
     clickable: true,
     showCloseIcon: true,
-    position: 'bottom-left',
-    offset: { x: 0, y: 0 },
+    position: bottomLeft,
     uid: '',
   })
-  const [currentToasts, setCurrentToasts] = useState<ToastProps[]>([])
+  const [toasts, setToasts] = useState<ToastProps[]>([])
 
-  const setToastSettings = (newSettings: Partial<ToastProps>) => {
-    setNewToastSettings((currSettings) => ({ ...currSettings, ...newSettings }))
+  const updateDefaults = (newDefaults: Partial<ToastProps>) => {
+    setToastDefaults((prevDefaults) => ({ ...prevDefaults, ...newDefaults }))
   }
 
   const showToast = (newToast: Partial<ToastProps> = {}) => {
-    setCurrentToasts((prevState) => [
-      ...prevState,
-      { ...newToastSettings, ...newToast, uid: nanoid(8) },
-    ])
+    setToasts((prevState) => [...prevState, { ...toastDefaults, ...newToast, uid: nanoid(8) }])
   }
 
   const removeToast = (uid: string) => {
-    setCurrentToasts((prevState) => prevState.filter((toast) => toast.uid !== uid))
+    setToasts((prevState) => prevState.filter((toast) => toast.uid !== uid))
   }
 
   return (
     <ToastProviderContext.Provider
       value={{
         showToast,
-        setToastSettings,
+        updateDefaults,
       }}
     >
-      <div id="toast-block">
-        {currentToasts.map((toast) => (
-          <Toast toast={toast} removeToast={() => removeToast(toast.uid)} key={toast.uid} />
+      <div id="toast-container">
+        {Object.entries(Position).map(([key, positionClass]) => (
+          <div className={`block ${positionClass}`} key={key}>
+            {toasts
+              .filter((toast) => toast.position === Position[key as keyof typeof Position])
+              .map((toast) => (
+                <Toast toast={toast} removeToast={() => removeToast(toast.uid)} key={toast.uid} />
+              ))}
+          </div>
         ))}
       </div>
       {children}
@@ -85,26 +66,26 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useToast = (toastSettings: Partial<ToastProps> = {}) => {
-  const { showToast, setToastSettings } = useContext(ToastProviderContext)
+  const { showToast, updateDefaults } = useContext(ToastProviderContext)
   useEffect(() => {
-    setToastSettings(toastSettings)
+    updateDefaults(toastSettings)
   }, [])
 
-  return { showToast, setToastSettings }
+  return { showToast }
 }
 
 export const Toast = ({ toast, removeToast }: { toast: ToastProps; removeToast: () => void }) => {
   const [visible, setVisible] = useState(false)
-  const timerId = useRef<TimeoutType>(0)
+  const timerId = useRef<number>(0)
   const { timeout } = toast
 
   useEffect(() => {
-    console.log('Launching', toast.uid)
     setTimeout(() => setVisible(true), 50)
-    timerId.current = setTimeout(() => {
-      setVisible(false)
-      setTimeout(() => removeToast(), 400)
-    }, timeout)
+    if (timeout !== 0)
+      timerId.current = setTimeout(() => {
+        setVisible(false)
+        setTimeout(() => removeToast(), TRANSITION_DURATION + 50)
+      }, timeout)
   }, [])
 
   const closeToast = () => {
@@ -112,26 +93,22 @@ export const Toast = ({ toast, removeToast }: { toast: ToastProps; removeToast: 
     clearTimeout(timerId.current)
     setTimeout(() => {
       removeToast()
-    }, 50)
+    }, TRANSITION_DURATION + 50)
   }
 
   const messageState: MessageProps = {
     header: toast.title,
     content: toast.text,
     onDismiss: toast.showCloseIcon ? closeToast : undefined,
-    onClick: toast.clickable ? closeToast : undefined,
+    onClick: toast?.onClick ? toast.onClick : toast.clickable ? closeToast : undefined,
     floating: true,
     ...getStyleProps(toast.style),
   }
 
   return (
-    <div className="toast-container">
-      <Transition visible={visible} animation="scale" duration={350}>
-        <Message
-          className="toast-message"
-          //   style={absolutePosition}
-          {...messageState}
-        />
+    <div className="toast-wrapper">
+      <Transition visible={visible} animation="scale" duration={TRANSITION_DURATION}>
+        <Message className="toast-message" {...messageState} />
       </Transition>
     </div>
   )
