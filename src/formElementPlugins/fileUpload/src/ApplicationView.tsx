@@ -4,7 +4,6 @@ import { nanoid } from 'nanoid'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
-import { useRouter } from '../../../utils/hooks/useRouter'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import prefs from '../config.json'
 
@@ -53,10 +52,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     userState: { currentUser },
   } = useUserState()
-  const {
-    query: { serialNumber },
-  } = useRouter()
+
   const application_response_id = initialValue.id
+  const serialNumber = applicationData.serial
 
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(
     generateInitialFileData(initialValue?.files)
