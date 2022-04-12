@@ -9,7 +9,7 @@ import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
 import { Loading } from '../../components'
 import ToastDemo from '../../components/ToastTest'
-import { ToastProvider } from '../../contexts/ToastProvider'
+import { ToastProvider } from '../../contexts/Toast/ToastProvider'
 
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()

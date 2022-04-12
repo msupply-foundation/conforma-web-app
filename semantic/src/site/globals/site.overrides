@@ -2241,13 +2241,22 @@ a:hover {
 @toastVerticalMargin: 20px;
 @toastHorizontalMargin: 20px;
 
+#toast-block {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  border: 5px solid black;
+}
+
 .toast-container {
+  position: relative;
+  z-index: 999;
   .transition.visible {
     display: flex !important;
   }
   .toast-message {
     width: fit-content !important;
-    position: absolute !important;
+    // position: absolute !important;
     max-width: 350px;
   }
   .bottom-left {

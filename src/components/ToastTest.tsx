@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Dropdown, Button, Form, Checkbox } from 'semantic-ui-react'
 
-import useToast, { MessageStyle, Position } from '../utils/hooks/useToast'
+// import useToast, { MessageStyle, Position } from '../utils/hooks/useToast'
+import { useToast, MessageStyle, Position } from '../contexts/Toast'
 
 const ToastDemo: React.FC<any> = () => {
   const [title, setTitle] = useState('Message Title')
@@ -12,7 +13,7 @@ const ToastDemo: React.FC<any> = () => {
   const [style, setStyle] = useState<MessageStyle>('basic')
   const [timeDelay, setTimeDelay] = useState<number>(5000)
   const [offset, setOffset] = useState({ x: 0, y: 0 })
-  const [toastComponent, showToast] = useToast()
+  const { showToast } = useToast()
 
   const positionOptions = [
     'bottom-left',
@@ -107,7 +108,6 @@ const ToastDemo: React.FC<any> = () => {
             }
           />
         </Form>
-        {toastComponent}
       </div>
     </div>
   )
