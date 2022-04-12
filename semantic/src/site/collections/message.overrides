@@ -2,9 +2,6 @@
         Site Overrides
 *******************************/
 
-.ui.message {
-  box-shadow: @floatingBoxShadow !important;
-}
 
 // Info message blue icon
 .ui.info.message .header i.icon {
@@ -13,7 +10,6 @@
 
 // Info message left border
 .ui.info.message {
-  border: none;
   border-left: @accentBorderWidth solid @information;
 }
 

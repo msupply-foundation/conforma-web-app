@@ -8,8 +8,14 @@
 // Info message colours
 @infoTextColor: @headersInteractiveLow;
 @infoHeaderColor: @headersInteractiveLow;
-@infoBoxShadow: none;
 @infoBackgroundColor: @surfacesLight;
+
+
+// Box shadow on info message -- make it consistent with other Message boxes
+@infoBoxShadow:
+  0px 0px 0px @borderWidth @surfacesMed inset,
+  @shadowShadow
+;
 
 // Error message colours
 @errorHeaderColor: @attention;
