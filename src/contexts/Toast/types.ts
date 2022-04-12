@@ -1,6 +1,6 @@
 import { SemanticICONS } from 'semantic-ui-react'
 
-export type MessageStyle =
+export type ToastStyle =
   | 'basic'
   | 'info'
   | 'warning'
@@ -19,15 +19,18 @@ export type Position =
 
 export type Offset = { x: number | string; y: number | string }
 
+export type TimeoutType = ReturnType<typeof setTimeout>
+
 export interface ToastProps {
-  title?: string
-  text?: string
-  style?: MessageStyle
-  timeout?: number
-  clickable?: boolean
-  showCloseIcon?: boolean // also makes it close-able
-  position?: Position
-  offset?: Offset
+  title: string
+  text: string
+  style: ToastStyle
+  timeout: number
+  clickable: boolean
+  showCloseIcon: boolean // also makes it close-able
+  position: Position
+  offset: Offset
+  uid: string
 }
 
 export interface MessageStyleProps {
@@ -41,11 +44,10 @@ export interface MessageStyleProps {
   position?: Position
 }
 
-export interface MessageState extends MessageStyleProps {
+export interface MessageProps extends MessageStyleProps {
   header: string
   content: string
   onDismiss?: () => void
   onClick?: () => void
   floating: boolean
-  timeout?: number
 }
