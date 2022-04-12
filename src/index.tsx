@@ -7,6 +7,7 @@ import { AppWrapper } from './containers/Main'
 import { ApolloClient, ApolloProvider, createHttpLink, NormalizedCacheObject } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { LanguageOption, LanguageProvider } from './contexts/Localisation'
+import { ToastProvider } from './contexts/Toast/ToastProvider'
 import usePrefs from './utils/hooks/usePrefs'
 import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
@@ -73,13 +74,15 @@ const App: React.FC = () => {
 
   return client && !loading ? (
     <ApolloProvider client={client}>
-      <LanguageProvider
-        languageOptions={languageOptions as LanguageOption[]}
-        defaultLanguageCode={preferences?.defaultLanguageCode as string}
-        refetchPrefs={refetchPrefs}
-      >
-        <AppWrapper />
-      </LanguageProvider>
+      <ToastProvider>
+        <LanguageProvider
+          languageOptions={languageOptions as LanguageOption[]}
+          defaultLanguageCode={preferences?.defaultLanguageCode as string}
+          refetchPrefs={refetchPrefs}
+        >
+          <AppWrapper />
+        </LanguageProvider>{' '}
+      </ToastProvider>
     </ApolloProvider>
   ) : (
     <Loading />

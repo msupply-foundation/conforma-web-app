@@ -92,7 +92,7 @@ export const AdminLocalisations: React.FC = () => {
           } else {
             showToast({ title: 'Error', text: message, style: 'error' })
           }
-          setTimeout(() => refetchLanguages(true), 3000)
+          refetchLanguages(true)
         }
       )
     }
