@@ -10,7 +10,7 @@ const ToastDemo: React.FC<any> = () => {
   const [clickable, setClickable] = useState(true)
   const [showCloseIcon, setShowCloseIcon] = useState(false)
   const [style, setStyle] = useState<ToastStyle>('basic')
-  const [timeDelay, setTimeDelay] = useState<number>(5000)
+  const [timeDelay, setTimeDelay] = useState<number>(4000)
   const [offset, setOffset] = useState({ x: 0, y: 0 })
   const { showToast } = useToast()
 
