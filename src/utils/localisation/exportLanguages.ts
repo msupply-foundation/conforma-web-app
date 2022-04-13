@@ -11,40 +11,17 @@ export interface LanguageObject extends LanguageOption {
 }
 
 export const exportLanguages = async (
-  includeDisabled = true
+  languageOptions: LanguageOption[]
 ): Promise<{ success: boolean; message: string }> => {
-  // Fetch list of languages
-  const languageOptions: LanguageOption[] = []
-  try {
-    languageOptions.push(
-      ...(await getRequest(`${config.serverREST}/public/get-prefs`)).languageOptions.filter(
-        (language: LanguageOption) => language.enabled || includeDisabled
-      )
-    )
-  } catch (err) {
-    throw err
-  }
-
   // Fetch all languages
-  const languagePromises: Promise<LanguageStrings>[] = []
-  languageOptions.forEach((language) => {
-    try {
-      languagePromises.push(getRequest(config.serverREST + '/public/language/' + language.code))
-    } catch (err) {
-      throw err
-    }
-  })
-  const languages = await Promise.all(languagePromises)
-
-  if (languages.some((lang: { [key: string]: string }) => lang.error))
-    return { success: false, message: 'Problem fetching languages' }
-
-  console.log(languages[1])
+  const allLanguageStrings: { [key: string]: LanguageStrings } = await getRequest(
+    `${config.serverREST}/admin/all-languages`
+  )
 
   // Combine language options with their translations
-  const languageObject: LanguageObject[] = languageOptions.map((language, index) => ({
+  const languageObject: LanguageObject[] = languageOptions.map((language) => ({
     ...language,
-    translations: languages[index],
+    translations: allLanguageStrings[language.code],
   }))
 
   // Iterate over default strings and extract all translations

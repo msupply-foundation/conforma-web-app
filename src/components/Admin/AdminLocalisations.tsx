@@ -15,7 +15,7 @@ export const AdminLocalisations: React.FC = () => {
   const fileInputRef = useRef<any>(null)
   const [exportDisabled, setExportDisabled] = useState(true)
   const [importDisabled, setImportDisabled] = useState(true)
-  const showToast = useToast({ position: topLeft, timeout: 0 })
+  const showToast = useToast({ position: topLeft })
   const [showModalWarning, setShowModalWarning] = useState<ModalProps>({ open: false })
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
@@ -74,7 +74,9 @@ export const AdminLocalisations: React.FC = () => {
   }
 
   const handleExport = async () => {
-    const result = await exportLanguages(exportDisabled)
+    const result = await exportLanguages(
+      languageOptions.filter((lang) => exportDisabled || lang.enabled)
+    )
     if (result.success)
       showToast({
         title: 'Languages exported',
