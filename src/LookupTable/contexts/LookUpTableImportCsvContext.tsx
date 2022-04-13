@@ -49,8 +49,8 @@ const LookUpTableImportCsvReducer = (
     case LookUpTableImportCsvActions.ImportCSV:
       return { ...state, file: action.payload }
     case LookUpTableImportCsvActions.SetTableName: {
-      const removeNumbers = action.payload.replace(/([0-9])/gm, '')
-      return { ...state, tableName: camelCase(removeNumbers) }
+      const restrictCharacters = action.payload.replace(/[^A-z_]/gm, '')
+      return { ...state, tableName: restrictCharacters }
     }
     case LookUpTableImportCsvActions.submittable:
       return { ...state, submittable: action.payload }
