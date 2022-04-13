@@ -61,7 +61,7 @@ export const AdminLocalisations: React.FC = () => {
           })
         } else {
           showToast({
-            title: 'Error',
+            title: strings.LOCALISATION_REMOVE_ERROR,
             text: result?.message ?? strings.LOCALISATION_REMOVE_PROBLEM,
             style: 'error',
           })
@@ -71,6 +71,24 @@ export const AdminLocalisations: React.FC = () => {
       },
       onClose: () => setShowModalWarning({ open: false }),
     })
+  }
+
+  const handleExport = async () => {
+    const result = await exportLanguages(exportDisabled)
+    if (result.success)
+      showToast({
+        title: 'Languages exported',
+        text: 'File has been downloaded',
+        style: 'success',
+      })
+    else {
+      showToast({
+        title: strings.LOCALISATION_REMOVE_ERROR,
+        text: `${strings.LOCALISATION_EXPORT_PROBLEM}: ${result?.message}`,
+        style: 'error',
+      })
+      console.error(result.message)
+    }
   }
 
   const handleFileImport = async (e: any) => {
@@ -128,11 +146,7 @@ export const AdminLocalisations: React.FC = () => {
       ))}
       <Header as="h5">{strings.LOCALISATION_EXPORT_MESSAGE + ':'}</Header>
       <div className="flex-row-start-center" style={{ gap: 20 }}>
-        <Button
-          primary
-          content={strings.LABEL_EXPORT}
-          onClick={() => exportLanguages(exportDisabled)}
-        />
+        <Button primary content={strings.LABEL_EXPORT} onClick={handleExport} />
         <Checkbox
           checked={exportDisabled}
           onChange={() => setExportDisabled(!exportDisabled)}

@@ -10,7 +10,9 @@ export interface LanguageObject extends LanguageOption {
   translations: LanguageStrings
 }
 
-export const exportLanguages = async (includeDisabled = true) => {
+export const exportLanguages = async (
+  includeDisabled = true
+): Promise<{ success: boolean; message: string }> => {
   // Fetch list of languages
   const languageOptions: LanguageOption[] = []
   try {
@@ -33,6 +35,11 @@ export const exportLanguages = async (includeDisabled = true) => {
     }
   })
   const languages = await Promise.all(languagePromises)
+
+  if (languages.some((lang: { [key: string]: string }) => lang.error))
+    return { success: false, message: 'Problem fetching languages' }
+
+  console.log(languages[1])
 
   // Combine language options with their translations
   const languageObject: LanguageObject[] = languageOptions.map((language, index) => ({
@@ -97,6 +104,8 @@ export const exportLanguages = async (includeDisabled = true) => {
   hiddenLink.setAttribute('download', `conforma_localisations_${DateTime.now().toISODate()}.csv`)
   document.body.appendChild(hiddenLink) // Required for FF
   hiddenLink.click() // This will download the data file.
+
+  return { success: true, message: '' }
 }
 
 const getTranslations = (
