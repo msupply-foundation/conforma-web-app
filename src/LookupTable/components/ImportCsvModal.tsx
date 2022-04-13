@@ -14,7 +14,6 @@ import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config'
 import axios from 'axios'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import pluralize from 'pluralize'
 
 const ImportCsvModal: React.FC<any> = ({
   onImportSuccess,
@@ -50,9 +49,7 @@ const ImportCsvModal: React.FC<any> = ({
     let formData: any = new FormData()
     formData.append('file', file)
 
-    const pluralTableName = pluralize.isPlural(tableName) ? tableName : pluralize.plural(tableName)
-
-    if (!tableStructureID) formData.append('tableName', pluralTableName)
+    if (!tableStructureID) formData.append('tableName', tableName)
 
     const JWT = localStorage.getItem(config.localStorageJWTKey || '')
     const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
