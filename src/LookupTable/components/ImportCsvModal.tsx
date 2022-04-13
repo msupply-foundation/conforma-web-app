@@ -56,9 +56,9 @@ const ImportCsvModal: React.FC<any> = ({
 
     await axios
       .post(
-        config.serverREST +
-          '/admin/lookup-table/import' +
-          (tableStructureID ? '/' + String(tableStructureID) : ''),
+        `${config.serverREST}/admin/lookup-table/import${
+          tableStructureID ? '/' + String(tableStructureID) : ''
+        }?tableName=${tableName}`,
         formData,
         {
           headers: {
