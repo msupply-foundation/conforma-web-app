@@ -12,6 +12,7 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --env.env=dev",
+    "start": "yarn dev",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production webpack -p --env.env=prod",
     "serve": "serve dist",
