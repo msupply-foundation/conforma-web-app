@@ -13,8 +13,8 @@ export const AdminLocalisations: React.FC = () => {
   const { strings, refetchLanguages, languageOptionsFull: languageOptions } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
   const fileInputRef = useRef<any>(null)
-  const [exportDisabled, setExportDisabled] = useState(true)
-  const [importDisabled, setImportDisabled] = useState(true)
+  const [includeDisabled, setIncludeDisabled] = useState(true)
+  const [includePlugins, setIncludePlugins] = useState(true)
   const showToast = useToast({ position: topLeft })
   const [showModalWarning, setShowModalWarning] = useState<ModalProps>({ open: false })
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
@@ -75,7 +75,7 @@ export const AdminLocalisations: React.FC = () => {
 
   const handleExport = async () => {
     const result = await exportLanguages(
-      languageOptions.filter((lang) => exportDisabled || lang.enabled)
+      languageOptions.filter((lang) => includeDisabled || lang.enabled)
     )
     if (result.success)
       showToast({
@@ -101,7 +101,7 @@ export const AdminLocalisations: React.FC = () => {
         showToast({ title: 'Error', text: strings.LOCALISATION_FILE_PROBLEM, style: 'error' })
         return
       }
-      importLanguages(event.target.result as string, importDisabled, strings).then(
+      importLanguages(event.target.result as string, includeDisabled, strings).then(
         ({ success, message }) => {
           if (success) {
             showToast({
@@ -146,16 +146,33 @@ export const AdminLocalisations: React.FC = () => {
           )}
         </div>
       ))}
-      <Header as="h5">{strings.LOCALISATION_EXPORT_MESSAGE + ':'}</Header>
+      <Header as="h2">{'Import / Export'}</Header>
+      <div className="flex-column" style={{ gap: 10 }}>
+        <Checkbox
+          checked={includeDisabled}
+          onChange={() => setIncludeDisabled(!includeDisabled)}
+          label={strings.LOCALISATION_INCLUDE_DISABLED}
+        />
+        <Checkbox
+          checked={includePlugins}
+          onChange={() => setIncludePlugins(!includePlugins)}
+          label={'Include plugin strings'}
+        />
+      </div>
+      <p className="invert-spacing">
+        <strong>{strings.LOCALISATION_EXPORT_MESSAGE + ':'}</strong>
+      </p>
       <div className="flex-row-start-center" style={{ gap: 20 }}>
         <Button primary content={strings.LABEL_EXPORT} onClick={handleExport} />
-        <Checkbox
+        {/* <Checkbox
           checked={exportDisabled}
           onChange={() => setExportDisabled(!exportDisabled)}
           label={strings.LOCALISATION_INCLUDE_DISABLED}
-        />
+        /> */}
       </div>
-      <Header as="h5">{strings.LOCALISATION_IMPORT_MESSAGE}</Header>
+      <p className="invert-spacing">
+        <strong>{strings.LOCALISATION_IMPORT_MESSAGE + ':'}</strong>
+      </p>
       <div className="flex-row-start-center" style={{ gap: 20 }}>
         <input
           type="file"
@@ -171,11 +188,11 @@ export const AdminLocalisations: React.FC = () => {
           content={strings.LABEL_IMPORT}
           onClick={() => fileInputRef?.current?.click()}
         />
-        <Checkbox
+        {/* <Checkbox
           checked={importDisabled}
           onChange={() => setImportDisabled(!importDisabled)}
           label={strings.LOCALISATION_INCLUDE_DISABLED}
-        />
+        /> */}
       </div>
     </div>
   )
