@@ -87,7 +87,7 @@ export const getElementDetails = (value: any, displayDefinition: DisplayDefiniti
   const isAlreadyElement = !!formatting?.elementTypePluginCode
   const elementTypePluginCode = isAlreadyElement ? formatting?.elementTypePluginCode : 'shortText'
   const elementParameters = isAlreadyElement
-    ? formatting?.elementParameters
+    ? formatting?.elementParameters ?? {}
     : {
         label: displayDefinition.title,
       }
