@@ -16,6 +16,7 @@ const useListApplications = ({
   type,
   ...queryFilters
 }: BasicStringObject) => {
+  const { selectedLanguage } = useLanguageProvider()
   const APPLICATION_FILTERS = useApplicationFilters()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
