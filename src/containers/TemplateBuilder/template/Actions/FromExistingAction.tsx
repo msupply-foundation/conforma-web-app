@@ -76,7 +76,7 @@ const FromExistingAction: React.FC<FromExistingActionProps> = ({
 
   return (
     <Dropdown
-      text="From Existing"
+      text="Or select from existing..."
       className="from-existing-dropdown"
       search
       selection

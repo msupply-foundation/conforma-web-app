@@ -4,6 +4,8 @@ import {
   ElementBase,
   EvaluatedElement,
   FullStructure,
+  LevelDetails,
+  StageDetails,
   TemplateDetails,
   UseGetApplicationProps,
 } from '../types'
@@ -18,6 +20,7 @@ import {
   TemplateElementCategory,
   TemplateSection,
   TemplateStage,
+  TemplateStageReviewLevel,
   useGetApplicationQuery,
   User,
 } from '../generated/graphql'
@@ -26,36 +29,50 @@ import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 import translate from '../../utils/helpers/structure/replaceLocalisedStrings'
+import useTriggers from './useTriggers'
 
 const graphQLEndpoint = config.serverGraphQL
-
-const MAX_REFETCH = 10
+const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
   const { strings, selectedLanguage } = useLanguageProvider()
   const [isLoading, setIsLoading] = useState(true)
   const [structureError, setStructureError] = useState('')
   const [structure, setFullStructure] = useState<FullStructure>()
-  const [refetchAttempts, setRefetchAttempts] = useState(0)
   const {
     userState: { currentUser },
   } = useUserState()
 
-  const { data, loading, error, refetch } = useGetApplicationQuery({
+  const {
+    ready: triggersReady,
+    loading: triggersLoading,
+    error: triggersError,
+    recheckTriggers,
+  } = useTriggers(serialNumber)
+
+  const { data, loading, error } = useGetApplicationQuery({
     variables: {
       serial: serialNumber,
       langCode: selectedLanguage.code,
     },
-    fetchPolicy: networkFetch ? 'network-only' : 'cache-first',
+    fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
+    skip: !triggersReady,
   })
 
   useEffect(() => {
-    if (loading) {
+    if (triggersError) {
+      setStructureError(strings.ERROR_TRIGGER)
+      console.error('Trigger error:', triggersError)
+      return
+    }
+
+    if (loading || triggersLoading) {
       setIsLoading(true)
       return
     }
-    if (!data) return
+
+    if (!triggersReady || !data) return
 
     const templateLanguageStrings =
       data?.applicationBySerial?.template?.customLocalisations?.nodes[0]?.strings ?? {}
@@ -77,19 +94,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     // Building the structure...
     setIsLoading(true)
-
-    // Checking if trigger is running before loading current status
-    if (application.trigger === null) {
-      setRefetchAttempts(0)
-    } else {
-      if (refetchAttempts < MAX_REFETCH) {
-        setTimeout(() => {
-          setRefetchAttempts(refetchAttempts + 1)
-          refetch()
-        }, 500)
-      } else setStructureError(strings.TRIGGER_RUNNING)
-      return
-    }
 
     const sections = (application?.template?.templateSections?.nodes || []) as TemplateSection[]
     const sectionDetails = getSectionDetails(sections)
@@ -162,40 +166,64 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       })
     })
 
+    const canApplicantMakeChanges = application.template?.canApplicantMakeChanges ?? true
+
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
     const evaluatorParams: EvaluatorParameters = {
       objects: { currentUser, applicationData: applicationDetails },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+      headers: { Authorization: 'Bearer ' + JWT },
     }
-    const templateMessages: any = [
-      evaluate(application.template?.startMessage || '', evaluatorParams),
-      evaluate(application.template?.submissionMessage || '', evaluatorParams),
-    ]
-    Promise.all(templateMessages).then(([startMessage, submissionMessage]: any) => {
-      let newStructure: FullStructure = {
-        info: { ...applicationDetails, submissionMessage, startMessage },
-        stages: templateStages.map((stage) => ({
+
+    const getStageAndLevels = (stage: TemplateStage) => {
+      const stageLevels =
+        (stage.templateStageReviewLevelsByStageId?.nodes as TemplateStageReviewLevel[]) || []
+      return {
+        stage: {
           id: stage.id,
           name: stage.title as string,
           number: stage.number as number,
           description: stage.description ? stage.description : undefined,
           colour: stage.colour as string,
+        },
+        levels: stageLevels.map(({ name: levelName, number: levelNumber }) => ({
+          name: levelName as string,
+          number: levelNumber as number,
         })),
-        sections: buildSectionsStructure({ sectionDetails, baseElements }),
+      }
+    }
+
+    evaluate(application.template?.startMessage || '', evaluatorParams).then((startMessage) => {
+      let newStructure: FullStructure = {
+        info: {
+          ...applicationDetails,
+          submissionMessage: application.template?.submissionMessage,
+          startMessage: startMessage as string,
+        },
+        stages: templateStages.map((stage) => getStageAndLevels(stage)),
+        sections: buildSectionsStructure({ sectionDetails, baseElements, page: strings.PAGE }),
+        canApplicantMakeChanges,
         attemptSubmission: false,
+        reload: reloadApplication,
       }
 
       setFullStructure(newStructure)
       setIsLoading(false)
     })
-  }, [data, loading])
+  }, [data, loading, triggersReady, triggersLoading, triggersError])
+
+  const reloadApplication = async () => {
+    console.log('Reloading...')
+    recheckTriggers()
+  }
 
   return {
     error: structureError || error?.message,
     isLoading: loading || isLoading,
     structure,
+    reloadApplication,
   }
 }
 

@@ -9,7 +9,7 @@ import {
 } from './helpers'
 
 const useGetReviewStructureForSections = (props: UseGetReviewStructureForSectionProps) => {
-  const [fullReviewStructure, setFullReviewStructure] = useState<FullStructure>()
+  const [reviewStructure, setReviewStructure] = useState<FullStructure>()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -27,11 +27,11 @@ const useGetReviewStructureForSections = (props: UseGetReviewStructureForSection
     if (error) return
     if (!data) return
 
-    setFullReviewStructure(generateReviewStructure({ ...props, currentUser, data, sectionIds }))
+    setReviewStructure(generateReviewStructure({ ...props, currentUser, data, sectionIds }))
   }, [data, error])
 
   return {
-    fullReviewStructure,
+    reviewStructure,
     error: error?.message,
   }
 }

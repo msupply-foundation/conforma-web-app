@@ -14,6 +14,7 @@ type DropdownIOprops = {
   ) => void
   disabled?: boolean
   disabledMessage?: string
+  labelNegative?: boolean
   link?: string
   isPropUpdated?: boolean
   options?: any[]
@@ -21,6 +22,9 @@ type DropdownIOprops = {
   getValue?: GetterOrKey
   getText?: GetterOrKey
   placeholder?: string
+  minLabelWidth?: number
+  labelTextAlign?: string
+  additionalStyles?: object
 }
 
 const defaultGetters: GetterOrKey = (row) => String(row)
@@ -41,6 +45,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   disabled = false,
   title = '',
   disabledMessage,
+  labelNegative = false,
   link,
   isPropUpdated = false,
   options = [],
@@ -48,8 +53,13 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   getValue = defaultGetters,
   getText = defaultGetters,
   placeholder,
+  minLabelWidth = 100,
+  labelTextAlign = 'center',
+  additionalStyles = {},
 }) => {
   const [innerValue, setInnerValue] = useState(value)
+  const style: any = { minWidth: minLabelWidth, textAlign: labelTextAlign, ...additionalStyles }
+  const ioCSS = labelNegative ? 'io-component-negative' : 'io-component'
 
   useEffect(() => {
     if (isPropUpdated) setInnerValue(value)
@@ -57,7 +67,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   const renderText = () => {
     if (setValue) return null
 
-    return <div className="io-component value">{value}</div>
+    return <div className={ioCSS + ' value'}>{value}</div>
   }
 
   const renderDropdown = () => {
@@ -73,10 +83,9 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
         value={innerValue}
         disabled={disabled}
         placeholder={placeholder}
-        className="io-component value"
+        className={ioCSS + ' value'}
         options={calculatedOptions}
         scrolling
-        size="small"
         onChange={(_, { value }) => {
           if (typeof value !== 'string' && typeof value !== 'number') return
           setInnerValue(value)
@@ -88,16 +97,21 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   }
 
   const renderLabel = () => {
+    const keyClass = labelNegative ? 'io-component-negative key-negative' : 'io-component key'
     if (link) {
       return (
-        <div className="io-component key">
+        <div className={keyClass} style={style}>
           <a target="_blank" href={link}>
             {title}
           </a>
         </div>
       )
     }
-    return <div className="io-component key">{title}</div>
+    return (
+      <div className={keyClass} style={style}>
+        {title}
+      </div>
+    )
   }
 
   return (
@@ -105,7 +119,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
       content={disabledMessage}
       disabled={!disabled || !disabledMessage}
       trigger={
-        <div className="io-wrapper">
+        <div className="io-wrapper" style={style}>
           {renderLabel()}
           {renderText()}
           {renderDropdown()}

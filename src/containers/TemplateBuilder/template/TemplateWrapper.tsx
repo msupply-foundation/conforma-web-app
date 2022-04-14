@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { matchPath } from 'react-router'
 import { Link } from 'react-router-dom'
-import { Header, Icon, Message } from 'semantic-ui-react'
+import { Header, Icon, Message, Label } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../../components'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
@@ -79,17 +79,23 @@ const TemplateContainer: React.FC = () => {
 
   return (
     <div className="template-builder-wrapper">
-      <div className="flex-row-space_between-center">
-        <Link to="/admin/templates">
-          <Icon name="angle left" />
-          {'Templates/Procedures'}
-        </Link>
+      <Label
+        className="back-label clickable"
+        onClick={() => push(`/admin/templates`)}
+        content={
+          <>
+            <Icon name="chevron left" className="dark-grey" />
+            Templates/Procedures
+          </>
+        }
+      />
+      <div className="flex-row-space-between-center-wrap">
         <div className="template-builder-info-bar">
-          <TextIO title="version" text={String(version)} />
-          <TextIO title="name" text={name} />
-          <TextIO title="code" text={code} />
-          <TextIO title="status" text={status} />
-          <TextIO title="# applications" text={String(applicationCount)} />
+          <TextIO title="version" text={String(version)} labelNegative />
+          <TextIO title="name" text={name} labelNegative />
+          <TextIO title="code" text={code} labelNegative />
+          <TextIO title="status" text={status} labelNegative />
+          <TextIO title="# applications" text={String(applicationCount)} labelNegative />
         </div>
       </div>
       <div className="template-builder-tabs">
@@ -103,7 +109,7 @@ const TemplateContainer: React.FC = () => {
           </div>
         ))}
       </div>
-      {selected.render()}
+      <div className="template-builder-content">{selected.render()}</div>
     </div>
   )
 }
@@ -119,6 +125,7 @@ type TemplateContextState = {
     applicationCount: number
     namePlural: string
     isLinear: boolean
+    canApplicantMakeChanges: boolean
   }
   refetch: () => void
   category?: TemplateCategory
@@ -142,6 +149,7 @@ const defaultTemplateContextState: TemplateContextState = {
     applicationCount: 0,
     namePlural: '',
     isLinear: false,
+    canApplicantMakeChanges: true,
   },
   refetch: () => {},
   sections: [],
@@ -182,6 +190,7 @@ const TemplateWrapper: React.FC = () => {
           code: template?.code || '',
           namePlural: template?.namePlural || '',
           isLinear: !!template?.isLinear,
+          canApplicantMakeChanges: !!template?.canApplicantMakeChanges,
           status: template?.status || TemplateStatus.Disabled,
           applicationCount: template?.applications?.totalCount || 0,
           isDraft: template.status === TemplateStatus.Draft,

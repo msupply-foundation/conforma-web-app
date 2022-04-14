@@ -1,6 +1,6 @@
 import React, { ReactNode, useRef } from 'react'
 import { useState } from 'react'
-import { Button, Header, Icon, Table } from 'semantic-ui-react'
+import { Button, Header, Icon, Table, Label } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { useOperationState } from './shared/OperationContext'
 import { snapshotFilesUrl } from './shared/OperationContextHelpers'
@@ -8,6 +8,7 @@ import TextIO from './shared/TextIO'
 import useGetTemplates, { Template } from './useGetTemplates'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
+import config from '../../config'
 
 type CellPropsTemplate = Template & { numberOfTemplates?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void }
@@ -31,8 +32,12 @@ const columns: Columns = [
     title: '',
     render: ({ template: { version, versionTimestamp } }) => (
       <React.Fragment key="version">
-        <TextIO text={String(version)} title="version" />
-        <TextIO text={String(versionTimestamp.toFormat('dd MMM yy'))} title="date" />
+        <TextIO text={String(version)} title="version" maxLabelWidth={70} />
+        <TextIO
+          text={String(versionTimestamp.toFormat('dd MMM yy'))}
+          title="date"
+          minLabelWidth={70}
+        />
       </React.Fragment>
     ),
   },
@@ -48,8 +53,10 @@ const columns: Columns = [
     title: '',
     render: ({ template: { applicationCount, numberOfTemplates } }) => (
       <React.Fragment key="counts">
-        <TextIO text={String(applicationCount)} title="# application" />
-        {numberOfTemplates && <TextIO text={String(numberOfTemplates)} title="# templates" />}
+        <TextIO text={String(applicationCount)} title="Applications" minLabelWidth={90} />
+        {numberOfTemplates && (
+          <TextIO text={String(numberOfTemplates)} title="Templates" minLabelWidth={90} />
+        )}
       </React.Fragment>
     ),
   },
@@ -87,6 +94,7 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
   const downloadLinkRef = useRef<HTMLAnchorElement>(null)
   const { exportTemplate } = useOperationState()
   const snapshotName = `${code}-${version}`
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
 
   return (
     <div key="export">
@@ -95,7 +103,16 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
         className="clickable"
         onClick={async (e) => {
           e.stopPropagation()
-          if (await exportTemplate({ id, snapshotName })) downloadLinkRef?.current?.click()
+          if (await exportTemplate({ id, snapshotName })) {
+            const res = await fetch(`${snapshotFilesUrl}/${snapshotName}.zip`, {
+              headers: { Authorization: `Bearer ${JWT}` },
+            })
+            const data = await res.blob()
+            var a = document.createElement('a')
+            a.href = window.URL.createObjectURL(data)
+            a.download = `${snapshotName}.zip`
+            a.click()
+          }
         }}
       >
         <Icon className="clickable" key="export" name="sign-out" />
@@ -218,11 +235,20 @@ const Templates: React.FC = () => {
     <div className="template-builder-templates">
       <div key="top-bar" className="top-bar">
         <Header as="h3">Templates / Procedures</Header>
-
         <div className="flex-grow-1" />
-        <TextIO icon="edit" text="edit" />
-        <TextIO icon="sign-out" text="export" />
-        <TextIO icon="copy" text="duplicate" />
+        Key:
+        <Label>
+          <Icon name="edit" />
+          Edit
+        </Label>
+        <Label>
+          <Icon name="sign-out" />
+          Export
+        </Label>
+        <Label>
+          <Icon name="copy" />
+          Duplicate
+        </Label>
         {renderImportButton()}
       </div>
       <div className="flex-column-center">

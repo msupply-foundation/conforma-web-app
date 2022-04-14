@@ -145,12 +145,44 @@ There is documentation on the code of these as well in the [repo](https://github
 
 #### Trigger: ON_REVIEW_SELF_ASSIGN
 
-**TODO** Update trigger actions after PR #577 is merged!
+- Asynchronous: Lock other Self-Assignments
 
-1. Change Assignment Status for other Reviewers
+  - Action: "updateReviewAssignmentsStatus"
+  - Description: "**CORE-ACTION** On Self-assignment change other self_assignment reviewAssignment flag is_locked to True"
+  - Condition: Always
+
+#### Trigger: ON_REVIEW_ASSIGN
+
+- Asynchornous: Lock other Self-Assignments
+
+  - Action: "updateReviewAssignmentsStatus"
+  - Description: "**CORE-ACTION** On Assignment change other self_assignment reviewAssignment flag is_locked to True"
+  - Condition: Always
+
+#### Trigger: ON_REVIEW_REASSIGN
+
+1. Change Review status (if existing)
+
+   - Action: "changeStatus"
+   - Description: "**CORE-ACTION** On Re-assignment if review is existing change to DRAFT or LOCKED (if assignment flag is_locked isTrue)"
+   - Condition: Always
+
+#### Trigger: ON_REVIEW_UNASSIGN
+
+1. Unlock other Self-Assignments
+2. Change Review status to DISCONTINUED
+
+##### Actions
+
+1. Unlock other Self-Assignments
 
    - Action: "updateReviewAssignmentsStatus"
-   - Description: "**CORE-ACTION** Change other review assignment statuses to SELF_ASSIGNED_BY_ANOTHER after one of the review assignment with AVAILABLE_FOR_SELF_ASSIGNMENT is self-assigned by the reviewer"
+   - Description: "**CORE-ACTION** On Un-assignment change other reviewAssignment that has flag is_self_assignment = True set flag is_locked to False"
+   - Condition: Always
+
+2. Change Review status to DISCONTINUED
+   - Action: "changeStatus"
+   - Description: "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED"
    - Condition: Always
 
 #### Trigger: ON_REVIEW_SUBMIT

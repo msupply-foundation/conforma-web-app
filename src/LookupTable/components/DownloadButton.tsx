@@ -31,10 +31,18 @@ const DownloadButton = ({
     clearTimeout(timeout)
   }
 
+  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
+  const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
+
   const downloadItem = async (event: any) => {
     event.stopPropagation()
     await axios
-      .get(config.serverREST + `/lookup-table/export/${id}`)
+      .get(config.serverREST + `/admin/lookup-table/export/${id}`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          ...authHeader,
+        },
+      })
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, Route, Switch } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
-import { NoMatch } from '.'
+import { Loading, NoMatch } from '.'
 import Snapshots from '../containers/Dev/Snapshots'
 import TemplateWrapper from '../containers/TemplateBuilder/template/TemplateWrapper'
 import Templates from '../containers/TemplateBuilder/Templates'
@@ -15,8 +15,10 @@ const Admin: React.FC = () => {
     match: { path },
   } = useRouter()
   const {
-    userState: { isAdmin },
+    userState: { isAdmin, isLoading },
   } = useUserState()
+
+  if (isLoading) return <Loading />
 
   if (!isAdmin) return <NoMatch />
 

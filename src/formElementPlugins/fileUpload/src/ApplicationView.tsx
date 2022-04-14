@@ -4,7 +4,8 @@ import { nanoid } from 'nanoid'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
-import { useRouter } from '../../../utils/hooks/useRouter'
+import { postRequest } from '../../../utils/helpers/fetchMethods'
+import prefs from '../config.json'
 
 interface FileResponseData {
   uniqueId: string
@@ -42,18 +43,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { isEditable } = element
   const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
 
-  const { config, template } = applicationData
-  const host = config.serverREST
-  const { uploadEndpoint } = config
+  const { config } = applicationData
+
+  const uploadUrl = `${config.serverREST}${config.uploadEndpoint}`
+  const downloadUrl = `${config.serverREST}/public`
 
   // These values required for file upload query parameters:
   const {
     userState: { currentUser },
   } = useUserState()
-  const {
-    query: { serialNumber },
-  } = useRouter()
+
   const application_response_id = initialValue.id
+  const serialNumber = applicationData.serial
 
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(
     generateInitialFileData(initialValue?.files)
@@ -223,16 +224,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                   {fileData && (
                     <>
                       <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-                        <a href={host + fileData.fileUrl} target="_blank">
+                        <a href={downloadUrl + fileData.fileUrl} target="_blank">
                           <Image
-                            src={host + fileData.thumbnailUrl}
-                            style={{ maxHeight: '120px' }}
+                            src={downloadUrl + fileData.thumbnailUrl}
+                            style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
                           />
                         </a>
                       </Grid.Row>
                       <Grid.Row centered style={{ boxShadow: 'none' }}>
                         <p style={{ wordBreak: 'break-word' }}>
-                          <a href={host + fileData.fileUrl} target="_blank">
+                          <a href={downloadUrl + fileData.fileUrl} target="_blank">
                             {filename}
                           </a>
                         </p>
@@ -250,11 +251,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   async function uploadFile(file: any) {
     const fileData = new FormData()
     await fileData.append('file', file)
-    const response = await fetch(
-      `${host}${uploadEndpoint}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}`,
-      { method: 'POST', body: fileData }
-    )
-    return await response.json()
+    return await postRequest({
+      url: `${uploadUrl}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}`,
+      otherBody: fileData,
+    })
   }
 }
 

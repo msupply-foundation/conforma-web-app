@@ -17,10 +17,12 @@ type EvaluationProps = {
   evaluation: EvaluatorNode
   currentElementCode: string
   setEvaluation: (evaluation: EvaluatorNode) => void
-  fullStructure?: FullStructure
+  fullStructure?: FullStructure // for Form Elements
+  applicationData?: any // for Actions
   label: string
   updateKey?: (key: string) => void
   deleteKey?: () => void
+  type?: 'FormElement' | 'Action'
 }
 
 type EvaluationHeaderProps = {
@@ -31,7 +33,7 @@ export const EvaluationHeader: React.FC<EvaluationHeaderProps> = ({ evaluation }
   const typedEvaluation = getTypedEvaluation(evaluation)
 
   return (
-    <div className="flex-row-start-center">
+    <div className="flex-row-start-center" style={{ marginTop: 6 }}>
       <TextIO title="Type" text={typedEvaluation.type} />
       {typedEvaluation.type === 'operator' && (
         <TextIO title="operator" text={typedEvaluation.asOperator.operator} />
@@ -53,22 +55,30 @@ const Evaluation: React.FC<EvaluationProps> = ({
   label,
   currentElementCode,
   fullStructure,
+  applicationData,
   updateKey,
   deleteKey,
+  type,
 }) => {
   const {
     userState: { currentUser },
   } = useUserState()
   const [isActive, setIsActive] = useState(false)
   const [asGui, setAsGui] = useState(true)
-  const objects = {
-    responses: {
-      ...fullStructure?.responsesByCode,
-      thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
-    },
-    currentUser,
-    applicationData: fullStructure?.info,
-  }
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
+  const objects =
+    type === 'Action'
+      ? { applicationData }
+      : type === 'FormElement'
+      ? {
+          responses: {
+            ...fullStructure?.responsesByCode,
+            thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
+          },
+          currentUser,
+          applicationData: fullStructure?.info,
+        }
+      : undefined
 
   const evaluationParameters = {
     objects,
@@ -77,30 +87,44 @@ const Evaluation: React.FC<EvaluationProps> = ({
       fetch: fetch.bind(window),
       endpoint: config.serverGraphQL,
     },
+    headers: { Authorization: 'Bearer ' + JWT },
   }
 
   return (
     <Accordion className="evaluation-container">
-      <Accordion.Title className="evaluation-container-title" active={isActive}>
-        {!updateKey && <Label>{label}</Label>}
-        {deleteKey && <Icon className="clickable" name="window close" onClick={deleteKey} />}
-
-        {updateKey && <TextIO title="Parameter Name" text={label} setText={updateKey} />}
-
+      <Accordion.Title className="evaluation-container-title flex-gap-10" active={isActive}>
+        {!updateKey && label && (
+          <Label style={{ minWidth: 120, textAlign: 'center' }}>{label}</Label>
+        )}
+        {deleteKey && (
+          <Icon
+            className="clickable left-margin-space-10"
+            name="window close"
+            onClick={deleteKey}
+          />
+        )}
+        {updateKey && (
+          <div className="flex-row-start-center" style={{ marginTop: 6 }}>
+            <TextIO title="Parameter Name" text={label} setText={updateKey} />
+          </div>
+        )}
         <EvaluationHeader evaluation={evaluation} />
-
-        <Icon
-          size="large"
-          name={isActive ? 'angle up' : 'angle down'}
-          onClick={() => setIsActive(!isActive)}
-        />
+        <div className="flex-row-end">
+          <Icon
+            size="large"
+            name={isActive ? 'angle up' : 'angle down'}
+            onClick={() => setIsActive(!isActive)}
+          />
+        </div>
       </Accordion.Title>
       {isActive && (
         <Accordion.Content className="evaluation-container-content" active={isActive}>
           <>
             <div className="flex-column-start-center">
-              <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />
-              <div className="spacer-10" />
+              <div style={{ marginLeft: 30 }}>
+                <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />
+                <div className="spacer-10" />
+              </div>
               {!asGui && (
                 <div className="long">
                   <JsonIO
@@ -119,11 +143,11 @@ const Evaluation: React.FC<EvaluationProps> = ({
                   evaluationParameters
                 )}
             </div>
-            {fullStructure && (
+            {objects && (
               <div className="object-properties-container">
                 <Label>Object Properties</Label>
                 <div className="spacer-20" />
-                <ReactJson src={objects} collapsed={2} />
+                <ReactJson src={objects} collapsed={1} />
               </div>
             )}
           </>

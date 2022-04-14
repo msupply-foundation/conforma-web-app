@@ -17,6 +17,7 @@ export default gql`
           nodes {
             id
             decision
+            comment
             timeUpdated
           }
         }

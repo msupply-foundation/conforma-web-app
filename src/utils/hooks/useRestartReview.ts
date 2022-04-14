@@ -13,51 +13,48 @@ type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewMutati
 type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
 type UseRestartReview = (props: {
-  reviewId: number
-  structure: FullStructure
-  assignment: AssignmentDetails
+  reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
 }) => () => PromiseReturnType
 
-type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
+type ConstructReviewPatch = (reviewStructure: FullStructure) => ReviewPatch
 
 // Need to duplicate or create new review responses for all assigned questions
-const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment }) => {
+const useRestartReview: UseRestartReview = ({ reviewStructure, reviewAssignment }) => {
   const [updateReview] = useUpdateReviewMutation()
+  const reviewId = reviewStructure.thisReview?.id as number
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullApplicationStructure: structure,
-    reviewAssignment: assignment,
+    reviewStructure,
+    reviewAssignment,
   })
 
   const shouldCreateConsolidationReviewResponse = (element: PageElement) => {
-    if (assignment.level === 1) return true
+    if (reviewAssignment.level === 1) return true
     return element?.lowerLevelReviewLatestResponse?.review?.status !== ReviewStatus.Draft
   }
 
-  const constructReviewPatch: ConstructReviewPatch = (structure) => {
-    const elements = Object.values(structure?.elementsById || {})
+  const constructReviewPatch: ConstructReviewPatch = (reviewStructure) => {
+    const elements = Object.values(reviewStructure?.elementsById || {})
 
     // Exclude not assigned, not visible and missing responses
     const reviewableElements = elements.filter((element) => {
       const { isAssigned, isActiveReviewResponse, response } = element
       return (
-        shouldCreateConsolidationReviewResponse(element) && !!response && isAssigned && !isActiveReviewResponse
+        shouldCreateConsolidationReviewResponse(element) &&
+        !!response &&
+        isAssigned &&
+        !isActiveReviewResponse
       )
     })
 
     // For re-assignment this would be slightly different, we need to consider latest review response of this level
     // not necessarily this thisReviewLatestResponse (would be just latestReviewResponse, from all reviews at this level)
     const reviewResponseCreate = reviewableElements.map(
-      ({
-        isPendingReview,
-        thisReviewLatestResponse,
-        response,
-        reviewQuestionAssignmentId,
-        lowerLevelReviewLatestResponse,
-      }) => {
-        const applicationResponseId = assignment.level > 1 ? undefined : response?.id
+      ({ isPendingReview, thisReviewLatestResponse, response, lowerLevelReviewLatestResponse }) => {
+        const applicationResponseId = reviewAssignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
-          assignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
+          reviewAssignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
         // create new if element is awaiting review
         const shouldCreateNew = isPendingReview
         return {
@@ -66,7 +63,6 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
           comment: shouldCreateNew ? null : thisReviewLatestResponse?.comment,
           applicationResponseId,
           reviewResponseLinkId,
-          reviewQuestionAssignmentId,
         }
       }
     )
@@ -87,7 +83,7 @@ const useRestartReview: UseRestartReview = ({ reviewId, structure, assignment })
   return async () => {
     const result = await updateReview({
       variables: {
-        reviewId: reviewId,
+        reviewId,
         // See comment at the bottom of file for resulting shape
         reviewPatch: constructReviewPatch(await getFullReviewStructureAsync()),
       },
@@ -109,7 +105,6 @@ export default useRestartReview
         "comment": null,
         "applicationResponseId": 34, // this or reviewResponseLinkId
         "reviewResponseLinkId": 34,  // this or applicationResponseId
-        "reviewQuestionAssignmentId": 11
       }
     ]
   },

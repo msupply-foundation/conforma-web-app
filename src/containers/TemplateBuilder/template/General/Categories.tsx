@@ -135,6 +135,9 @@ const Category: React.FC<{}> = () => {
           setValue={(value) => {
             updateTemplate(template.id, { templateCategoryId: value === -1 ? null : Number(value) })
           }}
+          minLabelWidth={100}
+          labelTextAlign="right"
+          additionalStyles={{ marginBottom: 0 }}
         />
 
         {renderAddEdit()}
@@ -142,7 +145,9 @@ const Category: React.FC<{}> = () => {
       {updateState && (
         <div className="template-buider-category-input">
           <Header as="h5">{`${
-            updateState.id ? strings.TEMPLATE_EDIT_CATEGORY : strings.TEMPLATE_ADD_CATEGORY
+            updateState.id
+              ? strings.TEMPLATE_BUTTON_EDIT_CATEGORY
+              : strings.TEMPLATE_BUTTON_ADD_CATEGORY
           }`}</Header>
           <TextIO
             text={updateState.code}
@@ -180,11 +185,11 @@ const Category: React.FC<{}> = () => {
           <div className="spacer-20" />
           <div className="flex-row">
             <ButtonWithFallback
-              title={updateState.id ? strings.TEMPLATE_BUTTON_SAVE : strings.TEMPLATE_BUTTON_ADD}
+              title={updateState.id ? strings.BUTTON_SAVE : strings.TEMPLATE_BUTTON_ADD}
               onClick={updateState.id ? editCategory : addCategory}
             />
             <ButtonWithFallback
-              title={strings.BUTTON_CANCEL}
+              title={strings.OPTION_CANCEL}
               onClick={() => setUpdateState(null)}
             />
           </div>

@@ -3,24 +3,30 @@ import { useRouter } from '../hooks/useRouter'
 import buildFilter from '../helpers/list/buildQueryFilters'
 import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQueryVariables'
 import { useGetApplicationListQuery, ApplicationListShape } from '../../utils/generated/graphql'
-import { BasicStringObject } from '../types'
+import { BasicStringObject, TemplateType } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useApplicationFilters } from '../data/applicationFilters'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import translate from '../helpers/structure/replaceLocalisedStrings'
 
-const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicStringObject) => {
-  const { selectedLanguage } = useLanguageProvider()
+const useListApplications = ({
+  sortBy,
+  page,
+  perPage,
+  type,
+  ...queryFilters
+}: BasicStringObject) => {
   const APPLICATION_FILTERS = useApplicationFilters()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
+  const [templateType, setTemplateType] = useState<TemplateType>()
   const [error, setError] = useState('')
   const { updateQuery } = useRouter()
   const {
     userState: { currentUser },
   } = useUserState()
 
-  const filters = buildFilter(queryFilters, APPLICATION_FILTERS)
+  const filters = buildFilter({ type, ...queryFilters }, APPLICATION_FILTERS)
   const sortFields = sortBy ? buildSortFields(sortBy) : []
   const { paginationOffset, numberToFetch } = getPaginationVariables(
     page ? Number(page) : 1,
@@ -39,6 +45,7 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
       numberToFetch,
       userId: currentUser?.userId as number,
       languageCode: selectedLanguage.code,
+      templateCode: type || '',
     },
     fetchPolicy: 'network-only',
   })
@@ -63,12 +70,17 @@ const useListApplications = ({ sortBy, page, perPage, ...queryFilters }: BasicSt
       setApplications(applicationsList as ApplicationListShape[])
       setApplicationCount(data?.applicationList?.totalCount)
     }
+    if (data?.templates?.nodes && data?.templates?.nodes.length > 0) {
+      const { code, name, namePlural } = data?.templates?.nodes?.[0] as TemplateType
+      setTemplateType({ code, name, namePlural })
+    }
   }, [data, applicationsError])
 
   return {
     error,
     loading,
     refetch,
+    templateType,
     applications,
     applicationCount,
   }

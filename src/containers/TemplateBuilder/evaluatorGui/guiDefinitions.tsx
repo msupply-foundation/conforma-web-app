@@ -13,8 +13,8 @@ import { GuisType } from './types'
 
 export const guis: GuisType = [
   {
-    selector: 'string',
-    default: getTypedEvaluation('defult string'),
+    selector: 'String',
+    default: getTypedEvaluation(''),
     match: (typedEvaluation) => typedEvaluation.type === 'string',
     render: (evaluation, setEvaluation, ComponentLibrary) => (
       <ComponentLibrary.TextInput
@@ -27,7 +27,7 @@ export const guis: GuisType = [
   },
 
   {
-    selector: 'number',
+    selector: 'Number',
     default: getTypedEvaluation(1),
     match: (typedEvaluation) => typedEvaluation.type === 'number',
     render: (evaluation, setEvaluation, ComponentLibrary) => (
@@ -40,7 +40,7 @@ export const guis: GuisType = [
   },
 
   {
-    selector: 'boolean',
+    selector: 'Boolean',
     default: getTypedEvaluation(true),
     match: (typedEvaluation) => typedEvaluation.type === 'boolean',
     render: (evaluation, setEvaluation, ComponentLibrary) => (
@@ -58,13 +58,13 @@ export const guis: GuisType = [
     render: () => null,
   },
   {
-    selector: 'array',
+    selector: 'Array',
     default: getTypedEvaluation(['array element']),
     match: (typedEvaluation) => typedEvaluation.type === 'array',
     render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
       return renderArrayControl({
         title: 'Elements',
-        key: 'arrayControll',
+        key: 'arrayControl',
         evaluation,
         offset: 0,
         setEvaluation,
@@ -75,7 +75,7 @@ export const guis: GuisType = [
     },
   },
   {
-    selector: 'object',
+    selector: 'Object',
     default: getTypedEvaluation({ key: 'value' }),
     match: (typedEvaluation) => typedEvaluation.type === 'object',
     render: (evaluation, setEvaluation, ComponentLibrary) => (
@@ -89,22 +89,22 @@ export const guis: GuisType = [
 
   pureArray({
     newValue: getTypedEvaluation(false),
-    selector: 'and',
+    selector: 'And',
     operator: 'AND',
   }),
   pureArray({
     newValue: getTypedEvaluation(false),
-    selector: 'or',
+    selector: 'Or',
     operator: 'OR',
   }),
   pureArray({
     newValue: getTypedEvaluation('concat string'),
-    selector: 'concatenate',
+    selector: 'Concatenate (deprecated, use Addition)',
     operator: 'CONCAT',
   }),
   pureArray({
     newValue: getTypedEvaluation({ value: false }),
-    selector: 'addition',
+    selector: 'Addition',
     operator: '+',
   }),
   {
@@ -125,10 +125,10 @@ export const guis: GuisType = [
     ),
   },
   {
-    selector: 'equality',
+    selector: 'Equal',
     default: getTypedEvaluation({
       operator: '=',
-      children: ['compare me', 'to me'],
+      children: ['Compare me', 'To me'],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === '=',
     render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
@@ -150,7 +150,7 @@ export const guis: GuisType = [
     ),
   },
   {
-    selector: 'inequality',
+    selector: 'Not Equal',
     default: getTypedEvaluation({
       operator: '!=',
       children: ['compare me', 'to me'],
@@ -166,7 +166,7 @@ export const guis: GuisType = [
     ),
   },
   {
-    selector: 'if a then b or c',
+    selector: 'Conditional',
     default: getTypedEvaluation({
       operator: '?',
       children: [true, 'if true', 'if false'],
@@ -184,7 +184,7 @@ export const guis: GuisType = [
     ),
   },
   {
-    selector: 'string substitution',
+    selector: 'String Substitution',
     default: getTypedEvaluation({
       operator: 'stringSubstitution',
       children: ['%1 %2 %1', 'first', 'second'],
@@ -209,7 +209,7 @@ export const guis: GuisType = [
     ),
   },
   {
-    selector: 'root object properies',
+    selector: 'Object properties',
     default: getTypedEvaluation({
       operator: 'objectProperties',
       children: ['firstName', null],
@@ -217,7 +217,7 @@ export const guis: GuisType = [
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'objectProperties',
     render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
       <React.Fragment key="objectProperties">
-        <ComponentLibrary.Label key="objectPath" title="Object path (i.e. thisResponse.text): " />
+        <ComponentLibrary.Label key="objectPath" title="Object path (e.g. thisResponse.text): " />
         {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
         <ComponentLibrary.Label
           key="fallback"
@@ -228,9 +228,31 @@ export const guis: GuisType = [
     ),
   },
   {
-    selector: 'api call',
+    selector: 'Object functions',
     default: getTypedEvaluation({
-      operator: 'API',
+      operator: 'objectFunctions',
+      children: ['getYear', null],
+    }),
+    match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'objectFunctions',
+    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
+      <React.Fragment key="objectFunctions">
+        <ComponentLibrary.Label
+          key="functionPath"
+          title="Function path (e.g. functions.getYear): "
+        />
+        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        <ComponentLibrary.Label
+          key="fallback"
+          title="Fallback (in case object path is not found): "
+        />
+        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, evaluatorParameters)}
+      </React.Fragment>
+    ),
+  },
+  {
+    selector: 'GET request',
+    default: getTypedEvaluation({
+      operator: 'GET',
       children: [
         'http://localhost:8080/check-unique',
         ['type', 'value'],
@@ -239,7 +261,7 @@ export const guis: GuisType = [
         'unique',
       ],
     }),
-    match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'API',
+    match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'GET',
     render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
       const parametersOffset = 1
       const children = evaluation.asOperator.children
@@ -295,7 +317,68 @@ export const guis: GuisType = [
     },
   },
   {
-    selector: 'graphQL call',
+    selector: 'POST request',
+    default: getTypedEvaluation({
+      operator: 'POST',
+      children: ['http://localhost:8080/login', ['username', 'password'], 'js', '123456'],
+    }),
+    match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'POST',
+    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
+      const parametersOffset = 1
+      const children = evaluation.asOperator.children
+      const parametersLength = children[parametersOffset].asArray.length
+
+      const lastChildIndex = children.length - 1
+
+      const isExtractionPropertySpecified =
+        parametersLength + parametersOffset + 1 < children.length
+
+      return (
+        <React.Fragment key="apiComponent">
+          <ComponentLibrary.Label key="title" title="URL:" />
+          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+          {renderDynamicParameters({
+            header: 'Query Parameters',
+            parametersOffset,
+            parameterValueHeader: 'Parameter Value:',
+            parameterNameHeader: 'Parameter Name:',
+            defaultParameterName: getTypedEvaluation('parameterName'),
+            defaultParameterValue: getTypedEvaluation('parameterValue'),
+            setEvaluation,
+            evaluation,
+            ComponentLibrary,
+            evaluatorParameters,
+          })}
+
+          <ComponentLibrary.FlexRow key="extractionBoolean">
+            <ComponentLibrary.Checkbox
+              checked={isExtractionPropertySpecified}
+              setChecked={(value) => {
+                if (!value && isExtractionPropertySpecified)
+                  setEvaluation(removeFromArray(evaluation, lastChildIndex))
+                if (value && !isExtractionPropertySpecified)
+                  setEvaluation(addToArray(evaluation, getTypedEvaluation('unique')))
+              }}
+            />
+            {isExtractionPropertySpecified && (
+              <ComponentLibrary.FlexColumn key="extractionKey">
+                <ComponentLibrary.Label title={'Property to Extract:'} />
+                {renderSingleChild(
+                  evaluation,
+                  lastChildIndex,
+                  setEvaluation,
+                  ComponentLibrary,
+                  evaluatorParameters
+                )}
+              </ComponentLibrary.FlexColumn>
+            )}
+          </ComponentLibrary.FlexRow>
+        </React.Fragment>
+      )
+    },
+  },
+  {
+    selector: 'GraphQL call',
     default: getTypedEvaluation({
       operator: 'graphQL',
       children: [
@@ -368,7 +451,7 @@ export const guis: GuisType = [
     },
   },
   {
-    selector: 'build object',
+    selector: 'Build Object',
     default: getTypedEvaluation({
       operator: 'buildObject',
       properties: [{ key: 'keyToBuild', value: 'valueToBuild' }],

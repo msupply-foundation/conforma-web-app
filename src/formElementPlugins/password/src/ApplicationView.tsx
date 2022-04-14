@@ -4,6 +4,7 @@ import { ApplicationViewProps } from '../../types'
 import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { postRequest } from '../../../utils/helpers/fetchMethods'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -58,10 +59,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       // Don't show error state on change if element is being use for checking existing password
       const shouldShowValidation = requireConfirmation ? currentResponse?.text === '' : false
       if (shouldShowValidation) {
+        const JWT = localStorage.getItem(config.localStorageJWTKey)
         const customValidation = await validate(validationInternal, validationMessageInternal, {
           objects: { responses, currentUser, applicationData },
           APIfetch: fetch,
           graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+          headers: { Authorization: 'Bearer ' + JWT },
         })
         setInternalValidation(customValidation)
       }
@@ -74,10 +77,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   async function handleLoseFocus(e: any) {
     if (e.target.name === 'passwordConfirm') setConfirmationIsActive(false)
     const responses = { thisResponse: password || '', ...allResponses }
+    const JWT = localStorage.getItem(config.localStorageJWTKey)
     const customValidation = await validate(validationInternal, validationMessageInternal, {
       objects: { responses, currentUser, applicationData },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+      headers: { Authorization: 'Bearer ' + JWT },
     })
     setInternalValidation(customValidation)
     const passwordsMatch = password === passwordConfirm
@@ -155,15 +160,12 @@ export default ApplicationView
 
 const createHash = async (password: string) => {
   try {
-    const response = await fetch(config.serverREST + '/create-hash', {
-      method: 'POST',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ password }),
+    const output = await postRequest({
+      url: config.serverREST + '/create-hash',
+      jsonBody: { password },
+      headers: { 'Content-Type': 'application/json' },
     })
-    const output = await response.json()
+
     return output.hash
   } catch (err) {
     throw err

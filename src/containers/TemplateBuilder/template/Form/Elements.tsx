@@ -43,7 +43,6 @@ const Elements: React.FC = () => {
     const elementsAfterLastIndex = currentSection.allElements.filter(
       ({ index }) => index > lastElementIndex
     )
-
     updateTemplateSection(currentSection.id, {
       templateElementsUsingId: {
         updateById: elementsAfterLastIndex.map(({ id, index }) => ({
@@ -58,7 +57,7 @@ const Elements: React.FC = () => {
   return (
     <div
       key={`${selectedSectionId}_${selectedPageNumber}`}
-      className="builder-page-elements-wrapper"
+      className="builder-page-elements-wrapper config-container-outline"
     >
       <PageElements
         canEdit={true}
@@ -122,6 +121,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
   } = useTemplateState()
 
   const currentElement = moveStructure.elements[elementId]
+
   if (selectedPageNumber === -1 || selectedSectionId === -1) return null
 
   const currentSection = moveStructure.sections[selectedSectionId]
@@ -167,7 +167,6 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
   }
 
   const doubleMove = (forward = true) => {
-    console.log('yow')
     if ((!forward && currentPage.isLast) || (forward && currentPage.isFirst)) {
       moveToSection(forward ? currentSection.previousSection : currentSection.nextSection)
     } else {
@@ -195,43 +194,42 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
 
   return (
     <>
-      {!(currentSection.isFirst && currentPage.isFirst) && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle double up"
-          onClick={() => doubleMove(true)}
-        />
-      )}
-      {!(currentSection.isLast && currentPage.isLast) && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle double down"
-          onClick={() => doubleMove(false)}
-        />
-      )}
-
-      {!currentElement.isFirstInPage && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle up"
-          onClick={() => {
-            swapElement(moveStructure.elements[elementId].previousElement)
-          }}
-        />
-      )}
-      {!currentElement.isLastInPage && (
-        <IconButton
-          disabled={!isDraft}
-          disabledMessage={disabledMessage}
-          name="angle down"
-          onClick={async () => {
-            swapElement(moveStructure.elements[elementId].nextElement)
-          }}
-        />
-      )}
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle double left"
+        onClick={() => doubleMove(true)}
+        hidden={currentSection.isFirst && currentPage.isFirst}
+        toolTip="Move to previous page"
+      />
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle double right"
+        onClick={() => doubleMove(false)}
+        hidden={currentSection.isLast && currentPage.isLast}
+        toolTip="Move to next page"
+      />
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle up"
+        onClick={() => {
+          swapElement(moveStructure.elements[elementId].previousElement)
+        }}
+        hidden={currentElement?.isFirstInPage ?? true}
+        toolTip="Move up"
+      />
+      <IconButton
+        disabled={!isDraft}
+        disabledMessage={disabledMessage}
+        name="angle down"
+        onClick={async () => {
+          swapElement(moveStructure.elements[elementId].nextElement)
+        }}
+        hidden={currentElement?.isLastInPage ?? true}
+        toolTip="Move down"
+      />
     </>
   )
 }

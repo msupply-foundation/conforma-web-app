@@ -13,13 +13,9 @@ const ReviewHeader: React.FC<ReviewHeaderProps> = ({ applicationName, stage }) =
   const { strings } = useLanguageProvider()
   return (
     <div id="application-summary-header">
-      <Header
-        as="h5"
-        content={applicationName}
-        subheader={<Header as="h2" content={strings.LABEL_REVIEW} />}
-      />
+      <Header as="h5" content={applicationName} />
+      <Header as="h2" content={strings.LABEL_REVIEW} />
       <Stage name={stage.name || ''} colour={stage.colour} />
-      {/* <p>{strings.SUBTITLE_REVIEW}</p> */}
     </div>
   )
 }

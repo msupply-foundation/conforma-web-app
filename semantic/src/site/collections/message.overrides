@@ -2,6 +2,11 @@
         Site Overrides
 *******************************/
 
+// For some reason, the default floating shadow doesn't work without !important
+.ui.floating.message {
+  box-shadow: @floatingBoxShadow !important;
+}
+
 // Info message blue icon
 .ui.info.message .header i.icon {
   color: @information;
@@ -9,7 +14,6 @@
 
 // Info message left border
 .ui.info.message {
-  border: none;
   border-left: @accentBorderWidth solid @information;
 }
 
@@ -21,6 +25,9 @@
 // Error message
 .ui.error.message {
   border-left: @accentBorderWidth solid @attention;
+  .icon {
+    color: @attention;
+  }
 }
 
 .ui.error.message h1,

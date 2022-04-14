@@ -5,6 +5,8 @@ import {
   TemplateStatus,
   useGetTemplatesAvailableForCodeQuery,
 } from '../../../../utils/generated/graphql'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
+
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import Markdown from '../../../../utils/helpers/semanticReactMarkdown'
 import { useOperationState } from '../../shared/OperationContext'
@@ -18,18 +20,16 @@ import MessagesConfig from './MessagesConfig'
 import CheckboxIO from '../../shared/CheckboxIO'
 
 const General: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const { updateTemplate } = useOperationState()
   const { structure } = useApplicationState()
   const { template } = useTemplateState()
-  const { data: availableTemplatesData, refetch: refetchAvailable } =
-    useGetTemplatesAvailableForCodeQuery({
-      variables: { code: template.code },
-    })
+  const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
+    variables: { code: template.code },
+  })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
 
-  const canSetAvailable =
-    availableTemplatesData?.templates?.nodes?.length === 0 &&
-    template.status !== TemplateStatus.Available
+  const canSetAvailable = template.status !== TemplateStatus.Available
 
   const canSetDraft = template.status !== TemplateStatus.Draft && template.applicationCount === 0
 
@@ -37,19 +37,18 @@ const General: React.FC = () => {
 
   return (
     <div className="flex-column-center-start">
-      <div className="flex-row">
-        <div className="spacer-10" />
+      <div className="flex-row flex-gap-10">
         <ButtonWithFallback
-          title="Make Available"
-          disabledMessage="At least one template with the same code is already available, or this template already available"
+          title={strings.TEMPLATE_GEN_BUTTON_AVAILABLE}
+          disabledMessage={strings.TEMPLATE_GEN_BUTTON_AVAILABLE_DISABLED}
           disabled={!canSetAvailable}
           onClick={() => {
             updateTemplate(template.id, { status: TemplateStatus.Available })
           }}
         />
         <ButtonWithFallback
-          title="Make Draft"
-          disabledMessage="Already has appications or is draft"
+          title={strings.TEMPLATE_GEN_BUTTON_DRAFT}
+          disabledMessage={strings.TEMPLATE_GEN_BUTTON_DRAFT_DISABLED}
           disabled={!canSetDraft}
           onClick={async () => {
             if (await updateTemplate(template.id, { status: TemplateStatus.Draft }))
@@ -72,6 +71,8 @@ const General: React.FC = () => {
           text={String(template.name)}
           title="Name"
           setText={(text) => updateTemplate(template.id, { name: text })}
+          minLabelWidth={100}
+          labelTextAlign="right"
         />
       </div>
       <div className="longer">
@@ -80,6 +81,8 @@ const General: React.FC = () => {
           disabledMessage="Can only change code of draft template"
           title="Name Plural"
           setText={(text) => updateTemplate(template.id, { namePlural: text })}
+          minLabelWidth={100}
+          labelTextAlign="right"
         />
       </div>
       <TextIO
@@ -88,6 +91,8 @@ const General: React.FC = () => {
         disabledMessage="Can only change code of draft template"
         title="Code"
         setText={(text) => updateTemplate(template.id, { code: text })}
+        minLabelWidth={100}
+        labelTextAlign="right"
       />
       <CheckboxIO
         title="Linear"
@@ -96,7 +101,21 @@ const General: React.FC = () => {
           updateTemplate(template.id, { isLinear: checked })
         }}
         disabled={!template.isDraft}
-        disabledMessage="Can only change code of draft template"
+        disabledMessage="Can only change isLinear of draft template"
+        minLabelWidth={100}
+        labelTextAlign="right"
+      />
+
+      <CheckboxIO
+        title="Interactive"
+        value={!!template?.canApplicantMakeChanges}
+        setValue={(checked) => {
+          updateTemplate(template.id, { canApplicantMakeChanges: checked })
+        }}
+        disabled={!template.isDraft}
+        disabledMessage="Can only change canApplicantMakeChanges of draft template"
+        minLabelWidth={100}
+        labelTextAlign="right"
       />
 
       <Category />
@@ -109,20 +128,23 @@ const General: React.FC = () => {
         </Header>
         <IconButton name="setting" onClick={() => setIsMessageConfigOpen(true)} />
       </div>
-      <div className="config-container">
-        <Header className="no-margin-no-padding" as="h6">
+      <div className="flex-column-center full-width-container">
+        <div className="spacer-20" />
+        <Header className="no-margin-no-padding" as="h4">
           Start Message
         </Header>
-        <div className="spacer-20" />
-        <Markdown text={structure.info.startMessage || ''} />
+        <div className="config-container-alternate text-block-width">
+          <Markdown text={structure.info.startMessage || ''} />
+        </div>
       </div>
-
-      <div className="config-container">
-        <Header className="no-margin-no-padding" as="h6">
+      <div className="flex-column-center full-width-container">
+        <div className="spacer-20" />
+        <Header className="no-margin-no-padding" as="h4">
           Submission Message
         </Header>
-        <div className="spacer-20" />
-        <Markdown text={structure.info.submissionMessage || ''} />
+        <div className="config-container-alternate text-block-width">
+          <Markdown text={structure.info.submissionMessage || ''} />
+        </div>
       </div>
       <MessagesConfig isOpen={isMessageConfigOpen} onClose={() => setIsMessageConfigOpen(false)} />
     </div>

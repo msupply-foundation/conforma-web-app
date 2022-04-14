@@ -15,7 +15,7 @@ const ApplicantResponseElement: React.FC<ApplicantResponseElementProps> = ({
   isResponseUpdated = false,
   children,
 }) => {
-  const backgroundClass = isResponseUpdated ? 'changeable-background' : ''
+  const backgroundClass = isResponseUpdated ? 'highlight-background' : ''
   return (
     <div className={`response-container ${backgroundClass}`}>
       <div className="flex-grow-1 summary-width">

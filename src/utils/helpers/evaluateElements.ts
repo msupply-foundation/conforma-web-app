@@ -51,6 +51,7 @@ const evaluateSingleElement: EvaluateElement = async (
   evaluationOptions,
   { responses, currentUser, applicationData }
 ) => {
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
   const evaluationParameters = {
     objects: {
       responses: { ...responses, thisResponse: responses?.[element.code]?.text },
@@ -59,6 +60,7 @@ const evaluateSingleElement: EvaluateElement = async (
     },
     APIfetch: fetch,
     graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+    headers: { Authorization: 'Bearer ' + JWT },
   }
 
   const evaluatedElement: PartialEvaluatedElement = {}

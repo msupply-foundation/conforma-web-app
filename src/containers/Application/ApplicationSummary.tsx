@@ -63,6 +63,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
           } else {
             try {
               await submit(fullStructure)
+              fullStructure.reload()
               push(`/application/${fullStructure?.info.serial}/submission`)
             } catch (e) {
               console.log(e)
@@ -87,7 +88,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     },
   } = fullStructure
 
-  const isCompleted = status === ApplicationStatus.Completed
+  const isSubmitted = status !== ApplicationStatus.Draft
 
   return (
     <Container id="application-summary">
@@ -96,12 +97,12 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
           as="h2"
           textAlign="center"
           content={
-            isCompleted ? strings.TITLE_APPLICATION_COMPLETED : strings.TITLE_APPLICATION_SUMMARY
+            isSubmitted ? strings.TITLE_APPLICATION_SUBMITTED : strings.TITLE_APPLICATION_SUMMARY
           }
           subheader={
             <Header.Subheader
               className="center-text"
-              content={isCompleted ? name : strings.SUBTITLE_APPLICATION_SUMMARY}
+              content={isSubmitted ? name : strings.SUBTITLE_APPLICATION_SUMMARY}
             />
           }
         />
@@ -116,7 +117,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
               section={section}
               responsesByCode={responsesByCode as ResponsesByCode}
               applicationData={fullStructure.info}
-              stages={stages}
+              stages={stages.map(({ stage }) => stage)}
               serial={serial}
               isSummary
               canEdit={status === ApplicationStatus.Draft}

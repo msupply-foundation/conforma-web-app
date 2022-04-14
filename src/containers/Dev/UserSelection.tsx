@@ -9,7 +9,7 @@ import { useUserState } from '../../contexts/UserState'
 
 const hardcodedPassword = '123456'
 
-const loginURL = config.serverREST + '/login'
+const loginURL = config.serverREST + '/public/login'
 const loginOrgURL = config.serverREST + '/login-org'
 
 const UserSelection: React.FC = () => {
@@ -31,11 +31,15 @@ const UserSelection: React.FC = () => {
   const handleChangeUser = async (username: string) => {
     setIsOpen(false)
     // Selected User login
-    const loginResult = await attemptLogin({ username, password: hardcodedPassword }, loginURL)
+    const loginResult = await attemptLogin({
+      jsonBody: { username, password: hardcodedPassword },
+      url: loginURL,
+      headers: { 'Content-Type': 'application/json' },
+    })
     if (!loginResult.success) {
       console.log(`Problem logging in user: ${username}`)
       return
-    }
+    } else localStorage.setItem(config.localStorageJWTKey, loginResult.JWT)
 
     // Organisation login (auto-select first in list)
     const { JWT, user, templatePermissions, orgList, isAdmin } = loginResult
@@ -44,12 +48,12 @@ const UserSelection: React.FC = () => {
       return
     }
     const selectedOrg = orgList[0]
-    const authHeader = { Authorization: 'Bearer ' + JWT }
-    const verifyOrgResult = await attemptLogin(
-      { userId: user.userId, orgId: selectedOrg.orgId },
-      loginOrgURL,
-      authHeader
-    )
+
+    const verifyOrgResult = await attemptLogin({
+      jsonBody: { userId: user.userId, orgId: selectedOrg.orgId },
+      url: loginOrgURL,
+      headers: { 'Content-Type': 'application/json' },
+    })
 
     if (!verifyOrgResult.success) {
       console.log(`Problem logging in with organisation: ${selectedOrg.name}`)

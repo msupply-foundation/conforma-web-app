@@ -7,18 +7,18 @@ type UseCreateReviewMutationReturnType = ReturnType<typeof useCreateReviewMutati
 type PromiseReturnType = ReturnType<UseCreateReviewMutationReturnType[0]>
 // hook used to start a review, , as per type definition below (returns promise that resolve with mutation result data)
 type UseCreateReview = (props: {
-  structure: FullStructure
-  assignment: AssignmentDetails
+  reviewStructure: FullStructure
+  reviewAssignment: AssignmentDetails
 }) => () => PromiseReturnType
 
 type ConstructReviewInput = (structure: FullStructure) => ReviewInput
 
-const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
+const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment }) => {
   const [createReview] = useCreateReviewMutation()
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullApplicationStructure: structure,
-    reviewAssignment: assignment,
+    reviewStructure,
+    reviewAssignment,
   })
 
   const constructReviewInput: ConstructReviewInput = (structure) => {
@@ -29,22 +29,22 @@ const useCreateReview: UseCreateReview = ({ structure, assignment }) => {
     )
 
     const reviewResponseCreate = reviewableElements.map(
-      ({ lowerLevelReviewLatestResponse, response, reviewQuestionAssignmentId }) => {
+      ({ lowerLevelReviewLatestResponse, response }) => {
         // link to applicaiton response or review response based on review level
-        const applicationResponseId = assignment.level > 1 ? undefined : response?.id
+        const applicationResponseId = reviewAssignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
-          assignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
+          reviewAssignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
         return {
           applicationResponseId,
           reviewResponseLinkId,
-          reviewQuestionAssignmentId,
         }
       }
     )
+
     // See comment at the bottom of file for resulting shape
     return {
       trigger: Trigger.OnReviewCreate,
-      reviewAssignmentId: assignment.id,
+      reviewAssignmentId: reviewAssignment.id,
       reviewResponsesUsingId: {
         create: reviewResponseCreate,
       },

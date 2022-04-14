@@ -7,5 +7,11 @@ export default gql`
     id
     description
     colour
+    templateStageReviewLevelsByStageId {
+      nodes {
+        name
+        number
+      }
+    }
   }
 `

@@ -7,6 +7,7 @@ import {
   useRestartApplicationMutation,
   useUpdateTemplateStageMutation,
 } from '../../../utils/generated/graphql'
+import { postRequest } from '../../../utils/helpers/fetchMethods'
 import useCreateApplication from '../../../utils/hooks/useCreateApplication'
 import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
 import {
@@ -21,7 +22,7 @@ import {
   UpdateTemplateStage,
 } from './OperationContext'
 
-const snapshotsBaseUrl = `${config.serverREST}/snapshot`
+const snapshotsBaseUrl = `${config.serverREST}/admin/snapshot`
 const takeSnapshotUrl = `${snapshotsBaseUrl}/take`
 export const snapshotFilesUrl = `${snapshotsBaseUrl}/files`
 const useSnapshotUrl = `${snapshotsBaseUrl}/use`
@@ -266,14 +267,17 @@ const safeFetch = async (
   body: any,
   setErrorAndLoadingState: SetErrorAndLoadingState
 ) => {
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
   setErrorAndLoadingState({ isLoading: true })
   try {
-    const resultRaw = await fetch(url, {
-      method: 'POST',
-      headers: typeof body === 'string' ? { 'Content-Type': 'application/json' } : {},
-      body,
+    const resultJson = await postRequest({
+      url,
+      headers:
+        typeof body === 'string'
+          ? { Authorization: `Bearer ${JWT}`, 'Content-Type': 'application/json' }
+          : { Authorization: `Bearer ${JWT}` },
+      otherBody: body,
     })
-    const resultJson = await resultRaw.json()
     if (!!resultJson?.success) {
       setErrorAndLoadingState({ isLoading: false })
       return true

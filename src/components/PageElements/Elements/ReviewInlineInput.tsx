@@ -64,7 +64,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
       : reviewResponse?.decision === ReviewResponseDecision.Decline)
 
   return (
-    <div className="response-container changeable-background">
+    <div className="response-container highlight-background">
       <div className="response-element-content">
         <Form>
           <Form.Field>
@@ -109,7 +109,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
             <Button
               primary
               inverted
-              content={strings.BUTTON_CANCEL}
+              content={strings.OPTION_CANCEL}
               onClick={() => setIsActiveEdit(false)}
               className="button-med"
             />

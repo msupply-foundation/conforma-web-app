@@ -66,12 +66,12 @@ export const PermissionActionInfo: React.FC<PermissionActionsProps> = ({ templat
         evaluation={templateAction?.condition}
         setEvaluation={() => {}}
       />
-      <Parameters
+      {/* <Parameters
         key="parametersElement"
         currentElementCode={''}
         parameters={templateAction?.parameterQueries || {}}
         setParameters={() => {}}
-      />
+      /> */}
     </div>
   )
 }
@@ -90,12 +90,12 @@ export const TemplateElementInfo: React.FC<TemplateElementProps> = ({ templateEl
           text={`${templateElement?.code} - ${templateElement?.title}`}
         />
       </div>
-      <Parameters
+      {/* <Parameters
         key="parametersElement"
         currentElementCode={''}
         parameters={templateElement?.parameters || {}}
         setParameters={() => {}}
-      />
+      /> */}
     </div>
   )
 }

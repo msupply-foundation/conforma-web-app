@@ -16,7 +16,7 @@ const usePrefs = () => {
   })
 
   useEffect(() => {
-    getRequest(`${config.serverREST}/get-prefs`)
+    getRequest(`${config.serverREST}/public/get-prefs`)
       .then((result) => {
         const { languageOptions, preferences } = result
         setPrefsState({

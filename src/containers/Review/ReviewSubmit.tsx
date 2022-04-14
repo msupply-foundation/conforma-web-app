@@ -21,13 +21,12 @@ type ReviewSubmitProps = {
 
 const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   const {
-    structure: { thisReview, assignment },
-    previousAssignment,
+    structure: { thisReview, assignment, canApplicantMakeChanges },
   } = props
 
   const reviewDecision = thisReview?.reviewDecision
   const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
-    useGetDecisionOptions(assignment, thisReview)
+    useGetDecisionOptions(canApplicantMakeChanges, assignment, thisReview)
 
   return (
     <Form id="review-submit-area">
@@ -79,23 +78,23 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     REVIEW_DECISION_SET_FAIL: {
       title: strings.REVIEW_DECISION_SET_FAIL_TITLE,
       message: strings.REVIEW_DECISION_SET_FAIL_MESSAGE,
-      option: strings.OK,
+      option: strings.OPTION_OK,
     },
     REVIEW_DECISION_MISMATCH: {
       title: strings.REVIEW_DECISION_MISMATCH_TITLE,
       message: strings.REVIEW_DECISION_MISMATCH_MESSAGE,
-      option: strings.OK,
+      option: strings.OPTION_OK,
     },
     REVIEW_STATUS_PENDING: {
       title: strings.REVIEW_STATUS_PENDING_TITLE,
       message: strings.REVIEW_STATUS_PENDING_MESSAGE,
-      option: strings.OK,
+      option: strings.OPTION_OK,
     },
   }
 
   // Need to refetch review status before submission, in case it's pending
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    fullApplicationStructure: structure,
+    reviewStructure: structure,
     reviewAssignment: assignment,
   })
 
@@ -103,7 +102,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
   // TODO: Show on message
   const [submissionError, setSubmissionError] = useState<boolean>(false)
-  const submitReview = useSubmitReview(Number(structure.thisReview?.id))
+  const submitReview = useSubmitReview(Number(structure.thisReview?.id), structure.reload)
   const setAttemptSubmission = () => (structure.attemptSubmission = true)
   const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
 

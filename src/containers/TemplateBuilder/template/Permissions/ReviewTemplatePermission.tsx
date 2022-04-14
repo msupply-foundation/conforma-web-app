@@ -124,32 +124,36 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
   }
 
   return (
-    <div className="flex-row-start-center">
-      <CheckboxIO
-        title="Self Assignable"
-        setValue={(canSelfAssign) => setSelfAssign(canSelfAssign)}
-        disabled={!!selfAssignedDisabledMessage}
-        disabledMessage={selfAssignedDisabledMessage}
-        value={!!templatePermission?.canSelfAssign}
-      />
-      <CheckboxIO
-        title="Make Decision"
-        setValue={(canMakeDecision) => setMakeDecision(canMakeDecision)}
-        disabled={!!makeDecisionDisbaleMessage}
-        disabledMessage={makeDecisionDisbaleMessage}
-        value={!!templatePermission?.canMakeFinalDecision}
-      />
-      {sectionCodes.map((sectionCode) => (
+    <div className="flex-column-start">
+      <div className="flex-row-start-center">
         <CheckboxIO
-          key={sectionCode}
-          title={sectionCode}
-          isPropUpdated={true}
-          setValue={(isAllowed) => setAllowedSection(sectionCode, isAllowed)}
-          disabled={!!allowedSectionsDisabledMessage}
-          disabledMessage={allowedSectionsDisabledMessage}
-          value={allowedSections === null || allowedSections.includes(sectionCode)}
+          title="Self Assignable"
+          setValue={(canSelfAssign) => setSelfAssign(canSelfAssign)}
+          disabled={!!selfAssignedDisabledMessage}
+          disabledMessage={selfAssignedDisabledMessage}
+          value={!!templatePermission?.canSelfAssign}
         />
-      ))}
+        <CheckboxIO
+          title="Make Decision"
+          setValue={(canMakeDecision) => setMakeDecision(canMakeDecision)}
+          disabled={!!makeDecisionDisbaleMessage}
+          disabledMessage={makeDecisionDisbaleMessage}
+          value={!!templatePermission?.canMakeFinalDecision}
+        />
+      </div>
+      <div className="flex-row-start-center-wrap">
+        {sectionCodes.map((sectionCode) => (
+          <CheckboxIO
+            key={sectionCode}
+            title={sectionCode}
+            isPropUpdated={true}
+            setValue={(isAllowed) => setAllowedSection(sectionCode, isAllowed)}
+            disabled={!!allowedSectionsDisabledMessage}
+            disabledMessage={allowedSectionsDisabledMessage}
+            value={allowedSections === null || allowedSections.includes(sectionCode)}
+          />
+        ))}
+      </div>
     </div>
   )
 }

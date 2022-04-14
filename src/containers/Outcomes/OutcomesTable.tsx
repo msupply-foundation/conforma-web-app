@@ -4,7 +4,6 @@ import { Loading } from '../../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { useUserState } from '../../contexts/UserState'
 import { useOutcomesTable } from '../../utils/hooks/useOutcomes'
 import { HeaderRow, OutcomeTableAPIQueries } from '../../utils/types'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
@@ -18,9 +17,6 @@ const OutcomeTable: React.FC = () => {
     query,
     params: { tableName },
   } = useRouter()
-  const {
-    userState: { templatePermissions },
-  } = useUserState()
 
   const [apiQueries, setApiQueries] = useState<OutcomeTableAPIQueries>({})
   const { outcomeTable, loading, error } = useOutcomesTable({

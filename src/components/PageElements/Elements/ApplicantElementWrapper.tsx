@@ -1,7 +1,7 @@
 import React from 'react'
 import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
 import { ApplicationResponse, ReviewResponse } from '../../../utils/generated/graphql'
-import { UpdateIcon } from '../PageElements'
+import { AddIcon, UpdateIcon } from '../PageElements'
 import ViewHistoryButton from '../ViewHistoryButton'
 import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
@@ -10,6 +10,7 @@ interface ApplicantElementWrapperProps {
   elementCode: string
   latestApplicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
+  canApplicantAddNew: boolean
   canApplicantEdit: boolean
   enableViewHistory: boolean
   reviewResponse?: ReviewResponse
@@ -23,6 +24,7 @@ const ApplicantElementWrapper: React.FC<ApplicantElementWrapperProps> = ({
   latestApplicationResponse,
   summaryViewProps,
   reviewResponse,
+  canApplicantAddNew,
   canApplicantEdit,
   enableViewHistory,
   updateMethod,
@@ -39,7 +41,11 @@ const ApplicantElementWrapper: React.FC<ApplicantElementWrapperProps> = ({
         summaryViewProps={summaryViewProps}
         isResponseUpdated={!!isChangeRequest || !!isChanged}
       >
-        {canApplicantEdit && <UpdateIcon onClick={updateMethod} />}
+        {canApplicantAddNew ? (
+          <AddIcon onClick={updateMethod} />
+        ) : canApplicantEdit ? (
+          <UpdateIcon onClick={updateMethod} />
+        ) : null}
       </ApplicantResponseElement>
       {canRenderReviewResponse && (
         <ReviewResponseElement

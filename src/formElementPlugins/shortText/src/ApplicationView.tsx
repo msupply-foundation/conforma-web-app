@@ -7,12 +7,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onUpdate,
   setIsActive,
+  currentResponse,
   validationState,
   onSave,
   Markdown,
-  currentResponse,
 }) => {
   const [value, setValue] = useState<string | null | undefined>(currentResponse?.text)
+  const [hasEdited, setHasEdited] = useState(
+    currentResponse?.text !== null && currentResponse?.text !== parameters?.default
+  )
   const { isEditable } = element
   const {
     placeholder,
@@ -21,7 +24,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     description,
     maxWidth,
     maxLength = Infinity,
+    default: defaultText,
   } = parameters
+
+  useEffect(() => {
+    if (defaultText && (!hasEdited || !value)) {
+      onSave({ text: defaultText })
+      setValue(defaultText)
+    } else onUpdate(value)
+  }, [defaultText])
 
   function handleChange(e: any) {
     let text = e.target.value
@@ -30,6 +41,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     }
     onUpdate(text)
     setValue(text)
+    setHasEdited(true)
   }
 
   function handleLoseFocus(e: any) {

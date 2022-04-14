@@ -8,6 +8,8 @@ type CheckboxIOprops = {
   disabled?: boolean
   disabledMessage?: string
   isPropUpdated?: boolean
+  minLabelWidth?: number
+  labelTextAlign?: string
 }
 
 const CheckboxIO: React.FC<CheckboxIOprops> = ({
@@ -17,8 +19,11 @@ const CheckboxIO: React.FC<CheckboxIOprops> = ({
   title,
   disabledMessage,
   isPropUpdated = false,
+  minLabelWidth = 100,
+  labelTextAlign = 'center',
 }) => {
   const [innerValue, setInnerValue] = useState(value)
+  const style: any = { minWidth: minLabelWidth, textAlign: labelTextAlign }
 
   useEffect(() => {
     if (isPropUpdated) setInnerValue(() => value)
@@ -30,7 +35,11 @@ const CheckboxIO: React.FC<CheckboxIOprops> = ({
       disabled={!disabled || !disabledMessage}
       trigger={
         <div className="io-wrapper">
-          {title && <div className="io-component key">{title}</div>}
+          {title && (
+            <div className="io-component key" style={style}>
+              {title}
+            </div>
+          )}
           <div className="io-component value">
             <Checkbox
               checked={innerValue}

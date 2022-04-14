@@ -3,14 +3,11 @@ import { Decision, ReviewStatus } from '../generated/graphql'
 import { LanguageStrings, useLanguageProvider } from '../../contexts/Localisation'
 import { DecisionOption, ReviewAssignment, ReviewDetails } from '../types'
 
-const getInitialDecisionOptions = (strings: LanguageStrings): DecisionOption[] => {
-  return [
-    {
-      code: Decision.ListOfQuestions,
-      title: strings.DECISION_LIST_OF_QUESTIONS,
-      isVisible: false,
-      value: false,
-    },
+const getInitialDecisionOptions = (
+  strings: LanguageStrings,
+  canApplicantMakeChanges: boolean
+): DecisionOption[] => {
+  let availableOptions = [
     {
       code: Decision.NonConform,
       title: strings.DECISION_NON_CONFORM,
@@ -30,10 +27,22 @@ const getInitialDecisionOptions = (strings: LanguageStrings): DecisionOption[] =
       value: false,
     },
   ]
+
+  // Only display LOQ options if template is interactive with Applicant
+  if (canApplicantMakeChanges)
+    availableOptions.push({
+      code: Decision.ListOfQuestions,
+      title: strings.DECISION_LIST_OF_QUESTIONS,
+      isVisible: false,
+      value: false,
+    })
+
+  return availableOptions
 }
 
 // hook used to manage state of options shown in review submit, as per type definition below
 type UseGetDecisionOptions = (
+  canApplicantMakeChanges: boolean,
   assignment?: ReviewAssignment,
   thisReview?: ReviewDetails | null
 ) => {
@@ -44,11 +53,15 @@ type UseGetDecisionOptions = (
   isDecisionError: boolean
 }
 
-const useGetDecisionOptions: UseGetDecisionOptions = (assignment, thisReview) => {
+const useGetDecisionOptions: UseGetDecisionOptions = (
+  canApplicantMakeChanges,
+  assignment,
+  thisReview
+) => {
   const { strings } = useLanguageProvider()
-  const { isLastLevel, finalDecision, canSubmitReviewAs } = assignment as ReviewAssignment
+  const { isLastLevel, isFinalDecision, canSubmitReviewAs } = assignment as ReviewAssignment
   const [decisionOptions, setDecisionOptions] = useState<DecisionOption[]>(
-    getInitialDecisionOptions(strings)
+    getInitialDecisionOptions(strings, canApplicantMakeChanges)
   )
   const [isDecisionError, setIsDecisionError] = useState(false)
 
@@ -63,7 +76,7 @@ const useGetDecisionOptions: UseGetDecisionOptions = (assignment, thisReview) =>
       let value = false
       // if review is NOT DRAFT then use decision from DB (and make it the only one visible)
       if (!isDraft) isVisible = value = code === decisionInStructure
-      else if (finalDecision) {
+      else if (isFinalDecision) {
         isVisible = code === Decision.NonConform || code === Decision.Conform
         value = false
       }

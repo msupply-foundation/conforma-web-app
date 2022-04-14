@@ -12,30 +12,31 @@ import {
 } from './typeHelpers'
 import { EvaluationType, ParseAndRenderEvaluationType, RenderEvaluationElementType } from './types'
 import EvaluationOutputType from './EvaluationOutputType'
+import EvaluationFallback from './EvaluationFallback'
 
 export const renderEvaluation: ParseAndRenderEvaluationType = (
   evaluation,
   setEvaluation,
   ComponentLibrary,
-  evaluatorParamers
+  evaluatorParameters
 ) => {
   const _setEvaluation = (typedEvaluation: EvaluationType) =>
     setEvaluation(convertTypedEvaluationToBaseType(typedEvaluation))
 
-  return renderEvaluationElement(evaluation, _setEvaluation, ComponentLibrary, evaluatorParamers)
+  return renderEvaluationElement(evaluation, _setEvaluation, ComponentLibrary, evaluatorParameters)
 }
 
-const Evaluate: React.FC<{ typedEvaluation: EvaluationType; evaluatorParamers?: IParameters }> = ({
-  typedEvaluation,
-  evaluatorParamers,
-}) => {
+const Evaluate: React.FC<{
+  typedEvaluation: EvaluationType
+  evaluatorParameters?: IParameters
+}> = ({ typedEvaluation, evaluatorParameters }) => {
   const [evaluationResult, setEvaluationResult] = useState<ValueNode | undefined | null>(undefined)
 
   const evaluateNode = async () => {
     try {
       const result = await evaluateExpression(
         convertTypedEvaluationToBaseType(typedEvaluation),
-        evaluatorParamers
+        evaluatorParameters
       )
       setEvaluationResult(result)
     } catch (e) {
@@ -45,7 +46,13 @@ const Evaluate: React.FC<{ typedEvaluation: EvaluationType; evaluatorParamers?: 
 
   return (
     <>
-      <Icon className="clickable" name="lightning" onClick={() => evaluateNode()} />
+      <Icon
+        className="clickable"
+        name="play"
+        size="large"
+        onClick={() => evaluateNode()}
+        style={{ marginBottom: 8 }}
+      />
       <Modal
         className="config-modal"
         open={evaluationResult !== undefined}
@@ -73,7 +80,7 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
   evaluation,
   setEvaluation,
   ComponentLibrary,
-  evaluatorParamers
+  evaluatorParameters
 ) => {
   const typedEvaluation = getTypedEvaluation(evaluation)
   const gui = guis.find(({ match }) => match(typedEvaluation))
@@ -95,10 +102,14 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
                 setSelected={onSelect}
                 title="operator"
               />
-              <Evaluate typedEvaluation={typedEvaluation} evaluatorParamers={evaluatorParamers} />
+              <Evaluate
+                typedEvaluation={typedEvaluation}
+                evaluatorParameters={evaluatorParameters}
+              />
             </ComponentLibrary.FlexRow>
             <EvaluationOutputType evaluation={typedEvaluation} setEvaluation={setEvaluation} />
-            {gui.render(typedEvaluation, setEvaluation, ComponentLibrary, evaluatorParamers)}
+            <EvaluationFallback evaluation={typedEvaluation} setEvaluation={setEvaluation} />
+            {gui.render(typedEvaluation, setEvaluation, ComponentLibrary, evaluatorParameters)}
           </ComponentLibrary.OperatorContainer>
         </ComponentLibrary.FlexRow>
       )

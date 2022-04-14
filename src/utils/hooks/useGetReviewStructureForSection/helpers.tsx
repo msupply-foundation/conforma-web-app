@@ -2,8 +2,6 @@ import { cloneDeep } from '@apollo/client/utilities'
 import {
   GetReviewResponsesQuery,
   ReviewResponse,
-  ReviewQuestionAssignment,
-  TemplateElement,
   ReviewResponseStatus,
   ReviewStatus,
   ReviewAssignmentStatus,
@@ -30,14 +28,15 @@ import {
   PageElement,
   AssignmentDetails,
   ReviewAssignment,
+  ElementsById,
 } from '../../types'
 
 const getSectionIds = ({
-  fullApplicationStructure,
+  reviewStructure,
   filteredSectionIds,
 }: UseGetReviewStructureForSectionProps) =>
   filteredSectionIds ||
-  Object.values(fullApplicationStructure.sections).map((section) => section.details.id) ||
+  Object.values(reviewStructure.sections).map((section) => section.details.id) ||
   []
 
 interface CompileVariablesForReviewResponseQueryProps extends UseGetReviewStructureForSectionProps {
@@ -53,12 +52,12 @@ type GenerateReviewStructure = (
 const compileVariablesForReviewResponseQuery = ({
   reviewAssignment,
   sectionIds,
-  fullApplicationStructure,
+  reviewStructure,
   currentUser,
 }: CompileVariablesForReviewResponseQueryProps) =>
   reviewAssignment
     ? {
-        applicationId: fullApplicationStructure.info.id,
+        applicationId: reviewStructure.info.id,
         reviewAssignmentId: reviewAssignment.id as number,
         sectionIds,
         userId: currentUser?.userId as number,
@@ -71,22 +70,24 @@ const compileVariablesForReviewResponseQuery = ({
 
 const generateReviewStructure: GenerateReviewStructure = ({
   data,
-  fullApplicationStructure,
   reviewAssignment,
+  reviewStructure,
   currentUser,
   sectionIds,
 }) => {
   // requires deep clone one we have concurrent useGetFullReviewStructure that could possibly
   // mutate fullApplicationStructure
-  let newStructure: FullStructure = cloneDeep(fullApplicationStructure)
+  let newStructure: FullStructure = cloneDeep(reviewStructure)
 
-  const { reviewQuestionAssignments, level } = reviewAssignment
+  if (!reviewAssignment) return newStructure
 
-  // This is usefull for linking assignments to elements
+  const { level } = reviewAssignment
+
+  // This is useful for linking assignments to elements
   newStructure = addElementsById(newStructure)
   newStructure = addSortedSectionsAndPages(newStructure)
 
-  newStructure = addIsAssigned(newStructure, reviewQuestionAssignments)
+  newStructure = addIsAssigned(newStructure, reviewAssignment)
 
   // Update fields element.isNewApplicantRsponse for applications re-submitted to a reviewer
   setIsNewApplicationResponse(newStructure)
@@ -111,7 +112,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
   // since the reviews with isChangeRequest (and not changed) need to be removed from done accountings
   generateReviewerChangesRequestedProgress(newStructure)
 
-  if (newStructure.assignment?.finalDecision) generateFinalDecisionProgress(newStructure)
+  if (newStructure.assignment?.isFinalDecision) generateFinalDecisionProgress(newStructure)
   else if (level === 1) {
     generateReviewerResponsesProgress(newStructure)
     generateReviewValidity(newStructure)
@@ -143,7 +144,15 @@ const setIsNewApplicationResponse = (structure: FullStructure) => {
 }
 
 const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: AssignmentDetails) => {
-  const { isLastLevel, isFinalDecision, review } = reviewAssignment
+  const {
+    isLastLevel,
+    isLocked,
+    isFinalDecision,
+    isSelfAssignable,
+    review,
+    level,
+    current: { stage },
+  } = reviewAssignment
 
   const isPreviousStageConsolidation = Object.values(structure.elementsById || {}).some(
     ({ lowerLevelReviewLatestResponse }) => !!lowerLevelReviewLatestResponse
@@ -152,14 +161,18 @@ const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: Assi
   // review info comes from reviewAssignment that's passed to this hook
   structure.thisReview = review
   structure.assignment = {
+    assignmentId: reviewAssignment.id,
     assignee: reviewAssignment.reviewer,
+    assigneeLevel: level,
+    assigneeStage: stage.number,
     assignmentStatus: reviewAssignment.current.assignmentStatus as ReviewAssignmentStatus,
+    assignmentDate: reviewAssignment.current.timeStatusUpdated,
+    assignedSections: reviewAssignment.assignedSections,
     isLastLevel,
-    finalDecision: isFinalDecision
-      ? {
-          decisionOnReview: !isPreviousStageConsolidation,
-        }
-      : null,
+    isLocked,
+    isSelfAssignable,
+    isFinalDecision,
+    isFinalDecisionOnConsolidation: isPreviousStageConsolidation,
     canSubmitReviewAs: null,
   }
 }
@@ -227,7 +240,7 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   const previousOriginalReviewResponses = (data?.previousOriginalReviewResponses?.nodes ||
     []) as ReviewResponse[]
 
-  const isFinalDecision = !!structure.assignment?.finalDecision
+  const isFinalDecision = !!structure.assignment?.isFinalDecision
 
   // add thisReviewLatestResponse and thisReviewPreviousResponse
   // includes for a consolidation also has reviewResponsesByReviewResponseLinkId with Consolidator decision
@@ -298,18 +311,18 @@ const addAllReviewResponses = (structure: FullStructure, data: GetReviewResponse
   return structure
 }
 
-const addIsAssigned = (
-  newStructure: FullStructure,
-  reviewQuestionAssignment: ReviewQuestionAssignment[]
-) => {
-  reviewQuestionAssignment.forEach(({ templateElement, id }) => {
-    const { id: templateElementId } = templateElement as TemplateElement
-    const assignedElement = newStructure?.elementsById?.[templateElementId || '']
-
+const addIsAssigned = (newStructure: FullStructure, reviewAssignment: AssignmentDetails) => {
+  const assignedSections = reviewAssignment.assignedSections
+  const assignedElements = Object.entries(newStructure?.elementsById as ElementsById).filter(
+    ([_, element]) =>
+      assignedSections.includes(element.element.sectionCode) &&
+      element.element.category === 'QUESTION'
+  )
+  assignedElements.forEach(([id, _]) => {
+    const assignedElement = newStructure?.elementsById?.[id || '']
     if (!assignedElement) return
 
     assignedElement.isAssigned = true
-    assignedElement.reviewQuestionAssignmentId = id
   })
   return newStructure
 }

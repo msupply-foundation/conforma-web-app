@@ -37,6 +37,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   useEffect(() => {
     // Update dynamic parameters when responses change
+    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
       evaluateExpression(expression as EvaluatorNode, {
         objects: {
@@ -46,6 +47,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
         },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+        headers: { Authorization: 'Bearer ' + JWT },
       }).then((result: any) =>
         setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
       )

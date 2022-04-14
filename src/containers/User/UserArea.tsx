@@ -11,7 +11,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import { UiLocation } from '../../utils/generated/graphql'
-const brandLogo = require('../../../images/brand_logo.png').default
+const brandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
 
 const UserArea: React.FC = () => {
   const {
@@ -101,6 +101,14 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, outcomes }) => {
       value: '/admin/localisations',
     },
   ]
+  // Only include Snapshots menu item in Dev mode
+  if (process.env.NODE_ENV === 'development')
+    adminOptions.splice(1, 0, {
+      key: 'snapshots',
+      text: 'Snapshots',
+      value: '/admin/snapshots',
+    })
+
   // Add Admin templates to Admin menu
   adminOptions.push(
     ...templates
@@ -172,12 +180,14 @@ const BrandArea: React.FC = () => {
   const { strings } = useLanguageProvider()
   return (
     <div id="brand-area" className="hide-on-mobile">
-      <Image src={brandLogo} />
+      <Link to="/">
+        <Image src={brandLogo} />
+      </Link>
       <div>
-        <Link to="/">
-          <h2 className="brand-area-text">{strings.APP_NAME}</h2>
-          <h3 className="brand-area-text">{strings.APP_NAME_SUBHEADER}</h3>
-        </Link>
+        {/* <Link to="/">
+          <h2 className="brand-area-text">{strings._APP_NAME}</h2>
+          <h3 className="brand-area-text">{strings._APP_NAME_SUBHEADER}</h3>
+        </Link> */}
       </div>
     </div>
   )
@@ -191,10 +201,10 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   const { strings } = useLanguageProvider()
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
 
-  const JWT = localStorage.getItem('persistJWT') as string
+  const JWT = localStorage.getItem(config.localStorageJWTKey) as string
 
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
-    await attemptLoginOrg({ orgId, JWT, onLoginOrgSuccess })
+    await attemptLoginOrg({ orgId, onLoginOrgSuccess })
   }
   const onLoginOrgSuccess = async ({
     user,
@@ -220,7 +230,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
-        <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST)} />
+        <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST + '/public')} />
       )}
       <div>
         {dropdownOptions.length === 1 ? (

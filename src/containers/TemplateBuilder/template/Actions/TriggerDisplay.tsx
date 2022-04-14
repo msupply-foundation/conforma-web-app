@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Checkbox, Header } from 'semantic-ui-react'
+import { Checkbox, Header, Button } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
 import CheckboxIO from '../../shared/CheckboxIO'
@@ -122,69 +122,83 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
     return (
       <div className="flex-column-start-stretch">
         <div className="spacer-10" />
-        <div className="config-container">
+        <div className="config-container-alternate">
           <Header as="h5" className="no-margin-no-padding">
             {title}
           </Header>
           {templateActions.map((templateAction, index) => (
-            <div key={templateAction.id} className="config-container-alternate">
+            <div key={templateAction.id} className="config-container">
               <div className="flex-row-start-center">
-                {!isAsynchronous(templateAction) && templateAction?.sequence !== firstSequence && (
+                {!isAsynchronous(templateAction) && (
                   <IconButton
                     name="angle up"
                     onClick={() => {
                       swapSequences(templateAction, templateActions[index - 1])
                     }}
+                    hidden={templateAction?.sequence === firstSequence}
                   />
                 )}
-                {!isAsynchronous(templateAction) && templateAction?.sequence !== lastSequence && (
+                {!isAsynchronous(templateAction) && (
                   <IconButton
                     name="angle down"
                     onClick={() => {
                       swapSequences(templateAction, templateActions[index + 1])
                     }}
+                    hidden={templateAction?.sequence === lastSequence}
                   />
                 )}
                 <IconButton
                   name="setting"
                   onClick={() => setCurrentTemplateAction(templateAction)}
                 />
-                <div className="flex-row-start-center-wrap">
-                  <TextIO
-                    title={strings.TEMPLATE_LABEL_ACTION}
-                    text={allActionsByCode[String(templateAction?.actionCode)]?.name || ''}
-                  />
-                  <TextIO
-                    title={strings.TEMPLATE_LABEL_DESCRIPTION}
-                    text={templateAction?.description || ''}
-                    isTextArea={true}
-                  />
-                  <div className="config-container">
-                    <div className="flex-row-start-center">
-                      <Header
-                        as="h6"
-                        className="no-margin-no-padding"
-                        content={strings.TEMPLATE_LABEL_CONDITION}
+                <div className="flex-row-space-between" style={{ width: '100%' }}>
+                  <div className="flex-row-start-center-wrap">
+                    <TextIO
+                      title={strings.TEMPLATE_LABEL_ACTION}
+                      text={allActionsByCode[String(templateAction?.actionCode)]?.name || ''}
+                      minLabelWidth={90}
+                      labelTextAlign="right"
+                    />
+                    <TextIO
+                      title={strings.TEMPLATE_LABEL_DESCRIPTION}
+                      text={templateAction?.description || ''}
+                      isTextArea={true}
+                      minLabelWidth={90}
+                      labelTextAlign="right"
+                    />
+                    <div className="config-container-outline">
+                      <div className="flex-row-start-center">
+                        <Header
+                          as="h6"
+                          className="no-margin-no-padding right-margin-space-10"
+                          content={strings.TEMPLATE_LABEL_CONDITION}
+                        />
+                        <EvaluationHeader evaluation={templateAction?.condition} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-row">
+                    <div style={{ alignSelf: 'flex-end' }}>
+                      <CheckboxIO
+                        disabled={!isDraft}
+                        disabledMessage={disabledMessage}
+                        title={strings.TEMPLATE_LABEL_SEQUENTIAL}
+                        value={!isAsynchronous(templateAction)}
+                        setValue={(isSequential) =>
+                          setIsSequential(templateAction?.id || 0, isSequential)
+                        }
                       />
-                      <EvaluationHeader evaluation={templateAction?.condition} />
+                    </div>
+                    <div style={{ alignSelf: 'flex-start' }}>
+                      <IconButton
+                        disabled={!isDraft}
+                        disabledMessage={disabledMessage}
+                        name="window close"
+                        onClick={() => removeAction(templateAction?.id)}
+                      />
                     </div>
                   </div>
                 </div>
-                <CheckboxIO
-                  disabled={!isDraft}
-                  disabledMessage={disabledMessage}
-                  title={strings.TEMPLATE_LABEL_SEQUENTIAL}
-                  value={!isAsynchronous(templateAction)}
-                  setValue={(isSequential) =>
-                    setIsSequential(templateAction?.id || 0, isSequential)
-                  }
-                />
-                <IconButton
-                  disabled={!isDraft}
-                  disabledMessage={disabledMessage}
-                  name="window close"
-                  onClick={() => removeAction(templateAction?.id)}
-                />
               </div>
             </div>
           ))}
@@ -198,31 +212,31 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
   }
 
   return (
-    <div className="flex-column-start-stretch">
+    <>
       <div className="spacer-20" />
-      <div className="flex-row-start-center">
-        <Header as="h4" className="no-margin-no-padding">
-          {trigger}
-        </Header>
-        {isDraft && (
-          <>
-            <IconButton
-              title={strings.TEMPLATE_BUTTON_ACTION_ADD}
-              name="add square"
-              onClick={addAction}
-            />
-            <Checkbox
-              toggle
-              label={strings.TEMPLATE_LABEL_ACTION_ON_TOP}
-              onChange={() => setAddActionAtBottom(!addActionAtBottom)}
-              checked={!addActionAtBottom}
-            />
-          </>
-        )}
+      <div className="config-container-outline">
+        <div className="flex-row-start-center flex-gap-20">
+          <Header as="h4" className="no-margin-no-padding">
+            {trigger}
+          </Header>
+          {isDraft && (
+            <>
+              <Button primary inverted onClick={addAction}>
+                {strings.TEMPLATE_BUTTON_ADD_ACTION}
+              </Button>
+              <Checkbox
+                toggle
+                label={strings.TEMPLATE_LABEL_ACTION_ON_TOP}
+                onChange={() => setAddActionAtBottom(!addActionAtBottom)}
+                checked={!addActionAtBottom}
+              />
+            </>
+          )}
+        </div>
+        {renderTemplateActions('Sequential', sequential)}
+        {renderTemplateActions('Asynchronous', asynchronous)}
       </div>
-      {renderTemplateActions('Sequential', sequential)}
-      {renderTemplateActions('Asynchronous', asynchronous)}
-    </div>
+    </>
   )
 }
 

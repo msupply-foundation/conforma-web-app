@@ -69,11 +69,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   // Update dynamic parameters when responses change
   useEffect(() => {
+    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
       evaluateExpression(expression as EvaluatorNode, {
         objects: { responses: allResponses, currentUser, applicationData },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+        headers: { Authorization: 'Bearer ' + JWT },
       }).then((result: any) => {
         // Need to do our own equality check since React treats 'result' as
         // different object to original and causes a re-render even when not
@@ -90,6 +92,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }, [currentResponse, isStrictPage])
 
   const onUpdate = async (value: LooseString) => {
+    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     const responses = { thisResponse: value, ...allResponses }
     const newValidationState = await calculateValidationState({
       validationExpression,
@@ -101,6 +104,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         objects: { responses, currentUser, applicationData },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+        headers: { Authorization: 'Bearer ' + JWT },
       },
       currentResponse,
     })

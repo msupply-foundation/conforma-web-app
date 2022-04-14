@@ -46,7 +46,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplica
         <Modal.Description>
           {historyList.map(({ stageNumber, historyElements }) => {
             const stageDetails = stages.find(({ number }) => number === stageNumber)
-            const stageName = stageDetails?.name || strings.STAGE_NOT_FOUND
+            const stageName = stageDetails?.name || strings.ERROR_STAGE_NOT_FOUND
             const stageColour = stageDetails?.colour || ''
             return (
               <div key={`history_stage_${stageName}`} className="history-block">

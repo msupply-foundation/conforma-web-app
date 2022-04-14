@@ -9,7 +9,7 @@
 @yellow: #fbbd08;
 @olive: #b5cc18;
 @green: @success;
-@teal: #00b5ad;
+@teal: @information;
 @blue: @interactiveHigh;
 @violet: #6435c9;
 @purple: #a333c8;
@@ -23,6 +23,7 @@
       See: https://debs181572.invisionapp.com/console/Drug-reg-app----Desktop-ckmfpptbx008401xqfx1j17ha/ckmfppu8f003s01wvdt41eywt/play
 ------------------------------------------------------*/
 @headerCopy: #000000;
+@headersInteractiveDarker: #242424;
 @headersInteractiveLow: #4a4a4a;
 @surfacesDark: #aeaeae;
 @surfacesMed: #dcdddd;

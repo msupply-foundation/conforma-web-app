@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getRequest } from '../../utils/helpers/fetchMethods'
 import config from '../../config'
-import { LOCAL_STORAGE_JWT_KEY } from '../data/globalConstants'
-import { TemplatePermissions } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import {
   OutcomesResponse,
@@ -43,7 +41,7 @@ export const useOutcomesList = () => {
   } = useUserState()
 
   useEffect(() => {
-    const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
+    const JWT = localStorage.getItem(config.localStorageJWTKey)
     if (!JWT) return
     const url = `${serverURL}/outcomes`
     processRequest(url, JWT, setError, setLoading, setOutcomesList)
@@ -62,7 +60,7 @@ export const useOutcomesTable = ({ tableName, apiQueries }: OutcomeTableProps) =
   } = useUserState()
 
   useEffect(() => {
-    const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
+    const JWT = localStorage.getItem(config.localStorageJWTKey)
     if (!JWT) return
     const queryElements = []
     if (first) queryElements.push(`first=${first}`)
@@ -86,7 +84,7 @@ export const useOutcomesDetail = ({ tableName, recordId }: OutcomeDetailsProps) 
   } = useUserState()
 
   useEffect(() => {
-    const JWT = localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
+    const JWT = localStorage.getItem(config.localStorageJWTKey)
     if (!JWT) return
     const url = `${serverURL}/outcomes/table/${tableName}/item/${recordId}`
     processRequest(url, JWT, setError, setLoading, setOutcomeDetail)
@@ -110,6 +108,10 @@ const processRequest = (
   setLoadingMethod(true)
   getRequest(url, { Authorization: `Bearer ${JWT}` })
     .then((response) => {
+      if (response?.error) {
+        setState(response, false, undefined)
+        return
+      }
       if (response?.statusCode) {
         setState(response, false, undefined)
         return
