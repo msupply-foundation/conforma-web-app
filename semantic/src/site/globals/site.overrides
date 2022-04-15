@@ -12,12 +12,6 @@ p {
   padding: 0;
 }
 
-p.invert-spacing{
-  margin-top: 1em;
-  margin-bottom: 0;
-  padding-bottom: 0.5em;
-}
-
 p strong {
   font-weight: @semiboldWeight;
 }
