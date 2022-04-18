@@ -42,6 +42,7 @@ const LookUpMainMenu: React.FC<any> = (props) => {
             labelPosition="left"
             popUpContent={strings.LOOKUP_TABLE_DOWNLOAD.replace('%1', tableLabel)}
             id={tableId}
+            name={tableLabel}
           />
         </Button.Group>
       }

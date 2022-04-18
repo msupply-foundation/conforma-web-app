@@ -82,10 +82,11 @@ const ListTable: React.FC<any> = ({
                     <DownloadButton
                       popUpContent={strings.LOOKUP_TABLE_DOWNLOAD.replace('%1', lookupTable.label)}
                       id={lookupTable.id}
+                      name={lookupTable.label}
                     />
                   </Button.Group>
                 </Table.Cell>
-                <Table.Cell icon="chevron down" collapsing />
+                {/* <Table.Cell icon="chevron down" collapsing /> */}
               </Table.Row>
               {lookupTable.isExpanded && (
                 <Table.Row key={`table-row-detail-${lookupTable.id}`}>
