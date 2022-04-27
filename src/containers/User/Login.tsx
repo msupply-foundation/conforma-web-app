@@ -1,5 +1,6 @@
 import React, { SyntheticEvent, useState, useEffect } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { useApolloClient } from '@apollo/client'
 import { useUserState } from '../../contexts/UserState'
 import { Link } from 'react-router-dom'
 import { Form, Button, Container, Icon, Image, Header, List, Dropdown } from 'semantic-ui-react'
@@ -22,6 +23,7 @@ const Login: React.FC = () => {
   const [selectedOrgId, setSelectedOrgId] = useState<number>(NO_ORG_SELECTED)
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
+  const client = useApolloClient()
   const { strings, languageOptions } = useLanguageProvider()
 
   const noOrgOption: OrganisationSimple = {
@@ -34,6 +36,7 @@ const Login: React.FC = () => {
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
   useEffect(() => {
     if (isLoggedIn()) push('/')
+    client.clearStore()
   }, [])
 
   const onLoginSuccess = (loginResult: LoginPayload) => {
