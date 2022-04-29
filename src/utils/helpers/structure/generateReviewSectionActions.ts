@@ -51,11 +51,11 @@ const actionDefinitions: ActionDefinition[] = [
   {
     // Show "start" when is new review submitted to consolidation (even for partial reviews)
     action: ReviewAction.canStartReview,
-    checkMethod: ({ reviewStatus, reviewLevel, isSecondReview, isPendingReview }) =>
-      reviewStatus === ReviewStatus.Pending &&
+    checkMethod: ({ reviewAssignmentStatus, reviewLevel, isSecondReview, reviewStatus }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
       reviewLevel > 1 &&
       !isSecondReview &&
-      isPendingReview,
+      !reviewStatus,
   },
   {
     action: ReviewAction.canReReview,
@@ -131,10 +131,13 @@ const generateReviewSectionActions: GenerateSectionActions = ({
 
     const totalNewReviewable = section?.consolidationProgress?.totalNewReviewable
 
+    const reviewStatus = thisReview?.current.reviewStatus
+
     const isReviewable =
-      (totalReviewable || 0) > 0 &&
       assignmentStatus === ReviewAssignmentStatus.Assigned &&
-      assignedSections.includes(section.details.code)
+      assignedSections.includes(section.details.code) &&
+      // Only check totalReviewable if review already exists
+      (reviewStatus ? (totalReviewable || 0) > 0 : true)
 
     const isAssignedToCurrentUser =
       assignee?.id === currentUserId && (isReviewable || isFinalDecision)
@@ -146,7 +149,7 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       reviewLevel: assigneeLevel,
       reviewAssignmentStatus: assignmentStatus,
       isReviewExisting: !!thisReview,
-      reviewStatus: thisReview?.current.reviewStatus,
+      reviewStatus: reviewStatus,
       isSecondReview: (totalNewReviewable || 0) > 0,
       isPendingReview: (totalPendingReview || 0) > 0,
       isReviewActive: (totalActive || 0) > 0,
