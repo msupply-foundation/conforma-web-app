@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react'
+import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import config from '../config'
@@ -91,12 +92,14 @@ export function UserProvider({ children }: UserProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const userState = state
   const setUserState = dispatch
+  const client = useApolloClient()
 
   const logout = () => {
     // Delete everything EXCEPT language preference in localStorage
     const language = localStorage.getItem('language')
     localStorage.clear()
     if (language) localStorage.setItem('language', language)
+    client.clearStore()
     window.location.href = '/login'
   }
 
