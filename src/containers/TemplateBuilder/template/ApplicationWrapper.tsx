@@ -51,7 +51,9 @@ const CreateApplicationWrapper: React.FC = ({ children }) => {
   }
 
   const create = async () => {
-    const elementsDefaults = allElements.map((element) => element.defaultValue)
+    const elementsDefaults = allElements
+      .filter((element) => element.elementTypePluginCode !== 'pageBreak')
+      .map((element) => element.defaultValue)
     const defaultValues = await getDefaultValues(elementsDefaults || [], currentUser)
 
     await createApplication({
