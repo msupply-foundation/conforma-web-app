@@ -31,7 +31,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     maxWidth,
     type = NumberType.FLOAT,
     simple = true,
-    minValue = -Infinity,
+    minValue = 0,
     maxValue = Infinity,
     step = 1,
     locale = undefined,
