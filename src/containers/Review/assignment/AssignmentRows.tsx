@@ -51,14 +51,13 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
                 sectionCode={code}
                 reviewLevel={Number(level)}
                 structure={fullStructure}
-                assignedSectionsState={[
-                  assignedSectionsByLevel[level] || defaultAssignedSections,
-                  (assignedSections) =>
-                    setAssignedSectionsByLevel({
-                      ...assignedSectionsByLevel,
-                      [level]: assignedSections,
-                    }),
-                ]}
+                assignedSections={assignedSectionsByLevel[level] || defaultAssignedSections}
+                setAssignedSections={(assignedSections) =>
+                  setAssignedSectionsByLevel({
+                    ...assignedSectionsByLevel,
+                    [level]: assignedSections,
+                  })
+                }
                 setEnableSubmit={setEnableSubmit}
                 setAssignmentError={setAssignmentError}
               />
