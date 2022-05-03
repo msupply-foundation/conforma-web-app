@@ -482,6 +482,11 @@ interface ChangeRequestsProgress {
   doneChangeRequests: number
 }
 
+export interface AssignedSectionsByLevel {
+  [level: string]: SectionAssignee
+}
+
+
 interface SectionAssignee {
   [sectionCode: string]: {
     newAssignee: number | undefined
@@ -752,15 +757,15 @@ export type FilterTypeMethod = (filterKey: string, options?: FilterTypeOptions) 
 
 export type FilterTypeDefinitions = {
   [filterType in
-    | 'number'
-    | 'date'
-    | 'boolean'
-    | 'equals'
-    | 'enumList'
-    | 'searchableListIn'
-    | 'searchableListInArray'
-    | 'staticList'
-    | 'search']: FilterTypeMethod
+  | 'number'
+  | 'date'
+  | 'boolean'
+  | 'equals'
+  | 'enumList'
+  | 'searchableListIn'
+  | 'searchableListInArray'
+  | 'staticList'
+  | 'search']: FilterTypeMethod
 }
 
 export type FilterTypes = keyof FilterTypeDefinitions

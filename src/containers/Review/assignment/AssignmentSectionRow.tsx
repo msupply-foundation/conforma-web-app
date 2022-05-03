@@ -16,7 +16,7 @@ type AssignmentSectionRowProps = {
   sectionCode: string
   reviewLevel: number
   structure: FullStructure
-  assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
+  assignedSectionsState: [SectionAssignee, (assingedSections: SectionAssignee) => void]
   setEnableSubmit: React.Dispatch<SetStateAction<boolean>>
   setAssignmentError: React.Dispatch<SetStateAction<string | null>>
 }
@@ -67,7 +67,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     assignments,
     sectionCode,
     // elements,
-    assignee: assignedSections[sectionCode]?.newAssignee,
+    assignee: assignedSections?.[sectionCode]?.newAssignee,
   })
   if (!assignmentOptions) return null
 
@@ -114,7 +114,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     setShowUnassignmentModal({ open: false })
     if (!unassignment) return
     try {
-      await submitAssignments(sectionToUnassign, [unassignment])
+      await submitAssignments(Number(reviewLevel), sectionToUnassign, [unassignment])
     } catch (e) {
       console.log(e)
       setAssignmentError(strings.ASSIGNMENT_ERROR_UNASSIGN)

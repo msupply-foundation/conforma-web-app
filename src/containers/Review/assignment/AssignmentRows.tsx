@@ -2,6 +2,7 @@ import React, { SetStateAction } from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 import { useReviewStructureState } from '../../../contexts/ReviewStructuresState'
 import {
+  AssignedSectionsByLevel,
   AssignmentDetails,
   FullStructure,
   LevelAssignments,
@@ -14,8 +15,8 @@ interface AssignmentRowsProps {
   fullStructure: FullStructure
   assignmentInPreviousStage: AssignmentDetails
   assignmentGroupedLevel: LevelAssignments
-  assignedSections: SectionAssignee
-  setAssignedSections: React.Dispatch<SetStateAction<SectionAssignee>>
+  assignedSectionsByLevel: AssignedSectionsByLevel
+  setAssignedSectionsByLevel: React.Dispatch<SetStateAction<AssignedSectionsByLevel>>
   setEnableSubmit: React.Dispatch<SetStateAction<boolean>>
   setAssignmentError: React.Dispatch<SetStateAction<string | null>>
 }
@@ -23,12 +24,20 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
   fullStructure,
   assignmentInPreviousStage,
   assignmentGroupedLevel,
-  assignedSections,
-  setAssignedSections,
+  assignedSectionsByLevel,
+  setAssignedSectionsByLevel,
   setEnableSubmit,
   setAssignmentError,
 }) => {
   const { reviewStructuresState } = useReviewStructureState()
+
+  const defaultAssignedSections = Object.values(fullStructure.sections).reduce(
+    (assignedSections, { details: { code } }) => ({
+      ...assignedSections,
+      [code]: { newAssignee: undefined },
+    }),
+    {}
+  )
 
   return (
     <>
@@ -42,7 +51,14 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
                 sectionCode={code}
                 reviewLevel={Number(level)}
                 structure={fullStructure}
-                assignedSectionsState={[assignedSections, setAssignedSections]}
+                assignedSectionsState={[
+                  assignedSectionsByLevel[level] || defaultAssignedSections,
+                  (assignedSections) =>
+                    setAssignedSectionsByLevel({
+                      ...assignedSectionsByLevel,
+                      [level]: assignedSections,
+                    }),
+                ]}
                 setEnableSubmit={setEnableSubmit}
                 setAssignmentError={setAssignmentError}
               />
