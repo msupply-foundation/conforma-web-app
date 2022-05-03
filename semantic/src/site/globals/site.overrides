@@ -2214,7 +2214,7 @@ a:hover {
 
   .config-modal-container {
     .flex-column-center-center();
-    padding: 0 0 10px 0;
+    padding: 20px;
     border-radius: @borderRadius !important;
   }
   .config-modal-info {

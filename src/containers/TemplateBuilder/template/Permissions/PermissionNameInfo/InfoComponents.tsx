@@ -16,14 +16,19 @@ type TemplateInfoProps = {
 
 export const TemplateInfo: React.FC<TemplateInfoProps> = ({ template }) => (
   <div className="flex-row-start-start">
-    <TextIO title="Template" text={`${template?.code} - ${template?.name} `} />
+    <TextIO
+      title="Template"
+      text={`${template?.code} - ${template?.name} `}
+      additionalStyles={{ margin: 0 }}
+    />
     <TextIO
       title="Version"
       icon="info circle"
       link={`/admin/template/${template?.id}/permissions`}
       text={String(template?.version)}
+      additionalStyles={{ margin: 0 }}
     />
-    <TextIO title="Status" text={String(template?.status)} />
+    <TextIO title="Status" text={String(template?.status)} additionalStyles={{ margin: 0 }} />
   </div>
 )
 
@@ -36,13 +41,22 @@ export const PermissionUserAndOrganisationInfo: React.FC<PermissionUserAndOrgani
 }) => (
   <div className="config-container-alternate">
     <div className="flex-row-start-start">
-      <TextIO title="Username" text={permissionJoin?.user?.username || ''} />
+      <TextIO
+        title="Username"
+        text={permissionJoin?.user?.username || ''}
+        additionalStyles={{ margin: 0 }}
+      />
       <TextIO
         title="Name"
         text={`${permissionJoin?.user?.firstName} ${permissionJoin?.user?.lastName}`}
+        additionalStyles={{ margin: 0 }}
       />
       {permissionJoin?.organisation?.name && (
-        <TextIO title="Organisation" text={permissionJoin?.organisation?.name || ''} />
+        <TextIO
+          title="Organisation"
+          text={permissionJoin?.organisation?.name || ''}
+          additionalStyles={{ margin: 0 }}
+        />
       )}
     </div>
   </div>
@@ -111,12 +125,19 @@ export const TemplatePermissionInfo: React.FC<TemplatePermissionProps> = ({
     <div className="config-container-alternate">
       <div className="flex-row-start-start">
         <TemplateInfo template={templatePermission?.template as Template} />
-        <TextIO title="Status" text={String(templatePermission?.template?.status)} />
         {Number(templatePermission?.stageNumber || 0) > 0 && (
-          <TextIO title="Stage Number" text={String(templatePermission?.stageNumber)} />
+          <TextIO
+            title="Stage Number"
+            text={String(templatePermission?.stageNumber)}
+            additionalStyles={{ margin: 0 }}
+          />
         )}
         {Number(templatePermission?.levelNumber || 0) > 0 && (
-          <TextIO title="Review Level" text={String(templatePermission?.levelNumber)} />
+          <TextIO
+            title="Review Level"
+            text={String(templatePermission?.levelNumber)}
+            additionalStyles={{ margin: 0 }}
+          />
         )}
       </div>
     </div>
