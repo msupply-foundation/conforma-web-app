@@ -161,7 +161,9 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   }
 
   const onClick = async () => {
-    const firstIncompleteReviewPage = structure.firstIncompleteReviewPage
+    const firstIncompleteReviewPage = assignment.isFinalDecision
+      ? null
+      : structure.firstIncompleteReviewPage
 
     // Check INCOMPLETE
     if (firstIncompleteReviewPage) {
