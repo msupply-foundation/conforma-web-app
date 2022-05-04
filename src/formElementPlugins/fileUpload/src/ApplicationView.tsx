@@ -41,7 +41,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { getPluginStrings } = useLanguageProvider()
   const strings = getPluginStrings('fileUpload')
   const { isEditable } = element
-  const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
+  const { label, description, fileCountLimit, fileExtensions, fileSizeLimit, subfolder } =
+    parameters
 
   const { config } = applicationData
 
@@ -252,7 +253,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const fileData = new FormData()
     await fileData.append('file', file)
     return await postRequest({
-      url: `${uploadUrl}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}`,
+      url: `${uploadUrl}?user_id=${
+        currentUser?.userId
+      }&application_serial=${serialNumber}&application_response_id=${application_response_id}${
+        subfolder ? '&subfolder=' + subfolder : ''
+      }`,
       otherBody: fileData,
     })
   }
