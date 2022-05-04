@@ -34,9 +34,11 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
 
   return (
     <Form.Field>
-      <label>
-        <Markdown text={label} semanticComponent="noParagraph" />
-      </label>
+      {label && (
+        <label>
+          <Markdown text={label} semanticComponent="noParagraph" />
+        </label>
+      )}
       {DisplayComponent}
     </Form.Field>
   )

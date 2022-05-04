@@ -90,9 +90,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
-      <label>
-        <Markdown text={label} semanticComponent="noParagraph" />
-      </label>
+      {label && (
+        <label>
+          <Markdown text={label} semanticComponent="noParagraph" />
+        </label>
+      )}
       <Markdown text={description} />
       {checkboxElements.map((cb: Checkbox, index: number) => (
         <Form.Field key={`${index}_${cb.label}`} disabled={!isEditable} style={styles}>
