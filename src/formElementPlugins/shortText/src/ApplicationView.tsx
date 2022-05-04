@@ -56,9 +56,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
-      <label>
-        <Markdown text={label} semanticComponent="noParagraph" />
-      </label>
+      {label && (
+        <label>
+          <Markdown text={label} semanticComponent="noParagraph" />
+        </label>
+      )}
       <Markdown text={description} />
       <Form.Input
         fluid
