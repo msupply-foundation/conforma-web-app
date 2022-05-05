@@ -231,7 +231,7 @@ export const guis: GuisType = [
     selector: 'Object functions',
     default: getTypedEvaluation({
       operator: 'objectFunctions',
-      children: ['getYear', null],
+      children: ['functions.getYear'],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'objectFunctions',
     render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
@@ -241,11 +241,17 @@ export const guis: GuisType = [
           title="Function path (e.g. functions.getYear): "
         />
         {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
-        <ComponentLibrary.Label
-          key="fallback"
-          title="Fallback (in case object path is not found): "
-        />
-        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        <ComponentLibrary.Label key="parameters" title="Function parameters: " />
+        {renderArrayControl({
+          title: 'Parameters',
+          evaluation,
+          key: 'parameters',
+          offset: 1,
+          setEvaluation,
+          newValue: getTypedEvaluation({ value: {} }),
+          ComponentLibrary,
+          evaluatorParameters,
+        })}
       </React.Fragment>
     ),
   },
