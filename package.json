@@ -1,6 +1,6 @@
 {
   "name": "application-manager-web-app",
-  "version": "0.2.0-25",
+  "version": "0.2.0-26",
   "main": "index.tsx",
   "license": "MIT",
   "repository": {
