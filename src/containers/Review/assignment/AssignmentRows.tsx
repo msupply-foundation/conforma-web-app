@@ -1,6 +1,7 @@
 import React, { SetStateAction } from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 import { useReviewStructureState } from '../../../contexts/ReviewStructuresState'
+import { ApplicationOutcome } from '../../../utils/generated/graphql'
 import {
   AssignedSectionsByLevel,
   AssignmentDetails,
@@ -46,21 +47,23 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
           <Header className="section-title" as="h5" content={title} />
           {Object.entries(assignmentGroupedLevel).map(([level, assignments]) => (
             <div className="flex-column" key={`assignment-group-level-${level}`}>
-              <AssignmentSectionRow
-                assignments={assignments}
-                sectionCode={code}
-                reviewLevel={Number(level)}
-                structure={fullStructure}
-                assignedSections={assignedSectionsByLevel[level] || defaultAssignedSections}
-                setAssignedSections={(assignedSections) =>
-                  setAssignedSectionsByLevel({
-                    ...assignedSectionsByLevel,
-                    [level]: assignedSections,
-                  })
-                }
-                setEnableSubmit={setEnableSubmit}
-                setAssignmentError={setAssignmentError}
-              />
+              {fullStructure.info.outcome === ApplicationOutcome.Pending && (
+                <AssignmentSectionRow
+                  assignments={assignments}
+                  sectionCode={code}
+                  reviewLevel={Number(level)}
+                  structure={fullStructure}
+                  assignedSections={assignedSectionsByLevel[level] || defaultAssignedSections}
+                  setAssignedSections={(assignedSections) =>
+                    setAssignedSectionsByLevel({
+                      ...assignedSectionsByLevel,
+                      [level]: assignedSections,
+                    })
+                  }
+                  setEnableSubmit={setEnableSubmit}
+                  setAssignmentError={setAssignmentError}
+                />
+              )}
               {(assignments as AssignmentDetails[]).map((assignment) =>
                 reviewStructuresState[assignment.id] ? (
                   <ReviewSectionRow

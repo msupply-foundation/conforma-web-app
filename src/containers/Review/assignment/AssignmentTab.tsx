@@ -9,7 +9,6 @@ import {
   Filters,
   FullStructure,
   LevelAssignments,
-  SectionAssignee,
 } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Stage } from '../../../components/Review'
@@ -20,6 +19,7 @@ import ReviewLevel, { ALL_LEVELS } from './ReviewLevel'
 import { ReviewStateProvider } from '../../../contexts/ReviewStructuresState'
 import AssignmentRows from './AssignmentRows'
 import AssignmentSubmit from './AssignmentSubmit'
+import { ApplicationOutcome } from '../../../utils/generated/graphql'
 
 const AssignmentTab: React.FC<{
   fullApplicationStructure: FullStructure
@@ -118,7 +118,7 @@ const AssignmentTab: React.FC<{
             structure={fullStructure}
           />
         ))}
-        {/* Then render each Assignmnet/Review section rows using the reviewStructures generated */}
+        {/* Then render each Assignment/Review section rows using the reviewStructures generated */}
         <AssignmentRows
           fullStructure={fullStructure}
           assignmentInPreviousStage={assignmentInPreviousStage}
@@ -128,13 +128,15 @@ const AssignmentTab: React.FC<{
           setEnableSubmit={setEnableSubmit}
           setAssignmentError={setAssignmentError}
         />
-        <AssignmentSubmit
-          fullStructure={fullStructure}
-          assignedSectionsByLevel={assignedSectionsByLevel}
-          assignmentsFiltered={assignmentsFiltered}
-          enableSubmit={enableSubmit}
-          setAssignmentError={setAssignmentError}
-        />
+        {fullStructure.info.outcome === ApplicationOutcome.Pending && (
+          <AssignmentSubmit
+            fullStructure={fullStructure}
+            assignedSectionsByLevel={assignedSectionsByLevel}
+            assignmentsFiltered={assignmentsFiltered}
+            enableSubmit={enableSubmit}
+            setAssignmentError={setAssignmentError}
+          />
+        )}
       </Container>
     </ReviewStateProvider>
   )
