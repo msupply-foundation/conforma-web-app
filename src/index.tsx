@@ -81,7 +81,7 @@ const App: React.FC = () => {
           refetchPrefs={refetchPrefs}
         >
           <AppWrapper />
-        </LanguageProvider>{' '}
+        </LanguageProvider>
       </ToastProvider>
     </ApolloProvider>
   ) : (
