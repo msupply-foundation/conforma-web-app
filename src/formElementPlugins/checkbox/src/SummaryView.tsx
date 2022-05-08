@@ -24,9 +24,11 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
   const { textDisplay = TextDisplay.LIST, label, description } = parameters
   return (
     <Form.Field className="element-summary-view">
-      <label style={{ color: 'black' }}>
-        <Markdown text={label} semanticComponent="noParagraph" />
-      </label>
+      {label && (
+        <label style={{ color: 'black' }}>
+          <Markdown text={label} semanticComponent="noParagraph" />
+        </label>
+      )}
       <Markdown text={description} />
       <Markdown text={(response ? getMarkdownText(textDisplay, response) : '') as string} />
     </Form.Field>

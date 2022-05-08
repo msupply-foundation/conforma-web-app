@@ -18,7 +18,7 @@ const DevOptions: React.FC = () => {
 }
 
 const menuStyle = {
-  zIndex: 20,
+  zIndex: 1001,
   position: 'fixed',
   right: 15,
   top: 0,

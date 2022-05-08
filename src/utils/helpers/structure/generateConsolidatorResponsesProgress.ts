@@ -56,7 +56,7 @@ const generatePageConsolidationProgress = (page: Page, assignedSections: string[
   if (!assignedSections.includes(page.sectionCode)) page.consolidationProgress = initial
   else {
     const totalReviewable = page.state.filter(
-      ({ isAssigned, thisReviewLatestResponse, element }) =>
+      ({ isAssigned, thisReviewLatestResponse, element }) => 
         (isAssigned || !!thisReviewLatestResponse) && element.isVisible
     )
 
