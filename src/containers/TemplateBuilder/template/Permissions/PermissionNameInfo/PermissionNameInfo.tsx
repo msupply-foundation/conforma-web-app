@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Header, Modal } from 'semantic-ui-react'
 import { Loading } from '../../../../../components'
@@ -10,9 +10,11 @@ import {
   TemplateAction,
   TemplateElement,
   TemplatePermission,
+  TemplateStatus,
   useGetPermissionStatisticsQuery,
 } from '../../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../../shared/ButtonWidthFallback'
+import CheckboxIO from '../../../shared/CheckboxIO'
 import {
   PermissionActionInfo,
   PermissionUserAndOrganisationInfo,
@@ -44,6 +46,7 @@ const PermissionNameInfo: React.FC<PermissionNameInfoProps> = ({ permissionName,
       rowLeveSearch: `pp${permissionName?.permissionPolicy?.id}`,
     },
   })
+  const [showInactiveTemplates, setShowInactiveTemplates] = useState(false)
 
   const permissionJoins = data?.permissionName?.permissionJoins?.nodes || []
   const templateActions = [...(data?.templateActions?.nodes || [])].sort((ta1, ta2) =>
@@ -63,8 +66,8 @@ const PermissionNameInfo: React.FC<PermissionNameInfoProps> = ({ permissionName,
       {data && (
         <div className="config-modal-container">
           <Header as="h1"> {`Statistics for ${name}`} </Header>
-          <div className="flex-row-start-start">
-            <div className="flex-column-start-stretch">
+          <div className="flex-column-start-center">
+            <div className="flex-column-start-stretch" style={{ marginBottom: 20 }}>
               <Header as="h2">Users and Organisations</Header>
               {permissionJoins.length === 0 &&
                 'Permission name is not linked to any users or user-organisations'}
@@ -76,23 +79,42 @@ const PermissionNameInfo: React.FC<PermissionNameInfoProps> = ({ permissionName,
               ))}
             </div>
             <div className="flex-column-start-stretch">
-              <Header as="h2">Linked Templates</Header>
-              {templatePermissions.length === 0 && 'Permission name is not used to any templates'}
-              {templatePermissions.map((templatePermission) => (
-                <TemplatePermissionInfo
-                  key={templatePermission?.id}
-                  templatePermission={templatePermission as TemplatePermission}
+              <div className="flex-row-space-between">
+                <Header as="h2">Linked Templates</Header>
+                <CheckboxIO
+                  value={!showInactiveTemplates}
+                  title="Show active templates only"
+                  setValue={(current) => setShowInactiveTemplates(!current)}
                 />
-              ))}
+              </div>
+              {templatePermissions.length === 0 && 'Permission name is not used by any templates'}
+              {templatePermissions
+                .filter(
+                  (templatePermission) =>
+                    showInactiveTemplates ||
+                    templatePermission?.template?.status === TemplateStatus.Available
+                )
+                .map((templatePermission) => (
+                  <TemplatePermissionInfo
+                    key={templatePermission?.id}
+                    templatePermission={templatePermission as TemplatePermission}
+                  />
+                ))}
               <Header as="h2">Template Actions</Header>
               {templateActions.length === 0 &&
                 'Permission name is not directly referenced in any actions'}
-              {templateActions.map((templateAction) => (
-                <PermissionActionInfo
-                  key={templateAction?.id}
-                  templateAction={templateAction as TemplateAction}
-                />
-              ))}
+              {templateActions
+                .filter(
+                  (templateAction) =>
+                    showInactiveTemplates ||
+                    templateAction?.template?.status === TemplateStatus.Available
+                )
+                .map((templateAction) => (
+                  <PermissionActionInfo
+                    key={templateAction?.id}
+                    templateAction={templateAction as TemplateAction}
+                  />
+                ))}
               <Header as="h2">Template Elements</Header>
               {templateElements.length === 0 &&
                 'Permission name is not directly referenced in any template elements'}

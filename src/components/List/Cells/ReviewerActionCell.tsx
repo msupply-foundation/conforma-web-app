@@ -2,11 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { CellProps } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignerAction, ReviewerAction } from '../../../utils/generated/graphql'
+import { ApplicationOutcome, AssignerAction, ReviewerAction } from '../../../utils/generated/graphql'
 import { Icon } from 'semantic-ui-react'
 
 const ReviewerActionCell: React.FC<CellProps> = ({
-  application: { serial, reviewerAction, assignerAction },
+  application: { serial, reviewerAction, assignerAction, outcome },
 }) => {
   const { strings } = useLanguageProvider()
   const actions = []
@@ -41,10 +41,12 @@ const ReviewerActionCell: React.FC<CellProps> = ({
     }
   }
 
+  // Only show actions if application is Pending - TODO: Change logic to back-end
+  if (outcome === ApplicationOutcome.Pending) {
   if (!!reviewerAction) actions.push(getReviewActionString(reviewerAction))
   if (!!assignerAction && assignerAction != AssignerAction.AssignLocked)
     actions.push(getAssignActionString(assignerAction))
-
+}
   if (actions.length == 0)
     return (
       <Link className="user-action" to={`/application/${serial}/review`}>
