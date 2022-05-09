@@ -2238,43 +2238,67 @@ a:hover {
   }
 }
 
-@toastVerticalMargin: 20px;
+@toastTopMargin: 40px;
+@toastBottomMargin: 40px;
 @toastHorizontalMargin: 20px;
 
-.toast-container {
+#toast-container {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 1001; // one higher than Modal dimmer
+  pointer-events: none;
+  .block {
+    position: absolute;
+    .flex-column();
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .bottom-left {  
+    bottom: @toastBottomMargin;
+    left: @toastHorizontalMargin;
+    max-height: calc(100vh - @toastBottomMargin);
+  }
+  .bottom-middle {
+    bottom: @toastBottomMargin;
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: calc(100vh - @toastBottomMargin);
+  }
+  .bottom-right {
+    bottom: @toastBottomMargin;
+    right: @toastHorizontalMargin;
+    max-height: calc(100vh - @toastBottomMargin);
+    flex-wrap: wrap-reverse
+  }
+  .top-left {
+    top: @toastTopMargin;
+    left: @toastHorizontalMargin;
+    max-height: calc(100vh - @toastTopMargin);
+  }
+  .top-middle {
+    top:  @toastTopMargin;
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: calc(100vh - @toastTopMargin);
+  }
+  .top-right {
+    top:  @toastTopMargin;
+    right: @toastHorizontalMargin;
+    max-height: calc(100vh - @toastTopMargin);
+    flex-wrap: wrap-reverse
+  }
+}
+
+.toast-wrapper {
+  position: relative;
+  pointer-events: auto;
   .transition.visible {
     display: flex !important;
   }
   .toast-message {
     width: fit-content !important;
-    position: absolute !important;
     max-width: 350px;
-  }
-  .bottom-left {
-    bottom: (@footerHeight + @toastVerticalMargin);
-    left: @toastHorizontalMargin;
-  }
-  .bottom-middle {
-    bottom: (@footerHeight + @toastVerticalMargin);
-    left: 50%;
-    transform: translateX(-50%) !important;
-  }
-  .bottom-right {
-    bottom: (@footerHeight + @toastVerticalMargin);
-    right: @toastHorizontalMargin;
-  }
-  .top-left {
-    top: (@headerHeight + @toastVerticalMargin);
-    left: @toastHorizontalMargin;
-  }
-  .top-middle {
-    top: (@headerHeight + @toastVerticalMargin);
-    left: 50%;
-    transform: translateX(-50%) !important;
-  }
-  .top-right {
-    top: (@headerHeight + @toastVerticalMargin);
-    right: @toastHorizontalMargin;
   }
   .icon.info {
     color: @information;
