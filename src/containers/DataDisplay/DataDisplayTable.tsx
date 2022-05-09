@@ -4,13 +4,13 @@ import { Loading } from '../../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { useOutcomesTable } from '../../utils/hooks/useOutcomes'
-import { HeaderRow, OutcomeTableAPIQueries } from '../../utils/types'
+import { useDataDisplaysTable } from '../../utils/hooks/useDataDisplays'
+import { HeaderRow, DataDisplayTableAPIQueries } from '../../utils/types'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { constructElement, formatCellText } from './helpers'
 import PaginationBar from '../../components/List/Pagination'
 
-const OutcomeTable: React.FC = () => {
+const DataDisplayTable: React.FC = () => {
   const { strings } = useLanguageProvider()
   const {
     push,
@@ -18,12 +18,12 @@ const OutcomeTable: React.FC = () => {
     params: { tableName },
   } = useRouter()
 
-  const [apiQueries, setApiQueries] = useState<OutcomeTableAPIQueries>({})
-  const { outcomeTable, loading, error } = useOutcomesTable({
+  const [apiQueries, setApiQueries] = useState<DataDisplayTableAPIQueries>({})
+  const { dataDisplayTable, loading, error } = useDataDisplaysTable({
     tableName,
     apiQueries,
   })
-  usePageTitle(outcomeTable?.title || '')
+  usePageTitle(dataDisplayTable?.title || '')
 
   useEffect(() => {
     setApiQueries(getAPIQueryParams(query))
@@ -32,16 +32,16 @@ const OutcomeTable: React.FC = () => {
   if (error) {
     return <Message error header={strings.ERROR_GENERIC} content={error.message} />
   }
-  if (loading || !outcomeTable) return <Loading />
+  if (loading || !dataDisplayTable) return <Loading />
 
-  const showDetailsForRow = (id: number) => push(`/outcomes/${tableName}/${id}`)
+  const showDetailsForRow = (id: number) => push(`/data/${tableName}/${id}`)
 
-  const { headerRow, tableRows, title, totalCount } = outcomeTable
+  const { headerRow, tableRows, title, totalCount } = dataDisplayTable
 
   return (
-    <div id="outcomes-display">
+    <div id="data-display">
       <Header as="h4">{title}</Header>
-      <div id="list-container" className="outcome-table-container">
+      <div id="list-container" className="data-display-table-container">
         <Table stackable selectable>
           <Table.Header>
             <Table.Row>
@@ -78,7 +78,7 @@ const OutcomeTable: React.FC = () => {
   )
 }
 
-export default OutcomeTable
+export default DataDisplayTable
 
 // If the cell contains plugin data, return a SummaryView component, otherwise
 // just format the text and return Markdown component

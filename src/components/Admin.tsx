@@ -8,7 +8,7 @@ import Templates from '../containers/TemplateBuilder/Templates'
 import { useUserState } from '../contexts/UserState'
 import { LookupTableRoutes } from '../LookupTable'
 import { useRouter } from '../utils/hooks/useRouter'
-import { AdminLocalisations, AdminOutcomes, AdminPermissions, AdminPlugins } from './AdminOther'
+import { AdminLocalisations, AdminDataDisplays, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Admin: React.FC = () => {
   const {
@@ -34,9 +34,9 @@ const Admin: React.FC = () => {
       Element: () => <LookupTableRoutes />,
     },
     {
-      route: 'outcomes',
-      header: 'Outcome Configurations',
-      Element: () => <AdminOutcomes />,
+      route: 'data',
+      header: 'Database Configurations',
+      Element: () => <AdminDataDisplays />,
     },
     {
       route: 'permissions',

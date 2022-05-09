@@ -3,38 +3,38 @@ import { Header, Message, Label, Icon, Table } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { ErrorResponse, useOutcomesDetail } from '../../utils/hooks/useOutcomes'
+import { ErrorResponse, useDataDisplaysDetail } from '../../utils/hooks/useDataDisplays'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { DisplayDefinition, LinkedApplication } from '../../utils/types'
 import { constructElement, formatCellText } from './helpers'
 import ApplicationLinks from './ApplicationLinks'
 
-const OutcomeDetails: React.FC = () => {
+const DataDisplayDetail: React.FC = () => {
   const { strings } = useLanguageProvider()
   const {
     push,
     params: { tableName, id },
   } = useRouter()
-  const { outcomeDetail, loading, error } = useOutcomesDetail({ tableName, recordId: id })
-  usePageTitle(outcomeDetail?.header?.value || '')
+  const { dataDisplayDetail, loading, error } = useDataDisplaysDetail({ tableName, recordId: id })
+  usePageTitle(dataDisplayDetail?.header?.value || '')
 
   if (error) return <NoMatch header={error?.message} message={error?.detail} />
-  if (loading || !outcomeDetail) return <Loading />
+  if (loading || !dataDisplayDetail) return <Loading />
 
   const { header, tableTitle, columns, displayDefinitions, item, linkedApplications } =
-    outcomeDetail
+    dataDisplayDetail
 
   const linkedApplicationsError = getLinkedApplicationsError(linkedApplications)
   if (linkedApplicationsError)
     console.error(linkedApplicationsError.message + '\n' + linkedApplicationsError?.detail)
 
   return (
-    <div id="outcomes-display">
-      <div className="outcome-nav">
+    <div id="data-display">
+      <div className="data-display-nav">
         <Label
           className="back-label clickable"
-          onClick={() => push(`/outcomes/${tableName}`)}
+          onClick={() => push(`/data/${tableName}`)}
           content={
             <>
               <Icon name="chevron left" className="dark-grey" />
@@ -43,9 +43,9 @@ const OutcomeDetails: React.FC = () => {
           }
         />
       </div>
-      <div className="outcome-detail-container">
+      <div className="data-display-detail-container">
         <Header as="h2">{header.value}</Header>
-        <div className="outcome-detail-table">
+        <div className="data-display-detail-table">
           <Table celled stackable striped>
             <Table.Body>
               {columns.map((columnName, index) => (
@@ -72,7 +72,7 @@ const OutcomeDetails: React.FC = () => {
   )
 }
 
-export default OutcomeDetails
+export default DataDisplayDetail
 
 const getCellComponent = (value: any, columnDetails: DisplayDefinition, id: number) => {
   const { formatting } = columnDetails

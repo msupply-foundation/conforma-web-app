@@ -22,7 +22,7 @@ import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../utils/data/LuxonDateTimeConstants'
-import { ErrorResponse } from './hooks/useOutcomes'
+import { ErrorResponse } from './hooks/useDataDisplays'
 
 export {
   ApplicationDetails,
@@ -654,11 +654,11 @@ interface SortQuery {
 }
 
 // *****************
-// OUTCOMES DISPLAY
+// DATA DISPLAY
 // *****************
 
-// Response value of /outcomes endpoint
-export type OutcomesResponse = {
+// Response value of /data-displays endpoint
+export type DataDisplaysResponse = {
   tableName: string
   title: string
   code: string
@@ -693,8 +693,8 @@ interface TableRow {
   item: { [key: string]: any }
 }
 
-// Response object of /outcomes/table endpoint
-export interface OutcomesTableResponse {
+// Response object of /data-displays/table endpoint
+export interface DataDisplaysTableResponse {
   tableName: string
   title: string
   code: string
@@ -721,8 +721,8 @@ export interface DetailsHeader {
   formatting: FormatOptions
 }
 
-// Response object of /outcomes/table/.../item endpoint
-export interface OutcomesDetailResponse {
+// Response object of /data-displays/table/.../item endpoint
+export interface DataDisplaysDetailResponse {
   tableName: string
   tableTitle: string
   id: number
@@ -741,7 +741,7 @@ export type ApplicationDisplayField = {
   linkVar?: keyof LinkedApplication
 }
 
-export type OutcomeTableAPIQueries = {
+export type DataDisplayTableAPIQueries = {
   first?: string | undefined
   offset?: string | undefined
   orderBy?: string | undefined
