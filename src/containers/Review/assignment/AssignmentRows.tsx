@@ -1,7 +1,9 @@
 import React, { SetStateAction } from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 import { useReviewStructureState } from '../../../contexts/ReviewStructuresState'
+import { ApplicationOutcome } from '../../../utils/generated/graphql'
 import {
+  AssignedSectionsByLevel,
   AssignmentDetails,
   FullStructure,
   LevelAssignments,
@@ -14,8 +16,8 @@ interface AssignmentRowsProps {
   fullStructure: FullStructure
   assignmentInPreviousStage: AssignmentDetails
   assignmentGroupedLevel: LevelAssignments
-  assignedSections: SectionAssignee
-  setAssignedSections: React.Dispatch<SetStateAction<SectionAssignee>>
+  assignedSectionsByLevel: AssignedSectionsByLevel
+  setAssignedSectionsByLevel: React.Dispatch<SetStateAction<AssignedSectionsByLevel>>
   setEnableSubmit: React.Dispatch<SetStateAction<boolean>>
   setAssignmentError: React.Dispatch<SetStateAction<string | null>>
 }
@@ -23,12 +25,20 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
   fullStructure,
   assignmentInPreviousStage,
   assignmentGroupedLevel,
-  assignedSections,
-  setAssignedSections,
+  assignedSectionsByLevel,
+  setAssignedSectionsByLevel,
   setEnableSubmit,
   setAssignmentError,
 }) => {
   const { reviewStructuresState } = useReviewStructureState()
+
+  const defaultAssignedSections = Object.values(fullStructure.sections).reduce(
+    (assignedSections, { details: { code } }) => ({
+      ...assignedSections,
+      [code]: { newAssignee: undefined },
+    }),
+    {}
+  )
 
   return (
     <>
@@ -37,15 +47,23 @@ const AssignmentRows: React.FC<AssignmentRowsProps> = ({
           <Header className="section-title" as="h5" content={title} />
           {Object.entries(assignmentGroupedLevel).map(([level, assignments]) => (
             <div className="flex-column" key={`assignment-group-level-${level}`}>
-              <AssignmentSectionRow
-                assignments={assignments}
-                sectionCode={code}
-                reviewLevel={Number(level)}
-                structure={fullStructure}
-                assignedSectionsState={[assignedSections, setAssignedSections]}
-                setEnableSubmit={setEnableSubmit}
-                setAssignmentError={setAssignmentError}
-              />
+              {fullStructure.info.outcome === ApplicationOutcome.Pending && (
+                <AssignmentSectionRow
+                  assignments={assignments}
+                  sectionCode={code}
+                  reviewLevel={Number(level)}
+                  structure={fullStructure}
+                  assignedSections={assignedSectionsByLevel[level] || defaultAssignedSections}
+                  setAssignedSections={(assignedSections) =>
+                    setAssignedSectionsByLevel({
+                      ...assignedSectionsByLevel,
+                      [level]: assignedSections,
+                    })
+                  }
+                  setEnableSubmit={setEnableSubmit}
+                  setAssignmentError={setAssignmentError}
+                />
+              )}
               {(assignments as AssignmentDetails[]).map((assignment) =>
                 reviewStructuresState[assignment.id] ? (
                   <ReviewSectionRow

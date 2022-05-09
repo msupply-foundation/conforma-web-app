@@ -26,6 +26,7 @@ const snapshotsBaseUrl = `${config.serverREST}/admin/snapshot`
 const takeSnapshotUrl = `${snapshotsBaseUrl}/take`
 export const snapshotFilesUrl = `${snapshotsBaseUrl}/files`
 const useSnapshotUrl = `${snapshotsBaseUrl}/use`
+const deleteSnapshotUrl = `${snapshotsBaseUrl}/delete`
 const templateExportOptionName = 'templateExport'
 const uploadSnapshotUrl = `${snapshotsBaseUrl}/upload`
 
@@ -238,11 +239,16 @@ export const importTemplate: ImportTemplateHelper =
 
       if (!result) return false
 
-      return await safeFetch(
+      const snapshotResult = await safeFetch(
         `${useSnapshotUrl}?name=${snapshotName}&optionsName=${templateExportOptionName}`,
         '{}',
         setErrorAndLoadingState
       )
+
+      // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
+      safeFetch(`${deleteSnapshotUrl}?name=${snapshotName}`, {}, () => {})
+
+      return snapshotResult
     } catch (error) {
       setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: error } })
       return false
