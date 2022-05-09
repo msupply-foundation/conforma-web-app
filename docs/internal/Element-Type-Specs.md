@@ -391,6 +391,7 @@ _Interface for uploading documents or other files_
 - **fileCountLimit**: `number` -- maximum number of files allowed to upload for this question (default: 1)
 - **fileExtensions**: `array[string]` -- list of allowed file extensions (default: no restrictions). e.g. `["pdf", "doc", "txt", "jpg", "png"]`
 - **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
+- **subfolder**: `string` -- by default, files are uploaded into a subfolder with the name of the application serial. However, this can be over-ridden by specifying this parameter. This should rarely be required.
 
 #### Response type
 
@@ -613,7 +614,7 @@ _Input for numeric fields_
 - **default** -- default value (Note: if you require a dynamic value for "default", please use the "defaultValue" field on `template_element`)
 - **type** -- `enum` -- either "integer" or "float" (default: "integer")
 - **simple** -- `boolean` (default: `true`) If `true`, the input field will always show only a non-formatted version of the number (i.e. "1000", not "1,000"), but it will have a "stepper" which can be clicked to increment the number up and down.
-- **minValue** -- minimum allowed value (default: no limit)
+- **minValue** -- minimum allowed value (default: 0)
 - **maxValue** -- maximum allowed value (default: no limit)
 - **step** -- `number` (default: `1`) If `simple == true` (above), the `step` value specifies the amount the number will be incremented or decremented by when using the stepper.
   **NOTE**: The parameters below are only relevant is `simple == false` (above)
