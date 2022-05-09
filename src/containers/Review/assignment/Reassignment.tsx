@@ -10,7 +10,8 @@ interface ReassignmentProps {
   sectionCode: string
   isLastLevel: (selectedIndex: number) => boolean
   previousAssignee: number
-  assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
+  assignedSections: SectionAssignee
+  setAssignedSections: (assignedSections: SectionAssignee) => void
 }
 
 const Reassignment: React.FC<ReassignmentProps> = ({
@@ -18,11 +19,11 @@ const Reassignment: React.FC<ReassignmentProps> = ({
   sectionCode,
   isLastLevel,
   previousAssignee,
-  assignedSectionsState,
+  assignedSections,
+  setAssignedSections,
 }) => {
   const { strings } = useLanguageProvider()
   const getAssignmentOptions = useGetAssignmentOptions()
-  const [assignedSections, setAssignedSections] = assignedSectionsState
   const assignmentOptions = getAssignmentOptions({
     assignments,
     sectionCode,

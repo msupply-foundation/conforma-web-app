@@ -4,11 +4,11 @@ import Loading from '../../../components/Loading'
 import Assignment from './Assignment'
 import { useUserState } from '../../../contexts/UserState'
 import {
+  AssignedSectionsByLevel,
   AssignmentDetails,
   Filters,
   FullStructure,
   LevelAssignments,
-  SectionAssignee,
 } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Stage } from '../../../components/Review'
@@ -19,6 +19,7 @@ import ReviewLevel, { ALL_LEVELS } from './ReviewLevel'
 import { ReviewStateProvider } from '../../../contexts/ReviewStructuresState'
 import AssignmentRows from './AssignmentRows'
 import AssignmentSubmit from './AssignmentSubmit'
+import { ApplicationOutcome } from '../../../utils/generated/graphql'
 
 const AssignmentTab: React.FC<{
   fullApplicationStructure: FullStructure
@@ -28,14 +29,8 @@ const AssignmentTab: React.FC<{
     userState: { currentUser },
   } = useUserState()
   const [enableSubmit, setEnableSubmit] = useState<boolean>(false)
-  const [assignedSections, setAssignedSections] = useState<SectionAssignee>(
-    Object.values(fullStructure.sections).reduce(
-      (assignedSections, { details: { code } }) => ({
-        ...assignedSections,
-        [code]: { newAssignee: undefined },
-      }),
-      {}
-    )
+  const [assignedSectionsByLevel, setAssignedSectionsByLevel] = useState<AssignedSectionsByLevel>(
+    {}
   )
   const [assignmentError, setAssignmentError] = useState<string | null>(null)
 
@@ -123,23 +118,25 @@ const AssignmentTab: React.FC<{
             structure={fullStructure}
           />
         ))}
-        {/* Then render each Assignmnet/Review section rows using the reviewStructures generated */}
+        {/* Then render each Assignment/Review section rows using the reviewStructures generated */}
         <AssignmentRows
           fullStructure={fullStructure}
           assignmentInPreviousStage={assignmentInPreviousStage}
           assignmentGroupedLevel={assignmentGroupedLevel}
-          assignedSections={assignedSections}
-          setAssignedSections={setAssignedSections}
+          assignedSectionsByLevel={assignedSectionsByLevel}
+          setAssignedSectionsByLevel={setAssignedSectionsByLevel}
           setEnableSubmit={setEnableSubmit}
           setAssignmentError={setAssignmentError}
         />
-        <AssignmentSubmit
-          fullStructure={fullStructure}
-          assignedSections={assignedSections}
-          assignmentsFiltered={assignmentsFiltered}
-          enableSubmit={enableSubmit}
-          setAssignmentError={setAssignmentError}
-        />
+        {fullStructure.info.outcome === ApplicationOutcome.Pending && (
+          <AssignmentSubmit
+            fullStructure={fullStructure}
+            assignedSectionsByLevel={assignedSectionsByLevel}
+            assignmentsFiltered={assignmentsFiltered}
+            enableSubmit={enableSubmit}
+            setAssignmentError={setAssignmentError}
+          />
+        )}
       </Container>
     </ReviewStateProvider>
   )
