@@ -482,6 +482,10 @@ interface ChangeRequestsProgress {
   doneChangeRequests: number
 }
 
+export interface AssignedSectionsByLevel {
+  [level: string]: SectionAssignee
+}
+
 interface SectionAssignee {
   [sectionCode: string]: {
     newAssignee: number | undefined
