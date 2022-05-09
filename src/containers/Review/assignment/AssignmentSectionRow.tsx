@@ -16,7 +16,8 @@ type AssignmentSectionRowProps = {
   sectionCode: string
   reviewLevel: number
   structure: FullStructure
-  assignedSectionsState: [SectionAssignee, React.Dispatch<React.SetStateAction<SectionAssignee>>]
+  assignedSections: SectionAssignee
+  setAssignedSections: (assingedSections: SectionAssignee) => void
   setEnableSubmit: React.Dispatch<SetStateAction<boolean>>
   setAssignmentError: React.Dispatch<SetStateAction<string | null>>
 }
@@ -26,7 +27,8 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   sectionCode,
   reviewLevel,
   structure,
-  assignedSectionsState,
+  assignedSections,
+  setAssignedSections,
   setEnableSubmit,
   setAssignmentError,
 }) => {
@@ -43,7 +45,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   const getAssignmentOptions = useGetAssignmentOptions()
   const [isReassignment, setIsReassignment] = useState(false)
   const [showUnassignmentModal, setShowUnassignmentModal] = useState<ModalProps>({ open: false })
-  const [assignedSections, setAssignedSections] = assignedSectionsState
   const [originalAssignee, setOriginalAssignee] = useState<string>()
 
   useEffect(() => {
@@ -67,7 +68,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     assignments,
     sectionCode,
     // elements,
-    assignee: assignedSections[sectionCode]?.newAssignee,
+    assignee: assignedSections?.[sectionCode]?.newAssignee,
   })
   if (!assignmentOptions) return null
 
@@ -114,7 +115,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     setShowUnassignmentModal({ open: false })
     if (!unassignment) return
     try {
-      await submitAssignments(sectionToUnassign, [unassignment])
+      await submitAssignments(Number(reviewLevel), sectionToUnassign, [unassignment])
     } catch (e) {
       console.log(e)
       setAssignmentError(strings.ASSIGNMENT_ERROR_UNASSIGN)
@@ -169,7 +170,8 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
             sectionCode={sectionCode}
             isLastLevel={isLastLevel}
             previousAssignee={assignmentOptions.selected}
-            assignedSectionsState={assignedSectionsState}
+            assignedSections={assignedSections}
+            setAssignedSections={setAssignedSections}
           />
         </Grid.Row>
       )}
