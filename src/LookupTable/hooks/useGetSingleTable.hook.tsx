@@ -1,4 +1,5 @@
 import { gql, useLazyQuery } from '@apollo/client'
+import { plural } from 'pluralize'
 import { useEffect, useState } from 'react'
 import { getDynamicSingleTable } from '../graphql'
 import { capitalizeFirstLetter, toCamelCase } from '../utils'
@@ -42,9 +43,9 @@ const useGetSingleTable = () => {
   }, [structure])
 
   useEffect(() => {
-    if (structure?.name) {
+    if (structure?.tableName) {
       const tableName = `${GQL_TABLE_NAME_PREFIX}${capitalizeFirstLetter(
-        toCamelCase(structure.name)
+        toCamelCase(plural(structure.tableName))
       )}`
 
       if (!loading && called && !error && data[tableName]) {

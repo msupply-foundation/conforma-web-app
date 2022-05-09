@@ -28,8 +28,8 @@ const useGetTableStructure = (): LookupTableStructureType => {
   }, [structureID])
 
   useEffect(() => {
-    if (!loading && !error && data?.lookupTable) {
-      const lookupTable = data.lookupTable
+    if (!loading && !error && data?.dataTable) {
+      const lookupTable = data.dataTable
       const namePlural = pluralize.isPlural(lookupTable.name)
         ? lookupTable.name
         : pluralize.plural(lookupTable.name)
