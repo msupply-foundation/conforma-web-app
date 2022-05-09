@@ -11,7 +11,7 @@ const initialStructureState: any = {
 }
 
 const useGetSingleTable = () => {
-  const GQL_TABLE_NAME_PREFIX = 'lookupTable'
+  const GQL_TABLE_NAME_PREFIX = 'dataTable'
 
   const [structure, setStructure]: any = useState(initialStructureState)
 

@@ -3,7 +3,7 @@ import { buildFieldList, capitalizeFirstLetter, toCamelCase } from '../utils'
 
 const getDynamicSingleTable = (structure: any) => gql`
     query getDynamicSingleTable {
-      lookupTable${capitalizeFirstLetter(toCamelCase(structure.name))} {
+      dataTable${capitalizeFirstLetter(toCamelCase(structure.tableName))} {
         nodes {
           ${buildFieldList(structure.fieldMap)}
         }
