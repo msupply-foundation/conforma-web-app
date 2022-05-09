@@ -614,7 +614,7 @@ _Input for numeric fields_
 - **default** -- default value (Note: if you require a dynamic value for "default", please use the "defaultValue" field on `template_element`)
 - **type** -- `enum` -- either "integer" or "float" (default: "integer")
 - **simple** -- `boolean` (default: `true`) If `true`, the input field will always show only a non-formatted version of the number (i.e. "1000", not "1,000"), but it will have a "stepper" which can be clicked to increment the number up and down.
-- **minValue** -- minimum allowed value (default: no limit)
+- **minValue** -- minimum allowed value (default: 0)
 - **maxValue** -- maximum allowed value (default: no limit)
 - **step** -- `number` (default: `1`) If `simple == true` (above), the `step` value specifies the amount the number will be incremented or decremented by when using the stepper.
   **NOTE**: The parameters below are only relevant is `simple == false` (above)

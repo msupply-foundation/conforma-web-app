@@ -105,9 +105,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
-      <label>
-        <Markdown text={label} semanticComponent="noParagraph" />
-      </label>
+      {label && (
+        <label>
+          <Markdown text={label} semanticComponent="noParagraph" />
+        </label>
+      )}
       <Markdown text={description} />
       {radioButtonOptions.map((option: any, index: number) => {
         const showOther = hasOther && index === allOptions.length - 1
