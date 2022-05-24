@@ -1,22 +1,12 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import {
-  Button,
-  Container,
-  Image,
-  List,
-  Dropdown,
-  Modal,
-  Header,
-  Form,
-  Icon,
-} from 'semantic-ui-react'
+import { Button, Container, Image, List, Dropdown, Modal, Header, Form } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
 import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
-import { useDataDisplaysList } from '../../utils/hooks/useDataDisplays'
+import { useDataViewsList } from '../../utils/hooks/useDataViews'
 import { useRouter } from '../../utils/hooks/useRouter'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
@@ -31,7 +21,7 @@ const UserArea: React.FC = () => {
   const {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
-  const { dataDisplaysList } = useDataDisplaysList()
+  const { dataViewsList } = useDataViewsList()
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
@@ -39,7 +29,7 @@ const UserArea: React.FC = () => {
     <Container id="user-area" fluid>
       <BrandArea />
       <div id="user-area-left">
-        <MainMenuBar templates={templates} dataDisplays={dataDisplaysList} />
+        <MainMenuBar templates={templates} dataViews={dataViewsList} />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
       <UserMenu
@@ -53,20 +43,20 @@ const UserArea: React.FC = () => {
 }
 interface MainMenuBarProps {
   templates: TemplateInList[]
-  dataDisplays: { tableName: string; title: string; code: string }[]
+  dataViews: { tableName: string; title: string; code: string }[]
 }
 interface DropdownsState {
   dashboard: { active: boolean }
   templates: { active: boolean; selection: string }
-  dataDisplays: { active: boolean; selection: string }
+  dataViews: { active: boolean; selection: string }
   admin: { active: boolean; selection: string }
 }
-const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataDisplays }) => {
+const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
   const { strings } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     templates: { active: false, selection: '' },
-    dataDisplays: { active: false, selection: '' },
+    dataViews: { active: false, selection: '' },
     admin: { active: false, selection: '' },
   })
   const { push, pathname } = useRouter()
@@ -80,7 +70,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataDisplays }) =>
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
   }, [pathname])
 
-  const dataDisplayOptions = dataDisplays.map(({ code, title, tableName }) => ({
+  const dataViewOptions = dataViews.map(({ code, title, tableName }) => ({
     key: code,
     text: title,
     value: tableName,
@@ -103,8 +93,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataDisplays }) =>
       value: '/admin/lookup-tables',
     },
     {
-      key: 'dataDisplays',
-      text: strings.MENU_ITEM_ADMIN_DATA_DISPLAY_CONFIG,
+      key: 'dataViews',
+      text: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
       value: '/admin/data',
     },
     { key: 'permissions', text: strings.MENU_ITEM_ADMIN_PERMISSIONS, value: '/admin/permissions' },
@@ -134,8 +124,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataDisplays }) =>
       }))
   )
 
-  const handleDataDisplayChange = (_: SyntheticEvent, { value }: any) => {
-    setDropDownsState({ ...dropdownsState, dataDisplays: { active: true, selection: value } })
+  const handleDataViewChange = (_: SyntheticEvent, { value }: any) => {
+    setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
     push(`/data/${value}`)
   }
 
@@ -165,13 +155,13 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataDisplays }) =>
             />
           </List.Item>
         )}
-        {dataDisplayOptions.length > 1 && (
-          <List.Item className={dropdownsState.dataDisplays.active ? 'selected-link' : ''}>
+        {dataViewOptions.length > 1 && (
+          <List.Item className={dropdownsState.dataViews.active ? 'selected-link' : ''}>
             <Dropdown
               text={strings.MENU_ITEM_DATA}
-              options={dataDisplayOptions}
-              onChange={handleDataDisplayChange}
-              value={dropdownsState.dataDisplays.selection}
+              options={dataViewOptions}
+              onChange={handleDataViewChange}
+              value={dropdownsState.dataViews.selection}
             />
           </List.Item>
         )}
@@ -348,35 +338,35 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
       return {
         dashboard: { active: true },
         templates: { active: false, selection: '' },
-        dataDisplays: { active: false, selection: '' },
+        dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
       }
     case 'applications':
       return {
         dashboard: { active: false },
         templates: { active: true, selection: dropdownsState.templates.selection },
-        dataDisplays: { active: false, selection: '' },
+        dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
       }
     case 'outcomes':
       return {
         dashboard: { active: false },
         templates: { active: false, selection: '' },
-        dataDisplays: { active: true, selection: dropdownsState.dataDisplays.selection },
+        dataViews: { active: true, selection: dropdownsState.dataViews.selection },
         admin: { active: false, selection: '' },
       }
     case 'admin':
       return {
         dashboard: { active: false },
         templates: { active: false, selection: '' },
-        dataDisplays: { active: false, selection: '' },
+        dataViews: { active: false, selection: '' },
         admin: { active: true, selection: dropdownsState.admin.selection },
       }
     default:
       return {
         dashboard: { active: false },
         templates: { active: false, selection: '' },
-        dataDisplays: { active: false, selection: '' },
+        dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
       }
   }

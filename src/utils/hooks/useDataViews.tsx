@@ -3,21 +3,21 @@ import { getRequest } from '../helpers/fetchMethods'
 import config from '../../config'
 import { useUserState } from '../../contexts/UserState'
 import {
-  DataDisplaysResponse,
-  DataDisplaysTableResponse,
-  DataDisplaysDetailResponse,
-  DataDisplayTableAPIQueries,
+  DataViewsResponse,
+  DataViewsTableResponse,
+  DataViewsDetailResponse,
+  DataViewTableAPIQueries,
 } from '../types'
 const serverURL = config.serverREST
 
 // 3 simple hooks for returning Outcome state
 
-interface DataDisplayTableProps {
+interface DataViewTableProps {
   tableName: string
-  apiQueries: DataDisplayTableAPIQueries
+  apiQueries: DataViewTableAPIQueries
 }
 
-interface DataDisplayDetailsProps {
+interface DataViewDetailsProps {
   tableName: string
   recordId: number
 }
@@ -29,13 +29,13 @@ export type ErrorResponse = {
   detail?: string // from GraphQL errors (caught by back-end)
 }
 
-export const useDataDisplaysList = () => {
+export const useDataViewsList = () => {
   // Note: we don't *need* templatePermissions, we only pass it in so that the
   // hook can react to changes, since JWT (what we *actually* need) is not in
   // State (perhaps it should be?)
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
-  const [dataDisplaysList, setDataDisplaysList] = useState<DataDisplaysResponse>([])
+  const [dataViewsList, setDataViewsList] = useState<DataViewsResponse>([])
   const {
     userState: { templatePermissions },
   } = useUserState()
@@ -43,18 +43,18 @@ export const useDataDisplaysList = () => {
   useEffect(() => {
     const JWT = localStorage.getItem(config.localStorageJWTKey)
     if (!JWT) return
-    const url = `${serverURL}/data-displays`
-    processRequest(url, JWT, setError, setLoading, setDataDisplaysList)
+    const url = `${serverURL}/data-views`
+    processRequest(url, JWT, setError, setLoading, setDataViewsList)
   }, [templatePermissions])
 
-  return { error, loading, dataDisplaysList }
+  return { error, loading, dataViewsList }
 }
 
-export const useDataDisplaysTable = ({ tableName, apiQueries }: DataDisplayTableProps) => {
+export const useDataViewsTable = ({ tableName, apiQueries }: DataViewTableProps) => {
   const { first, offset, orderBy, ascending } = apiQueries
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
-  const [dataDisplayTable, setDataDisplayTable] = useState<DataDisplaysTableResponse>()
+  const [dataViewTable, setDataViewTable] = useState<DataViewsTableResponse>()
   const {
     userState: { templatePermissions },
   } = useUserState()
@@ -68,17 +68,17 @@ export const useDataDisplaysTable = ({ tableName, apiQueries }: DataDisplayTable
     if (orderBy) queryElements.push(`orderBy=${orderBy}`)
     if (ascending) queryElements.push(`ascending=${ascending}`)
     const queryString = queryElements.join('&')
-    const url = `${serverURL}/data-displays/table/${tableName}?${queryString}`
-    processRequest(url, JWT, setError, setLoading, setDataDisplayTable)
+    const url = `${serverURL}/data-views/table/${tableName}?${queryString}`
+    processRequest(url, JWT, setError, setLoading, setDataViewTable)
   }, [templatePermissions, tableName, apiQueries])
 
-  return { error, loading, dataDisplayTable }
+  return { error, loading, dataViewTable }
 }
 
-export const useDataDisplaysDetail = ({ tableName, recordId }: DataDisplayDetailsProps) => {
+export const useDataViewsDetail = ({ tableName, recordId }: DataViewDetailsProps) => {
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
-  const [dataDisplayDetail, setDataDisplayDetail] = useState<DataDisplaysDetailResponse>()
+  const [dataViewDetail, setDataViewDetail] = useState<DataViewsDetailResponse>()
   const {
     userState: { templatePermissions },
   } = useUserState()
@@ -86,11 +86,11 @@ export const useDataDisplaysDetail = ({ tableName, recordId }: DataDisplayDetail
   useEffect(() => {
     const JWT = localStorage.getItem(config.localStorageJWTKey)
     if (!JWT) return
-    const url = `${serverURL}/data-displays/table/${tableName}/item/${recordId}`
-    processRequest(url, JWT, setError, setLoading, setDataDisplayDetail)
+    const url = `${serverURL}/data-views/table/${tableName}/item/${recordId}`
+    processRequest(url, JWT, setError, setLoading, setDataViewDetail)
   }, [templatePermissions, tableName, recordId])
 
-  return { error, loading, dataDisplayDetail }
+  return { error, loading, dataViewDetail }
 }
 
 const processRequest = (
