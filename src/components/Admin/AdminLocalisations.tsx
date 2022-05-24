@@ -25,7 +25,7 @@ export const AdminLocalisations: React.FC = () => {
       url: `${config.serverREST}/admin/enable-language?code=${language.code}&enabled=${enabled}`,
     })
     if (result.success) {
-      console.log('Language updated')
+      console.log(`Language updated: ${language.code}`)
       refetchLanguages()
     } else {
       showToast({ title: 'Error', text: result.message, style: 'error' })
@@ -50,7 +50,7 @@ export const AdminLocalisations: React.FC = () => {
           url: `${config.serverREST}/admin/remove-language?code=${language.code}`,
         })
         if (result.success) {
-          console.log('Language removed')
+          console.log(`Language removed: ${language.code}`)
           showToast({
             title: strings.LOCALISATION_REMOVE_SUCCESS.replace('%1', language.languageName).replace(
               '%2',
