@@ -191,17 +191,7 @@ const LanguageRow: React.FC<{
   index: number
 }> = ({ language, handleSelect, index }) => {
   return (
-    <div
-      className="flex-row-start-center"
-      style={{
-        gap: 20,
-        width: '90%',
-        backgroundColor: 'white',
-        marginBottom: 5,
-        padding: 10,
-        borderRadius: 8,
-      }}
-    >
+    <div className="flex-row-start-center row-format">
       <Checkbox checked={language.enabled} onChange={() => handleSelect(language, index)} />
       <div className="flex-column">
         <p style={{ marginBottom: 0 }}>
