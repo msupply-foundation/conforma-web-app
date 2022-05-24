@@ -80,6 +80,8 @@ export const Toast = ({ toast, removeToast }: { toast: ToastProps; removeToast: 
   const { timeout } = toast
 
   useEffect(() => {
+    // Small time-out so component changes from invisible to visible, which
+    // allows the Transition component to apply nice fade-in effect.
     setTimeout(() => setVisible(true), 50)
     if (timeout !== 0)
       timerId.current = setTimeout(() => {
