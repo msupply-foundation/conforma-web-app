@@ -9,7 +9,7 @@ import Templates from '../containers/TemplateBuilder/Templates'
 import { useUserState } from '../contexts/UserState'
 import { LookupTableRoutes } from '../LookupTable'
 import { useRouter } from '../utils/hooks/useRouter'
-import { AdminLocalisations, AdminDataDisplays, AdminPermissions, AdminPlugins } from './AdminOther'
+import { AdminLocalisations, AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Admin: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -37,8 +37,8 @@ const Admin: React.FC = () => {
     },
     {
       route: 'data',
-      header: strings.MENU_ITEM_ADMIN_DATA_DISPLAY_CONFIG,
-      Element: () => <AdminDataDisplays />,
+      header: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
+      Element: () => <AdminDataViews />,
     },
     {
       route: 'permissions',

@@ -4,13 +4,13 @@ import { Loading } from '../../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { useDataDisplaysTable } from '../../utils/hooks/useDataDisplays'
-import { HeaderRow, DataDisplayTableAPIQueries } from '../../utils/types'
+import { useDataViewsTable } from '../../utils/hooks/useDataViews'
+import { HeaderRow, DataViewTableAPIQueries } from '../../utils/types'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { constructElement, formatCellText } from './helpers'
 import PaginationBar from '../../components/List/Pagination'
 
-const DataDisplayTable: React.FC = () => {
+const DataViewTable: React.FC = () => {
   const { strings } = useLanguageProvider()
   const {
     push,
@@ -18,12 +18,12 @@ const DataDisplayTable: React.FC = () => {
     params: { tableName },
   } = useRouter()
 
-  const [apiQueries, setApiQueries] = useState<DataDisplayTableAPIQueries>({})
-  const { dataDisplayTable, loading, error } = useDataDisplaysTable({
+  const [apiQueries, setApiQueries] = useState<DataViewTableAPIQueries>({})
+  const { dataViewTable, loading, error } = useDataViewsTable({
     tableName,
     apiQueries,
   })
-  usePageTitle(dataDisplayTable?.title || '')
+  usePageTitle(dataViewTable?.title || '')
 
   useEffect(() => {
     setApiQueries(getAPIQueryParams(query))
@@ -32,16 +32,16 @@ const DataDisplayTable: React.FC = () => {
   if (error) {
     return <Message error header={strings.ERROR_GENERIC} content={error.message} />
   }
-  if (loading || !dataDisplayTable) return <Loading />
+  if (loading || !dataViewTable) return <Loading />
 
   const showDetailsForRow = (id: number) => push(`/data/${tableName}/${id}`)
 
-  const { headerRow, tableRows, title, totalCount } = dataDisplayTable
+  const { headerRow, tableRows, title, totalCount } = dataViewTable
 
   return (
-    <div id="data-display">
+    <div id="data-view">
       <Header as="h4">{title}</Header>
-      <div id="list-container" className="data-display-table-container">
+      <div id="list-container" className="data-view-table-container">
         <Table stackable selectable>
           <Table.Header>
             <Table.Row>
@@ -78,7 +78,7 @@ const DataDisplayTable: React.FC = () => {
   )
 }
 
-export default DataDisplayTable
+export default DataViewTable
 
 // If the cell contains plugin data, return a SummaryView component, otherwise
 // just format the text and return Markdown component
