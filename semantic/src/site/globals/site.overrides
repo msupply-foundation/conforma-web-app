@@ -1687,13 +1687,11 @@ a:hover {
   align-items: center;
 
   .admin-options-container {
-    .flex-row();
-    align-items: center;
-    flex-wrap: 1;
+    .flex-column();
+    align-items: start;
+    gap: 10px;
 
     .admin-option {
-      margin: 15px;
-      max-width: 330px;
       border-radius: @borderRadius;
       background-color: @surfacesWhite;
       box-shadow: @templateBoxShadow;

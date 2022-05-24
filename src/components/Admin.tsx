@@ -3,6 +3,7 @@ import { Link, Route, Switch } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
 import { Loading, NoMatch } from '.'
 import Snapshots from '../containers/Dev/Snapshots'
+import { useLanguageProvider } from '../contexts/Localisation'
 import TemplateWrapper from '../containers/TemplateBuilder/template/TemplateWrapper'
 import Templates from '../containers/TemplateBuilder/Templates'
 import { useUserState } from '../contexts/UserState'
@@ -11,6 +12,7 @@ import { useRouter } from '../utils/hooks/useRouter'
 import { AdminLocalisations, AdminDataDisplays, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Admin: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const {
     match: { path },
   } = useRouter()
@@ -25,32 +27,32 @@ const Admin: React.FC = () => {
   const adminOption = [
     {
       route: 'templates',
-      header: 'Templates/Procedures and Builder',
+      header: strings.MENU_ITEM_ADMIN_TEMPLATES,
       Element: () => <Templates />,
     },
     {
       route: 'lookup-tables',
-      header: 'Lookup Tables',
+      header: strings.MENU_ITEM_ADMIN_LOOKUP_TABLES,
       Element: () => <LookupTableRoutes />,
     },
     {
       route: 'data',
-      header: 'Database Configurations',
+      header: strings.MENU_ITEM_ADMIN_DATA_DISPLAY_CONFIG,
       Element: () => <AdminDataDisplays />,
     },
     {
       route: 'permissions',
-      header: 'Permission Policies and Names',
+      header: strings.MENU_ITEM_ADMIN_PERMISSIONS,
       Element: () => <AdminPermissions />,
     },
-    {
-      route: 'plugins',
-      header: 'Plugins',
-      Element: () => <AdminPlugins />,
-    },
+    // {
+    //   route: 'plugins',
+    //   header: 'Plugins',
+    //   Element: () => <AdminPlugins />,
+    // },
     {
       route: 'localisations',
-      header: 'Localisations',
+      header: strings.MENU_ITEM_ADMIN_LOCALISATION,
       Element: () => <AdminLocalisations />,
     },
     {
