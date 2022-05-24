@@ -79,8 +79,8 @@ export const AdminLocalisations: React.FC = () => {
     )
     if (result.success)
       showToast({
-        title: 'Languages exported',
-        text: 'File has been downloaded',
+        title: strings.LOCALISATION_EXPORT_SUCCESS,
+        text: strings.LOCALISATION_EXPORT_SUCCESS_MESSAGE,
         style: 'success',
       })
     else {
@@ -98,7 +98,11 @@ export const AdminLocalisations: React.FC = () => {
     const reader = new FileReader()
     reader.onload = (event) => {
       if (!event.target?.result) {
-        showToast({ title: 'Error', text: strings.LOCALISATION_FILE_PROBLEM, style: 'error' })
+        showToast({
+          title: strings.LOCALISATION_REMOVE_ERROR,
+          text: strings.LOCALISATION_FILE_PROBLEM,
+          style: 'error',
+        })
         return
       }
       importLanguages(event.target.result as string, importDisabled, strings).then(
@@ -110,7 +114,7 @@ export const AdminLocalisations: React.FC = () => {
               style: 'success',
             })
           } else {
-            showToast({ title: 'Error', text: message, style: 'error' })
+            showToast({ title: strings.LOCALISATION_REMOVE_ERROR, text: message, style: 'error' })
           }
           refetchLanguages(true)
         }
@@ -122,8 +126,8 @@ export const AdminLocalisations: React.FC = () => {
   return (
     <div id="localisation-panel">
       <ModalWarning {...showModalWarning} />
-      <Header as="h1">Localisation</Header>
-      <Header as="h4">Currently installed languages</Header>
+      <Header as="h1">{strings.LOCALISATION_HEADER}</Header>
+      <Header as="h4">{strings.LOCALISATION_CURRENTLY_INSTALLED}</Header>
       <div className="flex-row">
         <p className="smaller-text">Enabled</p>
       </div>
