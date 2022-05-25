@@ -132,8 +132,11 @@ export function LanguageProvider({
     if (languageOptions.some((lang) => lang.enabled && lang.code === defaultLanguageCode))
       return defaultLanguageCode
     else {
-      console.log('Invalid language code, falling back to first available')
-      return languageOptions.filter(({ enabled }) => enabled)[0].code
+      const firstAvailableLanguageCode = languageOptions.filter(({ enabled }) => enabled)[0].code
+      console.log(
+        `Invalid language code, falling back to first available: ${firstAvailableLanguageCode}`
+      )
+      return firstAvailableLanguageCode
     }
   }
 
