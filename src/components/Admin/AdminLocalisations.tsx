@@ -28,7 +28,7 @@ export const AdminLocalisations: React.FC = () => {
       console.log(`Language updated: ${language.code}`)
       refetchLanguages()
     } else {
-      showToast({ title: 'Error', text: result.message, style: 'error' })
+      showToast({ title: strings.LOCALISATION_REMOVE_ERROR, text: result.message, style: 'error' })
       console.error(result.message)
     }
   }
