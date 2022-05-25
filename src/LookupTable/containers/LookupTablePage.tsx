@@ -39,7 +39,7 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
         <Loading />
       ) : structure ? (
         <Container style={{ padding: '2em 0em' }}>
-          <LookUpMainMenu tableLabel={structure?.name} tableId={structure?.id} />
+          <LookUpMainMenu tableLabel={structure?.displayName} tableId={structure?.id} />
           <Divider />
           <LookUpTable structure={structure} />
         </Container>
@@ -47,7 +47,7 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
         <Message error header={strings.LOOKUP_ERROR_NOT_FOUND} />
       )}
       <ImportCsvModal
-        tableLabel={structure?.name}
+        tableLabel={structure?.displayName}
         tableStructureID={structure?.id}
         open={match !== null}
         onClose={() => {

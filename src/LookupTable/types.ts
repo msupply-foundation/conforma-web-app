@@ -15,7 +15,7 @@ type FieldMapType = {
 
 type LookUpTableType = {
   id: number
-  name: string
+  displayName: string
   tableName: string
   fieldMap: Array<FieldMapType>
   isExpanded?: boolean

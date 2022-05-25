@@ -59,7 +59,7 @@ const ListTable: React.FC<any> = ({
                 key={`lookup-table-${lookupTable.id}`}
                 onClick={() => handleExpansion(lookupTable)}
               >
-                <Table.Cell>{lookupTable.name}</Table.Cell>
+                <Table.Cell>{lookupTable.displayName}</Table.Cell>
                 <Table.Cell>{TABLE_PREFIX + lookupTable.tableName}</Table.Cell>
                 <Table.Cell collapsing>
                   <Button.Group>
@@ -80,9 +80,12 @@ const ListTable: React.FC<any> = ({
                       }
                     />
                     <DownloadButton
-                      popUpContent={strings.LOOKUP_TABLE_DOWNLOAD.replace('%1', lookupTable.name)}
+                      popUpContent={strings.LOOKUP_TABLE_DOWNLOAD.replace(
+                        '%1',
+                        lookupTable.displayName
+                      )}
                       id={lookupTable.id}
-                      name={lookupTable.name}
+                      name={lookupTable.displayName}
                     />
                   </Button.Group>
                 </Table.Cell>

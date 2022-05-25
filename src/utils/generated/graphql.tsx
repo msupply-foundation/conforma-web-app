@@ -33,8 +33,6 @@ export type Query = Node & {
   nodeId: Scalars['ID'];
   /** Fetches an object given its globally unique `ID`. */
   node?: Maybe<Node>;
-  /** Reads and enables pagination through a set of `BoogieWoogie`. */
-  boogieWoogies?: Maybe<BoogieWoogiesConnection>;
   /** Reads and enables pagination through a set of `ActionPlugin`. */
   actionPlugins?: Maybe<ActionPluginsConnection>;
   /** Reads and enables pagination through a set of `ActionQueue`. */
@@ -61,18 +59,16 @@ export type Query = Node & {
   constraintsInfos?: Maybe<ConstraintsInfosConnection>;
   /** Reads and enables pagination through a set of `Counter`. */
   counters?: Maybe<CountersConnection>;
-  /** Reads and enables pagination through a set of `DataDisplay`. */
-  dataDisplays?: Maybe<DataDisplaysConnection>;
-  /** Reads and enables pagination through a set of `DataDisplayColumnDefinition`. */
-  dataDisplayColumnDefinitions?: Maybe<DataDisplayColumnDefinitionsConnection>;
   /** Reads and enables pagination through a set of `DataTable`. */
   dataTables?: Maybe<DataTablesConnection>;
+  /** Reads and enables pagination through a set of `DataTableBoogieWoogie`. */
+  dataTableBoogieWoogies?: Maybe<DataTableBoogieWoogiesConnection>;
   /** Reads and enables pagination through a set of `DataTableContainer`. */
   dataTableContainers?: Maybe<DataTableContainersConnection>;
-  /** Reads and enables pagination through a set of `DataTableMyDosageInfo`. */
-  dataTableMyDosageInfos?: Maybe<DataTableMyDosageInfosConnection>;
-  /** Reads and enables pagination through a set of `DataTableWhereYaFrom`. */
-  dataTableWhereYaFroms?: Maybe<DataTableWhereYaFromsConnection>;
+  /** Reads and enables pagination through a set of `DataView`. */
+  dataViews?: Maybe<DataViewsConnection>;
+  /** Reads and enables pagination through a set of `DataViewColumnDefinition`. */
+  dataViewColumnDefinitions?: Maybe<DataViewColumnDefinitionsConnection>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
@@ -143,7 +139,6 @@ export type Query = Node & {
   userOrganisations?: Maybe<UserOrganisationsConnection>;
   /** Reads and enables pagination through a set of `Verification`. */
   verifications?: Maybe<VerificationsConnection>;
-  boogieWoogie?: Maybe<BoogieWoogie>;
   actionPlugin?: Maybe<ActionPlugin>;
   actionPluginByCode?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
@@ -156,15 +151,14 @@ export type Query = Node & {
   applicationStatusHistory?: Maybe<ApplicationStatusHistory>;
   counter?: Maybe<Counter>;
   counterByName?: Maybe<Counter>;
-  dataDisplay?: Maybe<DataDisplay>;
-  dataDisplayByTableNameAndCode?: Maybe<DataDisplay>;
-  dataDisplayColumnDefinition?: Maybe<DataDisplayColumnDefinition>;
-  dataDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<DataDisplayColumnDefinition>;
   dataTable?: Maybe<DataTable>;
   dataTableByTableName?: Maybe<DataTable>;
+  dataTableBoogieWoogie?: Maybe<DataTableBoogieWoogie>;
   dataTableContainer?: Maybe<DataTableContainer>;
-  dataTableMyDosageInfo?: Maybe<DataTableMyDosageInfo>;
-  dataTableWhereYaFrom?: Maybe<DataTableWhereYaFrom>;
+  dataView?: Maybe<DataView>;
+  dataViewByTableNameAndCode?: Maybe<DataView>;
+  dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
+  dataViewColumnDefinitionByTableNameAndColumnName?: Maybe<DataViewColumnDefinition>;
   elementTypePlugin?: Maybe<ElementTypePlugin>;
   file?: Maybe<File>;
   fileByUniqueId?: Maybe<File>;
@@ -235,8 +229,6 @@ export type Query = Node & {
   reviewStage?: Maybe<Scalars['Int']>;
   reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
   submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']>;
-  /** Reads a single `BoogieWoogie` using its globally unique `ID`. */
-  boogieWoogieByNodeId?: Maybe<BoogieWoogie>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
@@ -255,18 +247,16 @@ export type Query = Node & {
   applicationStatusHistoryByNodeId?: Maybe<ApplicationStatusHistory>;
   /** Reads a single `Counter` using its globally unique `ID`. */
   counterByNodeId?: Maybe<Counter>;
-  /** Reads a single `DataDisplay` using its globally unique `ID`. */
-  dataDisplayByNodeId?: Maybe<DataDisplay>;
-  /** Reads a single `DataDisplayColumnDefinition` using its globally unique `ID`. */
-  dataDisplayColumnDefinitionByNodeId?: Maybe<DataDisplayColumnDefinition>;
   /** Reads a single `DataTable` using its globally unique `ID`. */
   dataTableByNodeId?: Maybe<DataTable>;
+  /** Reads a single `DataTableBoogieWoogie` using its globally unique `ID`. */
+  dataTableBoogieWoogieByNodeId?: Maybe<DataTableBoogieWoogie>;
   /** Reads a single `DataTableContainer` using its globally unique `ID`. */
   dataTableContainerByNodeId?: Maybe<DataTableContainer>;
-  /** Reads a single `DataTableMyDosageInfo` using its globally unique `ID`. */
-  dataTableMyDosageInfoByNodeId?: Maybe<DataTableMyDosageInfo>;
-  /** Reads a single `DataTableWhereYaFrom` using its globally unique `ID`. */
-  dataTableWhereYaFromByNodeId?: Maybe<DataTableWhereYaFrom>;
+  /** Reads a single `DataView` using its globally unique `ID`. */
+  dataViewByNodeId?: Maybe<DataView>;
+  /** Reads a single `DataViewColumnDefinition` using its globally unique `ID`. */
+  dataViewColumnDefinitionByNodeId?: Maybe<DataViewColumnDefinition>;
   /** Reads a single `ElementTypePlugin` using its globally unique `ID`. */
   elementTypePluginByNodeId?: Maybe<ElementTypePlugin>;
   /** Reads a single `File` using its globally unique `ID`. */
@@ -335,19 +325,6 @@ export type Query = Node & {
 /** The root query type which gives access points into the data universe. */
 export type QueryNodeArgs = {
   nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryBoogieWoogiesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<BoogieWoogiesOrderBy>>;
-  condition?: Maybe<BoogieWoogieCondition>;
-  filter?: Maybe<BoogieWoogieFilter>;
 };
 
 
@@ -521,32 +498,6 @@ export type QueryCountersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplaysArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<DataDisplaysOrderBy>>;
-  condition?: Maybe<DataDisplayCondition>;
-  filter?: Maybe<DataDisplayFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayColumnDefinitionsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<DataDisplayColumnDefinitionsOrderBy>>;
-  condition?: Maybe<DataDisplayColumnDefinitionCondition>;
-  filter?: Maybe<DataDisplayColumnDefinitionFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryDataTablesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -556,6 +507,19 @@ export type QueryDataTablesArgs = {
   orderBy?: Maybe<Array<DataTablesOrderBy>>;
   condition?: Maybe<DataTableCondition>;
   filter?: Maybe<DataTableFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableBoogieWoogiesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataTableBoogieWoogiesOrderBy>>;
+  condition?: Maybe<DataTableBoogieWoogieCondition>;
+  filter?: Maybe<DataTableBoogieWoogieFilter>;
 };
 
 
@@ -573,28 +537,28 @@ export type QueryDataTableContainersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataTableMyDosageInfosArgs = {
+export type QueryDataViewsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<DataTableMyDosageInfosOrderBy>>;
-  condition?: Maybe<DataTableMyDosageInfoCondition>;
-  filter?: Maybe<DataTableMyDosageInfoFilter>;
+  orderBy?: Maybe<Array<DataViewsOrderBy>>;
+  condition?: Maybe<DataViewCondition>;
+  filter?: Maybe<DataViewFilter>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataTableWhereYaFromsArgs = {
+export type QueryDataViewColumnDefinitionsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<DataTableWhereYaFromsOrderBy>>;
-  condition?: Maybe<DataTableWhereYaFromCondition>;
-  filter?: Maybe<DataTableWhereYaFromFilter>;
+  orderBy?: Maybe<Array<DataViewColumnDefinitionsOrderBy>>;
+  condition?: Maybe<DataViewColumnDefinitionCondition>;
+  filter?: Maybe<DataViewColumnDefinitionFilter>;
 };
 
 
@@ -1054,12 +1018,6 @@ export type QueryVerificationsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryBoogieWoogieArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryActionPluginArgs = {
   id: Scalars['Int'];
 };
@@ -1132,32 +1090,6 @@ export type QueryCounterByNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayByTableNameAndCodeArgs = {
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayColumnDefinitionArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayColumnDefinitionByTableNameAndColumnNameArgs = {
-  tableName: Scalars['String'];
-  columnName: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryDataTableArgs = {
   id: Scalars['Int'];
 };
@@ -1170,20 +1102,40 @@ export type QueryDataTableByTableNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTableBoogieWoogieArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableContainerArgs = {
   id: Scalars['Int'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataTableMyDosageInfoArgs = {
+export type QueryDataViewArgs = {
   id: Scalars['Int'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataTableWhereYaFromArgs = {
+export type QueryDataViewByTableNameAndCodeArgs = {
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataViewColumnDefinitionArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataViewColumnDefinitionByTableNameAndColumnNameArgs = {
+  tableName: Scalars['String'];
+  columnName: Scalars['String'];
 };
 
 
@@ -1670,12 +1622,6 @@ export type QuerySubmittedAssignedQuestionsCountArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryBoogieWoogieByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryActionPluginByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -1730,19 +1676,13 @@ export type QueryCounterByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryDataDisplayColumnDefinitionByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryDataTableByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableBoogieWoogieByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -1754,13 +1694,13 @@ export type QueryDataTableContainerByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataTableMyDosageInfoByNodeIdArgs = {
+export type QueryDataViewByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataTableWhereYaFromByNodeIdArgs = {
+export type QueryDataViewColumnDefinitionByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -1957,43 +1897,73 @@ export type Node = {
 };
 
 
-/** Methods to use when ordering `BoogieWoogie`. */
-export enum BoogieWoogiesOrderBy {
+/** Methods to use when ordering `ActionPlugin`. */
+export enum ActionPluginsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  CommentAsc = 'COMMENT_ASC',
-  CommentDesc = 'COMMENT_DESC',
-  AnotherFieldAsc = 'ANOTHER_FIELD_ASC',
-  AnotherFieldDesc = 'ANOTHER_FIELD_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  PathAsc = 'PATH_ASC',
+  PathDesc = 'PATH_DESC',
+  RequiredParametersAsc = 'REQUIRED_PARAMETERS_ASC',
+  RequiredParametersDesc = 'REQUIRED_PARAMETERS_DESC',
+  OptionalParametersAsc = 'OPTIONAL_PARAMETERS_ASC',
+  OptionalParametersDesc = 'OPTIONAL_PARAMETERS_DESC',
+  OutputPropertiesAsc = 'OUTPUT_PROPERTIES_ASC',
+  OutputPropertiesDesc = 'OUTPUT_PROPERTIES_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A condition to be used against `BoogieWoogie` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type BoogieWoogieCondition = {
+/** A condition to be used against `ActionPlugin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ActionPluginCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `comment` field. */
-  comment?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `anotherField` field. */
-  anotherField?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `path` field. */
+  path?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `requiredParameters` field. */
+  requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `optionalParameters` field. */
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `outputProperties` field. */
+  outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
-/** A filter to be used against `BoogieWoogie` object types. All fields are combined with a logical ‘and.’ */
-export type BoogieWoogieFilter = {
+/** A filter to be used against `ActionPlugin` object types. All fields are combined with a logical ‘and.’ */
+export type ActionPluginFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `comment` field. */
-  comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `anotherField` field. */
-  anotherField?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
+  /** Filter by the object’s `path` field. */
+  path?: Maybe<StringFilter>;
+  /** Filter by the object’s `requiredParameters` field. */
+  requiredParameters?: Maybe<StringListFilter>;
+  /** Filter by the object’s `optionalParameters` field. */
+  optionalParameters?: Maybe<StringListFilter>;
+  /** Filter by the object’s `outputProperties` field. */
+  outputProperties?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<BoogieWoogieFilter>>;
+  and?: Maybe<Array<ActionPluginFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<BoogieWoogieFilter>>;
+  or?: Maybe<Array<ActionPluginFilter>>;
   /** Negates the expression. */
-  not?: Maybe<BoogieWoogieFilter>;
+  not?: Maybe<ActionPluginFilter>;
 };
 
 /** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
@@ -2100,119 +2070,6 @@ export type StringFilter = {
   greaterThanOrEqualToInsensitive?: Maybe<Scalars['String']>;
 };
 
-/** A connection to a list of `BoogieWoogie` values. */
-export type BoogieWoogiesConnection = {
-  __typename?: 'BoogieWoogiesConnection';
-  /** A list of `BoogieWoogie` objects. */
-  nodes: Array<Maybe<BoogieWoogie>>;
-  /** A list of edges which contains the `BoogieWoogie` and cursor to aid in pagination. */
-  edges: Array<BoogieWoogiesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `BoogieWoogie` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type BoogieWoogie = Node & {
-  __typename?: 'BoogieWoogie';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  comment?: Maybe<Scalars['String']>;
-  anotherField?: Maybe<Scalars['Int']>;
-};
-
-/** A `BoogieWoogie` edge in the connection. */
-export type BoogieWoogiesEdge = {
-  __typename?: 'BoogieWoogiesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `BoogieWoogie` at the end of the edge. */
-  node?: Maybe<BoogieWoogie>;
-};
-
-/** Information about pagination in a connection. */
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  /** When paginating forwards, are there more items? */
-  hasNextPage: Scalars['Boolean'];
-  /** When paginating backwards, are there more items? */
-  hasPreviousPage: Scalars['Boolean'];
-  /** When paginating backwards, the cursor to continue. */
-  startCursor?: Maybe<Scalars['Cursor']>;
-  /** When paginating forwards, the cursor to continue. */
-  endCursor?: Maybe<Scalars['Cursor']>;
-};
-
-/** Methods to use when ordering `ActionPlugin`. */
-export enum ActionPluginsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  CodeAsc = 'CODE_ASC',
-  CodeDesc = 'CODE_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  DescriptionAsc = 'DESCRIPTION_ASC',
-  DescriptionDesc = 'DESCRIPTION_DESC',
-  PathAsc = 'PATH_ASC',
-  PathDesc = 'PATH_DESC',
-  RequiredParametersAsc = 'REQUIRED_PARAMETERS_ASC',
-  RequiredParametersDesc = 'REQUIRED_PARAMETERS_DESC',
-  OptionalParametersAsc = 'OPTIONAL_PARAMETERS_ASC',
-  OptionalParametersDesc = 'OPTIONAL_PARAMETERS_DESC',
-  OutputPropertiesAsc = 'OUTPUT_PROPERTIES_ASC',
-  OutputPropertiesDesc = 'OUTPUT_PROPERTIES_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `ActionPlugin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type ActionPluginCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `code` field. */
-  code?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `description` field. */
-  description?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `path` field. */
-  path?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `requiredParameters` field. */
-  requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `optionalParameters` field. */
-  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `outputProperties` field. */
-  outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-/** A filter to be used against `ActionPlugin` object types. All fields are combined with a logical ‘and.’ */
-export type ActionPluginFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `description` field. */
-  description?: Maybe<StringFilter>;
-  /** Filter by the object’s `path` field. */
-  path?: Maybe<StringFilter>;
-  /** Filter by the object’s `requiredParameters` field. */
-  requiredParameters?: Maybe<StringListFilter>;
-  /** Filter by the object’s `optionalParameters` field. */
-  optionalParameters?: Maybe<StringListFilter>;
-  /** Filter by the object’s `outputProperties` field. */
-  outputProperties?: Maybe<StringListFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ActionPluginFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ActionPluginFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ActionPluginFilter>;
-};
-
 /** A filter to be used against String List fields. All fields are combined with a logical ‘and.’ */
 export type StringListFilter = {
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
@@ -2287,6 +2144,19 @@ export type ActionPluginsEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `ActionPlugin` at the end of the edge. */
   node?: Maybe<ActionPlugin>;
+};
+
+/** Information about pagination in a connection. */
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  /** When paginating forwards, are there more items? */
+  hasNextPage: Scalars['Boolean'];
+  /** When paginating backwards, are there more items? */
+  hasPreviousPage: Scalars['Boolean'];
+  /** When paginating backwards, the cursor to continue. */
+  startCursor?: Maybe<Scalars['Cursor']>;
+  /** When paginating forwards, the cursor to continue. */
+  endCursor?: Maybe<Scalars['Cursor']>;
 };
 
 /** Methods to use when ordering `ActionQueue`. */
@@ -9557,251 +9427,6 @@ export type CountersEdge = {
   node?: Maybe<Counter>;
 };
 
-/** Methods to use when ordering `DataDisplay`. */
-export enum DataDisplaysOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  TableNameAsc = 'TABLE_NAME_ASC',
-  TableNameDesc = 'TABLE_NAME_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC',
-  CodeAsc = 'CODE_ASC',
-  CodeDesc = 'CODE_DESC',
-  PermissionNamesAsc = 'PERMISSION_NAMES_ASC',
-  PermissionNamesDesc = 'PERMISSION_NAMES_DESC',
-  RowRestrictionsAsc = 'ROW_RESTRICTIONS_ASC',
-  RowRestrictionsDesc = 'ROW_RESTRICTIONS_DESC',
-  TableViewIncludeColumnsAsc = 'TABLE_VIEW_INCLUDE_COLUMNS_ASC',
-  TableViewIncludeColumnsDesc = 'TABLE_VIEW_INCLUDE_COLUMNS_DESC',
-  TableViewExcludeColumnsAsc = 'TABLE_VIEW_EXCLUDE_COLUMNS_ASC',
-  TableViewExcludeColumnsDesc = 'TABLE_VIEW_EXCLUDE_COLUMNS_DESC',
-  DetailViewIncludeColumnsAsc = 'DETAIL_VIEW_INCLUDE_COLUMNS_ASC',
-  DetailViewIncludeColumnsDesc = 'DETAIL_VIEW_INCLUDE_COLUMNS_DESC',
-  DetailViewExcludeColumnsAsc = 'DETAIL_VIEW_EXCLUDE_COLUMNS_ASC',
-  DetailViewExcludeColumnsDesc = 'DETAIL_VIEW_EXCLUDE_COLUMNS_DESC',
-  DetailViewHeaderColumnAsc = 'DETAIL_VIEW_HEADER_COLUMN_ASC',
-  DetailViewHeaderColumnDesc = 'DETAIL_VIEW_HEADER_COLUMN_DESC',
-  ShowLinkedApplicationsAsc = 'SHOW_LINKED_APPLICATIONS_ASC',
-  ShowLinkedApplicationsDesc = 'SHOW_LINKED_APPLICATIONS_DESC',
-  PriorityAsc = 'PRIORITY_ASC',
-  PriorityDesc = 'PRIORITY_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `DataDisplay` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type DataDisplayCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `tableName` field. */
-  tableName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `title` field. */
-  title?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `code` field. */
-  code?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `permissionNames` field. */
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `rowRestrictions` field. */
-  rowRestrictions?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `tableViewIncludeColumns` field. */
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `tableViewExcludeColumns` field. */
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `detailViewIncludeColumns` field. */
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `detailViewExcludeColumns` field. */
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `detailViewHeaderColumn` field. */
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `showLinkedApplications` field. */
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `priority` field. */
-  priority?: Maybe<Scalars['Int']>;
-};
-
-/** A filter to be used against `DataDisplay` object types. All fields are combined with a logical ‘and.’ */
-export type DataDisplayFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `tableName` field. */
-  tableName?: Maybe<StringFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
-  /** Filter by the object’s `permissionNames` field. */
-  permissionNames?: Maybe<StringListFilter>;
-  /** Filter by the object’s `rowRestrictions` field. */
-  rowRestrictions?: Maybe<JsonFilter>;
-  /** Filter by the object’s `tableViewIncludeColumns` field. */
-  tableViewIncludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `tableViewExcludeColumns` field. */
-  tableViewExcludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `detailViewIncludeColumns` field. */
-  detailViewIncludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `detailViewExcludeColumns` field. */
-  detailViewExcludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `detailViewHeaderColumn` field. */
-  detailViewHeaderColumn?: Maybe<StringFilter>;
-  /** Filter by the object’s `showLinkedApplications` field. */
-  showLinkedApplications?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `priority` field. */
-  priority?: Maybe<IntFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<DataDisplayFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<DataDisplayFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<DataDisplayFilter>;
-};
-
-/** A connection to a list of `DataDisplay` values. */
-export type DataDisplaysConnection = {
-  __typename?: 'DataDisplaysConnection';
-  /** A list of `DataDisplay` objects. */
-  nodes: Array<Maybe<DataDisplay>>;
-  /** A list of edges which contains the `DataDisplay` and cursor to aid in pagination. */
-  edges: Array<DataDisplaysEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `DataDisplay` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type DataDisplay = Node & {
-  __typename?: 'DataDisplay';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  tableName: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  rowRestrictions?: Maybe<Scalars['JSON']>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn: Scalars['String'];
-  showLinkedApplications: Scalars['Boolean'];
-  priority?: Maybe<Scalars['Int']>;
-};
-
-/** A `DataDisplay` edge in the connection. */
-export type DataDisplaysEdge = {
-  __typename?: 'DataDisplaysEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `DataDisplay` at the end of the edge. */
-  node?: Maybe<DataDisplay>;
-};
-
-/** Methods to use when ordering `DataDisplayColumnDefinition`. */
-export enum DataDisplayColumnDefinitionsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  TableNameAsc = 'TABLE_NAME_ASC',
-  TableNameDesc = 'TABLE_NAME_DESC',
-  ColumnNameAsc = 'COLUMN_NAME_ASC',
-  ColumnNameDesc = 'COLUMN_NAME_DESC',
-  TitleAsc = 'TITLE_ASC',
-  TitleDesc = 'TITLE_DESC',
-  ElementTypePluginCodeAsc = 'ELEMENT_TYPE_PLUGIN_CODE_ASC',
-  ElementTypePluginCodeDesc = 'ELEMENT_TYPE_PLUGIN_CODE_DESC',
-  ElementParametersAsc = 'ELEMENT_PARAMETERS_ASC',
-  ElementParametersDesc = 'ELEMENT_PARAMETERS_DESC',
-  AdditionalFormattingAsc = 'ADDITIONAL_FORMATTING_ASC',
-  AdditionalFormattingDesc = 'ADDITIONAL_FORMATTING_DESC',
-  ValueExpressionAsc = 'VALUE_EXPRESSION_ASC',
-  ValueExpressionDesc = 'VALUE_EXPRESSION_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `DataDisplayColumnDefinition` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type DataDisplayColumnDefinitionCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `tableName` field. */
-  tableName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `columnName` field. */
-  columnName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `title` field. */
-  title?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `elementTypePluginCode` field. */
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `elementParameters` field. */
-  elementParameters?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `additionalFormatting` field. */
-  additionalFormatting?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `valueExpression` field. */
-  valueExpression?: Maybe<Scalars['JSON']>;
-};
-
-/** A filter to be used against `DataDisplayColumnDefinition` object types. All fields are combined with a logical ‘and.’ */
-export type DataDisplayColumnDefinitionFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `tableName` field. */
-  tableName?: Maybe<StringFilter>;
-  /** Filter by the object’s `columnName` field. */
-  columnName?: Maybe<StringFilter>;
-  /** Filter by the object’s `title` field. */
-  title?: Maybe<StringFilter>;
-  /** Filter by the object’s `elementTypePluginCode` field. */
-  elementTypePluginCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `elementParameters` field. */
-  elementParameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `additionalFormatting` field. */
-  additionalFormatting?: Maybe<JsonFilter>;
-  /** Filter by the object’s `valueExpression` field. */
-  valueExpression?: Maybe<JsonFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<DataDisplayColumnDefinitionFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<DataDisplayColumnDefinitionFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<DataDisplayColumnDefinitionFilter>;
-};
-
-/** A connection to a list of `DataDisplayColumnDefinition` values. */
-export type DataDisplayColumnDefinitionsConnection = {
-  __typename?: 'DataDisplayColumnDefinitionsConnection';
-  /** A list of `DataDisplayColumnDefinition` objects. */
-  nodes: Array<Maybe<DataDisplayColumnDefinition>>;
-  /** A list of edges which contains the `DataDisplayColumnDefinition` and cursor to aid in pagination. */
-  edges: Array<DataDisplayColumnDefinitionsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `DataDisplayColumnDefinition` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type DataDisplayColumnDefinition = Node & {
-  __typename?: 'DataDisplayColumnDefinition';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  tableName?: Maybe<Scalars['String']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  elementParameters?: Maybe<Scalars['JSON']>;
-  additionalFormatting?: Maybe<Scalars['JSON']>;
-  valueExpression?: Maybe<Scalars['JSON']>;
-};
-
-/** A `DataDisplayColumnDefinition` edge in the connection. */
-export type DataDisplayColumnDefinitionsEdge = {
-  __typename?: 'DataDisplayColumnDefinitionsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `DataDisplayColumnDefinition` at the end of the edge. */
-  node?: Maybe<DataDisplayColumnDefinition>;
-};
-
 /** Methods to use when ordering `DataTable`. */
 export enum DataTablesOrderBy {
   Natural = 'NATURAL',
@@ -9809,8 +9434,8 @@ export enum DataTablesOrderBy {
   IdDesc = 'ID_DESC',
   TableNameAsc = 'TABLE_NAME_ASC',
   TableNameDesc = 'TABLE_NAME_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
+  DisplayNameAsc = 'DISPLAY_NAME_ASC',
+  DisplayNameDesc = 'DISPLAY_NAME_DESC',
   FieldMapAsc = 'FIELD_MAP_ASC',
   FieldMapDesc = 'FIELD_MAP_DESC',
   IsLookupTableAsc = 'IS_LOOKUP_TABLE_ASC',
@@ -9825,8 +9450,8 @@ export type DataTableCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `tableName` field. */
   tableName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `displayName` field. */
+  displayName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `fieldMap` field. */
   fieldMap?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isLookupTable` field. */
@@ -9839,8 +9464,8 @@ export type DataTableFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `tableName` field. */
   tableName?: Maybe<StringFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `displayName` field. */
+  displayName?: Maybe<StringFilter>;
   /** Filter by the object’s `fieldMap` field. */
   fieldMap?: Maybe<JsonFilter>;
   /** Filter by the object’s `isLookupTable` field. */
@@ -9872,7 +9497,7 @@ export type DataTable = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   tableName: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
 };
@@ -9884,6 +9509,76 @@ export type DataTablesEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `DataTable` at the end of the edge. */
   node?: Maybe<DataTable>;
+};
+
+/** Methods to use when ordering `DataTableBoogieWoogie`. */
+export enum DataTableBoogieWoogiesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  CommentAsc = 'COMMENT_ASC',
+  CommentDesc = 'COMMENT_DESC',
+  AnotherFieldAsc = 'ANOTHER_FIELD_ASC',
+  AnotherFieldDesc = 'ANOTHER_FIELD_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `DataTableBoogieWoogie` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type DataTableBoogieWoogieCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `comment` field. */
+  comment?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `anotherField` field. */
+  anotherField?: Maybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `DataTableBoogieWoogie` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableBoogieWoogieFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `comment` field. */
+  comment?: Maybe<StringFilter>;
+  /** Filter by the object’s `anotherField` field. */
+  anotherField?: Maybe<IntFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<DataTableBoogieWoogieFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<DataTableBoogieWoogieFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<DataTableBoogieWoogieFilter>;
+};
+
+/** A connection to a list of `DataTableBoogieWoogie` values. */
+export type DataTableBoogieWoogiesConnection = {
+  __typename?: 'DataTableBoogieWoogiesConnection';
+  /** A list of `DataTableBoogieWoogie` objects. */
+  nodes: Array<Maybe<DataTableBoogieWoogie>>;
+  /** A list of edges which contains the `DataTableBoogieWoogie` and cursor to aid in pagination. */
+  edges: Array<DataTableBoogieWoogiesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableBoogieWoogie` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type DataTableBoogieWoogie = Node & {
+  __typename?: 'DataTableBoogieWoogie';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  comment?: Maybe<Scalars['String']>;
+  anotherField?: Maybe<Scalars['Int']>;
+};
+
+/** A `DataTableBoogieWoogie` edge in the connection. */
+export type DataTableBoogieWoogiesEdge = {
+  __typename?: 'DataTableBoogieWoogiesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `DataTableBoogieWoogie` at the end of the edge. */
+  node?: Maybe<DataTableBoogieWoogie>;
 };
 
 /** Methods to use when ordering `DataTableContainer`. */
@@ -9956,158 +9651,249 @@ export type DataTableContainersEdge = {
   node?: Maybe<DataTableContainer>;
 };
 
-/** Methods to use when ordering `DataTableMyDosageInfo`. */
-export enum DataTableMyDosageInfosOrderBy {
+/** Methods to use when ordering `DataView`. */
+export enum DataViewsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
+  TableNameAsc = 'TABLE_NAME_ASC',
+  TableNameDesc = 'TABLE_NAME_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  PermissionNamesAsc = 'PERMISSION_NAMES_ASC',
+  PermissionNamesDesc = 'PERMISSION_NAMES_DESC',
+  RowRestrictionsAsc = 'ROW_RESTRICTIONS_ASC',
+  RowRestrictionsDesc = 'ROW_RESTRICTIONS_DESC',
+  TableViewIncludeColumnsAsc = 'TABLE_VIEW_INCLUDE_COLUMNS_ASC',
+  TableViewIncludeColumnsDesc = 'TABLE_VIEW_INCLUDE_COLUMNS_DESC',
+  TableViewExcludeColumnsAsc = 'TABLE_VIEW_EXCLUDE_COLUMNS_ASC',
+  TableViewExcludeColumnsDesc = 'TABLE_VIEW_EXCLUDE_COLUMNS_DESC',
+  DetailViewIncludeColumnsAsc = 'DETAIL_VIEW_INCLUDE_COLUMNS_ASC',
+  DetailViewIncludeColumnsDesc = 'DETAIL_VIEW_INCLUDE_COLUMNS_DESC',
+  DetailViewExcludeColumnsAsc = 'DETAIL_VIEW_EXCLUDE_COLUMNS_ASC',
+  DetailViewExcludeColumnsDesc = 'DETAIL_VIEW_EXCLUDE_COLUMNS_DESC',
+  DetailViewHeaderColumnAsc = 'DETAIL_VIEW_HEADER_COLUMN_ASC',
+  DetailViewHeaderColumnDesc = 'DETAIL_VIEW_HEADER_COLUMN_DESC',
+  ShowLinkedApplicationsAsc = 'SHOW_LINKED_APPLICATIONS_ASC',
+  ShowLinkedApplicationsDesc = 'SHOW_LINKED_APPLICATIONS_DESC',
+  PriorityAsc = 'PRIORITY_ASC',
+  PriorityDesc = 'PRIORITY_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A condition to be used against `DataTableMyDosageInfo` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type DataTableMyDosageInfoCondition = {
+/** A condition to be used against `DataView` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type DataViewCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `tableName` field. */
+  tableName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `permissionNames` field. */
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `rowRestrictions` field. */
+  rowRestrictions?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `tableViewIncludeColumns` field. */
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `tableViewExcludeColumns` field. */
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `detailViewIncludeColumns` field. */
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `detailViewExcludeColumns` field. */
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `detailViewHeaderColumn` field. */
+  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `showLinkedApplications` field. */
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `priority` field. */
+  priority?: Maybe<Scalars['Int']>;
 };
 
-/** A filter to be used against `DataTableMyDosageInfo` object types. All fields are combined with a logical ‘and.’ */
-export type DataTableMyDosageInfoFilter = {
+/** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
+export type DataViewFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `tableName` field. */
+  tableName?: Maybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `permissionNames` field. */
+  permissionNames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `rowRestrictions` field. */
+  rowRestrictions?: Maybe<JsonFilter>;
+  /** Filter by the object’s `tableViewIncludeColumns` field. */
+  tableViewIncludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `tableViewExcludeColumns` field. */
+  tableViewExcludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `detailViewIncludeColumns` field. */
+  detailViewIncludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `detailViewExcludeColumns` field. */
+  detailViewExcludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `detailViewHeaderColumn` field. */
+  detailViewHeaderColumn?: Maybe<StringFilter>;
+  /** Filter by the object’s `showLinkedApplications` field. */
+  showLinkedApplications?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `priority` field. */
+  priority?: Maybe<IntFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<DataTableMyDosageInfoFilter>>;
+  and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<DataTableMyDosageInfoFilter>>;
+  or?: Maybe<Array<DataViewFilter>>;
   /** Negates the expression. */
-  not?: Maybe<DataTableMyDosageInfoFilter>;
+  not?: Maybe<DataViewFilter>;
 };
 
-/** A connection to a list of `DataTableMyDosageInfo` values. */
-export type DataTableMyDosageInfosConnection = {
-  __typename?: 'DataTableMyDosageInfosConnection';
-  /** A list of `DataTableMyDosageInfo` objects. */
-  nodes: Array<Maybe<DataTableMyDosageInfo>>;
-  /** A list of edges which contains the `DataTableMyDosageInfo` and cursor to aid in pagination. */
-  edges: Array<DataTableMyDosageInfosEdge>;
+/** A connection to a list of `DataView` values. */
+export type DataViewsConnection = {
+  __typename?: 'DataViewsConnection';
+  /** A list of `DataView` objects. */
+  nodes: Array<Maybe<DataView>>;
+  /** A list of edges which contains the `DataView` and cursor to aid in pagination. */
+  edges: Array<DataViewsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `DataTableMyDosageInfo` you could get from the connection. */
+  /** The count of *all* `DataView` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-export type DataTableMyDosageInfo = Node & {
-  __typename?: 'DataTableMyDosageInfo';
+export type DataView = Node & {
+  __typename?: 'DataView';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  name?: Maybe<Scalars['String']>;
+  tableName: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrictions?: Maybe<Scalars['JSON']>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn: Scalars['String'];
+  showLinkedApplications: Scalars['Boolean'];
+  priority?: Maybe<Scalars['Int']>;
 };
 
-/** A `DataTableMyDosageInfo` edge in the connection. */
-export type DataTableMyDosageInfosEdge = {
-  __typename?: 'DataTableMyDosageInfosEdge';
+/** A `DataView` edge in the connection. */
+export type DataViewsEdge = {
+  __typename?: 'DataViewsEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
-  /** The `DataTableMyDosageInfo` at the end of the edge. */
-  node?: Maybe<DataTableMyDosageInfo>;
+  /** The `DataView` at the end of the edge. */
+  node?: Maybe<DataView>;
 };
 
-/** Methods to use when ordering `DataTableWhereYaFrom`. */
-export enum DataTableWhereYaFromsOrderBy {
+/** Methods to use when ordering `DataViewColumnDefinition`. */
+export enum DataViewColumnDefinitionsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  NameCommonAsc = 'NAME_COMMON_ASC',
-  NameCommonDesc = 'NAME_COMMON_DESC',
-  NameOfficialAsc = 'NAME_OFFICIAL_ASC',
-  NameOfficialDesc = 'NAME_OFFICIAL_DESC',
-  TranslationsPorOfficialAsc = 'TRANSLATIONS_POR_OFFICIAL_ASC',
-  TranslationsPorOfficialDesc = 'TRANSLATIONS_POR_OFFICIAL_DESC',
-  TranslationsPorCommonAsc = 'TRANSLATIONS_POR_COMMON_ASC',
-  TranslationsPorCommonDesc = 'TRANSLATIONS_POR_COMMON_DESC',
-  FlagAsc = 'FLAG_ASC',
-  FlagDesc = 'FLAG_DESC',
+  TableNameAsc = 'TABLE_NAME_ASC',
+  TableNameDesc = 'TABLE_NAME_DESC',
+  ColumnNameAsc = 'COLUMN_NAME_ASC',
+  ColumnNameDesc = 'COLUMN_NAME_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  ElementTypePluginCodeAsc = 'ELEMENT_TYPE_PLUGIN_CODE_ASC',
+  ElementTypePluginCodeDesc = 'ELEMENT_TYPE_PLUGIN_CODE_DESC',
+  ElementParametersAsc = 'ELEMENT_PARAMETERS_ASC',
+  ElementParametersDesc = 'ELEMENT_PARAMETERS_DESC',
+  AdditionalFormattingAsc = 'ADDITIONAL_FORMATTING_ASC',
+  AdditionalFormattingDesc = 'ADDITIONAL_FORMATTING_DESC',
+  ValueExpressionAsc = 'VALUE_EXPRESSION_ASC',
+  ValueExpressionDesc = 'VALUE_EXPRESSION_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A condition to be used against `DataTableWhereYaFrom` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type DataTableWhereYaFromCondition = {
+/** A condition to be used against `DataViewColumnDefinition` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type DataViewColumnDefinitionCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `nameCommon` field. */
-  nameCommon?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `nameOfficial` field. */
-  nameOfficial?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `translationsPorOfficial` field. */
-  translationsPorOfficial?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `translationsPorCommon` field. */
-  translationsPorCommon?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `flag` field. */
-  flag?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `tableName` field. */
+  tableName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `columnName` field. */
+  columnName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `elementTypePluginCode` field. */
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `elementParameters` field. */
+  elementParameters?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `additionalFormatting` field. */
+  additionalFormatting?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `valueExpression` field. */
+  valueExpression?: Maybe<Scalars['JSON']>;
 };
 
-/** A filter to be used against `DataTableWhereYaFrom` object types. All fields are combined with a logical ‘and.’ */
-export type DataTableWhereYaFromFilter = {
+/** A filter to be used against `DataViewColumnDefinition` object types. All fields are combined with a logical ‘and.’ */
+export type DataViewColumnDefinitionFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `nameCommon` field. */
-  nameCommon?: Maybe<StringFilter>;
-  /** Filter by the object’s `nameOfficial` field. */
-  nameOfficial?: Maybe<StringFilter>;
-  /** Filter by the object’s `translationsPorOfficial` field. */
-  translationsPorOfficial?: Maybe<StringFilter>;
-  /** Filter by the object’s `translationsPorCommon` field. */
-  translationsPorCommon?: Maybe<StringFilter>;
-  /** Filter by the object’s `flag` field. */
-  flag?: Maybe<StringFilter>;
+  /** Filter by the object’s `tableName` field. */
+  tableName?: Maybe<StringFilter>;
+  /** Filter by the object’s `columnName` field. */
+  columnName?: Maybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `elementTypePluginCode` field. */
+  elementTypePluginCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `elementParameters` field. */
+  elementParameters?: Maybe<JsonFilter>;
+  /** Filter by the object’s `additionalFormatting` field. */
+  additionalFormatting?: Maybe<JsonFilter>;
+  /** Filter by the object’s `valueExpression` field. */
+  valueExpression?: Maybe<JsonFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<DataTableWhereYaFromFilter>>;
+  and?: Maybe<Array<DataViewColumnDefinitionFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<DataTableWhereYaFromFilter>>;
+  or?: Maybe<Array<DataViewColumnDefinitionFilter>>;
   /** Negates the expression. */
-  not?: Maybe<DataTableWhereYaFromFilter>;
+  not?: Maybe<DataViewColumnDefinitionFilter>;
 };
 
-/** A connection to a list of `DataTableWhereYaFrom` values. */
-export type DataTableWhereYaFromsConnection = {
-  __typename?: 'DataTableWhereYaFromsConnection';
-  /** A list of `DataTableWhereYaFrom` objects. */
-  nodes: Array<Maybe<DataTableWhereYaFrom>>;
-  /** A list of edges which contains the `DataTableWhereYaFrom` and cursor to aid in pagination. */
-  edges: Array<DataTableWhereYaFromsEdge>;
+/** A connection to a list of `DataViewColumnDefinition` values. */
+export type DataViewColumnDefinitionsConnection = {
+  __typename?: 'DataViewColumnDefinitionsConnection';
+  /** A list of `DataViewColumnDefinition` objects. */
+  nodes: Array<Maybe<DataViewColumnDefinition>>;
+  /** A list of edges which contains the `DataViewColumnDefinition` and cursor to aid in pagination. */
+  edges: Array<DataViewColumnDefinitionsEdge>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `DataTableWhereYaFrom` you could get from the connection. */
+  /** The count of *all* `DataViewColumnDefinition` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-export type DataTableWhereYaFrom = Node & {
-  __typename?: 'DataTableWhereYaFrom';
+export type DataViewColumnDefinition = Node & {
+  __typename?: 'DataViewColumnDefinition';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  nameCommon?: Maybe<Scalars['String']>;
-  nameOfficial?: Maybe<Scalars['String']>;
-  translationsPorOfficial?: Maybe<Scalars['String']>;
-  translationsPorCommon?: Maybe<Scalars['String']>;
-  flag?: Maybe<Scalars['String']>;
+  tableName?: Maybe<Scalars['String']>;
+  columnName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  elementParameters?: Maybe<Scalars['JSON']>;
+  additionalFormatting?: Maybe<Scalars['JSON']>;
+  valueExpression?: Maybe<Scalars['JSON']>;
 };
 
-/** A `DataTableWhereYaFrom` edge in the connection. */
-export type DataTableWhereYaFromsEdge = {
-  __typename?: 'DataTableWhereYaFromsEdge';
+/** A `DataViewColumnDefinition` edge in the connection. */
+export type DataViewColumnDefinitionsEdge = {
+  __typename?: 'DataViewColumnDefinitionsEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
-  /** The `DataTableWhereYaFrom` at the end of the edge. */
-  node?: Maybe<DataTableWhereYaFrom>;
+  /** The `DataViewColumnDefinition` at the end of the edge. */
+  node?: Maybe<DataViewColumnDefinition>;
 };
 
 /** Methods to use when ordering `ElementTypePlugin`. */
@@ -11550,8 +11336,6 @@ export type ReviewListEdge = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Creates a single `BoogieWoogie`. */
-  createBoogieWoogie?: Maybe<CreateBoogieWoogiePayload>;
   /** Creates a single `ActionPlugin`. */
   createActionPlugin?: Maybe<CreateActionPluginPayload>;
   /** Creates a single `ActionQueue`. */
@@ -11572,18 +11356,16 @@ export type Mutation = {
   createApplicationStatusHistory?: Maybe<CreateApplicationStatusHistoryPayload>;
   /** Creates a single `Counter`. */
   createCounter?: Maybe<CreateCounterPayload>;
-  /** Creates a single `DataDisplay`. */
-  createDataDisplay?: Maybe<CreateDataDisplayPayload>;
-  /** Creates a single `DataDisplayColumnDefinition`. */
-  createDataDisplayColumnDefinition?: Maybe<CreateDataDisplayColumnDefinitionPayload>;
   /** Creates a single `DataTable`. */
   createDataTable?: Maybe<CreateDataTablePayload>;
+  /** Creates a single `DataTableBoogieWoogie`. */
+  createDataTableBoogieWoogie?: Maybe<CreateDataTableBoogieWoogiePayload>;
   /** Creates a single `DataTableContainer`. */
   createDataTableContainer?: Maybe<CreateDataTableContainerPayload>;
-  /** Creates a single `DataTableMyDosageInfo`. */
-  createDataTableMyDosageInfo?: Maybe<CreateDataTableMyDosageInfoPayload>;
-  /** Creates a single `DataTableWhereYaFrom`. */
-  createDataTableWhereYaFrom?: Maybe<CreateDataTableWhereYaFromPayload>;
+  /** Creates a single `DataView`. */
+  createDataView?: Maybe<CreateDataViewPayload>;
+  /** Creates a single `DataViewColumnDefinition`. */
+  createDataViewColumnDefinition?: Maybe<CreateDataViewColumnDefinitionPayload>;
   /** Creates a single `ElementTypePlugin`. */
   createElementTypePlugin?: Maybe<CreateElementTypePluginPayload>;
   /** Creates a single `File`. */
@@ -11646,10 +11428,6 @@ export type Mutation = {
   createUserOrganisation?: Maybe<CreateUserOrganisationPayload>;
   /** Creates a single `Verification`. */
   createVerification?: Maybe<CreateVerificationPayload>;
-  /** Updates a single `BoogieWoogie` using its globally unique id and a patch. */
-  updateBoogieWoogieByNodeId?: Maybe<UpdateBoogieWoogiePayload>;
-  /** Updates a single `BoogieWoogie` using a unique key and a patch. */
-  updateBoogieWoogie?: Maybe<UpdateBoogieWoogiePayload>;
   /** Updates a single `ActionPlugin` using its globally unique id and a patch. */
   updateActionPluginByNodeId?: Maybe<UpdateActionPluginPayload>;
   /** Updates a single `ActionPlugin` using a unique key and a patch. */
@@ -11692,36 +11470,32 @@ export type Mutation = {
   updateCounter?: Maybe<UpdateCounterPayload>;
   /** Updates a single `Counter` using a unique key and a patch. */
   updateCounterByName?: Maybe<UpdateCounterPayload>;
-  /** Updates a single `DataDisplay` using its globally unique id and a patch. */
-  updateDataDisplayByNodeId?: Maybe<UpdateDataDisplayPayload>;
-  /** Updates a single `DataDisplay` using a unique key and a patch. */
-  updateDataDisplay?: Maybe<UpdateDataDisplayPayload>;
-  /** Updates a single `DataDisplay` using a unique key and a patch. */
-  updateDataDisplayByTableNameAndCode?: Maybe<UpdateDataDisplayPayload>;
-  /** Updates a single `DataDisplayColumnDefinition` using its globally unique id and a patch. */
-  updateDataDisplayColumnDefinitionByNodeId?: Maybe<UpdateDataDisplayColumnDefinitionPayload>;
-  /** Updates a single `DataDisplayColumnDefinition` using a unique key and a patch. */
-  updateDataDisplayColumnDefinition?: Maybe<UpdateDataDisplayColumnDefinitionPayload>;
-  /** Updates a single `DataDisplayColumnDefinition` using a unique key and a patch. */
-  updateDataDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<UpdateDataDisplayColumnDefinitionPayload>;
   /** Updates a single `DataTable` using its globally unique id and a patch. */
   updateDataTableByNodeId?: Maybe<UpdateDataTablePayload>;
   /** Updates a single `DataTable` using a unique key and a patch. */
   updateDataTable?: Maybe<UpdateDataTablePayload>;
   /** Updates a single `DataTable` using a unique key and a patch. */
   updateDataTableByTableName?: Maybe<UpdateDataTablePayload>;
+  /** Updates a single `DataTableBoogieWoogie` using its globally unique id and a patch. */
+  updateDataTableBoogieWoogieByNodeId?: Maybe<UpdateDataTableBoogieWoogiePayload>;
+  /** Updates a single `DataTableBoogieWoogie` using a unique key and a patch. */
+  updateDataTableBoogieWoogie?: Maybe<UpdateDataTableBoogieWoogiePayload>;
   /** Updates a single `DataTableContainer` using its globally unique id and a patch. */
   updateDataTableContainerByNodeId?: Maybe<UpdateDataTableContainerPayload>;
   /** Updates a single `DataTableContainer` using a unique key and a patch. */
   updateDataTableContainer?: Maybe<UpdateDataTableContainerPayload>;
-  /** Updates a single `DataTableMyDosageInfo` using its globally unique id and a patch. */
-  updateDataTableMyDosageInfoByNodeId?: Maybe<UpdateDataTableMyDosageInfoPayload>;
-  /** Updates a single `DataTableMyDosageInfo` using a unique key and a patch. */
-  updateDataTableMyDosageInfo?: Maybe<UpdateDataTableMyDosageInfoPayload>;
-  /** Updates a single `DataTableWhereYaFrom` using its globally unique id and a patch. */
-  updateDataTableWhereYaFromByNodeId?: Maybe<UpdateDataTableWhereYaFromPayload>;
-  /** Updates a single `DataTableWhereYaFrom` using a unique key and a patch. */
-  updateDataTableWhereYaFrom?: Maybe<UpdateDataTableWhereYaFromPayload>;
+  /** Updates a single `DataView` using its globally unique id and a patch. */
+  updateDataViewByNodeId?: Maybe<UpdateDataViewPayload>;
+  /** Updates a single `DataView` using a unique key and a patch. */
+  updateDataView?: Maybe<UpdateDataViewPayload>;
+  /** Updates a single `DataView` using a unique key and a patch. */
+  updateDataViewByTableNameAndCode?: Maybe<UpdateDataViewPayload>;
+  /** Updates a single `DataViewColumnDefinition` using its globally unique id and a patch. */
+  updateDataViewColumnDefinitionByNodeId?: Maybe<UpdateDataViewColumnDefinitionPayload>;
+  /** Updates a single `DataViewColumnDefinition` using a unique key and a patch. */
+  updateDataViewColumnDefinition?: Maybe<UpdateDataViewColumnDefinitionPayload>;
+  /** Updates a single `DataViewColumnDefinition` using a unique key and a patch. */
+  updateDataViewColumnDefinitionByTableNameAndColumnName?: Maybe<UpdateDataViewColumnDefinitionPayload>;
   /** Updates a single `ElementTypePlugin` using its globally unique id and a patch. */
   updateElementTypePluginByNodeId?: Maybe<UpdateElementTypePluginPayload>;
   /** Updates a single `ElementTypePlugin` using a unique key and a patch. */
@@ -11868,10 +11642,6 @@ export type Mutation = {
   updateVerification?: Maybe<UpdateVerificationPayload>;
   /** Updates a single `Verification` using a unique key and a patch. */
   updateVerificationByUniqueId?: Maybe<UpdateVerificationPayload>;
-  /** Deletes a single `BoogieWoogie` using its globally unique id. */
-  deleteBoogieWoogieByNodeId?: Maybe<DeleteBoogieWoogiePayload>;
-  /** Deletes a single `BoogieWoogie` using a unique key. */
-  deleteBoogieWoogie?: Maybe<DeleteBoogieWoogiePayload>;
   /** Deletes a single `ActionPlugin` using its globally unique id. */
   deleteActionPluginByNodeId?: Maybe<DeleteActionPluginPayload>;
   /** Deletes a single `ActionPlugin` using a unique key. */
@@ -11914,36 +11684,32 @@ export type Mutation = {
   deleteCounter?: Maybe<DeleteCounterPayload>;
   /** Deletes a single `Counter` using a unique key. */
   deleteCounterByName?: Maybe<DeleteCounterPayload>;
-  /** Deletes a single `DataDisplay` using its globally unique id. */
-  deleteDataDisplayByNodeId?: Maybe<DeleteDataDisplayPayload>;
-  /** Deletes a single `DataDisplay` using a unique key. */
-  deleteDataDisplay?: Maybe<DeleteDataDisplayPayload>;
-  /** Deletes a single `DataDisplay` using a unique key. */
-  deleteDataDisplayByTableNameAndCode?: Maybe<DeleteDataDisplayPayload>;
-  /** Deletes a single `DataDisplayColumnDefinition` using its globally unique id. */
-  deleteDataDisplayColumnDefinitionByNodeId?: Maybe<DeleteDataDisplayColumnDefinitionPayload>;
-  /** Deletes a single `DataDisplayColumnDefinition` using a unique key. */
-  deleteDataDisplayColumnDefinition?: Maybe<DeleteDataDisplayColumnDefinitionPayload>;
-  /** Deletes a single `DataDisplayColumnDefinition` using a unique key. */
-  deleteDataDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<DeleteDataDisplayColumnDefinitionPayload>;
   /** Deletes a single `DataTable` using its globally unique id. */
   deleteDataTableByNodeId?: Maybe<DeleteDataTablePayload>;
   /** Deletes a single `DataTable` using a unique key. */
   deleteDataTable?: Maybe<DeleteDataTablePayload>;
   /** Deletes a single `DataTable` using a unique key. */
   deleteDataTableByTableName?: Maybe<DeleteDataTablePayload>;
+  /** Deletes a single `DataTableBoogieWoogie` using its globally unique id. */
+  deleteDataTableBoogieWoogieByNodeId?: Maybe<DeleteDataTableBoogieWoogiePayload>;
+  /** Deletes a single `DataTableBoogieWoogie` using a unique key. */
+  deleteDataTableBoogieWoogie?: Maybe<DeleteDataTableBoogieWoogiePayload>;
   /** Deletes a single `DataTableContainer` using its globally unique id. */
   deleteDataTableContainerByNodeId?: Maybe<DeleteDataTableContainerPayload>;
   /** Deletes a single `DataTableContainer` using a unique key. */
   deleteDataTableContainer?: Maybe<DeleteDataTableContainerPayload>;
-  /** Deletes a single `DataTableMyDosageInfo` using its globally unique id. */
-  deleteDataTableMyDosageInfoByNodeId?: Maybe<DeleteDataTableMyDosageInfoPayload>;
-  /** Deletes a single `DataTableMyDosageInfo` using a unique key. */
-  deleteDataTableMyDosageInfo?: Maybe<DeleteDataTableMyDosageInfoPayload>;
-  /** Deletes a single `DataTableWhereYaFrom` using its globally unique id. */
-  deleteDataTableWhereYaFromByNodeId?: Maybe<DeleteDataTableWhereYaFromPayload>;
-  /** Deletes a single `DataTableWhereYaFrom` using a unique key. */
-  deleteDataTableWhereYaFrom?: Maybe<DeleteDataTableWhereYaFromPayload>;
+  /** Deletes a single `DataView` using its globally unique id. */
+  deleteDataViewByNodeId?: Maybe<DeleteDataViewPayload>;
+  /** Deletes a single `DataView` using a unique key. */
+  deleteDataView?: Maybe<DeleteDataViewPayload>;
+  /** Deletes a single `DataView` using a unique key. */
+  deleteDataViewByTableNameAndCode?: Maybe<DeleteDataViewPayload>;
+  /** Deletes a single `DataViewColumnDefinition` using its globally unique id. */
+  deleteDataViewColumnDefinitionByNodeId?: Maybe<DeleteDataViewColumnDefinitionPayload>;
+  /** Deletes a single `DataViewColumnDefinition` using a unique key. */
+  deleteDataViewColumnDefinition?: Maybe<DeleteDataViewColumnDefinitionPayload>;
+  /** Deletes a single `DataViewColumnDefinition` using a unique key. */
+  deleteDataViewColumnDefinitionByTableNameAndColumnName?: Maybe<DeleteDataViewColumnDefinitionPayload>;
   /** Deletes a single `ElementTypePlugin` using its globally unique id. */
   deleteElementTypePluginByNodeId?: Maybe<DeleteElementTypePluginPayload>;
   /** Deletes a single `ElementTypePlugin` using a unique key. */
@@ -12095,12 +11861,6 @@ export type Mutation = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateBoogieWoogieArgs = {
-  input: CreateBoogieWoogieInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateActionPluginArgs = {
   input: CreateActionPluginInput;
 };
@@ -12161,20 +11921,14 @@ export type MutationCreateCounterArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateDataDisplayArgs = {
-  input: CreateDataDisplayInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateDataDisplayColumnDefinitionArgs = {
-  input: CreateDataDisplayColumnDefinitionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDataTableArgs = {
   input: CreateDataTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableBoogieWoogieArgs = {
+  input: CreateDataTableBoogieWoogieInput;
 };
 
 
@@ -12185,14 +11939,14 @@ export type MutationCreateDataTableContainerArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateDataTableMyDosageInfoArgs = {
-  input: CreateDataTableMyDosageInfoInput;
+export type MutationCreateDataViewArgs = {
+  input: CreateDataViewInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateDataTableWhereYaFromArgs = {
-  input: CreateDataTableWhereYaFromInput;
+export type MutationCreateDataViewColumnDefinitionArgs = {
+  input: CreateDataViewColumnDefinitionInput;
 };
 
 
@@ -12383,18 +12137,6 @@ export type MutationCreateVerificationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateBoogieWoogieByNodeIdArgs = {
-  input: UpdateBoogieWoogieByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateBoogieWoogieArgs = {
-  input: UpdateBoogieWoogieInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateActionPluginByNodeIdArgs = {
   input: UpdateActionPluginByNodeIdInput;
 };
@@ -12521,42 +12263,6 @@ export type MutationUpdateCounterByNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayByNodeIdArgs = {
-  input: UpdateDataDisplayByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayArgs = {
-  input: UpdateDataDisplayInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayByTableNameAndCodeArgs = {
-  input: UpdateDataDisplayByTableNameAndCodeInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayColumnDefinitionByNodeIdArgs = {
-  input: UpdateDataDisplayColumnDefinitionByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayColumnDefinitionArgs = {
-  input: UpdateDataDisplayColumnDefinitionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataDisplayColumnDefinitionByTableNameAndColumnNameArgs = {
-  input: UpdateDataDisplayColumnDefinitionByTableNameAndColumnNameInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableByNodeIdArgs = {
   input: UpdateDataTableByNodeIdInput;
 };
@@ -12575,6 +12281,18 @@ export type MutationUpdateDataTableByTableNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableBoogieWoogieByNodeIdArgs = {
+  input: UpdateDataTableBoogieWoogieByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableBoogieWoogieArgs = {
+  input: UpdateDataTableBoogieWoogieInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableContainerByNodeIdArgs = {
   input: UpdateDataTableContainerByNodeIdInput;
 };
@@ -12587,26 +12305,38 @@ export type MutationUpdateDataTableContainerArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataTableMyDosageInfoByNodeIdArgs = {
-  input: UpdateDataTableMyDosageInfoByNodeIdInput;
+export type MutationUpdateDataViewByNodeIdArgs = {
+  input: UpdateDataViewByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataTableMyDosageInfoArgs = {
-  input: UpdateDataTableMyDosageInfoInput;
+export type MutationUpdateDataViewArgs = {
+  input: UpdateDataViewInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataTableWhereYaFromByNodeIdArgs = {
-  input: UpdateDataTableWhereYaFromByNodeIdInput;
+export type MutationUpdateDataViewByTableNameAndCodeArgs = {
+  input: UpdateDataViewByTableNameAndCodeInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataTableWhereYaFromArgs = {
-  input: UpdateDataTableWhereYaFromInput;
+export type MutationUpdateDataViewColumnDefinitionByNodeIdArgs = {
+  input: UpdateDataViewColumnDefinitionByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataViewColumnDefinitionArgs = {
+  input: UpdateDataViewColumnDefinitionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataViewColumnDefinitionByTableNameAndColumnNameArgs = {
+  input: UpdateDataViewColumnDefinitionByTableNameAndColumnNameInput;
 };
 
 
@@ -13049,18 +12779,6 @@ export type MutationUpdateVerificationByUniqueIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteBoogieWoogieByNodeIdArgs = {
-  input: DeleteBoogieWoogieByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteBoogieWoogieArgs = {
-  input: DeleteBoogieWoogieInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteActionPluginByNodeIdArgs = {
   input: DeleteActionPluginByNodeIdInput;
 };
@@ -13187,42 +12905,6 @@ export type MutationDeleteCounterByNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayByNodeIdArgs = {
-  input: DeleteDataDisplayByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayArgs = {
-  input: DeleteDataDisplayInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayByTableNameAndCodeArgs = {
-  input: DeleteDataDisplayByTableNameAndCodeInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayColumnDefinitionByNodeIdArgs = {
-  input: DeleteDataDisplayColumnDefinitionByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayColumnDefinitionArgs = {
-  input: DeleteDataDisplayColumnDefinitionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataDisplayColumnDefinitionByTableNameAndColumnNameArgs = {
-  input: DeleteDataDisplayColumnDefinitionByTableNameAndColumnNameInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableByNodeIdArgs = {
   input: DeleteDataTableByNodeIdInput;
 };
@@ -13241,6 +12923,18 @@ export type MutationDeleteDataTableByTableNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableBoogieWoogieByNodeIdArgs = {
+  input: DeleteDataTableBoogieWoogieByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableBoogieWoogieArgs = {
+  input: DeleteDataTableBoogieWoogieInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableContainerByNodeIdArgs = {
   input: DeleteDataTableContainerByNodeIdInput;
 };
@@ -13253,26 +12947,38 @@ export type MutationDeleteDataTableContainerArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataTableMyDosageInfoByNodeIdArgs = {
-  input: DeleteDataTableMyDosageInfoByNodeIdInput;
+export type MutationDeleteDataViewByNodeIdArgs = {
+  input: DeleteDataViewByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataTableMyDosageInfoArgs = {
-  input: DeleteDataTableMyDosageInfoInput;
+export type MutationDeleteDataViewArgs = {
+  input: DeleteDataViewInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataTableWhereYaFromByNodeIdArgs = {
-  input: DeleteDataTableWhereYaFromByNodeIdInput;
+export type MutationDeleteDataViewByTableNameAndCodeArgs = {
+  input: DeleteDataViewByTableNameAndCodeInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataTableWhereYaFromArgs = {
-  input: DeleteDataTableWhereYaFromInput;
+export type MutationDeleteDataViewColumnDefinitionByNodeIdArgs = {
+  input: DeleteDataViewColumnDefinitionByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataViewColumnDefinitionArgs = {
+  input: DeleteDataViewColumnDefinitionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataViewColumnDefinitionByTableNameAndColumnNameArgs = {
+  input: DeleteDataViewColumnDefinitionByTableNameAndColumnNameInput;
 };
 
 
@@ -13717,40 +13423,6 @@ export type MutationDeleteVerificationByUniqueIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteWholeApplicationArgs = {
   input: DeleteWholeApplicationInput;
-};
-
-/** All input for the create `BoogieWoogie` mutation. */
-export type CreateBoogieWoogieInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `BoogieWoogie` to be created by this mutation. */
-  boogieWoogie: BoogieWoogieInput;
-};
-
-/** An input for mutations affecting `BoogieWoogie` */
-export type BoogieWoogieInput = {
-  id?: Maybe<Scalars['Int']>;
-  comment?: Maybe<Scalars['String']>;
-  anotherField?: Maybe<Scalars['Int']>;
-};
-
-/** The output of our create `BoogieWoogie` mutation. */
-export type CreateBoogieWoogiePayload = {
-  __typename?: 'CreateBoogieWoogiePayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `BoogieWoogie` that was created by this mutation. */
-  boogieWoogie?: Maybe<BoogieWoogie>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `BoogieWoogie`. May be used by Relay 1. */
-  boogieWoogieEdge?: Maybe<BoogieWoogiesEdge>;
-};
-
-
-/** The output of our create `BoogieWoogie` mutation. */
-export type CreateBoogieWoogiePayloadBoogieWoogieEdgeArgs = {
-  orderBy?: Maybe<Array<BoogieWoogiesOrderBy>>;
 };
 
 /** All input for the create `ActionPlugin` mutation. */
@@ -25905,89 +25577,6 @@ export type CreateCounterPayloadCounterEdgeArgs = {
   orderBy?: Maybe<Array<CountersOrderBy>>;
 };
 
-/** All input for the create `DataDisplay` mutation. */
-export type CreateDataDisplayInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplay` to be created by this mutation. */
-  dataDisplay: DataDisplayInput;
-};
-
-/** An input for mutations affecting `DataDisplay` */
-export type DataDisplayInput = {
-  id?: Maybe<Scalars['Int']>;
-  tableName: Scalars['String'];
-  title?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  rowRestrictions?: Maybe<Scalars['JSON']>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn: Scalars['String'];
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-};
-
-/** The output of our create `DataDisplay` mutation. */
-export type CreateDataDisplayPayload = {
-  __typename?: 'CreateDataDisplayPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplay` that was created by this mutation. */
-  dataDisplay?: Maybe<DataDisplay>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `DataDisplay`. May be used by Relay 1. */
-  dataDisplayEdge?: Maybe<DataDisplaysEdge>;
-};
-
-
-/** The output of our create `DataDisplay` mutation. */
-export type CreateDataDisplayPayloadDataDisplayEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplaysOrderBy>>;
-};
-
-/** All input for the create `DataDisplayColumnDefinition` mutation. */
-export type CreateDataDisplayColumnDefinitionInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplayColumnDefinition` to be created by this mutation. */
-  dataDisplayColumnDefinition: DataDisplayColumnDefinitionInput;
-};
-
-/** An input for mutations affecting `DataDisplayColumnDefinition` */
-export type DataDisplayColumnDefinitionInput = {
-  id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  elementParameters?: Maybe<Scalars['JSON']>;
-  additionalFormatting?: Maybe<Scalars['JSON']>;
-  valueExpression?: Maybe<Scalars['JSON']>;
-};
-
-/** The output of our create `DataDisplayColumnDefinition` mutation. */
-export type CreateDataDisplayColumnDefinitionPayload = {
-  __typename?: 'CreateDataDisplayColumnDefinitionPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplayColumnDefinition` that was created by this mutation. */
-  dataDisplayColumnDefinition?: Maybe<DataDisplayColumnDefinition>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `DataDisplayColumnDefinition`. May be used by Relay 1. */
-  dataDisplayColumnDefinitionEdge?: Maybe<DataDisplayColumnDefinitionsEdge>;
-};
-
-
-/** The output of our create `DataDisplayColumnDefinition` mutation. */
-export type CreateDataDisplayColumnDefinitionPayloadDataDisplayColumnDefinitionEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplayColumnDefinitionsOrderBy>>;
-};
-
 /** All input for the create `DataTable` mutation. */
 export type CreateDataTableInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -26000,7 +25589,7 @@ export type CreateDataTableInput = {
 export type DataTableInput = {
   id?: Maybe<Scalars['Int']>;
   tableName: Scalars['String'];
-  name?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
 };
@@ -26022,6 +25611,40 @@ export type CreateDataTablePayload = {
 /** The output of our create `DataTable` mutation. */
 export type CreateDataTablePayloadDataTableEdgeArgs = {
   orderBy?: Maybe<Array<DataTablesOrderBy>>;
+};
+
+/** All input for the create `DataTableBoogieWoogie` mutation. */
+export type CreateDataTableBoogieWoogieInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableBoogieWoogie` to be created by this mutation. */
+  dataTableBoogieWoogie: DataTableBoogieWoogieInput;
+};
+
+/** An input for mutations affecting `DataTableBoogieWoogie` */
+export type DataTableBoogieWoogieInput = {
+  id?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
+  anotherField?: Maybe<Scalars['Int']>;
+};
+
+/** The output of our create `DataTableBoogieWoogie` mutation. */
+export type CreateDataTableBoogieWoogiePayload = {
+  __typename?: 'CreateDataTableBoogieWoogiePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableBoogieWoogie` that was created by this mutation. */
+  dataTableBoogieWoogie?: Maybe<DataTableBoogieWoogie>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableBoogieWoogie`. May be used by Relay 1. */
+  dataTableBoogieWoogieEdge?: Maybe<DataTableBoogieWoogiesEdge>;
+};
+
+
+/** The output of our create `DataTableBoogieWoogie` mutation. */
+export type CreateDataTableBoogieWoogiePayloadDataTableBoogieWoogieEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableBoogieWoogiesOrderBy>>;
 };
 
 /** All input for the create `DataTableContainer` mutation. */
@@ -26058,74 +25681,87 @@ export type CreateDataTableContainerPayloadDataTableContainerEdgeArgs = {
   orderBy?: Maybe<Array<DataTableContainersOrderBy>>;
 };
 
-/** All input for the create `DataTableMyDosageInfo` mutation. */
-export type CreateDataTableMyDosageInfoInput = {
+/** All input for the create `DataView` mutation. */
+export type CreateDataViewInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataTableMyDosageInfo` to be created by this mutation. */
-  dataTableMyDosageInfo: DataTableMyDosageInfoInput;
+  /** The `DataView` to be created by this mutation. */
+  dataView: DataViewInput;
 };
 
-/** An input for mutations affecting `DataTableMyDosageInfo` */
-export type DataTableMyDosageInfoInput = {
+/** An input for mutations affecting `DataView` */
+export type DataViewInput = {
   id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
+  tableName: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrictions?: Maybe<Scalars['JSON']>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn: Scalars['String'];
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
 };
 
-/** The output of our create `DataTableMyDosageInfo` mutation. */
-export type CreateDataTableMyDosageInfoPayload = {
-  __typename?: 'CreateDataTableMyDosageInfoPayload';
+/** The output of our create `DataView` mutation. */
+export type CreateDataViewPayload = {
+  __typename?: 'CreateDataViewPayload';
   /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataTableMyDosageInfo` that was created by this mutation. */
-  dataTableMyDosageInfo?: Maybe<DataTableMyDosageInfo>;
+  /** The `DataView` that was created by this mutation. */
+  dataView?: Maybe<DataView>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataTableMyDosageInfo`. May be used by Relay 1. */
-  dataTableMyDosageInfoEdge?: Maybe<DataTableMyDosageInfosEdge>;
+  /** An edge for our `DataView`. May be used by Relay 1. */
+  dataViewEdge?: Maybe<DataViewsEdge>;
 };
 
 
-/** The output of our create `DataTableMyDosageInfo` mutation. */
-export type CreateDataTableMyDosageInfoPayloadDataTableMyDosageInfoEdgeArgs = {
-  orderBy?: Maybe<Array<DataTableMyDosageInfosOrderBy>>;
+/** The output of our create `DataView` mutation. */
+export type CreateDataViewPayloadDataViewEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewsOrderBy>>;
 };
 
-/** All input for the create `DataTableWhereYaFrom` mutation. */
-export type CreateDataTableWhereYaFromInput = {
+/** All input for the create `DataViewColumnDefinition` mutation. */
+export type CreateDataViewColumnDefinitionInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataTableWhereYaFrom` to be created by this mutation. */
-  dataTableWhereYaFrom: DataTableWhereYaFromInput;
+  /** The `DataViewColumnDefinition` to be created by this mutation. */
+  dataViewColumnDefinition: DataViewColumnDefinitionInput;
 };
 
-/** An input for mutations affecting `DataTableWhereYaFrom` */
-export type DataTableWhereYaFromInput = {
+/** An input for mutations affecting `DataViewColumnDefinition` */
+export type DataViewColumnDefinitionInput = {
   id?: Maybe<Scalars['Int']>;
-  nameCommon?: Maybe<Scalars['String']>;
-  nameOfficial?: Maybe<Scalars['String']>;
-  translationsPorOfficial?: Maybe<Scalars['String']>;
-  translationsPorCommon?: Maybe<Scalars['String']>;
-  flag?: Maybe<Scalars['String']>;
+  tableName?: Maybe<Scalars['String']>;
+  columnName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  elementParameters?: Maybe<Scalars['JSON']>;
+  additionalFormatting?: Maybe<Scalars['JSON']>;
+  valueExpression?: Maybe<Scalars['JSON']>;
 };
 
-/** The output of our create `DataTableWhereYaFrom` mutation. */
-export type CreateDataTableWhereYaFromPayload = {
-  __typename?: 'CreateDataTableWhereYaFromPayload';
+/** The output of our create `DataViewColumnDefinition` mutation. */
+export type CreateDataViewColumnDefinitionPayload = {
+  __typename?: 'CreateDataViewColumnDefinitionPayload';
   /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataTableWhereYaFrom` that was created by this mutation. */
-  dataTableWhereYaFrom?: Maybe<DataTableWhereYaFrom>;
+  /** The `DataViewColumnDefinition` that was created by this mutation. */
+  dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataTableWhereYaFrom`. May be used by Relay 1. */
-  dataTableWhereYaFromEdge?: Maybe<DataTableWhereYaFromsEdge>;
+  /** An edge for our `DataViewColumnDefinition`. May be used by Relay 1. */
+  dataViewColumnDefinitionEdge?: Maybe<DataViewColumnDefinitionsEdge>;
 };
 
 
-/** The output of our create `DataTableWhereYaFrom` mutation. */
-export type CreateDataTableWhereYaFromPayloadDataTableWhereYaFromEdgeArgs = {
-  orderBy?: Maybe<Array<DataTableWhereYaFromsOrderBy>>;
+/** The output of our create `DataViewColumnDefinition` mutation. */
+export type CreateDataViewColumnDefinitionPayloadDataViewColumnDefinitionEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewColumnDefinitionsOrderBy>>;
 };
 
 /** All input for the create `ElementTypePlugin` mutation. */
@@ -27534,51 +27170,6 @@ export type CreateVerificationPayloadVerificationEdgeArgs = {
   orderBy?: Maybe<Array<VerificationsOrderBy>>;
 };
 
-/** All input for the `updateBoogieWoogieByNodeId` mutation. */
-export type UpdateBoogieWoogieByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `BoogieWoogie` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `BoogieWoogie` being updated. */
-  patch: BoogieWoogiePatch;
-};
-
-/** Represents an update to a `BoogieWoogie`. Fields that are set will be updated. */
-export type BoogieWoogiePatch = {
-  id?: Maybe<Scalars['Int']>;
-  comment?: Maybe<Scalars['String']>;
-  anotherField?: Maybe<Scalars['Int']>;
-};
-
-/** The output of our update `BoogieWoogie` mutation. */
-export type UpdateBoogieWoogiePayload = {
-  __typename?: 'UpdateBoogieWoogiePayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `BoogieWoogie` that was updated by this mutation. */
-  boogieWoogie?: Maybe<BoogieWoogie>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `BoogieWoogie`. May be used by Relay 1. */
-  boogieWoogieEdge?: Maybe<BoogieWoogiesEdge>;
-};
-
-
-/** The output of our update `BoogieWoogie` mutation. */
-export type UpdateBoogieWoogiePayloadBoogieWoogieEdgeArgs = {
-  orderBy?: Maybe<Array<BoogieWoogiesOrderBy>>;
-};
-
-/** All input for the `updateBoogieWoogie` mutation. */
-export type UpdateBoogieWoogieInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `BoogieWoogie` being updated. */
-  patch: BoogieWoogiePatch;
-  id: Scalars['Int'];
-};
-
 /** All input for the `updateActionPluginByNodeId` mutation. */
 export type UpdateActionPluginByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -27995,131 +27586,6 @@ export type UpdateCounterByNameInput = {
   name: Scalars['String'];
 };
 
-/** All input for the `updateDataDisplayByNodeId` mutation. */
-export type UpdateDataDisplayByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataDisplay` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `DataDisplay` being updated. */
-  patch: DataDisplayPatch;
-};
-
-/** Represents an update to a `DataDisplay`. Fields that are set will be updated. */
-export type DataDisplayPatch = {
-  id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  rowRestrictions?: Maybe<Scalars['JSON']>;
-  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
-  showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  priority?: Maybe<Scalars['Int']>;
-};
-
-/** The output of our update `DataDisplay` mutation. */
-export type UpdateDataDisplayPayload = {
-  __typename?: 'UpdateDataDisplayPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplay` that was updated by this mutation. */
-  dataDisplay?: Maybe<DataDisplay>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `DataDisplay`. May be used by Relay 1. */
-  dataDisplayEdge?: Maybe<DataDisplaysEdge>;
-};
-
-
-/** The output of our update `DataDisplay` mutation. */
-export type UpdateDataDisplayPayloadDataDisplayEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplaysOrderBy>>;
-};
-
-/** All input for the `updateDataDisplay` mutation. */
-export type UpdateDataDisplayInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataDisplay` being updated. */
-  patch: DataDisplayPatch;
-  id: Scalars['Int'];
-};
-
-/** All input for the `updateDataDisplayByTableNameAndCode` mutation. */
-export type UpdateDataDisplayByTableNameAndCodeInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataDisplay` being updated. */
-  patch: DataDisplayPatch;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** All input for the `updateDataDisplayColumnDefinitionByNodeId` mutation. */
-export type UpdateDataDisplayColumnDefinitionByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataDisplayColumnDefinition` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `DataDisplayColumnDefinition` being updated. */
-  patch: DataDisplayColumnDefinitionPatch;
-};
-
-/** Represents an update to a `DataDisplayColumnDefinition`. Fields that are set will be updated. */
-export type DataDisplayColumnDefinitionPatch = {
-  id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
-  columnName?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-  elementTypePluginCode?: Maybe<Scalars['String']>;
-  elementParameters?: Maybe<Scalars['JSON']>;
-  additionalFormatting?: Maybe<Scalars['JSON']>;
-  valueExpression?: Maybe<Scalars['JSON']>;
-};
-
-/** The output of our update `DataDisplayColumnDefinition` mutation. */
-export type UpdateDataDisplayColumnDefinitionPayload = {
-  __typename?: 'UpdateDataDisplayColumnDefinitionPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplayColumnDefinition` that was updated by this mutation. */
-  dataDisplayColumnDefinition?: Maybe<DataDisplayColumnDefinition>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `DataDisplayColumnDefinition`. May be used by Relay 1. */
-  dataDisplayColumnDefinitionEdge?: Maybe<DataDisplayColumnDefinitionsEdge>;
-};
-
-
-/** The output of our update `DataDisplayColumnDefinition` mutation. */
-export type UpdateDataDisplayColumnDefinitionPayloadDataDisplayColumnDefinitionEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplayColumnDefinitionsOrderBy>>;
-};
-
-/** All input for the `updateDataDisplayColumnDefinition` mutation. */
-export type UpdateDataDisplayColumnDefinitionInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataDisplayColumnDefinition` being updated. */
-  patch: DataDisplayColumnDefinitionPatch;
-  id: Scalars['Int'];
-};
-
-/** All input for the `updateDataDisplayColumnDefinitionByTableNameAndColumnName` mutation. */
-export type UpdateDataDisplayColumnDefinitionByTableNameAndColumnNameInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataDisplayColumnDefinition` being updated. */
-  patch: DataDisplayColumnDefinitionPatch;
-  tableName: Scalars['String'];
-  columnName: Scalars['String'];
-};
-
 /** All input for the `updateDataTableByNodeId` mutation. */
 export type UpdateDataTableByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -28134,7 +27600,7 @@ export type UpdateDataTableByNodeIdInput = {
 export type DataTablePatch = {
   id?: Maybe<Scalars['Int']>;
   tableName?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
 };
@@ -28174,6 +27640,51 @@ export type UpdateDataTableByTableNameInput = {
   /** An object where the defined keys will be set on the `DataTable` being updated. */
   patch: DataTablePatch;
   tableName: Scalars['String'];
+};
+
+/** All input for the `updateDataTableBoogieWoogieByNodeId` mutation. */
+export type UpdateDataTableBoogieWoogieByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableBoogieWoogie` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `DataTableBoogieWoogie` being updated. */
+  patch: DataTableBoogieWoogiePatch;
+};
+
+/** Represents an update to a `DataTableBoogieWoogie`. Fields that are set will be updated. */
+export type DataTableBoogieWoogiePatch = {
+  id?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
+  anotherField?: Maybe<Scalars['Int']>;
+};
+
+/** The output of our update `DataTableBoogieWoogie` mutation. */
+export type UpdateDataTableBoogieWoogiePayload = {
+  __typename?: 'UpdateDataTableBoogieWoogiePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableBoogieWoogie` that was updated by this mutation. */
+  dataTableBoogieWoogie?: Maybe<DataTableBoogieWoogie>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableBoogieWoogie`. May be used by Relay 1. */
+  dataTableBoogieWoogieEdge?: Maybe<DataTableBoogieWoogiesEdge>;
+};
+
+
+/** The output of our update `DataTableBoogieWoogie` mutation. */
+export type UpdateDataTableBoogieWoogiePayloadDataTableBoogieWoogieEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableBoogieWoogiesOrderBy>>;
+};
+
+/** All input for the `updateDataTableBoogieWoogie` mutation. */
+export type UpdateDataTableBoogieWoogieInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataTableBoogieWoogie` being updated. */
+  patch: DataTableBoogieWoogiePatch;
+  id: Scalars['Int'];
 };
 
 /** All input for the `updateDataTableContainerByNodeId` mutation. */
@@ -28221,96 +27732,129 @@ export type UpdateDataTableContainerInput = {
   id: Scalars['Int'];
 };
 
-/** All input for the `updateDataTableMyDosageInfoByNodeId` mutation. */
-export type UpdateDataTableMyDosageInfoByNodeIdInput = {
+/** All input for the `updateDataViewByNodeId` mutation. */
+export type UpdateDataViewByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataTableMyDosageInfo` to be updated. */
+  /** The globally unique `ID` which will identify a single `DataView` to be updated. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `DataTableMyDosageInfo` being updated. */
-  patch: DataTableMyDosageInfoPatch;
+  /** An object where the defined keys will be set on the `DataView` being updated. */
+  patch: DataViewPatch;
 };
 
-/** Represents an update to a `DataTableMyDosageInfo`. Fields that are set will be updated. */
-export type DataTableMyDosageInfoPatch = {
+/** Represents an update to a `DataView`. Fields that are set will be updated. */
+export type DataViewPatch = {
   id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
+  tableName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrictions?: Maybe<Scalars['JSON']>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
 };
 
-/** The output of our update `DataTableMyDosageInfo` mutation. */
-export type UpdateDataTableMyDosageInfoPayload = {
-  __typename?: 'UpdateDataTableMyDosageInfoPayload';
+/** The output of our update `DataView` mutation. */
+export type UpdateDataViewPayload = {
+  __typename?: 'UpdateDataViewPayload';
   /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataTableMyDosageInfo` that was updated by this mutation. */
-  dataTableMyDosageInfo?: Maybe<DataTableMyDosageInfo>;
+  /** The `DataView` that was updated by this mutation. */
+  dataView?: Maybe<DataView>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataTableMyDosageInfo`. May be used by Relay 1. */
-  dataTableMyDosageInfoEdge?: Maybe<DataTableMyDosageInfosEdge>;
+  /** An edge for our `DataView`. May be used by Relay 1. */
+  dataViewEdge?: Maybe<DataViewsEdge>;
 };
 
 
-/** The output of our update `DataTableMyDosageInfo` mutation. */
-export type UpdateDataTableMyDosageInfoPayloadDataTableMyDosageInfoEdgeArgs = {
-  orderBy?: Maybe<Array<DataTableMyDosageInfosOrderBy>>;
+/** The output of our update `DataView` mutation. */
+export type UpdateDataViewPayloadDataViewEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewsOrderBy>>;
 };
 
-/** All input for the `updateDataTableMyDosageInfo` mutation. */
-export type UpdateDataTableMyDosageInfoInput = {
+/** All input for the `updateDataView` mutation. */
+export type UpdateDataViewInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataTableMyDosageInfo` being updated. */
-  patch: DataTableMyDosageInfoPatch;
+  /** An object where the defined keys will be set on the `DataView` being updated. */
+  patch: DataViewPatch;
   id: Scalars['Int'];
 };
 
-/** All input for the `updateDataTableWhereYaFromByNodeId` mutation. */
-export type UpdateDataTableWhereYaFromByNodeIdInput = {
+/** All input for the `updateDataViewByTableNameAndCode` mutation. */
+export type UpdateDataViewByTableNameAndCodeInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataTableWhereYaFrom` to be updated. */
+  /** An object where the defined keys will be set on the `DataView` being updated. */
+  patch: DataViewPatch;
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+/** All input for the `updateDataViewColumnDefinitionByNodeId` mutation. */
+export type UpdateDataViewColumnDefinitionByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataViewColumnDefinition` to be updated. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `DataTableWhereYaFrom` being updated. */
-  patch: DataTableWhereYaFromPatch;
+  /** An object where the defined keys will be set on the `DataViewColumnDefinition` being updated. */
+  patch: DataViewColumnDefinitionPatch;
 };
 
-/** Represents an update to a `DataTableWhereYaFrom`. Fields that are set will be updated. */
-export type DataTableWhereYaFromPatch = {
+/** Represents an update to a `DataViewColumnDefinition`. Fields that are set will be updated. */
+export type DataViewColumnDefinitionPatch = {
   id?: Maybe<Scalars['Int']>;
-  nameCommon?: Maybe<Scalars['String']>;
-  nameOfficial?: Maybe<Scalars['String']>;
-  translationsPorOfficial?: Maybe<Scalars['String']>;
-  translationsPorCommon?: Maybe<Scalars['String']>;
-  flag?: Maybe<Scalars['String']>;
+  tableName?: Maybe<Scalars['String']>;
+  columnName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  elementParameters?: Maybe<Scalars['JSON']>;
+  additionalFormatting?: Maybe<Scalars['JSON']>;
+  valueExpression?: Maybe<Scalars['JSON']>;
 };
 
-/** The output of our update `DataTableWhereYaFrom` mutation. */
-export type UpdateDataTableWhereYaFromPayload = {
-  __typename?: 'UpdateDataTableWhereYaFromPayload';
+/** The output of our update `DataViewColumnDefinition` mutation. */
+export type UpdateDataViewColumnDefinitionPayload = {
+  __typename?: 'UpdateDataViewColumnDefinitionPayload';
   /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataTableWhereYaFrom` that was updated by this mutation. */
-  dataTableWhereYaFrom?: Maybe<DataTableWhereYaFrom>;
+  /** The `DataViewColumnDefinition` that was updated by this mutation. */
+  dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataTableWhereYaFrom`. May be used by Relay 1. */
-  dataTableWhereYaFromEdge?: Maybe<DataTableWhereYaFromsEdge>;
+  /** An edge for our `DataViewColumnDefinition`. May be used by Relay 1. */
+  dataViewColumnDefinitionEdge?: Maybe<DataViewColumnDefinitionsEdge>;
 };
 
 
-/** The output of our update `DataTableWhereYaFrom` mutation. */
-export type UpdateDataTableWhereYaFromPayloadDataTableWhereYaFromEdgeArgs = {
-  orderBy?: Maybe<Array<DataTableWhereYaFromsOrderBy>>;
+/** The output of our update `DataViewColumnDefinition` mutation. */
+export type UpdateDataViewColumnDefinitionPayloadDataViewColumnDefinitionEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewColumnDefinitionsOrderBy>>;
 };
 
-/** All input for the `updateDataTableWhereYaFrom` mutation. */
-export type UpdateDataTableWhereYaFromInput = {
+/** All input for the `updateDataViewColumnDefinition` mutation. */
+export type UpdateDataViewColumnDefinitionInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataTableWhereYaFrom` being updated. */
-  patch: DataTableWhereYaFromPatch;
+  /** An object where the defined keys will be set on the `DataViewColumnDefinition` being updated. */
+  patch: DataViewColumnDefinitionPatch;
   id: Scalars['Int'];
+};
+
+/** All input for the `updateDataViewColumnDefinitionByTableNameAndColumnName` mutation. */
+export type UpdateDataViewColumnDefinitionByTableNameAndColumnNameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataViewColumnDefinition` being updated. */
+  patch: DataViewColumnDefinitionPatch;
+  tableName: Scalars['String'];
+  columnName: Scalars['String'];
 };
 
 /** All input for the `updateElementTypePluginByNodeId` mutation. */
@@ -29715,41 +29259,6 @@ export type UpdateVerificationByUniqueIdInput = {
   uniqueId: Scalars['String'];
 };
 
-/** All input for the `deleteBoogieWoogieByNodeId` mutation. */
-export type DeleteBoogieWoogieByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `BoogieWoogie` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The output of our delete `BoogieWoogie` mutation. */
-export type DeleteBoogieWoogiePayload = {
-  __typename?: 'DeleteBoogieWoogiePayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `BoogieWoogie` that was deleted by this mutation. */
-  boogieWoogie?: Maybe<BoogieWoogie>;
-  deletedBoogieWoogieNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `BoogieWoogie`. May be used by Relay 1. */
-  boogieWoogieEdge?: Maybe<BoogieWoogiesEdge>;
-};
-
-
-/** The output of our delete `BoogieWoogie` mutation. */
-export type DeleteBoogieWoogiePayloadBoogieWoogieEdgeArgs = {
-  orderBy?: Maybe<Array<BoogieWoogiesOrderBy>>;
-};
-
-/** All input for the `deleteBoogieWoogie` mutation. */
-export type DeleteBoogieWoogieInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
 /** All input for the `deleteActionPluginByNodeId` mutation. */
 export type DeleteActionPluginByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -30114,92 +29623,6 @@ export type DeleteCounterByNameInput = {
   name: Scalars['String'];
 };
 
-/** All input for the `deleteDataDisplayByNodeId` mutation. */
-export type DeleteDataDisplayByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataDisplay` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The output of our delete `DataDisplay` mutation. */
-export type DeleteDataDisplayPayload = {
-  __typename?: 'DeleteDataDisplayPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplay` that was deleted by this mutation. */
-  dataDisplay?: Maybe<DataDisplay>;
-  deletedDataDisplayNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `DataDisplay`. May be used by Relay 1. */
-  dataDisplayEdge?: Maybe<DataDisplaysEdge>;
-};
-
-
-/** The output of our delete `DataDisplay` mutation. */
-export type DeleteDataDisplayPayloadDataDisplayEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplaysOrderBy>>;
-};
-
-/** All input for the `deleteDataDisplay` mutation. */
-export type DeleteDataDisplayInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** All input for the `deleteDataDisplayByTableNameAndCode` mutation. */
-export type DeleteDataDisplayByTableNameAndCodeInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** All input for the `deleteDataDisplayColumnDefinitionByNodeId` mutation. */
-export type DeleteDataDisplayColumnDefinitionByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataDisplayColumnDefinition` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The output of our delete `DataDisplayColumnDefinition` mutation. */
-export type DeleteDataDisplayColumnDefinitionPayload = {
-  __typename?: 'DeleteDataDisplayColumnDefinitionPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataDisplayColumnDefinition` that was deleted by this mutation. */
-  dataDisplayColumnDefinition?: Maybe<DataDisplayColumnDefinition>;
-  deletedDataDisplayColumnDefinitionNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `DataDisplayColumnDefinition`. May be used by Relay 1. */
-  dataDisplayColumnDefinitionEdge?: Maybe<DataDisplayColumnDefinitionsEdge>;
-};
-
-
-/** The output of our delete `DataDisplayColumnDefinition` mutation. */
-export type DeleteDataDisplayColumnDefinitionPayloadDataDisplayColumnDefinitionEdgeArgs = {
-  orderBy?: Maybe<Array<DataDisplayColumnDefinitionsOrderBy>>;
-};
-
-/** All input for the `deleteDataDisplayColumnDefinition` mutation. */
-export type DeleteDataDisplayColumnDefinitionInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** All input for the `deleteDataDisplayColumnDefinitionByTableNameAndColumnName` mutation. */
-export type DeleteDataDisplayColumnDefinitionByTableNameAndColumnNameInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  tableName: Scalars['String'];
-  columnName: Scalars['String'];
-};
-
 /** All input for the `deleteDataTableByNodeId` mutation. */
 export type DeleteDataTableByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -30242,6 +29665,41 @@ export type DeleteDataTableByTableNameInput = {
   tableName: Scalars['String'];
 };
 
+/** All input for the `deleteDataTableBoogieWoogieByNodeId` mutation. */
+export type DeleteDataTableBoogieWoogieByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableBoogieWoogie` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `DataTableBoogieWoogie` mutation. */
+export type DeleteDataTableBoogieWoogiePayload = {
+  __typename?: 'DeleteDataTableBoogieWoogiePayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableBoogieWoogie` that was deleted by this mutation. */
+  dataTableBoogieWoogie?: Maybe<DataTableBoogieWoogie>;
+  deletedDataTableBoogieWoogieNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableBoogieWoogie`. May be used by Relay 1. */
+  dataTableBoogieWoogieEdge?: Maybe<DataTableBoogieWoogiesEdge>;
+};
+
+
+/** The output of our delete `DataTableBoogieWoogie` mutation. */
+export type DeleteDataTableBoogieWoogiePayloadDataTableBoogieWoogieEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableBoogieWoogiesOrderBy>>;
+};
+
+/** All input for the `deleteDataTableBoogieWoogie` mutation. */
+export type DeleteDataTableBoogieWoogieInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
 /** All input for the `deleteDataTableContainerByNodeId` mutation. */
 export type DeleteDataTableContainerByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -30277,74 +29735,90 @@ export type DeleteDataTableContainerInput = {
   id: Scalars['Int'];
 };
 
-/** All input for the `deleteDataTableMyDosageInfoByNodeId` mutation. */
-export type DeleteDataTableMyDosageInfoByNodeIdInput = {
+/** All input for the `deleteDataViewByNodeId` mutation. */
+export type DeleteDataViewByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataTableMyDosageInfo` to be deleted. */
+  /** The globally unique `ID` which will identify a single `DataView` to be deleted. */
   nodeId: Scalars['ID'];
 };
 
-/** The output of our delete `DataTableMyDosageInfo` mutation. */
-export type DeleteDataTableMyDosageInfoPayload = {
-  __typename?: 'DeleteDataTableMyDosageInfoPayload';
+/** The output of our delete `DataView` mutation. */
+export type DeleteDataViewPayload = {
+  __typename?: 'DeleteDataViewPayload';
   /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataTableMyDosageInfo` that was deleted by this mutation. */
-  dataTableMyDosageInfo?: Maybe<DataTableMyDosageInfo>;
-  deletedDataTableMyDosageInfoNodeId?: Maybe<Scalars['ID']>;
+  /** The `DataView` that was deleted by this mutation. */
+  dataView?: Maybe<DataView>;
+  deletedDataViewNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataTableMyDosageInfo`. May be used by Relay 1. */
-  dataTableMyDosageInfoEdge?: Maybe<DataTableMyDosageInfosEdge>;
+  /** An edge for our `DataView`. May be used by Relay 1. */
+  dataViewEdge?: Maybe<DataViewsEdge>;
 };
 
 
-/** The output of our delete `DataTableMyDosageInfo` mutation. */
-export type DeleteDataTableMyDosageInfoPayloadDataTableMyDosageInfoEdgeArgs = {
-  orderBy?: Maybe<Array<DataTableMyDosageInfosOrderBy>>;
+/** The output of our delete `DataView` mutation. */
+export type DeleteDataViewPayloadDataViewEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewsOrderBy>>;
 };
 
-/** All input for the `deleteDataTableMyDosageInfo` mutation. */
-export type DeleteDataTableMyDosageInfoInput = {
+/** All input for the `deleteDataView` mutation. */
+export type DeleteDataViewInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
 };
 
-/** All input for the `deleteDataTableWhereYaFromByNodeId` mutation. */
-export type DeleteDataTableWhereYaFromByNodeIdInput = {
+/** All input for the `deleteDataViewByTableNameAndCode` mutation. */
+export type DeleteDataViewByTableNameAndCodeInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `DataTableWhereYaFrom` to be deleted. */
+  tableName: Scalars['String'];
+  code: Scalars['String'];
+};
+
+/** All input for the `deleteDataViewColumnDefinitionByNodeId` mutation. */
+export type DeleteDataViewColumnDefinitionByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataViewColumnDefinition` to be deleted. */
   nodeId: Scalars['ID'];
 };
 
-/** The output of our delete `DataTableWhereYaFrom` mutation. */
-export type DeleteDataTableWhereYaFromPayload = {
-  __typename?: 'DeleteDataTableWhereYaFromPayload';
+/** The output of our delete `DataViewColumnDefinition` mutation. */
+export type DeleteDataViewColumnDefinitionPayload = {
+  __typename?: 'DeleteDataViewColumnDefinitionPayload';
   /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `DataTableWhereYaFrom` that was deleted by this mutation. */
-  dataTableWhereYaFrom?: Maybe<DataTableWhereYaFrom>;
-  deletedDataTableWhereYaFromNodeId?: Maybe<Scalars['ID']>;
+  /** The `DataViewColumnDefinition` that was deleted by this mutation. */
+  dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
+  deletedDataViewColumnDefinitionNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** An edge for our `DataTableWhereYaFrom`. May be used by Relay 1. */
-  dataTableWhereYaFromEdge?: Maybe<DataTableWhereYaFromsEdge>;
+  /** An edge for our `DataViewColumnDefinition`. May be used by Relay 1. */
+  dataViewColumnDefinitionEdge?: Maybe<DataViewColumnDefinitionsEdge>;
 };
 
 
-/** The output of our delete `DataTableWhereYaFrom` mutation. */
-export type DeleteDataTableWhereYaFromPayloadDataTableWhereYaFromEdgeArgs = {
-  orderBy?: Maybe<Array<DataTableWhereYaFromsOrderBy>>;
+/** The output of our delete `DataViewColumnDefinition` mutation. */
+export type DeleteDataViewColumnDefinitionPayloadDataViewColumnDefinitionEdgeArgs = {
+  orderBy?: Maybe<Array<DataViewColumnDefinitionsOrderBy>>;
 };
 
-/** All input for the `deleteDataTableWhereYaFrom` mutation. */
-export type DeleteDataTableWhereYaFromInput = {
+/** All input for the `deleteDataViewColumnDefinition` mutation. */
+export type DeleteDataViewColumnDefinitionInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
+};
+
+/** All input for the `deleteDataViewColumnDefinitionByTableNameAndColumnName` mutation. */
+export type DeleteDataViewColumnDefinitionByTableNameAndColumnNameInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  tableName: Scalars['String'];
+  columnName: Scalars['String'];
 };
 
 /** All input for the `deleteElementTypePluginByNodeId` mutation. */
@@ -32286,7 +31760,7 @@ export type GetAllLookupTableStructuresQuery = (
     { __typename?: 'DataTablesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'DataTable' }
-      & Pick<DataTable, 'id' | 'tableName' | 'name' | 'fieldMap'>
+      & Pick<DataTable, 'id' | 'tableName' | 'displayName' | 'fieldMap'>
     )>> }
   )> }
 );
@@ -32522,7 +31996,7 @@ export type GetLookupTableStructureByIdQuery = (
   { __typename?: 'Query' }
   & { dataTable?: Maybe<(
     { __typename?: 'DataTable' }
-    & Pick<DataTable, 'id' | 'name' | 'tableName' | 'fieldMap'>
+    & Pick<DataTable, 'id' | 'displayName' | 'tableName' | 'fieldMap'>
   )> }
 );
 
@@ -34182,7 +33656,7 @@ export const GetAllLookupTableStructuresDocument = gql`
     nodes {
       id
       tableName
-      name
+      displayName
       fieldMap
     }
   }
@@ -34598,7 +34072,7 @@ export const GetLookupTableStructureByIdDocument = gql`
     query getLookupTableStructureById($lookupTableID: Int!) {
   dataTable(id: $lookupTableID) {
     id
-    name
+    displayName
     tableName
     fieldMap
   }

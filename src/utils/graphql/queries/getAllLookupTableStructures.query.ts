@@ -6,7 +6,7 @@ export default gql`
       nodes {
         id
         tableName
-        name
+        displayName
         fieldMap
       }
     }
