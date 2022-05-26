@@ -1,16 +1,14 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { Approval, Admin, Dashboard, NoMatch, Footer } from '../../components'
+import { Admin, Dashboard, NoMatch, Footer } from '../../components'
 import { ApplicationCreate, ApplicationWrapper } from '../Application'
 import UserArea from '../User/UserArea'
 import Login from '../User/Login'
 import ListWrapper from '../List/ListWrapper'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
-import { LookupTableRoutes } from '../../LookupTable'
 import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
 import DevRoutes from '../Dev/DevRoutes'
-import LayoutHelpers from '../../components/LayoutHelpers'
 import DataViews from '../DataDisplay/DataViews'
 import config from '../../config'
 const { isProductionBuild } = config
@@ -26,9 +24,6 @@ const SiteLayout: React.FC = () => {
             <Route exact path="/">
               <Dashboard />
             </Route>
-            <Route exact path="/layout">
-              <LayoutHelpers />
-            </Route>
             <Route exact path="/login">
               <Login />
             </Route>
@@ -42,9 +37,6 @@ const SiteLayout: React.FC = () => {
               <FormElementUpdateTrackerProvider>
                 <ApplicationWrapper />
               </FormElementUpdateTrackerProvider>
-            </Route>
-            <Route exact path="/application/:serialNumber/approval">
-              <Approval />
             </Route>
             <Route path="/admin">
               <Admin />
