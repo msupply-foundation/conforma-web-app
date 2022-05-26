@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react'
+import { singular } from 'pluralize'
 import {
   LookUpTableImportCsvActions,
   LookUpTableImportCsvActionType,
@@ -48,8 +49,7 @@ const LookUpTableImportCsvReducer = (
     case LookUpTableImportCsvActions.ImportCSV:
       return { ...state, file: action.payload }
     case LookUpTableImportCsvActions.SetTableName: {
-      const restrictCharacters = action.payload.replace(/[^A-z_]/gm, '')
-      return { ...state, tableName: restrictCharacters }
+      return { ...state, tableName: action.payload }
     }
     case LookUpTableImportCsvActions.submittable:
       return { ...state, submittable: action.payload }

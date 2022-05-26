@@ -12,9 +12,9 @@ const useGetAllTableStructures = (): AllLookupTableStructuresType => {
   const { data, loading, error, refetch: refetchAllTableStructures } = allTableStructuresLoadState
 
   useEffect(() => {
-    if (!loading && !error && data?.lookupTables?.nodes) {
+    if (!loading && !error && data?.dataTables?.nodes) {
       setAllTableStructures(
-        data.lookupTables.nodes.map((lookupTable: any) => ({
+        data.dataTables.nodes.map((lookupTable: any) => ({
           ...lookupTable,
           isExpanded: false,
         }))

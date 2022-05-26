@@ -2,11 +2,11 @@ import { gql } from '@apollo/client'
 
 export default gql`
   query getAllLookupTableStructures {
-    lookupTables {
+    dataTables(condition: { isLookupTable: true }) {
       nodes {
         id
-        name
-        label
+        tableName
+        displayName
         fieldMap
       }
     }

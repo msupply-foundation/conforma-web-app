@@ -7,7 +7,7 @@ import { DownloadButton } from '..'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
-const TABLE_PREFIX = 'lookup_table_'
+const TABLE_PREFIX = 'data_table_'
 
 const ListTable: React.FC<any> = ({
   allTableStructures,
@@ -37,12 +37,12 @@ const ListTable: React.FC<any> = ({
           <Table.HeaderCell
             key={`lookup-table-header-title`}
             colSpan={1}
-            content={strings.LOOKUP_TABLE_HEADER_LABEL}
+            content={strings.LOOKUP_TABLE_HEADER_NAME}
           ></Table.HeaderCell>
           <Table.HeaderCell
             key={`lookup-table-header-table-name`}
             colSpan={1}
-            content={strings.LOOKUP_TABLE_HEADER_NAME}
+            content={strings.LOOKUP_TABLE_HEADER_TABLE_NAME}
           ></Table.HeaderCell>
           <Table.HeaderCell
             key={`lookup-table-header-actions`}
@@ -59,8 +59,8 @@ const ListTable: React.FC<any> = ({
                 key={`lookup-table-${lookupTable.id}`}
                 onClick={() => handleExpansion(lookupTable)}
               >
-                <Table.Cell>{lookupTable.label}</Table.Cell>
-                <Table.Cell>{TABLE_PREFIX + lookupTable.name}</Table.Cell>
+                <Table.Cell>{lookupTable.displayName}</Table.Cell>
+                <Table.Cell>{TABLE_PREFIX + lookupTable.tableName}</Table.Cell>
                 <Table.Cell collapsing>
                   <Button.Group>
                     <Popup
@@ -80,9 +80,12 @@ const ListTable: React.FC<any> = ({
                       }
                     />
                     <DownloadButton
-                      popUpContent={strings.LOOKUP_TABLE_DOWNLOAD.replace('%1', lookupTable.label)}
+                      popUpContent={strings.LOOKUP_TABLE_DOWNLOAD.replace(
+                        '%1',
+                        lookupTable.displayName
+                      )}
                       id={lookupTable.id}
-                      name={lookupTable.label}
+                      name={lookupTable.displayName}
                     />
                   </Button.Group>
                 </Table.Cell>

@@ -2,7 +2,6 @@ import { ApolloQueryResult, QueryLazyOptions } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { useGetLookupTableStructureByIdLazyQuery } from '../../utils/generated/graphql'
 import { LookUpTableType } from '../types'
-import pluralize from 'pluralize'
 
 type LookupTableStructureType = {
   setStructureID: (id: number) => void
@@ -28,12 +27,9 @@ const useGetTableStructure = (): LookupTableStructureType => {
   }, [structureID])
 
   useEffect(() => {
-    if (!loading && !error && data?.lookupTable) {
-      const lookupTable = data.lookupTable
-      const namePlural = pluralize.isPlural(lookupTable.name)
-        ? lookupTable.name
-        : pluralize.plural(lookupTable.name)
-      setStructure({ ...lookupTable, name: namePlural })
+    if (!loading && !error && data?.dataTable) {
+      const lookupTable = data.dataTable
+      setStructure(lookupTable)
     }
   }, [loading, data, error])
 
