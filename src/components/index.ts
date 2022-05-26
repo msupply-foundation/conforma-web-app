@@ -6,7 +6,7 @@ import {
   ProgressArea,
 } from './Application'
 import Approval from './Approval'
-import Admin from './Admin'
+import Admin from './Admin/Admin'
 import FilterList from './FilterList'
 import Dashboard from './Dashboard'
 import Loading from './Loading'

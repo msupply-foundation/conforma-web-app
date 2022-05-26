@@ -1701,6 +1701,20 @@ a:hover {
 }
 
 /*--------------------------------
+      Localisation (Admin) Page
+---------------------------------*/
+
+#localisation-panel {
+  .row-format {
+      gap: 20px;
+      width: 90%;
+      background-color: white;
+      margin-bottom: 5px;
+      padding: 10px; border-radius: 8px;    
+  }
+}
+
+/*--------------------------------
       Filters
 ---------------------------------*/
 
