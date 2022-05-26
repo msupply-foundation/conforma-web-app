@@ -2,10 +2,10 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { NoMatch } from '../../components'
 import { useRouter } from '../../utils/hooks/useRouter'
-import OutcomeDetails from './OutcomesDetail'
-import OutcomeTable from './OutcomesTable'
+import DataViewDetail from './DataViewDetail'
+import DataViewTable from './DataViewTable'
 
-const Outcomes: React.FC = () => {
+const DataViews: React.FC = () => {
   const {
     match: { path },
   } = useRouter()
@@ -13,10 +13,10 @@ const Outcomes: React.FC = () => {
   return (
     <Switch>
       <Route exact path={`${path}/:tableName/:id`}>
-        <OutcomeDetails />
+        <DataViewDetail />
       </Route>
       <Route exact path={`${path}/:tableName`}>
-        <OutcomeTable />
+        <DataViewTable />
       </Route>
       <Route>
         <NoMatch />
@@ -25,4 +25,4 @@ const Outcomes: React.FC = () => {
   )
 }
 
-export default Outcomes
+export default DataViews

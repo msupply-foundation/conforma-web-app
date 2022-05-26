@@ -24,12 +24,12 @@ export const AdminPermissions: React.FC = () => {
   )
 }
 
-export const AdminOutcomes: React.FC = () => {
+export const AdminDataViews: React.FC = () => {
   const { strings } = useLanguageProvider()
-  usePageTitle(strings.PAGE_TITLE_OUTCOMES)
+  usePageTitle(strings.PAGE_TITLE_DATA_VIEW)
   return (
     <div>
-      <h1>Outcome Configuration Page</h1>
+      <h1>Data View Configuration Page</h1>
       not implemented
     </div>
   )

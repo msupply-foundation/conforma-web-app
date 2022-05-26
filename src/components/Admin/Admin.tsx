@@ -2,16 +2,18 @@ import React from 'react'
 import { Link, Route, Switch } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
 import { Loading, NoMatch } from '..'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import Snapshots from '../../containers/Dev/Snapshots'
 import TemplateWrapper from '../../containers/TemplateBuilder/template/TemplateWrapper'
 import Templates from '../../containers/TemplateBuilder/Templates'
 import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { AdminOutcomes, AdminPermissions, AdminPlugins } from './AdminOther'
 import { AdminLocalisations } from './AdminLocalisations'
+// import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Admin: React.FC = () => {
+  const { strings } = useLanguageProvider()
   const {
     match: { path },
   } = useRouter()
@@ -26,32 +28,32 @@ const Admin: React.FC = () => {
   const adminOption = [
     {
       route: 'templates',
-      header: 'Templates/Procedures and Builder',
+      header: strings.MENU_ITEM_ADMIN_TEMPLATES,
       Element: () => <Templates />,
     },
     {
       route: 'lookup-tables',
-      header: 'Lookup Tables',
+      header: strings.MENU_ITEM_ADMIN_LOOKUP_TABLES,
       Element: () => <LookupTableRoutes />,
     },
-    {
-      route: 'outcomes',
-      header: 'Outcome Configurations',
-      Element: () => <AdminOutcomes />,
-    },
-    {
-      route: 'permissions',
-      header: 'Permission Policies and Names',
-      Element: () => <AdminPermissions />,
-    },
-    {
-      route: 'plugins',
-      header: 'Plugins',
-      Element: () => <AdminPlugins />,
-    },
+    // {
+    //   route: 'data',
+    //   header: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
+    //   Element: () => <AdminDataViews />,
+    // },
+    // {
+    //   route: 'permissions',
+    //   header: strings.MENU_ITEM_ADMIN_PERMISSIONS,
+    //   Element: () => <AdminPermissions />,
+    // },
+    // {
+    //   route: 'plugins',
+    //   header: 'Plugins',
+    //   Element: () => <AdminPlugins />,
+    // },
     {
       route: 'localisations',
-      header: 'Localisations',
+      header: strings.MENU_ITEM_ADMIN_LOCALISATION,
       Element: () => <AdminLocalisations />,
     },
     {

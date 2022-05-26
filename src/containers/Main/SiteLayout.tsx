@@ -11,7 +11,7 @@ import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
 import DevRoutes from '../Dev/DevRoutes'
 import LayoutHelpers from '../../components/LayoutHelpers'
-import Outcomes from '../Outcomes/Outcomes'
+import DataViews from '../DataDisplay/DataViews'
 import config from '../../config'
 const { isProductionBuild } = config
 
@@ -49,8 +49,8 @@ const SiteLayout: React.FC = () => {
             <Route path="/admin">
               <Admin />
             </Route>
-            <Route path="/outcomes">
-              <Outcomes />
+            <Route path="/data">
+              <DataViews />
             </Route>
             {!isProductionBuild && (
               <Route path="/dev">
