@@ -34,7 +34,7 @@ const httpLink = createHttpLink({
 
 const App: React.FC = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
-  const { preferences, languageOptions, error, loading } = usePrefs()
+  const { preferences, languageOptions, error, loading, refetchPrefs } = usePrefs()
 
   useEffect(() => {
     const client = new ApolloClient({
@@ -78,6 +78,7 @@ const App: React.FC = () => {
         <LanguageProvider
           languageOptions={languageOptions as LanguageOption[]}
           defaultLanguageCode={preferences?.defaultLanguageCode as string}
+          refetchPrefs={refetchPrefs}
         >
           <AppWrapper />
         </LanguageProvider>

@@ -20,6 +20,7 @@ type LanguageProviderProps = {
   children: React.ReactNode
   languageOptions: LanguageOption[]
   defaultLanguageCode: string
+  refetchPrefs: () => void
 }
 
 export type LanguageOption = {
@@ -44,18 +45,22 @@ const initialContext: {
   strings: LanguageStrings
   selectedLanguage: LanguageOption
   languageOptions: LanguageOption[]
+  languageOptionsFull: LanguageOption[]
   loading: boolean
   error: any
   setLanguage: Function
   getPluginStrings: Function
+  refetchLanguages: Function
 } = {
   strings: {} as LanguageStrings,
   selectedLanguage: initSelectedLanguage,
   languageOptions: [],
+  languageOptionsFull: [],
   loading: true,
   error: null,
   setLanguage: () => {},
   getPluginStrings: () => {},
+  refetchLanguages: () => {},
 }
 
 const LanguageProviderContext = createContext(initialContext)
@@ -64,6 +69,7 @@ export function LanguageProvider({
   children,
   languageOptions,
   defaultLanguageCode,
+  refetchPrefs,
 }: LanguageProviderProps) {
   const [languageState, setLanguageState] = useState<LanguageState>({
     languageOptions,
@@ -75,6 +81,7 @@ export function LanguageProvider({
   const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>(
     savedLanguageCode ?? defaultLanguageCode
   )
+  const [shouldRefetchStrings, setShouldRefetchStrings] = useState(false)
 
   // Helper function provided to plugins to determine where to read their
   // language strings from
@@ -118,21 +125,56 @@ export function LanguageProvider({
     }
   }
 
+  // If the selected language is no longer valid (either disabled or uninstalled), then try default, or fallback to first available
+  const getValidLanguageCode = () => {
+    if (languageOptions.some((lang) => lang.enabled && lang.code === selectedLanguageCode))
+      return selectedLanguageCode
+    if (languageOptions.some((lang) => lang.enabled && lang.code === defaultLanguageCode))
+      return defaultLanguageCode
+    else {
+      const firstAvailableLanguageCode = languageOptions.filter(({ enabled }) => enabled)[0].code
+      console.log(
+        `Invalid language code, falling back to first available: ${firstAvailableLanguageCode}`
+      )
+      return firstAvailableLanguageCode
+    }
+  }
+
+  // Reload language options from prefs, and (optionally) refresh the current
+  // strings
+  const refetchLanguages = async (reloadStrings = false) => {
+    if (reloadStrings) setShouldRefetchStrings(true)
+    refetchPrefs()
+  }
+
   // Fetch new language when language code changes
   useEffect(() => {
     updateLanguageState(selectedLanguageCode)
   }, [selectedLanguageCode])
+
+  // Update language state whenever Options refetched from Prefs
+  useEffect(() => {
+    setLanguageState((state) => ({ ...state, languageOptions }))
+    const validCode = getValidLanguageCode()
+    if (validCode !== selectedLanguageCode) setSelectedLanguageCode(validCode)
+    else if (shouldRefetchStrings) updateLanguageState(validCode)
+    setShouldRefetchStrings(false)
+  }, [languageOptions])
 
   return (
     <LanguageProviderContext.Provider
       value={{
         strings: languageState.strings,
         selectedLanguage: languageState.selectedLanguage,
-        languageOptions: languageState.languageOptions,
+        languageOptions: languageState.languageOptions.filter(
+          (lang: LanguageOption) => lang?.enabled
+        ),
+        languageOptionsFull: languageState.languageOptions,
         loading: languageState.loading,
         error: languageState.error,
         setLanguage: setSelectedLanguageCode,
         getPluginStrings,
+        refetchLanguages,
       }}
     >
       {children}

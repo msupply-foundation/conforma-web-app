@@ -102,9 +102,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, outcomes }) => {
       text: strings.MENU_ITEM_ADMIN_LOOKUP_TABLES,
       value: '/admin/lookup-tables',
     },
-    { key: 'outcomes', text: strings.MENU_ITEM_ADMIN_OUTCOME_CONFIG, value: '/admin/outcomes' },
-    { key: 'permissions', text: strings.MENU_ITEM_ADMIN_PERMISSIONS, value: '/admin/permissions' },
-    { key: 'plugins', text: strings.MENU_ITEM_ADMIN_PLUGINS, value: '/admin/plugins' },
+    // { key: 'outcomes', text: strings.MENU_ITEM_ADMIN_OUTCOME_CONFIG, value: '/admin/outcomes' },
+    // { key: 'permissions', text: strings.MENU_ITEM_ADMIN_PERMISSIONS, value: '/admin/permissions' },
+    // { key: 'plugins', text: strings.MENU_ITEM_ADMIN_PLUGINS, value: '/admin/plugins' },
     {
       key: 'localisations',
       text: strings.MENU_ITEM_ADMIN_LOCALISATION,
