@@ -9,8 +9,8 @@ import Templates from '../../containers/TemplateBuilder/Templates'
 import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { AdminPermissions } from './AdminOther'
 import { AdminLocalisations } from './AdminLocalisations'
+// import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Admin: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -36,16 +36,16 @@ const Admin: React.FC = () => {
       header: strings.MENU_ITEM_ADMIN_LOOKUP_TABLES,
       Element: () => <LookupTableRoutes />,
     },
-    {
-      route: 'data',
-      header: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
-      Element: () => <AdminDataViews />,
-    },
-    {
-      route: 'permissions',
-      header: strings.MENU_ITEM_ADMIN_PERMISSIONS,
-      Element: () => <AdminPermissions />,
-    },
+    // {
+    //   route: 'data',
+    //   header: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
+    //   Element: () => <AdminDataViews />,
+    // },
+    // {
+    //   route: 'permissions',
+    //   header: strings.MENU_ITEM_ADMIN_PERMISSIONS,
+    //   Element: () => <AdminPermissions />,
+    // },
     // {
     //   route: 'plugins',
     //   header: 'Plugins',
