@@ -92,13 +92,13 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
       text: strings.MENU_ITEM_ADMIN_LOOKUP_TABLES,
       value: '/admin/lookup-tables',
     },
-    {
-      key: 'dataViews',
-      text: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
-      value: '/admin/data',
-    },
-    { key: 'permissions', text: strings.MENU_ITEM_ADMIN_PERMISSIONS, value: '/admin/permissions' },
-    { key: 'plugins', text: strings.MENU_ITEM_ADMIN_PLUGINS, value: '/admin/plugins' },
+    // {
+    //   key: 'dataViews',
+    //   text: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
+    //   value: '/admin/data',
+    // },
+    // { key: 'permissions', text: strings.MENU_ITEM_ADMIN_PERMISSIONS, value: '/admin/permissions' },
+    // { key: 'plugins', text: strings.MENU_ITEM_ADMIN_PLUGINS, value: '/admin/plugins' },
     {
       key: 'localisations',
       text: strings.MENU_ITEM_ADMIN_LOCALISATION,
