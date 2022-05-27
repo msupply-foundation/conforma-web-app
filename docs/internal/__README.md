@@ -4,18 +4,18 @@ The `./docs` folder is the root documentation folder for this repository.
 
 Subfolders: **internal** and **public**.
 
-Pages and images from `docs/internal` will be published in [**This repo wiki**](https://github.com/openmsupply/application-manager-web-app/wiki) after running the script (described in Wiki info below).
-Pages and images from `docs/public` will be published to our [**Public docs**](https://openmsupply.github.io/application-manager-web-app/) when a PR is merged to the `main` branch - by automation.
+Pages and images from `docs/internal` will be published in [**This repo wiki**](https://github.com/openmsupply/conforma-web-app/wiki) after running the script (described in Wiki info below).
+Pages and images from `docs/public` will be published to our [**Public docs**](https://openmsupply.github.io/conforma-web-app/) when a PR is merged to the `main` branch - by automation.
 
-The subfolder `docs/_wiki` is a clone of the repo's [**wiki**](https://github.com/openmsupply/application-manager-web-app/wiki) repository, which appears as a submodule in the main repo (see `.gitmodules`)
+The subfolder `docs/_wiki` is a clone of the repo's [**wiki**](https://github.com/openmsupply/conforma-web-app/wiki) repository, which appears as a submodule in the main repo (see `.gitmodules`)
 
 ### To configure with submodule:
 
 - Clone repo with submodule pulled (if already in master):  
-  `git clone --recurse-submodules https://github.com/openmsupply/application-manager-web-app.git`
+  `git clone --recurse-submodules https://github.com/openmsupply/conforma-web-app.git`
 
 - Clone repo with submodule in specific branch:  
-  `git clone --recurse-submodules -b <branch_name> https://github.com/openmsupply/application-manager-web-app.git`
+  `git clone --recurse-submodules -b <branch_name> https://github.com/openmsupply/conforma-web-app.git`
 
 - Then Init and pull submodule folder:  
   `git submodule update --init`
