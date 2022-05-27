@@ -39,7 +39,7 @@ This list should reflect the same as we have in `Sample templates` so when chang
 
 ### Core-actions
 
-There is documentation on the code of these as well in the [repo](https://github.com/openmsupply/application-manager-server/blob/develop/database/insertData/_helpers/core_mutations.js)
+There is documentation on the code of these as well in the [repo](https://github.com/openmsupply/conforma-server/blob/develop/database/insertData/_helpers/core_mutations.js)
 
 #### Trigger: ON_APPLICATION_CREATE
 

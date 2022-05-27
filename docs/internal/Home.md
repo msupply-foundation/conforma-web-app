@@ -27,4 +27,4 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 
 - [Workflow](Development-Workflow.md)
 - [Sections Structure](Sections-Structure.md)
-- [Back-end Docs](https://github.com/openmsupply/application-manager-server/wiki)
+- [Back-end Docs](https://github.com/openmsupply/conforma-server/wiki)

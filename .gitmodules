@@ -1,7 +1,7 @@
 [submodule "documentation/_wiki"]
-	path = docs/_wiki
-	url = https://github.com/openmsupply/application-manager-web-app.wiki.git
-	branch = master
+path = docs/_wiki
+url = https://github.com/openmsupply/conforma-web-app.wiki.git
+branch = master
 [submodule "docs/public/themes/zola_easydocs_theme"]
-	path = docs/public/themes/zola_easydocs_theme
-	url = https://github.com/codeandmedia/zola_easydocs_theme.git
+path = docs/public/themes/zola_easydocs_theme
+url = https://github.com/codeandmedia/zola_easydocs_theme.git

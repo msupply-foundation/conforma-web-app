@@ -8,7 +8,7 @@ Install Graphql-codegen tutorial: https://medium.com/make-it-heady/part-2-buildi
 
 ## Run the Back-end server
 
-[Repo documentation](https://github.com/openmsupply/application-manager-server/pull/1)
+[Repo documentation](https://github.com/openmsupply/conforma-server/pull/1)
 
 ## Create a App config file
 
@@ -430,7 +430,7 @@ import * as config from './config.json'
 module.exports = {
   client: {
     service: {
-      name: "Application Manager",
+      name: "Conforma",
       url: config.server
     }
   }
