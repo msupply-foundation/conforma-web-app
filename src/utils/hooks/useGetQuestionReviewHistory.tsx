@@ -39,6 +39,13 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
     ? useGetHistoryForApplicantQuery({ variables })
     : useGetHistoryForReviewerQuery({ variables })
 
+    const localisedResponse: { [key: string]: string} = {
+      'APPROVE': strings.LABEL_REVIEW_APPROVED,
+      'DECLINE': strings.LABEL_REVIEW_DECLINED,
+      'AGREE': strings.LABEL_CONSOLIDATION_AGREEMENT,
+      'DISAGREE': strings.LABEL_CONSOLIDATION_DISAGREEMENT
+    }
+
   useEffect(() => {
     if (!data) return
     // Organise ReviewResponse and Applicant Responses from latest to oldest
@@ -90,7 +97,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
           (levelNumber || 1) > 1
             ? strings.TITLE_HISTORY_CONSOLIDATION
             : strings.TITLE_HISTORY_REVIEW,
-        message: decision as ReviewResponseDecision, // TODO: Localisation
+        message: !!decision ? localisedResponse[decision.toString()] : 'Undefined',
         timeUpdated,
         reviewerComment: comment || '',
       }
