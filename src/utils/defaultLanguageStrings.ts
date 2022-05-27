@@ -175,8 +175,6 @@ export default {
   LABEL_REVIEW_DECISION: 'Decision',
   LABEL_REVIEW_APPROVED: 'Approved',
   LABEL_REVIEW_DECLINED: 'Declined',
-  LABEL_REVIEW_DECICION_CONFORM: 'Conform',
-  LABEL_REVIEW_DECISION_NON_CONFORM: 'Non conform',
   LABEL_REVIEW_IN_PROGRESS: 'Review in Progress',
   LABEL_REVIEW_MAKE_DECISION_BY: 'Awaiting decision making by',
   LABEL_REVIEW_OVERALL_COMMENT: 'Overall comment',
