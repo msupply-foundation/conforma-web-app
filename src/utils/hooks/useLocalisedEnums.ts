@@ -1,5 +1,10 @@
 import { useLanguageProvider } from '../../contexts/Localisation'
-import { ApplicationOutcome, ApplicationStatus, Decision } from '../generated/graphql'
+import {
+  ApplicationOutcome,
+  ApplicationStatus,
+  Decision,
+  ReviewResponseDecision,
+} from '../generated/graphql'
 
 /*
 For converting enum names from database/server (Outcomes, Statuses, etc. to
@@ -34,7 +39,15 @@ const useLocalisedEnums = () => {
     NO_DECISION: strings.DECISION_NO_DECISION,
   }
 
-  return { Status, Outcome, Decision }
+  const ReviewResponse: { [key in ReviewResponseDecision]: string } =
+    {
+      APPROVE: strings.LABEL_REVIEW_APPROVED,
+      DECLINE: strings.LABEL_REVIEW_DECLINED,
+      AGREE: strings.LABEL_CONSOLIDATION_AGREEMENT,
+      DISAGREE: strings.LABEL_CONSOLIDATION_DISAGREEMENT,
+    }
+
+  return { Status, Outcome, Decision, ReviewResponse }
 }
 
 export default useLocalisedEnums
