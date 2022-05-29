@@ -80,4 +80,5 @@ The app always come with the file `defaultLanguageStrings.js` file which has all
  The configuration file bascially has which languages are selectable by the user (`enabled` option), which how it displays to be user for selecion. In case only one language is available, the user don't the 'Language selection' option on the UI. In other cases it will display as the following:
 
 ![Language selecion dropdown](/images/localisation-selection-dropdown.png)
+
 ![Language selecion dialog](/images/localisation-selection-dialog.png)
