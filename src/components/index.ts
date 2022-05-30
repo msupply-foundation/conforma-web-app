@@ -1,3 +1,5 @@
+
+import Admin from './Admin/Admin'
 import {
   ApplicationContainer,
   ApplicationSections,
@@ -5,9 +7,6 @@ import {
   Navigation,
   ProgressArea,
 } from './Application'
-import Approval from './Approval'
-import Admin from './Admin/Admin'
-import FilterList from './FilterList'
 import Dashboard from './Dashboard'
 import Loading from './Loading'
 import { Footer, ModalWarning } from './Main'
@@ -25,36 +24,22 @@ import {
   SectionWrapper,
 } from './Sections'
 import { PageElements } from './PageElements'
-import TemplateList from './TemplateList'
-import TemplateNew from './TemplateNew'
-import Template from './Template'
-import Account from './Account'
-import { Organisation, OrgMemberEdit } from './Organisation'
-import { NotificationsList, Notification } from './Notification'
 import NoMatch from './NoMatch'
-import { ProductList, Product } from './Product'
 
 export {
-  Account,
+  Admin,
   ApplicationContainer,
   ApplicationSections,
   ApplicationSelectType,
   ApplicationProgressBar,
-  Approval,
-  Admin,
   ConsolidationSectionProgressBar,
-  FilterList,
   Footer,
   Dashboard,
   Loading,
   ModalWarning,
   Navigation,
-  Notification,
-  NotificationsList,
   NoMatch,
   PageElements,
-  Product,
-  ProductList,
   ProgressArea,
   ReviewContainer,
   ReviewHeader,
@@ -63,9 +48,4 @@ export {
   ReviewLockedLabel,
   ReviewSectionProgressBar,
   SectionWrapper,
-  Organisation,
-  OrgMemberEdit,
-  TemplateList,
-  TemplateNew,
-  Template,
 }
