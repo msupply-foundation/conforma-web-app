@@ -42,7 +42,7 @@ Workflow for exporting and importing could be as follows:
 
 ## Localisation development
 
-To have access to our context file with all the strings to be localised just import `contexts/Localisation`. Note that you would need to be inside a React component or React hook to be allowed to be using the localisations hook. For fixed enum (defined in the Database) localisation import the `utils/hooks/useLocalisedEnums` file.
+To access localised strings,  just import the `useLanguageProvider` hook from `contexts/Localisation`. Note that you  need to be inside a React component or React hook to be able to use the localisations hook. For localised enums (defined in the Database) import the `utils/hooks/useLocalisedEnums` hook.
 
 ### How localisation works?
 
