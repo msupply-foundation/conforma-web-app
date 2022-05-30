@@ -17,14 +17,9 @@ In this example the user has **applicant** role. The user-role can only be `appl
 
 ## Table of contents
 
-### Filters
-
 - [Overview](#overview)
-- [Table of contents](#table-of-contents)
-  - [Filters](#filters)
-  - [More](#more)
-- [Examples: [UI Design] Applicant - applications list](#examples-ui-design-applicant---applications-list)
-- [Filters](#filters-1)
+- [Examples: UI Design](#examples-ui-design)
+- [Filters](#filters)
   - [Label filters:](#label-filters)
     - [type](#type)
     - [category (_not yet implemented in schema_)](#category-not-yet-implemented-in-schema)
@@ -50,18 +45,13 @@ In this example the user has **applicant** role. The user-role can only be `appl
     - [per-page](#per-page)
   - [Boolean filters](#boolean-filters)
     - [Is fully assigned level 1](#is-fully-assigned-level-1)
-- [Formats & Rules](#formats--rules)
+- [Formats & Rules](#formats-&-rules)
   - [Pre-defined dates](#pre-defined-dates)
   - [Strings](#strings)
   - [Labels](#labels)
   - [General](#general)
 
-### More
-
-- [Format & Rules](#format-and-rules)
-- [Columns per role](#columns)
-
-## Examples: [UI Design] Applicant - applications list
+## Examples: UI Design
 
 ![Applicant-List](images/Filters-for-Applications-Applicant-List.png)
 
