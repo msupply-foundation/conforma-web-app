@@ -81,7 +81,7 @@ The configuration file is easy to follow, and relates to the other language fold
 ]
  ```
 
- The configuration file bascially has which languages are selectable by the user (`enabled` option), which how it displays to be user for selecion. In case only one language is available, the user don't the 'Language selection' option on the UI. In other cases it will display as the following:
+The configuration file specifies which languages are selectable by the user (`enabled` option), along with how it is displayed to a user in the language selection UI.  If only one language is available, the user doesn't see this option. In other cases it will display like this:
 
 ![Language selecion dropdown](/images/localisation-selection-dropdown.png)
 
