@@ -2,6 +2,8 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import {
   ApplicationOutcome,
   ApplicationStatus,
+  AssignerAction,
+  ReviewerAction,
   Decision,
   ReviewResponseDecision,
 } from '../generated/graphql'
@@ -13,6 +15,12 @@ localisable string references)
 
 const useLocalisedEnums = () => {
   const { strings } = useLanguageProvider()
+
+  const AssignAction: { [key in AssignerAction]: string } = {
+    ASSIGN: strings.ACTION_ASSIGN,
+    ASSIGN_LOCKED: strings.ACTION_LOCKED,
+    RE_ASSIGN: strings.ACTION_RE_ASSIGN
+  }
 
   const Status: { [key in ApplicationStatus]: string } = {
     DRAFT: strings.STATUS_DRAFT,
@@ -39,6 +47,16 @@ const useLocalisedEnums = () => {
     NO_DECISION: strings.DECISION_NO_DECISION,
   }
 
+  const ReviewAction: { [key in ReviewerAction]: string } = {
+    SELF_ASSIGN: strings.ACTION_SELF_ASSIGN,
+    START_REVIEW: strings.ACTION_START,
+    VIEW_REVIEW: strings.ACTION_VIEW,
+    CONTINUE_REVIEW: strings.ACTION_CONTINUE,
+    RESTART_REVIEW: strings.ACTION_PENDING,
+    MAKE_DECISION: strings.ACTION_MAKE_DECISION,
+    UPDATE_REVIEW: strings.ACTION_UPDATE
+  }
+
   const ReviewResponse: { [key in ReviewResponseDecision]: string } =
     {
       APPROVE: strings.LABEL_REVIEW_APPROVED,
@@ -47,7 +65,7 @@ const useLocalisedEnums = () => {
       DISAGREE: strings.LABEL_CONSOLIDATION_DISAGREEMENT,
     }
 
-  return { Status, Outcome, Decision, ReviewResponse }
+  return { AssignAction, Status, Outcome, Decision, ReviewAction, ReviewResponse }
 }
 
 export default useLocalisedEnums
