@@ -52,7 +52,9 @@ Defining other languages is usually done by exporting the existing languages and
 
 ### Localisations directory
 
- Contains one languages configuration file `languages.json` and each language folders each containing one file `strings.json` with a map of strings (key) and localised text. The configuration file is easy to follow, and relates to the other language folder in the same directory:
+Contains one overall languages configuration file `languages.json` and separate folders for each language containing one `strings.json` file which consists of a map of strings (keys) and localised text.
+
+The configuration file is easy to follow, and relates to the other language folder in the same directory:
  ```
  [
   {
