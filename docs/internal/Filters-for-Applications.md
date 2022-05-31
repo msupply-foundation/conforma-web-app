@@ -17,35 +17,41 @@ In this example the user has **applicant** role. The user-role can only be `appl
 
 ## Table of contents
 
-### Filters
+- [Overview](#overview)
+- [Examples: UI Design](#examples-ui-design)
+- [Filters](#filters)
+  - [Label filters:](#label-filters)
+    - [type](#type)
+    - [category (_not yet implemented in schema_)](#category-not-yet-implemented-in-schema)
+    - [stage](#stage)
+    - [status](#status)
+    - [sort-by](#sort-by)
+    - [user-role](#user-role)
+    - [outcome](#outcome)
+  - [applicant action _not implemented_](#applicant-action-not-implemented)
+    - [assigner action](#assigner-action)
+    - [reviewer action](#reviewer-action)
+  - [String filters:](#string-filters)
+    - [reviewer](#reviewer)
+    - [assigner](#assigner)
+    - [applicant](#applicant)
+    - [org](#org)
+    - [search](#search)
+  - [Date filters:](#date-filters)
+    - [last-active-date](#last-active-date)
+    - [deadline-date](#deadline-date)
+  - [Number filters:](#number-filters)
+    - [page](#page)
+    - [per-page](#per-page)
+  - [Boolean filters](#boolean-filters)
+    - [Is fully assigned level 1](#is-fully-assigned-level-1)
+- [Formats & Rules](#formats-&-rules)
+  - [Pre-defined dates](#pre-defined-dates)
+  - [Strings](#strings)
+  - [Labels](#labels)
+  - [General](#general)
 
-- [type](#type)
-- [category](#category)
-- [stage](#stage)
-- [status](#status)
-- [sort-by](#sort-by)
-- [user-role](#user-role)
-- [outcome](#outcome)
-- [applicant-action](#applicant-action)
-- [assiger-action](#assigner-action)
-- [reviewer-action](#reviewer-action)
-- [reviewer](#reviewer)
-- [assigner](#assigner)
-- [applicant](#applicant)
-- [org](#org)
-- [search](#search)
-- [last-active-date](#last-active-date)
-- [deadline-date](#deadline-date)
-- [page](#page)
-- [per-page](#per-page)
-- [is-fully-assigned-level-1](#is-fully-assigned-level-1)
-
-### More
-
-- [Format & Rules](#format-and-rules)
-- [Columns per role](#columns)
-
-## Examples: [UI Design] Applicant - applications list
+## Examples: UI Design
 
 ![Applicant-List](images/Filters-for-Applications-Applicant-List.png)
 
@@ -73,7 +79,7 @@ After is converted to Graphql: `templateCode: { equalToInsensitive: user-registr
 
 #### category (_not yet implemented in schema_)
 
-Included: **No** [Epic#82](https://github.com/openmsupply/application-manager-web-app/issues/540)  
+Included: **No** [Epic#82](https://github.com/openmsupply/conforma-web-app/issues/540)  
 Can have combined values: **No**  
 Examples: `category=company`  
 After is converted to Graphql: **TODO**

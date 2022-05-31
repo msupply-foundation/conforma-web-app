@@ -137,7 +137,7 @@ export default {
   FILTER_ASSIGNER_ACTION: 'Assigner Action',
   FILTER_DATE_BEFORE: 'Before',
   FILTER_DATE_AFTER: 'After',
-  FOOTER_TEXT: 'Powered by mSupply Application Manager',
+  FOOTER_TEXT: 'Powered by The mSupply Foundation',
   LABEL_APPLICATIONS: 'applications',
   LABEL_APPLICATION_SUBMITTED: 'Application Submitted',
   LABEL_APPLICATION_BACK: 'Back to form',

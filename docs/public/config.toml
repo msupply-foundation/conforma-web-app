@@ -1,5 +1,5 @@
 # The URL the site will be built for
-base_url = "https://openmsupply.github.io/application-manager-web-app/"
+base_url = "https://openmsupply.github.io/conforma-web-app/"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
@@ -19,5 +19,5 @@ external_links_target_blank = true
 [extra]
 # Put all your custom variables here
 logo = "https://msupply.foundation/themes/open-msupply/img/mFlow.svg"
-release = "https://github.com/openmsupply/application-manager-web-app/releases/tag/B-1.0.0"
+release = "https://github.com/openmsupply/conforma-web-app/releases/tag/B-1.0.0"
 favicon = "https://msupply.foundation/themes/open-msupply/img/mFlow_favicon.ico"
