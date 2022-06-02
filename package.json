@@ -1,11 +1,11 @@
 {
-  "name": "application-manager-web-app",
-  "version": "0.2.0",
+  "name": "conforma-web-app",
+  "version": "0.2.1-0",
   "main": "index.tsx",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openmsupply/application-manager-web-app.git"
+    "url": "https://github.com/openmsupply/conforma-web-app.git"
   },
   "engines": {
     "node": ">=12.0.0"

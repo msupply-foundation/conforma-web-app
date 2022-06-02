@@ -122,7 +122,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           style={{ borderTopRightRadius: 8 }}
         >
           <a
-            href="https://github.com/openmsupply/application-manager-server/wiki/List-of-Action-plugins"
+            href="https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins"
             target="_blank"
           >
             <Icon name="info circle" size="big" color="blue" />
