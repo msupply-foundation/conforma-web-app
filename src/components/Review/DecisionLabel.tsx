@@ -15,13 +15,13 @@ const useGetDecisionString = () => {
   const getDecisionString = (isPositiveDecision: boolean, isConsolidation: boolean) => {
     if (isConsolidation) {
       return isPositiveDecision
-        ? strings.LABEL_CONSOLIDATION_AGREE
-        : strings.LABEL_CONSOLIDATION_DISAGREE
+        ? strings.LABEL_CONSOLIDATION_AGREEMENT
+        : strings.LABEL_CONSOLIDATION_DISAGREEMENT
     }
 
     return isPositiveDecision
-      ? strings.LABEL_REVIEW_DECICION_CONFORM
-      : strings.LABEL_REVIEW_DECISION_NON_CONFORM
+      ? strings.LABEL_REVIEW_APPROVED
+      : strings.LABEL_REVIEW_DECLINED
   }
   return getDecisionString
 }

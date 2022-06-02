@@ -3,7 +3,7 @@ import { startCase as lodashStartCase } from 'lodash'
 import { Checkbox, Dropdown, Icon, Label } from 'semantic-ui-react'
 import { FilterContainerProps, FilterOptionsProps } from './types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { ApplicationOutcome, ApplicationStatus } from '../../../utils/generated/graphql'
+import { ApplicationOutcome, ApplicationStatus, AssignerAction, ReviewerAction } from '../../../utils/generated/graphql'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 
 export const startCase = (string: string) => lodashStartCase(string.toLowerCase())
@@ -52,7 +52,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
     (_option) => !optionList.find((option) => startCase(option) === startCase(_option))
   )
   const availableOptions = [...missingOptions, ...optionList]
-  const { Outcome, Status } = useLocalisedEnums()
+  const { AssignAction, ReviewAction, Outcome, Status } = useLocalisedEnums()
 
   return (
     <>
@@ -73,6 +73,8 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
               label={
                 Outcome?.[option as ApplicationOutcome] ??
                 Status?.[option as ApplicationStatus] ??
+                AssignAction?.[option as AssignerAction] ??
+                ReviewAction?.[option as ReviewerAction] ??
                 startCase(option)
               }
               checked={isOptionActive}

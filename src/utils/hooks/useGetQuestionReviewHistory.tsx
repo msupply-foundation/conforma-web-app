@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import {
-  ReviewResponseDecision,
   TemplateElement,
   useGetHistoryForApplicantQuery,
   useGetHistoryForReviewerQuery,
@@ -8,6 +7,7 @@ import {
 } from '../generated/graphql'
 import { HistoryElement } from '../types'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import useLocalisedEnums from './useLocalisedEnums'
 
 interface UseGetQuestionHistoryProps {
   serial: string
@@ -34,6 +34,7 @@ interface ResponsesByStageByDate {
 
 const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuestionHistoryProps) => {
   const { strings } = useLanguageProvider()
+  const { ReviewResponse } = useLocalisedEnums()
   const [historyList, setHistoryList] = useState<HistoryElementsByStage>([])
   const { data, error, loading } = isApplicant
     ? useGetHistoryForApplicantQuery({ variables })
@@ -90,7 +91,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
           (levelNumber || 1) > 1
             ? strings.TITLE_HISTORY_CONSOLIDATION
             : strings.TITLE_HISTORY_REVIEW,
-        message: decision as ReviewResponseDecision, // TODO: Localisation
+        message: !!decision ? ReviewResponse[decision] : 'Undefined',
         timeUpdated,
         reviewerComment: comment || '',
       }

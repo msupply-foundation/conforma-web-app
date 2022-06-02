@@ -1,0 +1,6 @@
+{
+  "ERROR_NOT_INTEGER": "Utilizar apenas valor não decimal",
+  "ERROR_TOO_SMALL": "Valor mínimo atingido",
+  "ERROR_TOO_BIG": "Valor máximo atingido",
+  "ERROR_NOT_NUMBER": "Utilizar apenas números"
+}
