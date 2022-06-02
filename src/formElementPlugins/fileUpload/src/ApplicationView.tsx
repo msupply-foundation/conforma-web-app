@@ -153,7 +153,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           <Markdown text={label} semanticComponent="noParagraph" />
         </label>
       )}
-      <Markdown text={description} />
       <Segment.Group>
         {/* Dummy input button required, as Semantic Button can't
         handle file input. Link between this input and Semantic
@@ -249,6 +248,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           })}
         </List>
       </Segment.Group>
+      <Markdown text={description} semanticComponent="noParagraph"/>
     </>
   )
   async function uploadFile(file: any) {
