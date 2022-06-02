@@ -2,7 +2,8 @@
         Site Overrides
 *******************************/
 
-.ui.message {
+// For some reason, the default floating shadow doesn't work without !important
+.ui.floating.message {
   box-shadow: @floatingBoxShadow !important;
 }
 
@@ -13,7 +14,6 @@
 
 // Info message left border
 .ui.info.message {
-  border: none;
   border-left: @accentBorderWidth solid @information;
 }
 

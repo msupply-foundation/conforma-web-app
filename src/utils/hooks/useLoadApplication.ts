@@ -61,7 +61,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
   useEffect(() => {
     if (triggersError) {
-      setStructureError(strings.TRIGGER_ERROR)
+      setStructureError(strings.ERROR_TRIGGER)
       console.error('Trigger error:', triggersError)
       return
     }
@@ -196,7 +196,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           startMessage: startMessage as string,
         },
         stages: templateStages.map((stage) => getStageAndLevels(stage)),
-        sections: buildSectionsStructure({ sectionDetails, baseElements }),
+        sections: buildSectionsStructure({ sectionDetails, baseElements, page: strings.PAGE }),
         canApplicantMakeChanges,
         attemptSubmission: false,
         reload: reloadApplication,

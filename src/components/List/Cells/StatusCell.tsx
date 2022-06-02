@@ -16,7 +16,7 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
     APPLICATION_DELETION_CONFIRM: {
       title: strings.APPLICATION_DELETION_CONFIRM_TITLE,
       message: strings.APPLICATION_DELETION_CONFIRM_MESSAGE,
-      option: strings.OK,
+      option: strings.OPTION_OK,
     },
   }
 

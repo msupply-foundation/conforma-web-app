@@ -31,7 +31,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     maxWidth,
     type = NumberType.FLOAT,
     simple = true,
-    minValue = -Infinity,
+    minValue = 0,
     maxValue = Infinity,
     step = 1,
     locale = undefined,
@@ -124,9 +124,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
-      <label>
-        <Markdown text={label} semanticComponent="noParagraph" />
-      </label>
+      {label && (
+        <label>
+          <Markdown text={label} semanticComponent="noParagraph" />
+        </label>
+      )}
       <Markdown text={description} />
       <Form.Input
         fluid

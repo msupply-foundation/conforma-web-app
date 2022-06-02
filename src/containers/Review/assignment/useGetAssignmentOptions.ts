@@ -37,7 +37,7 @@ const useGetAssignmentOptions = () => {
     )
 
     const currentUserAssignable = currentSectionAssignable.filter(
-      ({ isCurrentUserAssigner, isSelfAssignable }) => isCurrentUserAssigner || isSelfAssignable
+      ({ isCurrentUserAssigner, isSelfAssignable, isCurrentUserReviewer }) => isCurrentUserAssigner || (isSelfAssignable && isCurrentUserReviewer)
     )
 
     const currentlyAssigned = assignments.find(

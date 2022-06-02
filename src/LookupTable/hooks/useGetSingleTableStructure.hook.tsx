@@ -27,8 +27,9 @@ const useGetTableStructure = (): LookupTableStructureType => {
   }, [structureID])
 
   useEffect(() => {
-    if (!loading && !error && data?.lookupTable) {
-      setStructure(data.lookupTable as any)
+    if (!loading && !error && data?.dataTable) {
+      const lookupTable = data.dataTable
+      setStructure(lookupTable)
     }
   }, [loading, data, error])
 

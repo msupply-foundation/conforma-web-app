@@ -8,7 +8,7 @@ weight = 3
 
 Demo can be accessed at: [https://irims-demo.msupply.org:50000/](https://irims-demo.msupply.org:50000/)
 
-This demo allows you to use the **mFlow Application Manager** system to experience the following workflow:
+This demo allows you to use the **Conforma** system to experience the following workflow:
 
 1. **Create a user account**
 

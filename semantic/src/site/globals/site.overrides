@@ -296,7 +296,7 @@ a:hover {
   padding-right: 20px;
   height: @headerHeight; // TO-DO: Adjust for mobile
   justify-content: space-between;
-  z-index: 10;
+  z-index: 1000;
 }
 
 #user-area.ui.container {
@@ -1625,10 +1625,10 @@ a:hover {
 }
 
 /*--------------------------------
-      Outcomes
+      Data views
 ---------------------------------*/
 
-#outcomes-display {
+#data-view {
   .flex-column();
   align-items: center;
   width: @applicationListWidth;
@@ -1637,11 +1637,11 @@ a:hover {
     padding-top: 30px;
   }
 
-  .outcome-nav {
+  .data-view-nav {
     width: 70%;
   }
 
-  .outcome-table-container {
+  .data-view-table-container {
     .flex-column();
     align-items: center;
     // Limit size of images in Table (that come from SummaryView elements)
@@ -1659,7 +1659,7 @@ a:hover {
     max-width: 450px;
   }
 
-  .outcome-detail-container {
+  .data-view-detail-container {
     .flex-column();
     align-items: center;
     // Limit size of images in Table (that come from SummaryView elements)
@@ -1669,7 +1669,7 @@ a:hover {
     }
   }
 
-  .outcome-detail-table {
+  .data-view-detail-table {
     min-width: 500px;
   }
 
@@ -1687,18 +1687,30 @@ a:hover {
   align-items: center;
 
   .admin-options-container {
-    .flex-row();
-    align-items: center;
-    flex-wrap: 1;
+    .flex-column();
+    align-items: start;
+    gap: 10px;
 
     .admin-option {
-      margin: 15px;
-      max-width: 330px;
       border-radius: @borderRadius;
       background-color: @surfacesWhite;
       box-shadow: @templateBoxShadow;
       padding: 10px;
     }
+  }
+}
+
+/*--------------------------------
+      Localisation (Admin) Page
+---------------------------------*/
+
+#localisation-panel {
+  .row-format {
+      gap: 20px;
+      width: 90%;
+      background-color: white;
+      margin-bottom: 5px;
+      padding: 10px; border-radius: 8px;    
   }
 }
 
@@ -2214,7 +2226,7 @@ a:hover {
 
   .config-modal-container {
     .flex-column-center-center();
-    padding: 0 0 10px 0;
+    padding: 20px;
     border-radius: @borderRadius !important;
   }
   .config-modal-info {
@@ -2238,43 +2250,67 @@ a:hover {
   }
 }
 
-@toastVerticalMargin: 20px;
+@toastTopMargin: 40px;
+@toastBottomMargin: 40px;
 @toastHorizontalMargin: 20px;
 
-.toast-container {
+#toast-container {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 1001; // one higher than Modal dimmer
+  pointer-events: none;
+  .block {
+    position: absolute;
+    .flex-column();
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .bottom-left {  
+    bottom: @toastBottomMargin;
+    left: @toastHorizontalMargin;
+    max-height: calc(100vh - @toastBottomMargin);
+  }
+  .bottom-middle {
+    bottom: @toastBottomMargin;
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: calc(100vh - @toastBottomMargin);
+  }
+  .bottom-right {
+    bottom: @toastBottomMargin;
+    right: @toastHorizontalMargin;
+    max-height: calc(100vh - @toastBottomMargin);
+    flex-wrap: wrap-reverse
+  }
+  .top-left {
+    top: @toastTopMargin;
+    left: @toastHorizontalMargin;
+    max-height: calc(100vh - @toastTopMargin);
+  }
+  .top-middle {
+    top:  @toastTopMargin;
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: calc(100vh - @toastTopMargin);
+  }
+  .top-right {
+    top:  @toastTopMargin;
+    right: @toastHorizontalMargin;
+    max-height: calc(100vh - @toastTopMargin);
+    flex-wrap: wrap-reverse
+  }
+}
+
+.toast-wrapper {
+  position: relative;
+  pointer-events: auto;
   .transition.visible {
     display: flex !important;
   }
   .toast-message {
     width: fit-content !important;
-    position: absolute !important;
     max-width: 350px;
-  }
-  .bottom-left {
-    bottom: (@footerHeight + @toastVerticalMargin);
-    left: @toastHorizontalMargin;
-  }
-  .bottom-middle {
-    bottom: (@footerHeight + @toastVerticalMargin);
-    left: 50%;
-    transform: translateX(-50%) !important;
-  }
-  .bottom-right {
-    bottom: (@footerHeight + @toastVerticalMargin);
-    right: @toastHorizontalMargin;
-  }
-  .top-left {
-    top: (@headerHeight + @toastVerticalMargin);
-    left: @toastHorizontalMargin;
-  }
-  .top-middle {
-    top: (@headerHeight + @toastVerticalMargin);
-    left: 50%;
-    transform: translateX(-50%) !important;
-  }
-  .top-right {
-    top: (@headerHeight + @toastVerticalMargin);
-    right: @toastHorizontalMargin;
   }
   .icon.info {
     color: @information;

@@ -222,7 +222,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
           {isDraft && (
             <>
               <Button primary inverted onClick={addAction}>
-                {strings.TEMPLATE_BUTTON_ACTION_ADD}
+                {strings.TEMPLATE_BUTTON_ADD_ACTION}
               </Button>
               <Checkbox
                 toggle

@@ -93,7 +93,9 @@ const Evaluation: React.FC<EvaluationProps> = ({
   return (
     <Accordion className="evaluation-container">
       <Accordion.Title className="evaluation-container-title flex-gap-10" active={isActive}>
-        {!updateKey && <Label style={{ minWidth: 120, textAlign: 'center' }}>{label}</Label>}
+        {!updateKey && label && (
+          <Label style={{ minWidth: 120, textAlign: 'center' }}>{label}</Label>
+        )}
         {deleteKey && (
           <Icon
             className="clickable left-margin-space-10"

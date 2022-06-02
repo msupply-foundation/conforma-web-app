@@ -36,10 +36,10 @@ const LookupTable: React.FC<any> = ({ structure }) => {
         {lookupTable && lookupTable.length > 0 ? (
           (lookupTable as any).map((myDataRow: any) => {
             return (
-              <Table.Row key={`lookup-table-${structure.name}-row-${myDataRow.id}`}>
+              <Table.Row key={`lookup-table-${structure.tableName}-row-${myDataRow.id}`}>
                 {structure &&
                   structure.fieldMap.map((field: FieldMapType) => (
-                    <Table.Cell key={`lookup-table-${structure.name}-data-${field.fieldname}`}>
+                    <Table.Cell key={`lookup-table-${structure.tableName}-data-${field.fieldname}`}>
                       {myDataRow[toCamelCase(field.fieldname)]}
                     </Table.Cell>
                   ))}
@@ -47,7 +47,7 @@ const LookupTable: React.FC<any> = ({ structure }) => {
             )
           })
         ) : (
-          <Table.Row key={`lookup-table-${structure.name}-row-error`}>
+          <Table.Row key={`lookup-table-${structure.tableName}-row-error`}>
             <Table.Cell>
               <Header as="h5" icon="exclamation circle" content="No data found!" />
             </Table.Cell>

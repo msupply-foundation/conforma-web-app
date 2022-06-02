@@ -1,16 +1,17 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { Approval, Admin, Dashboard, NoMatch, Footer } from '../../components'
+import { Admin, Dashboard, NoMatch, Footer } from '../../components'
 import { ApplicationCreate, ApplicationWrapper } from '../Application'
 import UserArea from '../User/UserArea'
 import Login from '../User/Login'
 import ListWrapper from '../List/ListWrapper'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
-import { LookupTableRoutes } from '../../LookupTable'
 import { Container } from 'semantic-ui-react'
 import DevOptions from '../Dev/DevOptions'
-import LayoutHelpers from '../../components/LayoutHelpers'
-import Outcomes from '../Outcomes/Outcomes'
+import DevRoutes from '../Dev/DevRoutes'
+import DataViews from '../DataDisplay/DataViews'
+import config from '../../config'
+const { isProductionBuild } = config
 
 const SiteLayout: React.FC = () => {
   return (
@@ -22,9 +23,6 @@ const SiteLayout: React.FC = () => {
           <Switch>
             <Route exact path="/">
               <Dashboard />
-            </Route>
-            <Route exact path="/layout">
-              <LayoutHelpers />
             </Route>
             <Route exact path="/login">
               <Login />
@@ -40,16 +38,17 @@ const SiteLayout: React.FC = () => {
                 <ApplicationWrapper />
               </FormElementUpdateTrackerProvider>
             </Route>
-            <Route exact path="/application/:serialNumber/approval">
-              <Approval />
-            </Route>
             <Route path="/admin">
               <Admin />
             </Route>
-            <Route path="/outcomes">
-              <Outcomes />
+            <Route path="/data">
+              <DataViews />
             </Route>
-            <Route exact path="/products/:productId"></Route>
+            {!isProductionBuild && (
+              <Route path="/dev">
+                <DevRoutes />
+              </Route>
+            )}
             <Route>
               <NoMatch />
             </Route>

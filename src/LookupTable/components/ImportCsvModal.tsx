@@ -14,7 +14,6 @@ import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config'
 import axios from 'axios'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import pluralize from 'pluralize'
 
 const ImportCsvModal: React.FC<any> = ({
   onImportSuccess,
@@ -25,7 +24,7 @@ const ImportCsvModal: React.FC<any> = ({
 }: any) => {
   const { strings } = useLanguageProvider()
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
-  const { uploadModalOpen, file, tableName, submittable, submitting, errors, success } = state
+  const { uploadModalOpen, file, tableName: name, submittable, submitting, errors, success } = state
 
   useEffect(() => {
     dispatch({ type: open ? 'OPEN_MODAL' : 'CLOSE_MODAL' })
@@ -34,9 +33,9 @@ const ImportCsvModal: React.FC<any> = ({
   useEffect(() => {
     dispatch({
       type: 'SUBMITTABLE',
-      payload: uploadModalOpen && file !== null && (tableStructureID ? true : tableName !== ''),
+      payload: uploadModalOpen && file !== null && (tableStructureID ? true : name !== ''),
     })
-  }, [uploadModalOpen, file, tableName])
+  }, [uploadModalOpen, file, name])
 
   const fileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target as HTMLInputElement
@@ -50,18 +49,16 @@ const ImportCsvModal: React.FC<any> = ({
     let formData: any = new FormData()
     formData.append('file', file)
 
-    const pluralTableName = pluralize.isPlural(tableName) ? tableName : pluralize.plural(tableName)
-
-    if (!tableStructureID) formData.append('tableName', pluralTableName)
+    if (!tableStructureID) formData.append('name', name)
 
     const JWT = localStorage.getItem(config.localStorageJWTKey || '')
     const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
 
     await axios
       .post(
-        config.serverREST +
-          '/admin/lookup-table/import' +
-          (tableStructureID ? '/' + String(tableStructureID) : ''),
+        `${config.serverREST}/admin/lookup-table/import${
+          tableStructureID ? '/' + String(tableStructureID) : ''
+        }?name=${name}`,
         formData,
         {
           headers: {
@@ -132,7 +129,7 @@ const ImportCsvModal: React.FC<any> = ({
                 <label>{strings.LOOKUP_TABLE_NAME}</label>
                 <input
                   placeholder={strings.LOOKUP_TABLE_NAME}
-                  value={tableName || ''}
+                  value={name || ''}
                   onChange={(event) =>
                     dispatch({ type: 'SET_TABLE_NAME', payload: event.target.value })
                   }

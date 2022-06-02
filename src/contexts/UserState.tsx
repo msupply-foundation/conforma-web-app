@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react'
+import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import config from '../config'
@@ -91,17 +92,19 @@ export function UserProvider({ children }: UserProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState)
   const userState = state
   const setUserState = dispatch
+  const client = useApolloClient()
 
   const logout = () => {
     // Delete everything EXCEPT language preference in localStorage
     const language = localStorage.getItem('language')
     localStorage.clear()
     if (language) localStorage.setItem('language', language)
+    client.clearStore()
     window.location.href = '/login'
   }
 
   const onLogin: OnLogin = (JWT: string, user, permissions, orgList, isAdmin) => {
-    // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/application-manager-web-app/pull/841#discussion_r670822649
+    // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
     if (JWT == 'undefined' || JWT == undefined) logout()
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
@@ -120,7 +123,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   // Initial check for persisted user in local storage
   const JWT = localStorage.getItem(config.localStorageJWTKey)
-  // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/application-manager-web-app/pull/841#discussion_r670822649
+  // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
   if (JWT === 'undefined') logout()
   if (JWT && !userState.currentUser && !userState.isLoading) {
     onLogin(JWT)

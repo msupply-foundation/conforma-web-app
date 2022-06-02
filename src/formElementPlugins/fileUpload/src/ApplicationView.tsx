@@ -4,7 +4,6 @@ import { nanoid } from 'nanoid'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
-import { useRouter } from '../../../utils/hooks/useRouter'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import prefs from '../config.json'
 
@@ -42,7 +41,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { getPluginStrings } = useLanguageProvider()
   const strings = getPluginStrings('fileUpload')
   const { isEditable } = element
-  const { label, description, fileCountLimit, fileExtensions, fileSizeLimit } = parameters
+  const { label, description, fileCountLimit, fileExtensions, fileSizeLimit, subfolder } =
+    parameters
 
   const { config } = applicationData
 
@@ -53,10 +53,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     userState: { currentUser },
   } = useUserState()
-  const {
-    query: { serialNumber },
-  } = useRouter()
+
   const application_response_id = initialValue.id
+  const serialNumber = applicationData.serial
 
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(
     generateInitialFileData(initialValue?.files)
@@ -149,9 +148,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
-      <label>
-        <Markdown text={label} semanticComponent="noParagraph" />
-      </label>
+      {label && (
+        <label>
+          <Markdown text={label} semanticComponent="noParagraph" />
+        </label>
+      )}
       <Markdown text={description} />
       <Segment.Group>
         {/* Dummy input button required, as Semantic Button can't
@@ -254,7 +255,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const fileData = new FormData()
     await fileData.append('file', file)
     return await postRequest({
-      url: `${uploadUrl}?user_id=${currentUser?.userId}&application_serial=${serialNumber}&application_response_id=${application_response_id}`,
+      url: `${uploadUrl}?user_id=${
+        currentUser?.userId
+      }&application_serial=${serialNumber}&application_response_id=${application_response_id}${
+        subfolder ? '&subfolder=' + subfolder : ''
+      }`,
       otherBody: fileData,
     })
   }

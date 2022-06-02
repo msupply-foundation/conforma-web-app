@@ -41,8 +41,7 @@ const ConsolidationSectionProgressBar: React.FC<SectionProgressBarProps> = (prop
     doneAgreeNonConform,
     doneAgreeConform,
     doneDisagree,
-    totalReviewable,
-    totalPendingReview,
+    totalActive
   } = getConsolidationProgressDefaults(props)
   const progressLabel = getConsolidationProgressTitle(props)
   return (
@@ -55,8 +54,8 @@ const ConsolidationSectionProgressBar: React.FC<SectionProgressBarProps> = (prop
       <Progress
         className="progress"
         percent={
-          (100 * (doneAgreeNonConform + doneAgreeConform + doneDisagree)) /
-          (totalReviewable - totalPendingReview)
+          // See generateConsolidationValidity for explannation on this change
+          (100 * (doneAgreeNonConform + doneAgreeConform + doneDisagree)) / totalActive
         }
         size="tiny"
         success={doneDisagree === 0}
@@ -110,6 +109,7 @@ const useHelpers = () => {
     doneDisagree: consolidationProgress?.doneDisagree || 0,
     totalReviewable: consolidationProgress?.totalReviewable || 0,
     totalPendingReview: consolidationProgress?.totalPendingReview || 0,
+    totalActive: consolidationProgress?.totalActive || 0,
   })
 
   const getConsolidationProgressTitle = (props: SectionProgressBarProps) => {

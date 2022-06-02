@@ -9,9 +9,11 @@ const downloadUrl = `${config.serverREST}/public`
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
   return (
     <Form.Field required={parameters.isRequired}>
-      <label style={{ color: 'black' }}>
-        <Markdown text={parameters.label} semanticComponent="noParagraph" />
-      </label>
+      {parameters?.label && (
+        <label style={{ color: 'black' }}>
+          <Markdown text={parameters?.label} semanticComponent="noParagraph" />
+        </label>
+      )}
       <Markdown text={parameters.description} />
       <List horizontal verticalAlign="top">
         {response?.files &&

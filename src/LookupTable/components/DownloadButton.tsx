@@ -3,12 +3,14 @@ import config from '../../config'
 import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import { DateTime } from 'luxon'
 
 const DownloadButton = ({
   id,
   open: openPopup = false,
   popUpContent = '',
   content = '',
+  name = 'lookup_table',
   ...props
 }: any) => {
   const { strings } = useLanguageProvider()
@@ -47,7 +49,7 @@ const DownloadButton = ({
         const url = window.URL.createObjectURL(new Blob([response.data]))
         const link = document.createElement('a')
         link.href = url
-        link.setAttribute('download', 'file.csv')
+        link.setAttribute('download', `${name}_${DateTime.now().toISODate()}.csv`)
         document.body.appendChild(link)
         link.click()
       })
