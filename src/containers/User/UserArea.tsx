@@ -194,12 +194,12 @@ const BrandArea: React.FC = () => {
       <Link to="/">
         <Image src={logoUrl ?? defaultBrandLogo} />
       </Link>
-      <div>
-        {/* <Link to="/">
+      {/* <div>
+        <Link to="/">
           <h2 className="brand-area-text">{strings._APP_NAME}</h2>
           <h3 className="brand-area-text">{strings._APP_NAME_SUBHEADER}</h3>
-        </Link> */}
-      </div>
+        </Link>
+      </div> */}
     </div>
   )
 }
