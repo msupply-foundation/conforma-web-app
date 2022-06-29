@@ -8,10 +8,11 @@ import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../ut
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useDataViewsList } from '../../utils/hooks/useDataViews'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { usePrefs } from '../../contexts/SystemPrefs'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import { UiLocation } from '../../utils/generated/graphql'
-const brandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
+const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
 
 const UserArea: React.FC = () => {
   const {
@@ -182,10 +183,16 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
 
 const BrandArea: React.FC = () => {
   const { strings } = useLanguageProvider()
+  const { preferences } = usePrefs()
+
+  const logoUrl = preferences?.brandLogoOnDarkFileId
+    ? `${config.serverREST}/public/file?uid=${preferences.brandLogoOnDarkFileId}`
+    : null
+
   return (
     <div id="brand-area" className="hide-on-mobile">
       <Link to="/">
-        <Image src={brandLogo} />
+        <Image src={logoUrl ?? defaultBrandLogo} />
       </Link>
       <div>
         {/* <Link to="/">
