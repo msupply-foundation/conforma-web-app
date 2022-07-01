@@ -24,6 +24,7 @@ export default gql`
     }
     templateActions(orderBy: SEQUENCE_ASC) {
       nodes {
+        code
         actionCode
         condition
         eventCode

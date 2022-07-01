@@ -21,6 +21,7 @@ type ActionConfigProps = {
 }
 
 type ActionUpdateState = {
+  code: string
   actionCode: string
   description: string
   eventCode: string
@@ -32,6 +33,7 @@ type ActionUpdateState = {
 type GetState = (action: TemplateAction) => ActionUpdateState
 
 const getState: GetState = (action: TemplateAction) => ({
+  code: action?.code || '',
   actionCode: action?.actionCode || '',
   description: action?.description || '',
   eventCode: action?.eventCode || '',
@@ -133,6 +135,16 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <div className="spacer-10" />
           <div className="config-container-outline">
             <div className="flex-column-start-center">
+              <TextIO
+                text={state.code}
+                title="Code"
+                setText={(text) => {
+                  setState({ ...state, code: text })
+                }}
+                markNeedsUpdate={markNeedsUpdate}
+                isPropUpdated={true}
+                minLabelWidth={150}
+              />
               <TextIO
                 text={state.eventCode}
                 title="Scheduled Event Code"
