@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Icon, Accordion, Image } from 'semantic-ui-react'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import MarkdownBlock from '../../../utils/helpers/semanticReactMarkdown'
 import { ActionQueueStatus } from '../../../utils/generated/graphql'
 import config from '../../../config'
@@ -33,12 +34,13 @@ export type ActionResultPreviewData =
   | GenericPreviewData
 
 const NotificationPreview = ({ item }: { item: NotificationPreviewData }) => {
+  const { strings } = useLanguageProvider()
   const [open, setOpen] = useState(false)
   return (
     <Accordion className="item notification-preview" style={{}}>
       <Accordion.Title active={open} onClick={() => setOpen(!open)}>
         <Icon name="dropdown" />
-        Email message: <strong>{item.displayString}</strong>
+        {strings.REVIEW_PREVIEW_NOTIFICATION} <strong>{item.displayString}</strong>
       </Accordion.Title>
       <Accordion.Content active={open} className="content">
         <MarkdownBlock text={item.text} />
@@ -73,10 +75,12 @@ const FallbackPreview = ({ item }: { item: GenericPreviewData }) => {
 }
 
 const ErrorPreview = ({ item }: { item: ActionResultPreviewData }) => {
+  const { strings } = useLanguageProvider()
   return (
     <div className="item error-item">
       <p>
-        <span style={{ color: 'red' }}>Problem generating preview:</span> <em>{item.errorLog}</em>
+        <span style={{ color: 'red' }}>{strings.REVIEW_PREVIEW_ERROR}</span>{' '}
+        <em>{item.errorLog}</em>
       </p>
     </div>
   )

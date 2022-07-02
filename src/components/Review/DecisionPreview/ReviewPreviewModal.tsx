@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Message, Button, Loader, ModalProps } from 'semantic-ui-react'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import config from '../../../config'
 import { getItemDisplayComponent, ActionResultPreviewData } from './PreviewItems'
@@ -21,6 +22,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
   reviewId,
   previewData,
 }) => {
+  const { strings } = useLanguageProvider()
   const [data, setData] = useState<ActionResultPreviewData[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -40,21 +42,20 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
 
   return (
     <Modal id="preview-modal" open={open} closeOnDimmerClick={false}>
-      <Modal.Header>Preview Decision Documentation</Modal.Header>
+      <Modal.Header>{strings.REVIEW_DECISION_PREVIEW_HEADER}</Modal.Header>
       <Modal.Content>
-        Here is a preview of documents and correspondence that will be sent to the applicant as a
-        result of the decision: <strong>{decision}</strong>
+        {strings.REVIEW_DECISION_PREVIEW_TEXT} <strong>{decision}</strong>
         {loading && (
           <Loader active size="huge">
-            Fetching previews...
+            {strings.REVIEW_DECISION_PREVIEW_FETCHING}
           </Loader>
         )}
         {error && (
           <Message
             error
             icon="warning sign"
-            header="Something went wrong"
-            content="There was a problem generating previews"
+            header={strings.REVIEW_DECISION_PREVIEW_ERROR_HEADER}
+            content={strings.REVIEW_DECISION_PREVIEW_ERROR_TEXT}
           />
         )}
         <div id="preview-items">
@@ -62,7 +63,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
             (data.length > 0 ? (
               data.map((item, index) => getItemDisplayComponent(item, index))
             ) : (
-              <Message info header="No previews available" />
+              <Message info header={strings.REVIEW_DECISION_NO_PREVIEWS_AVAILABLE} />
             ))}
         </div>
       </Modal.Content>
