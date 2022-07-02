@@ -4,7 +4,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast } from '../../../contexts/Toast'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 import { Decision } from '../../../utils/generated/graphql'
-import { FullStructure, ReviewDetails } from '../../../utils/types'
+import { FullStructure } from '../../../utils/types'
 import ReviewPreviewModal from './ReviewPreviewModal'
 
 interface ReviewDecisionProps {
@@ -28,7 +28,7 @@ export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
         setOpen={setIsModalOpen}
         reviewId={thisReview?.id as number}
         decision={LocalisedDecision[decision]}
-        previewData={getPreviewData(decision, thisReview as ReviewDetails)}
+        previewData={{ reviewData: { latestDecision: { decision } } }}
       />
       <Form.Field>
         <Button
@@ -38,8 +38,8 @@ export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
           onClick={() => {
             if (decision === Decision.NoDecision)
               toast({
-                title: 'No decision selected',
-                text: 'You must select a decision before you can preview the output',
+                title: strings.REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE,
+                text: strings.REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE,
                 style: 'error',
               })
             else setIsModalOpen(true)
@@ -49,9 +49,4 @@ export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
       </Form.Field>
     </>
   )
-}
-
-const getPreviewData = (decision: Decision, review: ReviewDetails) => {
-  console.log('preview', { reviewData: { latestDecision: { decision } } })
-  return { reviewData: { latestDecision: { decision } } }
 }
