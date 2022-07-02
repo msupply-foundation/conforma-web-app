@@ -57,6 +57,7 @@ export default {
   BUTTON_REVIEW_RE_REVIEW: 'Re-Review',
   BUTTON_REVIEW_RESPONSE: 'Review',
   BUTTON_RE_REVIEW_RESPONSE: 'Re-Review',
+  BUTTON_PREVIEW_DECISION: 'Preview Decision',
   BUTTON_REVIEW_SUBMIT: 'Submit review',
   BUTTON_SELF_ASSIGN: 'Self Assign',
   BUTTON_SUMMARY: 'Review & Summary',
