@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Form, Label, ModalProps } from 'semantic-ui-react'
+import { Button, Form, Label, Modal, ModalProps } from 'semantic-ui-react'
 import { ModalWarning } from '../../components'
 import ModalConfirmation from '../../components/Main/ModalConfirmation'
 import ReviewComment from '../../components/Review/ReviewComment'
@@ -9,6 +9,7 @@ import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
 import { useGetFullReviewStructureAsync } from '../../utils/hooks/useGetReviewStructureForSection'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
+import { ReviewDecisionPreview } from '../../components/Review/DecisionPreview/ReviewDecisionPreview'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 
@@ -23,19 +24,21 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   const {
     structure: { thisReview, assignment, canApplicantMakeChanges },
   } = props
-
   const reviewDecision = thisReview?.reviewDecision
   const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
     useGetDecisionOptions(canApplicantMakeChanges, assignment, thisReview)
 
   return (
     <Form id="review-submit-area">
-      <ReviewDecision
-        decisionOptions={decisionOptions}
-        setDecision={setDecision}
-        isDecisionError={isDecisionError}
-        isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
-      />
+      <div className="flex-row-space-between" style={{ alignItems: 'flex-end' }}>
+        <ReviewDecision
+          decisionOptions={decisionOptions}
+          setDecision={setDecision}
+          isDecisionError={isDecisionError}
+          isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
+        />
+        <ReviewDecisionPreview structure={props.structure} decision={getDecision()} />
+      </div>
       <ReviewComment
         isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
         reviewDecisionId={reviewDecision?.id}
