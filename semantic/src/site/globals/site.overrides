@@ -561,6 +561,7 @@ a:hover {
     .document-preview {
       .flex-row-start-center();
       padding-left: 6px;
+      gap: 10px;
     }
     .error-item, .fallback-preview{
       p {
