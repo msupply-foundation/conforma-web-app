@@ -70,7 +70,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
       </Modal.Content>
       <Modal.Actions>
         <Button primary onClick={() => setOpen(false)}>
-          Close
+          {strings.BUTTON_CLOSE}
         </Button>
       </Modal.Actions>
     </Modal>
