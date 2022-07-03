@@ -523,6 +523,11 @@ a:hover {
     padding-left: 20px;
     padding-right: 20px;
   }
+  .actions {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
   #preview-items{
     display: flex;
     flex-direction: column;

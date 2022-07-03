@@ -30,6 +30,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
   useEffect(() => {
     if (!open) {
       setData(null)
+      setError(false)
       return
     }
     setLoading(true)
