@@ -1,14 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Button, Icon, Grid, List, Image, Message, Segment, Loader, Input } from 'semantic-ui-react'
+import { Button, Icon, List, Segment } from 'semantic-ui-react'
 import { nanoid } from 'nanoid'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
-import prefs from '../config.json'
-import './styles.css'
-import { FileDisplay } from './components/FileDisplay'
-import { FileDisplayWithDescription } from './components/FileDisplayWIthDescription'
+import { FileDisplay, FileDisplayWithDescription } from './components'
 
 export interface FileResponseData {
   uniqueId: string

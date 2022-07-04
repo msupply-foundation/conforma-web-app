@@ -2,6 +2,7 @@ import React from 'react'
 import { Icon, Grid, List, Image, Message, Loader } from 'semantic-ui-react'
 import { FileInfo } from '../ApplicationView'
 import prefs from '../../config.json'
+import './styles.css'
 
 export interface FileDisplayProps {
   file: FileInfo
@@ -12,7 +13,7 @@ export interface FileDisplayProps {
 export const FileDisplay = ({ file, onDelete, downloadUrl }: FileDisplayProps) => {
   const { key, loading, error, errorMessage, filename, fileData } = file
   return (
-    <List.Item style={{ position: 'relative', maxWidth: 150 }}>
+    <List.Item className="file-item" style={{ position: 'relative', maxWidth: 150 }}>
       <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
         {error && (
           <>
@@ -69,6 +70,7 @@ export const FileDisplay = ({ file, onDelete, downloadUrl }: FileDisplayProps) =
         fitted
         color="grey"
         onClick={() => onDelete(key)}
+        className="delete-icon"
         style={{ position: 'absolute', right: 0, top: 0 }}
       />
     </List.Item>

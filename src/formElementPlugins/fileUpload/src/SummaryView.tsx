@@ -35,6 +35,11 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
                     </a>
                   </p>
                 </Grid.Row>
+                {file?.description && (
+                  <Grid.Row centered style={{ boxShadow: 'none' }}>
+                    <p className="tiny-bit-smaller-text">{file.description}</p>
+                  </Grid.Row>
+                )}
               </Grid>
             </List.Item>
           ))}
