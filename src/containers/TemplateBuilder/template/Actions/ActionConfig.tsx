@@ -21,10 +21,10 @@ type ActionConfigProps = {
 }
 
 type ActionUpdateState = {
-  code: string
+  code?: string | null
   actionCode: string
   description: string
-  eventCode: string
+  eventCode?: string | null
   condition: EvaluatorNode
   parameterQueries: ParametersType
   id: number
@@ -33,10 +33,10 @@ type ActionUpdateState = {
 type GetState = (action: TemplateAction) => ActionUpdateState
 
 const getState: GetState = (action: TemplateAction) => ({
-  code: action?.code || '',
+  code: action?.code,
   actionCode: action?.actionCode || '',
   description: action?.description || '',
-  eventCode: action?.eventCode || '',
+  eventCode: action?.eventCode,
   condition: action?.condition || true,
   parameterQueries: action?.parameterQueries || {},
   id: action?.id || 0,
