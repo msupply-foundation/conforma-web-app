@@ -18,7 +18,7 @@ export const FileDisplayWithDescription = ({
   const { loading, error, errorMessage, filename, fileData, key } = file
   const [description, setDescription] = useState<string>(fileData?.description ?? '')
   return (
-    <List.Item>
+    <List.Item className="file-item">
       {fileData && (
         <div style={{ display: 'flex', gap: 20, alignItems: 'center', paddingRight: 20 }}>
           <Grid
@@ -84,6 +84,7 @@ export const FileDisplayWithDescription = ({
               fitted
               color="grey"
               onClick={() => onDelete(key)}
+              className="delete-icon"
               style={{ position: 'absolute', right: 0, top: 0 }}
             />
           </Grid>
