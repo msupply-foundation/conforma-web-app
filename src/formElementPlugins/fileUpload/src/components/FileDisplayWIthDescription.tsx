@@ -18,12 +18,13 @@ export const FileDisplayWithDescription = ({
   const { loading, error, errorMessage, filename, fileData, key } = file
   const [description, setDescription] = useState<string>(fileData?.description ?? '')
   return (
-    <List.Item className="file-item">
+    <List.Item>
       {fileData && (
         <div style={{ display: 'flex', gap: 20, alignItems: 'center', paddingRight: 20 }}>
           <Grid
             verticalAlign="top"
             celled
+            className="file-item"
             style={{ position: 'relative', boxShadow: 'none', maxWidth: '30%' }}
           >
             {error && (
