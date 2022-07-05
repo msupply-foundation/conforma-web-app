@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Button, Icon, Grid, List, Image, Message, Segment, Loader, Input } from 'semantic-ui-react'
-import { FileResponseData, FileInfo } from '../ApplicationView'
+import { Icon, Grid, List, Image, Message, Loader, Input } from 'semantic-ui-react'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { FileDisplayProps } from './FileDisplay'
 import prefs from '../../config.json'
 
@@ -15,6 +15,8 @@ export const FileDisplayWithDescription = ({
   downloadUrl,
   updateDescription,
 }: FileDisplayDescriptionProps) => {
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('fileUpload')
   const { loading, error, errorMessage, filename, fileData, key } = file
   const [description, setDescription] = useState<string>(fileData?.description ?? '')
   return (
@@ -92,7 +94,7 @@ export const FileDisplayWithDescription = ({
           {fileData && (
             <Input
               fluid
-              placeholder={'Add description'}
+              placeholder={strings.ADD_DESCRIPTION}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               onBlur={(e: any) => updateDescription(fileData.uniqueId, e.target.value, key)}
