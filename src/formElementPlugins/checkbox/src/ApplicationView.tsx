@@ -45,7 +45,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     // Don't save response if parameters are still loading
-    if (checkboxElements[0].text === config.parameterLoadingValues.label) return
+    if (checkboxElements[0]?.text === config.parameterLoadingValues.label) return
     const {
       text,
       textUnselected,
