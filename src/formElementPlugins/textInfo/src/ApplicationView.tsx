@@ -1,6 +1,7 @@
 import React from 'react'
 import { Message } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
+import './styles.css'
 
 interface TextInfoProps {
   parameters: any
@@ -55,7 +56,7 @@ export const TextInfoElement: React.FC<TextInfoProps> = (props) => {
           visible
         >
           <Markdown text={title} newTabLinks={newTabLinks} />
-          <Markdown text={text} newTabLinks={newTabLinks} />
+          <Markdown text={formatText(text)} newTabLinks={newTabLinks} />
         </Message>
       </div>
     )
@@ -65,7 +66,7 @@ export const TextInfoElement: React.FC<TextInfoProps> = (props) => {
     return (
       <div className="text-info">
         <Markdown text={title} newTabLinks={newTabLinks} />
-        <Markdown text={text} newTabLinks={newTabLinks} />
+        <Markdown text={formatText(text)} newTabLinks={newTabLinks} />
       </div>
     )
 }
@@ -75,3 +76,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters, Markdown 
 }
 
 export default ApplicationView
+
+// If text is an array or an object, this will format it nicely,
+// Otherwise just gets returned as-is.
+const formatText = (text: string | any): string => {
+  if (!(text instanceof Object)) return text
+  if (!Array.isArray(text))
+    return Object.entries(text).reduce((acc, [key, value]) => acc + `**${key}**: ${value}  \n`, '')
+  if (Array.isArray(text)) return text.reduce((acc, item) => acc + `- ${formatText(item)}\n`, '')
+  return JSON.stringify(text)
+}
