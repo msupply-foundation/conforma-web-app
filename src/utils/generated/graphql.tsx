@@ -4015,6 +4015,8 @@ export type FileFilter = {
   timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isPreviewDoc` field. */
   isPreviewDoc?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isReferenceDoc` field. */
+  isReferenceDoc?: Maybe<BooleanFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -7234,6 +7236,8 @@ export enum FilesOrderBy {
   TimestampDesc = 'TIMESTAMP_DESC',
   IsPreviewDocAsc = 'IS_PREVIEW_DOC_ASC',
   IsPreviewDocDesc = 'IS_PREVIEW_DOC_DESC',
+  IsReferenceDocAsc = 'IS_REFERENCE_DOC_ASC',
+  IsReferenceDocDesc = 'IS_REFERENCE_DOC_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -7272,6 +7276,8 @@ export type FileCondition = {
   timestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isPreviewDoc` field. */
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isReferenceDoc` field. */
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `File` values. */
@@ -7306,7 +7312,8 @@ export type File = Node & {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp: Scalars['Datetime'];
-  isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isPreviewDoc: Scalars['Boolean'];
+  isReferenceDoc: Scalars['Boolean'];
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Template` that is related to this `File`. */
@@ -19496,6 +19503,7 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20350,6 +20358,7 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20588,6 +20597,7 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20803,6 +20813,7 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20899,6 +20910,7 @@ export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20939,6 +20951,7 @@ export type FilePatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20963,6 +20976,7 @@ export type FileApplicationNoteIdFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -21038,6 +21052,7 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -24829,6 +24844,7 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -24916,6 +24932,7 @@ export type FileUserIdFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -25501,6 +25518,7 @@ export type FileTemplateIdFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -28987,6 +29005,7 @@ export type FileInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   isPreviewDoc?: Maybe<Scalars['Boolean']>;
+  isReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -36199,6 +36218,20 @@ export type GetApplicationNotesQuery = (
   )> }
 );
 
+export type GetRefDocsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRefDocsQuery = (
+  { __typename?: 'Query' }
+  & { files?: Maybe<(
+    { __typename?: 'FilesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'File' }
+      & Pick<File, 'uniqueId' | 'description'>
+    )>> }
+  )> }
+);
+
 export type GetReviewDecisionCommentQueryVariables = Exact<{
   reviewDecisionId: Scalars['Int'];
 }>;
@@ -38330,6 +38363,41 @@ export function useGetApplicationNotesLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetApplicationNotesQueryHookResult = ReturnType<typeof useGetApplicationNotesQuery>;
 export type GetApplicationNotesLazyQueryHookResult = ReturnType<typeof useGetApplicationNotesLazyQuery>;
 export type GetApplicationNotesQueryResult = Apollo.QueryResult<GetApplicationNotesQuery, GetApplicationNotesQueryVariables>;
+export const GetRefDocsDocument = gql`
+    query getRefDocs {
+  files(filter: {isReferenceDoc: {equalTo: true}}) {
+    nodes {
+      uniqueId
+      description
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRefDocsQuery__
+ *
+ * To run a query within a React component, call `useGetRefDocsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRefDocsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRefDocsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetRefDocsQuery(baseOptions?: Apollo.QueryHookOptions<GetRefDocsQuery, GetRefDocsQueryVariables>) {
+        return Apollo.useQuery<GetRefDocsQuery, GetRefDocsQueryVariables>(GetRefDocsDocument, baseOptions);
+      }
+export function useGetRefDocsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRefDocsQuery, GetRefDocsQueryVariables>) {
+          return Apollo.useLazyQuery<GetRefDocsQuery, GetRefDocsQueryVariables>(GetRefDocsDocument, baseOptions);
+        }
+export type GetRefDocsQueryHookResult = ReturnType<typeof useGetRefDocsQuery>;
+export type GetRefDocsLazyQueryHookResult = ReturnType<typeof useGetRefDocsLazyQuery>;
+export type GetRefDocsQueryResult = Apollo.QueryResult<GetRefDocsQuery, GetRefDocsQueryVariables>;
 export const GetReviewDecisionCommentDocument = gql`
     query getReviewDecisionComment($reviewDecisionId: Int!) {
   reviewDecision(id: $reviewDecisionId) {

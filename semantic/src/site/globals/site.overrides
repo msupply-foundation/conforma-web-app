@@ -322,8 +322,12 @@ a:hover {
 
 #menu-bar {
   font-size: inherit;
-  .item {
-    margin-right: 10px;
+  .list {
+    display: flex;
+    gap: 10px;
+  }
+  .ui .dropdown {
+    display: flex;
   }
 }
 // Menu bar links
@@ -331,6 +335,11 @@ a:hover {
   a {
     color: @userAreaText;
     font-size: @fontSmall;
+  }
+  .menu {
+    a {
+      color: @headersInteractiveDarker;
+    }
   }
 }
 

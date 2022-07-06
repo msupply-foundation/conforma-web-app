@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useDataViewsList } from '../../utils/hooks/useDataViews'
+import { useReferenceDocs } from '../../utils/hooks/useReferenceDocs'
 import { useRouter } from '../../utils/hooks/useRouter'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
@@ -22,6 +23,7 @@ const UserArea: React.FC = () => {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
+  const { referenceDocs } = useReferenceDocs()
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
@@ -29,7 +31,11 @@ const UserArea: React.FC = () => {
     <Container id="user-area" fluid>
       <BrandArea />
       <div id="user-area-left">
-        <MainMenuBar templates={templates} dataViews={dataViewsList} />
+        <MainMenuBar
+          templates={templates}
+          dataViews={dataViewsList}
+          referenceDocs={referenceDocs}
+        />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
       <UserMenu
@@ -44,20 +50,23 @@ const UserArea: React.FC = () => {
 interface MainMenuBarProps {
   templates: TemplateInList[]
   dataViews: { tableName: string; title: string; code: string }[]
+  referenceDocs: { uniqueId: string; description: string }[]
 }
 interface DropdownsState {
   dashboard: { active: boolean }
   templates: { active: boolean; selection: string }
   dataViews: { active: boolean; selection: string }
   admin: { active: boolean; selection: string }
+  help: { active: boolean; selection: string }
 }
-const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
+const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews, referenceDocs }) => {
   const { strings } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     templates: { active: false, selection: '' },
     dataViews: { active: false, selection: '' },
     admin: { active: false, selection: '' },
+    help: { active: false, selection: '' },
   })
   const { push, pathname } = useRouter()
   const {
@@ -74,6 +83,12 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
     key: code,
     text: title,
     value: tableName,
+  }))
+
+  const refDocOptions = referenceDocs.map(({ uniqueId, description }) => ({
+    key: uniqueId,
+    text: description,
+    value: uniqueId,
   }))
 
   const templateOptions = templates
@@ -139,6 +154,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
     push(value)
   }
 
+  // const handleRefDocsChange = (_: SyntheticEvent, { value }: any) => {}
+
   return (
     <div id="menu-bar">
       <List horizontal>
@@ -173,6 +190,22 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
               onChange={handleAdminChange}
               value={dropdownsState.admin.selection}
             />
+          </List.Item>
+        )}
+        {referenceDocs && (
+          <List.Item className={dropdownsState.help.active ? 'selected-link' : ''}>
+            <Dropdown text={strings.MENU_ITEM_HELP}>
+              <Dropdown.Menu>
+                {referenceDocs.map((doc) => (
+                  <Dropdown.Item
+                    onClick={() =>
+                      window.open(`${config.serverREST}/public/file?uid=${doc.uniqueId}`)
+                    }
+                    text={doc.description}
+                  />
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </List.Item>
         )}
       </List>
@@ -340,6 +373,7 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        help: { active: false, selection: '' },
       }
     case 'applications':
       return {
@@ -347,13 +381,15 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: true, selection: dropdownsState.templates.selection },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        help: { active: false, selection: '' },
       }
-    case 'outcomes':
+    case 'data':
       return {
         dashboard: { active: false },
         templates: { active: false, selection: '' },
         dataViews: { active: true, selection: dropdownsState.dataViews.selection },
         admin: { active: false, selection: '' },
+        help: { active: false, selection: '' },
       }
     case 'admin':
       return {
@@ -361,6 +397,15 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: true, selection: dropdownsState.admin.selection },
+        help: { active: false, selection: '' },
+      }
+    case 'help':
+      return {
+        dashboard: { active: false },
+        templates: { active: false, selection: '' },
+        dataViews: { active: false, selection: '' },
+        admin: { active: false, selection: '' },
+        help: { active: false, selection: '' },
       }
     default:
       return {
@@ -368,6 +413,7 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        help: { active: false, selection: '' },
       }
   }
 }

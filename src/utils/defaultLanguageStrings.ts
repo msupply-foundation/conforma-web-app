@@ -243,6 +243,7 @@ export default {
   MENU_ITEM_APPLICATION_LIST: 'Application List',
   MENU_ITEM_DATA: 'Database',
   MENU_ITEM_ADMIN_CONFIG: 'Admin Configurations',
+  MENU_ITEM_HELP: 'Help',
   MENU_ITEM_ADMIN_TEMPLATES: 'Templates/Procedures',
   MENU_ITEM_ADMIN_LOOKUP_TABLES: 'Lookup Tables',
   MENU_ITEM_ADMIN_DATA_VIEW_CONFIG: 'Data View Configurations',
