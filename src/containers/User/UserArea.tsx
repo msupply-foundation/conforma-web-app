@@ -16,14 +16,14 @@ const brandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.p
 
 const UserArea: React.FC = () => {
   const {
-    userState: { currentUser, orgList, templatePermissions },
+    userState: { currentUser, orgList, templatePermissions, isAdmin },
     onLogin,
   } = useUserState()
   const {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
-  const { referenceDocs } = useReferenceDocs()
+  const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser, isAdmin)
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
@@ -34,7 +34,7 @@ const UserArea: React.FC = () => {
         <MainMenuBar
           templates={templates}
           dataViews={dataViewsList}
-          referenceDocs={referenceDocs}
+          referenceDocs={{ intReferenceDocs, extReferenceDocs }}
         />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
@@ -50,23 +50,32 @@ const UserArea: React.FC = () => {
 interface MainMenuBarProps {
   templates: TemplateInList[]
   dataViews: { tableName: string; title: string; code: string }[]
-  referenceDocs: { uniqueId: string; description: string }[]
+  referenceDocs: {
+    intReferenceDocs: { uniqueId: string; description: string }[]
+    extReferenceDocs: { uniqueId: string; description: string }[]
+  }
 }
 interface DropdownsState {
   dashboard: { active: boolean }
   templates: { active: boolean; selection: string }
   dataViews: { active: boolean; selection: string }
   admin: { active: boolean; selection: string }
-  help: { active: boolean; selection: string }
+  intRefDocs: { active: boolean; selection: string }
+  extRefDocs: { active: boolean; selection: string }
 }
-const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews, referenceDocs }) => {
+const MainMenuBar: React.FC<MainMenuBarProps> = ({
+  templates,
+  dataViews,
+  referenceDocs: { intReferenceDocs, extReferenceDocs },
+}) => {
   const { strings } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     templates: { active: false, selection: '' },
     dataViews: { active: false, selection: '' },
     admin: { active: false, selection: '' },
-    help: { active: false, selection: '' },
+    intRefDocs: { active: false, selection: '' },
+    extRefDocs: { active: false, selection: '' },
   })
   const { push, pathname } = useRouter()
   const {
@@ -83,12 +92,6 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews, referen
     key: code,
     text: title,
     value: tableName,
-  }))
-
-  const refDocOptions = referenceDocs.map(({ uniqueId, description }) => ({
-    key: uniqueId,
-    text: description,
-    value: uniqueId,
   }))
 
   const templateOptions = templates
@@ -154,8 +157,6 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews, referen
     push(value)
   }
 
-  // const handleRefDocsChange = (_: SyntheticEvent, { value }: any) => {}
-
   return (
     <div id="menu-bar">
       <List horizontal>
@@ -192,12 +193,30 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews, referen
             />
           </List.Item>
         )}
-        {referenceDocs && (
-          <List.Item className={dropdownsState.help.active ? 'selected-link' : ''}>
+        {extReferenceDocs.length && (
+          <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
             <Dropdown text={strings.MENU_ITEM_HELP}>
               <Dropdown.Menu>
-                {referenceDocs.map((doc) => (
+                {extReferenceDocs.map((doc) => (
                   <Dropdown.Item
+                    key={doc.uniqueId}
+                    onClick={() =>
+                      window.open(`${config.serverREST}/public/file?uid=${doc.uniqueId}`)
+                    }
+                    text={doc.description}
+                  />
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </List.Item>
+        )}
+        {intReferenceDocs.length && (
+          <List.Item className={dropdownsState.intRefDocs.active ? 'selected-link' : ''}>
+            <Dropdown text={strings.MENU_ITEM_REF_DOCS}>
+              <Dropdown.Menu>
+                {intReferenceDocs.map((doc) => (
+                  <Dropdown.Item
+                    key={doc.uniqueId}
                     onClick={() =>
                       window.open(`${config.serverREST}/public/file?uid=${doc.uniqueId}`)
                     }
@@ -373,7 +392,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
-        help: { active: false, selection: '' },
+        intRefDocs: { active: false, selection: '' },
+        extRefDocs: { active: false, selection: '' },
       }
     case 'applications':
       return {
@@ -381,7 +401,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: true, selection: dropdownsState.templates.selection },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
-        help: { active: false, selection: '' },
+        intRefDocs: { active: false, selection: '' },
+        extRefDocs: { active: false, selection: '' },
       }
     case 'data':
       return {
@@ -389,7 +410,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: true, selection: dropdownsState.dataViews.selection },
         admin: { active: false, selection: '' },
-        help: { active: false, selection: '' },
+        intRefDocs: { active: false, selection: '' },
+        extRefDocs: { active: false, selection: '' },
       }
     case 'admin':
       return {
@@ -397,7 +419,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: true, selection: dropdownsState.admin.selection },
-        help: { active: false, selection: '' },
+        intRefDocs: { active: false, selection: '' },
+        extRefDocs: { active: false, selection: '' },
       }
     case 'help':
       return {
@@ -405,7 +428,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
-        help: { active: false, selection: '' },
+        intRefDocs: { active: false, selection: '' },
+        extRefDocs: { active: false, selection: '' },
       }
     default:
       return {
@@ -413,7 +437,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
-        help: { active: false, selection: '' },
+        intRefDocs: { active: false, selection: '' },
+        extRefDocs: { active: false, selection: '' },
       }
   }
 }
