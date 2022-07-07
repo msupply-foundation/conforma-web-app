@@ -422,15 +422,7 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         intRefDocs: { active: false, selection: '' },
         extRefDocs: { active: false, selection: '' },
       }
-    case 'help':
-      return {
-        dashboard: { active: false },
-        templates: { active: false, selection: '' },
-        dataViews: { active: false, selection: '' },
-        admin: { active: false, selection: '' },
-        intRefDocs: { active: false, selection: '' },
-        extRefDocs: { active: false, selection: '' },
-      }
+    // Don't need one for ref docs because they open in new tab
     default:
       return {
         dashboard: { active: false },
