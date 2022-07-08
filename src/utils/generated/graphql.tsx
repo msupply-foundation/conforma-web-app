@@ -3012,6 +3012,10 @@ export type TemplateElementFilter = {
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateVersion` field. */
   templateVersion?: Maybe<IntFilter>;
+  /** Filter by the object’s `isReviewable` field. */
+  isReviewable?: Maybe<IsReviewableStatusFilter>;
+  /** Filter by the object’s `reviewRequired` field. */
+  reviewRequired?: Maybe<BooleanFilter>;
   /** Filter by the object’s `parametersString` field. */
   parametersString?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
@@ -3061,6 +3065,37 @@ export type TemplateElementCategoryFilter = {
 export enum TemplateElementCategory {
   Question = 'QUESTION',
   Information = 'INFORMATION'
+}
+
+/** A filter to be used against IsReviewableStatus fields. All fields are combined with a logical ‘and.’ */
+export type IsReviewableStatusFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<IsReviewableStatus>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<IsReviewableStatus>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<IsReviewableStatus>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<IsReviewableStatus>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<IsReviewableStatus>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<IsReviewableStatus>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<IsReviewableStatus>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<IsReviewableStatus>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<IsReviewableStatus>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<IsReviewableStatus>;
+};
+
+export enum IsReviewableStatus {
+  Always = 'ALWAYS',
+  Never = 'NEVER'
 }
 
 /** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -4013,12 +4048,12 @@ export type FileFilter = {
   submitted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `toBeDeleted` field. */
+  toBeDeleted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isInternalReferenceDoc` field. */
   isInternalReferenceDoc?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isExternalReferenceDoc` field. */
   isExternalReferenceDoc?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `toBeDeleted` field. */
-  toBeDeleted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -5962,6 +5997,10 @@ export enum TemplateElementsOrderBy {
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   TemplateVersionAsc = 'TEMPLATE_VERSION_ASC',
   TemplateVersionDesc = 'TEMPLATE_VERSION_DESC',
+  IsReviewableAsc = 'IS_REVIEWABLE_ASC',
+  IsReviewableDesc = 'IS_REVIEWABLE_DESC',
+  ReviewRequiredAsc = 'REVIEW_REQUIRED_ASC',
+  ReviewRequiredDesc = 'REVIEW_REQUIRED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -6002,6 +6041,10 @@ export type TemplateElementCondition = {
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateVersion` field. */
   templateVersion?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isReviewable` field. */
+  isReviewable?: Maybe<IsReviewableStatus>;
+  /** Checks for equality with the object’s `reviewRequired` field. */
+  reviewRequired?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `TemplateElement` values. */
@@ -6038,6 +6081,8 @@ export type TemplateElement = Node & {
   parameters?: Maybe<Scalars['JSON']>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewRequired: Scalars['Boolean'];
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -7236,12 +7281,12 @@ export enum FilesOrderBy {
   SubmittedDesc = 'SUBMITTED_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
+  ToBeDeletedAsc = 'TO_BE_DELETED_ASC',
+  ToBeDeletedDesc = 'TO_BE_DELETED_DESC',
   IsInternalReferenceDocAsc = 'IS_INTERNAL_REFERENCE_DOC_ASC',
   IsInternalReferenceDocDesc = 'IS_INTERNAL_REFERENCE_DOC_DESC',
   IsExternalReferenceDocAsc = 'IS_EXTERNAL_REFERENCE_DOC_ASC',
   IsExternalReferenceDocDesc = 'IS_EXTERNAL_REFERENCE_DOC_DESC',
-  ToBeDeletedAsc = 'TO_BE_DELETED_ASC',
-  ToBeDeletedDesc = 'TO_BE_DELETED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -7278,12 +7323,12 @@ export type FileCondition = {
   submitted?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `toBeDeleted` field. */
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `isInternalReferenceDoc` field. */
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `isExternalReferenceDoc` field. */
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `toBeDeleted` field. */
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `File` values. */
@@ -7318,9 +7363,9 @@ export type File = Node & {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp: Scalars['Datetime'];
+  toBeDeleted: Scalars['Boolean'];
   isInternalReferenceDoc: Scalars['Boolean'];
   isExternalReferenceDoc: Scalars['Boolean'];
-  toBeDeleted: Scalars['Boolean'];
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Template` that is related to this `File`. */
@@ -18056,6 +18101,8 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   parameters?: Maybe<Scalars['JSON']>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -18154,6 +18201,8 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   parameters?: Maybe<Scalars['JSON']>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -19509,9 +19558,9 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20365,9 +20414,9 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20605,9 +20654,9 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20822,9 +20871,9 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20920,9 +20969,9 @@ export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20962,9 +21011,9 @@ export type FilePatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20988,9 +21037,9 @@ export type FileApplicationNoteIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -21065,9 +21114,9 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -21362,6 +21411,8 @@ export type UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElemen
   parameters?: Maybe<Scalars['JSON']>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -21508,6 +21559,8 @@ export type TemplateElementPatch = {
   parameters?: Maybe<Scalars['JSON']>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -21532,6 +21585,8 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   parameters?: Maybe<Scalars['JSON']>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -24858,9 +24913,9 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -24947,9 +25002,9 @@ export type FileUserIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -25534,9 +25589,9 @@ export type FileTemplateIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -26566,6 +26621,8 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   parameters?: Maybe<Scalars['JSON']>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -26645,6 +26702,8 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   parameters?: Maybe<Scalars['JSON']>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -29022,9 +29081,9 @@ export type FileInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -30050,6 +30109,8 @@ export type TemplateElementInput = {
   parameters?: Maybe<Scalars['JSON']>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewRequired?: Maybe<Scalars['Boolean']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -35340,7 +35401,7 @@ export type ConsolidatorResponseFragmentFragment = (
 
 export type ElementFragmentFragment = (
   { __typename?: 'TemplateElement' }
-  & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'helpText' | 'defaultValue' | 'parameters'>
+  & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'helpText' | 'defaultValue' | 'parameters' | 'isReviewable' | 'reviewRequired'>
 );
 
 export type FullTemplateFragment = (
@@ -36786,6 +36847,8 @@ export const ElementFragmentFragmentDoc = gql`
   helpText
   defaultValue
   parameters
+  isReviewable
+  reviewRequired
 }
     `;
 export const FullTemplateFragmentDoc = gql`

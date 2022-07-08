@@ -1,4 +1,10 @@
-import { Decision, ReviewInput, Trigger, useCreateReviewMutation } from '../generated/graphql'
+import {
+  Decision,
+  IsReviewableStatus,
+  ReviewInput,
+  Trigger,
+  useCreateReviewMutation,
+} from '../generated/graphql'
 import { AssignmentDetails, FullStructure } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
 
@@ -24,8 +30,10 @@ const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment })
   const constructReviewInput: ConstructReviewInput = (structure) => {
     const elements = Object.values(structure?.elementsById || {})
     // Only create review for elements that are pendingReview and are assigned
+    // and are reviewable
     const reviewableElements = elements.filter(
-      ({ isPendingReview, isAssigned }) => isPendingReview && isAssigned
+      ({ isPendingReview, isAssigned, element: { isReviewable } }) =>
+        isPendingReview && isAssigned && isReviewable !== IsReviewableStatus.Never
     )
 
     const reviewResponseCreate = reviewableElements.map(

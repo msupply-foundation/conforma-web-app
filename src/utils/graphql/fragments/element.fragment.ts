@@ -16,5 +16,7 @@ export default gql`
     helpText
     defaultValue
     parameters
+    isReviewable
+    reviewRequired
   }
 `
