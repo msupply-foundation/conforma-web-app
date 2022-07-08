@@ -1,4 +1,4 @@
-import { ReviewResponseDecision } from '../../generated/graphql'
+import { IsReviewableStatus, ReviewResponseDecision } from '../../generated/graphql'
 
 import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 
@@ -41,6 +41,8 @@ const generatePageReviewProgress = (page: Page, assignedSections: string[]) => {
       }) =>
         (isAssigned || !!thisReviewLatestResponse || !!latestOriginalReviewResponse) &&
         element.isVisible &&
+        element.isReviewable !== IsReviewableStatus.Never &&
+        element.reviewRequired &&
         latestApplicationResponse?.id
     )
 
@@ -50,13 +52,16 @@ const generatePageReviewProgress = (page: Page, assignedSections: string[]) => {
       ({ isPendingReview, isChangeRequest, isChanged }) =>
         !isPendingReview && (!isChangeRequest || isChanged)
     )
-
     const doneConform = totalReviewableLinkedToLatestApplicationResponse.filter(
       (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Approve
     )
-    const doneNonConform = totalReviewableLinkedToLatestApplicationResponse.filter(
+
+    // We include ANY non-conforming elements here, so we also capture optional
+    // ones that have been marked "Decline"
+    const doneNonConform = page.state.filter(
       (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Decline
     )
+
     const totalNewReviewable = totalReviewable.filter((element) => element.isNewApplicationResponse)
     const doneNewReviewable = totalNewReviewable.filter(
       (element) => !element.isPendingReview && element.thisReviewLatestResponse?.decision
