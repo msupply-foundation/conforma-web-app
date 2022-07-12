@@ -221,7 +221,7 @@ interface ElementBase extends ElementForEvaluation {
   helpText: string | null
   parameters: any
   isReviewable: IsReviewableStatus | null
-  reviewRequired: boolean
+  // reviewRequired: boolean
 }
 
 export type EvaluatedElement = {

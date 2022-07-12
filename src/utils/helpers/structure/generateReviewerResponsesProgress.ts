@@ -42,7 +42,7 @@ const generatePageReviewProgress = (page: Page, assignedSections: string[]) => {
         (isAssigned || !!thisReviewLatestResponse || !!latestOriginalReviewResponse) &&
         element.isVisible &&
         element.isReviewable !== IsReviewableStatus.Never &&
-        element.reviewRequired &&
+        // element.reviewRequired && -- TO-DO: make elements optionally reviewable
         latestApplicationResponse?.id
     )
 
@@ -56,9 +56,7 @@ const generatePageReviewProgress = (page: Page, assignedSections: string[]) => {
       (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Approve
     )
 
-    // We include ANY non-conforming elements here, so we also capture optional
-    // ones that have been marked "Decline"
-    const doneNonConform = page.state.filter(
+    const doneNonConform = totalReviewableLinkedToLatestApplicationResponse.filter(
       (element) => element.thisReviewLatestResponse?.decision === ReviewResponseDecision.Decline
     )
 

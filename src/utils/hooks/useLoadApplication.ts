@@ -154,7 +154,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             helpText: element.helpText || '',
             title: element.title || '',
             isReviewable: element?.isReviewable || null,
-            reviewRequired: element.reviewRequired,
+            // reviewRequired: element.reviewRequired,
             defaultValueExpression: element.defaultValue,
             ...defaultEvaluatedElement,
           })

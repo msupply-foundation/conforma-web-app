@@ -17,6 +17,6 @@ export default gql`
     defaultValue
     parameters
     isReviewable
-    reviewRequired
+    # reviewRequired
   }
 `

@@ -69,7 +69,6 @@ export const constructElement = (value: any, displayDefinition: DisplayDefinitio
     ...defaultEvaluatedElement,
     isRequired: false,
     isReviewable: null,
-    reviewRequired: false,
   }
   return (
     <SummaryViewWrapper
