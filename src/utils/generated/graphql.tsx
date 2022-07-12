@@ -35401,7 +35401,7 @@ export type ConsolidatorResponseFragmentFragment = (
 
 export type ElementFragmentFragment = (
   { __typename?: 'TemplateElement' }
-  & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'helpText' | 'defaultValue' | 'parameters' | 'isReviewable' | 'reviewRequired'>
+  & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'helpText' | 'defaultValue' | 'parameters' | 'isReviewable'>
 );
 
 export type FullTemplateFragment = (
@@ -36848,7 +36848,6 @@ export const ElementFragmentFragmentDoc = gql`
   defaultValue
   parameters
   isReviewable
-  reviewRequired
 }
     `;
 export const FullTemplateFragmentDoc = gql`
