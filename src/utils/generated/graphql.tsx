@@ -2744,8 +2744,8 @@ export enum Trigger {
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnVerification = 'ON_VERIFICATION',
   OnSchedule = 'ON_SCHEDULE',
-  OnExtend = 'ON_EXTEND',
   OnPreview = 'ON_PREVIEW',
+  OnExtend = 'ON_EXTEND',
   DevTest = 'DEV_TEST',
   Processing = 'PROCESSING',
   Error = 'ERROR'
@@ -3009,12 +3009,12 @@ export type TemplateElementFilter = {
   helpText?: Maybe<StringFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isReviewable` field. */
+  isReviewable?: Maybe<IsReviewableStatusFilter>;
   /** Filter by the object’s `templateCode` field. */
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateVersion` field. */
   templateVersion?: Maybe<IntFilter>;
-  /** Filter by the object’s `isReviewable` field. */
-  isReviewable?: Maybe<IsReviewableStatusFilter>;
   /** Filter by the object’s `parametersString` field. */
   parametersString?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
@@ -4037,6 +4037,12 @@ export type FileFilter = {
   applicationNoteId?: Maybe<IntFilter>;
   /** Filter by the object’s `isOutputDoc` field. */
   isOutputDoc?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isInternalReferenceDoc` field. */
+  isInternalReferenceDoc?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isExternalReferenceDoc` field. */
+  isExternalReferenceDoc?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `toBeDeleted` field. */
+  toBeDeleted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `filePath` field. */
   filePath?: Maybe<StringFilter>;
   /** Filter by the object’s `thumbnailPath` field. */
@@ -4047,12 +4053,6 @@ export type FileFilter = {
   submitted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `toBeDeleted` field. */
-  toBeDeleted?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isInternalReferenceDoc` field. */
-  isInternalReferenceDoc?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isExternalReferenceDoc` field. */
-  isExternalReferenceDoc?: Maybe<BooleanFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -5992,12 +5992,12 @@ export enum TemplateElementsOrderBy {
   HelpTextDesc = 'HELP_TEXT_DESC',
   ParametersAsc = 'PARAMETERS_ASC',
   ParametersDesc = 'PARAMETERS_DESC',
+  IsReviewableAsc = 'IS_REVIEWABLE_ASC',
+  IsReviewableDesc = 'IS_REVIEWABLE_DESC',
   TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   TemplateVersionAsc = 'TEMPLATE_VERSION_ASC',
   TemplateVersionDesc = 'TEMPLATE_VERSION_DESC',
-  IsReviewableAsc = 'IS_REVIEWABLE_ASC',
-  IsReviewableDesc = 'IS_REVIEWABLE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -6034,12 +6034,12 @@ export type TemplateElementCondition = {
   helpText?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `isReviewable` field. */
+  isReviewable?: Maybe<IsReviewableStatus>;
   /** Checks for equality with the object’s `templateCode` field. */
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateVersion` field. */
   templateVersion?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `isReviewable` field. */
-  isReviewable?: Maybe<IsReviewableStatus>;
 };
 
 /** A connection to a list of `TemplateElement` values. */
@@ -6074,9 +6074,9 @@ export type TemplateElement = Node & {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -7265,6 +7265,12 @@ export enum FilesOrderBy {
   ApplicationNoteIdDesc = 'APPLICATION_NOTE_ID_DESC',
   IsOutputDocAsc = 'IS_OUTPUT_DOC_ASC',
   IsOutputDocDesc = 'IS_OUTPUT_DOC_DESC',
+  IsInternalReferenceDocAsc = 'IS_INTERNAL_REFERENCE_DOC_ASC',
+  IsInternalReferenceDocDesc = 'IS_INTERNAL_REFERENCE_DOC_DESC',
+  IsExternalReferenceDocAsc = 'IS_EXTERNAL_REFERENCE_DOC_ASC',
+  IsExternalReferenceDocDesc = 'IS_EXTERNAL_REFERENCE_DOC_DESC',
+  ToBeDeletedAsc = 'TO_BE_DELETED_ASC',
+  ToBeDeletedDesc = 'TO_BE_DELETED_DESC',
   FilePathAsc = 'FILE_PATH_ASC',
   FilePathDesc = 'FILE_PATH_DESC',
   ThumbnailPathAsc = 'THUMBNAIL_PATH_ASC',
@@ -7275,12 +7281,6 @@ export enum FilesOrderBy {
   SubmittedDesc = 'SUBMITTED_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
-  ToBeDeletedAsc = 'TO_BE_DELETED_ASC',
-  ToBeDeletedDesc = 'TO_BE_DELETED_DESC',
-  IsInternalReferenceDocAsc = 'IS_INTERNAL_REFERENCE_DOC_ASC',
-  IsInternalReferenceDocDesc = 'IS_INTERNAL_REFERENCE_DOC_DESC',
-  IsExternalReferenceDocAsc = 'IS_EXTERNAL_REFERENCE_DOC_ASC',
-  IsExternalReferenceDocDesc = 'IS_EXTERNAL_REFERENCE_DOC_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -7307,6 +7307,12 @@ export type FileCondition = {
   applicationNoteId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `isOutputDoc` field. */
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isInternalReferenceDoc` field. */
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isExternalReferenceDoc` field. */
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `toBeDeleted` field. */
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `filePath` field. */
   filePath?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `thumbnailPath` field. */
@@ -7317,12 +7323,6 @@ export type FileCondition = {
   submitted?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `toBeDeleted` field. */
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `isInternalReferenceDoc` field. */
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `isExternalReferenceDoc` field. */
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `File` values. */
@@ -7352,14 +7352,14 @@ export type File = Node & {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc: Scalars['Boolean'];
+  isInternalReferenceDoc: Scalars['Boolean'];
+  isExternalReferenceDoc: Scalars['Boolean'];
+  toBeDeleted: Scalars['Boolean'];
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp: Scalars['Datetime'];
-  toBeDeleted: Scalars['Boolean'];
-  isInternalReferenceDoc: Scalars['Boolean'];
-  isExternalReferenceDoc: Scalars['Boolean'];
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Template` that is related to this `File`. */
@@ -18093,9 +18093,9 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -18192,9 +18192,9 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -19545,14 +19545,14 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20401,14 +20401,14 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20641,14 +20641,14 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20858,14 +20858,14 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20956,14 +20956,14 @@ export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -20998,14 +20998,14 @@ export type FilePatch = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -21024,14 +21024,14 @@ export type FileApplicationNoteIdFkeyFileCreateInput = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -21101,14 +21101,14 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -21401,9 +21401,9 @@ export type UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElemen
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -21548,9 +21548,9 @@ export type TemplateElementPatch = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -21573,9 +21573,9 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -24897,14 +24897,14 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -24986,14 +24986,14 @@ export type FileUserIdFkeyFileCreateInput = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -25573,14 +25573,14 @@ export type FileTemplateIdFkeyFileCreateInput = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -26608,9 +26608,9 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -26688,9 +26688,9 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -29063,14 +29063,14 @@ export type FileInput = {
   description?: Maybe<Scalars['String']>;
   applicationNoteId?: Maybe<Scalars['Int']>;
   isOutputDoc?: Maybe<Scalars['Boolean']>;
+  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
+  toBeDeleted?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  toBeDeleted?: Maybe<Scalars['Boolean']>;
-  isInternalReferenceDoc?: Maybe<Scalars['Boolean']>;
-  isExternalReferenceDoc?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -30094,9 +30094,9 @@ export type TemplateElementInput = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
+  isReviewable?: Maybe<IsReviewableStatus>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
