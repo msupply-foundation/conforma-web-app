@@ -129,6 +129,7 @@ interface ApplicationScheduledEvent {
   id: number
   timeScheduled: Date
   eventCode: string
+  isActive: boolean
 }
 
 interface AssignmentDetails {

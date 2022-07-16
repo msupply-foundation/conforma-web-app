@@ -36093,7 +36093,7 @@ export type GetApplicationQuery = (
       { __typename?: 'TriggerSchedulesConnection' }
       & { nodes: Array<Maybe<(
         { __typename?: 'TriggerSchedule' }
-        & Pick<TriggerSchedule, 'timeScheduled' | 'eventCode' | 'id'>
+        & Pick<TriggerSchedule, 'id' | 'timeScheduled' | 'eventCode' | 'isActive'>
       )>> }
     ) }
     & ApplicationFragment
@@ -38044,11 +38044,12 @@ export const GetApplicationDocument = gql`
     org {
       ...Organisation
     }
-    triggerSchedules(condition: {isActive: true}) {
+    triggerSchedules {
       nodes {
+        id
         timeScheduled
         eventCode
-        id
+        isActive
       }
     }
   }

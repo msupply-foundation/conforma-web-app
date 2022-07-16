@@ -58,8 +58,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     skip: !triggersReady,
   })
 
-  console.log('structure', structure)
-
   useEffect(() => {
     if (triggersError) {
       setStructureError(strings.ERROR_TRIGGER)
@@ -75,8 +73,6 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     if (!triggersReady || !data) return
 
     const application = data.applicationBySerial as Application
-
-    console.log('application', application)
 
     // No unexpected error - just a application not accessible to user (Show 404 page)
     if (!application) {
@@ -172,11 +168,13 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         id: number
         timeScheduled: string
         eventCode: string
+        isActive: boolean
       }[]
-    ).map(({ id, timeScheduled, eventCode }) => ({
+    ).map(({ id, timeScheduled, eventCode, isActive }) => ({
       id,
       timeScheduled: new Date(timeScheduled),
       eventCode,
+      isActive,
     }))
 
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]

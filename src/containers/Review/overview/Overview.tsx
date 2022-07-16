@@ -1,26 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { DateTime } from 'luxon'
-import { Header, Icon, Message, Segment } from 'semantic-ui-react'
+import { Header, Icon, Message, Segment, Button, Form } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
+import useConfirmModal from '../../../utils/hooks/useConfirmModal'
+import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FullStructure } from '../../../utils/types'
-import { ActivityLog, ApplicationOutcome } from '../../../utils/generated/graphql'
+import {
+  ActivityLog,
+  ApplicationOutcome,
+  ApplicationStatus,
+} from '../../../utils/generated/graphql'
+import config from '../../../config'
 
 export const Overview: React.FC<{
   structure: FullStructure
   activityLog: ActivityLog[]
 }> = ({
   structure: {
-    info: { current, outcome, user, org, serial, template },
+    info: { current, outcome, user, org, serial, id, template },
+    scheduledEvents,
+    reload,
   },
   activityLog,
 }) => {
   const { strings } = useLanguageProvider()
   const { Outcome } = useLocalisedEnums()
+  const [deadlineDays, setDeadlineDays] = useState(5)
+  const { ConfirmModal, showModal } = useConfirmModal()
   const applicant = `${user?.firstName} ${user?.lastName}`
   const organisation = org?.name
   const { started, completed } = getDates(activityLog)
   const stage = current.stage.name
+  const applicantDeadlineEvent = scheduledEvents.filter(
+    (event) => event.eventCode === config.applicantDeadlineCode
+  )
+
+  const [applicantDeadline, deadlineActive] =
+    applicantDeadlineEvent.length > 0
+      ? [applicantDeadlineEvent[0].timeScheduled, applicantDeadlineEvent[0].isActive]
+      : [null, false]
 
   return (
     <div id="overview">
@@ -68,9 +87,49 @@ export const Overview: React.FC<{
                 <strong>{strings.REVIEW_OVERVIEW_SERIAL}: </strong>
                 {serial}
               </p>
+              {applicantDeadline && deadlineActive && (
+                <p className="right-item">
+                  <strong>{strings.REVIEW_OVERVIEW_DEADLINE}: </strong>
+                  {DateTime.fromJSDate(applicantDeadline).toLocaleString()}
+                </p>
+              )}
             </div>
+            {applicantDeadline &&
+              (outcome === ApplicationOutcome.Expired ||
+                current.status === ApplicationStatus.ChangesRequired) && (
+                <div className="flex-row-start-center" style={{ gap: 10, marginTop: 20 }}>
+                  Extend deadline by{' '}
+                  <Form.Input
+                    size="mini"
+                    type="number"
+                    min={1}
+                    value={deadlineDays}
+                    onChange={(e) => setDeadlineDays(Number(e.target.value))}
+                  />{' '}
+                  days
+                  <Button
+                    primary
+                    inverted
+                    onClick={() =>
+                      showModal({
+                        message: strings.REVIEW_OVERVIEW_MODAL_MESSAGE.replace(
+                          '%1',
+                          String(deadlineDays)
+                        ),
+                        onOK: async () => {
+                          await extendDeadline(id, deadlineDays)
+                          reload()
+                        },
+                      })
+                    }
+                  >
+                    Extend
+                  </Button>
+                </div>
+              )}
           </Message.Content>
         </Message>
+        <ConfirmModal />
       </Segment>
     </div>
   )
@@ -80,4 +139,16 @@ const getDates = (activityLog: ActivityLog[]): { started: string; completed: str
   const startEvent = activityLog.find((e) => e.type === 'STATUS' && e.value === 'DRAFT')
   const endEvent = activityLog.find((e) => e.type === 'OUTCOME' && e.value !== 'PENDING')
   return { started: startEvent?.timestamp, completed: endEvent?.timestamp }
+}
+
+const extendDeadline = async (applicationId: number, days: number) => {
+  const extendEndpoint = `${config.serverREST}/extend-application`
+  const payload = { applicationId, eventCode: config.applicantDeadlineCode, extensionTime: days }
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
+
+  await postRequest({
+    url: extendEndpoint,
+    jsonBody: payload,
+    headers: { Authorization: `Bearer ${JWT}`, 'Content-Type': 'application/json' },
+  })
 }

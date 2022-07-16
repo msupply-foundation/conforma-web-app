@@ -68,6 +68,7 @@ export default {
   BUTTON_SUMMARY_EDIT: 'Edit',
   BUTTON_ADD_REVIEW: 'Add review',
   BUTTON_VIEW_HISTORY: 'View history',
+  MODAL_CONFIRM_TITLE: 'Are you sure?',
   COLUMN_SERIAL: 'Serial',
   COLUMN_LAST_ACTIVE_DATE: 'Last Active',
   COLUMN_DEADLINE_DATE: 'Deadline',
@@ -290,6 +291,9 @@ export default {
   REVIEW_OVERVIEW_STAGE: 'Stage',
   REVIEW_OVERVIEW_OUTCOME: 'Outcome',
   REVIEW_OVERVIEW_SERIAL: 'Serial',
+  REVIEW_OVERVIEW_DEADLINE: 'Applicant Deadline',
+  REVIEW_OVERVIEW_EXTEND: 'Extend deadline',
+  REVIEW_OVERVIEW_MODAL_MESSAGE: "This will set the applicant's deadline to %1 days from now",
   REVIEW_PROGRESS_BAR_SUBMITTED: 'Submitted',
   REVIEW_SUBMISSION_CONFIRM_TITLE: 'Submitting Review',
   REVIEW_SUBMISSION_CONFIRM_MESSAGE:

@@ -33,11 +33,12 @@ export default gql`
         ...Organisation
       }
       # Get scheduled events so we can extend deadlines
-      triggerSchedules(condition: { isActive: true }) {
+      triggerSchedules {
         nodes {
           id
           timeScheduled
           eventCode
+          isActive
         }
       }
     }
