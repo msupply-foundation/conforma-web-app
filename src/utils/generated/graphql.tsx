@@ -36078,6 +36078,9 @@ export type GetApplicationQuery = (
           { __typename?: 'TemplateStage' }
           & TemplateStageFragment
         )>> }
+      ), templateActions: (
+        { __typename?: 'TemplateActionsConnection' }
+        & Pick<TemplateActionsConnection, 'totalCount'>
       ) }
       & TemplateFragmentFragment
     )>, user?: Maybe<(
@@ -36086,7 +36089,13 @@ export type GetApplicationQuery = (
     )>, org?: Maybe<(
       { __typename?: 'Organisation' }
       & OrganisationFragment
-    )> }
+    )>, triggerSchedules: (
+      { __typename?: 'TriggerSchedulesConnection' }
+      & { nodes: Array<Maybe<(
+        { __typename?: 'TriggerSchedule' }
+        & Pick<TriggerSchedule, 'timeScheduled' | 'eventCode' | 'id'>
+      )>> }
+    ) }
     & ApplicationFragment
   )>, applicationStageStatusLatests?: Maybe<(
     { __typename?: 'ApplicationStageStatusLatestsConnection' }
@@ -38025,12 +38034,22 @@ export const GetApplicationDocument = gql`
           ...TemplateStage
         }
       }
+      templateActions(condition: {trigger: ON_PREVIEW}) {
+        totalCount
+      }
     }
     user {
       ...User
     }
     org {
       ...Organisation
+    }
+    triggerSchedules(condition: {isActive: true}) {
+      nodes {
+        timeScheduled
+        eventCode
+        id
+      }
     }
   }
   applicationStageStatusLatests(condition: {serial: $serial}) {
