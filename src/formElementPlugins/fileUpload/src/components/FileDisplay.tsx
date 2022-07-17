@@ -70,7 +70,7 @@ export const FileDisplay = ({ file, onDelete, downloadUrl }: FileDisplayProps) =
         fitted
         color="grey"
         onClick={() => onDelete(key)}
-        className="delete-icon"
+        className="file-delete-icon"
         style={{ position: 'absolute', right: 0, top: 0 }}
       />
     </List.Item>
