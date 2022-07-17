@@ -1,10 +1,10 @@
 /* This allows the delete (x) icon to become visible when hovering over the
 whole file icon block */
 
-.delete-icon {
+.file-delete-icon {
     visibility: hidden;
 }
 
-.file-item:hover .delete-icon {
+.file-item:hover .file-delete-icon {
     visibility: visible;
 }
