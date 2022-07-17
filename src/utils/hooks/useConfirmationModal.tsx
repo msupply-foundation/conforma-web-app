@@ -35,9 +35,9 @@ const useConfirmationModal = ({
     onCancel: onCancel ? onCancel : () => {},
   })
 
-  const handleOk = async (OKFunction: () => void) => {
+  const handleConfirm = async (confirmFunction: () => void) => {
     setButtonLoading(true)
-    await OKFunction()
+    await confirmFunction()
     setButtonLoading(false)
     setOpen(false)
   }
@@ -80,7 +80,7 @@ const useConfirmationModal = ({
           inverted
           icon="checkmark"
           content={modalState.confirmText}
-          onClick={() => handleOk(modalState.onConfirm)}
+          onClick={() => handleConfirm(modalState.onConfirm)}
         />
       </Modal.Actions>
     </Modal>
