@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Button,
   Checkbox,
@@ -50,7 +50,6 @@ const NotesTab: React.FC<{
   const {
     userState: { currentUser },
   } = useUserState()
-  const [noteIdToDelete, setNoteIdToDelete] = useState<number>(0)
   const { ConfirmModal, showModal } = useConfirmationModal({
     type: 'warning',
     title: strings.REVIEW_NOTES_DELETE_TITLE,
@@ -66,9 +65,8 @@ const NotesTab: React.FC<{
 
   const { sortDesc, filesOnlyFilter, showForm } = state
 
-  const handleDelete = async () => {
-    await deleteNote(noteIdToDelete)
-    setNoteIdToDelete(0)
+  const handleDelete = async (noteId: number) => {
+    await deleteNote(noteId)
     refetch()
   }
 
@@ -123,10 +121,7 @@ const NotesTab: React.FC<{
                     name="delete"
                     size="large"
                     color="blue"
-                    onClick={() => {
-                      setNoteIdToDelete(note.id)
-                      showModal({ onConfirm: () => handleDelete() })
-                    }}
+                    onClick={() => showModal({ onConfirm: () => handleDelete(note.id) })}
                     style={{
                       visibility: isCurrentUser && canDelete(note.timestamp) ? 'visible' : 'hidden',
                     }}
