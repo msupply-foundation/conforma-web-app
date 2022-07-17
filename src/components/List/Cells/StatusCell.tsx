@@ -27,7 +27,6 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
         </Link>
       )
     case ApplicationStatus.Draft:
-      console.log('HERE WE ARE')
       return (
         <>
           <Progress size="tiny" />

@@ -31,8 +31,8 @@ const useConfirmModal = ({
     message,
     OKText: OKText ?? strings.OPTION_OK,
     cancelText: cancelText ?? strings.OPTION_CANCEL,
-    onOK: () => console.log('Clicked OK'),
-    onCancel: () => {},
+    onOK: onOK ? onOK : () => console.log('Clicked OK'),
+    onCancel: onCancel ? onCancel : () => {},
   })
 
   const handleOk = async (OKFunction: () => void) => {
