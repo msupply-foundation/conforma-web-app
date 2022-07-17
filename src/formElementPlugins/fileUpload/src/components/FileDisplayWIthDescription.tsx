@@ -87,7 +87,7 @@ export const FileDisplayWithDescription = ({
               fitted
               color="grey"
               onClick={() => onDelete(key)}
-              className="delete-icon"
+              className="file-delete-icon"
               style={{ position: 'absolute', right: 0, top: 0 }}
             />
           </Grid>
