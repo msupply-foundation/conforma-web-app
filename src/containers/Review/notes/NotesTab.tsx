@@ -11,7 +11,7 @@ import {
 } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
 import { ApplicationNote, useGetApplicationNotesQuery } from '../../../utils/generated/graphql'
-import ModalWarning from '../../../components/Main/ModalWarning'
+import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -50,8 +50,13 @@ const NotesTab: React.FC<{
   const {
     userState: { currentUser },
   } = useUserState()
-  const [modalOpen, setModalOpen] = useState(false)
   const [noteIdToDelete, setNoteIdToDelete] = useState<number>(0)
+  const { ConfirmModal, showModal } = useConfirmationModal({
+    type: 'warning',
+    title: strings.REVIEW_NOTES_DELETE_TITLE,
+    message: strings.REVIEW_NOTES_DELETE_MESSAGE,
+    confirmText: strings.BUTTON_CONFIRM,
+  })
 
   const { data, loading, error, refetch } = useGetApplicationNotesQuery({
     variables: { applicationId: fullStructure.info.id },
@@ -63,7 +68,6 @@ const NotesTab: React.FC<{
 
   const handleDelete = async () => {
     await deleteNote(noteIdToDelete)
-    setModalOpen(false)
     setNoteIdToDelete(0)
     refetch()
   }
@@ -79,14 +83,7 @@ const NotesTab: React.FC<{
 
   return notes ? (
     <Container id="notes-tab">
-      <ModalWarning
-        title={strings.REVIEW_NOTES_DELETE_TITLE}
-        message={strings.REVIEW_NOTES_DELETE_MESSAGE}
-        option={strings.BUTTON_CONFIRM}
-        open={modalOpen}
-        onClick={() => handleDelete()}
-        onClose={() => setModalOpen(false)}
-      />
+      <ConfirmModal />
       <div className="options-row">
         <p>{strings.REVIEW_NOTES_SORT_ORDER}</p>
         <Dropdown
@@ -128,7 +125,7 @@ const NotesTab: React.FC<{
                     color="blue"
                     onClick={() => {
                       setNoteIdToDelete(note.id)
-                      setModalOpen(true)
+                      showModal({ onConfirm: () => handleDelete() })
                     }}
                     style={{
                       visibility: isCurrentUser && canDelete(note.timestamp) ? 'visible' : 'hidden',
