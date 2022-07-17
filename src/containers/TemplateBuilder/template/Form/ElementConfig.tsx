@@ -79,7 +79,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } = useConfirmModal({
     title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
     message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
-    OKText: strings.BUTTON_CONFIRM,
+    confirmText: strings.BUTTON_CONFIRM,
   })
 
   const { structure } = useFullApplicationState()
@@ -334,7 +334,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               disabled={!isDraft}
               disabledMessage={disabledMessage}
               title={strings.BUTTON_REMOVE}
-              onClick={() => showRemoveElementModal({ onOK: () => removeElement() })}
+              onClick={() => showRemoveElementModal({ onConfirm: () => removeElement() })}
             />
             <ButtonWithFallback
               title={strings.BUTTON_CLOSE}

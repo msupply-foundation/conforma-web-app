@@ -6,9 +6,9 @@ interface ConfirmModalState extends ModalProps {
   type: 'warning' | 'confirmation'
   title: string
   message?: string
-  OKText: string
+  confirmText: string
   cancelText: string
-  onOK: () => void
+  onConfirm: () => void
   onCancel: () => void
 }
 
@@ -16,9 +16,9 @@ const useConfirmModal = ({
   type,
   title,
   message,
-  OKText,
+  confirmText,
   cancelText,
-  onOK,
+  onConfirm,
   onCancel,
   ...modalProps
 }: Partial<ConfirmModalState> = {}) => {
@@ -29,9 +29,9 @@ const useConfirmModal = ({
     type: type ?? 'confirmation',
     title: title ?? strings.MODAL_CONFIRM_TITLE,
     message,
-    OKText: OKText ?? strings.OPTION_OK,
+    confirmText: confirmText ?? strings.OPTION_OK,
     cancelText: cancelText ?? strings.OPTION_CANCEL,
-    onOK: onOK ? onOK : () => console.log('Clicked OK'),
+    onConfirm: onConfirm ? onConfirm : () => console.log('Clicked OK'),
     onCancel: onCancel ? onCancel : () => {},
   })
 
@@ -69,8 +69,8 @@ const useConfirmModal = ({
           color="green"
           inverted
           icon="checkmark"
-          content={modalState.OKText}
-          onClick={() => handleOk(modalState.onOK)}
+          content={modalState.confirmText}
+          onClick={() => handleOk(modalState.onConfirm)}
         />
       </Modal.Actions>
     </Modal>
@@ -79,17 +79,17 @@ const useConfirmModal = ({
   const showModal = ({
     title,
     message,
-    OKText,
+    confirmText: OKText,
     cancelText,
-    onOK,
+    onConfirm: onOK,
     onCancel,
   }: Partial<ConfirmModalState> = {}) => {
     const newState: Partial<ConfirmModalState> = {}
     if (title) newState.title = title
     if (message) newState.message = message
-    if (OKText) newState.OKText = OKText
+    if (OKText) newState.confirmText = OKText
     if (cancelText) newState.cancelText = cancelText
-    if (onOK) newState.onOK = onOK
+    if (onOK) newState.onConfirm = onOK
     if (onCancel) newState.onCancel = onCancel
     setModalState({ ...modalState, ...newState })
     setOpen(true)

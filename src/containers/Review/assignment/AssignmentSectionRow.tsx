@@ -36,7 +36,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   const { ConfirmModal, showModal } = useConfirmModal({
     title: strings.UNASSIGN_TITLE,
     message: strings.UNASSIGN_MESSAGE,
-    OKText: strings.BUTTON_SUBMIT,
+    confirmText: strings.BUTTON_SUBMIT,
   })
 
   const { submitAssignments } = useUpdateAssignment({
@@ -135,7 +135,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
               isSelfAssigned={isSelfAssignment}
               isReassignment={isReassignment}
               setIsReassignment={setIsReassignment}
-              setIsUnassignment={() => showModal({ onOK: () => unassignAssignee() })}
+              setIsUnassignment={() => showModal({ onConfirm: () => unassignAssignee() })}
             />
           ) : (
             assignmentOptions.options.length > 1 && (

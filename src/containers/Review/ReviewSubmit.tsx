@@ -104,7 +104,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const { ConfirmModal, showModal: showConfirmModal } = useConfirmModal({
     title: strings.REVIEW_SUBMISSION_CONFIRM_TITLE,
     message: strings.REVIEW_SUBMISSION_CONFIRM_MESSAGE,
-    OKText: strings.BUTTON_SUBMIT,
+    confirmText: strings.BUTTON_SUBMIT,
   })
   const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
   // TODO: Show on message
@@ -196,7 +196,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     }
 
     // Can SUBMIT
-    showConfirmModal({ onOK: () => submission() })
+    showConfirmModal({ onConfirm: () => submission() })
   }
 
   const submission = async () => {

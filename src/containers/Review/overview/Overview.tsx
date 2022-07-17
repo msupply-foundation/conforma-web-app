@@ -124,7 +124,7 @@ export const Overview: React.FC<{
                                 String(deadlineDays)
                               )
                             : strings.REVIEW_OVERVIEW_MODAL_MESSAGE_SINGULAR,
-                        onOK: async () => {
+                        onConfirm: async () => {
                           await extendDeadline(id, deadlineDays)
                           reload()
                         },

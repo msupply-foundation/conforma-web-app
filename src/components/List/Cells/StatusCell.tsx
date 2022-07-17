@@ -13,8 +13,8 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
   const { ConfirmModal, showModal } = useConfirmModal({
     title: strings.APPLICATION_DELETION_CONFIRM_TITLE,
     message: strings.APPLICATION_DELETION_CONFIRM_MESSAGE,
-    OKText: strings.OPTION_OK,
-    onOK: () => deleteApplication(),
+    confirmText: strings.OPTION_OK,
+    onConfirm: () => deleteApplication(),
   })
 
   const { serial, status } = application
