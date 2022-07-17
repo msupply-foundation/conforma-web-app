@@ -48,7 +48,17 @@ const useConfirmationModal = ({
   }
 
   const ConfirmModal = () => (
-    <Modal closeIcon open={open} {...modalProps} basic size="small" onClose={() => setOpen(false)}>
+    <Modal
+      closeIcon
+      open={open}
+      {...modalProps}
+      basic
+      size="small"
+      onClose={() => {
+        modalState.onCancel()
+        setOpen(false)
+      }}
+    >
       <Header icon>
         {modalState.type === 'confirmation' ? (
           <Icon name="check square outline" color="green" />

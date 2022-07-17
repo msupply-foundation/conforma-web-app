@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Header, Icon, Label, Message, ModalProps, Segment } from 'semantic-ui-react'
+import React, { useEffect } from 'react'
+import { Button, Header, Icon, Label, Message, Segment } from 'semantic-ui-react'
 import {
   Loading,
   ConsolidationSectionProgressBar,
@@ -7,8 +7,8 @@ import {
   ReviewInProgressLabel,
   ReviewSectionProgressBar,
   SectionWrapper,
-  ModalWarning,
 } from '../../components'
+import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import {
   ReviewByLabel,
   ConsolidationByLabel,
@@ -66,18 +66,25 @@ const ReviewPage: React.FC<{
 
   const { addScrollable, scrollTo } = useScrollableAttachments()
 
-  const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
+  const { ConfirmModal: WarningModal, showModal: showWarningModal } = useConfirmationModal({
+    type: 'warning',
+    title: strings.REVIEW_STATUS_PENDING_TITLE,
+    message: strings.REVIEW_STATUS_PENDING_MESSAGE,
+  })
+
+  useEffect(() => {
+    if (!reviewStructure) return
+    if (thisReview?.current.reviewStatus === ReviewStatus.Pending) {
+      console.log('Should show modal')
+      showWarningModal({
+        onConfirm: () => push(`/application/${reviewStructure.info.serial}/review`),
+        onCancel: () => push(`/application/${reviewStructure.info.serial}/review`),
+      })
+    }
+  }, [reviewStructure])
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!reviewStructure) return <Loading />
-
-  const messages = {
-    REVIEW_STATUS_PENDING: {
-      title: strings.REVIEW_STATUS_PENDING_TITLE,
-      message: strings.REVIEW_STATUS_PENDING_MESSAGE,
-      option: strings.OPTION_OK,
-    },
-  }
 
   if (
     reviewAssignment?.reviewer?.id !== currentUser?.userId &&
@@ -111,27 +118,6 @@ const ReviewPage: React.FC<{
     attemptSubmission,
     firstIncompleteReviewPage,
   } = reviewStructure
-
-  if (
-    thisReview?.current.reviewStatus === ReviewStatus.Pending &&
-    showWarningModal.open === false
-  ) {
-    const { title, message, option } = messages.REVIEW_STATUS_PENDING
-    setShowWarningModal({
-      open: true,
-      title,
-      message,
-      option,
-      onClick: () => {
-        setShowWarningModal({ open: false })
-        push(`/application/${reviewStructure.info.serial}/review`)
-      },
-      onClose: () => {
-        setShowWarningModal({ open: false })
-        push(`/application/${reviewStructure.info.serial}/review`)
-      },
-    })
-  }
 
   const isMissingReviewResponses = (section: string): boolean =>
     attemptSubmission && firstIncompleteReviewPage?.sectionCode === section
@@ -234,7 +220,7 @@ const ReviewPage: React.FC<{
           scrollTo={scrollTo}
         />
       </div>
-      <ModalWarning {...showWarningModal} />
+      <WarningModal />
     </>
   )
 }
