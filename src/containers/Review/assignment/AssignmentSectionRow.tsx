@@ -1,6 +1,6 @@
 import React, { useEffect, useState, SetStateAction } from 'react'
 import { Grid, Label } from 'semantic-ui-react'
-import useConfirmModal from '../../../utils/hooks/useConfirmModal'
+import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
@@ -33,7 +33,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   setAssignmentError,
 }) => {
   const { strings } = useLanguageProvider()
-  const { ConfirmModal, showModal } = useConfirmModal({
+  const { ConfirmModal, showModal } = useConfirmationModal({
     title: strings.UNASSIGN_TITLE,
     message: strings.UNASSIGN_MESSAGE,
     confirmText: strings.BUTTON_SUBMIT,

@@ -18,7 +18,7 @@ import { useFullApplicationState } from '../ApplicationWrapper'
 import { useFormState } from './Form'
 import FromExistingElement from './FromExistingElement'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
-import useConfirmModal from '../../../../utils/hooks/useConfirmModal'
+import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 
 type ElementConfigProps = {
   element: TemplateElement | null
@@ -76,11 +76,12 @@ const evaluations: Evaluations = [
 
 const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { strings } = useLanguageProvider()
-  const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } = useConfirmModal({
-    title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
-    message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
-    confirmText: strings.BUTTON_CONFIRM,
-  })
+  const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } =
+    useConfirmationModal({
+      title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
+      message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
+      confirmText: strings.BUTTON_CONFIRM,
+    })
 
   const { structure } = useFullApplicationState()
   const {

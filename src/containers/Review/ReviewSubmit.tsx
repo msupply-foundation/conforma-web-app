@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Form, Label, ModalProps } from 'semantic-ui-react'
 import { ModalWarning } from '../../components'
-import useConfirmModal from '../../utils/hooks/useConfirmModal'
+import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import ReviewComment from '../../components/Review/ReviewComment'
 import ReviewDecision from '../../components/Review/ReviewDecision'
 import { Decision, ReviewStatus } from '../../utils/generated/graphql'
@@ -101,7 +101,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     reviewAssignment: assignment,
   })
 
-  const { ConfirmModal, showModal: showConfirmModal } = useConfirmModal({
+  const { ConfirmModal, showModal: showConfirmModal } = useConfirmationModal({
     title: strings.REVIEW_SUBMISSION_CONFIRM_TITLE,
     message: strings.REVIEW_SUBMISSION_CONFIRM_MESSAGE,
     confirmText: strings.BUTTON_SUBMIT,

@@ -5,12 +5,12 @@ import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
-import useConfirmModal from '../../../utils/hooks/useConfirmModal'
+import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 
 const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplication }) => {
   const { strings } = useLanguageProvider()
   const { Status } = useLocalisedEnums()
-  const { ConfirmModal, showModal } = useConfirmModal({
+  const { ConfirmModal, showModal } = useConfirmationModal({
     title: strings.APPLICATION_DELETION_CONFIRM_TITLE,
     message: strings.APPLICATION_DELETION_CONFIRM_MESSAGE,
     confirmText: strings.OPTION_OK,

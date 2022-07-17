@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import { Header, Icon, Message, Segment, Button, Form } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
-import useConfirmModal from '../../../utils/hooks/useConfirmModal'
+import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FullStructure } from '../../../utils/types'
 import {
@@ -27,7 +27,7 @@ export const Overview: React.FC<{
   const { strings } = useLanguageProvider()
   const { Outcome } = useLocalisedEnums()
   const [deadlineDays, setDeadlineDays] = useState(5)
-  const { ConfirmModal, showModal } = useConfirmModal()
+  const { ConfirmModal, showModal } = useConfirmationModal()
   const applicant = `${user?.firstName} ${user?.lastName}`
   const organisation = org?.name
   const { started, completed } = getDates(activityLog)

@@ -12,7 +12,7 @@ interface ConfirmModalState extends ModalProps {
   onCancel: () => void
 }
 
-const useConfirmModal = ({
+const useConfirmationModal = ({
   type,
   title,
   message,
@@ -98,4 +98,4 @@ const useConfirmModal = ({
   return { ConfirmModal, showModal }
 }
 
-export default useConfirmModal
+export default useConfirmationModal
