@@ -1,6 +1,6 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React, { useEffect, useState } from 'react'
-import { Modal, Label, Icon, Header, Message, ModalProps } from 'semantic-ui-react'
+import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
 import { pluginProvider } from '../../../../formElementPlugins'
 import {
   IsReviewableStatus,
@@ -18,7 +18,6 @@ import { useFullApplicationState } from '../ApplicationWrapper'
 import { useFormState } from './Form'
 import FromExistingElement from './FromExistingElement'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
-import ModalConfirmation from '../../../../components/Main/ModalConfirmation'
 import useConfirmModal from '../../../../utils/hooks/useConfirmModal'
 
 type ElementConfigProps = {

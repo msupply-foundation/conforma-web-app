@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Button, Form, Label, Modal, ModalProps } from 'semantic-ui-react'
+import { Button, Form, Label, ModalProps } from 'semantic-ui-react'
 import { ModalWarning } from '../../components'
-import ModalConfirmation from '../../components/Main/ModalConfirmation'
+import useConfirmModal from '../../utils/hooks/useConfirmModal'
 import ReviewComment from '../../components/Review/ReviewComment'
 import ReviewDecision from '../../components/Review/ReviewDecision'
 import { Decision, ReviewStatus } from '../../utils/generated/graphql'
@@ -101,7 +101,11 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     reviewAssignment: assignment,
   })
 
-  const [showModalConfirmation, setShowModalConfirmation] = useState<ModalProps>({ open: false })
+  const { ConfirmModal, showModal: showConfirmModal } = useConfirmModal({
+    title: strings.REVIEW_SUBMISSION_CONFIRM_TITLE,
+    message: strings.REVIEW_SUBMISSION_CONFIRM_MESSAGE,
+    OKText: strings.BUTTON_SUBMIT,
+  })
   const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
   // TODO: Show on message
   const [submissionError, setSubmissionError] = useState<boolean>(false)
@@ -151,18 +155,6 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     })
   }
 
-  const showConfirmation = () => {
-    const { title, message, option } = messages.REVIEW_SUBMISSION_CONFIRM
-    setShowModalConfirmation({
-      open: true,
-      title,
-      message,
-      option,
-      onClick: () => submission(),
-      onClose: () => setShowModalConfirmation({ open: false }),
-    })
-  }
-
   const onClick = async () => {
     const firstIncompleteReviewPage = assignment.isFinalDecision
       ? null
@@ -204,7 +196,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     }
 
     // Can SUBMIT
-    showConfirmation()
+    showConfirmModal({ onOK: () => submission() })
   }
 
   const submission = async () => {
@@ -212,7 +204,6 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       await submitReview(structure, getDecision())
     } catch (e) {
       console.log(e)
-      setShowModalConfirmation({ open: false })
       setSubmissionError(true)
     }
   }
@@ -231,7 +222,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
         <Label className="simple-label alert-text" content={strings.REVIEW_SUBMISSION_FAIL} />
       )}
       <ModalWarning {...showWarningModal} />
-      <ModalConfirmation {...showModalConfirmation} />
+      <ConfirmModal />
     </Form.Field>
   )
 }
