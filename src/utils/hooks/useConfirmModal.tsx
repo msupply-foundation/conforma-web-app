@@ -50,7 +50,7 @@ const useConfirmModal = ({
   const ConfirmModal = () => (
     <Modal closeIcon open={open} {...modalProps} basic size="small" onClose={() => setOpen(false)}>
       <Header icon>
-        {type === 'confirmation' ? (
+        {modalState.type === 'confirmation' ? (
           <Icon name="check square outline" color="green" />
         ) : (
           <Icon name="exclamation triangle" color="orange" />
