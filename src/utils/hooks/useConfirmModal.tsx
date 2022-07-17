@@ -83,7 +83,7 @@ const useConfirmModal = ({
     cancelText,
     onOK,
     onCancel,
-  }: Partial<ConfirmModalState>) => {
+  }: Partial<ConfirmModalState> = {}) => {
     const newState: Partial<ConfirmModalState> = {}
     if (title) newState.title = title
     if (message) newState.message = message
