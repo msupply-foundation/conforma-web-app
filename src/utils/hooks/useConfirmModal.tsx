@@ -3,6 +3,7 @@ import { Button, Header, Icon, Modal, ModalProps } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
 
 interface ConfirmModalState extends ModalProps {
+  type: 'warning' | 'confirmation'
   title: string
   message?: string
   OKText: string
@@ -12,6 +13,7 @@ interface ConfirmModalState extends ModalProps {
 }
 
 const useConfirmModal = ({
+  type,
   title,
   message,
   OKText,
@@ -24,6 +26,7 @@ const useConfirmModal = ({
   const [open, setOpen] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
   const [modalState, setModalState] = useState<ConfirmModalState>({
+    type: type ?? 'confirmation',
     title: title ?? strings.MODAL_CONFIRM_TITLE,
     message,
     OKText: OKText ?? strings.OPTION_OK,
@@ -47,7 +50,11 @@ const useConfirmModal = ({
   const ConfirmModal = () => (
     <Modal closeIcon open={open} {...modalProps} basic size="small" onClose={() => setOpen(false)}>
       <Header icon>
-        <Icon name="check square outline" color="green" />
+        {type === 'confirmation' ? (
+          <Icon name="check square outline" color="green" />
+        ) : (
+          <Icon name="exclamation triangle" color="orange" />
+        )}
         {modalState.title}
       </Header>
       <Modal.Content>{modalState.message && <p>{modalState.message}</p>}</Modal.Content>
