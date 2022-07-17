@@ -97,25 +97,33 @@ export const Overview: React.FC<{
             {applicantDeadline &&
               (outcome === ApplicationOutcome.Expired ||
                 current.status === ApplicationStatus.ChangesRequired) && (
-                <div className="flex-row-start-center" style={{ gap: 10, marginTop: 20 }}>
-                  Extend deadline by{' '}
+                <div className="flex-row-start-center" style={{ gap: 10, marginTop: 30 }}>
+                  {strings.REVIEW_OVERVIEW_EXTEND_BY}
                   <Form.Input
                     size="mini"
                     type="number"
                     min={1}
                     value={deadlineDays}
                     onChange={(e) => setDeadlineDays(Number(e.target.value))}
-                  />{' '}
-                  days
+                    style={{ maxWidth: 65 }}
+                  />
+                  <span style={{ marginRight: 20 }}>
+                    {deadlineDays > 1
+                      ? strings.REVIEW_OVERVIEW_DAYS
+                      : strings.REVIEW_OVERVIEW_DAYS_SINGULAR}
+                  </span>
                   <Button
                     primary
                     inverted
                     onClick={() =>
                       showModal({
-                        message: strings.REVIEW_OVERVIEW_MODAL_MESSAGE.replace(
-                          '%1',
-                          String(deadlineDays)
-                        ),
+                        message:
+                          deadlineDays > 1
+                            ? strings.REVIEW_OVERVIEW_MODAL_MESSAGE.replace(
+                                '%1',
+                                String(deadlineDays)
+                              )
+                            : strings.REVIEW_OVERVIEW_MODAL_MESSAGE_SINGULAR,
                         onOK: async () => {
                           await extendDeadline(id, deadlineDays)
                           reload()
@@ -123,7 +131,7 @@ export const Overview: React.FC<{
                       })
                     }
                   >
-                    Extend
+                    {strings.REVIEW_OVERVIEW_BUTTON_EXTEND}
                   </Button>
                 </div>
               )}
