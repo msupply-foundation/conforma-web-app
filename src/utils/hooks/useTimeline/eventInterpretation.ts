@@ -115,11 +115,16 @@ const getExtensionEvent = (
       eventType: TimelineEventType.Ignore,
       displayString: '',
     }
+  const {
+    newDeadline,
+    extendedBy: { name },
+  } = details
   return {
     eventType: TimelineEventType.ApplicantDeadlineExtended,
-    displayString: `${strings.TIMELINE_DEADLINE_EXTENDED} ${DateTime.fromISO(
-      details.newDeadline
-    ).toLocaleString(DateTime.DATETIME_SHORT)}`,
+    displayString: `${strings.TIMELINE_DEADLINE_EXTENDED.replace(
+      '%1',
+      `**${name}**`
+    )} ${DateTime.fromISO(details.newDeadline).toLocaleString(DateTime.DATETIME_SHORT)}`,
   }
 }
 
