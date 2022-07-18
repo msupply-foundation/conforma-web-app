@@ -1,5 +1,5 @@
 overwrite: true
-watch: true
+watch: false
 schema: 'http://localhost:5000/graphql'
 documents:
   - './src/components/**/*.ts'

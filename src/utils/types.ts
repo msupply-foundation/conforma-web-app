@@ -180,6 +180,7 @@ interface CellProps {
 
 interface ColumnDetails {
   headerName: string
+  headerDetail?: string
   sortName: string
   ColumnComponent: React.FunctionComponent<any>
 }
