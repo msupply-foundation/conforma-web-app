@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
-import { ActivityLog, Decision, EventType, useGetActivityLogQuery } from '../../generated/graphql'
+import {
+  ActivityLog,
+  ApplicationStatus,
+  Decision,
+  EventType,
+  useGetActivityLogQuery,
+} from '../../generated/graphql'
 import { FullStructure } from '../../types'
 import {
   getAssignmentEvent,
@@ -11,7 +17,7 @@ import {
 } from './eventInterpretation'
 import { getDecisionIcon } from './helpers'
 import useLocalisedEnums from '../useLocalisedEnums'
-import { TimelineStage, Timeline, TimelineEventType, EventOutput } from './types'
+import { TimelineStage, Timeline, TimelineEventType, EventOutput, TimelineEvent } from './types'
 
 const useTimeline = (structure: FullStructure) => {
   const { strings } = useLanguageProvider()
@@ -61,6 +67,7 @@ const buildTimeline = (
   // Group by stage
   const stages: TimelineStage[] = []
   let stageIndex = -1
+  let mostRecentChangeRequestEvent: TimelineEvent | null = null
 
   activityLog.forEach((event, index) => {
     if (event.type === 'STAGE') {
@@ -87,22 +94,30 @@ const buildTimeline = (
 
       if (stageIndex < 0) return
 
-      if (timelineEvent.eventType !== TimelineEventType.Ignore)
+      if (
+        timelineEvent.eventType === TimelineEventType.ApplicationChangesRequired ||
+        timelineEvent.eventType === TimelineEventType.ReviewChangesRequested
+      )
+        mostRecentChangeRequestEvent = timelineEvent
+
+      if (
+        ![
+          TimelineEventType.Ignore,
+          TimelineEventType.ApplicationChangesRequired,
+          TimelineEventType.ReviewChangesRequested,
+        ].includes(timelineEvent.eventType)
+      )
         stages[stageIndex].events.push(timelineEvent)
     }
   })
 
-  // Remove "Changes Requested/Required" events except if last in list
-  stages.forEach((stage, stageIndex) => {
-    stage.events = stage.events.filter((event, eventIndex) => {
-      if (
-        event.eventType === TimelineEventType.ApplicationChangesRequired ||
-        event.eventType === TimelineEventType.ReviewChangesRequested
-      )
-        return stageIndex === stages.length - 1 && eventIndex === stage.events.length - 1
-      return true
-    })
-  })
+  // Add a special "waiting" event if application is currently awaiting changes
+  // from applicant or reviewer
+  if (
+    structure.info.current.status === ApplicationStatus.ChangesRequired &&
+    mostRecentChangeRequestEvent
+  )
+    stages[stageIndex].events.push(mostRecentChangeRequestEvent)
 
   // Placeholder event if no activity yet in stage
   if (stageIndex > -1 && stages[stageIndex].events.length === 0)

@@ -56,8 +56,7 @@ const getStatusEvent = (
         displayString: '',
       }
     case value === 'CHANGES_REQUIRED':
-      // Mostly ignored, only shows when event is *last* in list (see
-      // buildTimeline function)
+      // Mostly ignored, only shows when event reflects the *current* state
       return {
         eventType: TimelineEventType.ApplicationChangesRequired,
         displayString: `*> ${strings.TIMELINE_WAITING_FOR_APPLICANT}*`,
@@ -124,7 +123,7 @@ const getExtensionEvent = (
     displayString: `${strings.TIMELINE_DEADLINE_EXTENDED.replace(
       '%1',
       `**${name}**`
-    )} ${DateTime.fromISO(details.newDeadline).toLocaleString(DateTime.DATETIME_SHORT)}`,
+    )} ${DateTime.fromISO(newDeadline).toLocaleString(DateTime.DATETIME_SHORT)}`,
   }
 }
 
@@ -197,7 +196,7 @@ const getReviewEvent = (
 
   switch (true) {
     case value === 'CHANGES_REQUESTED':
-      // Mostly ignored, only shows when event is *last* in list
+      // Mostly ignored, only shows when event reflects the *current* state
       return {
         eventType: TimelineEventType.ReviewChangesRequested,
         displayString: `*> ${strings.TIMELINE_WAITING_FOR_REVIEWER}*`.replace(
