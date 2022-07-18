@@ -1,6 +1,6 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React, { useEffect, useState } from 'react'
-import { Modal, Label, Icon, Header, Message, ModalProps } from 'semantic-ui-react'
+import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
 import { pluginProvider } from '../../../../formElementPlugins'
 import {
   IsReviewableStatus,
@@ -18,7 +18,7 @@ import { useFullApplicationState } from '../ApplicationWrapper'
 import { useFormState } from './Form'
 import FromExistingElement from './FromExistingElement'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
-import ModalConfirmation from '../../../../components/Main/ModalConfirmation'
+import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 
 type ElementConfigProps = {
   element: TemplateElement | null
@@ -76,12 +76,12 @@ const evaluations: Evaluations = [
 
 const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { strings } = useLanguageProvider()
-
-  const REMOVE_MESSAGE = {
-    title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
-    message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
-    option: strings.BUTTON_CONFIRM,
-  }
+  const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } =
+    useConfirmationModal({
+      title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
+      message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
+      confirmText: strings.BUTTON_CONFIRM,
+    })
 
   const { structure } = useFullApplicationState()
   const {
@@ -93,7 +93,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
   const [open, setOpen] = useState(false) // TODO: Use ConfirmationModal (2 actions...)
-  const [showRemoveElementModal, setShowRemoveElementModal] = useState<ModalProps>({ open: false })
 
   useEffect(() => {
     if (!element) return setState(null)
@@ -146,18 +145,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const markNeedsUpdate = () => {
     setShouldUpdate(true)
     setShowSaveAlert(false)
-  }
-
-  const confirmAndRemove = () => {
-    setShowRemoveElementModal({
-      ...REMOVE_MESSAGE,
-      open: true,
-      onClick: () => {
-        removeElement()
-        setShowRemoveElementModal({ open: false })
-      },
-      onClose: () => setShowRemoveElementModal({ open: false }),
-    })
   }
 
   return (
@@ -348,7 +335,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               disabled={!isDraft}
               disabledMessage={disabledMessage}
               title={strings.BUTTON_REMOVE}
-              onClick={confirmAndRemove}
+              onClick={() => showRemoveElementModal({ onConfirm: () => removeElement() })}
             />
             <ButtonWithFallback
               title={strings.BUTTON_CLOSE}
@@ -379,7 +366,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           </div>
         </div>
       </div>
-      <ModalConfirmation {...showRemoveElementModal} />
+      <RemoveElementModal />
       <Message
         className="alert-success"
         success
