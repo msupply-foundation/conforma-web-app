@@ -4948,6 +4948,7 @@ export enum EventType {
   Stage = 'STAGE',
   Status = 'STATUS',
   Outcome = 'OUTCOME',
+  Extension = 'EXTENSION',
   Assignment = 'ASSIGNMENT',
   Review = 'REVIEW',
   ReviewDecision = 'REVIEW_DECISION',

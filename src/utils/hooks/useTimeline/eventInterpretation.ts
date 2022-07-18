@@ -8,6 +8,8 @@ import {
   stringifySections,
   getReviewLinkString,
 } from './helpers'
+import { DateTime } from 'luxon'
+import config from '../../../config'
 
 const getStatusEvent = (
   { value, timestamp, details: { prevStatus } }: ActivityLog,
@@ -57,7 +59,7 @@ const getStatusEvent = (
       // Mostly ignored, only shows when event is *last* in list (see
       // buildTimeline function)
       return {
-        eventType: TimelineEventType.Ignore,
+        eventType: TimelineEventType.ApplicationChangesRequired,
         displayString: `*> ${strings.TIMELINE_WAITING_FOR_APPLICANT}*`,
       }
     default:
@@ -101,6 +103,23 @@ const getOutcomeEvent = ({ value }: ActivityLog, strings: LanguageStrings): Even
         eventType: TimelineEventType.Error,
         displayString: strings.TIMELINE_ERROR_MESSAGE,
       }
+  }
+}
+
+const getExtensionEvent = (
+  { value, details }: ActivityLog,
+  strings: LanguageStrings
+): EventOutput => {
+  if (value !== config.applicantDeadlineCode)
+    return {
+      eventType: TimelineEventType.Ignore,
+      displayString: '',
+    }
+  return {
+    eventType: TimelineEventType.ApplicantDeadlineExtended,
+    displayString: `${strings.TIMELINE_DEADLINE_EXTENDED} ${DateTime.fromISO(
+      details.newDeadline
+    ).toLocaleString(DateTime.DATETIME_SHORT)}`,
   }
 }
 
@@ -175,7 +194,7 @@ const getReviewEvent = (
     case value === 'CHANGES_REQUESTED':
       // Mostly ignored, only shows when event is *last* in list
       return {
-        eventType: TimelineEventType.Ignore,
+        eventType: TimelineEventType.ReviewChangesRequested,
         displayString: `*> ${strings.TIMELINE_WAITING_FOR_REVIEWER}*`.replace(
           '%1',
           `**${reviewer?.name}**`
@@ -289,4 +308,4 @@ const getReviewEvent = (
   }
 }
 
-export { getStatusEvent, getOutcomeEvent, getAssignmentEvent, getReviewEvent }
+export { getStatusEvent, getOutcomeEvent, getExtensionEvent, getAssignmentEvent, getReviewEvent }
