@@ -41,8 +41,8 @@ const useCategoryInfo = () => {
 type CategoryUpdate = {
   code: string
   id?: number
-  icon: string
-  title: string
+  icon: string | null
+  title: string | null
   uiLocation: UiLocation[]
 }
 
@@ -152,19 +152,19 @@ const Category: React.FC<{}> = () => {
           <TextIO
             text={updateState.code}
             title={strings.TEMPLATE_CODE}
-            setText={(text) => setUpdateState({ ...updateState, code: text })}
+            setText={(text) => setUpdateState({ ...updateState, code: text ?? '' })}
           />
           <TextIO
             text={updateState.title}
             title={strings.TEMPLATE_TITLE}
-            setText={(value: string) => setUpdateState({ ...updateState, title: value })}
+            setText={(value: string | null) => setUpdateState({ ...updateState, title: value })}
           />
           <TextIO
             text={updateState.icon}
             title={strings.TEMPLATE_ICON}
             link={iconLink}
-            icon={updateState.icon}
-            setText={(value: string) => setUpdateState({ ...updateState, icon: value })}
+            icon={updateState.icon ?? undefined}
+            setText={(value: string | null) => setUpdateState({ ...updateState, icon: value })}
           />
           <div>
             <p>{strings.TEMPLATE_APPEARS_IN}:</p>
