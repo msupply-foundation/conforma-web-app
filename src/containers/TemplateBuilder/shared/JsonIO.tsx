@@ -46,7 +46,7 @@ const JsonIO: React.FC<{
         title={label}
         isPropUpdated={isPropUpdated}
         isTextArea={true}
-        setText={(value, resetValue) => resetValue(tryToSetValue(value))}
+        setText={(value, resetValue) => resetValue(tryToSetValue(value ?? ''))}
       />
       {isError && (
         <Label basic color="red" pointing="above">

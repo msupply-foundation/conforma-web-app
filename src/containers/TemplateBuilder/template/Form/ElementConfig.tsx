@@ -23,15 +23,15 @@ type ElementConfigProps = {
 
 type ElementUpdateState = {
   code: string
-  title: string
+  title: string | null
   category: TemplateElementCategory
   elementTypePluginCode: string
   visibilityCondition: EvaluatorNode
   isRequired: EvaluatorNode
   isEditable: EvaluatorNode
   validation: EvaluatorNode
-  validationMessage: string
-  helpText: string
+  validationMessage: string | null
+  helpText: string | null
   parameters: ParametersType
   defaultValue: EvaluatorNode
   id: number
@@ -41,14 +41,14 @@ type GetState = (element: TemplateElement) => ElementUpdateState
 
 const getState: GetState = (element: TemplateElement) => ({
   code: element.code || '',
-  title: element.title || '',
+  title: element.title || null,
   category: element.category || TemplateElementCategory.Information,
   elementTypePluginCode: element.elementTypePluginCode || '',
   visibilityCondition: element.visibilityCondition,
   isRequired: element.isRequired,
   isEditable: element.isEditable,
   validation: element.validation,
-  helpText: element.helpText || '',
+  helpText: element.helpText || null,
   validationMessage: element.validationMessage || '',
   parameters: element.parameters || {},
   defaultValue: element.defaultValue || null,
@@ -205,7 +205,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   text={state.title}
                   title="Title"
                   setText={(text) => {
-                    setState({ ...state, title: text })
+                    setState({ ...state, title: text ?? '' })
                   }}
                   markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
@@ -219,7 +219,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 text={state.code}
                 title="Code"
                 setText={(text) => {
-                  setState({ ...state, code: text })
+                  setState({ ...state, code: text ?? '' })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
