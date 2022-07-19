@@ -23,7 +23,7 @@ type ActionConfigProps = {
 type ActionUpdateState = {
   code?: string | null
   actionCode: string
-  description: string
+  description: string | null
   eventCode?: string | null
   condition: EvaluatorNode
   parameterQueries: ParametersType
