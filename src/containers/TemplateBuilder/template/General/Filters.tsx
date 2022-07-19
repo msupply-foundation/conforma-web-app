@@ -153,12 +153,16 @@ const Filters: React.FC = () => {
           <TextIO
             text={updateState.code}
             title="Code"
-            setText={(value: string) => setUpdateState({ ...updateState, code: value })}
+            setText={(value: string | null) =>
+              setUpdateState({ ...updateState, code: value ?? '' })
+            }
           />
           <TextIO
             text={updateState.title}
             title="Code"
-            setText={(value: string) => setUpdateState({ ...updateState, title: value })}
+            setText={(value: string | null) =>
+              setUpdateState({ ...updateState, title: value ?? '' })
+            }
           />
           <DropdownIO
             value={updateState.userRole}

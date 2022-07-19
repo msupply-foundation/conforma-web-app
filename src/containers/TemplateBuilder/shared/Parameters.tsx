@@ -114,7 +114,7 @@ export const Parameters: React.FC<ParametersProps> = ({
                     updateKey={(newKey) => {
                       const newParameters = { ...parameters }
                       delete newParameters[key]
-                      setParameters({ ...newParameters, [newKey]: value })
+                      newKey && setParameters({ ...newParameters, [newKey]: value })
                     }}
                     deleteKey={() => {
                       const newParameters = { ...parameters }
