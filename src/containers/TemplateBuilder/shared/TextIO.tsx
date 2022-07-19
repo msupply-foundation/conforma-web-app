@@ -8,7 +8,7 @@ const colourLink = 'https://htmlcolorcodes.com/'
 type TextIOprops = {
   text?: string | null
   title?: string | null
-  setText?: (text: string, resetValue: (text: string) => void) => void
+  setText?: (text: string | null, resetValue: (text: string) => void) => void
   markNeedsUpdate?: () => void
   disabled?: boolean
   disabledMessage?: string
@@ -84,7 +84,7 @@ const TextIO: React.FC<TextIOprops> = ({
               disabled={disabled}
               value={innerValue ?? ''}
               rows={defaultRows}
-              onBlur={() => innerValue && setText(innerValue, setInnerValue)}
+              onBlur={() => setText(innerValue === '' ? null : innerValue, setInnerValue)}
               onChange={(_, { value }) => {
                 setInnerValue(String(value))
                 markNeedsUpdate()
@@ -106,7 +106,7 @@ const TextIO: React.FC<TextIOprops> = ({
           markNeedsUpdate()
         }}
         // Dont' want to try and query api on every key change of query text
-        onBlur={() => innerValue && setText(innerValue, setInnerValue)}
+        onBlur={() => setText(innerValue === '' ? null : innerValue, setInnerValue)}
       />
     )
   }
