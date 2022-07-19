@@ -105,7 +105,11 @@ const Evaluation: React.FC<EvaluationProps> = ({
         )}
         {updateKey && (
           <div className="flex-row-start-center" style={{ marginTop: 6 }}>
-            <TextIO title="Parameter Name" text={label} setText={updateKey} />
+            <TextIO
+              title="Parameter Name"
+              text={label}
+              setText={updateKey as (key: string | null) => void}
+            />
           </div>
         )}
         <EvaluationHeader evaluation={evaluation} />
