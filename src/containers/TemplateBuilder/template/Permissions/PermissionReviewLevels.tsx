@@ -92,7 +92,7 @@ const PermissionReviewLevel: React.FC<PemrmissionReviewLevelProps> = ({ stage })
               disabled={!isDraft}
               labelNegative
               disabledMessage={disabledMessage}
-              setText={(name) => updateLevelName(level?.id || 0, name)}
+              setText={(name) => updateLevelName(level?.id || 0, name ?? '')}
             />
             {canRemoveLevel(level?.number || 0) && (
               <IconButton
