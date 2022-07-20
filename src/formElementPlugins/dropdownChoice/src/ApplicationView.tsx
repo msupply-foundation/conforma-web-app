@@ -79,6 +79,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <Dropdown
         fluid
+        multiple
         selection
         clearable
         search={search}
