@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Form, Message } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Input, Select } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import config from '../pluginConfig.json'
@@ -100,30 +100,28 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       
       {checkboxElements.map((cb: Checkbox, index: number) => (
         <Form>
-        <Form.Field 
-          key={`${index}_${cb.label}`} 
-          disabled={!isEditable} 
-          style={styles}
-          >
-            <Checkbox
-              label={cb.label}
-              checked={cb.selected}
-              onChange={toggle}
-              index={index}
-              toggle={type === 'toggle'}
-              slider={type === 'slider'}
-          />
-        </Form.Field>
-        <Message
-        error={
-          !validationState.isValid
-            ? {
-                content: validationState?.validationMessage,
-                pointing: 'above',
-              }
-            : null
-        }
-        />
+          <Form.Input 
+            key={`${index}_${cb.label}`} 
+            disabled={!isEditable} 
+            style={styles}
+            error={
+              !validationState.isValid 
+                ? {
+                    content: validationState?.validationMessage,
+                    pointing: 'above',
+                  }
+                : null
+            }
+            >
+              <Checkbox
+                label={cb.label}
+                checked={cb.selected}
+                onChange={toggle}
+                index={index}
+                toggle={type === 'toggle'}
+                slider={type === 'slider'}
+            />
+          </Form.Input>
         </Form>
       ))}
       {resetButton && (

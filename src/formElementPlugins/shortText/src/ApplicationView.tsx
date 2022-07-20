@@ -75,7 +75,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         error={
           !validationState.isValid
             ? {
-                content: validationState?.validationMessage,
+                content: 'validationState?.validationMessage',
                 pointing: 'above',
               }
             : null
