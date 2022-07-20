@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Form } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Message } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import config from '../pluginConfig.json'
@@ -23,6 +23,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
   Markdown,
   initialValue,
+  validationState
 }) => {
   const { getPluginStrings } = useLanguageProvider()
   const strings = getPluginStrings('checkbox')
@@ -96,17 +97,34 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
+      
       {checkboxElements.map((cb: Checkbox, index: number) => (
-        <Form.Field key={`${index}_${cb.label}`} disabled={!isEditable} style={styles}>
-          <Checkbox
-            label={cb.label}
-            checked={cb.selected}
-            onChange={toggle}
-            index={index}
-            toggle={type === 'toggle'}
-            slider={type === 'slider'}
+        <Form>
+        <Form.Field 
+          key={`${index}_${cb.label}`} 
+          disabled={!isEditable} 
+          style={styles}
+          >
+            <Checkbox
+              label={cb.label}
+              checked={cb.selected}
+              onChange={toggle}
+              index={index}
+              toggle={type === 'toggle'}
+              slider={type === 'slider'}
           />
         </Form.Field>
+        <Message
+        error={
+          !validationState.isValid
+            ? {
+                content: validationState?.validationMessage,
+                pointing: 'above',
+              }
+            : null
+        }
+        />
+        </Form>
       ))}
       {resetButton && (
         <div style={{ marginTop: 10 }}>
