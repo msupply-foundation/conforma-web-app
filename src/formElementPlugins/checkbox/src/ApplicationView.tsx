@@ -108,14 +108,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             key={`${index}_${cb.label}`} 
             disabled={!isEditable} 
             style={styles}
-            error={
-              !validationState.isValid
-                ? {
-                    content: validationState?.validationMessage,
-                    pointing: 'above',
-                  }
-                : null
-            }
             >
               <Checkbox
                 label={cb.label}
@@ -129,6 +121,22 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           </Form.Input>
         </Form>
       ))}
+      <Form>
+        <Form.Field
+          label={''}
+          error={
+              !validationState.isValid
+                ? {
+                    content: validationState?.validationMessage,
+                    pointing: 'above',
+                  }
+                : null
+            }
+          disabled={!isEditable} 
+          style={styles}
+        >
+        </Form.Field>
+      </Form>
       {resetButton && (
         <div style={{ marginTop: 10 }}>
           <Button primary content={strings.BUTTON_RESET_SELECTION} compact onClick={resetState} />
