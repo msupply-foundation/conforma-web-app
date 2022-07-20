@@ -25,6 +25,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   } = parameters
 
   const [selectedIndex, setSelectedIndex] = useState<number>()
+  const [additionalItem, setAdditionalItem] = useState<any|null>(null)
   const { isEditable } = element
 
   useEffect(() => {
@@ -61,13 +62,21 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     else onSave(null)
   }
 
-  const dropdownOptions = options.map((option: any, index: number) => {
+  var currentOptions = [...options]
+  if (additionalItem) {
+    currentOptions = [...options, additionalItem]
+    console.log(currentOptions)
+  }
+
+  const dropdownOptions = currentOptions.map((option: any, index: number) => {
     return {
       key: `${index}_${option}`,
       text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
       value: index,
     }
   })
+
+  
 
   return (
     <>
@@ -79,10 +88,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <Dropdown
         fluid
-        multiple
+        //multiple
+        onAddItem={additionalItem}
         selection
         clearable
         search={search}
+        allowAdditions
+        OnAddItem={({value}) => setAdditionalItem()}
         placeholder={placeholder}
         options={dropdownOptions}
         onChange={handleChange}
