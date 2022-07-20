@@ -21,11 +21,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     search,
     options,
     optionsDisplayProperty,
+    hasOther,
     default: defaultOption,
   } = parameters
 
   const [selectedIndex, setSelectedIndex] = useState<number>()
   const [additionalItem, setAdditionalItem] = useState<any|null>(null)
+  const [currentOptions, setCurrentOptions] = useState<any>(options)
   const { isEditable } = element
 
   useEffect(() => {
@@ -49,10 +51,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleChange(e: any, data: any) {
     const { value: optionIndex } = data
+    console.log(optionsDisplayProperty)
+    console.log(optionIndex)
+    console.log(options)
     setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
     if (optionIndex !== '')
       onSave({
-        text: optionsDisplayProperty
+        text: (optionsDisplayProperty != undefined && optionsDisplayProperty)
           ? options[optionIndex][optionsDisplayProperty]
           : options[optionIndex],
         selection: options[optionIndex],
@@ -62,21 +67,28 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     else onSave(null)
   }
 
-  var currentOptions = [...options]
-  if (additionalItem) {
-    currentOptions = [...options, additionalItem]
-    console.log(currentOptions)
+
+
+  const addItemHandler = (newOption: any) => {
+    const newIndex = options.length
+    options.push({
+      key: `${newIndex}_${newOption}`,
+      text: {name:newOption},
+      value: newIndex,
+    })
+    console.log(options)
   }
 
-  const dropdownOptions = currentOptions.map((option: any, index: number) => {
+  const dropdownOptions = options.map((option: any, index: number) => {
+    //console.log(options)
+    // console.log(optionsDisplayProperty)
+    // console.log(option)
     return {
       key: `${index}_${option}`,
       text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
       value: index,
     }
   })
-
-  
 
   return (
     <>
@@ -89,12 +101,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Dropdown
         fluid
         //multiple
-        onAddItem={additionalItem}
+        // onAddItem={additionalItem}
         selection
         clearable
-        search={search}
+        search={search || hasOther}
         allowAdditions
-        OnAddItem={({value}) => setAdditionalItem()}
+        onAddItem={(newOption: any) => addItemHandler(newOption)}
         placeholder={placeholder}
         options={dropdownOptions}
         onChange={handleChange}
