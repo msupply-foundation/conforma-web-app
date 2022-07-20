@@ -51,9 +51,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleChange(e: any, data: any) {
     const { value: optionIndex } = data
-    console.log(optionsDisplayProperty)
-    console.log(optionIndex)
-    console.log(options)
+    // console.log(optionsDisplayProperty)
+    // console.log(optionIndex)
+    // console.log(options)
     setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
     if (optionIndex !== '')
       onSave({
@@ -69,14 +69,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 
 
-  const addItemHandler = (newOption: any) => {
-    const newIndex = options.length
-    options.push({
-      key: `${newIndex}_${newOption}`,
-      text: {name:newOption},
-      value: newIndex,
-    })
-    console.log(options)
+  const addItemHandler = (e: any, data: any) => {
+    console.log('here is the data',data)
+    const { value: newOption } = data
+    console.log(newOption)
+    // options.push({
+    //   name: newOption
+    // })
+    setCurrentOptions([...currentOptions, {name: newOption}])
+    console.log(currentOptions)
   }
 
   const dropdownOptions = options.map((option: any, index: number) => {
@@ -106,7 +107,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         clearable
         search={search || hasOther}
         allowAdditions
-        onAddItem={(newOption: any) => addItemHandler(newOption)}
+        onAddItem={addItemHandler}
         placeholder={placeholder}
         options={dropdownOptions}
         onChange={handleChange}
