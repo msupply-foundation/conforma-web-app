@@ -31,6 +31,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { label, description, checkboxes, type, layout, resetButton = false, keyMap } = parameters
 
   const [isFirstRender, setIsFirstRender] = useState(true)
+  const [toggled, setToggled] = useState(false)
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
     getInitialState(initialValue, checkboxes, keyMap, isFirstRender)
@@ -78,6 +79,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const changedCheckbox = { ...checkboxElements[index] }
     changedCheckbox.selected = !changedCheckbox.selected
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
+    setToggled(true)
   }
 
   const resetState = () =>
@@ -92,6 +94,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       : {}
   
       console.log(validationState)
+      console.log('is first render? :', isFirstRender)
 
   return (
     <>
@@ -116,7 +119,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 index={index}
                 toggle={type === 'toggle'}
                 slider={type === 'slider'}
-                defaultIndeterminate
             />
           </Form.Input>
         </Form>
@@ -125,7 +127,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Form.Field
           label={''}
           error={
-              !validationState.isValid
+              (!validationState.isValid && toggled)
                 ? {
                     content: validationState?.validationMessage,
                     pointing: 'above',
