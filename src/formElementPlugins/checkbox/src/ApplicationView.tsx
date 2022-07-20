@@ -36,6 +36,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     getInitialState(initialValue, checkboxes, keyMap, isFirstRender)
   )
 
+  //new state
+
   // When checkbox array changes after initial load (e.g. when its being dynamically loaded from an API)
   useEffect(() => {
     if (checkboxes[0] !== config.parameterLoadingValues.label && isFirstRender) {
@@ -88,6 +90,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           marginRight: 10,
         }
       : {}
+  
+      console.log(validationState)
 
   return (
     <>
@@ -105,7 +109,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             disabled={!isEditable} 
             style={styles}
             error={
-              !validationState.isValid 
+              !validationState.isValid
                 ? {
                     content: validationState?.validationMessage,
                     pointing: 'above',
@@ -120,6 +124,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 index={index}
                 toggle={type === 'toggle'}
                 slider={type === 'slider'}
+                defaultIndeterminate
             />
           </Form.Input>
         </Form>
