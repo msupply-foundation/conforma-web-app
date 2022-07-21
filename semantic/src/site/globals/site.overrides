@@ -291,9 +291,10 @@ a:hover {
   position: fixed; // TO-DO: No fixed on mobile
   background-color: @headersInteractiveLow;
   padding-top: 10px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   padding-left: 20px;
   padding-right: 20px;
+  gap: 20px;
   height: @headerHeight; // TO-DO: Adjust for mobile
   justify-content: space-between;
   z-index: 1000;
@@ -307,7 +308,6 @@ a:hover {
   width: clamp(100px, 25%, 200px);
   display: flex;
   align-items: center;
-  gap: 20px;
   .brand-area-text {
     color: @userAreaText !important;
     margin: 0;
