@@ -31,7 +31,7 @@ export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
         setOpen={setIsModalOpen}
         reviewId={thisReview?.id as number}
         decision={LocalisedDecision[decision]}
-        previewData={{ reviewData: { latestDecision: { decision } } }}
+        applicationDataOverride={{ reviewData: { latestDecision: { decision } } }}
       />
       {hasPreviewActions && (
         <Form.Field>

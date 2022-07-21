@@ -10,7 +10,7 @@ interface PreviewProps extends ModalProps {
   setOpen: (open: boolean) => void
   decision: string
   reviewId: number
-  previewData: { [key: string]: any }
+  applicationDataOverride: { [key: string]: any }
 }
 
 const previewEndpoint = `${config.serverREST}/preview-actions`
@@ -20,7 +20,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
   setOpen,
   decision,
   reviewId,
-  previewData,
+  applicationDataOverride,
 }) => {
   const { strings } = useLanguageProvider()
   const [data, setData] = useState<ActionResultPreviewData[] | null>(null)
@@ -34,7 +34,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
       return
     }
     setLoading(true)
-    fetchPreviews(reviewId, previewData).then((result) => {
+    fetchPreviews(reviewId, applicationDataOverride).then((result) => {
       if (result.error) setError(result.error)
       else setData(result.displayData)
       setLoading(false)
@@ -79,12 +79,12 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
 
 export default ReviewPreviewModal
 
-const fetchPreviews = async (reviewId: number, previewData: { [key: string]: any }) => {
+const fetchPreviews = async (reviewId: number, applicationDataOverride: { [key: string]: any }) => {
   const JWT = localStorage.getItem(config.localStorageJWTKey)
   try {
     const result = await postRequest({
       url: previewEndpoint,
-      jsonBody: { reviewId, previewData },
+      jsonBody: { reviewId, applicationDataOverride },
       headers: { Authorization: `Bearer ${JWT}`, 'Content-Type': 'application/json' },
     })
     return result
