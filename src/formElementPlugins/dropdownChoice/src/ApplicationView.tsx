@@ -27,8 +27,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   } = parameters
 
   const [selectedIndex, setSelectedIndex] = useState<number>()
-  const [additionalItem, setAdditionalItem] = useState<any|null>(null)
-  const [currentOptions, setCurrentOptions] = useState<any>(options)
+
   const { isEditable } = element
 
   useEffect(() => {
@@ -50,18 +49,37 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     }
   }, [])
 
+  const addItemHandler = (e: any, data: any) => {
+    const { value: newOption } = data
+    console.log(dropdownOptions)
+    const index = dropdownOptions.length
+    console.log(newOption)
+    dropdownOptions.push({
+      key: `${index}_${{newOption}}`,
+      text: newOption,
+      value: index,
+    })
+    console.log(dropdownOptions)
+  }
+
+  const dropdownOptions = options.map((option: any, index: number) => {
+    //console.log(option)
+    return {
+      key: `${index}_${option}`,
+      text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
+      value: index,
+    }
+  })
+
   function handleChange(e: any, data: any) {
     const { value: optionIndex } = data
-    // console.log(optionsDisplayProperty)
-    // console.log(optionIndex)
-    // console.log(options)
     setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
     if (optionIndex !== '')
       onSave({
         text: (optionsDisplayProperty != undefined && optionsDisplayProperty)
           ? options[optionIndex][optionsDisplayProperty]
-          : options[optionIndex],
-        selection: options[optionIndex],
+          : dropdownOptions[optionIndex],
+        selection: dropdownOptions[optionIndex],
         optionIndex,
       })
     // Reset response if selection cleared
@@ -70,29 +88,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 
 
-  const addItemHandler = (e: any, data: any) => {
-    setCurrentOptions(options)
-    console.log('here is the data',data)
-    console.log('here are options', options)
-    const { value: newOption } = data
-    console.log(newOption)
-    // options.push({
-    //   name: newOption
-    // })
-    setCurrentOptions([...currentOptions, {name: newOption}])
-    console.log('current options', currentOptions)
-  }
 
-  const dropdownOptions = options.map((option: any, index: number) => {
-    //console.log(options)
-    // console.log(optionsDisplayProperty)
-    // console.log(option)
-    return {
-      key: `${index}_${option}`,
-      text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
-      value: index,
-    }
-  })
 
   return (
     <>
