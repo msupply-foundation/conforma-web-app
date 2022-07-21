@@ -202,10 +202,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <div className="flex-row-start-start">
               <div className="full-width-container">
                 <TextIO
-                  text={state.title}
+                  text={state?.title || ''}
                   title="Title"
                   setText={(text) => {
-                    setState({ ...state, title: text ?? '' })
+                    setState({ ...state, title: text })
                   }}
                   markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
@@ -246,11 +246,11 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <div className="flex-row-start-center-wrap">
               <div className="full-width-container">
                 <TextIO
-                  text={state.validationMessage}
+                  text={state?.validationMessage || ''}
                   title="Validation Message"
                   isTextArea={true}
                   setText={(text) => {
-                    setState({ ...state, validationMessage: text })
+                    setState({ ...state, validationMessage: text || null })
                   }}
                   markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
@@ -264,11 +264,11 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <div className="flex-row-start-center-wrap">
               <div className="full-width-container">
                 <TextIO
-                  text={state.helpText}
+                  text={state?.helpText || ''}
                   isTextArea={true}
                   title="Help Text"
                   setText={(text) => {
-                    setState({ ...state, helpText: text })
+                    setState({ ...state, helpText: text || null })
                   }}
                   markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
