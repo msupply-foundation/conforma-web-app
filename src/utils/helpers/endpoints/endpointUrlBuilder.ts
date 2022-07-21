@@ -40,6 +40,18 @@ const getServerUrl = (...args: RestEndpoints) => {
       const uid = args[1]
       return `${serverREST}${endpointPath}?uid=${uid}`
 
+    case 'userPermissions':
+      const permissionParameters = args[1]
+      return `${serverREST}${endpointPath}${buildQueryString(permissionParameters as BasicObject)}`
+
+    case 'checkTrigger':
+      const serial = args[1]
+      return `${serverREST}${endpointPath}?serial=${serial}`
+
+    case 'checkUnique':
+      const checkUniqueParams = args[1]
+      return `${serverREST}${endpointPath}${buildQueryString(checkUniqueParams as BasicObject)}`
+
     case 'dataViews':
       const tableName = args[1]
       const itemId = typeof args[2] === 'string' ? args[2] : undefined
@@ -55,17 +67,16 @@ const getServerUrl = (...args: RestEndpoints) => {
       return `${serverREST}${endpointPath}`
 
     case 'upload':
-      const parameters = args[1]
-      return `${serverREST}${endpointPath}${
-        parameters ? buildQueryString(parameters as BasicObject) : ''
-      }`
+      const uploadParameters = args[1]
+      return `${serverREST}${endpointPath}${buildQueryString(uploadParameters as BasicObject)}`
 
     default:
       return 'PATH NOT FOUND'
   }
 }
 
-const buildQueryString = (query: { [key: string]: string | number | boolean }) => {
+const buildQueryString = (query?: BasicObject) => {
+  if (!query) return ''
   const keyValStrings = Object.entries(query)
     .filter(([_, value]) => !!value)
     .map(([key, value]) => `${key}=${value}`)

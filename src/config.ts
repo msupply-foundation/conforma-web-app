@@ -25,7 +25,7 @@ const config = {
     loginOrg: '/login-org',
     userInfo: '/user-info',
     userPermissions: '/user-permissions',
-    checkTrigger: '/check-trigger',
+    checkTrigger: '/check-triggers',
     upload: '/upload',
     checkUnique: '/check-unique',
     generatePDF: '/generate-pdf',
@@ -38,6 +38,8 @@ const config = {
     // install language
     // All languages
     // Snapshots
+    // Preview
+    // Extend deadline
   },
   uploadEndpoint: '/upload',
   version,
