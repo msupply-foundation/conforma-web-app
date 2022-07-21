@@ -30,7 +30,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
 
   return (
     <Form id="review-submit-area">
-      <div className="flex-row-space-between" style={{ alignItems: 'flex-end' }}>
+      <div className="flex-row-space-between-flex-end">
         <ReviewDecision
           decisionOptions={decisionOptions}
           setDecision={setDecision}
