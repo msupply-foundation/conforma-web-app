@@ -50,6 +50,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [])
 
   const addItemHandler = (e: any, data: any) => {
+    console.log(data)
     const { value: newOption } = data
     console.log(dropdownOptions)
     const index = dropdownOptions.length
@@ -72,23 +73,34 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   })
 
   function handleChange(e: any, data: any) {
-    const { value: optionIndex } = data
-    setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
-    if (optionIndex !== '')
-      onSave({
-        text: (optionsDisplayProperty != undefined && optionsDisplayProperty)
-          ? options[optionIndex][optionsDisplayProperty]
-          : dropdownOptions[optionIndex],
-        selection: dropdownOptions[optionIndex],
-        optionIndex,
-      })
-    // Reset response if selection cleared
-    else onSave(null)
+      const { value: optionIndex } = data
+      const {options: array} = data
+      if (typeof optionIndex === 'string') {
+        console.log('sent')
+        setSelectedIndex(array.length-1)
+        if (optionIndex !== '')
+          onSave({
+            text: optionIndex,
+            selection: dropdownOptions[optionIndex],
+            optionIndex,
+          })
+        // Reset response if selection cleared
+        else onSave(null)
+      }
+      else {
+        setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
+        if (optionIndex !== '')
+          onSave({
+            text: (optionsDisplayProperty != undefined && optionsDisplayProperty)
+              ? options[optionIndex][optionsDisplayProperty]
+              : dropdownOptions[optionIndex],
+            selection: dropdownOptions[optionIndex],
+            optionIndex,
+          })
+        // Reset response if selection cleared
+        else onSave(null)
+      }
   }
-
-
-
-
 
   return (
     <>
