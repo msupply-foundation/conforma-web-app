@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
+import consolidatorResponseFragment from '../../../utils/graphql/fragments/consolidatorResponse.fragment'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -70,14 +71,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 
   const addItemHandler = (e: any, data: any) => {
+    setCurrentOptions(options)
     console.log('here is the data',data)
+    console.log('here are options', options)
     const { value: newOption } = data
     console.log(newOption)
     // options.push({
     //   name: newOption
     // })
     setCurrentOptions([...currentOptions, {name: newOption}])
-    console.log(currentOptions)
+    console.log('current options', currentOptions)
   }
 
   const dropdownOptions = options.map((option: any, index: number) => {
