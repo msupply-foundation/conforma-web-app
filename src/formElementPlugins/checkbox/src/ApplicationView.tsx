@@ -23,15 +23,23 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
   Markdown,
   initialValue,
-  validationState
+  validationState,
 }) => {
   const { getPluginStrings } = useLanguageProvider()
   const strings = getPluginStrings('checkbox')
   const { isEditable } = element
-  const { label, description, checkboxes, type, layout, resetButton = false, keyMap } = parameters
+  const {
+    label,
+    description,
+    checkboxes,
+    type,
+    layout,
+    resetButton = false,
+    keyMap,
+    preventNonResponse = false,
+  } = parameters
 
   const [isFirstRender, setIsFirstRender] = useState(true)
-  const [toggled, setToggled] = useState(false)
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
     getInitialState(initialValue, checkboxes, keyMap, isFirstRender)
@@ -48,6 +56,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useEffect(() => {
     // Don't save response if parameters are still loading
     if (checkboxElements[0]?.text === config.parameterLoadingValues.label) return
+    // Don't save a valid "nonResponse" if not allowed, so validation logic
+    // works as expected
+    if (preventNonResponse && checkboxElements.every((elem) => !elem.selected)) return
+
     const {
       text,
       textUnselected,
@@ -77,7 +89,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const changedCheckbox = { ...checkboxElements[index] }
     changedCheckbox.selected = !changedCheckbox.selected
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
-    setToggled(true)
   }
 
   const resetState = () =>
@@ -114,17 +125,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Form.Field
         label={''}
         error={
-            (!validationState.isValid && toggled)
-              ? {
-                  content: validationState?.validationMessage,
-                  pointing: 'above',
-                }
-              : null
-          }
-        disabled={!isEditable} 
+          !validationState.isValid
+            ? {
+                content: validationState?.validationMessage,
+                pointing: 'above',
+              }
+            : null
+        }
+        disabled={!isEditable}
         style={styles}
-      >
-      </Form.Field>
+      ></Form.Field>
       {resetButton && (
         <div style={{ marginTop: 10 }}>
           <Button primary content={strings.BUTTON_RESET_SELECTION} compact onClick={resetState} />
