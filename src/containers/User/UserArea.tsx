@@ -234,7 +234,6 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
 }
 
 const BrandArea: React.FC = () => {
-  const { strings } = useLanguageProvider()
   const { preferences } = usePrefs()
 
   const logoUrl = preferences?.brandLogoOnDarkFileId
@@ -246,12 +245,6 @@ const BrandArea: React.FC = () => {
       <Link to="/">
         <Image src={logoUrl ?? defaultBrandLogo} />
       </Link>
-      {/* <div>
-        <Link to="/">
-          <h2 className="brand-area-text">{strings._APP_NAME}</h2>
-          <h3 className="brand-area-text">{strings._APP_NAME_SUBHEADER}</h3>
-        </Link>
-      </div> */}
     </div>
   )
 }
