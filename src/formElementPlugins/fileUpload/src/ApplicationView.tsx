@@ -130,7 +130,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setUploadedFiles([...newFileData])
     files.forEach(async (file: any) => {
       if (file?.error) return
-      const result: FileUploadServerResponse = await uploadFile(file)
+      const result: FileUploadServerResponse = await uploadFile(file, {
+        uploadUrl,
+        serialNumber,
+        userId: currentUser?.userId ?? null,
+        applicationResponseId: application_response_id,
+        subfolder,
+      })
       const index = newFileData.findIndex((f: any) => f.key === file.key)
       if (result.success) {
         newFileData[index] = {
@@ -157,7 +163,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const handleUpdateDescription = async (uniqueId: string, value: string, key: string) => {
     try {
       // Save description to database file record
-      await updateFileDescription(uniqueId, value || null)
+      await updateFileDescription(uniqueId, value || null, uploadUrl)
       // Update response
       const index = uploadedFiles.findIndex((f) => f.key === key)
       const newFiles = [...uploadedFiles]
@@ -224,27 +230,46 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       </Segment.Group>
     </>
   )
-  async function uploadFile(file: any) {
-    const fileData = new FormData()
-    await fileData.append('file', file)
-    return await postRequest({
-      url: `${uploadUrl}?user_id=${
-        currentUser?.userId
-      }&application_serial=${serialNumber}&application_response_id=${application_response_id}${
-        subfolder ? '&subfolder=' + subfolder : ''
-      }`,
-      otherBody: fileData,
-    })
-  }
-  async function updateFileDescription(uniqueId: string, description: string | null) {
-    if (description === '') return
-    return await postRequest({
-      url: `${uploadUrl}?uniqueId=${uniqueId}&description=${description}`,
-    })
-  }
 }
 
 export default ApplicationView
+
+const uploadFile = async (
+  file: any,
+  {
+    uploadUrl,
+    userId,
+    serialNumber,
+    applicationResponseId,
+    subfolder,
+  }: {
+    uploadUrl: string
+    userId: number | null
+    serialNumber: string
+    applicationResponseId: number
+    subfolder?: string
+  }
+) => {
+  const fileData = new FormData()
+  await fileData.append('file', file)
+  return await postRequest({
+    url: `${uploadUrl}?user_id=${userId}&application_serial=${serialNumber}&application_response_id=${applicationResponseId}${
+      subfolder ? '&subfolder=' + subfolder : ''
+    }`,
+    otherBody: fileData,
+  })
+}
+
+const updateFileDescription = async (
+  uniqueId: string,
+  description: string | null,
+  uploadUrl: string
+) => {
+  if (description === '') return
+  return await postRequest({
+    url: `${uploadUrl}?uniqueId=${uniqueId}&description=${description}`,
+  })
+}
 
 const createTextString = (files: FileResponseData[]) =>
   files.reduce(
