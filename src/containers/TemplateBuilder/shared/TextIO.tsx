@@ -6,8 +6,8 @@ const iconLink = 'https://react.semantic-ui.com/elements/icon/'
 const colourLink = 'https://htmlcolorcodes.com/'
 
 type TextIOprops = {
-  text?: string | null
-  title?: string | null
+  text?: string
+  title?: string
   setText?: (text: string | null, resetValue: (text: string) => void) => void
   markNeedsUpdate?: () => void
   disabled?: boolean
