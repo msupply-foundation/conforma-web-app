@@ -8,7 +8,8 @@ import { ApolloClient, ApolloProvider, createHttpLink, NormalizedCacheObject } f
 import { setContext } from '@apollo/client/link/context'
 import { LanguageOption, LanguageProvider } from './contexts/Localisation'
 import { ToastProvider } from './contexts/Toast/ToastProvider'
-import usePrefs from './utils/hooks/usePrefs'
+import { SystemPrefsProvider } from './contexts/SystemPrefs'
+import { usePrefs } from './contexts/SystemPrefs'
 import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
 
@@ -89,4 +90,9 @@ const App: React.FC = () => {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <SystemPrefsProvider>
+    <App />
+  </SystemPrefsProvider>,
+  document.getElementById('root')
+)
