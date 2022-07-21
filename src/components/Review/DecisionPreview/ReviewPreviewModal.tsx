@@ -42,6 +42,8 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
   }, [open])
 
   return (
+    // closeOnDimmerClick makes it harder to accidentally close Modal, as it
+    // generates new Previews every time it's opened
     <Modal id="preview-modal" open={open} closeOnDimmerClick={false}>
       <Modal.Header>{strings.REVIEW_DECISION_PREVIEW_HEADER}</Modal.Header>
       <Modal.Content>
