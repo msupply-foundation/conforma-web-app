@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Form } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import config from '../pluginConfig.json'
@@ -122,23 +122,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           />
         </Form.Field>
       ))}
-      <Form.Field
-        label={''}
-        error={
-          !validationState.isValid
-            ? {
-                content: validationState?.validationMessage,
-                pointing: 'above',
-              }
-            : null
-        }
-        disabled={!isEditable}
-        style={styles}
-      ></Form.Field>
       {resetButton && (
         <div style={{ marginTop: 10 }}>
           <Button primary content={strings.BUTTON_RESET_SELECTION} compact onClick={resetState} />
         </div>
+      )}
+      {validationState.isValid ? null : (
+        <Label pointing prompt content={validationState?.validationMessage} />
       )}
     </>
   )
