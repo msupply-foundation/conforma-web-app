@@ -42,7 +42,7 @@ const NotificationPreview = ({ item }: { item: NotificationPreviewData }) => {
         <Icon name="dropdown" />
         {strings.REVIEW_PREVIEW_NOTIFICATION} <strong>{item.displayString}</strong>
       </Accordion.Title>
-      <Accordion.Content active={open} className="content">
+      <Accordion.Content active={open}>
         <MarkdownBlock text={item.text} />
       </Accordion.Content>
     </Accordion>
