@@ -30,7 +30,7 @@ export type ErrorResponse = {
 }
 
 export const useDataViewsList = () => {
-  // Note: we don't *need* templatePermissions, we only pass it in so that the
+  // Note: we don't *need* templatePermissions, we only use it so that the
   // hook can react to changes, since JWT (what we *actually* need) is not in
   // State (perhaps it should be?)
   const [error, setError] = useState<ErrorResponse | null>(null)
@@ -41,10 +41,8 @@ export const useDataViewsList = () => {
   } = useUserState()
 
   useEffect(() => {
-    const JWT = localStorage.getItem(config.localStorageJWTKey)
-    if (!JWT) return
     const url = `${serverURL}/data-views`
-    processRequest(url, JWT, setError, setLoading, setDataViewsList)
+    processRequest(url, setError, setLoading, setDataViewsList)
   }, [templatePermissions])
 
   return { error, loading, dataViewsList }
@@ -60,8 +58,6 @@ export const useDataViewsTable = ({ tableName, apiQueries }: DataViewTableProps)
   } = useUserState()
 
   useEffect(() => {
-    const JWT = localStorage.getItem(config.localStorageJWTKey)
-    if (!JWT) return
     const queryElements = []
     if (first) queryElements.push(`first=${first}`)
     if (offset) queryElements.push(`offset=${offset}`)
@@ -69,7 +65,7 @@ export const useDataViewsTable = ({ tableName, apiQueries }: DataViewTableProps)
     if (ascending) queryElements.push(`ascending=${ascending}`)
     const queryString = queryElements.join('&')
     const url = `${serverURL}/data-views/table/${tableName}?${queryString}`
-    processRequest(url, JWT, setError, setLoading, setDataViewTable)
+    processRequest(url, setError, setLoading, setDataViewTable)
   }, [templatePermissions, tableName, apiQueries])
 
   return { error, loading, dataViewTable }
@@ -84,10 +80,8 @@ export const useDataViewsDetail = ({ tableName, recordId }: DataViewDetailsProps
   } = useUserState()
 
   useEffect(() => {
-    const JWT = localStorage.getItem(config.localStorageJWTKey)
-    if (!JWT) return
     const url = `${serverURL}/data-views/table/${tableName}/item/${recordId}`
-    processRequest(url, JWT, setError, setLoading, setDataViewDetail)
+    processRequest(url, setError, setLoading, setDataViewDetail)
   }, [templatePermissions, tableName, recordId])
 
   return { error, loading, dataViewDetail }
@@ -95,7 +89,6 @@ export const useDataViewsDetail = ({ tableName, recordId }: DataViewDetailsProps
 
 const processRequest = (
   url: string,
-  JWT: string,
   setErrorMethod: (_: ErrorResponse | null) => void,
   setLoadingMethod: (_: boolean) => void,
   setStateMethod: (_: any) => void
@@ -106,7 +99,7 @@ const processRequest = (
     setStateMethod(stateState)
   }
   setLoadingMethod(true)
-  getRequest(url, { Authorization: `Bearer ${JWT}` })
+  getRequest(url)
     .then((response) => {
       if (response?.error) {
         setState(response, false, undefined)

@@ -49,7 +49,6 @@ const Snapshots: React.FC = () => {
     try {
       const resultJson = await postRequest({
         url: `${takeSnapshotUrl}?name=${normaliseSnapshotName(name)}`,
-        headers: { Authorization: `Bearer ${JWT}` },
       })
 
       if (resultJson.success) {
@@ -69,7 +68,6 @@ const Snapshots: React.FC = () => {
     try {
       const resultJson = await postRequest({
         url: `${useSnapshotUrl}?name=${name}`,
-        headers: { Authorization: `Bearer ${JWT}` },
       })
 
       if (resultJson.success) return setIsLoading(false)
@@ -85,7 +83,6 @@ const Snapshots: React.FC = () => {
     try {
       const resultJson = await postRequest({
         url: `${deleteSnapshotUrl}?name=${name}`,
-        headers: { Authorization: `Bearer ${JWT}` },
       })
       if (resultJson.success) {
         await getList()
@@ -112,7 +109,6 @@ const Snapshots: React.FC = () => {
       const resultJson = await postRequest({
         otherBody: data,
         url: `${uploadSnapshotUrl}?name=${snapshotName}`,
-        headers: { Authorization: `Bearer ${JWT}` },
       })
 
       if (resultJson.success) {
