@@ -735,6 +735,10 @@ a:hover {
   max-width: 500px;
 }
 
+#review-submit-area textarea {
+  max-width: none;
+}
+
 #review-submit-area p {
   font-size: @tinyBitSmallerText;
   margin-top: 10px;
