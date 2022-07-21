@@ -42,6 +42,8 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
   }, [open])
 
   return (
+    // closeOnDimmerClick makes it harder to accidentally close Modal, as it
+    // generates new Previews every time it's opened
     <Modal id="preview-modal" open={open} closeOnDimmerClick={false}>
       <Modal.Header>{strings.REVIEW_DECISION_PREVIEW_HEADER}</Modal.Header>
       <Modal.Content>
@@ -80,12 +82,11 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
 export default ReviewPreviewModal
 
 const fetchPreviews = async (reviewId: number, applicationDataOverride: { [key: string]: any }) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
   try {
     const result = await postRequest({
       url: previewEndpoint,
       jsonBody: { reviewId, applicationDataOverride },
-      headers: { Authorization: `Bearer ${JWT}`, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
     })
     return result
   } catch (err) {
