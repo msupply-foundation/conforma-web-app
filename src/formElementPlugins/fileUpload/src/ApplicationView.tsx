@@ -212,7 +212,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 updateDescription={handleUpdateDescription}
               />
             ) : (
-              <FileDisplay file={file} onDelete={handleDelete} downloadUrl={downloadUrl} />
+              <FileDisplay
+                key={file.key}
+                file={file}
+                onDelete={handleDelete}
+                downloadUrl={downloadUrl}
+              />
             )
           )}
         </List>
