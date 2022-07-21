@@ -272,15 +272,11 @@ const safeFetch = async (
   body: any,
   setErrorAndLoadingState: SetErrorAndLoadingState
 ) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
   setErrorAndLoadingState({ isLoading: true })
   try {
     const resultJson = await postRequest({
       url,
-      headers:
-        typeof body === 'string'
-          ? { Authorization: `Bearer ${JWT}`, 'Content-Type': 'application/json' }
-          : { Authorization: `Bearer ${JWT}` },
+      headers: typeof body === 'string' ? { 'Content-Type': 'application/json' } : {},
       otherBody: body,
     })
     if (!!resultJson?.success) {

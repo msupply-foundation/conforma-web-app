@@ -82,12 +82,11 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
 export default ReviewPreviewModal
 
 const fetchPreviews = async (reviewId: number, applicationDataOverride: { [key: string]: any }) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
   try {
     const result = await postRequest({
       url: previewEndpoint,
       jsonBody: { reviewId, applicationDataOverride },
-      headers: { Authorization: `Bearer ${JWT}`, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
     })
     return result
   } catch (err) {
