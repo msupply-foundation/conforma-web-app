@@ -1,6 +1,10 @@
 import { DataViewTableAPIQueries } from '../../types'
 
-type BasicEndpoint = [endpoint: 'public' | 'prefs' | 'login' | 'loginOrg']
+type BasicEndpoint = [endpoint: 'public' | 'prefs' | 'login' | 'loginOrg' | 'userInfo']
+
+type LanguageEndpoint = [endpoint: 'language', languageCode: string]
+
+type VerifyEndpoint = [endpoint: 'verify', uid: string]
 
 type FileEndpoint = [endpoint: 'file', fileId: string, isThumbnail?: 'thumbnail']
 
@@ -23,4 +27,10 @@ type UploadEndpoint = [
   }
 ]
 
-export type RestEndpoints = BasicEndpoint | FileEndpoint | UploadEndpoint | DataViewEndpoint
+export type RestEndpoints =
+  | BasicEndpoint
+  | LanguageEndpoint
+  | VerifyEndpoint
+  | FileEndpoint
+  | UploadEndpoint
+  | DataViewEndpoint

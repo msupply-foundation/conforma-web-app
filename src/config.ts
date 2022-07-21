@@ -14,12 +14,14 @@ const config = {
     : 'http://localhost:5000/graphql',
   serverREST: `${serverURL}/api`,
   restEndpoints: {
+    // Public
     public: '/public',
     prefs: '/public/get-prefs',
-    language: 'public/language',
-    verify: 'public/verify',
+    language: '/public/language',
     login: '/public/login',
     file: '/public/file',
+    verify: '/public/verify',
+    // Auth required
     loginOrg: '/login-org',
     userInfo: '/user-info',
     userPermissions: '/user-permissions',
@@ -28,6 +30,7 @@ const config = {
     checkUnique: '/check-unique',
     generatePDF: '/generate-pdf',
     dataViews: '/data-views',
+    // Admin
     admin: '/admin',
     updateRowPolicies: '/admin/updateRowPolicies',
     localisations: '/admin/localisations',

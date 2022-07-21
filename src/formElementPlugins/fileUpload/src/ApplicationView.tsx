@@ -53,11 +53,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     showDescription = false,
   } = parameters
 
-  const { config } = applicationData
-
-  const uploadUrl = `${config.serverREST}${config.uploadEndpoint}`
-  const downloadUrl = `${config.serverREST}/public`
-
   // These values required for file upload query parameters:
   const {
     userState: { currentUser },
@@ -214,16 +209,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 key={file.key}
                 file={file}
                 onDelete={handleDelete}
-                downloadUrl={downloadUrl}
                 updateDescription={handleUpdateDescription}
               />
             ) : (
-              <FileDisplay
-                key={file.key}
-                file={file}
-                onDelete={handleDelete}
-                downloadUrl={downloadUrl}
-              />
+              <FileDisplay key={file.key} file={file} onDelete={handleDelete} />
             )
           )}
         </List>

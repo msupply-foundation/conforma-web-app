@@ -24,12 +24,21 @@ const getServerUrl = (...args: RestEndpoints) => {
     case 'prefs':
     case 'login':
     case 'loginOrg':
+    case 'userInfo':
       return serverREST + endpointPath
 
+    case 'language':
+      const languageCode = args[1]
+      return `${serverREST}${endpointPath}/${languageCode}`
+
     case 'file':
-      const fileId = args[0]
-      const isThumbnail = args[1] === 'thumbnail'
+      const fileId = args[1]
+      const isThumbnail = args[2] === 'thumbnail'
       return `${serverREST}${endpointPath}?uid=${fileId}${isThumbnail ? '&thumbnail=true' : ''}`
+
+    case 'verify':
+      const uid = args[1]
+      return `${serverREST}${endpointPath}?uid=${uid}`
 
     case 'dataViews':
       const tableName = args[1]
