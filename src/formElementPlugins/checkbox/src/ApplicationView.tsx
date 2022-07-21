@@ -23,6 +23,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
   Markdown,
   initialValue,
+  validationState
 }) => {
   const { getPluginStrings } = useLanguageProvider()
   const strings = getPluginStrings('checkbox')
@@ -30,6 +31,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { label, description, checkboxes, type, layout, resetButton = false, keyMap } = parameters
 
   const [isFirstRender, setIsFirstRender] = useState(true)
+  const [toggled, setToggled] = useState(false)
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
     getInitialState(initialValue, checkboxes, keyMap, isFirstRender)
@@ -75,6 +77,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const changedCheckbox = { ...checkboxElements[index] }
     changedCheckbox.selected = !changedCheckbox.selected
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
+    setToggled(true)
   }
 
   const resetState = () =>
@@ -108,6 +111,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           />
         </Form.Field>
       ))}
+      <Form.Field
+        label={''}
+        error={
+            (!validationState.isValid && toggled)
+              ? {
+                  content: validationState?.validationMessage,
+                  pointing: 'above',
+                }
+              : null
+          }
+        disabled={!isEditable} 
+        style={styles}
+      >
+      </Form.Field>
       {resetButton && (
         <div style={{ marginTop: 10 }}>
           <Button primary content={strings.BUTTON_RESET_SELECTION} compact onClick={resetState} />
