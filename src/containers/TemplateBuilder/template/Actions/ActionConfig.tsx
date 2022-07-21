@@ -136,31 +136,31 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <div className="config-container-outline">
             <div className="flex-column-start-center">
               <TextIO
-                text={state.code}
+                text={state?.code || ''}
                 title="Code"
                 setText={(text) => {
-                  setState({ ...state, code: text })
+                  setState({ ...state, code: text || null })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
               <TextIO
-                text={state.eventCode}
+                text={state?.eventCode || ''}
                 title="Scheduled Event Code"
                 setText={(text) => {
-                  setState({ ...state, eventCode: text })
+                  setState({ ...state, eventCode: text || null })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
               <TextIO
-                text={state.description}
+                text={state?.description || ''}
                 isTextArea={true}
                 title="Description"
                 setText={(text) => {
-                  setState({ ...state, description: text })
+                  setState({ ...state, description: text || null })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}

@@ -112,6 +112,11 @@ a:hover {
   flex-wrap: wrap;
 }
 
+.flex-row-space-between-flex-end {
+  .flex-row-space-between-center();
+  align-items: flex-end;
+}
+
 .flex-row-space_evenly-center {
   .flex-row-space_evenly();
   align-items: center;
@@ -742,6 +747,10 @@ a:hover {
 #review-submit-area {
   margin-bottom: 30px;
   max-width: 500px;
+}
+
+#review-submit-area textarea {
+  max-width: none;
 }
 
 #review-submit-area p {
