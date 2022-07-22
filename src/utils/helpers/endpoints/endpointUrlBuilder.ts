@@ -18,7 +18,7 @@ export const serverGraphQL = isProductionBuild
   ? getProductionUrl(productionPathGraphQL)
   : localHostGraphQL
 
-const getServerUrl = (...args: RestEndpoints | ['graphQL']) => {
+const getServerUrl = (...args: RestEndpoints | ['graphQL']): string => {
   // "as" here ensures we must have types/cases for ALL keys of
   // config.restEndpoints
   const endpointKey = args[0] as keyof typeof restEndpoints | 'graphQL'
@@ -133,7 +133,7 @@ const getServerUrl = (...args: RestEndpoints | ['graphQL']) => {
   }
 }
 
-const buildQueryString = (query?: BasicObject) => {
+const buildQueryString = (query?: BasicObject): string => {
   if (!query) return ''
   const keyValStrings = Object.entries(query)
     .filter(([_, value]) => !!value)
