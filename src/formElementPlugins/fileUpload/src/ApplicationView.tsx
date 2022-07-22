@@ -241,9 +241,9 @@ const uploadFile = async (
   await fileData.append('file', file)
   return await postRequest({
     url: getServerUrl('upload', {
-      user_id: userId,
-      application_serial: serialNumber,
-      application_response_id: applicationResponseId,
+      userId,
+      applicationSerial: serialNumber,
+      applicationResponseId: applicationResponseId,
       subfolder,
     }),
     otherBody: fileData,
@@ -253,7 +253,7 @@ const uploadFile = async (
 const updateFileDescription = async (uniqueId: string, description: string | null) => {
   if (description === '') return
   return await postRequest({
-    url: getServerUrl('upload', { unique_id: uniqueId, description }),
+    url: getServerUrl('upload', { uniqueId, description }),
   })
 }
 

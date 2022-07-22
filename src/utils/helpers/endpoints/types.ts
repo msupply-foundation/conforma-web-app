@@ -1,7 +1,17 @@
 import { DataViewTableAPIQueries } from '../../types'
 
 type BasicEndpoint = [
-  endpoint: 'public' | 'prefs' | 'login' | 'loginOrg' | 'userInfo' | 'generatePDF'
+  // These ones don't take any query parameters
+  endpoint:
+    | 'public'
+    | 'prefs'
+    | 'login'
+    | 'loginOrg'
+    | 'userInfo'
+    | 'generatePDF'
+    | 'admin'
+    | 'installLanguage'
+    | 'allLanguages'
 ]
 
 type LanguageEndpoint = [endpoint: 'language', languageCode: string]
@@ -36,14 +46,32 @@ type DataViewEndpoint = [
 type UploadEndpoint = [
   endpoint: 'upload',
   parameters?: {
-    user_id?: number | null
-    application_serial?: string
-    application_response_id?: number
-    unique_id?: string
-    template_id?: string
+    userId?: number | null
+    applicationSerial?: string
+    applicationResponseId?: number
+    applicationNoteId?: number
+    uniqueId?: string
+    templateId?: string
     subfolder?: string
     description?: string | null
   }
+]
+
+type EnableLanguageEndpoint = [endpoint: 'enableLanguage', languageCode: string, enabled?: boolean]
+
+type RemoveLanguageEndpoint = [endpoint: 'removeLanguage', languageCode: string]
+
+type SnapshotEndpoint = [
+  endpoint: 'snapshot',
+  action: 'list' | 'take' | 'use' | 'upload' | 'delete' | 'download',
+  name?: string,
+  options?: string
+]
+
+type LookupTableEndpoint = [
+  endpoint: 'lookupTable',
+  action: 'import' | 'export',
+  lookupTableId?: number
 ]
 
 export type RestEndpoints =
@@ -56,3 +84,7 @@ export type RestEndpoints =
   | CheckTriggersEndpoint
   | CheckUniqueEndpoint
   | DataViewEndpoint
+  | EnableLanguageEndpoint
+  | RemoveLanguageEndpoint
+  | SnapshotEndpoint
+  | LookupTableEndpoint

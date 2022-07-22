@@ -32,16 +32,16 @@ const config = {
     dataViews: '/data-views',
     // Admin
     admin: '/admin',
-    updateRowPolicies: '/admin/updateRowPolicies',
-    localisations: '/admin/localisations',
-    // Enable language
-    // install language
-    // All languages
-    // Snapshots
+    // updateRowPolicies: '/admin/updateRowPolicies' -- not currently called by front-end
+    enableLanguage: '/admin/enable-language',
+    installLanguage: '/admin/install-language',
+    allLanguages: '/admin/all-languages',
+    removeLanguage: '/admin/remove-language',
+    snapshot: '/admin/snapshot',
+    lookupTable: '/admin/lookup-table',
     // Preview
     // Extend deadline
   },
-  uploadEndpoint: '/upload',
   version,
   pluginsFolder: 'formElementPlugins',
   nonRegisteredUser: 'nonRegistered',

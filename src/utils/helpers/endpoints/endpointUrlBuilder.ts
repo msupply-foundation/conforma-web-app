@@ -25,6 +25,10 @@ const getServerUrl = (...args: RestEndpoints) => {
     case 'login':
     case 'loginOrg':
     case 'userInfo':
+    case 'generatePDF':
+    case 'admin':
+    case 'installLanguage':
+    case 'allLanguages':
       return serverREST + endpointPath
 
     case 'language':
@@ -69,6 +73,39 @@ const getServerUrl = (...args: RestEndpoints) => {
     case 'upload':
       const uploadParameters = args[1]
       return `${serverREST}${endpointPath}${buildQueryString(uploadParameters as BasicObject)}`
+
+    case 'enableLanguage':
+      const langCodeEnable = args[1]
+      const enabled = args[2]
+      return `${serverREST}${endpointPath}?code=${langCodeEnable}${
+        enabled !== undefined ? `&enabled=${enabled}` : ''
+      }`
+
+    case 'removeLanguage':
+      const langCodeRemove = args[1]
+      return `${serverREST}${endpointPath}?code=${langCodeRemove}`
+
+    case 'snapshot':
+      const action = args[1]
+      if (action === 'list') return `${serverREST}${endpointPath}/list`
+      const name = args[2]
+      const options = args[3]
+
+      // "download" is direct download url
+      if (action === 'download') return `${serverREST}${endpointPath}/files/${name}.zip`
+
+      if (action === 'upload' || action === 'delete' || !options)
+        return `${serverREST}${endpointPath}/${action}?name=${name}`
+
+      // Options AND name present, so must be 'take' or 'use'
+      return `${serverREST}${endpointPath}/${action}?name=${name}&optionsName=${options}`
+
+    case 'lookupTable':
+      const lookupAction = args[1]
+      const lookupTableId = args[2]
+      return `${serverREST}${endpointPath}/${lookupAction}${
+        lookupTableId ? `/${lookupTableId}` : ''
+      }`
 
     default:
       return 'PATH NOT FOUND'
