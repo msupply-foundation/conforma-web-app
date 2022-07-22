@@ -12,6 +12,7 @@ import {
   ApplicationStatus,
 } from '../../../utils/generated/graphql'
 import config from '../../../config'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 export const Overview: React.FC<{
   structure: FullStructure
@@ -150,13 +151,11 @@ const getDates = (activityLog: ActivityLog[]): { started: string; completed: str
 }
 
 const extendDeadline = async (applicationId: number, days: number) => {
-  const extendEndpoint = `${config.serverREST}/extend-application`
   const payload = { applicationId, eventCode: config.applicantDeadlineCode, extensionTime: days }
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
 
   await postRequest({
-    url: extendEndpoint,
+    url: getServerUrl('extendApplication'),
     jsonBody: payload,
-    headers: { Authorization: `Bearer ${JWT}`, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
   })
 }

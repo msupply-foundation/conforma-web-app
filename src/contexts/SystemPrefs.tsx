@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { LanguageOption } from './Localisation'
 import { getRequest } from '../utils/helpers/fetchMethods'
-import config from '../config'
+import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 
 interface PrefsState {
   preferences?: {
@@ -31,7 +31,7 @@ export const SystemPrefsProvider = ({ children }: { children: React.ReactNode })
   }, [])
 
   const fetchPrefs = async () => {
-    getRequest(`${config.serverREST}/public/get-prefs`)
+    getRequest(getServerUrl('prefs'))
       .then((result) => {
         const { languageOptions, preferences } = result
         setPrefsState({

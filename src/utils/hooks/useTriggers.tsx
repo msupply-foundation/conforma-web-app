@@ -6,7 +6,6 @@ import { getRequest } from '../../utils/helpers/fetchMethods'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 
 const MAX_REFETCH = 10
-const serverURL = config.serverREST
 
 interface TriggerError {
   type: 'trigger' | 'timeout' | 'network'

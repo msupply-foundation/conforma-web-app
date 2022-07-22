@@ -202,9 +202,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
                 {extReferenceDocs.map((doc) => (
                   <Dropdown.Item
                     key={doc.uniqueId}
-                    onClick={() =>
-                      window.open(`${config.serverREST}/public/file?uid=${doc.uniqueId}`)
-                    }
+                    onClick={() => window.open(getServerUrl('file', doc.uniqueId))}
                     text={doc.description}
                   />
                 ))}
@@ -219,9 +217,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
                 {intReferenceDocs.map((doc) => (
                   <Dropdown.Item
                     key={doc.uniqueId}
-                    onClick={() =>
-                      window.open(`${config.serverREST}/public/file?uid=${doc.uniqueId}`)
-                    }
+                    onClick={() => window.open(getServerUrl('file', doc.uniqueId))}
                     text={doc.description}
                   />
                 ))}

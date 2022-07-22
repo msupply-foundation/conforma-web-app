@@ -1,14 +1,17 @@
 import { DataViewTableAPIQueries } from '../../types'
 
 type BasicEndpoint = [
-  // These ones don't take any query parameters
+  // These ones don't take any query parameters or sub-routes
   endpoint:
     | 'public'
     | 'prefs'
     | 'login'
     | 'loginOrg'
     | 'userInfo'
+    | 'createHash'
     | 'generatePDF'
+    | 'previewActions'
+    | 'extendApplication'
     | 'admin'
     | 'installLanguage'
     | 'allLanguages'
@@ -70,8 +73,15 @@ type SnapshotEndpoint = [
 
 type LookupTableEndpoint = [
   endpoint: 'lookupTable',
-  action: 'import' | 'export',
-  lookupTableId?: number
+  action: 'import' | 'export' | 'update',
+  nameOrId?: string | number,
+  lookupTableName?: string
+]
+
+type GetApplicationDataEndpoint = [
+  endpoint: 'getApplicationData',
+  applicationId: number,
+  reviewId?: number
 ]
 
 export type RestEndpoints =
@@ -88,3 +98,4 @@ export type RestEndpoints =
   | RemoveLanguageEndpoint
   | SnapshotEndpoint
   | LookupTableEndpoint
+  | GetApplicationDataEndpoint

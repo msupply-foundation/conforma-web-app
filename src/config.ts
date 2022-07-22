@@ -4,15 +4,12 @@ const getUrl = (path: string) => `${protocol}//${hostname}:${port}/${path}`
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const { version } = require('../package.json')
 
-const serverURL = isProductionBuild ? getUrl('server') : 'http://localhost:8080'
-
 const config = {
   localHostRest: 'http://localhost:8080/api',
   localHostGraphQL: 'http://localhost:5000/graphql',
   serverGraphQL: isProductionBuild
     ? getUrl('postgraphile/graphql')
     : 'http://localhost:5000/graphql',
-  serverREST: `${serverURL}/api`,
   restEndpoints: {
     // Public
     public: '/public',
@@ -25,11 +22,14 @@ const config = {
     loginOrg: '/login-org',
     userInfo: '/user-info',
     userPermissions: '/user-permissions',
+    createHash: '/create-hash',
     checkTrigger: '/check-triggers',
     upload: '/upload',
     checkUnique: '/check-unique',
     generatePDF: '/generate-pdf',
     dataViews: '/data-views',
+    previewActions: '/preview-actions',
+    extendApplication: '/extend-application',
     // Admin
     admin: '/admin',
     // updateRowPolicies: '/admin/updateRowPolicies' -- not currently called by front-end
@@ -39,8 +39,7 @@ const config = {
     removeLanguage: '/admin/remove-language',
     snapshot: '/admin/snapshot',
     lookupTable: '/admin/lookup-table',
-    // Preview
-    // Extend deadline
+    getApplicationData: '/admin/get-application-data',
   },
   version,
   pluginsFolder: 'formElementPlugins',

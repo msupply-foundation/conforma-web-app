@@ -25,6 +25,7 @@ const getServerUrl = (...args: RestEndpoints) => {
     case 'login':
     case 'loginOrg':
     case 'userInfo':
+    case 'createHash':
     case 'generatePDF':
     case 'admin':
     case 'installLanguage':
@@ -102,9 +103,18 @@ const getServerUrl = (...args: RestEndpoints) => {
 
     case 'lookupTable':
       const lookupAction = args[1]
-      const lookupTableId = args[2]
-      return `${serverREST}${endpointPath}/${lookupAction}${
-        lookupTableId ? `/${lookupTableId}` : ''
+      const nameOrId = args[2]
+      if (lookupAction === 'import') return `${serverREST}${endpointPath}/import?name=${nameOrId}`
+      // "Update" uses /import/tableID route
+      if (lookupAction === 'update') return `${serverREST}${endpointPath}/import/${nameOrId}`
+      // Export
+      return `${serverREST}${endpointPath}/export/${nameOrId}`
+
+    case 'getApplicationData':
+      const applicationId = args[1]
+      const reviewId = args[2]
+      return `${serverREST}${endpointPath}?applicationId=${applicationId}${
+        reviewId ? `&reviewId=${reviewId}` : ''
       }`
 
     default:

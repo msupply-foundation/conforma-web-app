@@ -3,9 +3,7 @@ import { Icon, Accordion, Image } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import MarkdownBlock from '../../../utils/helpers/semanticReactMarkdown'
 import { ActionQueueStatus } from '../../../utils/generated/graphql'
-import config from '../../../config'
-
-const fileEndpoint = `${config.serverREST}/public/file?uid=`
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 interface ResultCommon {
   status: ActionQueueStatus
@@ -52,9 +50,9 @@ const NotificationPreview = ({ item }: { item: NotificationPreviewData }) => {
 const DocumentPreview = ({ item }: { item: DocumentPreviewData }) => {
   return (
     <div className="item document-preview">
-      <Image src={fileEndpoint + item.fileId + '&thumbnail=true'} style={{ maxHeight: 50 }} />
+      <Image src={getServerUrl('file', item.fileId, 'thumbnail')} style={{ maxHeight: 50 }} />
       <p>
-        <a href={fileEndpoint + item.fileId} target="_blank">
+        <a href={getServerUrl('file', item.fileId)} target="_blank">
           {item.displayString}
         </a>
       </p>
