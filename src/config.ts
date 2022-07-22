@@ -3,8 +3,10 @@ const isProductionBuild = process.env.NODE_ENV === 'production'
 const { version } = require('../package.json')
 
 const config = {
-  localHostRest: 'http://localhost:8080/api',
+  localHostREST: 'http://localhost:8080/api',
   localHostGraphQL: 'http://localhost:5000/graphql',
+  productionPathREST: '/server/api',
+  productionPathGraphQL: '/postgraphile/graphql',
   restEndpoints: {
     // Public
     public: '/public',

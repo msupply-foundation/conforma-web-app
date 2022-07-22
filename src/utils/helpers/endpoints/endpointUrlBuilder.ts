@@ -2,13 +2,20 @@ import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import config from '../../../config'
 import { RestEndpoints } from './types'
 
-const { isProductionBuild, restEndpoints, localHostRest, localHostGraphQL } = config
+const {
+  isProductionBuild,
+  restEndpoints,
+  localHostREST,
+  localHostGraphQL,
+  productionPathREST,
+  productionPathGraphQL,
+} = config
 const { port, hostname, protocol } = window.location
-const getProductionUrl = (path: string) => `${protocol}//${hostname}:${port}/${path}`
+const getProductionUrl = (path: string) => `${protocol}//${hostname}:${port}${path}`
 
-const serverREST = isProductionBuild ? getProductionUrl('server/api') : localHostRest
+const serverREST = isProductionBuild ? getProductionUrl(productionPathREST) : localHostREST
 export const serverGraphQL = isProductionBuild
-  ? getProductionUrl('postgraphile/graphql')
+  ? getProductionUrl(productionPathGraphQL)
   : localHostGraphQL
 
 const getServerUrl = (...args: RestEndpoints | ['graphQL']) => {
