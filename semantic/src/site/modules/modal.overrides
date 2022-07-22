@@ -5,4 +5,5 @@
 // Make full-screen modal fill the whole window
 .ui.fullscreen.modal {
   width: 100% !important;
+  border-radius: 0;
 }

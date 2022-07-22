@@ -8,7 +8,7 @@ const colourLink = 'https://htmlcolorcodes.com/'
 type TextIOprops = {
   text?: string
   title?: string
-  setText?: (text: string, resetValue: (text: string) => void) => void
+  setText?: (text: string | null, resetValue: (text: string) => void) => void
   markNeedsUpdate?: () => void
   disabled?: boolean
   disabledMessage?: string
@@ -53,7 +53,7 @@ const TextIO: React.FC<TextIOprops> = ({
   additionalStyles = {},
   onIconClick,
 }) => {
-  const [defaultRows] = useState(getDefaultRows(text, textAreaDefaultRows))
+  const [defaultRows] = useState(getDefaultRows(text ?? '', textAreaDefaultRows))
   const [innerValue, setInnerValue] = useState(text)
   const style: any = { minWidth: minLabelWidth, maxWidth: maxLabelWidth, textAlign: labelTextAlign }
   if (color) style.color = color
@@ -82,9 +82,9 @@ const TextIO: React.FC<TextIOprops> = ({
           <Form>
             <TextArea
               disabled={disabled}
-              value={innerValue}
+              value={innerValue ?? ''}
               rows={defaultRows}
-              onBlur={() => setText(innerValue, setInnerValue)}
+              onBlur={() => setText(innerValue === '' ? null : innerValue, setInnerValue)}
               onChange={(_, { value }) => {
                 setInnerValue(String(value))
                 markNeedsUpdate()
@@ -106,7 +106,7 @@ const TextIO: React.FC<TextIOprops> = ({
           markNeedsUpdate()
         }}
         // Dont' want to try and query api on every key change of query text
-        onBlur={() => setText(innerValue, setInnerValue)}
+        onBlur={() => setText(innerValue === '' ? null : innerValue, setInnerValue)}
       />
     )
   }

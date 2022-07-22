@@ -22,7 +22,7 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
     const onChangeDecision = (_: any, { value: code }: any) => setDecision(code)
     const visibleOptions = decisionOptions.filter((option) => option.isVisible)
     return (
-      <Container>
+      <div>
         {visibleOptions.length > 0 && (
           <p>
             <strong>{strings.LABEL_REVIEW_SUBMIT_AS}:</strong>
@@ -44,7 +44,7 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
             />
           </Form.Field>
         ))}
-      </Container>
+      </div>
     )
   }
   // If review has been submitted/locked:

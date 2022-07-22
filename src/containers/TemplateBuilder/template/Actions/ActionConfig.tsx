@@ -21,9 +21,10 @@ type ActionConfigProps = {
 }
 
 type ActionUpdateState = {
+  code?: string | null
   actionCode: string
-  description: string
-  eventCode: string
+  description: string | null
+  eventCode?: string | null
   condition: EvaluatorNode
   parameterQueries: ParametersType
   id: number
@@ -32,9 +33,10 @@ type ActionUpdateState = {
 type GetState = (action: TemplateAction) => ActionUpdateState
 
 const getState: GetState = (action: TemplateAction) => ({
+  code: action?.code,
   actionCode: action?.actionCode || '',
   description: action?.description || '',
-  eventCode: action?.eventCode || '',
+  eventCode: action?.eventCode,
   condition: action?.condition || true,
   parameterQueries: action?.parameterQueries || {},
   id: action?.id || 0,
@@ -134,21 +136,31 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <div className="config-container-outline">
             <div className="flex-column-start-center">
               <TextIO
-                text={state.eventCode}
-                title="Scheduled Event Code"
+                text={state?.code || ''}
+                title="Code"
                 setText={(text) => {
-                  setState({ ...state, eventCode: text })
+                  setState({ ...state, code: text || null })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
               <TextIO
-                text={state.description}
+                text={state?.eventCode || ''}
+                title="Scheduled Event Code"
+                setText={(text) => {
+                  setState({ ...state, eventCode: text || null })
+                }}
+                markNeedsUpdate={markNeedsUpdate}
+                isPropUpdated={true}
+                minLabelWidth={150}
+              />
+              <TextIO
+                text={state?.description || ''}
                 isTextArea={true}
                 title="Description"
                 setText={(text) => {
-                  setState({ ...state, description: text })
+                  setState({ ...state, description: text || null })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}

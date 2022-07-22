@@ -15,7 +15,7 @@ const ComponentLibrary: ComponentLibraryType = {
         isPropUpdated={true}
         title={title}
         text={text}
-        setText={setText}
+        setText={setText as (text: string | null) => void}
         disabled={disabled}
         isTextArea={isTextArea}
       />

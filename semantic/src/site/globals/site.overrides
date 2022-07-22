@@ -112,6 +112,11 @@ a:hover {
   flex-wrap: wrap;
 }
 
+.flex-row-space-between-flex-end {
+  .flex-row-space-between-center();
+  align-items: flex-end;
+}
+
 .flex-row-space_evenly-center {
   .flex-row-space_evenly();
   align-items: center;
@@ -513,6 +518,69 @@ a:hover {
 }
 
 /*---------------------------------------
+      Review Submission Document Preview
+----------------------------------------*/
+
+#preview-modal {
+  min-height: 60vh;
+  max-width: 700px;
+  .content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .actions {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  #preview-items{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 650px;
+    margin-top: 20px;
+    .item {
+      background-color: @surfacesLight;
+      width: 90%;
+      border-radius: @borderRadius;
+      padding: 10px
+    }
+    .notification-preview {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      h1, h2 {
+        font-size: 1.1em;
+        font-weight: bold;
+      }
+      h3, h4 {
+        font-size: 1.0em;
+      }
+      p {
+        font-size: 0.95em;
+      }
+      .content {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .document-preview {
+      .flex-row-start-center();
+      padding-left: 6px;
+      gap: 10px;
+    }
+    .error-item, .fallback-preview{
+      p {
+        font-size: 1em;
+      }
+    }
+    .fallback-preview pre {
+      font-size: 0.9em;
+      margin: 0;
+    }
+  }
+}
+
+/*---------------------------------------
       Review Home page
 ----------------------------------------*/
 
@@ -669,6 +737,11 @@ a:hover {
 
 #review-submit-area {
   margin-bottom: 30px;
+  max-width: 500px;
+}
+
+#review-submit-area textarea {
+  max-width: none;
 }
 
 #review-submit-area p {
