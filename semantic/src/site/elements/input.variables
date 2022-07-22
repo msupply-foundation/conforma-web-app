@@ -1,5 +1,3 @@
 /*******************************
     User Variable Overrides
 *******************************/
-
-@inputPlaceholderColor: @darkGrey;
