@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import globalConfig from '../../config'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import { Loading } from '../../components'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   const [submissionMessageEvaluated, setSubmissionMessageEvaluated] = useState<string>()
@@ -47,7 +47,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   useEffect(() => {
     if (!fullStructure || !fullStructure?.responsesByCode) return
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
-    const graphQLEndpoint = globalConfig.serverGraphQL
+    const graphQLEndpoint = getServerUrl('graphQL')
     const evaluatorParams: EvaluatorParameters = {
       objects: {
         responses: fullStructure.responsesByCode,

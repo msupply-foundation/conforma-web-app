@@ -1,5 +1,7 @@
 import { DataViewTableAPIQueries } from '../../types'
 
+type GraphQLEndpoint = [endpoint: 'graphQL']
+
 type BasicEndpoint = [
   // These ones don't take any query parameters or sub-routes
   endpoint:
@@ -85,6 +87,7 @@ type GetApplicationDataEndpoint = [
 ]
 
 export type RestEndpoints =
+  // | GraphQLEndpoint
   | BasicEndpoint
   | LanguageEndpoint
   | VerifyEndpoint

@@ -16,8 +16,9 @@ export const serverGraphQL = isProductionBuild
   ? getProductionUrl('postgraphile/graphql')
   : localHostGraphQL
 
-const getServerUrl = (...args: RestEndpoints) => {
+const getServerUrl = (...args: RestEndpoints | ['graphQL']) => {
   const endpointKey = args[0]
+  if (endpointKey === 'graphQL') return serverGraphQL
   const endpointPath = restEndpoints[endpointKey]
   switch (endpointKey) {
     case 'public':

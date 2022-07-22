@@ -64,7 +64,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         const customValidation = await validate(validationInternal, validationMessageInternal, {
           objects: { responses, currentUser, applicationData },
           APIfetch: fetch,
-          graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+          graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
           headers: { Authorization: 'Bearer ' + JWT },
         })
         setInternalValidation(customValidation)
@@ -82,7 +82,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const customValidation = await validate(validationInternal, validationMessageInternal, {
       objects: { responses, currentUser, applicationData },
       APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+      graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
       headers: { Authorization: 'Bearer ' + JWT },
     })
     setInternalValidation(customValidation)

@@ -1,15 +1,10 @@
 // for production we get URL relative to web app
-const { port, hostname, protocol } = window.location
-const getUrl = (path: string) => `${protocol}//${hostname}:${port}/${path}`
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const { version } = require('../package.json')
 
 const config = {
   localHostRest: 'http://localhost:8080/api',
   localHostGraphQL: 'http://localhost:5000/graphql',
-  serverGraphQL: isProductionBuild
-    ? getUrl('postgraphile/graphql')
-    : 'http://localhost:5000/graphql',
   restEndpoints: {
     // Public
     public: '/public',
