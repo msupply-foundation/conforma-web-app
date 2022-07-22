@@ -2,12 +2,7 @@ import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import config from '../../../config'
 import { RestEndpoints } from './types'
 
-const { isProductionBuild, restEndpoints, localHostRest, localHostGraphQL } = config as {
-  isProductionBuild: boolean
-  restEndpoints: { [key in RestEndpoints[0]]: string }
-  localHostRest: string
-  localHostGraphQL: string
-}
+const { isProductionBuild, restEndpoints, localHostRest, localHostGraphQL } = config
 const { port, hostname, protocol } = window.location
 const getProductionUrl = (path: string) => `${protocol}//${hostname}:${port}/${path}`
 
@@ -17,9 +12,12 @@ export const serverGraphQL = isProductionBuild
   : localHostGraphQL
 
 const getServerUrl = (...args: RestEndpoints | ['graphQL']) => {
-  const endpointKey = args[0]
+  // "as" here ensures we must have types/cases for ALL keys of
+  // config.restEndpoints
+  const endpointKey = args[0] as keyof typeof restEndpoints | 'graphQL'
   if (endpointKey === 'graphQL') return serverGraphQL
   const endpointPath = restEndpoints[endpointKey]
+
   switch (endpointKey) {
     case 'public':
     case 'prefs':
@@ -31,6 +29,8 @@ const getServerUrl = (...args: RestEndpoints | ['graphQL']) => {
     case 'admin':
     case 'installLanguage':
     case 'allLanguages':
+    case 'previewActions':
+    case 'extendApplication':
       return serverREST + endpointPath
 
     case 'language':
@@ -119,7 +119,10 @@ const getServerUrl = (...args: RestEndpoints | ['graphQL']) => {
       }`
 
     default:
-      return 'PATH NOT FOUND'
+      // "never" type ensures we will get a *compile-time* error if we are
+      // missing a case defined in RestEndpoints type
+      const missingValue: never = endpointKey
+      throw new Error('Failed to consider case:' + missingValue)
   }
 }
 
