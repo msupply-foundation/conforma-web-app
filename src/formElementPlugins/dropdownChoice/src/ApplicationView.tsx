@@ -85,14 +85,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       const {options: array} = data
         setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
         setSelectedValue(optionIndex === '' ? undefined : options[optionIndex])
-        if (optionIndex !== '')
+        if (optionIndex !== '') {
+        console.log('option Index is: ',optionIndex)
+        console.log('optionDisplayProperty is: ', optionsDisplayProperty)
+        console.log('local options are:', localOptions)
           onSave({
             text: (optionsDisplayProperty != undefined && optionsDisplayProperty)
-              ? options[optionIndex][optionsDisplayProperty]
+              ? localOptions[optionIndex][optionsDisplayProperty]
               : localOptions[optionIndex],
             selection: localOptions[optionIndex],
             optionIndex,
           })
+        }
         // Reset response if selection cleared
         else onSave(null)
   }
