@@ -26,9 +26,27 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     default: defaultOption,
   } = parameters
 
-  const [selectedIndex, setSelectedIndex] = useState<number>()
+  const [selectedIndex, setSelectedIndex] = useState<any>()
+  const [localOptions, setLocalOptions] = useState<any[]>([])
+  //saving selected value in local state, so that when options are re rendered, we retain this value
+  const [selectedValue, setSelectedValue] = useState<any[]>()
 
   const { isEditable } = element
+
+  useEffect (() => {
+    console.log(options)
+    const optionsMapped = options.map((option: any, index: number) => {
+      return {
+        key: `${index}_${option}`,
+        text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
+        value: index,
+      }
+    })
+    setLocalOptions(optionsMapped)
+    if (selectedIndex && selectedIndex > localOptions.length) {
+      addItemHandler(selectedIndex, selectedValue)
+    }
+  }, [options])
 
   useEffect(() => {
     // This ensures that, if a default is specified, it gets saved on first load
@@ -50,56 +68,33 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [])
 
   const addItemHandler = (e: any, data: any) => {
-    console.log(data)
-    const { value: newOption } = data
-    console.log(dropdownOptions)
-    const index = dropdownOptions.length
-    console.log(newOption)
-    dropdownOptions.push({
+    console.log('data is', data)
+    const  newOption  = data
+    const index = localOptions.length
+    const newOptionList : any = [...localOptions, {
       key: `${index}_${{newOption}}`,
       text: newOption,
-      value: index,
-    })
-    console.log(dropdownOptions)
+      value: index
+    }]
+    setLocalOptions(newOptionList)
+    setSelectedIndex(index)
   }
 
-  const dropdownOptions = options.map((option: any, index: number) => {
-    //console.log(option)
-    return {
-      key: `${index}_${option}`,
-      text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
-      value: index,
-    }
-  })
-
-  function handleChange(e: any, data: any) {
+  function handleChange(_: any, data: any) {
       const { value: optionIndex } = data
       const {options: array} = data
-      if (typeof optionIndex === 'string') {
-        console.log('sent')
-        setSelectedIndex(array.length-1)
-        if (optionIndex !== '')
-          onSave({
-            text: optionIndex,
-            selection: dropdownOptions[optionIndex],
-            optionIndex,
-          })
-        // Reset response if selection cleared
-        else onSave(null)
-      }
-      else {
         setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
+        setSelectedValue(optionIndex === '' ? undefined : options[optionIndex])
         if (optionIndex !== '')
           onSave({
             text: (optionsDisplayProperty != undefined && optionsDisplayProperty)
               ? options[optionIndex][optionsDisplayProperty]
-              : dropdownOptions[optionIndex],
-            selection: dropdownOptions[optionIndex],
+              : localOptions[optionIndex],
+            selection: localOptions[optionIndex],
             optionIndex,
           })
         // Reset response if selection cleared
         else onSave(null)
-      }
   }
 
   return (
@@ -118,9 +113,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         clearable
         search={search || hasOther}
         allowAdditions
-        onAddItem={addItemHandler}
+        onAddItem={(e, data)=>addItemHandler(e, data.value)}
         placeholder={placeholder}
-        options={dropdownOptions}
+        options={localOptions}
         onChange={handleChange}
         value={selectedIndex}
         error={!validationState.isValid ? true : undefined}
