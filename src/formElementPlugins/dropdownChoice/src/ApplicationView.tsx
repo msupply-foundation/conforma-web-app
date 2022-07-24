@@ -29,12 +29,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [selectedIndex, setSelectedIndex] = useState<any>()
   const [localOptions, setLocalOptions] = useState<any[]>([])
   //saving selected value in local state, so that when options are re rendered, we retain this value
-  const [selectedValue, setSelectedValue] = useState<any[]>()
+  const [addedOptions, setAddedOptions] = useState<any[]>([])
 
   const { isEditable } = element
 
   useEffect (() => {
-    console.log(options)
     const optionsMapped = options.map((option: any, index: number) => {
       return {
         key: `${index}_${option}`,
@@ -42,59 +41,69 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         value: index,
       }
     })
-    setLocalOptions(optionsMapped)
-    if (selectedIndex && selectedIndex > localOptions.length) {
-      addItemHandler(selectedIndex, selectedValue)
+    //console.log('added options are: ', addedOptions)
+    if (addedOptions && addedOptions.length > 0) {
+      const newOptionList = [...optionsMapped, ...addedOptions]
+      setLocalOptions(newOptionList)
+    } else {
+      setLocalOptions(optionsMapped)
     }
-  }, [options])
+  }, [options, addedOptions])
 
   useEffect(() => {
     // This ensures that, if a default is specified, it gets saved on first load
     if (!currentResponse?.text && defaultOption !== undefined) {
-      const optionIndex = getDefaultIndex(defaultOption, options)
+      const optionValue = getDefaultIndex(defaultOption, options)
       onSave({
         text: optionsDisplayProperty
-          ? options[optionIndex][optionsDisplayProperty]
-          : options[optionIndex],
-        selection: options[optionIndex],
-        optionIndex,
+          ? options[optionValue][optionsDisplayProperty]
+          : options[optionValue],
+        selection: options[optionValue],
+        optionValue,
       })
-      setSelectedIndex(optionIndex)
-    }
-    if (currentResponse?.text) {
-      const { optionIndex } = currentResponse
-      setSelectedIndex(optionIndex)
+      setSelectedIndex(optionValue)
     }
   }, [])
 
+  //addItemHandler is called when new data is entered. This in turn calls original hook to re-render displayed options
   const addItemHandler = (e: any, data: any) => {
-    console.log('data is', data)
+    //console.log('data is', data)
     const  newOption  = data
     const index = localOptions.length
-    const newOptionList : any = [...localOptions, {
+    const newAddedOptions : any = [...addedOptions, {
       key: `${index}_${{newOption}}`,
       text: newOption,
       value: index
     }]
-    setLocalOptions(newOptionList)
+    setAddedOptions(newAddedOptions)
     setSelectedIndex(index)
   }
 
   function handleChange(_: any, data: any) {
-      const { value: optionIndex } = data
-      const {options: array} = data
-        setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
-        setSelectedValue(optionIndex === '' ? undefined : options[optionIndex])
-        if (optionIndex !== '') {
-        console.log('option Index is: ',optionIndex)
-        console.log('optionDisplayProperty is: ', optionsDisplayProperty)
-        console.log('local options are:', localOptions)
+      var { value: optionValue } = data
+      //If condition saves appropriate value if new value is entered by user
+        if (typeof(optionValue) === 'string') {
+          const optionIndex = localOptions.length
+          onSave({
+            text: optionValue,
+            selection: {
+              key: `${optionIndex}_${optionValue}`,
+              text: optionValue,
+              value: optionIndex,
+            },
+            optionIndex,
+          })
+          return
+        }
+        setSelectedIndex(optionValue === '' ? undefined : optionValue)
+        // console.log('optionValue is: ', optionValue)
+        if (optionValue !== '') {
           onSave({
             text: (optionsDisplayProperty != undefined && optionsDisplayProperty)
-              ? localOptions[optionIndex][optionsDisplayProperty]
-              : localOptions[optionIndex],
-            selection: localOptions[optionIndex],
-            optionIndex,
+              ? localOptions[optionValue][optionsDisplayProperty]
+              : localOptions[optionValue],
+            selection: localOptions[optionValue],
+            optionValue,
           })
         }
         // Reset response if selection cleared
