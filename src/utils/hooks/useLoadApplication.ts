@@ -127,7 +127,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       hasPreviewActions: application.template.templateActions.totalCount > 0,
       user: application?.user as User,
       org: application?.org as Organisation,
-      config,
+      config: { ...config, getServerUrl },
     }
 
     const baseElements: ElementBase[] = []
