@@ -64,7 +64,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [])
 
   //addItemHandler is called when new data is entered. This in turn calls original hook to re-render displayed options
-  const addItemHandler = (e: any, data: any) => {
+  const addItemHandler = (e: any, data: string) => {
     const  newOption  = data
     const index = localOptions.length
     const newAddedOptions : any = [...addedOptions, {
@@ -122,7 +122,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         clearable
         search={search || hasOther}
         allowAdditions
-        onAddItem={(e, data)=>addItemHandler(e, data.value)}
+        onAddItem={(e, data)=>addItemHandler(e, data.value as string)}
         placeholder={placeholder}
         options={localOptions}
         onChange={handleChange}
