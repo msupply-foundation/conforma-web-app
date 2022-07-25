@@ -25,7 +25,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     default: defaultOption,
   } = parameters
 
-  const [selectedIndex, setSelectedIndex] = useState<any>()
+  const [selectedIndex, setSelectedIndex] = useState<number>()
   const [localOptions, setLocalOptions] = useState<any[]>([])
   //saving selected value in local state, so that when options are re rendered, we retain this value
   const [addedOptions, setAddedOptions] = useState<any[]>([])
