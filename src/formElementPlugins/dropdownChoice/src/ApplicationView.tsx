@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
+import consolidatorResponseFragment from '../../../utils/graphql/fragments/consolidatorResponse.fragment'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -21,53 +22,93 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     search,
     options,
     optionsDisplayProperty,
+    hasOther,
     default: defaultOption,
   } = parameters
 
-  const [selectedIndex, setSelectedIndex] = useState<number>()
+  const [selectedIndex, setSelectedIndex] = useState<any>()
+  const [localOptions, setLocalOptions] = useState<any[]>([])
+  //saving selected value in local state, so that when options are re rendered, we retain this value
+  const [addedOptions, setAddedOptions] = useState<any[]>([])
+
   const { isEditable } = element
+
+  useEffect (() => {
+    const optionsMapped = options.map((option: any, index: number) => {
+      return {
+        key: `${index}_${option}`,
+        text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
+        value: index,
+      }
+    })
+    //console.log('added options are: ', addedOptions)
+    if (addedOptions && addedOptions.length > 0) {
+      const newOptionList = [...optionsMapped, ...addedOptions]
+      setLocalOptions(newOptionList)
+    } else {
+      setLocalOptions(optionsMapped)
+    }
+  }, [options, addedOptions])
 
   useEffect(() => {
     // This ensures that, if a default is specified, it gets saved on first load
     if (!currentResponse?.text && defaultOption !== undefined) {
-      const optionIndex = getDefaultIndex(defaultOption, options)
+      const optionValue = getDefaultIndex(defaultOption, options)
       onSave({
         text: optionsDisplayProperty
-          ? options[optionIndex][optionsDisplayProperty]
-          : options[optionIndex],
-        selection: options[optionIndex],
-        optionIndex,
+          ? options[optionValue][optionsDisplayProperty]
+          : options[optionValue],
+        selection: options[optionValue],
+        optionValue,
       })
-      setSelectedIndex(optionIndex)
-    }
-    if (currentResponse?.text) {
-      const { optionIndex } = currentResponse
-      setSelectedIndex(optionIndex)
+      setSelectedIndex(optionValue)
     }
   }, [])
 
-  function handleChange(e: any, data: any) {
-    const { value: optionIndex } = data
-    setSelectedIndex(optionIndex === '' ? undefined : optionIndex)
-    if (optionIndex !== '')
-      onSave({
-        text: optionsDisplayProperty
-          ? options[optionIndex][optionsDisplayProperty]
-          : options[optionIndex],
-        selection: options[optionIndex],
-        optionIndex,
-      })
-    // Reset response if selection cleared
-    else onSave(null)
+  //addItemHandler is called when new data is entered. This in turn calls original hook to re-render displayed options
+  const addItemHandler = (e: any, data: any) => {
+    //console.log('data is', data)
+    const  newOption  = data
+    const index = localOptions.length
+    const newAddedOptions : any = [...addedOptions, {
+      key: `${index}_${{newOption}}`,
+      text: newOption,
+      value: index
+    }]
+    setAddedOptions(newAddedOptions)
+    setSelectedIndex(index)
   }
 
-  const dropdownOptions = options.map((option: any, index: number) => {
-    return {
-      key: `${index}_${option}`,
-      text: optionsDisplayProperty ? option[optionsDisplayProperty] : option,
-      value: index,
-    }
-  })
+  function handleChange(_: any, data: any) {
+      var { value: optionValue } = data
+      //If condition saves appropriate value if new value is entered by user
+        if (typeof(optionValue) === 'string') {
+          const optionIndex = localOptions.length
+          onSave({
+            text: optionValue,
+            selection: {
+              key: `${optionIndex}_${optionValue}`,
+              text: optionValue,
+              value: optionIndex,
+            },
+            optionIndex,
+          })
+          return
+        }
+        setSelectedIndex(optionValue === '' ? undefined : optionValue)
+        // console.log('optionValue is: ', optionValue)
+        if (optionValue !== '') {
+          onSave({
+            text: (optionsDisplayProperty != undefined && optionsDisplayProperty)
+              ? localOptions[optionValue][optionsDisplayProperty]
+              : localOptions[optionValue],
+            selection: localOptions[optionValue],
+            optionValue,
+          })
+        }
+        // Reset response if selection cleared
+        else onSave(null)
+  }
 
   return (
     <>
@@ -79,11 +120,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <Dropdown
         fluid
+        //multiple
+        // onAddItem={additionalItem}
         selection
         clearable
-        search={search}
+        search={search || hasOther}
+        allowAdditions
+        onAddItem={(e, data)=>addItemHandler(e, data.value)}
         placeholder={placeholder}
-        options={dropdownOptions}
+        options={localOptions}
         onChange={handleChange}
         value={selectedIndex}
         error={!validationState.isValid ? true : undefined}
