@@ -40,7 +40,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         value: index,
       }
     })
-    //console.log('added options are: ', addedOptions)
     if (addedOptions && addedOptions.length > 0) {
       const newOptionList = [...optionsMapped, ...addedOptions]
       setLocalOptions(newOptionList)
@@ -66,7 +65,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   //addItemHandler is called when new data is entered. This in turn calls original hook to re-render displayed options
   const addItemHandler = (e: any, data: any) => {
-    //console.log('data is', data)
     const  newOption  = data
     const index = localOptions.length
     const newAddedOptions : any = [...addedOptions, {
@@ -95,7 +93,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           return
         }
         setSelectedIndex(optionValue === '' ? undefined : optionValue)
-        // console.log('optionValue is: ', optionValue)
         if (optionValue !== '') {
           onSave({
             text: (optionsDisplayProperty != undefined && optionsDisplayProperty)
