@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
-import consolidatorResponseFragment from '../../../utils/graphql/fragments/consolidatorResponse.fragment'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
