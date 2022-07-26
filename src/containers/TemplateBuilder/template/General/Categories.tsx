@@ -155,16 +155,18 @@ const Category: React.FC<{}> = () => {
             setText={(text) => setUpdateState({ ...updateState, code: text ?? '' })}
           />
           <TextIO
-            text={updateState.title}
+            text={updateState?.title || ''}
             title={strings.TEMPLATE_TITLE}
             setText={(value: string | null) => setUpdateState({ ...updateState, title: value })}
           />
           <TextIO
-            text={updateState.icon}
+            text={updateState?.icon || ''}
             title={strings.TEMPLATE_ICON}
             link={iconLink}
             icon={updateState.icon ?? undefined}
-            setText={(value: string | null) => setUpdateState({ ...updateState, icon: value })}
+            setText={(value: string | null) =>
+              setUpdateState({ ...updateState, icon: value || null })
+            }
           />
           <div>
             <p>{strings.TEMPLATE_APPEARS_IN}:</p>
