@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Form } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import config from '../pluginConfig.json'
@@ -23,11 +23,21 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onSave,
   Markdown,
   initialValue,
+  validationState,
 }) => {
   const { getPluginStrings } = useLanguageProvider()
   const strings = getPluginStrings('checkbox')
   const { isEditable } = element
-  const { label, description, checkboxes, type, layout, resetButton = false, keyMap } = parameters
+  const {
+    label,
+    description,
+    checkboxes,
+    type,
+    layout,
+    resetButton = false,
+    keyMap,
+    preventNonResponse = false,
+  } = parameters
 
   const [isFirstRender, setIsFirstRender] = useState(true)
 
@@ -46,6 +56,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useEffect(() => {
     // Don't save response if parameters are still loading
     if (checkboxElements[0]?.text === config.parameterLoadingValues.label) return
+    // Don't save a valid "nonResponse" if not allowed, so validation logic
+    // works as expected
+    if (preventNonResponse && checkboxElements.every((elem) => !elem.selected)) return
+
     const {
       text,
       textUnselected,
@@ -112,6 +126,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <div style={{ marginTop: 10 }}>
           <Button primary content={strings.BUTTON_RESET_SELECTION} compact onClick={resetState} />
         </div>
+      )}
+      {validationState.isValid ? null : (
+        <Label pointing prompt content={validationState?.validationMessage} />
       )}
     </>
   )
