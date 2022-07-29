@@ -32,6 +32,9 @@ const DataViewTable: React.FC = () => {
   if (error) {
     return <Message error header={strings.ERROR_GENERIC} content={error.message} />
   }
+  console.log("dataViewTable", dataViewTable)
+  console.log("loading ", loading)
+
   if (loading || !dataViewTable) return <Loading />
 
   const showDetailsForRow = (id: number) => push(`/data/${tableName}/${id}`)

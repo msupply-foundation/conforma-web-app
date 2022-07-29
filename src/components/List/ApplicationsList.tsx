@@ -14,6 +14,8 @@ interface ApplicationsListProps {
   refetch: Function
 }
 
+
+
 const ApplicationsList: React.FC<ApplicationsListProps> = ({
   columns,
   applications,
@@ -22,6 +24,9 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   loading,
   refetch,
 }) => {
+
+  console.log(applications)
+  
   const { strings } = useLanguageProvider()
   return (
     <>
