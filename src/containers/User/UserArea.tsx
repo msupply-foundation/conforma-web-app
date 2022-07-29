@@ -171,6 +171,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               options={templateOptions}
               onChange={handleTemplateChange}
               value={dropdownsState.templates.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
@@ -181,6 +182,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               options={dataViewOptions}
               onChange={handleDataViewChange}
               value={dropdownsState.dataViews.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
@@ -191,6 +193,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               options={adminOptions}
               onChange={handleAdminChange}
               value={dropdownsState.admin.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
