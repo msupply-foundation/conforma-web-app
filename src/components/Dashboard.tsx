@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { Header, Button, Icon, Label } from 'semantic-ui-react'
 import { useUserState } from '../contexts/UserState'
@@ -9,6 +9,7 @@ import useListApplications from '../utils/hooks/useListApplications'
 import useListTemplates from '../utils/hooks/useListTemplates'
 import usePageTitle from '../utils/hooks/usePageTitle'
 import { TemplateDetails, TemplateInList } from '../utils/types'
+import LoadingSmall from './LoadingSmall'
 
 const Dashboard: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -57,6 +58,11 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
       ? USER_ROLES.APPLICANT
       : USER_ROLES.REVIEWER
 
+  const [loadingFilters, setLoadingFilters] = useState(false)
+  const setLoading = (loadingState:boolean) => {
+    setLoadingFilters(loadingState)
+  }
+
   return (
     <div className="template">
       <div className="content">
@@ -66,9 +72,12 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
               {template?.namePlural || `${name} ${strings.LABEL_APPLICATIONS}`}
             </a>
             <Icon name="chevron right" />
+            {loadingFilters && 
+              <LoadingSmall />
+            }
           </Label>
           {filters.map((filter) => (
-            <FilterComponent key={filter.id} template={template} filter={filter} />
+            <FilterComponent key={filter.id} template={template} filter={filter} setLoading={setLoading}/>
           ))}
         </div>
         {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
@@ -85,9 +94,10 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
   )
 }
 
-const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> = ({
+const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; setLoading:any }> = ({
   template,
   filter,
+  setLoading
 }) => {
   const templateType = template.code
   const { loading, applicationCount } = useListApplications({
@@ -95,6 +105,10 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> =
     perPage: 1,
     ...filter.query,
   })
+
+  useEffect(() => {
+    setLoading(loading)
+  }, [loading])
 
   const applicationListUserRole =
     filter.userRole === PermissionPolicyType.Apply ? USER_ROLES.APPLICANT : USER_ROLES.REVIEWER
@@ -106,7 +120,7 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter }> =
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`
 
-  if (loading) return null
+  // if (loading) return <LoadingSmall/>
   if (applicationCount === 0) return null
 
   return (
