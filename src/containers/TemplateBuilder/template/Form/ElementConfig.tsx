@@ -2,7 +2,11 @@ import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React, { useEffect, useState } from 'react'
 import { Modal, Label, Icon, Header, Message, ModalProps } from 'semantic-ui-react'
 import { pluginProvider } from '../../../../formElementPlugins'
-import { TemplateElement, TemplateElementCategory } from '../../../../utils/generated/graphql'
+import {
+  IsReviewableStatus,
+  TemplateElement,
+  TemplateElementCategory,
+} from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
 import Evaluation from '../../shared/Evaluation'
@@ -34,6 +38,7 @@ type ElementUpdateState = {
   helpText: string | null
   parameters: ParametersType
   defaultValue: EvaluatorNode
+  isReviewable: IsReviewableStatus | null
   id: number
 }
 
@@ -52,6 +57,7 @@ const getState: GetState = (element: TemplateElement) => ({
   validationMessage: element.validationMessage || '',
   parameters: element.parameters || {},
   defaultValue: element.defaultValue || null,
+  isReviewable: element.isReviewable || null,
   id: element.id,
 })
 
@@ -241,6 +247,27 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   { category: TemplateElementCategory.Information, title: 'Information' },
                   { category: TemplateElementCategory.Question, title: 'Question' },
                 ]}
+              />
+            </div>
+            <div className="full-width-container">
+              <DropdownIO
+                title="Is Reviewable"
+                value={state.isReviewable || 'default'}
+                getKey={'value'}
+                getValue={'value'}
+                getText={'text'}
+                isPropUpdated={true}
+                setValue={(value) => {
+                  const updateValue = value === 'default' ? null : value
+                  setState({ ...state, isReviewable: updateValue as IsReviewableStatus | null })
+                  markNeedsUpdate()
+                }}
+                options={[
+                  { value: IsReviewableStatus.Always, text: 'Always' },
+                  { value: IsReviewableStatus.Never, text: 'Never' },
+                  { value: 'default', text: 'Only if applicant answered' },
+                ]}
+                maxLabelWidth={120}
               />
             </div>
             <div className="flex-row-start-center-wrap">

@@ -23,6 +23,7 @@ type DropdownIOprops = {
   getText?: GetterOrKey
   placeholder?: string
   minLabelWidth?: number
+  maxLabelWidth?: number
   labelTextAlign?: string
   additionalStyles?: object
 }
@@ -54,11 +55,17 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   getText = defaultGetters,
   placeholder,
   minLabelWidth = 100,
+  maxLabelWidth,
   labelTextAlign = 'center',
   additionalStyles = {},
 }) => {
   const [innerValue, setInnerValue] = useState(value)
-  const style: any = { minWidth: minLabelWidth, textAlign: labelTextAlign, ...additionalStyles }
+  const style: any = {
+    minWidth: minLabelWidth,
+    maxWidth: maxLabelWidth,
+    textAlign: labelTextAlign,
+    ...additionalStyles,
+  }
   const ioCSS = labelNegative ? 'io-component-negative' : 'io-component'
 
   useEffect(() => {
@@ -119,7 +126,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
       content={disabledMessage}
       disabled={!disabled || !disabledMessage}
       trigger={
-        <div className="io-wrapper" style={style}>
+        <div className="io-wrapper" style={additionalStyles}>
           {renderLabel()}
           {renderText()}
           {renderDropdown()}

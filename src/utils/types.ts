@@ -14,6 +14,7 @@ import {
   Organisation as GraphQLOrg,
   Filter,
   UiLocation,
+  IsReviewableStatus,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
@@ -219,6 +220,8 @@ interface ElementBase extends ElementForEvaluation {
   validationMessage: string | null
   helpText: string | null
   parameters: any
+  isReviewable: IsReviewableStatus | null
+  // reviewRequired: boolean
 }
 
 export type EvaluatedElement = {
