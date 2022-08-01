@@ -1,14 +1,12 @@
 import React from 'react'
 import { Loader, Segment } from 'semantic-ui-react'
 import { useLanguageProvider } from '../contexts/Localisation'
+import { SemanticSIZES } from 'semantic-ui-react'
 
-const LoadingSmall: React.FC = () => {
-  const { strings } = useLanguageProvider()
+const LoadingSmall: React.FC<{size?: SemanticSIZES}> = ({size ='small'}) => {
   return (
     <Segment basic style={{ height: '50%', margin: 0}}>
-      <Loader active size="mini">
-        {/* {strings.LABEL_LOADING} */}
-      </Loader>
+      <Loader active size={size} />
     </Segment>
   )
 }

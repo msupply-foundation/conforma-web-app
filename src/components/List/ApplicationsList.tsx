@@ -24,7 +24,6 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   loading,
   refetch,
 }) => {
-
   const { strings } = useLanguageProvider()
   return (
     <>

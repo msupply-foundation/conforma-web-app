@@ -59,9 +59,6 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
       : USER_ROLES.REVIEWER
 
   const [loadingFilters, setLoadingFilters] = useState(false)
-  const setLoading = (loadingState:boolean) => {
-    setLoadingFilters(loadingState)
-  }
 
   return (
     <div className="template">
@@ -77,7 +74,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
             }
           </Label>
           {filters.map((filter) => (
-            <FilterComponent key={filter.id} template={template} filter={filter} setLoading={setLoading}/>
+            <FilterComponent key={filter.id} template={template} filter={filter} setLoading={setLoadingFilters}/>
           ))}
         </div>
         {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
@@ -94,7 +91,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
   )
 }
 
-const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; setLoading:any }> = ({
+const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; setLoading:(loading:boolean) => void }> = ({
   template,
   filter,
   setLoading
@@ -120,7 +117,6 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; set
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`
 
-  // if (loading) return <LoadingSmall/>
   if (applicationCount === 0) return null
 
   return (
