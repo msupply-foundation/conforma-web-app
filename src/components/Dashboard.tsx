@@ -73,7 +73,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
             </a>
             <Icon name="chevron right" />
             {loadingFilters && 
-              <LoadingSmall />
+              <LoadingSmall/>
             }
           </Label>
           {filters.map((filter) => (

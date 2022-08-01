@@ -5,9 +5,9 @@ import { useLanguageProvider } from '../contexts/Localisation'
 const LoadingSmall: React.FC = () => {
   const { strings } = useLanguageProvider()
   return (
-    <Segment basic style={{ height: '20vh' }}>
-      <Loader active size="massive">
-        {strings.LABEL_LOADING}
+    <Segment basic style={{ height: '50%', margin: 0, padding: 15}}>
+      <Loader active size="mini">
+        {/* {strings.LABEL_LOADING} */}
       </Loader>
     </Segment>
   )
