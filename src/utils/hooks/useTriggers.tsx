@@ -76,7 +76,7 @@ const useTriggers = (serialNumber: string) => {
     }
   }
 
-  const recheckTriggers = async () => {
+  const recheckTriggers = () => {
     setLoading(true)
     setError(null)
     setReady(false)
