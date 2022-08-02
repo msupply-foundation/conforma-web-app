@@ -65,7 +65,8 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
       allResponsesByStage[stageNumber][timeUpdated] = {
         author: firstName || '' + ' ' + lastName || '',
         title: strings.TITLE_HISTORY_SUBMITTED_BY_APPLICANT,
-        message: value.text,
+        // TODO translated message, that nothing is entered
+        message: value?.text || '',
         timeUpdated,
       }
     })
