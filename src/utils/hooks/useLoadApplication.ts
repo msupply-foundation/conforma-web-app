@@ -166,19 +166,21 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const canApplicantMakeChanges = application.template?.canApplicantMakeChanges ?? true
 
-    const scheduledEvents: ApplicationScheduledEvent[] = (
+    const applicantDeadline: ApplicationScheduledEvent | undefined = (
       (application?.triggerSchedules?.nodes || []) as {
         id: number
         timeScheduled: string
         eventCode: string
         isActive: boolean
       }[]
-    ).map(({ id, timeScheduled, eventCode, isActive }) => ({
-      id,
-      timeScheduled: new Date(timeScheduled),
-      eventCode,
-      isActive,
-    }))
+    )
+      .filter((event) => event.eventCode === config.applicantDeadlineCode)
+      .map(({ id, timeScheduled, eventCode, isActive }) => ({
+        id,
+        timeScheduled: new Date(timeScheduled),
+        eventCode,
+        isActive,
+      }))[0]
 
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
@@ -216,7 +218,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         },
         stages: templateStages.map((stage) => getStageAndLevels(stage)),
         sections: buildSectionsStructure({ sectionDetails, baseElements, page: strings.PAGE }),
-        scheduledEvents,
+        applicantDeadline: applicantDeadline
+          ? { deadline: applicantDeadline.timeScheduled, isActive: applicantDeadline.isActive }
+          : { deadline: null, isActive: false },
         canApplicantMakeChanges,
         attemptSubmission: false,
         reload: reloadApplication,

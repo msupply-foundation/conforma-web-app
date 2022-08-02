@@ -277,7 +277,7 @@ interface FullStructure {
   info: ApplicationDetails
   canApplicantMakeChanges: boolean
   sections: SectionsStructure
-  scheduledEvents: ApplicationScheduledEvent[]
+  applicantDeadline: { deadline: Date | null; isActive: boolean }
   stages: {
     stage: StageDetails
     levels: LevelDetails[]
