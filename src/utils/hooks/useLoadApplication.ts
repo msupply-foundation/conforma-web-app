@@ -72,7 +72,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     if (!triggersReady || !data) return
 
-    const application = data.applicationBySerial as Application
+    const application = data.applicationBySerial
 
     // No unexpected error - just a application not accessible to user (Show 404 page)
     if (!application) {
@@ -126,7 +126,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       },
       firstStrictInvalidPage: null,
       isChangeRequest: false,
-      hasPreviewActions: application.template.templateActions.totalCount > 0,
+      hasPreviewActions: application.template.previewActions.totalCount > 0,
       user: application?.user as User,
       org: application?.org as Organisation,
       config,
