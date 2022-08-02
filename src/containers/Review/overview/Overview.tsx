@@ -89,8 +89,9 @@ export const Overview: React.FC<{
               )}
             </div>
             {applicantDeadline.deadline &&
-              (outcome === ApplicationOutcome.Expired ||
-                current.status === ApplicationStatus.ChangesRequired) && (
+              outcome !== ApplicationOutcome.Approved &&
+              outcome !== ApplicationOutcome.Rejected &&
+              outcome !== ApplicationOutcome.Withdrawn && (
                 <div className="flex-row-start-center" style={{ gap: 10, marginTop: 30 }}>
                   {strings.REVIEW_OVERVIEW_EXTEND_BY}
                   <Form.Input
