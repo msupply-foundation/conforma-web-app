@@ -73,8 +73,8 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
               <LoadingSmall/>
             }
           </Label>
-          {filters.map((filter) => (
-            <FilterComponent key={filter.id} template={template} filter={filter} setLoading={setLoadingFilters}/>
+          {filters.map((filter, i:number, filters) => (
+            <FilterComponent key={filter.id} template={template} filter={filter} setLoading={setLoadingFilters} filters={filters} i={i}/>
           ))}
         </div>
         {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
@@ -91,10 +91,12 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
   )
 }
 
-const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; setLoading:(loading:boolean) => void }> = ({
+const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; setLoading:(loading:boolean) => void; filters: Array<{}>; i:number }> = ({
   template,
   filter,
-  setLoading
+  setLoading,
+  filters,
+  i
 }) => {
   const templateType = template.code
   const { loading, applicationCount } = useListApplications({
@@ -104,7 +106,9 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; set
   })
 
   useEffect(() => {
+    if (i+1 === filters.length) {
     setLoading(loading)
+    }
   }, [loading])
 
   const applicationListUserRole =
