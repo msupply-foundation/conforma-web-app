@@ -167,6 +167,9 @@ const generateTimelineEvent: {
   OUTCOME: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
   EXTENSION: (event, _, __, ___, strings) => getExtensionEvent(event, strings),
   ASSIGNMENT: (event, _, structure, __, strings) => getAssignmentEvent(event, structure, strings),
+  // TEMPORARY TO AVOID TYPE ERROR WITH BACK-END DEVELOP -- WILL REPLACE WITH PROPER ONE WHEN LATER PR IS MERGED
+  EXTENSION: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
+
   REVIEW: (event, fullLog, structure, index, strings, decisionStrings) =>
     getReviewEvent(event, fullLog, structure, index, strings, decisionStrings),
   REVIEW_DECISION: () =>
