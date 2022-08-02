@@ -113,12 +113,12 @@ export const Overview: React.FC<{
                     onClick={() =>
                       showModal({
                         message:
-                          deadlineDays > 1
-                            ? strings.REVIEW_OVERVIEW_MODAL_MESSAGE.replace(
+                          deadlineDays === 1
+                            ? strings.REVIEW_OVERVIEW_MODAL_MESSAGE_SINGULAR
+                            : strings.REVIEW_OVERVIEW_MODAL_MESSAGE.replace(
                                 '%1',
                                 String(deadlineDays)
-                              )
-                            : strings.REVIEW_OVERVIEW_MODAL_MESSAGE_SINGULAR,
+                              ),
                         onOK: async () => {
                           await extendDeadline(id, deadlineDays)
                           reload()
