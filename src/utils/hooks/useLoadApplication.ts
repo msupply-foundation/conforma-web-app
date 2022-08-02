@@ -85,6 +85,9 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       return
     }
 
+    // TODO this is hacky, useTrigger should be a context, so that it can be re-triggered in ApplicationSections when 'restartApplication`
+    if (application.trigger !== null) return recheckTriggers()
+
     // Building the structure...
     setIsLoading(true)
 
