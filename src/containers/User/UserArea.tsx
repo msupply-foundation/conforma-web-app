@@ -62,8 +62,8 @@ interface DropdownsState {
   templates: { active: boolean; selection: string }
   dataViews: { active: boolean; selection: string }
   admin: { active: boolean; selection: string }
-  intRefDocs: { active: boolean; selection: string }
-  extRefDocs: { active: boolean; selection: string }
+  intRefDocs: { active: boolean }
+  extRefDocs: { active: boolean }
 }
 const MainMenuBar: React.FC<MainMenuBarProps> = ({
   templates,
@@ -76,8 +76,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     templates: { active: false, selection: '' },
     dataViews: { active: false, selection: '' },
     admin: { active: false, selection: '' },
-    intRefDocs: { active: false, selection: '' },
-    extRefDocs: { active: false, selection: '' },
+    intRefDocs: { active: false },
+    extRefDocs: { active: false },
   })
   const { push, pathname } = useRouter()
   const {
@@ -172,6 +172,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               options={templateOptions}
               onChange={handleTemplateChange}
               value={dropdownsState.templates.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
@@ -182,6 +183,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               options={dataViewOptions}
               onChange={handleDataViewChange}
               value={dropdownsState.dataViews.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
@@ -192,6 +194,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               options={adminOptions}
               onChange={handleAdminChange}
               value={dropdownsState.admin.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
@@ -387,8 +390,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
-        intRefDocs: { active: false, selection: '' },
-        extRefDocs: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
     case 'applications':
       return {
@@ -396,8 +399,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: true, selection: dropdownsState.templates.selection },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
-        intRefDocs: { active: false, selection: '' },
-        extRefDocs: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
     case 'data':
       return {
@@ -405,8 +408,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: true, selection: dropdownsState.dataViews.selection },
         admin: { active: false, selection: '' },
-        intRefDocs: { active: false, selection: '' },
-        extRefDocs: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
     case 'admin':
       return {
@@ -414,8 +417,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: true, selection: dropdownsState.admin.selection },
-        intRefDocs: { active: false, selection: '' },
-        extRefDocs: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
     // Don't need one for ref docs because they open in new tab
     default:
@@ -424,8 +427,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
-        intRefDocs: { active: false, selection: '' },
-        extRefDocs: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
   }
 }
