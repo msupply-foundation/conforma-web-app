@@ -237,7 +237,7 @@ const BrandArea: React.FC = () => {
   const { preferences } = usePrefs()
 
   const logoUrl = preferences?.brandLogoOnDarkFileId
-    ? getServerUrl('file', preferences?.brandLogoOnDarkFileId)
+    ? getServerUrl('file', preferences.brandLogoOnDarkFileId)
     : defaultBrandLogo
 
   return (

@@ -2,20 +2,16 @@
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const { version } = require('../package.json')
 
-// To connect to a remote server, store them in .env file
-// REMOTE_SERVER => name of server in SERVERS
-// SERVERS => JSON.stringified object {serverName: url, ...}
-const remoteServerName = process.env.REMOTE_SERVER
-const remoteServers = process.env.SERVERS ? JSON.parse(process.env.SERVERS) : null
-const remoteServer =
-  remoteServers && remoteServerName ? remoteServers[remoteServerName] ?? null : null
+// To connect to a remote server, store them in .env file:
+// REMOTE_SERVER=<server-url>
+const remoteServer = process.env.REMOTE_SERVER
 
 const remoteRestServer = remoteServer ? `${remoteServer}/server/api` : null
 const remoteGraphQLServer = remoteServer ? `${remoteServer}/graphql` : null
 
 const config = {
-  localHostREST: remoteRestServer ?? 'http://localhost:8080/api',
-  localHostGraphQL: remoteGraphQLServer ?? 'http://localhost:5000/graphql',
+  devServerRest: remoteRestServer ?? 'http://localhost:8080/api',
+  devServerGraphQL: remoteGraphQLServer ?? 'http://localhost:5000/graphql',
   productionPathREST: '/server/api',
   productionPathGraphQL: '/postgraphile/graphql',
   restEndpoints: {

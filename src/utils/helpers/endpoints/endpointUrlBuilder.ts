@@ -5,18 +5,18 @@ import { RestEndpoints } from './types'
 const {
   isProductionBuild,
   restEndpoints,
-  localHostREST,
-  localHostGraphQL,
+  devServerRest,
+  devServerGraphQL,
   productionPathREST,
   productionPathGraphQL,
 } = config
 const { port, hostname, protocol } = window.location
 const getProductionUrl = (path: string) => `${protocol}//${hostname}:${port}${path}`
 
-const serverREST = isProductionBuild ? getProductionUrl(productionPathREST) : localHostREST
+const serverREST = isProductionBuild ? getProductionUrl(productionPathREST) : devServerRest
 export const serverGraphQL = isProductionBuild
   ? getProductionUrl(productionPathGraphQL)
-  : localHostGraphQL
+  : devServerGraphQL
 
 const getServerUrl = (...args: RestEndpoints | ['graphQL']): string => {
   // "as" here ensures we must have types/cases for ALL keys of
@@ -67,17 +67,19 @@ const getServerUrl = (...args: RestEndpoints | ['graphQL']): string => {
 
     case 'dataViews':
       const tableName = args[1]
+      // List view
+      if (!tableName) return `${serverREST}${endpointPath}`
+
       const itemId = typeof args[2] === 'string' ? args[2] : undefined
       const query = typeof args[2] === 'object' ? args[2] : undefined
+
       // Detail view
       if (itemId) return `${serverREST}${endpointPath}/table/${tableName}/item/${itemId}`
+
       // Table view
-      if (tableName)
-        return `${serverREST}${endpointPath}/table/${tableName}${
-          query ? buildQueryString(query as BasicObject) : ''
-        }`
-      // List view
-      return `${serverREST}${endpointPath}`
+      return `${serverREST}${endpointPath}/table/${tableName}${
+        query ? buildQueryString(query as BasicObject) : ''
+      }`
 
     case 'upload':
       const uploadParameters = args[1]
