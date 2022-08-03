@@ -4,6 +4,5 @@
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "es5",
-  "semi": false,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "semi": false
 }
