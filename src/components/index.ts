@@ -1,4 +1,3 @@
-
 import Admin from './Admin/Admin'
 import {
   ApplicationContainer,
@@ -9,7 +8,7 @@ import {
 } from './Application'
 import Dashboard from './Dashboard'
 import Loading from './Loading'
-import { Footer, ModalWarning } from './Main'
+import { Footer } from './Main'
 import {
   ReviewContainer,
   ReviewHeader,
@@ -36,7 +35,6 @@ export {
   Footer,
   Dashboard,
   Loading,
-  ModalWarning,
   Navigation,
   NoMatch,
   PageElements,

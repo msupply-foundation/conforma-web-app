@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react'
-import { Header, Button, Checkbox, Icon, ModalProps } from 'semantic-ui-react'
+import { Header, Button, Checkbox, Icon } from 'semantic-ui-react'
 import { postRequest } from '../../utils/helpers/fetchMethods'
 import { LanguageOption, useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useToast, topLeft } from '../../contexts/Toast'
-import ModalWarning from '../Main/ModalWarning'
+import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import { exportLanguages } from '../../utils/localisation/exportLanguages'
 import { importLanguages } from '../../utils/localisation/importLanguages'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
@@ -16,7 +16,11 @@ export const AdminLocalisations: React.FC = () => {
   const [exportDisabled, setExportDisabled] = useState(true)
   const [importDisabled, setImportDisabled] = useState(true)
   const showToast = useToast({ position: topLeft })
-  const [showModalWarning, setShowModalWarning] = useState<ModalProps>({ open: false })
+  const { ConfirmModal: WarningModal, showModal: showWarningModal } = useConfirmationModal({
+    type: 'warning',
+    title: strings.LOCALISATION_DELETE_WARNING_TITLE,
+    confirmText: strings.BUTTON_CONFIRM,
+  })
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
   const handleSelect = async (language: LanguageOption, index: number) => {
@@ -34,43 +38,28 @@ export const AdminLocalisations: React.FC = () => {
   }
 
   const handleRemove = async (language: LanguageOption) => {
-    setShowModalWarning({
-      open: true,
-      title: strings.LOCALISATION_DELETE_WARNING_TITLE,
-      message: strings.LOCALISATION_DELETE_WARNING_MESSAGE.replace(
-        '%1',
-        language.languageName
-      ).replace('%2', language.code),
-      option: strings.BUTTON_CONFIRM,
-      optionCancel: strings.OPTION_CANCEL,
-      onCancel: () => setShowModalWarning({ open: false }),
-      onClick: async () => {
-        setShowModalWarning({ open: false })
-        const result = await postRequest({
-          url: getServerUrl('removeLanguage', language.code),
-        })
-        if (result.success) {
-          console.log(`Language removed: ${language.code}`)
-          showToast({
-            title: strings.LOCALISATION_REMOVE_SUCCESS.replace('%1', language.languageName).replace(
-              '%2',
-              language.code
-            ),
-            text: '',
-            style: 'success',
-          })
-        } else {
-          showToast({
-            title: strings.LOCALISATION_REMOVE_ERROR,
-            text: result?.message ?? strings.LOCALISATION_REMOVE_PROBLEM,
-            style: 'error',
-          })
-          console.error(result.message)
-        }
-        refetchLanguages()
-      },
-      onClose: () => setShowModalWarning({ open: false }),
+    const result = await postRequest({
+      url: getServerUrl('removeLanguage', language.code),
     })
+    if (result.success) {
+      console.log(`Language removed: ${language.code}`)
+      showToast({
+        title: strings.LOCALISATION_REMOVE_SUCCESS.replace('%1', language.languageName).replace(
+          '%2',
+          language.code
+        ),
+        text: '',
+        style: 'success',
+      })
+    } else {
+      showToast({
+        title: strings.LOCALISATION_REMOVE_ERROR,
+        text: result?.message ?? strings.LOCALISATION_REMOVE_PROBLEM,
+        style: 'error',
+      })
+      console.error(result.message)
+    }
+    refetchLanguages()
   }
 
   const handleExport = async () => {
@@ -125,7 +114,7 @@ export const AdminLocalisations: React.FC = () => {
 
   return (
     <div id="localisation-panel">
-      <ModalWarning {...showModalWarning} />
+      <WarningModal />
       <Header as="h1">{strings.LOCALISATION_HEADER}</Header>
       <Header as="h4">{strings.LOCALISATION_CURRENTLY_INSTALLED}</Header>
       <div className="flex-row">
@@ -145,7 +134,15 @@ export const AdminLocalisations: React.FC = () => {
               size="large"
               className="clickable"
               style={{ position: 'absolute', right: 4, top: -4, color: 'grey' }}
-              onClick={() => handleRemove(language)}
+              onClick={() =>
+                showWarningModal({
+                  message: strings.LOCALISATION_DELETE_WARNING_MESSAGE.replace(
+                    '%1',
+                    language.languageName
+                  ).replace('%2', language.code),
+                  onConfirm: () => handleRemove(language),
+                })
+              }
             />
           )}
         </div>
