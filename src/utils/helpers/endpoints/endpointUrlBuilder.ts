@@ -67,17 +67,19 @@ const getServerUrl = (...args: RestEndpoints | ['graphQL']): string => {
 
     case 'dataViews':
       const tableName = args[1]
+      // List view
+      if (!tableName) return `${serverREST}${endpointPath}`
+
       const itemId = typeof args[2] === 'string' ? args[2] : undefined
       const query = typeof args[2] === 'object' ? args[2] : undefined
+
       // Detail view
       if (itemId) return `${serverREST}${endpointPath}/table/${tableName}/item/${itemId}`
+
       // Table view
-      if (tableName)
-        return `${serverREST}${endpointPath}/table/${tableName}${
-          query ? buildQueryString(query as BasicObject) : ''
-        }`
-      // List view
-      return `${serverREST}${endpointPath}`
+      return `${serverREST}${endpointPath}/table/${tableName}${
+        query ? buildQueryString(query as BasicObject) : ''
+      }`
 
     case 'upload':
       const uploadParameters = args[1]
