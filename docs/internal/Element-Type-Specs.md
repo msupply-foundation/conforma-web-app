@@ -244,7 +244,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 - **default**: `string`/`number` -- if not provided, defaults to index 0.
 - **search**: `boolean` (default: `false`) -- if `true`, the list of options can be searched and filtered by user
 - **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of organisation objects (i.e. `{orgId, name, licenceNumber}`), you'd probably specify `name` as the `optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection. And if `optionsDisplayProperty` refers to a field that doesn't exist on the supplied object, the plugin will fail and show in error in the application.
-- ~~**hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(not yet implemented)_~~
+- **hasOther**: `boolean` (default `false`) -- if `true`, allows the user to enter a custom "free text" value instead of one of the pre-defined options.
 
 #### Response type
 
@@ -253,6 +253,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
   optionIndex: <integer> (index from the options array)
   text: <string> (actual text from options array)
   selection: <string | object> (entire object or string from the supplied options list)
+  isCustomOption: <boolean> (if the selection is a custom "hasOther" option)
 }
 
 ```
