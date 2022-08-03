@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import { Header, Icon, Message, Segment, Button, Form } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
-import useConfirmModal from '../../../utils/hooks/useConfirmModal'
+import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FullStructure } from '../../../utils/types'
 import {
@@ -20,7 +20,7 @@ export const Overview: React.FC<{
 }> = ({
   structure: {
     info: { current, outcome, user, org, serial, id, template },
-    scheduledEvents,
+    applicantDeadline,
     reload,
   },
   activityLog,
@@ -28,19 +28,11 @@ export const Overview: React.FC<{
   const { strings } = useLanguageProvider()
   const { Outcome } = useLocalisedEnums()
   const [deadlineDays, setDeadlineDays] = useState(5)
-  const { ConfirmModal, showModal } = useConfirmModal()
+  const { ConfirmModal, showModal } = useConfirmationModal()
   const applicant = `${user?.firstName} ${user?.lastName}`
   const organisation = org?.name
   const { started, completed } = getDates(activityLog)
   const stage = current.stage.name
-  const applicantDeadlineEvent = scheduledEvents.filter(
-    (event) => event.eventCode === config.applicantDeadlineCode
-  )
-
-  const [applicantDeadline, deadlineActive] =
-    applicantDeadlineEvent.length > 0
-      ? [applicantDeadlineEvent[0].timeScheduled, applicantDeadlineEvent[0].isActive]
-      : [null, false]
 
   return (
     <div id="overview">
@@ -88,16 +80,19 @@ export const Overview: React.FC<{
                 <strong>{strings.REVIEW_OVERVIEW_SERIAL}: </strong>
                 {serial}
               </p>
-              {applicantDeadline && deadlineActive && (
+              {applicantDeadline.deadline && applicantDeadline.isActive && (
                 <p className="right-item">
                   <strong>{strings.REVIEW_OVERVIEW_DEADLINE}: </strong>
-                  {DateTime.fromJSDate(applicantDeadline).toLocaleString(DateTime.DATETIME_SHORT)}
+                  {DateTime.fromJSDate(applicantDeadline.deadline).toLocaleString(
+                    DateTime.DATETIME_SHORT
+                  )}
                 </p>
               )}
             </div>
             {applicantDeadline &&
               (outcome === ApplicationOutcome.Expired ||
-                current.status === ApplicationStatus.ChangesRequired) && (
+                current.status === ApplicationStatus.ChangesRequired ||
+                current.status === ApplicationStatus.Draft) && (
                 <div className="flex-row-start-center" style={{ gap: 10, marginTop: 30 }}>
                   {strings.REVIEW_OVERVIEW_EXTEND_BY}
                   <Form.Input
@@ -119,13 +114,13 @@ export const Overview: React.FC<{
                     onClick={() =>
                       showModal({
                         message:
-                          deadlineDays > 1
-                            ? strings.REVIEW_OVERVIEW_MODAL_MESSAGE.replace(
+                          deadlineDays === 1
+                            ? strings.REVIEW_OVERVIEW_MODAL_MESSAGE_SINGULAR
+                            : strings.REVIEW_OVERVIEW_MODAL_MESSAGE.replace(
                                 '%1',
                                 String(deadlineDays)
-                              )
-                            : strings.REVIEW_OVERVIEW_MODAL_MESSAGE_SINGULAR,
-                        onOK: async () => {
+                              ),
+                        onConfirm: async () => {
                           await extendDeadline(id, deadlineDays)
                           reload()
                         },
