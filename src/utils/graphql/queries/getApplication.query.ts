@@ -22,7 +22,7 @@ export default gql`
           }
         }
         # Count PREVIEW actions so we know whether to show the option to Preview
-        templateActions(condition: { trigger: ON_PREVIEW }) {
+        previewActions: templateActions(condition: { trigger: ON_PREVIEW }) {
           totalCount
         }
       }
