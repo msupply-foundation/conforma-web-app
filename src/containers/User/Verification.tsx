@@ -6,7 +6,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { getRequest } from '../../utils/helpers/fetchMethods'
 import isLoggedIn from '../../utils/helpers/loginCheck'
-import config from '../../config'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 interface Verification {
   success: boolean
@@ -21,7 +21,7 @@ const Verify: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [verification, setVerification] = useState<Verification>()
 
-  const verifyUrl = `${config.serverREST}/public/verify?uid=${uid}`
+  const verifyUrl = getServerUrl('verify', uid)
 
   useEffect(() => {
     getRequest(verifyUrl).then((result) => {

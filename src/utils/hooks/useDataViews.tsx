@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
 import { getRequest } from '../helpers/fetchMethods'
-import config from '../../config'
 import { useUserState } from '../../contexts/UserState'
+import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 import {
   DataViewsResponse,
   DataViewsTableResponse,
   DataViewsDetailResponse,
   DataViewTableAPIQueries,
 } from '../types'
-const serverURL = config.serverREST
 
 // 3 simple hooks for returning Outcome state
 
@@ -41,15 +40,13 @@ export const useDataViewsList = () => {
   } = useUserState()
 
   useEffect(() => {
-    const url = `${serverURL}/data-views`
-    processRequest(url, setError, setLoading, setDataViewsList)
+    processRequest(getServerUrl('dataViews'), setError, setLoading, setDataViewsList)
   }, [templatePermissions])
 
   return { error, loading, dataViewsList }
 }
 
 export const useDataViewsTable = ({ tableName, apiQueries }: DataViewTableProps) => {
-  const { first, offset, orderBy, ascending } = apiQueries
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [dataViewTable, setDataViewTable] = useState<DataViewsTableResponse>()
@@ -58,14 +55,12 @@ export const useDataViewsTable = ({ tableName, apiQueries }: DataViewTableProps)
   } = useUserState()
 
   useEffect(() => {
-    const queryElements = []
-    if (first) queryElements.push(`first=${first}`)
-    if (offset) queryElements.push(`offset=${offset}`)
-    if (orderBy) queryElements.push(`orderBy=${orderBy}`)
-    if (ascending) queryElements.push(`ascending=${ascending}`)
-    const queryString = queryElements.join('&')
-    const url = `${serverURL}/data-views/table/${tableName}?${queryString}`
-    processRequest(url, setError, setLoading, setDataViewTable)
+    processRequest(
+      getServerUrl('dataViews', tableName, apiQueries),
+      setError,
+      setLoading,
+      setDataViewTable
+    )
   }, [templatePermissions, tableName, apiQueries])
 
   return { error, loading, dataViewTable }
@@ -80,8 +75,12 @@ export const useDataViewsDetail = ({ tableName, recordId }: DataViewDetailsProps
   } = useUserState()
 
   useEffect(() => {
-    const url = `${serverURL}/data-views/table/${tableName}/item/${recordId}`
-    processRequest(url, setError, setLoading, setDataViewDetail)
+    processRequest(
+      getServerUrl('dataViews', tableName, recordId),
+      setError,
+      setLoading,
+      setDataViewDetail
+    )
   }, [templatePermissions, tableName, recordId])
 
   return { error, loading, dataViewDetail }

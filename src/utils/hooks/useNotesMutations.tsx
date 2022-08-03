@@ -3,9 +3,7 @@ import { useCreateNoteMutation, useDeleteNoteMutation } from '../generated/graph
 import { postRequest } from '../../utils/helpers/fetchMethods'
 import { FullStructure, User } from '../types'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import config from '../../config'
-
-const fileEndpoint = `${config.serverREST}${config.uploadEndpoint}`
+import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 
 const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
   const { strings } = useLanguageProvider()
@@ -54,7 +52,11 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
       fileData.append('file', file)
       fileResults.push(
         postRequest({
-          url: `${fileEndpoint}?user_id=${userId}&application_serial=${serial}&application_note_id=${noteId}`,
+          url: getServerUrl('upload', {
+            userId,
+            applicationSerial: serial,
+            applicationNoteId: noteId,
+          }),
           otherBody: fileData,
         })
       )

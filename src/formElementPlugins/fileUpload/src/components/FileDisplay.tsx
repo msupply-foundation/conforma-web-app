@@ -1,5 +1,6 @@
 import React from 'react'
 import { Icon, Grid, List, Image, Message, Loader } from 'semantic-ui-react'
+import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FileInfo } from '../ApplicationView'
 import prefs from '../../config.json'
 import './styles.css'
@@ -7,10 +8,9 @@ import './styles.css'
 export interface FileDisplayProps {
   file: FileInfo
   onDelete: (key: string) => void
-  downloadUrl: string
 }
 
-export const FileDisplay = ({ file, onDelete, downloadUrl }: FileDisplayProps) => {
+export const FileDisplay = ({ file, onDelete }: FileDisplayProps) => {
   const { key, loading, error, errorMessage, filename, fileData } = file
   return (
     <List.Item className="file-item" style={{ position: 'relative', maxWidth: 150 }}>
@@ -46,16 +46,16 @@ export const FileDisplay = ({ file, onDelete, downloadUrl }: FileDisplayProps) =
         {fileData && (
           <>
             <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-              <a href={downloadUrl + fileData.fileUrl} target="_blank">
+              <a href={getServerUrl('file', fileData.uniqueId)} target="_blank">
                 <Image
-                  src={downloadUrl + fileData.thumbnailUrl}
+                  src={getServerUrl('file', fileData.uniqueId, 'thumbnail')}
                   style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
                 />
               </a>
             </Grid.Row>
             <Grid.Row centered style={{ boxShadow: 'none' }}>
               <p style={{ wordBreak: 'break-word' }}>
-                <a href={downloadUrl + fileData.fileUrl} target="_blank">
+                <a href={getServerUrl('file', fileData.uniqueId)} target="_blank">
                   {filename}
                 </a>
               </p>

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Modal, Message, Button, Loader, ModalProps } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
-import config from '../../../config'
 import { getItemDisplayComponent, ActionResultPreviewData } from './PreviewItems'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 interface PreviewProps extends ModalProps {
   open: boolean
@@ -12,8 +12,6 @@ interface PreviewProps extends ModalProps {
   reviewId: number
   applicationDataOverride: { [key: string]: any }
 }
-
-const previewEndpoint = `${config.serverREST}/preview-actions`
 
 const ReviewPreviewModal: React.FC<PreviewProps> = ({
   open,
@@ -84,7 +82,7 @@ export default ReviewPreviewModal
 const fetchPreviews = async (reviewId: number, applicationDataOverride: { [key: string]: any }) => {
   try {
     const result = await postRequest({
-      url: previewEndpoint,
+      url: getServerUrl('previewActions'),
       jsonBody: { reviewId, applicationDataOverride },
       headers: { 'Content-Type': 'application/json' },
     })

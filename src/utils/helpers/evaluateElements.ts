@@ -1,4 +1,5 @@
 import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
+import getServerUrl from './endpoints/endpointUrlBuilder'
 import config from '../../config'
 import {
   EvaluatedElement,
@@ -9,7 +10,8 @@ import {
   EvaluationOptions,
   EvaluatorNode,
 } from '../types'
-const graphQLEndpoint = config.serverGraphQL
+
+const graphQLEndpoint = getServerUrl('graphQL')
 
 type PartialEvaluatedElement = Partial<EvaluatedElement>
 type EvaluationObject = {

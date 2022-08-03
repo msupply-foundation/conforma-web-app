@@ -19,8 +19,9 @@ import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTracke
 import { useLanguageProvider } from '../contexts/Localisation'
 import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
+import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 
-const graphQLEndpoint = globalConfig.serverGraphQL
+const graphQLEndpoint = getServerUrl('graphQL')
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const { strings } = useLanguageProvider()

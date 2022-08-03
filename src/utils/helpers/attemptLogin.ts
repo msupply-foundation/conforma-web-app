@@ -1,9 +1,7 @@
 import { postRequest } from './fetchMethods'
 import config from '../../config'
 import { LoginPayload } from '../types'
-
-const loginURL = config.serverREST + '/public/login'
-const loginOrgURL = config.serverREST + '/login-org'
+import getServerUrl from './endpoints/endpointUrlBuilder'
 
 interface loginParameters {
   username: string
@@ -29,7 +27,7 @@ export const attemptLogin = async ({
   try {
     const loginResult: LoginPayload = await postRequest({
       jsonBody: { username, password, sessionId },
-      url: loginURL,
+      url: getServerUrl('login'),
       headers: { 'Content-Type': 'application/json' },
     })
 
@@ -50,7 +48,7 @@ export const attemptLoginOrg = async ({
   try {
     const loginResult: LoginPayload = await postRequest({
       jsonBody: { orgId, sessionId },
-      url: loginOrgURL,
+      url: getServerUrl('loginOrg'),
       headers: { 'Content-Type': 'application/json' },
     })
 

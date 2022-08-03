@@ -4,6 +4,7 @@ import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { DateTime } from 'luxon'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const DownloadButton = ({
   id,
@@ -39,7 +40,7 @@ const DownloadButton = ({
   const downloadItem = async (event: any) => {
     event.stopPropagation()
     await axios
-      .get(config.serverREST + `/admin/lookup-table/export/${id}`, {
+      .get(getServerUrl('lookupTable', 'export', id), {
         headers: {
           'Content-Type': 'multipart/form-data',
           ...authHeader,

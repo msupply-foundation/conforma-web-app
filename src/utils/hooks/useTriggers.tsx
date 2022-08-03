@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react'
 import { Trigger } from '../generated/graphql'
 import config from '../../config'
 import { getRequest } from '../../utils/helpers/fetchMethods'
+import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 
 const MAX_REFETCH = 10
-const serverURL = config.serverREST
 
 interface TriggerError {
   type: 'trigger' | 'timeout' | 'network'
@@ -53,9 +53,7 @@ const useTriggers = (serialNumber: string) => {
   const getTriggers = async () => {
     console.log('Checking triggers, attempt #', refetchAttempts)
     try {
-      const result: TriggerState = await getRequest(
-        `${serverURL}/check-triggers?serial=${serialNumber}`
-      )
+      const result: TriggerState = await getRequest(getServerUrl('checkTrigger', serialNumber))
       switch (result.status) {
         case 'error':
           clearTimeout(timerId as Timer)
