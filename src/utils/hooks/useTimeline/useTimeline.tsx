@@ -1,9 +1,16 @@
 import { useEffect, useState } from 'react'
 import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
-import { ActivityLog, Decision, EventType, useGetActivityLogQuery } from '../../generated/graphql'
+import {
+  ActivityLog,
+  ApplicationStatus,
+  Decision,
+  EventType,
+  useGetActivityLogQuery,
+} from '../../generated/graphql'
 import { FullStructure } from '../../types'
 import {
   getAssignmentEvent,
+  getExtensionEvent,
   getOutcomeEvent,
   getReviewEvent,
   getStatusEvent,
@@ -60,7 +67,8 @@ const buildTimeline = (
   // Group by stage
   const stages: TimelineStage[] = []
   let stageIndex = -1
-  let finalOutcome: TimelineEvent | null = null
+  let mostRecentChangeRequestEvent: TimelineEvent | null = null
+
   activityLog.forEach((event, index) => {
     if (event.type === 'STAGE') {
       // Stages become the parents of all other events
@@ -86,20 +94,31 @@ const buildTimeline = (
 
       if (stageIndex < 0) return
 
-      if (event.type === 'OUTCOME' && event.value !== 'PENDING') finalOutcome = timelineEvent
-      else if (
-        // Show special changes required message is currently waiting
-        (((event.type === 'STATUS' && event.value === 'CHANGES_REQUIRED') ||
-          (event.type === 'REVIEW' && event.value === 'CHANGES_REQUESTED')) &&
-          index === activityLog.length - 1) ||
-        // Normal event
-        (timelineEvent.eventType !== TimelineEventType.Ignore && stageIndex >= 0)
+      if (
+        timelineEvent.eventType === TimelineEventType.ApplicationChangesRequired ||
+        timelineEvent.eventType === TimelineEventType.ReviewChangesRequested
+      )
+        mostRecentChangeRequestEvent = timelineEvent
+
+      if (
+        ![
+          TimelineEventType.Ignore,
+          TimelineEventType.ApplicationChangesRequired,
+          TimelineEventType.ReviewChangesRequested,
+        ].includes(timelineEvent.eventType)
       )
         stages[stageIndex].events.push(timelineEvent)
     }
   })
-  // Put final outcome at the end of the event list
-  if (finalOutcome) stages[stageIndex].events.push(finalOutcome)
+
+  // Add a special "waiting" event if application is currently awaiting changes
+  // from applicant or reviewer
+  if (
+    structure.info.current.status === ApplicationStatus.ChangesRequired &&
+    mostRecentChangeRequestEvent
+  )
+    stages[stageIndex].events.push(mostRecentChangeRequestEvent)
+
   // Placeholder event if no activity yet in stage
   if (stageIndex > -1 && stages[stageIndex].events.length === 0)
     stages[stageIndex].events.push({
@@ -110,6 +129,7 @@ const buildTimeline = (
       details: {},
       logType: null,
     })
+
   // Add emoji icon if last event in stage is a review decision
   stages.forEach((stage, index) => {
     // Don't worry about final stage -- OUTCOME result used instead
@@ -121,6 +141,7 @@ const buildTimeline = (
       lastEvent.displayString = `${getDecisionIcon(decision)} ${lastEvent.displayString}`
     }
   })
+
   return {
     stages,
     rawLog: activityLog,
@@ -144,10 +165,8 @@ const generateTimelineEvent: {
     ({ eventType: TimelineEventType.Ignore, displayString: '' }),
   STATUS: (event, fullLog, _, __, strings) => getStatusEvent(event, fullLog, strings),
   OUTCOME: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
+  EXTENSION: (event, _, __, ___, strings) => getExtensionEvent(event, strings),
   ASSIGNMENT: (event, _, structure, __, strings) => getAssignmentEvent(event, structure, strings),
-  // TEMPORARY TO AVOID TYPE ERROR WITH BACK-END DEVELOP -- WILL REPLACE WITH PROPER ONE WHEN LATER PR IS MERGED
-  EXTENSION: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
-
   REVIEW: (event, fullLog, structure, index, strings, decisionStrings) =>
     getReviewEvent(event, fullLog, structure, index, strings, decisionStrings),
   REVIEW_DECISION: () =>

@@ -424,6 +424,7 @@ export default {
   TIMELINE_APPLICATION_WITHDRAWN: 'Application withdrawn',
   TIMELINE_APPLICATION_APPROVED: '✅ Application **approved**',
   TIMELINE_APPLICATION_REJECTED: '❌ Application has been **rejected**',
+  TIMELINE_DEADLINE_EXTENDED: '%1 extended the deadline to:',
   TIMELINE_WAITING_FOR_APPLICANT: 'Waiting for applicant to make changes',
   TIMELINE_WAITING_FOR_REVIEWER: 'Waiting for reviewer %1 to make changes',
   TIMELINE_REVIEW_ASSIGNED: 'Reviewer %1 was assigned %2 by %3',
