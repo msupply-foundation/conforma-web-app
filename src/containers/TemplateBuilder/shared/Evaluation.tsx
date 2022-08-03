@@ -8,6 +8,7 @@ import { useUserState } from '../../../contexts/UserState'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FullStructure } from '../../../utils/types'
 import { renderEvaluation } from '../evaluatorGui/renderEvaluation'
+import functions from '../evaluatorGui/evaluatorFunctions'
 import semanticComponentLibrary from '../evaluatorGui/semanticComponentLibrary'
 import { getTypedEvaluation, getTypedEvaluationAsString } from '../evaluatorGui/typeHelpers'
 import CheckboxIO from './CheckboxIO'
@@ -69,7 +70,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
   const JWT = localStorage.getItem(config.localStorageJWTKey)
   const objects =
     type === 'Action'
-      ? { applicationData }
+      ? { applicationData, functions }
       : type === 'FormElement'
       ? {
           responses: {

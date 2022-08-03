@@ -125,8 +125,6 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
             />
           ))}
         </div>
-        {/* <ModalWarning showModal={showModal} /> */}
-
         {status === ApplicationStatus.Draft ? (
           <div id="application-submit">
             <Button

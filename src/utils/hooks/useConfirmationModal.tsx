@@ -6,20 +6,22 @@ interface ConfirmModalState extends ModalProps {
   type: 'warning' | 'confirmation'
   title: string
   message?: string
-  OKText: string
+  confirmText: string
   cancelText: string
-  onOK: () => void
+  onConfirm: () => void
   onCancel: () => void
+  showCancel: boolean
 }
 
-const useConfirmModal = ({
+const useConfirmationModal = ({
   type,
   title,
   message,
-  OKText,
+  confirmText,
   cancelText,
-  onOK,
+  onConfirm,
   onCancel,
+  showCancel = true,
   ...modalProps
 }: Partial<ConfirmModalState> = {}) => {
   const { strings } = useLanguageProvider()
@@ -29,15 +31,16 @@ const useConfirmModal = ({
     type: type ?? 'confirmation',
     title: title ?? strings.MODAL_CONFIRM_TITLE,
     message,
-    OKText: OKText ?? strings.OPTION_OK,
+    confirmText: confirmText ?? strings.OPTION_OK,
     cancelText: cancelText ?? strings.OPTION_CANCEL,
-    onOK: () => console.log('Clicked OK'),
-    onCancel: () => {},
+    onConfirm: onConfirm ? onConfirm : () => console.log('Clicked OK'),
+    onCancel: onCancel ? onCancel : () => {},
+    showCancel,
   })
 
-  const handleOk = async (OKFunction: () => void) => {
+  const handleConfirm = async (confirmFunction: () => void) => {
     setButtonLoading(true)
-    await OKFunction()
+    await confirmFunction()
     setButtonLoading(false)
     setOpen(false)
   }
@@ -48,9 +51,19 @@ const useConfirmModal = ({
   }
 
   const ConfirmModal = () => (
-    <Modal closeIcon open={open} {...modalProps} basic size="small" onClose={() => setOpen(false)}>
+    <Modal
+      closeIcon
+      open={open}
+      {...modalProps}
+      basic
+      size="small"
+      onClose={() => {
+        modalState.onCancel()
+        setOpen(false)
+      }}
+    >
       <Header icon>
-        {type === 'confirmation' ? (
+        {modalState.type === 'confirmation' ? (
           <Icon name="check square outline" color="green" />
         ) : (
           <Icon name="exclamation triangle" color="orange" />
@@ -59,18 +72,20 @@ const useConfirmModal = ({
       </Header>
       <Modal.Content>{modalState.message && <p>{modalState.message}</p>}</Modal.Content>
       <Modal.Actions>
-        <Button
-          content={modalState.cancelText}
-          inverted
-          onClick={() => handleCancel(modalState.onCancel)}
-        />
+        {modalState.showCancel && (
+          <Button
+            content={modalState.cancelText}
+            inverted
+            onClick={() => handleCancel(modalState.onCancel)}
+          />
+        )}
         <Button
           loading={buttonLoading}
           color="green"
           inverted
           icon="checkmark"
-          content={modalState.OKText}
-          onClick={() => handleOk(modalState.onOK)}
+          content={modalState.confirmText}
+          onClick={() => handleConfirm(modalState.onConfirm)}
         />
       </Modal.Actions>
     </Modal>
@@ -79,18 +94,20 @@ const useConfirmModal = ({
   const showModal = ({
     title,
     message,
-    OKText,
+    confirmText,
     cancelText,
-    onOK,
+    onConfirm,
     onCancel,
-  }: Partial<ConfirmModalState>) => {
+    showCancel,
+  }: Partial<ConfirmModalState> = {}) => {
     const newState: Partial<ConfirmModalState> = {}
     if (title) newState.title = title
     if (message) newState.message = message
-    if (OKText) newState.OKText = OKText
+    if (confirmText) newState.confirmText = confirmText
     if (cancelText) newState.cancelText = cancelText
-    if (onOK) newState.onOK = onOK
+    if (onConfirm) newState.onConfirm = onConfirm
     if (onCancel) newState.onCancel = onCancel
+    if (showCancel !== undefined) newState.showCancel = showCancel
     setModalState({ ...modalState, ...newState })
     setOpen(true)
   }
@@ -98,4 +115,4 @@ const useConfirmModal = ({
   return { ConfirmModal, showModal }
 }
 
-export default useConfirmModal
+export default useConfirmationModal
