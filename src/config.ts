@@ -2,7 +2,7 @@
 const isProductionBuild = process.env.NODE_ENV === 'production'
 const { version } = require('../package.json')
 
-// To connect to a remote server, store them in .env file:
+// To connect to a remote server, store url(s) in .env file:
 // REMOTE_SERVER=<server-url>
 const remoteServer = process.env.REMOTE_SERVER
 
