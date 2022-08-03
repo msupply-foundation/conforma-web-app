@@ -118,7 +118,7 @@ export const Overview: React.FC<{
                             : strings.REVIEW_OVERVIEW_MODAL_MESSAGE.replace(
                                 '%1',
                                 String(deadlineDays)
-                              )
+                              ),
                         onConfirm: async () => {
                           await extendDeadline(id, deadlineDays)
                           reload()

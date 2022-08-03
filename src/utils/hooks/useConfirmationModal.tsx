@@ -10,6 +10,7 @@ interface ConfirmModalState extends ModalProps {
   cancelText: string
   onConfirm: () => void
   onCancel: () => void
+  showCancel: boolean
 }
 
 const useConfirmationModal = ({
@@ -20,6 +21,7 @@ const useConfirmationModal = ({
   cancelText,
   onConfirm,
   onCancel,
+  showCancel = true,
   ...modalProps
 }: Partial<ConfirmModalState> = {}) => {
   const { strings } = useLanguageProvider()
@@ -33,6 +35,7 @@ const useConfirmationModal = ({
     cancelText: cancelText ?? strings.OPTION_CANCEL,
     onConfirm: onConfirm ? onConfirm : () => console.log('Clicked OK'),
     onCancel: onCancel ? onCancel : () => {},
+    showCancel,
   })
 
   const handleConfirm = async (confirmFunction: () => void) => {
@@ -69,11 +72,13 @@ const useConfirmationModal = ({
       </Header>
       <Modal.Content>{modalState.message && <p>{modalState.message}</p>}</Modal.Content>
       <Modal.Actions>
-        <Button
-          content={modalState.cancelText}
-          inverted
-          onClick={() => handleCancel(modalState.onCancel)}
-        />
+        {modalState.showCancel && (
+          <Button
+            content={modalState.cancelText}
+            inverted
+            onClick={() => handleCancel(modalState.onCancel)}
+          />
+        )}
         <Button
           loading={buttonLoading}
           color="green"
@@ -93,6 +98,7 @@ const useConfirmationModal = ({
     cancelText,
     onConfirm: onOK,
     onCancel,
+    showCancel,
   }: Partial<ConfirmModalState> = {}) => {
     const newState: Partial<ConfirmModalState> = {}
     if (title) newState.title = title
@@ -101,6 +107,7 @@ const useConfirmationModal = ({
     if (cancelText) newState.cancelText = cancelText
     if (onOK) newState.onConfirm = onOK
     if (onCancel) newState.onCancel = onCancel
+    if (showCancel !== undefined) newState.showCancel = showCancel
     setModalState({ ...modalState, ...newState })
     setOpen(true)
   }

@@ -166,7 +166,10 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     }
 
     // Can SUBMIT
-    showConfirmModal({ onConfirm: () => submission() })
+    showConfirmModal({
+      onConfirm: () => submission(),
+      showCancel: false,
+    })
   }
 
   const submission = async () => {

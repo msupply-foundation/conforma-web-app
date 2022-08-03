@@ -75,10 +75,9 @@ const ReviewPage: React.FC<{
   useEffect(() => {
     if (!reviewStructure) return
     if (thisReview?.current.reviewStatus === ReviewStatus.Pending) {
-      console.log('Should show modal')
       showWarningModal({
         onConfirm: () => push(`/application/${reviewStructure.info.serial}/review`),
-        onCancel: () => push(`/application/${reviewStructure.info.serial}/review`),
+        showCancel: false,
       })
     }
   }, [reviewStructure])
