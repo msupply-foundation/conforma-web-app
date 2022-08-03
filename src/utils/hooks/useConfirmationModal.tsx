@@ -94,18 +94,18 @@ const useConfirmationModal = ({
   const showModal = ({
     title,
     message,
-    confirmText: OKText,
+    confirmText,
     cancelText,
-    onConfirm: onOK,
+    onConfirm,
     onCancel,
     showCancel,
   }: Partial<ConfirmModalState> = {}) => {
     const newState: Partial<ConfirmModalState> = {}
     if (title) newState.title = title
     if (message) newState.message = message
-    if (OKText) newState.confirmText = OKText
+    if (confirmText) newState.confirmText = confirmText
     if (cancelText) newState.cancelText = cancelText
-    if (onOK) newState.onConfirm = onOK
+    if (onConfirm) newState.onConfirm = onConfirm
     if (onCancel) newState.onCancel = onCancel
     if (showCancel !== undefined) newState.showCancel = showCancel
     setModalState({ ...modalState, ...newState })
