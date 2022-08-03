@@ -78,6 +78,11 @@ export const useApplicationFilters = () => {
     // reviewersAssignedCount: {
     //   type: 'number',
     // },
+    applicantDeadline: {
+      type: 'date',
+      title: strings.FILTER_APPLICANT_DEADLINE,
+      options: { namedDates: NAMED_DATE_RANGES },
+    },
     type: {
       type: 'equals',
       options: { substituteColumnName: 'templateCode' },

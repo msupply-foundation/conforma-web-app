@@ -29,6 +29,7 @@ export default gql`
         status
         outcome
         lastActiveDate
+        applicantDeadline
         reviewerAction
         assignerAction
         assigners

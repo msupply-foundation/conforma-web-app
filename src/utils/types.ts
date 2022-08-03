@@ -180,6 +180,7 @@ interface CellProps {
 
 interface ColumnDetails {
   headerName: string
+  headerDetail?: string
   sortName: string
   ColumnComponent: React.FunctionComponent<any>
 }
@@ -276,7 +277,7 @@ interface FullStructure {
   info: ApplicationDetails
   canApplicantMakeChanges: boolean
   sections: SectionsStructure
-  scheduledEvents: ApplicationScheduledEvent[]
+  applicantDeadline: { deadline: Date | null; isActive: boolean }
   stages: {
     stage: StageDetails
     levels: LevelDetails[]
