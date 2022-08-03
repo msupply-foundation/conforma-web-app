@@ -2050,7 +2050,11 @@ a:hover {
   color: @attention !important;
 }
 
-.interactive-color {
+.alert-colour {
+  color: @error !important;
+}
+
+.interactive-colour {
   color: @interactiveHigh !important;
 }
 

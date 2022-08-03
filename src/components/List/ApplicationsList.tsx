@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Table, Message } from 'semantic-ui-react'
+import { Table, Message, Popup } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useDeleteApplicationMutation } from '../../utils/generated/graphql'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
@@ -28,14 +28,18 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
       <Table sortable stackable selectable>
         <Table.Header>
           <Table.Row>
-            {columns.map(({ headerName, sortName }, index) => (
+            {columns.map(({ headerName, headerDetail, sortName }, index) => (
               <Table.HeaderCell
                 key={`ApplicationList-header-${headerName}-${index}`}
                 sorted={sortName && sortColumn === sortName ? sortDirection : undefined}
                 onClick={() => handleSort(sortName)}
                 colSpan={index === columns.length - 1 ? 2 : 1} // Set last column to fill last column (expansion)
               >
-                {headerName}
+                {headerDetail ? (
+                  <Popup size="tiny" content={headerDetail} trigger={<span>{headerName}</span>} />
+                ) : (
+                  headerName
+                )}
               </Table.HeaderCell>
             ))}
           </Table.Row>

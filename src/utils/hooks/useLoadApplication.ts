@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import {
   ApplicationDetails,
+  ApplicationScheduledEvents as ApplicationScheduledEvent,
   ElementBase,
   EvaluatedElement,
   FullStructure,
-  LevelDetails,
-  StageDetails,
   TemplateDetails,
   UseGetApplicationProps,
 } from '../types'
@@ -38,7 +37,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
   const { strings } = useLanguageProvider()
   const [isLoading, setIsLoading] = useState(true)
   const [structureError, setStructureError] = useState('')
-  const [structure, setFullStructure] = useState<FullStructure>()
+  const [structure, setStructure] = useState<FullStructure>()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -73,7 +72,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     if (!triggersReady || !data) return
 
-    const application = data.applicationBySerial as Application
+    const application = data.applicationBySerial
 
     // No unexpected error - just a application not accessible to user (Show 404 page)
     if (!application) {
@@ -127,6 +126,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       },
       firstStrictInvalidPage: null,
       isChangeRequest: false,
+      hasPreviewActions: application.template.previewActions.totalCount > 0,
       user: application?.user as User,
       org: application?.org as Organisation,
       config,
@@ -166,6 +166,22 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
     const canApplicantMakeChanges = application.template?.canApplicantMakeChanges ?? true
 
+    const applicantDeadline: ApplicationScheduledEvent | undefined = (
+      (application?.triggerSchedules?.nodes || []) as {
+        id: number
+        timeScheduled: string
+        eventCode: string
+        isActive: boolean
+      }[]
+    )
+      .filter((event) => event.eventCode === config.applicantDeadlineCode)
+      .map(({ id, timeScheduled, eventCode, isActive }) => ({
+        id,
+        timeScheduled: new Date(timeScheduled),
+        eventCode,
+        isActive,
+      }))[0]
+
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
     const evaluatorParams: EvaluatorParameters = {
@@ -202,12 +218,15 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
         },
         stages: templateStages.map((stage) => getStageAndLevels(stage)),
         sections: buildSectionsStructure({ sectionDetails, baseElements, page: strings.PAGE }),
+        applicantDeadline: applicantDeadline
+          ? { deadline: applicantDeadline.timeScheduled, isActive: applicantDeadline.isActive }
+          : { deadline: null, isActive: false },
         canApplicantMakeChanges,
         attemptSubmission: false,
         reload: reloadApplication,
       }
 
-      setFullStructure(newStructure)
+      setStructure(newStructure)
       setIsLoading(false)
     })
   }, [data, loading, triggersReady, triggersLoading, triggersError])

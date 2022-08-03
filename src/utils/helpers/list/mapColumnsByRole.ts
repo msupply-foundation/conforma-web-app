@@ -39,12 +39,14 @@ export const useMapColumnsByRole = () => {
     },
     LAST_ACTIVE_DATE: {
       headerName: strings.COLUMN_LAST_ACTIVE_DATE,
+      headerDetail: strings.COLUMN_LAST_ACTIVE_DATE_TOOLTIP,
       sortName: 'last-active-date',
       ColumnComponent: LastActiveDateCell,
     },
     DEADLINE_DATE: {
       headerName: strings.COLUMN_DEADLINE_DATE,
-      sortName: '', // Not yet implemented
+      headerDetail: strings.COLUMN_DEADLINE_DATE_TOOLTIP,
+      sortName: 'applicant-deadline',
       ColumnComponent: DeadlineCell,
     },
     APPLICATION_NAME: {

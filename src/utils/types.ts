@@ -28,6 +28,7 @@ import { ErrorResponse } from './hooks/useDataViews'
 export {
   ApplicationDetails,
   ApplicationElementStates,
+  ApplicationScheduledEvent as ApplicationScheduledEvents,
   ApplicationListRow,
   ApplicationProps,
   AssignmentDetails,
@@ -101,6 +102,7 @@ interface ApplicationDetails {
   isChangeRequest: boolean
   current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
+  hasPreviewActions: boolean
   submissionMessage?: string
   startMessage?: string
   user?: GraphQLUser
@@ -121,6 +123,13 @@ interface ApplicationProps {
   requestRevalidation?: MethodRevalidate
   strictSectionPage?: SectionAndPage | null
   isValidating?: boolean
+}
+
+interface ApplicationScheduledEvent {
+  id: number
+  timeScheduled: Date
+  eventCode: string
+  isActive: boolean
 }
 
 interface AssignmentDetails {
@@ -171,6 +180,7 @@ interface CellProps {
 
 interface ColumnDetails {
   headerName: string
+  headerDetail?: string
   sortName: string
   ColumnComponent: React.FunctionComponent<any>
 }
@@ -267,6 +277,7 @@ interface FullStructure {
   info: ApplicationDetails
   canApplicantMakeChanges: boolean
   sections: SectionsStructure
+  applicantDeadline: { deadline: Date | null; isActive: boolean }
   stages: {
     stage: StageDetails
     levels: LevelDetails[]
