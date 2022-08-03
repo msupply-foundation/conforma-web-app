@@ -36,7 +36,7 @@ interface ApplicationViewProps extends ApplicationViewWrapperProps {
   setIsActive: () => void
   validationState: ValidationState
   Markdown: any
-  getDefaultIndex: Function
+  getDefaultIndex: (defaultValue: string | number, options: any[]) => number
   parameters: any // TODO: Create type for existing pre-defined types for parameters (TemplateElement)s
   validate: Function
 }
