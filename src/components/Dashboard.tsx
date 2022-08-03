@@ -10,6 +10,7 @@ import useListTemplates from '../utils/hooks/useListTemplates'
 import usePageTitle from '../utils/hooks/usePageTitle'
 import { TemplateDetails, TemplateInList } from '../utils/types'
 import LoadingSmall from './LoadingSmall'
+import { filter } from 'lodash'
 
 const Dashboard: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -58,7 +59,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
       ? USER_ROLES.APPLICANT
       : USER_ROLES.REVIEWER
 
-  const [loadingFilters, setLoadingFilters] = useState(false)
+  const [loadingFilters, setLoadingFilters] = useState<number>(0)
 
   return (
     <div className="template">
@@ -69,12 +70,12 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
               {template?.namePlural || `${name} ${strings.LABEL_APPLICATIONS}`}
             </a>
             <Icon name="chevron right" />
-            {loadingFilters && 
+            {loadingFilters !== filters.length &&
               <LoadingSmall/>
             }
           </Label>
           {filters.map((filter, i:number, filters) => (
-            <FilterComponent key={filter.id} template={template} filter={filter} setLoading={setLoadingFilters} filters={filters} i={i}/>
+            <FilterComponent key={filter.id} template={template} filter={filter} setLoadingFilters={setLoadingFilters} filters={filters} loadingFilters={loadingFilters}/>
           ))}
         </div>
         {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
@@ -91,12 +92,10 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
   )
 }
 
-const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; setLoading:(loading:boolean) => void; filters: Array<{}>; i:number }> = ({
+const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; setLoadingFilters:Function; filters: Array<{}>; loadingFilters: number}> = ({
   template,
   filter,
-  setLoading,
-  filters,
-  i
+  setLoadingFilters
 }) => {
   const templateType = template.code
   const { loading, applicationCount } = useListApplications({
@@ -106,9 +105,7 @@ const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; set
   })
 
   useEffect(() => {
-    if (i+1 === filters.length) {
-    setLoading(loading)
-    }
+    if (loading === false) setLoadingFilters((loadingFilters: number) => loadingFilters + 1)
   }, [loading])
 
   const applicationListUserRole =
