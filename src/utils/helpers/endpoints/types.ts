@@ -74,8 +74,7 @@ type SnapshotEndpoint = [
 type LookupTableEndpoint = [
   endpoint: 'lookupTable',
   action: 'import' | 'export' | 'update',
-  nameOrId?: string | number,
-  lookupTableName?: string
+  nameOrId?: string | number
 ]
 
 type GetApplicationDataEndpoint = [
