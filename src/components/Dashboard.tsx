@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Header, Button, Icon, Label } from 'semantic-ui-react'
 import { useUserState } from '../contexts/UserState'
@@ -10,7 +10,6 @@ import useListTemplates from '../utils/hooks/useListTemplates'
 import usePageTitle from '../utils/hooks/usePageTitle'
 import { TemplateDetails, TemplateInList } from '../utils/types'
 import LoadingSmall from './LoadingSmall'
-import { filter } from 'lodash'
 
 const Dashboard: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -59,7 +58,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
       ? USER_ROLES.APPLICANT
       : USER_ROLES.REVIEWER
 
-  const [loadingFilters, setLoadingFilters] = useState<number>(0)
+  const [loadedFiltersCount, setLoadedFiltersCount] = useState(0)
 
   return (
     <div className="template">
@@ -70,12 +69,16 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
               {template?.namePlural || `${name} ${strings.LABEL_APPLICATIONS}`}
             </a>
             <Icon name="chevron right" />
-            {loadingFilters !== filters.length &&
-              <LoadingSmall/>
-            }
+            {loadedFiltersCount !== filters.length && <LoadingSmall />}
           </Label>
-          {filters.map((filter, i:number, filters) => (
-            <FilterComponent key={filter.id} template={template} filter={filter} setLoadingFilters={setLoadingFilters} filters={filters} loadingFilters={loadingFilters}/>
+          {filters.map((filter, i: number, filters) => (
+            <FilterComponent
+              key={filter.id}
+              template={template}
+              filter={filter}
+              setFiltersCount={setLoadedFiltersCount}
+              filters={filters}
+            />
           ))}
         </div>
         {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
@@ -92,11 +95,11 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
   )
 }
 
-const FilterComponent: React.FC<{ template: TemplateDetails; filter: Filter; setLoadingFilters:Function; filters: Array<{}>; loadingFilters: number}> = ({
-  template,
-  filter,
-  setLoadingFilters
-}) => {
+const FilterComponent: React.FC<{
+  template: TemplateDetails
+  filter: Filter
+  setFiltersCount: (setState: Function) => void
+}> = ({ template, filter, setFiltersCount: setLoadingFilters }) => {
   const templateType = template.code
   const { loading, applicationCount } = useListApplications({
     type: templateType,
