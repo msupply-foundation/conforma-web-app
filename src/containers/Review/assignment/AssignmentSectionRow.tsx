@@ -1,6 +1,6 @@
 import React, { useEffect, useState, SetStateAction } from 'react'
-import { Grid, Label, ModalProps } from 'semantic-ui-react'
-import ModalConfirmation from '../../../components/Main/ModalConfirmation'
+import { Grid, Label } from 'semantic-ui-react'
+import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
@@ -33,18 +33,17 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   setAssignmentError,
 }) => {
   const { strings } = useLanguageProvider()
-  const UNASSIGN_MESSAGE = {
+  const { ConfirmModal, showModal } = useConfirmationModal({
     title: strings.UNASSIGN_TITLE,
     message: strings.UNASSIGN_MESSAGE,
-    option: strings.BUTTON_SUBMIT,
-  }
+    confirmText: strings.BUTTON_SUBMIT,
+  })
 
   const { submitAssignments } = useUpdateAssignment({
     fullStructure: structure,
   })
   const getAssignmentOptions = useGetAssignmentOptions()
   const [isReassignment, setIsReassignment] = useState(false)
-  const [showUnassignmentModal, setShowUnassignmentModal] = useState<ModalProps>({ open: false })
   const [originalAssignee, setOriginalAssignee] = useState<string>()
 
   useEffect(() => {
@@ -89,16 +88,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
 
   const isLastLevel = (): boolean => assignments.length > 0 && assignments[0].isLastLevel
 
-  const setIsUnassignment = () => {
-    if (!showUnassignmentModal.open)
-      setShowUnassignmentModal({
-        ...UNASSIGN_MESSAGE,
-        open: true,
-        onClick: () => unassignAssignee(),
-        onClose: () => setShowUnassignmentModal({ open: false }),
-      })
-  }
-
   const unassignAssignee = async () => {
     const unassignment = assignments.find(
       (assignment) => assignment.reviewer.id === assignmentOptions.selected
@@ -112,7 +101,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     // const sectionToUnassign: SectionAssignee = {
     //   [sectionCode]: { previousAssignee: unassignment?.reviewer.id, newAssignee: undefined },
     // }
-    setShowUnassignmentModal({ open: false })
     if (!unassignment) return
     try {
       await submitAssignments(Number(reviewLevel), sectionToUnassign, [unassignment])
@@ -147,7 +135,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
               isSelfAssigned={isSelfAssignment}
               isReassignment={isReassignment}
               setIsReassignment={setIsReassignment}
-              setIsUnassignment={setIsUnassignment}
+              setIsUnassignment={() => showModal({ onConfirm: () => unassignAssignee() })}
             />
           ) : (
             assignmentOptions.options.length > 1 && (
@@ -175,7 +163,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
           />
         </Grid.Row>
       )}
-      <ModalConfirmation {...showUnassignmentModal} />
+      <ConfirmModal />
     </Grid>
   )
 }
