@@ -257,7 +257,7 @@ value. Number is assumed to be index, else it returns the index of the
 specified value in the options array. Functions is passed as prop to
 element plug-ins so can be used by any plugin.
 */
-const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
+const getDefaultIndex = (defaultOption: string | number, options: string[]): number => {
   if (typeof defaultOption === 'number') {
     return defaultOption
   } else return options.indexOf(defaultOption)

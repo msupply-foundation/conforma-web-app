@@ -18,6 +18,7 @@ import Filters from './Filters'
 import { IconButton } from '../../shared/IconButton'
 import MessagesConfig from './MessagesConfig'
 import CheckboxIO from '../../shared/CheckboxIO'
+import config from '../../../../config'
 
 const General: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -31,7 +32,11 @@ const General: React.FC = () => {
 
   const canSetAvailable = template.status !== TemplateStatus.Available
 
-  const canSetDraft = template.status !== TemplateStatus.Draft && template.applicationCount === 0
+  const canSetDraft =
+    template.status !== TemplateStatus.Draft &&
+    (template.applicationCount === 0 ||
+      // Let us make changes to active templates while in "dev" mode
+      !config.isProductionBuild)
 
   const canSetDisabled = template.status !== TemplateStatus.Disabled
 
