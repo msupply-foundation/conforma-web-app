@@ -37,7 +37,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
   if (endpointKey === 'graphQL') return serverGraphQL
   const endpointPath = restEndpoints[endpointKey]
 
-  const options = args[1] as ComplexEndpoint[1] | {}
+  const options = (args[1] as ComplexEndpoint[1]) || {}
 
   switch (endpointKey) {
     case 'public':

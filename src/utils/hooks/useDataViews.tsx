@@ -40,7 +40,7 @@ export const useDataViewsList = () => {
   } = useUserState()
 
   useEffect(() => {
-    processRequest(getServerUrl('dataViews', {}), setError, setLoading, setDataViewsList)
+    processRequest(getServerUrl('dataViews'), setError, setLoading, setDataViewsList)
   }, [templatePermissions])
 
   return { error, loading, dataViewsList }
