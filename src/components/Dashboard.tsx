@@ -77,7 +77,6 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
               template={template}
               filter={filter}
               setFiltersCount={setLoadedFiltersCount}
-              filters={filters}
             />
           ))}
         </div>
@@ -98,7 +97,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
 const FilterComponent: React.FC<{
   template: TemplateDetails
   filter: Filter
-  setFiltersCount: (setState: Function) => void
+  setFiltersCount: React.Dispatch<React.SetStateAction<number>>
 }> = ({ template, filter, setFiltersCount: setLoadingFilters }) => {
   const templateType = template.code
   const { loading, applicationCount } = useListApplications({
