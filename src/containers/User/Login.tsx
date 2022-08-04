@@ -104,7 +104,7 @@ const Login: React.FC = () => {
   }, [selectedOrgId])
 
   const logoUrl = preferences?.brandLogoFileId
-    ? getServerUrl('file', preferences?.brandLogoFileId)
+    ? getServerUrl('file', { fileId: preferences?.brandLogoFileId })
     : defaultLogo
 
   return (

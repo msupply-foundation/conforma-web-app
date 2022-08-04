@@ -177,10 +177,10 @@ const FilesDisplay: React.FC<any> = ({ files }) => {
     <div className="file-row">
       {files.map((file: FileData) => (
         <div className="file-container" key={file.uniqueId}>
-          <a href={getServerUrl('file', file?.uniqueId)} target="_blank">
-            <Image src={getServerUrl('file', file?.uniqueId, 'thumbnail')} />
+          <a href={getServerUrl('file', { fileId: file?.uniqueId })} target="_blank">
+            <Image src={getServerUrl('file', { fileId: file?.uniqueId, thumbnail: true })} />
           </a>
-          <a href={getServerUrl('file', file?.uniqueId)} target="_blank">
+          <a href={getServerUrl('file', { fileId: file?.uniqueId })} target="_blank">
             {file.originalFilename}
           </a>
         </div>

@@ -1,6 +1,18 @@
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import config from '../../../config'
-import { RestEndpoints } from './types'
+import {
+  ComplexEndpoint,
+  BasicEndpoint,
+  VerifyEndpoint,
+  LookupTableEndpoint,
+  LanguageEndpoint,
+  FileEndpoint,
+  CheckTriggersEndpoint,
+  EnableLanguageEndpoint,
+  RemoveLanguageEndpoint,
+  GetApplicationDataEndpoint,
+  SnapshotEndpoint,
+} from './types'
 
 const {
   isProductionBuild,
@@ -18,12 +30,14 @@ export const serverGraphQL = isProductionBuild
   ? getProductionUrl(productionPathGraphQL)
   : localHostGraphQL
 
-const getServerUrl = (...args: RestEndpoints | ['graphQL']): string => {
+const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): string => {
   // "as" here ensures we must have types/cases for ALL keys of
   // config.restEndpoints
   const endpointKey = args[0] as keyof typeof restEndpoints | 'graphQL'
   if (endpointKey === 'graphQL') return serverGraphQL
   const endpointPath = restEndpoints[endpointKey]
+
+  const options = args[1] as ComplexEndpoint[1] | {}
 
   switch (endpointKey) {
     case 'public':
@@ -40,96 +54,98 @@ const getServerUrl = (...args: RestEndpoints | ['graphQL']): string => {
     case 'extendApplication':
       return serverREST + endpointPath
 
+    case 'userPermissions':
+    case 'checkUnique':
+    case 'upload':
+      return `${serverREST}${endpointPath}${buildQueryString(options)}`
+
     case 'language':
-      const languageCode = args[1]
-      return `${serverREST}${endpointPath}/${languageCode}`
+      const { code } = options as LanguageEndpoint[1]
+      return `${serverREST}${endpointPath}/${code}`
 
     case 'file':
-      const fileId = args[1]
-      const isThumbnail = args[2] === 'thumbnail'
-      return `${serverREST}${endpointPath}?uid=${fileId}${isThumbnail ? '&thumbnail=true' : ''}`
+      const { fileId, thumbnail = false } = options as FileEndpoint[1]
+      return `${serverREST}${endpointPath}?uid=${fileId}${thumbnail ? '&thumbnail=true' : ''}`
 
     case 'verify':
-      const uid = args[1]
+      const { uid } = options as VerifyEndpoint[1]
       return `${serverREST}${endpointPath}?uid=${uid}`
 
-    case 'userPermissions':
-      const permissionParameters = args[1]
-      return `${serverREST}${endpointPath}${buildQueryString(permissionParameters as BasicObject)}`
-
     case 'checkTrigger':
-      const serial = args[1]
+      const { serial } = options as CheckTriggersEndpoint[1]
       return `${serverREST}${endpointPath}?serial=${serial}`
 
-    case 'checkUnique':
-      const checkUniqueParams = args[1]
-      return `${serverREST}${endpointPath}${buildQueryString(checkUniqueParams as BasicObject)}`
-
     case 'dataViews':
-      const tableName = args[1]
       // List view
-      if (!tableName) return `${serverREST}${endpointPath}`
-
-      const itemId = typeof args[2] === 'string' ? args[2] : undefined
-      const query = typeof args[2] === 'object' ? args[2] : undefined
+      if (!('tableName' in options)) return `${serverREST}${endpointPath}`
 
       // Detail view
-      if (itemId) return `${serverREST}${endpointPath}/table/${tableName}/item/${itemId}`
+      if ('itemId' in options) {
+        const { tableName, itemId } = options
+        return `${serverREST}${endpointPath}/table/${tableName}/item/${itemId}`
+      }
 
       // Table view
-      return `${serverREST}${endpointPath}/table/${tableName}${
-        query ? buildQueryString(query as BasicObject) : ''
-      }`
+      const { tableName, query } = options
+      return `${serverREST}${endpointPath}/table/${tableName}${buildQueryString(query)}`
 
-    case 'upload':
-      const uploadParameters = args[1]
-      return `${serverREST}${endpointPath}${buildQueryString(uploadParameters as BasicObject)}`
+    case 'enableLanguage': {
+      const { code, enabled = true } = options as EnableLanguageEndpoint[1]
+      return `${serverREST}${endpointPath}?code=${code}${enabled ? `&enabled=${enabled}` : ''}`
+    }
 
-    case 'enableLanguage':
-      const langCodeEnable = args[1]
-      const enabled = args[2]
-      return `${serverREST}${endpointPath}?code=${langCodeEnable}${
-        enabled !== undefined ? `&enabled=${enabled}` : ''
-      }`
-
-    case 'removeLanguage':
-      const langCodeRemove = args[1]
-      return `${serverREST}${endpointPath}?code=${langCodeRemove}`
+    case 'removeLanguage': {
+      const { code } = options as RemoveLanguageEndpoint[1]
+      return `${serverREST}${endpointPath}?code=${code}`
+    }
 
     case 'snapshot':
-      const action = args[1]
+      const { action } = options as SnapshotEndpoint[1]
       if (action === 'list') return `${serverREST}${endpointPath}/list`
-      const name = args[2]
-      const options = args[3]
+
+      const name = 'name' in options ? options.name : null
+      const optionsName = 'options' in options ? options.options : null
+
+      if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
       // "download" is direct download url
       if (action === 'download') return `${serverREST}${endpointPath}/files/${name}.zip`
 
-      if (action === 'upload' || action === 'delete' || !options)
+      if (action === 'upload' || action === 'delete')
         return `${serverREST}${endpointPath}/${action}?name=${name}`
 
-      // Options AND name present, so must be 'take' or 'use'
-      return `${serverREST}${endpointPath}/${action}?name=${name}&optionsName=${options}`
+      // Must be "take" or "user", which uses "options" file
+      return `${serverREST}${endpointPath}/${action}?name=${name}${
+        optionsName ? `&optionsName=${optionsName}` : ''
+      }`
 
-    case 'lookupTable':
-      const lookupAction = args[1]
-      const nameOrId = args[2]
-      if (lookupAction === 'import') return `${serverREST}${endpointPath}/import?name=${nameOrId}`
+    case 'lookupTable': {
+      let { action } = options as LookupTableEndpoint[1]
+
+      // Import
+      if (action === 'import' && 'name' in options)
+        return `${serverREST}${endpointPath}/import?name=${options.name}`
+
       // "Update" uses /import/tableID route
-      if (lookupAction === 'update') return `${serverREST}${endpointPath}/import/${nameOrId}`
+      if (action === 'update' && 'id' in options)
+        return `${serverREST}${endpointPath}/import/${options.id}`
+
       // Export
-      return `${serverREST}${endpointPath}/export/${nameOrId}`
+      if ('id' in options) return `${serverREST}${endpointPath}/export/${options.id}`
+
+      // Typescript should prevent this during compilation
+      throw new Error('Missing options')
+    }
 
     case 'getApplicationData':
-      const applicationId = args[1]
-      const reviewId = args[2]
+      const { applicationId, reviewId } = options as GetApplicationDataEndpoint[1]
       return `${serverREST}${endpointPath}?applicationId=${applicationId}${
         reviewId ? `&reviewId=${reviewId}` : ''
       }`
 
     default:
       // "never" type ensures we will get a *compile-time* error if we are
-      // missing a case defined in RestEndpoints type
+      // missing a case defined in Endpoints types
       const missingValue: never = endpointKey
       throw new Error('Failed to consider case:' + missingValue)
   }

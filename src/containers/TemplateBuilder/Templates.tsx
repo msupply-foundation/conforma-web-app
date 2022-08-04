@@ -100,7 +100,7 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
     <div key="export">
       <a
         ref={downloadLinkRef}
-        href={getServerUrl('snapshot', 'download', snapshotName)}
+        href={getServerUrl('snapshot', { action: 'download', name: snapshotName })}
         target="_blank"
       ></a>
       <div
@@ -108,9 +108,12 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
         onClick={async (e) => {
           e.stopPropagation()
           if (await exportTemplate({ id, snapshotName })) {
-            const res = await fetch(getServerUrl('snapshot', 'download', snapshotName), {
-              headers: { Authorization: `Bearer ${JWT}` },
-            })
+            const res = await fetch(
+              getServerUrl('snapshot', { action: 'download', name: snapshotName }),
+              {
+                headers: { Authorization: `Bearer ${JWT}` },
+              }
+            )
             const data = await res.blob()
             var a = document.createElement('a')
             a.href = window.URL.createObjectURL(data)

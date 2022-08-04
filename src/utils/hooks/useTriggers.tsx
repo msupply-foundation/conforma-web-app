@@ -53,7 +53,9 @@ const useTriggers = (serialNumber: string) => {
   const getTriggers = async () => {
     console.log('Checking triggers, attempt #', refetchAttempts)
     try {
-      const result: TriggerState = await getRequest(getServerUrl('checkTrigger', serialNumber))
+      const result: TriggerState = await getRequest(
+        getServerUrl('checkTrigger', { serial: serialNumber })
+      )
       switch (result.status) {
         case 'error':
           clearTimeout(timerId as Timer)

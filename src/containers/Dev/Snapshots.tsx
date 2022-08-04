@@ -26,7 +26,7 @@ const Snapshots: React.FC = () => {
 
   const getList = async () => {
     try {
-      const snapshotListRaw = await getRequest(getServerUrl('snapshot', 'list'))
+      const snapshotListRaw = await getRequest(getServerUrl('snapshot', { action: 'list' }))
       const snapshotList: string[] = snapshotListRaw.snapshotsNames
 
       setData(snapshotList)
@@ -42,7 +42,7 @@ const Snapshots: React.FC = () => {
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
-        url: getServerUrl('snapshot', 'take', normaliseSnapshotName(name)),
+        url: getServerUrl('snapshot', { action: 'take', name: normaliseSnapshotName(name) }),
       })
 
       if (resultJson.success) {
@@ -61,7 +61,7 @@ const Snapshots: React.FC = () => {
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
-        url: getServerUrl('snapshot', 'use', name),
+        url: getServerUrl('snapshot', { action: 'use', name }),
       })
 
       if (resultJson.success) return setIsLoading(false)
@@ -76,7 +76,7 @@ const Snapshots: React.FC = () => {
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
-        url: getServerUrl('snapshot', 'delete', name),
+        url: getServerUrl('snapshot', { action: 'delete', name }),
       })
       if (resultJson.success) {
         await getList()
@@ -102,7 +102,7 @@ const Snapshots: React.FC = () => {
 
       const resultJson = await postRequest({
         otherBody: data,
-        url: getServerUrl('snapshot', 'upload', snapshotName),
+        url: getServerUrl('snapshot', { action: 'upload', name: snapshotName }),
       })
 
       if (resultJson.success) {
@@ -117,7 +117,7 @@ const Snapshots: React.FC = () => {
   }
 
   const downloadSnapshot = async (snapshotName: string) => {
-    const res = await fetch(getServerUrl('snapshot', 'download', snapshotName), {
+    const res = await fetch(getServerUrl('snapshot', { action: 'download', name: snapshotName }), {
       headers: { Authorization: `Bearer ${JWT}` },
     })
     const data = await res.blob()
