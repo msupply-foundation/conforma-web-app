@@ -12,8 +12,9 @@ import { EvaluatorParameters } from '../types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
 import { TemplateDetails } from '../types'
 import config from '../../config'
+import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 
-const graphQLEndpoint = config.serverGraphQL
+const graphQLEndpoint = getServerUrl('graphQL')
 const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 interface UseLoadTemplateProps {

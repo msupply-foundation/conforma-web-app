@@ -1,8 +1,8 @@
 import { postRequest } from '../helpers/fetchMethods'
-import config from '../../config'
 import { LanguageStrings } from '../../contexts/Localisation'
 import Papa from 'papaparse'
 import { LanguageObject } from './exportLanguages'
+import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 interface ImportReturn {
   success: boolean
   message: string
@@ -75,7 +75,7 @@ export const importLanguages = async (
     for (const language of uploadObjects) {
       results.push(
         await postRequest({
-          url: config.serverREST + '/admin/install-language',
+          url: getServerUrl('installLanguage'),
           jsonBody: language,
           headers: { 'Content-Type': 'application/json' },
         })

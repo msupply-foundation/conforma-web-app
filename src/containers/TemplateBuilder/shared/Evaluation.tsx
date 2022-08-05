@@ -5,6 +5,7 @@ import ReactJson from 'react-json-view'
 import { Accordion, Icon, Label } from 'semantic-ui-react'
 import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FullStructure } from '../../../utils/types'
 import { renderEvaluation } from '../evaluatorGui/renderEvaluation'
 import functions from '../evaluatorGui/evaluatorFunctions'
@@ -86,7 +87,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
     APIfetch: fetch,
     graphQLConnection: {
       fetch: fetch.bind(window),
-      endpoint: config.serverGraphQL,
+      endpoint: getServerUrl('graphQL'),
     },
     headers: { Authorization: 'Bearer ' + JWT },
   }

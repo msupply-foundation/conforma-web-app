@@ -29,8 +29,9 @@ import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 import useTriggers from './useTriggers'
+import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 
-const graphQLEndpoint = config.serverGraphQL
+const graphQLEndpoint = getServerUrl('graphQL')
 const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
@@ -129,7 +130,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       hasPreviewActions: application.template.previewActions.totalCount > 0,
       user: application?.user as User,
       org: application?.org as Organisation,
-      config,
+      config: { ...config, getServerUrl },
     }
 
     const baseElements: ElementBase[] = []

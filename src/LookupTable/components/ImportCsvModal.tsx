@@ -14,6 +14,7 @@ import { LookUpTableImportCsvContext } from '../contexts'
 import config from '../../config'
 import axios from 'axios'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const ImportCsvModal: React.FC<any> = ({
   onImportSuccess,
@@ -56,9 +57,9 @@ const ImportCsvModal: React.FC<any> = ({
 
     await axios
       .post(
-        `${config.serverREST}/admin/lookup-table/import${
-          tableStructureID ? '/' + String(tableStructureID) : ''
-        }?name=${name}`,
+        tableStructureID
+          ? getServerUrl('lookupTable', { action: 'update', id: tableStructureID })
+          : getServerUrl('lookupTable', { action: 'import', name }),
         formData,
         {
           headers: {

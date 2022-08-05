@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react'
 import { Header, Button, Checkbox, Icon } from 'semantic-ui-react'
 import { postRequest } from '../../utils/helpers/fetchMethods'
-import config from '../../config'
 import { LanguageOption, useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useToast, topLeft } from '../../contexts/Toast'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import { exportLanguages } from '../../utils/localisation/exportLanguages'
 import { importLanguages } from '../../utils/localisation/importLanguages'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 export const AdminLocalisations: React.FC = () => {
   const { strings, refetchLanguages, languageOptionsFull: languageOptions } = useLanguageProvider()
@@ -26,7 +26,7 @@ export const AdminLocalisations: React.FC = () => {
   const handleSelect = async (language: LanguageOption, index: number) => {
     const enabled = !language.enabled
     const result = await postRequest({
-      url: `${config.serverREST}/admin/enable-language?code=${language.code}&enabled=${enabled}`,
+      url: getServerUrl('enableLanguage', { code: language.code, enabled }),
     })
     if (result.success) {
       console.log(`Language updated: ${language.code}`)
@@ -39,7 +39,7 @@ export const AdminLocalisations: React.FC = () => {
 
   const handleRemove = async (language: LanguageOption) => {
     const result = await postRequest({
-      url: `${config.serverREST}/admin/remove-language?code=${language.code}`,
+      url: getServerUrl('removeLanguage', { code: language.code }),
     })
     if (result.success) {
       console.log(`Language removed: ${language.code}`)

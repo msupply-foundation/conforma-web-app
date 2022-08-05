@@ -2,14 +2,14 @@ import { Dispatch } from 'react'
 import config from '../../config'
 import { UserActions } from '../../contexts/UserState'
 import { getRequest } from './fetchMethods'
-const userInfoUrl = `${config.serverREST}/user-info`
+import getServerUrl from './endpoints/endpointUrlBuilder'
 
 interface SetUserInfoProps {
   dispatch: Dispatch<UserActions>
 }
 
 const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
-  getRequest(userInfoUrl)
+  getRequest(getServerUrl('userInfo'))
     .then(({ templatePermissions, JWT, user, success, orgList, isAdmin }) => {
       if (!success) logout()
       localStorage.setItem(config.localStorageJWTKey, JWT)

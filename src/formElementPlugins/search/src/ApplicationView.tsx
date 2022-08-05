@@ -44,7 +44,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     userState: { currentUser },
   } = useUserState()
 
-  const graphQLEndpoint = applicationData.config.serverGraphQL
+  const graphQLEndpoint = applicationData.config.getServerUrl('graphQL')
 
   const [searchText, setSearchText] = useState('')
   const [loading, setLoading] = useState(false)

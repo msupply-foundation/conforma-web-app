@@ -8,7 +8,9 @@ import isLoggedIn from '../../utils/helpers/loginCheck'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
+
 const defaultLogo = require('../../../images/logos/conforma_logo_wide_1024.png').default
 import config from '../../config'
 
@@ -102,15 +104,15 @@ const Login: React.FC = () => {
   }, [selectedOrgId])
 
   const logoUrl = preferences?.brandLogoFileId
-    ? `${config.serverREST}/public/file?uid=${preferences.brandLogoFileId}`
-    : null
+    ? getServerUrl('file', { fileId: preferences?.brandLogoFileId })
+    : defaultLogo
 
   return (
     <Container id="login-container">
       {languageOptions.length > 1 && <LanguageSelector />}
       <div id="login-box">
         <div className="flex-column-center">
-          <Image src={logoUrl ?? defaultLogo} className="image-icon" />
+          <Image src={logoUrl} className="image-icon" />
           <Header as="h3" className="login-header">
             {strings.TITLE_LOGIN_HEADER}
           </Header>

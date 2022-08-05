@@ -19,11 +19,9 @@ import { DateTime, Interval } from 'luxon'
 import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 import NewCommentForm from './NewCommentForm'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
-import config from '../../../config'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const COMMENT_DELETION_LIMIT = 5 // minutes
-
-const downloadUrl = `${config.serverREST}/public`
 
 interface FileData {
   filePath: string
@@ -179,10 +177,10 @@ const FilesDisplay: React.FC<any> = ({ files }) => {
     <div className="file-row">
       {files.map((file: FileData) => (
         <div className="file-container" key={file.uniqueId}>
-          <a href={`${downloadUrl}/file?uid=${file?.uniqueId}`} target="_blank">
-            <Image src={`${downloadUrl}/file?uid=${file?.uniqueId}&thumbnail=true`} />
+          <a href={getServerUrl('file', { fileId: file?.uniqueId })} target="_blank">
+            <Image src={getServerUrl('file', { fileId: file?.uniqueId, thumbnail: true })} />
           </a>
-          <a href={`${downloadUrl}/file?uid=${file?.uniqueId}`} target="_blank">
+          <a href={getServerUrl('file', { fileId: file?.uniqueId })} target="_blank">
             {file.originalFilename}
           </a>
         </div>

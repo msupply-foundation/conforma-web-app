@@ -12,6 +12,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { UiLocation } from '../../utils/generated/graphql'
 const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
 
@@ -204,9 +205,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
                 {extReferenceDocs.map((doc) => (
                   <Dropdown.Item
                     key={doc.uniqueId}
-                    onClick={() =>
-                      window.open(`${config.serverREST}/public/file?uid=${doc.uniqueId}`)
-                    }
+                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
                     text={doc.description}
                   />
                 ))}
@@ -221,9 +220,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
                 {intReferenceDocs.map((doc) => (
                   <Dropdown.Item
                     key={doc.uniqueId}
-                    onClick={() =>
-                      window.open(`${config.serverREST}/public/file?uid=${doc.uniqueId}`)
-                    }
+                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
                     text={doc.description}
                   />
                 ))}
@@ -240,13 +237,13 @@ const BrandArea: React.FC = () => {
   const { preferences } = usePrefs()
 
   const logoUrl = preferences?.brandLogoOnDarkFileId
-    ? `${config.serverREST}/public/file?uid=${preferences.brandLogoOnDarkFileId}`
-    : null
+    ? getServerUrl('file', { fileId: preferences.brandLogoOnDarkFileId })
+    : defaultBrandLogo
 
   return (
     <div id="brand-area" className="hide-on-mobile">
       <Link to="/">
-        <Image src={logoUrl ?? defaultBrandLogo} />
+        <Image src={logoUrl} />
       </Link>
     </div>
   )
@@ -259,8 +256,6 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
 }) => {
   const { strings } = useLanguageProvider()
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
-
-  const JWT = localStorage.getItem(config.localStorageJWTKey) as string
 
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
     await attemptLoginOrg({ orgId, onLoginOrgSuccess })
@@ -289,7 +284,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
-        <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST + '/public')} />
+        <Image src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))} />
       )}
       <div>
         {dropdownOptions.length === 1 ? (

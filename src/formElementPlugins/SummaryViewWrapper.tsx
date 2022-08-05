@@ -9,8 +9,9 @@ import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import globalConfig from '../config'
 import { TemplateElementCategory } from '../utils/generated/graphql'
+import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 
-const graphQLEndpoint = globalConfig.serverGraphQL
+const graphQLEndpoint = getServerUrl('graphQL')
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   element,
