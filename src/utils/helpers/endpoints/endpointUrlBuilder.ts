@@ -17,18 +17,18 @@ import {
 const {
   isProductionBuild,
   restEndpoints,
-  localHostREST,
-  localHostGraphQL,
+  devServerRest,
+  devServerGraphQL,
   productionPathREST,
   productionPathGraphQL,
 } = config
 const { port, hostname, protocol } = window.location
 const getProductionUrl = (path: string) => `${protocol}//${hostname}:${port}${path}`
 
-const serverREST = isProductionBuild ? getProductionUrl(productionPathREST) : localHostREST
+const serverREST = isProductionBuild ? getProductionUrl(productionPathREST) : devServerRest
 export const serverGraphQL = isProductionBuild
   ? getProductionUrl(productionPathGraphQL)
-  : localHostGraphQL
+  : devServerGraphQL
 
 const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): string => {
   // "as" here ensures we must have types/cases for ALL keys of
