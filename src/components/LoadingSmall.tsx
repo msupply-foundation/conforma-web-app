@@ -1,6 +1,5 @@
 import React from 'react'
 import { Loader, Segment } from 'semantic-ui-react'
-import { useLanguageProvider } from '../contexts/Localisation'
 import { SemanticSIZES } from 'semantic-ui-react'
 
 const LoadingSmall: React.FC<{size?: SemanticSIZES}> = ({size ='small'}) => {

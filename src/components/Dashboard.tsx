@@ -71,7 +71,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
             <Icon name="chevron right" />
             {loadedFiltersCount !== filters.length && <LoadingSmall />}
           </Label>
-          {filters.map((filter, i: number, filters) => (
+          {filters.map((filter: { id: any }) => (
             <FilterComponent
               key={filter.id}
               template={template}
@@ -97,7 +97,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
 const FilterComponent: React.FC<{
   template: TemplateDetails
   filter: Filter
-  setFiltersCount: React.Dispatch<React.SetStateAction<number>>
+  setFiltersCount: Function
 }> = ({ template, filter, setFiltersCount: setLoadingFilters }) => {
   const templateType = template.code
   const { loading, applicationCount } = useListApplications({
@@ -107,7 +107,7 @@ const FilterComponent: React.FC<{
   })
 
   useEffect(() => {
-    if (loading === false) setLoadingFilters((currentCount: number) => currentCount + 1)
+    if (!loading) setLoadingFilters((currentCount: number) => currentCount + 1)
   }, [loading])
 
   const applicationListUserRole =

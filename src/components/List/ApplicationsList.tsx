@@ -14,8 +14,6 @@ interface ApplicationsListProps {
   refetch: Function
 }
 
-
-
 const ApplicationsList: React.FC<ApplicationsListProps> = ({
   columns,
   applications,
