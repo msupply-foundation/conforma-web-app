@@ -46,16 +46,16 @@ export const FileDisplay = ({ file, onDelete }: FileDisplayProps) => {
         {fileData && (
           <>
             <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-              <a href={getServerUrl('file', fileData.uniqueId)} target="_blank">
+              <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
                 <Image
-                  src={getServerUrl('file', fileData.uniqueId, 'thumbnail')}
+                  src={getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })}
                   style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
                 />
               </a>
             </Grid.Row>
             <Grid.Row centered style={{ boxShadow: 'none' }}>
               <p style={{ wordBreak: 'break-word' }}>
-                <a href={getServerUrl('file', fileData.uniqueId)} target="_blank">
+                <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
                   {filename}
                 </a>
               </p>

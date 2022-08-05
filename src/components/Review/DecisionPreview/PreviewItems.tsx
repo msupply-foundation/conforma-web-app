@@ -50,9 +50,12 @@ const NotificationPreview = ({ item }: { item: NotificationPreviewData }) => {
 const DocumentPreview = ({ item }: { item: DocumentPreviewData }) => {
   return (
     <div className="item document-preview">
-      <Image src={getServerUrl('file', item.fileId, 'thumbnail')} style={{ maxHeight: 50 }} />
+      <Image
+        src={getServerUrl('file', { fileId: item.fileId, thumbnail: true })}
+        style={{ maxHeight: 50 }}
+      />
       <p>
-        <a href={getServerUrl('file', item.fileId)} target="_blank">
+        <a href={getServerUrl('file', { fileId: item.fileId })} target="_blank">
           {item.displayString}
         </a>
       </p>

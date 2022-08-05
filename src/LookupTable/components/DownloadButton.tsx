@@ -40,7 +40,7 @@ const DownloadButton = ({
   const downloadItem = async (event: any) => {
     event.stopPropagation()
     await axios
-      .get(getServerUrl('lookupTable', 'export', id), {
+      .get(getServerUrl('lookupTable', { action: 'export', id }), {
         headers: {
           'Content-Type': 'multipart/form-data',
           ...authHeader,

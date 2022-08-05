@@ -56,7 +56,7 @@ export const useDataViewsTable = ({ tableName, apiQueries }: DataViewTableProps)
 
   useEffect(() => {
     processRequest(
-      getServerUrl('dataViews', tableName, apiQueries),
+      getServerUrl('dataViews', { tableName, query: apiQueries }),
       setError,
       setLoading,
       setDataViewTable
@@ -76,7 +76,7 @@ export const useDataViewsDetail = ({ tableName, recordId }: DataViewDetailsProps
 
   useEffect(() => {
     processRequest(
-      getServerUrl('dataViews', tableName, recordId),
+      getServerUrl('dataViews', { tableName, itemId: recordId }),
       setError,
       setLoading,
       setDataViewDetail

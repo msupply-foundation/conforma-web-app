@@ -1,6 +1,6 @@
 import { DataViewTableAPIQueries } from '../../types'
 
-type BasicEndpoint = [
+export type BasicEndpoint = [
   // These ones don't take any query parameters or sub-routes
   endpoint:
     | 'public'
@@ -17,38 +17,42 @@ type BasicEndpoint = [
     | 'allLanguages'
 ]
 
-type LanguageEndpoint = [endpoint: 'language', languageCode: string]
+export type LanguageEndpoint = [endpoint: 'language', options: { code: string }]
 
-type VerifyEndpoint = [endpoint: 'verify', uid: string]
+export type VerifyEndpoint = [endpoint: 'verify', options: { uid: string }]
 
-type FileEndpoint = [endpoint: 'file', fileId: string, isThumbnail?: 'thumbnail']
+export type FileEndpoint = [endpoint: 'file', options: { fileId: string; thumbnail?: boolean }]
 
-type UserPermissionsEndpoint = [
+export type UserPermissionsEndpoint = [
   endpoint: 'userPermissions',
-  parameters: { username?: string; orgId?: number | null }
+  options: { username?: string; orgId?: number | null }
 ]
 
-type CheckTriggersEndpoint = [endpoint: 'checkTrigger', serial: string]
+export type CheckTriggersEndpoint = [endpoint: 'checkTrigger', options: { serial: string }]
 
-type CheckUniqueEndpoint = [
+export type CheckUniqueEndpoint = [
   endpoint: 'checkUnique',
-  parameters: {
-    type?: 'username' | 'email' | 'organisation'
-    value: string
-    table?: string
-    field?: string
-  }
+  options: (
+    | {
+        type: 'username' | 'email' | 'organisation'
+      }
+    | {
+        table: string
+        field: string
+      }
+  ) & { value: string }
 ]
 
-type DataViewEndpoint = [
+export type DataViewEndpoint = [
   endpoint: 'dataViews',
-  tableName?: string,
-  itemIdOrQuery?: number | DataViewTableAPIQueries
+  options?:
+    | { tableName: string; query?: DataViewTableAPIQueries }
+    | { tableName: string; itemId: number }
 ]
 
-type UploadEndpoint = [
+export type UploadEndpoint = [
   endpoint: 'upload',
-  parameters?: {
+  options: {
     userId?: number | null
     applicationSerial?: string
     applicationResponseId?: number
@@ -60,31 +64,44 @@ type UploadEndpoint = [
   }
 ]
 
-type EnableLanguageEndpoint = [endpoint: 'enableLanguage', languageCode: string, enabled?: boolean]
+export type EnableLanguageEndpoint = [
+  endpoint: 'enableLanguage',
+  options: { code: string; enabled?: boolean }
+]
 
-type RemoveLanguageEndpoint = [endpoint: 'removeLanguage', languageCode: string]
+export type RemoveLanguageEndpoint = [endpoint: 'removeLanguage', options: { code: string }]
 
-type SnapshotEndpoint = [
+export type SnapshotEndpoint = [
   endpoint: 'snapshot',
-  action: 'list' | 'take' | 'use' | 'upload' | 'delete' | 'download',
-  name?: string,
-  options?: string
+  options:
+    | { action: 'list' }
+    | { action: 'download' | 'upload' | 'delete'; name: string }
+    | { action: 'take' | 'use'; name: string; options?: string }
 ]
 
-type LookupTableEndpoint = [
+export type LookupTableEndpoint = [
   endpoint: 'lookupTable',
-  action: 'import' | 'export' | 'update',
-  nameOrId?: string | number
+  options:
+    | {
+        action: 'import'
+        name: string
+      }
+    | {
+        action: 'export'
+        id: number
+      }
+    | {
+        action: 'update'
+        id: number
+      }
 ]
 
-type GetApplicationDataEndpoint = [
+export type GetApplicationDataEndpoint = [
   endpoint: 'getApplicationData',
-  applicationId: number,
-  reviewId?: number
+  options: { applicationId: number; reviewId?: number }
 ]
 
-export type RestEndpoints =
-  | BasicEndpoint
+export type ComplexEndpoint =
   | LanguageEndpoint
   | VerifyEndpoint
   | FileEndpoint

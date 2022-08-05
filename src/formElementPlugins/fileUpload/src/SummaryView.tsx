@@ -22,7 +22,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
                 <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
                   <a href={getServerUrl('file', file.uniqueId)} target="_blank">
                     <Image
-                      src={getServerUrl('file', file.uniqueId, 'thumbnail')}
+                      src={getServerUrl('file', { fileId: file.uniqueId, thumbnail: true })}
                       style={{ maxHeight: prefs.summaryViewThumbnailHeight }}
                     />
                   </a>

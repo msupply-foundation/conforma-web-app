@@ -47,9 +47,11 @@ const ActionsWrapper: React.FC = () => {
     })
 
     if (!configApplicationId) return
-    getRequest(getServerUrl('getApplicationData', configApplicationId)).then((applicationData) => {
-      setState({ allActionsByCode, applicationData, loading: false })
-    })
+    getRequest(getServerUrl('getApplicationData', { applicationId: configApplicationId })).then(
+      (applicationData) => {
+        setState({ allActionsByCode, applicationData, loading: false })
+      }
+    )
   }, [data, configApplicationId])
 
   if (state.loading) return <Loading />

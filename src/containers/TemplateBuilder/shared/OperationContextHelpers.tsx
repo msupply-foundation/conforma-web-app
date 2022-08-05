@@ -189,7 +189,11 @@ export const exportTemplate: TemplateOperationHelper = async (
   setErrorAndLoadingState
 ) =>
   await safeFetch(
-    getServerUrl('snapshot', 'take', snapshotName, templateExportOptionName),
+    getServerUrl('snapshot', {
+      action: 'take',
+      name: snapshotName,
+      options: templateExportOptionName,
+    }),
     getFitlerBody(id),
     setErrorAndLoadingState
   )
@@ -201,7 +205,11 @@ export const duplicateTemplate: TemplateOperationHelper = async (
   const body = getFitlerBody(id)
 
   const result = await safeFetch(
-    getServerUrl('snapshot', 'take', snapshotName, templateExportOptionName),
+    getServerUrl('snapshot', {
+      action: 'take',
+      name: snapshotName,
+      options: templateExportOptionName,
+    }),
     body,
     setErrorAndLoadingState
   )
@@ -209,7 +217,11 @@ export const duplicateTemplate: TemplateOperationHelper = async (
   if (!result) return false
 
   return await safeFetch(
-    getServerUrl('snapshot', 'use', snapshotName, templateExportOptionName),
+    getServerUrl('snapshot', {
+      action: 'use',
+      name: snapshotName,
+      options: templateExportOptionName,
+    }),
     body,
     setErrorAndLoadingState
   )
@@ -226,7 +238,7 @@ export const importTemplate: ImportTemplateHelper =
       data.append('file', file)
 
       const result = await safeFetch(
-        getServerUrl('snapshot', 'upload', snapshotName),
+        getServerUrl('snapshot', { action: 'upload', name: snapshotName }),
         data,
         setErrorAndLoadingState
       )
@@ -234,13 +246,17 @@ export const importTemplate: ImportTemplateHelper =
       if (!result) return false
 
       const snapshotResult = await safeFetch(
-        getServerUrl('snapshot', 'use', snapshotName, templateExportOptionName),
+        getServerUrl('snapshot', {
+          action: 'use',
+          name: snapshotName,
+          options: templateExportOptionName,
+        }),
         '{}',
         setErrorAndLoadingState
       )
 
       // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
-      safeFetch(getServerUrl('snapshot', 'delete', snapshotName), {}, () => {})
+      safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})
 
       return snapshotResult
     } catch (error) {

@@ -205,7 +205,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
                 {extReferenceDocs.map((doc) => (
                   <Dropdown.Item
                     key={doc.uniqueId}
-                    onClick={() => window.open(getServerUrl('file', doc.uniqueId))}
+                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
                     text={doc.description}
                   />
                 ))}
@@ -220,7 +220,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
                 {intReferenceDocs.map((doc) => (
                   <Dropdown.Item
                     key={doc.uniqueId}
-                    onClick={() => window.open(getServerUrl('file', doc.uniqueId))}
+                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
                     text={doc.description}
                   />
                 ))}
@@ -237,7 +237,7 @@ const BrandArea: React.FC = () => {
   const { preferences } = usePrefs()
 
   const logoUrl = preferences?.brandLogoOnDarkFileId
-    ? getServerUrl('file', preferences.brandLogoOnDarkFileId)
+    ? getServerUrl('file', { fileId: preferences.brandLogoOnDarkFileId })
     : defaultBrandLogo
 
   return (

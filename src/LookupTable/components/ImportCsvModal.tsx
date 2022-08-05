@@ -58,8 +58,8 @@ const ImportCsvModal: React.FC<any> = ({
     await axios
       .post(
         tableStructureID
-          ? getServerUrl('lookupTable', 'update', tableStructureID)
-          : getServerUrl('lookupTable', 'import', name),
+          ? getServerUrl('lookupTable', { action: 'update', id: tableStructureID })
+          : getServerUrl('lookupTable', { action: 'import', name }),
         formData,
         {
           headers: {

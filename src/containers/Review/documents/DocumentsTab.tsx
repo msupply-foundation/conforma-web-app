@@ -32,11 +32,11 @@ const DocumentsTab: React.FC<{
         {docs.map((doc) => (
           <List.Item
             className="clickable"
-            onClick={() => window.open(getServerUrl('file', doc!.uniqueId), '_blank')}
+            onClick={() => window.open(getServerUrl('file', { fileId: doc!.uniqueId }), '_blank')}
           >
             <div className="flex-row-start flex-extra">
               <div className="icon-container">
-                <Image src={getServerUrl('file', doc!.uniqueId, 'thumbnail')} />
+                <Image src={getServerUrl('file', { fileId: doc!.uniqueId, thumbnail: true })} />
               </div>
               <div>
                 <Header as="h4" content={doc?.description} />
@@ -44,7 +44,7 @@ const DocumentsTab: React.FC<{
                   {DateTime.fromISO(doc?.timestamp).toLocaleString()}
                 </p>
                 <p className="smaller-text">
-                  <a href={getServerUrl('file', doc!.uniqueId)} target="_blank">
+                  <a href={getServerUrl('file', { fileId: doc!.uniqueId })} target="_blank">
                     {doc?.originalFilename}
                   </a>
                 </p>
