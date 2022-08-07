@@ -4,7 +4,7 @@ import { SemanticSIZES } from 'semantic-ui-react'
 
 const LoadingSmall: React.FC<{size?: SemanticSIZES}> = ({size ='small'}) => {
   return (
-    <Segment basic style={{ height: '50%', margin: 0}}>
+    <Segment basic>
       <Loader active size={size} />
     </Segment>
   )

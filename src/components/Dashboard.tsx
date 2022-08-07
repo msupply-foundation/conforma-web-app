@@ -71,7 +71,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
             <Icon name="chevron right" />
             {loadedFiltersCount !== filters.length && <LoadingSmall />}
           </Label>
-          {filters.map((filter: { id: any }) => (
+          {filters.map((filter) => (
             <FilterComponent
               key={filter.id}
               template={template}
