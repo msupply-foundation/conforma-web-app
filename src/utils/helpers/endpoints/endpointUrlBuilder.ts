@@ -59,6 +59,9 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'upload':
       return `${serverREST}${endpointPath}${buildQueryString(options)}`
 
+    // The "as"s here shouldn't be required, but it's a current limitation of
+    // Typescript that it doesn't properly narrow the "case" statements when the
+    // variable has been re-assigned. See example: https://bit.ly/3bFhQqX
     case 'language':
       const { code } = options as LanguageEndpoint[1]
       return `${serverREST}${endpointPath}/${code}`
