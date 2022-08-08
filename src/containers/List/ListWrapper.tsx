@@ -15,6 +15,7 @@ import ApplicationsList from '../../components/List/ApplicationsList'
 import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
 import { useApplicationFilters } from '../../utils/data/applicationFilters'
+import Loading from '../../components/Loading'
 
 const ListWrapper: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -103,6 +104,8 @@ const ListWrapper: React.FC = () => {
         break
     }
   }
+
+  if (loading ) return <Loading />
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
