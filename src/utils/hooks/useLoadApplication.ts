@@ -12,7 +12,6 @@ import evaluate from '@openmsupply/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../types'
 import {
-  Application,
   ApplicationStageStatusAll,
   ApplicationStatus,
   Organisation,
@@ -29,7 +28,7 @@ import { buildSectionsStructure } from '../helpers/structure'
 import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 import useTriggers from './useTriggers'
-import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
+import getServerUrl, { serverGraphQL, serverREST } from '../helpers/endpoints/endpointUrlBuilder'
 
 const graphQLEndpoint = getServerUrl('graphQL')
 const JWT = localStorage.getItem(config.localStorageJWTKey)
@@ -130,7 +129,13 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
       hasPreviewActions: application.template.previewActions.totalCount > 0,
       user: application?.user as User,
       org: application?.org as Organisation,
-      config: { ...config, getServerUrl },
+      config: {
+        serverGraphQL,
+        serverREST,
+        getServerUrl,
+        isProductionBuild: config.isProductionBuild,
+        version: config.version,
+      },
     }
 
     const baseElements: ElementBase[] = []
