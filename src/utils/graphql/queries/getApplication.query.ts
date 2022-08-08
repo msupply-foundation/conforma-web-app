@@ -21,12 +21,25 @@ export default gql`
             ...TemplateStage
           }
         }
+        # Count PREVIEW actions so we know whether to show the option to Preview
+        previewActions: templateActions(condition: { trigger: ON_PREVIEW }) {
+          totalCount
+        }
       }
       user {
         ...User
       }
       org {
         ...Organisation
+      }
+      # Get scheduled events so we can extend deadlines
+      triggerSchedules {
+        nodes {
+          id
+          timeScheduled
+          eventCode
+          isActive
+        }
       }
     }
     applicationStageStatusLatests(condition: { serial: $serial }) {

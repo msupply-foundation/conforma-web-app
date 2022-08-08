@@ -91,6 +91,7 @@ export const buildElements = async (
     sectionIndex: 0,
     helpText: null,
     sectionCode: '0',
+    isReviewable: null,
   }))
   const evaluationOptions: EvaluationOptions = ['isEditable', 'isVisible', 'isRequired']
   const evaluationObjects = {

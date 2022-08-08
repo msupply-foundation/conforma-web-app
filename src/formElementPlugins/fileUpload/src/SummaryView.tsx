@@ -2,9 +2,8 @@ import React from 'react'
 import { Grid, Form, Image, List } from 'semantic-ui-react'
 import config from '../../../config'
 import prefs from '../config.json'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { SummaryViewProps } from '../../types'
-
-const downloadUrl = `${config.serverREST}/public`
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
   return (
@@ -21,16 +20,16 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
             <List.Item key={file.filename} style={{ maxWidth: 150 }}>
               <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
                 <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-                  <a href={downloadUrl + file.fileUrl} target="_blank">
+                  <a href={getServerUrl('file', file.uniqueId)} target="_blank">
                     <Image
-                      src={downloadUrl + file.thumbnailUrl}
+                      src={getServerUrl('file', { fileId: file.uniqueId, thumbnail: true })}
                       style={{ maxHeight: prefs.summaryViewThumbnailHeight }}
                     />
                   </a>
                 </Grid.Row>
                 <Grid.Row centered style={{ boxShadow: 'none' }}>
                   <p style={{ wordBreak: 'break-word' }}>
-                    <a href={downloadUrl + file.fileUrl} target="_blank">
+                    <a href={getServerUrl('file', file.uniqueId)} target="_blank">
                       {file.filename}
                     </a>
                   </p>

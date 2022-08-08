@@ -24,6 +24,7 @@ const mapSortFields: any = {
   status: 'STATUS_',
   outcome: 'OUTCOME_',
   'last-active-date': 'LAST_ACTIVE_DATE_',
+  'applicant-deadline': 'APPLICANT_DEADLINE_',
 }
 
 // ----

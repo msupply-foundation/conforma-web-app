@@ -19,8 +19,9 @@ import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTracke
 import { useLanguageProvider } from '../contexts/Localisation'
 import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
+import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 
-const graphQLEndpoint = globalConfig.serverGraphQL
+const graphQLEndpoint = getServerUrl('graphQL')
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const { strings } = useLanguageProvider()
@@ -256,7 +257,7 @@ value. Number is assumed to be index, else it returns the index of the
 specified value in the options array. Functions is passed as prop to
 element plug-ins so can be used by any plugin.
 */
-const getDefaultIndex = (defaultOption: string | number, options: string[]) => {
+const getDefaultIndex = (defaultOption: string | number, options: string[]): number => {
   if (typeof defaultOption === 'number') {
     return defaultOption
   } else return options.indexOf(defaultOption)

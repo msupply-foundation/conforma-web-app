@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader, Input } from 'semantic-ui-react'
+import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { FileDisplayProps } from './FileDisplay'
 import prefs from '../../config.json'
@@ -12,7 +13,6 @@ interface FileDisplayDescriptionProps extends FileDisplayProps {
 export const FileDisplayWithDescription = ({
   file,
   onDelete,
-  downloadUrl,
   updateDescription,
 }: FileDisplayDescriptionProps) => {
   const { getPluginStrings } = useLanguageProvider()
@@ -59,16 +59,16 @@ export const FileDisplayWithDescription = ({
           {fileData && (
             <>
               <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-                <a href={downloadUrl + fileData.fileUrl} target="_blank">
+                <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
                   <Image
-                    src={downloadUrl + fileData.thumbnailUrl}
+                    src={getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })}
                     style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
                   />
                 </a>
               </Grid.Row>
               <Grid.Row centered style={{ boxShadow: 'none' }}>
                 <p style={{ wordBreak: 'break-word', fontSize: '90%' }}>
-                  <a href={downloadUrl + fileData.fileUrl} target="_blank">
+                  <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
                     {filename}
                   </a>
                 </p>

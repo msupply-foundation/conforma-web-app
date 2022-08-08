@@ -3,12 +3,7 @@ import { useEffect, useState } from 'react'
 import { Header } from 'semantic-ui-react'
 import { Loading } from '../../../../components'
 
-import {
-  ActionPlugin,
-  TemplateAction,
-  Trigger,
-  useGetAllActionsQuery,
-} from '../../../../utils/generated/graphql'
+import { ActionPlugin, Trigger, useGetAllActionsQuery } from '../../../../utils/generated/graphql'
 import DropdownIO from '../../shared/DropdownIO'
 import { IconButton } from '../../shared/IconButton'
 import { stringSort } from '../Permissions/PermissionNameInfo/PermissionNameInfo'
@@ -17,6 +12,7 @@ import TriggerDisplay from './TriggerDisplay'
 import { useFormStructureState } from '../Form/FormWrapper'
 import { getRequest } from '../../../../utils/helpers/fetchMethods'
 import config from '../../../../config'
+import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 type ActionsByCode = { [actionCode: string]: ActionPlugin }
 
@@ -51,10 +47,11 @@ const ActionsWrapper: React.FC = () => {
     })
 
     if (!configApplicationId) return
-    const url = `${config.serverREST}/admin/get-application-data?applicationId=${configApplicationId}`
-    getRequest(url).then((applicationData) => {
-      setState({ allActionsByCode, applicationData, loading: false })
-    })
+    getRequest(getServerUrl('getApplicationData', { applicationId: configApplicationId })).then(
+      (applicationData) => {
+        setState({ allActionsByCode, applicationData, loading: false })
+      }
+    )
   }, [data, configApplicationId])
 
   if (state.loading) return <Loading />

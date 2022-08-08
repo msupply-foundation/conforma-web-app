@@ -1,7 +1,7 @@
 import { getRequest } from '../helpers/fetchMethods'
-import config from '../../config'
 import { LanguageOption, LanguageStrings } from '../../contexts/Localisation'
 import defaultLanguageStrings from '../../utils/defaultLanguageStrings'
+import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 import { mapValues } from 'lodash'
 import Papa from 'papaparse'
 import { DateTime } from 'luxon'
@@ -16,7 +16,7 @@ export const exportLanguages = async (
   try {
     // Fetch all languages
     const allLanguageStrings: { [key: string]: LanguageStrings } = await getRequest(
-      `${config.serverREST}/admin/all-languages`
+      getServerUrl('allLanguages')
     )
 
     // Combine language options with their translations

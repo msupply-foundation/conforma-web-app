@@ -6,6 +6,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FileDisplay, FileDisplayWithDescription } from './components'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 export interface FileResponseData {
   uniqueId: string
@@ -51,11 +52,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     subfolder,
     showDescription = false,
   } = parameters
-
-  const { config } = applicationData
-
-  const uploadUrl = `${config.serverREST}${config.uploadEndpoint}`
-  const downloadUrl = `${config.serverREST}/public`
 
   // These values required for file upload query parameters:
   const {
@@ -131,7 +127,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     files.forEach(async (file: any) => {
       if (file?.error) return
       const result: FileUploadServerResponse = await uploadFile(file, {
-        uploadUrl,
         serialNumber,
         userId: currentUser?.userId ?? null,
         applicationResponseId: application_response_id,
@@ -163,7 +158,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const handleUpdateDescription = async (uniqueId: string, value: string, key: string) => {
     try {
       // Save description to database file record
-      await updateFileDescription(uniqueId, value || null, uploadUrl)
+      await updateFileDescription(uniqueId, value || null)
       // Update response
       const index = uploadedFiles.findIndex((f) => f.key === key)
       const newFiles = [...uploadedFiles]
@@ -214,16 +209,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 key={file.key}
                 file={file}
                 onDelete={handleDelete}
-                downloadUrl={downloadUrl}
                 updateDescription={handleUpdateDescription}
               />
             ) : (
-              <FileDisplay
-                key={file.key}
-                file={file}
-                onDelete={handleDelete}
-                downloadUrl={downloadUrl}
-              />
+              <FileDisplay key={file.key} file={file} onDelete={handleDelete} />
             )
           )}
         </List>
@@ -237,13 +226,11 @@ export default ApplicationView
 const uploadFile = async (
   file: any,
   {
-    uploadUrl,
     userId,
     serialNumber,
     applicationResponseId,
     subfolder,
   }: {
-    uploadUrl: string
     userId: number | null
     serialNumber: string
     applicationResponseId: number
@@ -253,21 +240,20 @@ const uploadFile = async (
   const fileData = new FormData()
   await fileData.append('file', file)
   return await postRequest({
-    url: `${uploadUrl}?user_id=${userId}&application_serial=${serialNumber}&application_response_id=${applicationResponseId}${
-      subfolder ? '&subfolder=' + subfolder : ''
-    }`,
+    url: getServerUrl('upload', {
+      userId,
+      applicationSerial: serialNumber,
+      applicationResponseId: applicationResponseId,
+      subfolder,
+    }),
     otherBody: fileData,
   })
 }
 
-const updateFileDescription = async (
-  uniqueId: string,
-  description: string | null,
-  uploadUrl: string
-) => {
+const updateFileDescription = async (uniqueId: string, description: string | null) => {
   if (description === '') return
   return await postRequest({
-    url: `${uploadUrl}?uniqueId=${uniqueId}&description=${description}`,
+    url: getServerUrl('upload', { uniqueId, description }),
   })
 }
 

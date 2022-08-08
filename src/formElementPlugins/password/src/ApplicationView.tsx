@@ -5,6 +5,7 @@ import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -63,7 +64,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         const customValidation = await validate(validationInternal, validationMessageInternal, {
           objects: { responses, currentUser, applicationData },
           APIfetch: fetch,
-          graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+          graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
           headers: { Authorization: 'Bearer ' + JWT },
         })
         setInternalValidation(customValidation)
@@ -81,7 +82,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const customValidation = await validate(validationInternal, validationMessageInternal, {
       objects: { responses, currentUser, applicationData },
       APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: config.serverGraphQL },
+      graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
       headers: { Authorization: 'Bearer ' + JWT },
     })
     setInternalValidation(customValidation)
@@ -163,8 +164,8 @@ export default ApplicationView
 const createHash = async (password: string) => {
   try {
     const output = await postRequest({
-      url: config.serverREST + '/create-hash',
       jsonBody: { password },
+      url: getServerUrl('createHash'),
       headers: { 'Content-Type': 'application/json' },
     })
 

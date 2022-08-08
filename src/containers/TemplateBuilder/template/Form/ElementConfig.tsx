@@ -1,8 +1,12 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React, { useEffect, useState } from 'react'
-import { Modal, Label, Icon, Header, Message, ModalProps } from 'semantic-ui-react'
+import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
 import { pluginProvider } from '../../../../formElementPlugins'
-import { TemplateElement, TemplateElementCategory } from '../../../../utils/generated/graphql'
+import {
+  IsReviewableStatus,
+  TemplateElement,
+  TemplateElementCategory,
+} from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
 import Evaluation from '../../shared/Evaluation'
@@ -14,7 +18,7 @@ import { useFullApplicationState } from '../ApplicationWrapper'
 import { useFormState } from './Form'
 import FromExistingElement from './FromExistingElement'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
-import ModalConfirmation from '../../../../components/Main/ModalConfirmation'
+import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 
 type ElementConfigProps = {
   element: TemplateElement | null
@@ -34,6 +38,7 @@ type ElementUpdateState = {
   helpText: string | null
   parameters: ParametersType
   defaultValue: EvaluatorNode
+  isReviewable: IsReviewableStatus | null
   id: number
 }
 
@@ -52,6 +57,7 @@ const getState: GetState = (element: TemplateElement) => ({
   validationMessage: element.validationMessage || '',
   parameters: element.parameters || {},
   defaultValue: element.defaultValue || null,
+  isReviewable: element.isReviewable || null,
   id: element.id,
 })
 
@@ -70,12 +76,12 @@ const evaluations: Evaluations = [
 
 const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { strings } = useLanguageProvider()
-
-  const REMOVE_MESSAGE = {
-    title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
-    message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
-    option: strings.BUTTON_CONFIRM,
-  }
+  const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } =
+    useConfirmationModal({
+      title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
+      message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
+      confirmText: strings.BUTTON_CONFIRM,
+    })
 
   const { structure } = useFullApplicationState()
   const {
@@ -87,7 +93,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
   const [open, setOpen] = useState(false) // TODO: Use ConfirmationModal (2 actions...)
-  const [showRemoveElementModal, setShowRemoveElementModal] = useState<ModalProps>({ open: false })
 
   useEffect(() => {
     if (!element) return setState(null)
@@ -140,18 +145,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const markNeedsUpdate = () => {
     setShouldUpdate(true)
     setShowSaveAlert(false)
-  }
-
-  const confirmAndRemove = () => {
-    setShowRemoveElementModal({
-      ...REMOVE_MESSAGE,
-      open: true,
-      onClick: () => {
-        removeElement()
-        setShowRemoveElementModal({ open: false })
-      },
-      onClose: () => setShowRemoveElementModal({ open: false }),
-    })
   }
 
   return (
@@ -243,6 +236,27 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 ]}
               />
             </div>
+            <div className="full-width-container">
+              <DropdownIO
+                title="Is Reviewable"
+                value={state.isReviewable || 'default'}
+                getKey={'value'}
+                getValue={'value'}
+                getText={'text'}
+                isPropUpdated={true}
+                setValue={(value) => {
+                  const updateValue = value === 'default' ? null : value
+                  setState({ ...state, isReviewable: updateValue as IsReviewableStatus | null })
+                  markNeedsUpdate()
+                }}
+                options={[
+                  { value: IsReviewableStatus.Always, text: 'Always' },
+                  { value: IsReviewableStatus.Never, text: 'Never' },
+                  { value: 'default', text: 'Only if applicant answered' },
+                ]}
+                maxLabelWidth={120}
+              />
+            </div>
             <div className="flex-row-start-center-wrap">
               <div className="full-width-container">
                 <TextIO
@@ -321,7 +335,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               disabled={!isDraft}
               disabledMessage={disabledMessage}
               title={strings.BUTTON_REMOVE}
-              onClick={confirmAndRemove}
+              onClick={() => showRemoveElementModal({ onConfirm: () => removeElement() })}
             />
             <ButtonWithFallback
               title={strings.BUTTON_CLOSE}
@@ -352,7 +366,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           </div>
         </div>
       </div>
-      <ModalConfirmation {...showRemoveElementModal} />
+      <RemoveElementModal />
       <Message
         className="alert-success"
         success

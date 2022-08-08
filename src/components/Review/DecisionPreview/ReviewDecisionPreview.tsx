@@ -13,7 +13,10 @@ interface ReviewDecisionProps {
 }
 
 export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
-  structure: { thisReview },
+  structure: {
+    thisReview,
+    info: { hasPreviewActions },
+  },
   decision,
 }) => {
   const { strings } = useLanguageProvider()
@@ -30,23 +33,25 @@ export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
         decision={LocalisedDecision[decision]}
         applicationDataOverride={{ reviewData: { latestDecision: { decision } } }}
       />
-      <Form.Field>
-        <Button
-          primary
-          inverted
-          className="wide-button"
-          onClick={() => {
-            if (decision === Decision.NoDecision)
-              toast({
-                title: strings.REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE,
-                text: strings.REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE,
-                style: 'error',
-              })
-            else setIsModalOpen(true)
-          }}
-          content={strings.BUTTON_PREVIEW_DECISION}
-        />
-      </Form.Field>
+      {hasPreviewActions && (
+        <Form.Field>
+          <Button
+            primary
+            inverted
+            className="wide-button"
+            onClick={() => {
+              if (decision === Decision.NoDecision)
+                toast({
+                  title: strings.REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE,
+                  text: strings.REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE,
+                  style: 'error',
+                })
+              else setIsModalOpen(true)
+            }}
+            content={strings.BUTTON_PREVIEW_DECISION}
+          />
+        </Form.Field>
+      )}
     </>
   )
 }

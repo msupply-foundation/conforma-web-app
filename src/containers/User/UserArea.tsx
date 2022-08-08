@@ -7,22 +7,25 @@ import { Link } from 'react-router-dom'
 import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useDataViewsList } from '../../utils/hooks/useDataViews'
+import { useReferenceDocs } from '../../utils/hooks/useReferenceDocs'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { UiLocation } from '../../utils/generated/graphql'
 const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
 
 const UserArea: React.FC = () => {
   const {
-    userState: { currentUser, orgList, templatePermissions },
+    userState: { currentUser, orgList, templatePermissions, isAdmin },
     onLogin,
   } = useUserState()
   const {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
+  const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser, isAdmin)
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
@@ -30,7 +33,11 @@ const UserArea: React.FC = () => {
     <Container id="user-area" fluid>
       <BrandArea />
       <div id="user-area-left">
-        <MainMenuBar templates={templates} dataViews={dataViewsList} />
+        <MainMenuBar
+          templates={templates}
+          dataViews={dataViewsList}
+          referenceDocs={{ intReferenceDocs, extReferenceDocs }}
+        />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
       <UserMenu
@@ -45,20 +52,32 @@ const UserArea: React.FC = () => {
 interface MainMenuBarProps {
   templates: TemplateInList[]
   dataViews: { tableName: string; title: string; code: string }[]
+  referenceDocs: {
+    intReferenceDocs: { uniqueId: string; description: string }[]
+    extReferenceDocs: { uniqueId: string; description: string }[]
+  }
 }
 interface DropdownsState {
   dashboard: { active: boolean }
   templates: { active: boolean; selection: string }
   dataViews: { active: boolean; selection: string }
   admin: { active: boolean; selection: string }
+  intRefDocs: { active: boolean }
+  extRefDocs: { active: boolean }
 }
-const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
+const MainMenuBar: React.FC<MainMenuBarProps> = ({
+  templates,
+  dataViews,
+  referenceDocs: { intReferenceDocs, extReferenceDocs },
+}) => {
   const { strings } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     templates: { active: false, selection: '' },
     dataViews: { active: false, selection: '' },
     admin: { active: false, selection: '' },
+    intRefDocs: { active: false },
+    extRefDocs: { active: false },
   })
   const { push, pathname } = useRouter()
   const {
@@ -153,6 +172,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
               options={templateOptions}
               onChange={handleTemplateChange}
               value={dropdownsState.templates.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
@@ -163,6 +183,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
               options={dataViewOptions}
               onChange={handleDataViewChange}
               value={dropdownsState.dataViews.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
@@ -173,7 +194,38 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
               options={adminOptions}
               onChange={handleAdminChange}
               value={dropdownsState.admin.selection}
+              selectOnBlur={false}
             />
+          </List.Item>
+        )}
+        {extReferenceDocs.length && (
+          <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
+            <Dropdown text={strings.MENU_ITEM_HELP}>
+              <Dropdown.Menu>
+                {extReferenceDocs.map((doc) => (
+                  <Dropdown.Item
+                    key={doc.uniqueId}
+                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
+                    text={doc.description}
+                  />
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </List.Item>
+        )}
+        {intReferenceDocs.length && (
+          <List.Item className={dropdownsState.intRefDocs.active ? 'selected-link' : ''}>
+            <Dropdown text={strings.MENU_ITEM_REF_DOCS}>
+              <Dropdown.Menu>
+                {intReferenceDocs.map((doc) => (
+                  <Dropdown.Item
+                    key={doc.uniqueId}
+                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
+                    text={doc.description}
+                  />
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </List.Item>
         )}
       </List>
@@ -185,13 +237,13 @@ const BrandArea: React.FC = () => {
   const { preferences } = usePrefs()
 
   const logoUrl = preferences?.brandLogoOnDarkFileId
-    ? `${config.serverREST}/public/file?uid=${preferences.brandLogoOnDarkFileId}`
-    : null
+    ? getServerUrl('file', { fileId: preferences.brandLogoOnDarkFileId })
+    : defaultBrandLogo
 
   return (
     <div id="brand-area" className="hide-on-mobile">
       <Link to="/">
-        <Image src={logoUrl ?? defaultBrandLogo} />
+        <Image src={logoUrl} />
       </Link>
     </div>
   )
@@ -204,8 +256,6 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
 }) => {
   const { strings } = useLanguageProvider()
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
-
-  const JWT = localStorage.getItem(config.localStorageJWTKey) as string
 
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
     await attemptLoginOrg({ orgId, onLoginOrgSuccess })
@@ -234,7 +284,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
-        <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST + '/public')} />
+        <Image src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))} />
       )}
       <div>
         {dropdownOptions.length === 1 ? (
@@ -340,6 +390,8 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
     case 'applications':
       return {
@@ -347,13 +399,17 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: true, selection: dropdownsState.templates.selection },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
-    case 'outcomes':
+    case 'data':
       return {
         dashboard: { active: false },
         templates: { active: false, selection: '' },
         dataViews: { active: true, selection: dropdownsState.dataViews.selection },
         admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
     case 'admin':
       return {
@@ -361,13 +417,18 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: true, selection: dropdownsState.admin.selection },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
+    // Don't need one for ref docs because they open in new tab
     default:
       return {
         dashboard: { active: false },
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
   }
 }
