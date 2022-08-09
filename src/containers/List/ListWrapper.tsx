@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Label, Button, Search, Header, Icon } from 'semantic-ui-react'
+import { camelCase } from 'lodash'
 
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -8,7 +9,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import { useMapColumnsByRole } from '../../utils/helpers/list/mapColumnsByRole'
-import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
+import { ApplicationListRow, ColumnDetails, FilterDefinitions, SortQuery } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
@@ -109,6 +110,16 @@ const ListWrapper: React.FC = () => {
 
   if (loading || loadingPrefs) return <Loading />
 
+  let filterDefinitions: FilterDefinitions = {}   
+  
+  columns.forEach((column) => {
+    const filter = Object.entries(APPLICATION_FILTERS).find(([filterName, _]) => camelCase(column.sortName) === filterName)
+    if (filter) {
+      const [filterName, filterValue] = filter
+      filterDefinitions[filterName] = filterValue
+    }
+  })
+
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
   ) : (
@@ -132,7 +143,7 @@ const ListWrapper: React.FC = () => {
         ) : null}
       </div>
       <ListFilters
-        filterDefinitions={APPLICATION_FILTERS}
+        filterDefinitions={filterDefinitions}
         filterListParameters={{ userId: currentUser?.userId || 0, templateCode: type }}
       />
       {columns && applicationsRows && (
