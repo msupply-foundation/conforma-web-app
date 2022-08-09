@@ -44,6 +44,8 @@ These fields are common to all element types and have their own field in the `te
 - **validation_message**: `string` -- the message that shows in the UI when validation fails.  
   _TO-DO: Handle multiple validation criteria with different messages (eg. "Not a valid email", "Email is not unique")_
 - **parameters**: `JSON` -- the parameters specific to each question/element type. See individual plugins below for parameter breakdown
+- **is_reviewable**: `enum` -- either "ALWAYS", "NEVER" or `null`. If set to "ALWAYS", a review response will be created (i.e. a reviewer can review the question) even if there is no applicant response. If set to "NEVER", there will no review response created. This is useful (for example) for questions that are just used as logical conditions for other questions (e.g. "Is your postal address different"), and it can save the reviewer a lot of unnecessary clicking on content that is irrelevant to their actual review. The default for this field is `null`, in which case a review response is created whenever an application response is present.
+
   <a name="types"/>
 
 ## Question/Element types
@@ -394,6 +396,7 @@ _Interface for uploading documents or other files_
 - **fileExtensions**: `array[string]` -- list of allowed file extensions (default: no restrictions). e.g. `["pdf", "doc", "txt", "jpg", "png"]`
 - **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
 - **subfolder**: `string` -- by default, files are uploaded into a subfolder with the name of the application serial. However, this can be over-ridden by specifying this parameter. This should rarely be required.
+- **showDescription**: `boolean` -- if `true`, an additional text input will be displayed alongside each file to allow the applicant to specify a description for each file. (default `false`)
 
 #### Response type
 
