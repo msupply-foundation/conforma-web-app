@@ -25,8 +25,8 @@ const getDisplayableFilters = (filterDefinitions: FilterDefinitions) => {
 
 const getDefaultDisplayFilters = (filterDefinitions: FilterDefinitions) =>
   Object.entries(filterDefinitions)
-    .filter(([filterName, filterValue]) => filterValue.default)
-    .map(([filterName, filterValue]) => filterName)
+    .filter(([_, filterValue]) => filterValue.default)
+    .map(([filterName, _]) => filterName)
 
 const ListFilters: React.FC<{
   filterDefinitions: FilterDefinitions
