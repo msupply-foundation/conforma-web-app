@@ -62,6 +62,7 @@ export const useApplicationFilters = () => {
   const APPLICATION_FILTERS: FilterDefinitions = {
     lastActiveDate: {
       type: 'date',
+      default: false,
       title: strings.FILTER_LAST_ACTIVE,
       options: { namedDates: NAMED_DATE_RANGES },
     },
@@ -80,25 +81,30 @@ export const useApplicationFilters = () => {
     // },
     applicantDeadline: {
       type: 'date',
+      default: true,
       title: strings.FILTER_APPLICANT_DEADLINE,
       options: { namedDates: NAMED_DATE_RANGES },
     },
     type: {
       type: 'equals',
+      default: false,
       options: { substituteColumnName: 'templateCode' },
     },
     status: {
       type: 'enumList',
+      default: false,
       title: strings.FILTER_STATUS,
       options: { enumList: Object.values(ApplicationStatus) },
     },
     outcome: {
       type: 'enumList',
+      default: false,
       title: strings.FILTER_OUTCOME,
       options: { enumList: Object.values(ApplicationOutcome) },
     },
     orgName: {
       type: 'searchableListIn',
+      default: false,
       title: strings.FILTER_ORGANISATION,
       options: {
         getListQuery: constructFilterListQuery(
@@ -109,6 +115,7 @@ export const useApplicationFilters = () => {
     },
     stage: {
       type: 'staticList',
+      default: true,
       title: strings.FILTER_STAGE,
       options: {
         getListQuery: constructFilterListQuery(getStageFilterList, 'applicationListFilterStage'),
@@ -116,12 +123,14 @@ export const useApplicationFilters = () => {
     },
     search: {
       type: 'search',
+      default: false,
       options: {
         orFieldNames: ['name', 'applicant', 'orgName', 'templateName', 'stage'],
       },
     },
     applicant: {
       type: 'searchableListIn',
+      default: false,
       title: strings.FILTER_APPLICANT,
       options: {
         getListQuery: constructFilterListQuery(
@@ -132,6 +141,7 @@ export const useApplicationFilters = () => {
     },
     reviewers: {
       type: 'searchableListInArray',
+      default: true,
       title: strings.FILTER_REVIEWER,
       options: {
         getListQuery: constructFilterListQuery(
@@ -142,6 +152,7 @@ export const useApplicationFilters = () => {
     },
     assigner: {
       type: 'searchableListInArray',
+      default: false,
       title: strings.FILTER_ASSIGNER,
       options: {
         getListQuery: constructFilterListQuery(
@@ -152,11 +163,13 @@ export const useApplicationFilters = () => {
     },
     reviewerAction: {
       type: 'enumList',
+      default: true,
       title: strings.FILTER_REVIEWER_ACTION,
       options: { enumList: Object.values(ReviewerAction) },
     },
     assignerAction: {
       type: 'enumList',
+      default: false,
       title: strings.FILTER_ASSIGNER_ACTION,
       options: { enumList: Object.values(AssignerAction) },
     },

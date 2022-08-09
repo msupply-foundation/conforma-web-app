@@ -822,6 +822,7 @@ export type FilterTypeOptions = {
 
 export type FilterDefinition = {
   type: FilterTypes
+  default: boolean,
   // Empty or undefined title will be excluded from generic fitler UI display (ListFilters)
   title?: string
   options?: FilterTypeOptions
