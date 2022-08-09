@@ -25,7 +25,7 @@ const {
 const { port, hostname, protocol } = window.location
 const getProductionUrl = (path: string) => `${protocol}//${hostname}:${port}${path}`
 
-const serverREST = isProductionBuild ? getProductionUrl(productionPathREST) : devServerRest
+export const serverREST = isProductionBuild ? getProductionUrl(productionPathREST) : devServerRest
 export const serverGraphQL = isProductionBuild
   ? getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
