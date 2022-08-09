@@ -126,7 +126,7 @@ export const useApplicationFilters = (defaultFilters: string[]) => {
         ),
       },
     },
-    reviewer: {
+    reviewers: {
       type: 'searchableListInArray',
       default: defaultFilters.some((filter) => filter === 'reviewers'),
       title: strings.FILTER_REVIEWER,
@@ -137,7 +137,7 @@ export const useApplicationFilters = (defaultFilters: string[]) => {
         ),
       },
     },
-    assigner: {
+    assigner: { // Not in use for any user-role yet (needs to be listed in useMapColumnsByRole)
       type: 'searchableListInArray',
       default: defaultFilters.some((filter) => filter === 'assigner'),
       title: strings.FILTER_ASSIGNER,

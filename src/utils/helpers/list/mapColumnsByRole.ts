@@ -73,7 +73,7 @@ export const useMapColumnsByRole = () => {
     },
     REVIEWER: {
       headerName: strings.COLUMN_REVIEWER,
-      sortName: 'reviewer',
+      sortName: 'reviewers',
       ColumnComponent: ReviewerCell,
     },
     CONSOLIDATOR: {
