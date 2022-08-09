@@ -21,7 +21,7 @@ import { usePrefs } from '../../contexts/SystemPrefs'
 
 const ListWrapper: React.FC = () => {
   const { strings } = useLanguageProvider()
-  const { loading: loadingPrefs, preferences } = usePrefs()
+  const { preferences } = usePrefs()
   const APPLICATION_FILTERS = useApplicationFilters(preferences?.defaultListFilters || [])
   const mapColumnsByRole = useMapColumnsByRole()
   const { query, updateQuery } = useRouter()
@@ -108,7 +108,7 @@ const ListWrapper: React.FC = () => {
     }
   }
 
-  if (loading || loadingPrefs) return <Loading />
+  if (loading) return <Loading />
 
   let filterDefinitions: FilterDefinitions = {}   
   

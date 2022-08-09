@@ -15,7 +15,7 @@ const useListApplications = ({
   type,
   ...queryFilters
 }: BasicStringObject) => {
-  const { loading: loadingPrefs, preferences } = usePrefs()
+  const { preferences } = usePrefs()
   const APPLICATION_FILTERS = useApplicationFilters(preferences?.defaultListFilters || [])
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
@@ -46,8 +46,7 @@ const useListApplications = ({
       userId: currentUser?.userId as number,
       templateCode: type || '',
     },
-    fetchPolicy: 'network-only',
-    skip: loadingPrefs
+    fetchPolicy: 'network-only'
   })
 
   // Ensures that query doesn't request a page beyond the available total
