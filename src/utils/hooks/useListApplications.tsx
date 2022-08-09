@@ -6,6 +6,7 @@ import { useGetApplicationListQuery, ApplicationListShape } from '../../utils/ge
 import { BasicStringObject, TemplateType } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useApplicationFilters } from '../data/applicationFilters'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 const useListApplications = ({
   sortBy,
@@ -14,7 +15,8 @@ const useListApplications = ({
   type,
   ...queryFilters
 }: BasicStringObject) => {
-  const APPLICATION_FILTERS = useApplicationFilters()
+  const { loading: loadingPrefs, preferences } = usePrefs()
+  const APPLICATION_FILTERS = useApplicationFilters(preferences?.defaultListFilters || [])
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
   const [templateType, setTemplateType] = useState<TemplateType>()
@@ -45,6 +47,7 @@ const useListApplications = ({
       templateCode: type || '',
     },
     fetchPolicy: 'network-only',
+    skip: loadingPrefs
   })
 
   // Ensures that query doesn't request a page beyond the available total

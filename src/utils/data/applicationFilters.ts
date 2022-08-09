@@ -15,7 +15,7 @@ import getStageFilterList from '../graphql/queries/applicationListFilters/getSta
 import { FilterDefinitions, GetFilterListQuery, NamedDates } from '../types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 
-export const useApplicationFilters = () => {
+export const useApplicationFilters = (defaultFilters: string[]) => {
   const { strings } = useLanguageProvider()
 
   const NAMED_DATE_RANGES: NamedDates = {
@@ -66,6 +66,100 @@ export const useApplicationFilters = () => {
       title: strings.FILTER_LAST_ACTIVE,
       options: { namedDates: NAMED_DATE_RANGES },
     },
+    applicantDeadline: {
+      type: 'date',
+      default: defaultFilters.some((filter) => filter === 'applicantDeadline'),
+      title: strings.FILTER_APPLICANT_DEADLINE,
+      options: { namedDates: NAMED_DATE_RANGES },
+    },
+    type: {
+      type: 'equals',
+      default: defaultFilters.some((filter) => filter === 'type'),
+      options: { substituteColumnName: 'templateCode' },
+    },
+    status: {
+      type: 'enumList',
+      default: defaultFilters.some((filter) => filter === 'status'),
+      title: strings.FILTER_STATUS,
+      options: { enumList: Object.values(ApplicationStatus) },
+    },
+    outcome: {
+      type: 'enumList',
+      default: defaultFilters.some((filter) => filter === 'outcome'),
+      title: strings.FILTER_OUTCOME,
+      options: { enumList: Object.values(ApplicationOutcome) },
+    },
+    orgName: {
+      type: 'searchableListIn',
+      default: defaultFilters.some((filter) => filter === 'orgName'),
+      title: strings.FILTER_ORGANISATION,
+      options: {
+        getListQuery: constructFilterListQuery(
+          getOrganisationFilterList,
+          'applicationListFilterOrganisation'
+        ),
+      },
+    },
+    stage: {
+      type: 'staticList',
+      default: defaultFilters.some((filter) => filter === 'stage'),
+      title: strings.FILTER_STAGE,
+      options: {
+        getListQuery: constructFilterListQuery(getStageFilterList, 'applicationListFilterStage'),
+      },
+    },
+    search: {
+      type: 'search',
+      default: defaultFilters.some((filter) => filter === 'search'),
+      options: {
+        orFieldNames: ['name', 'applicant', 'orgName', 'templateName', 'stage'],
+      },
+    },
+    applicant: {
+      type: 'searchableListIn',
+      default: defaultFilters.some((filter) => filter === 'applicant'),
+      title: strings.FILTER_APPLICANT,
+      options: {
+        getListQuery: constructFilterListQuery(
+          getApplicantFilterList,
+          'applicationListFilterApplicant'
+        ),
+      },
+    },
+    reviewers: {
+      type: 'searchableListInArray',
+      default: defaultFilters.some((filter) => filter === 'reviewers'),
+      title: strings.FILTER_REVIEWER,
+      options: {
+        getListQuery: constructFilterListQuery(
+          getReviewersFilterList,
+          'applicationListFilterReviewer'
+        ),
+      },
+    },
+    assigner: {
+      type: 'searchableListInArray',
+      default: defaultFilters.some((filter) => filter === 'assigner'),
+      title: strings.FILTER_ASSIGNER,
+      options: {
+        getListQuery: constructFilterListQuery(
+          getAssignerFilterList,
+          'applicationListFilterAssigner'
+        ),
+      },
+    },
+    reviewerAction: {
+      type: 'enumList',
+      default: defaultFilters.some((filter) => filter === 'reviewerAction'),
+      title: strings.FILTER_REVIEWER_ACTION,
+      options: { enumList: Object.values(ReviewerAction) },
+    },
+    assignerAction: {
+      type: 'enumList',
+      default: defaultFilters.some((filter) => filter === 'assignerAction'),
+      title: strings.FILTER_ASSIGNER_ACTION,
+      options: { enumList: Object.values(AssignerAction) },
+    },
     // isFullyAssignedLevel1: {
     //   type: 'boolean',
     //   title: strings.FILTER_ASSIGNMENT_STATUS,
@@ -79,100 +173,6 @@ export const useApplicationFilters = () => {
     // reviewersAssignedCount: {
     //   type: 'number',
     // },
-    applicantDeadline: {
-      type: 'date',
-      default: true,
-      title: strings.FILTER_APPLICANT_DEADLINE,
-      options: { namedDates: NAMED_DATE_RANGES },
-    },
-    type: {
-      type: 'equals',
-      default: false,
-      options: { substituteColumnName: 'templateCode' },
-    },
-    status: {
-      type: 'enumList',
-      default: false,
-      title: strings.FILTER_STATUS,
-      options: { enumList: Object.values(ApplicationStatus) },
-    },
-    outcome: {
-      type: 'enumList',
-      default: false,
-      title: strings.FILTER_OUTCOME,
-      options: { enumList: Object.values(ApplicationOutcome) },
-    },
-    orgName: {
-      type: 'searchableListIn',
-      default: false,
-      title: strings.FILTER_ORGANISATION,
-      options: {
-        getListQuery: constructFilterListQuery(
-          getOrganisationFilterList,
-          'applicationListFilterOrganisation'
-        ),
-      },
-    },
-    stage: {
-      type: 'staticList',
-      default: true,
-      title: strings.FILTER_STAGE,
-      options: {
-        getListQuery: constructFilterListQuery(getStageFilterList, 'applicationListFilterStage'),
-      },
-    },
-    search: {
-      type: 'search',
-      default: false,
-      options: {
-        orFieldNames: ['name', 'applicant', 'orgName', 'templateName', 'stage'],
-      },
-    },
-    applicant: {
-      type: 'searchableListIn',
-      default: false,
-      title: strings.FILTER_APPLICANT,
-      options: {
-        getListQuery: constructFilterListQuery(
-          getApplicantFilterList,
-          'applicationListFilterApplicant'
-        ),
-      },
-    },
-    reviewers: {
-      type: 'searchableListInArray',
-      default: true,
-      title: strings.FILTER_REVIEWER,
-      options: {
-        getListQuery: constructFilterListQuery(
-          getReviewersFilterList,
-          'applicationListFilterReviewer'
-        ),
-      },
-    },
-    assigner: {
-      type: 'searchableListInArray',
-      default: false,
-      title: strings.FILTER_ASSIGNER,
-      options: {
-        getListQuery: constructFilterListQuery(
-          getAssignerFilterList,
-          'applicationListFilterAssigner'
-        ),
-      },
-    },
-    reviewerAction: {
-      type: 'enumList',
-      default: true,
-      title: strings.FILTER_REVIEWER_ACTION,
-      options: { enumList: Object.values(ReviewerAction) },
-    },
-    assignerAction: {
-      type: 'enumList',
-      default: false,
-      title: strings.FILTER_ASSIGNER_ACTION,
-      options: { enumList: Object.values(AssignerAction) },
-    },
   }
   return APPLICATION_FILTERS
 }

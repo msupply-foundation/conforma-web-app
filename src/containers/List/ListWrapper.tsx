@@ -16,10 +16,12 @@ import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
 import { useApplicationFilters } from '../../utils/data/applicationFilters'
 import Loading from '../../components/Loading'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 const ListWrapper: React.FC = () => {
   const { strings } = useLanguageProvider()
-  const APPLICATION_FILTERS = useApplicationFilters()
+  const { loading: loadingPrefs, preferences } = usePrefs()
+  const APPLICATION_FILTERS = useApplicationFilters(preferences?.defaultListFilters || [])
   const mapColumnsByRole = useMapColumnsByRole()
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
@@ -105,7 +107,7 @@ const ListWrapper: React.FC = () => {
     }
   }
 
-  if (loading ) return <Loading />
+  if (loading || loadingPrefs) return <Loading />
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
