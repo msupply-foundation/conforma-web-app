@@ -1,4 +1,5 @@
 import {
+  AssignerActionCell,
   ApplicantActionCell,
   ApplicantCell,
   ApplicationNameCell,
@@ -8,6 +9,7 @@ import {
   LastActiveDateCell,
   OrganisationCell,
   OutcomeCell,
+  ReviewerCell,
   ReviewerActionCell,
   SerialNumberCell,
   StageCell,
@@ -69,6 +71,11 @@ export const useMapColumnsByRole = () => {
       sortName: 'org',
       ColumnComponent: OrganisationCell,
     },
+    REVIEWER: {
+      headerName: strings.COLUMN_REVIEWER,
+      sortName: 'reviewer',
+      ColumnComponent: ReviewerCell,
+    },
     CONSOLIDATOR: {
       headerName: strings.COLUMN_CONSOLIDATOR,
       sortName: 'consolidator', // Not implemented in query
@@ -89,14 +96,19 @@ export const useMapColumnsByRole = () => {
       sortName: 'outcome',
       ColumnComponent: OutcomeCell,
     },
+    ASSIGNER_ACTION: {
+      headerName: strings.COLUMN_ASSIGNER_ACTION,
+      sortName: 'assigner-action',
+      ColumnComponent: AssignerActionCell,
+    },
     REVIEWER_ACTION: {
       headerName: strings.COLUMN_REVIEWER_ACTION,
-      sortName: 'outcome',
+      sortName: 'reviewer-action',
       ColumnComponent: ReviewerActionCell,
     },
     APPLICANT_ACTION: {
       headerName: strings.COLUMN_APPLICANT_ACTION,
-      sortName: 'outcome',
+      sortName: 'applicant-action',
       ColumnComponent: ApplicantActionCell,
     },
   }

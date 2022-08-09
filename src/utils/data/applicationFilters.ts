@@ -89,9 +89,9 @@ export const useApplicationFilters = (defaultFilters: string[]) => {
       title: strings.FILTER_OUTCOME,
       options: { enumList: Object.values(ApplicationOutcome) },
     },
-    orgName: {
+    org: {
       type: 'searchableListIn',
-      default: defaultFilters.some((filter) => filter === 'orgName'),
+      default: defaultFilters.some((filter) => filter === 'org'),
       title: strings.FILTER_ORGANISATION,
       options: {
         getListQuery: constructFilterListQuery(
@@ -126,7 +126,7 @@ export const useApplicationFilters = (defaultFilters: string[]) => {
         ),
       },
     },
-    reviewers: {
+    reviewer: {
       type: 'searchableListInArray',
       default: defaultFilters.some((filter) => filter === 'reviewers'),
       title: strings.FILTER_REVIEWER,
