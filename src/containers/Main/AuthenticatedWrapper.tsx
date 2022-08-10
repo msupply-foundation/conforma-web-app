@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SiteLayout from './SiteLayout'
 import { useRouter } from '../../utils/hooks/useRouter'
 import isLoggedIn from '../../utils/helpers/loginCheck'
@@ -13,15 +13,24 @@ const AuthenticatedContent: React.FC = () => {
   } = useRouter()
   // Location is not fully loaded unless 'state' is present, TODO try upgrading react router
   // without this sessionId is missing when navigating via Click Here in forgot password verification
-  if ('state' in location) {
-    let { pathname, search } = location
-    // If there is a sessionId in the URL, then need to login as nonRegistered
-    // before continuing
-    if (sessionId) return <NonRegisteredLogin option="redirect" redirect={pathname + search} />
-    if (isLoggedIn()) return <SiteLayout />
-    return <Redirect to={{ pathname: '/login', state: { from: location.pathname } }} />
+  // if ('state' in location) {
+  console.log('Location state', location)
+  console.log('sessionId', sessionId)
+  let { pathname, search } = location
+  // If there is a sessionId in the URL, then need to login as nonRegistered
+  // before continuing
+  if (sessionId && !isLoggedIn()) {
+    console.log('SessionID and logged in')
+    return <NonRegisteredLogin option="redirect" redirect={pathname + search} />
   }
-
+  if (isLoggedIn()) {
+    console.log('isLoggedIn, authenticated')
+    return <SiteLayout />
+  }
+  console.log('REDIRECT to login')
+  return <Redirect to={{ pathname: '/login', state: { from: location.pathname } }} />
+  // }
+  console.log('Default loading...')
   return <Loading />
 }
 

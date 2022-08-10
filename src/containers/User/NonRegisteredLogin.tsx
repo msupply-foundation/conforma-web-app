@@ -22,14 +22,21 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   } = useRouter()
   const { onLogin } = useUserState()
 
+  console.log('SessionId', sessionId)
+
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
   useEffect(() => {
-    if (isLoggedIn()) push('/')
+    console.log('Checking login...')
+    if (isLoggedIn()) {
+      console.log('Logged in!')
+      push('/')
+    }
   }, [])
 
   useEffect(() => {
     // Log in as 'nonRegistered' user to be able to apply for User Registration
     // form or reset password
+    console.log('Attempting login with', sessionId)
 
     attemptLogin({
       username: config.nonRegisteredUser,
@@ -42,11 +49,16 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   }, [])
 
   const onLoginSuccess = async (loginResult: LoginPayload) => {
+    console.log('Success')
+    console.log('Option', option)
     const { JWT, user, templatePermissions, orgList, isAdmin } = loginResult
     await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
     if (option === 'register') push('/application/new?type=UserRegistration')
     else if (option === 'reset-password') push('/application/new?type=PasswordReset')
-    else if (option === 'redirect' && redirect) push(redirect)
+    else if (option === 'redirect' && redirect) {
+      console.log('Redirecting', redirect)
+      push(redirect)
+    }
   }
 
   if (networkError) return <p>{networkError}</p>
