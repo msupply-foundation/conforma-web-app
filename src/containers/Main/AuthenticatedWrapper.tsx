@@ -10,30 +10,24 @@ const AuthenticatedContent: React.FC = () => {
 
   const sessionId = getSessionIdFromUrl()
 
-  console.log('Location state', location)
-  console.log('sessionId', sessionId)
-
   let { pathname, search } = location
   // If there is a sessionId in the URL, then need to login as nonRegistered
   // before continuing
-  if (sessionId && !isLoggedIn()) {
-    console.log('SessionID and logged in')
+  if (sessionId && !isLoggedIn())
     return <NonRegisteredLogin option="redirect" redirect={pathname + search} />
-  }
-  if (isLoggedIn()) {
-    console.log('isLoggedIn, authenticated')
-    return <SiteLayout />
-  }
-  console.log('REDIRECT to login')
+
+  if (isLoggedIn()) return <SiteLayout />
+
   return <Redirect to={{ pathname: '/login', state: { from: location.pathname } }} />
 }
 
 export default AuthenticatedContent
 
 // This is a nasty hack that we need due to the fact that ReactRouter doesn't
-// have "query" values available when this component is loaded from another. So
-// we fetch and parse it ourselves directly from window.location.search instead.
-// We should upgrade to ReactRouter 6 at some point and hopefully this will be
+// have "query" values available when this component is loaded from another
+// (i.e. when clicking "Click here" in password reset verification). So we fetch
+// and parse it ourselves directly from window.location.search instead. We
+// should upgrade to ReactRouter 6 at some point and hopefully this will be
 // sorted.
 export const getSessionIdFromUrl = () => {
   const sessionIdRegex = /^\?(sessionId)=(.+)$/

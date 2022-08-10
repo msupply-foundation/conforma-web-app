@@ -29,8 +29,7 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
     // Log in as 'nonRegistered' user to be able to apply for User Registration
     // form or reset password
 
-    const sessionId = getSessionIdFromUrl() ?? ''
-    console.log('Attempting login with', sessionId)
+    const sessionId = getSessionIdFromUrl() ?? undefined
 
     attemptLogin({
       username: config.nonRegisteredUser,
