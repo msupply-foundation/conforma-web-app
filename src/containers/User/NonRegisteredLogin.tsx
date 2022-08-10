@@ -6,6 +6,7 @@ import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { LoginPayload } from '../../utils/types'
 import config from '../../config'
+import { getSessionIdFromUrl } from '../Main/AuthenticatedWrapper'
 
 interface NonRegisteredLoginProps {
   option: 'register' | 'reset-password' | 'redirect'
@@ -16,26 +17,19 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   const { strings } = useLanguageProvider()
 
   const [networkError, setNetworkError] = useState('')
-  const {
-    push,
-    query: { sessionId },
-  } = useRouter()
+  const { push } = useRouter()
   const { onLogin } = useUserState()
-
-  console.log('SessionId', sessionId)
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
   useEffect(() => {
-    console.log('Checking login...')
-    if (isLoggedIn()) {
-      console.log('Logged in!')
-      push('/')
-    }
+    if (isLoggedIn()) push('/')
   }, [])
 
   useEffect(() => {
     // Log in as 'nonRegistered' user to be able to apply for User Registration
     // form or reset password
+
+    const sessionId = getSessionIdFromUrl() ?? ''
     console.log('Attempting login with', sessionId)
 
     attemptLogin({
@@ -49,16 +43,11 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   }, [])
 
   const onLoginSuccess = async (loginResult: LoginPayload) => {
-    console.log('Success')
-    console.log('Option', option)
     const { JWT, user, templatePermissions, orgList, isAdmin } = loginResult
     await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
     if (option === 'register') push('/application/new?type=UserRegistration')
     else if (option === 'reset-password') push('/application/new?type=PasswordReset')
-    else if (option === 'redirect' && redirect) {
-      console.log('Redirecting', redirect)
-      push(redirect)
-    }
+    else if (option === 'redirect' && redirect) push(redirect)
   }
 
   if (networkError) return <p>{networkError}</p>
