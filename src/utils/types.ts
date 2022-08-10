@@ -24,6 +24,7 @@ import { DocumentNode } from '@apollo/client'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../utils/data/LuxonDateTimeConstants'
 import { ErrorResponse } from './hooks/useDataViews'
+import { USER_ROLES } from './data'
 
 export {
   ApplicationDetails,
@@ -823,6 +824,7 @@ export type FilterTypeOptions = {
 export type FilterDefinition = {
   type: FilterTypes
   default: boolean,
+  visibleTo: USER_ROLES[],
   // Empty or undefined title will be excluded from generic fitler UI display (ListFilters)
   title?: string
   options?: FilterTypeOptions

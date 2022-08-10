@@ -1,5 +1,4 @@
 import {
-  AssignerActionCell,
   ApplicantActionCell,
   ApplicantCell,
   ApplicationNameCell,
@@ -9,13 +8,12 @@ import {
   LastActiveDateCell,
   OrganisationCell,
   OutcomeCell,
-  ReviewerCell,
   ReviewerActionCell,
   SerialNumberCell,
   StageCell,
   StatusCell,
 } from '../../../components/List/Cells'
-import { APPLICATION_COLUMNS, USER_ROLES } from '../../data'
+import { LIST_COLUMNS, USER_ROLES } from '../../data'
 import COLUMNS_PER_ROLE from '../../data/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -33,7 +31,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 
 export const useMapColumnsByRole = () => {
   const { strings } = useLanguageProvider()
-  const allColumns: { [key in APPLICATION_COLUMNS]: ColumnDetails } = {
+  const allColumns: { [key in LIST_COLUMNS]: ColumnDetails } = {
     SERIAL_NUMBER: {
       headerName: strings.COLUMN_SERIAL,
       sortName: 'serial',
@@ -71,11 +69,6 @@ export const useMapColumnsByRole = () => {
       sortName: 'org',
       ColumnComponent: OrganisationCell,
     },
-    REVIEWER: {
-      headerName: strings.COLUMN_REVIEWER,
-      sortName: 'reviewers',
-      ColumnComponent: ReviewerCell,
-    },
     CONSOLIDATOR: {
       headerName: strings.COLUMN_CONSOLIDATOR,
       sortName: 'consolidator', // Not implemented in query
@@ -96,19 +89,14 @@ export const useMapColumnsByRole = () => {
       sortName: 'outcome',
       ColumnComponent: OutcomeCell,
     },
-    ASSIGNER_ACTION: {
-      headerName: strings.COLUMN_ASSIGNER_ACTION,
-      sortName: 'assigner-action',
-      ColumnComponent: AssignerActionCell,
-    },
     REVIEWER_ACTION: {
       headerName: strings.COLUMN_REVIEWER_ACTION,
-      sortName: 'reviewer-action',
+      sortName: 'outcome',
       ColumnComponent: ReviewerActionCell,
     },
     APPLICANT_ACTION: {
       headerName: strings.COLUMN_APPLICANT_ACTION,
-      sortName: 'applicant-action',
+      sortName: 'outcome',
       ColumnComponent: ApplicantActionCell,
     },
   }
