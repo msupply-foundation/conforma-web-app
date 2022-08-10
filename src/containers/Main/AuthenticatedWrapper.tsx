@@ -10,7 +10,8 @@ const AuthenticatedContent: React.FC = () => {
 
   const sessionId = getSessionIdFromUrl()
 
-  let { pathname, search } = location
+  const { pathname, search } = location
+
   // If there is a sessionId in the URL, then need to login as nonRegistered
   // before continuing
   if (sessionId && !isLoggedIn())
