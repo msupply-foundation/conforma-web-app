@@ -18,7 +18,7 @@ const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white
 
 const UserArea: React.FC = () => {
   const {
-    userState: { currentUser, orgList, templatePermissions, isAdmin },
+    userState: { currentUser, orgList, templatePermissions, isAdmin, isManager },
     onLogin,
   } = useUserState()
   const {

@@ -142,7 +142,7 @@ export default {
   FILTER_ASSIGNER_ACTION: 'Assigner Action',
   FILTER_DATE_BEFORE: 'Before',
   FILTER_DATE_AFTER: 'After',
-  FILTER_CLEAR_ALL: 'Clear all filters',
+  FILTER_RESET_ALL: 'Reset all filters',
   FOOTER_TEXT: 'Powered by The mSupply Foundation',
   LABEL_APPLICATIONS: 'applications',
   LABEL_APPLICATION_SUBMITTED: 'Application Submitted',
