@@ -1,4 +1,4 @@
-import APPLICATION_COLUMNS from './applicationColumns'
+import LIST_COLUMNS from './listColumns'
 import USER_ROLES from './userRoles'
 
-export { APPLICATION_COLUMNS, USER_ROLES }
+export { LIST_COLUMNS, USER_ROLES }
