@@ -96,7 +96,7 @@ export const useGetFilterDefinitions = (defaultFilters: string[]) => {
       title: strings.FILTER_OUTCOME,
       options: { enumList: Object.values(ApplicationOutcome) },
     },
-    org: {
+    orgName: {
       type: 'searchableListIn',
       default: defaultFilters.some((filter) => filter === 'org'),
       visibleTo: checkFilterVisibility("ORGANISATION"),
@@ -239,7 +239,7 @@ const checkFilterVisibility = (filterKey: string) => {
   ]
   if (visibleToApplicant.find((visibleFilter) => visibleFilter === filterKey)) filtersAreVisibleTo.push(USER_ROLES.APPLICANT)
   
-  const visibleToReviewer: LIST_FILTERS[] = [
+  const visibleToReviewer = [
     LIST_FILTERS.LAST_ACTIVE_DATE,
     LIST_FILTERS.DEADLINE_DATE,
     LIST_FILTERS.STATUS,
