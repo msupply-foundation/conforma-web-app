@@ -40,7 +40,7 @@ export type CheckUniqueEndpoint = [
         table: string
         field: string
       }
-  ) & { value: string }
+  ) & { value: string; caseInsensitive?: boolean }
 ]
 
 export type DataViewEndpoint = [

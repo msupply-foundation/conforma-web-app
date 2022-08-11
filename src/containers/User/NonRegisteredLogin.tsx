@@ -6,6 +6,7 @@ import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { LoginPayload } from '../../utils/types'
 import config from '../../config'
+import { getSessionIdFromUrl } from '../Main/AuthenticatedWrapper'
 
 interface NonRegisteredLoginProps {
   option: 'register' | 'reset-password' | 'redirect'
@@ -16,10 +17,7 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   const { strings } = useLanguageProvider()
 
   const [networkError, setNetworkError] = useState('')
-  const {
-    push,
-    query: { sessionId },
-  } = useRouter()
+  const { push } = useRouter()
   const { onLogin } = useUserState()
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
@@ -30,6 +28,8 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   useEffect(() => {
     // Log in as 'nonRegistered' user to be able to apply for User Registration
     // form or reset password
+
+    const sessionId = getSessionIdFromUrl() ?? undefined
 
     attemptLogin({
       username: config.nonRegisteredUser,
