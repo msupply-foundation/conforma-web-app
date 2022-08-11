@@ -105,7 +105,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       value: template.code,
     }))
 
-  const adminOptions: any = [
+  const configOptions = [
     { key: 'templates', text: strings.MENU_ITEM_ADMIN_TEMPLATES, value: '/admin/templates' },
     {
       key: 'lookup_tables',
@@ -127,22 +127,19 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   ]
   // Only include Snapshots menu item in Dev mode
   if (process.env.NODE_ENV === 'development')
-    adminOptions.splice(1, 0, {
+    configOptions.splice(1, 0, {
       key: 'snapshots',
       text: 'Snapshots',
       value: '/admin/snapshots',
     })
 
-  // Add Admin templates to Admin menu
-  adminOptions.push(
-    ...templates
-      .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin))
-      .map((template) => ({
-        key: template.code,
-        text: template.name,
-        value: `/application/new?type=${template.code}`,
-      }))
-  )
+  const managementOptions = templates
+    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin))
+    .map((template) => ({
+      key: template.code,
+      text: template.name,
+      value: `/application/new?type=${template.code}`,
+    }))
 
   const handleDataViewChange = (_: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
@@ -190,8 +187,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         {isAdmin && (
           <List.Item className={dropdownsState.admin.active ? 'selected-link' : ''}>
             <Dropdown
-              text={strings.MENU_ITEM_ADMIN_CONFIG}
-              options={adminOptions}
+              text={strings.MENU_ITEM_MANAGE}
+              options={configOptions}
               onChange={handleAdminChange}
               value={dropdownsState.admin.selection}
               selectOnBlur={false}
