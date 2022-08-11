@@ -199,6 +199,7 @@ interface CurrentPage {
 type DecisionOption = {
   code: Decision
   title: string
+  description: string
   isVisible: boolean
   value: boolean
 }
