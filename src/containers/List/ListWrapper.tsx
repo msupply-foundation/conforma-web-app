@@ -14,12 +14,12 @@ import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
 import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
-import { useApplicationFilters } from '../../utils/data/applicationFilters'
+import { useGetFilterDefinitions } from '../../utils/helpers/list/useGetFilterDefinitions'
 import Loading from '../../components/Loading'
 
 const ListWrapper: React.FC = () => {
   const { strings } = useLanguageProvider()
-  const APPLICATION_FILTERS = useApplicationFilters()
+  const FILTER_DEFINITIONS = useGetFilterDefinitions()
   const mapColumnsByRole = useMapColumnsByRole()
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
@@ -105,7 +105,13 @@ const ListWrapper: React.FC = () => {
     }
   }
 
-  if (loading ) return <Loading />
+  if (loading) return <Loading />
+
+  const visibleFilters = Object.fromEntries(
+    Object.entries(FILTER_DEFINITIONS).filter(([_, { visibleTo }]) =>
+      visibleTo.includes(userRole as USER_ROLES)
+    )
+  )
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
@@ -130,7 +136,7 @@ const ListWrapper: React.FC = () => {
         ) : null}
       </div>
       <ListFilters
-        filterDefinitions={APPLICATION_FILTERS}
+        filterDefinitions={visibleFilters}
         filterListParameters={{ userId: currentUser?.userId || 0, templateCode: type }}
       />
       {columns && applicationsRows && (
