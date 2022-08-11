@@ -16,9 +16,14 @@ import { FilterDefinitions, GetFilterListQuery, NamedDates } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { USER_ROLES } from '../../data'
 import LIST_FILTERS from '../../data/listFilters'
+import { usePrefs } from '../../../contexts/SystemPrefs'
 
-export const useGetFilterDefinitions = (defaultFilters: string[]) => {
+export const useGetFilterDefinitions = () => {
   const { strings } = useLanguageProvider()
+
+  const { preferences } = usePrefs()
+
+  const defaultFilters = preferences?.defaultListFilters || []
 
   const NAMED_DATE_RANGES: NamedDates = {
     today: { getDates: () => [today(), today()], title: strings.FILTER_NAMED_DATE_TODAY },
@@ -240,7 +245,7 @@ const checkFilterVisibility = (filterKey: string) => {
   if (visibleToApplicant.find((visibleFilter) => visibleFilter === filterKey))
     filtersAreVisibleTo.push(USER_ROLES.APPLICANT)
 
-  const visibleToReviewer = [
+  const visibleToReviewer: LIST_FILTERS[] = [
     LIST_FILTERS.LAST_ACTIVE_DATE,
     LIST_FILTERS.DEADLINE_DATE,
     LIST_FILTERS.STATUS,
