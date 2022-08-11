@@ -34625,7 +34625,7 @@ export type GetAllTemplatesLazyQueryHookResult = ReturnType<typeof useGetAllTemp
 export type GetAllTemplatesQueryResult = Apollo.QueryResult<GetAllTemplatesQuery, GetAllTemplatesQueryVariables>;
 export const GetTemplateCategoriesDocument = gql`
     query getTemplateCategories {
-  templateCategories {
+  templateCategories(orderBy: CODE_ASC) {
     nodes {
       code
       icon
