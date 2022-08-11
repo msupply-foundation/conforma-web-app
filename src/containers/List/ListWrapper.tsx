@@ -17,12 +17,10 @@ import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
 import { useGetFilterDefinitions } from '../../utils/helpers/list/useGetFilterDefinitions'
 import Loading from '../../components/Loading'
-import { usePrefs } from '../../contexts/SystemPrefs'
 
 const ListWrapper: React.FC = () => {
   const { strings } = useLanguageProvider()
-  const { preferences } = usePrefs()
-  const FILTER_DEFINITIONS = useGetFilterDefinitions(preferences?.defaultListFilters || [])
+  const FILTER_DEFINITIONS = useGetFilterDefinitions()
   const mapColumnsByRole = useMapColumnsByRole()
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
