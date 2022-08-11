@@ -120,7 +120,7 @@ export const useGetFilterDefinitions = (defaultFilters: string[]) => {
     search: {
       type: 'search',
       default: defaultFilters.some((filter) => filter === 'search'),
-      visibleTo: ['applicant' as USER_ROLES, 'reviewer' as USER_ROLES], // Always Visible 
+      visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER], // Always Visible
       options: {
         orFieldNames: ['name', 'applicant', 'orgName', 'templateName', 'stage'],
       },
