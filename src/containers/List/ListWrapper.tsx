@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Label, Button, Search, Header, Icon } from 'semantic-ui-react'
+import { camelCase } from 'lodash'
 
 import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -8,18 +9,20 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { findUserRole, checkExistingUserRole } from '../../utils/helpers/list/findUserRole'
 import { useUserState } from '../../contexts/UserState'
 import { useMapColumnsByRole } from '../../utils/helpers/list/mapColumnsByRole'
-import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
+import { ApplicationListRow, ColumnDetails, FilterDefinitions, SortQuery } from '../../utils/types'
 import { USER_ROLES } from '../../utils/data'
 import { Link } from 'react-router-dom'
 import ApplicationsList from '../../components/List/ApplicationsList'
 import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
-import { useApplicationFilters } from '../../utils/data/applicationFilters'
+import { useGetFilterDefinitions } from '../../utils/helpers/list/useGetFilterDefinitions'
 import Loading from '../../components/Loading'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 const ListWrapper: React.FC = () => {
   const { strings } = useLanguageProvider()
-  const APPLICATION_FILTERS = useApplicationFilters()
+  const { preferences } = usePrefs()
+  const FILTER_DEFINITIONS = useGetFilterDefinitions(preferences?.defaultListFilters || [])
   const mapColumnsByRole = useMapColumnsByRole()
   const { query, updateQuery } = useRouter()
   const { type, userRole } = query
@@ -105,7 +108,13 @@ const ListWrapper: React.FC = () => {
     }
   }
 
-  if (loading ) return <Loading />
+  if (loading) return <Loading />
+
+  const visibleFilters = Object.fromEntries(
+    Object.entries(FILTER_DEFINITIONS).filter(([_, { visibleTo }]) =>
+      visibleTo.includes(userRole as USER_ROLES)
+    )
+  )
 
   return error ? (
     <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
@@ -130,7 +139,7 @@ const ListWrapper: React.FC = () => {
         ) : null}
       </div>
       <ListFilters
-        filterDefinitions={APPLICATION_FILTERS}
+        filterDefinitions={visibleFilters}
         filterListParameters={{ userId: currentUser?.userId || 0, templateCode: type }}
       />
       {columns && applicationsRows && (

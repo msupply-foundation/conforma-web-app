@@ -23,6 +23,11 @@ const getDisplayableFilters = (filterDefinitions: FilterDefinitions) => {
   return result
 }
 
+const getDefaultDisplayFilters = (filterDefinitions: FilterDefinitions) =>
+  Object.entries(filterDefinitions)
+    .filter(([_, filterValue]) => filterValue.default)
+    .map(([filterName, _]) => filterName)
+
 const ListFilters: React.FC<{
   filterDefinitions: FilterDefinitions
   filterListParameters: any
@@ -31,9 +36,10 @@ const ListFilters: React.FC<{
   const { query, updateQuery } = useRouter()
 
   const displayableFilters = getDisplayableFilters(filterDefinitions)
+  const defaultDisplayFilters = getDefaultDisplayFilters(filterDefinitions)
 
   const filterNames = Object.keys(displayableFilters)
-  const [activeFilters, setActiveFilters] = useState<string[]>([])
+  const [activeFilters, setActiveFilters] = useState<string[]>(defaultDisplayFilters)
 
   // Add filters from URL to activeFilters, filters may not have criteria/options yet thus we have to use activeFilter state variable
   useEffect(() => {

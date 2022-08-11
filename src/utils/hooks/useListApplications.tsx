@@ -5,7 +5,8 @@ import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQu
 import { useGetApplicationListQuery, ApplicationListShape } from '../../utils/generated/graphql'
 import { BasicStringObject, TemplateType } from '../types'
 import { useUserState } from '../../contexts/UserState'
-import { useApplicationFilters } from '../data/applicationFilters'
+import { useGetFilterDefinitions } from '../helpers/list/useGetFilterDefinitions'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 const useListApplications = ({
   sortBy,
@@ -14,7 +15,8 @@ const useListApplications = ({
   type,
   ...queryFilters
 }: BasicStringObject) => {
-  const APPLICATION_FILTERS = useApplicationFilters()
+  const { preferences } = usePrefs()
+  const FILTER_DEFINITIONS = useGetFilterDefinitions(preferences?.defaultListFilters || [])
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
   const [templateType, setTemplateType] = useState<TemplateType>()
@@ -24,7 +26,7 @@ const useListApplications = ({
     userState: { currentUser },
   } = useUserState()
 
-  const filters = buildFilter({ type, ...queryFilters }, APPLICATION_FILTERS)
+  const filters = buildFilter({ type, ...queryFilters }, FILTER_DEFINITIONS)
   const sortFields = sortBy ? buildSortFields(sortBy) : []
   const { paginationOffset, numberToFetch } = getPaginationVariables(
     page ? Number(page) : 1,
@@ -44,7 +46,7 @@ const useListApplications = ({
       userId: currentUser?.userId as number,
       templateCode: type || '',
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'network-only'
   })
 
   // Ensures that query doesn't request a page beyond the available total
