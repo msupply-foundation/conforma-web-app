@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export default gql`
   query getTemplateCategories {
-    templateCategories {
+    templateCategories(orderBy: CODE_ASC) {
       nodes {
         code
         icon

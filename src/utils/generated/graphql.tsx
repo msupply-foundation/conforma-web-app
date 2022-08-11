@@ -34344,7 +34344,7 @@ export type GetTemplateLazyQueryHookResult = ReturnType<typeof useGetTemplateLaz
 export type GetTemplateQueryResult = Apollo.QueryResult<GetTemplateQuery, GetTemplateQueryVariables>;
 export const GetTemplatesDocument = gql`
     query getTemplates($status: TemplateStatus = AVAILABLE) {
-  templates(condition: {status: $status}) {
+  templates(condition: {status: $status}, orderBy: CODE_ASC) {
     nodes {
       ...templateFragment
     }
@@ -34625,7 +34625,7 @@ export type GetAllTemplatesLazyQueryHookResult = ReturnType<typeof useGetAllTemp
 export type GetAllTemplatesQueryResult = Apollo.QueryResult<GetAllTemplatesQuery, GetAllTemplatesQueryVariables>;
 export const GetTemplateCategoriesDocument = gql`
     query getTemplateCategories {
-  templateCategories {
+  templateCategories(orderBy: CODE_ASC) {
     nodes {
       code
       icon
