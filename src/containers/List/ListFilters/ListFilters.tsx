@@ -71,7 +71,7 @@ const ListFilters: React.FC<{
 
   const resetFilters = () => {
     updateQuery(Object.fromEntries(activeFilters.map((filterName) => [filterName, undefined])))
-    setActiveFilters([])
+    setActiveFilters(defaultDisplayFilters)
   }
 
   const availableFilterNames = filterNames.filter(
