@@ -22,6 +22,9 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
   useEffect(() => {
+    // Don't let a logged in user go to register page, but they can go to
+    // "reset-password"
+    if (option === 'reset-password') return
     if (isLoggedIn()) push('/')
   }, [])
 
