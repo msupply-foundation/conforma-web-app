@@ -15,7 +15,6 @@ import getStageFilterList from '../../graphql/queries/applicationListFilters/get
 import { FilterDefinitions, GetFilterListQuery, NamedDates } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { USER_ROLES } from '../../data'
-import LIST_FILTERS from '../../data/listFilters'
 import { usePrefs } from '../../../contexts/SystemPrefs'
 
 export const useGetFilterDefinitions = () => {
@@ -70,41 +69,41 @@ export const useGetFilterDefinitions = () => {
     lastActiveDate: {
       type: 'date',
       default: defaultFilters.some((filter) => filter === 'lastActiveDate'),
-      visibleTo: checkFilterVisibility('LAST_ACTIVE_DATE'),
+      visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
       title: strings.FILTER_LAST_ACTIVE,
       options: { namedDates: NAMED_DATE_RANGES },
     },
     applicantDeadline: {
       type: 'date',
       default: defaultFilters.some((filter) => filter === 'applicantDeadline'),
-      visibleTo: checkFilterVisibility('DEADLINE_DATE'),
+      visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
       title: strings.FILTER_APPLICANT_DEADLINE,
       options: { namedDates: NAMED_DATE_RANGES },
     },
     type: {
       type: 'equals',
       default: defaultFilters.some((filter) => filter === 'type'),
-      visibleTo: checkFilterVisibility('TYPE'),
+      visibleTo: [],
       options: { substituteColumnName: 'templateCode' },
     },
     status: {
       type: 'enumList',
       default: defaultFilters.some((filter) => filter === 'status'),
-      visibleTo: checkFilterVisibility('STATUS'),
+      visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
       title: strings.FILTER_STATUS,
       options: { enumList: Object.values(ApplicationStatus) },
     },
     outcome: {
       type: 'enumList',
       default: defaultFilters.some((filter) => filter === 'outcome'),
-      visibleTo: checkFilterVisibility('OUTCOME'),
+      visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
       title: strings.FILTER_OUTCOME,
       options: { enumList: Object.values(ApplicationOutcome) },
     },
     orgName: {
       type: 'searchableListIn',
       default: defaultFilters.some((filter) => filter === 'org'),
-      visibleTo: checkFilterVisibility('ORGANISATION'),
+      visibleTo: [USER_ROLES.REVIEWER],
       title: strings.FILTER_ORGANISATION,
       options: {
         getListQuery: constructFilterListQuery(
@@ -116,7 +115,7 @@ export const useGetFilterDefinitions = () => {
     stage: {
       type: 'staticList',
       default: defaultFilters.some((filter) => filter === 'stage'),
-      visibleTo: checkFilterVisibility('STAGE'),
+      visibleTo: [USER_ROLES.REVIEWER],
       title: strings.FILTER_STAGE,
       options: {
         getListQuery: constructFilterListQuery(getStageFilterList, 'applicationListFilterStage'),
@@ -133,7 +132,7 @@ export const useGetFilterDefinitions = () => {
     applicant: {
       type: 'searchableListIn',
       default: defaultFilters.some((filter) => filter === 'applicant'),
-      visibleTo: checkFilterVisibility('APPLICANT'),
+      visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
       title: strings.FILTER_APPLICANT,
       options: {
         getListQuery: constructFilterListQuery(
@@ -145,7 +144,7 @@ export const useGetFilterDefinitions = () => {
     assigners: {
       type: 'searchableListInArray',
       default: defaultFilters.some((filter) => filter === 'assigner'),
-      visibleTo: checkFilterVisibility('ASSIGNERS'),
+      visibleTo: [USER_ROLES.REVIEWER],
       title: strings.FILTER_ASSIGNER,
       options: {
         getListQuery: constructFilterListQuery(
@@ -157,7 +156,7 @@ export const useGetFilterDefinitions = () => {
     reviewers: {
       type: 'searchableListInArray',
       default: defaultFilters.some((filter) => filter === 'reviewers'),
-      visibleTo: checkFilterVisibility('REVIEWERS'),
+      visibleTo: [USER_ROLES.REVIEWER],
       title: strings.FILTER_REVIEWER,
       options: {
         getListQuery: constructFilterListQuery(
@@ -169,14 +168,14 @@ export const useGetFilterDefinitions = () => {
     assignerAction: {
       type: 'enumList',
       default: defaultFilters.some((filter) => filter === 'assignerAction'),
-      visibleTo: checkFilterVisibility('ASSIGNER_ACTION'),
+      visibleTo: [],
       title: strings.FILTER_ASSIGNER_ACTION,
       options: { enumList: Object.values(AssignerAction) },
     },
     reviewerAction: {
       type: 'enumList',
       default: defaultFilters.some((filter) => filter === 'reviewerAction'),
-      visibleTo: checkFilterVisibility('REVIEWER_ACTION'),
+      visibleTo: [USER_ROLES.REVIEWER],
       title: strings.FILTER_REVIEWER_ACTION,
       options: { enumList: Object.values(ReviewerAction) },
     },
@@ -229,35 +228,4 @@ const getDateRangeForUnit: GetDateRangeForUnit = (unit, value = 0) => {
       .endOf(unit)
       .startOf('day'),
   ]
-}
-
-const checkFilterVisibility = (filterKey: string) => {
-  let filtersAreVisibleTo: USER_ROLES[] = []
-
-  const visibleToApplicant = [
-    LIST_FILTERS.LAST_ACTIVE_DATE,
-    LIST_FILTERS.DEADLINE_DATE,
-    LIST_FILTERS.STATUS,
-    LIST_FILTERS.OUTCOME,
-    LIST_FILTERS.APPLICANT,
-    LIST_FILTERS.APPLICANT_ACTION,
-  ]
-  if (visibleToApplicant.find((visibleFilter) => visibleFilter === filterKey))
-    filtersAreVisibleTo.push(USER_ROLES.APPLICANT)
-
-  const visibleToReviewer: LIST_FILTERS[] = [
-    LIST_FILTERS.LAST_ACTIVE_DATE,
-    LIST_FILTERS.DEADLINE_DATE,
-    LIST_FILTERS.STATUS,
-    LIST_FILTERS.OUTCOME,
-    LIST_FILTERS.STAGE,
-    LIST_FILTERS.ORGANISATION,
-    LIST_FILTERS.APPLICANT,
-    LIST_FILTERS.ASSIGNERS,
-    LIST_FILTERS.REVIEWERS,
-    LIST_FILTERS.REVIEWER_ACTION,
-  ]
-  if (visibleToReviewer.find((visibleFilter) => visibleFilter === filterKey))
-    filtersAreVisibleTo.push(USER_ROLES.REVIEWER)
-  return filtersAreVisibleTo
 }
