@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import config from '../../../config'
 import {
