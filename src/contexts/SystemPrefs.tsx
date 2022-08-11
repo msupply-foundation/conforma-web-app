@@ -9,6 +9,7 @@ interface PrefsState {
     defaultLanguageCode: string
     brandLogoFileId?: string
     brandLogoOnDarkFileId?: string
+    defaultListFilters?: string[]
     systemManagerPermissionName?: string
   }
   languageOptions?: LanguageOption[]

@@ -44,7 +44,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
     // generates new Previews every time it's opened
     <Modal id="preview-modal" open={open} closeOnDimmerClick={false}>
       <Modal.Header>{strings.REVIEW_DECISION_PREVIEW_HEADER}</Modal.Header>
-      <Modal.Content>
+      <Modal.Content scrolling>
         {strings.REVIEW_DECISION_PREVIEW_TEXT} <strong>{decision}</strong>
         {loading && (
           <Loader active size="huge">
