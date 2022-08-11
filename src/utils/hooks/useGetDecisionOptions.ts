@@ -11,21 +11,18 @@ const getInitialDecisionOptions = (
     {
       code: Decision.NonConform,
       title: strings.DECISION_NON_CONFORM,
-      description: strings.LABEL_REVIEW_DECISION_NON_CONFORM,
       isVisible: false,
       value: false,
     },
     {
       code: Decision.Conform,
       title: strings.DECISION_CONFORM,
-      description: strings.LABEL_REVIEW_DECISION_CONFORM,
       isVisible: false,
       value: false,
     },
     {
       code: Decision.ChangesRequested,
       title: strings.DECISION_CHANGES_REQUESTED,
-      description: strings.LABEL_REVIEW_DECISION_CHANGES_REQUESTED,
       isVisible: false,
       value: false,
     },
@@ -36,7 +33,6 @@ const getInitialDecisionOptions = (
     availableOptions.push({
       code: Decision.ListOfQuestions,
       title: strings.DECISION_LIST_OF_QUESTIONS,
-      description: strings.LABEL_REVIEW_DECISION_LOQ,
       isVisible: false,
       value: false,
     })
@@ -75,7 +71,7 @@ const useGetDecisionOptions: UseGetDecisionOptions = (
 
   useEffect(() => {
     setIsDecisionError(false)
-    const updatedOptions = decisionOptions.map(({ code, title, description }) => {
+    const updatedOptions = decisionOptions.map(({ code, title }) => {
       let isVisible = false
       let value = false
       // if review is NOT DRAFT then use decision from DB (and make it the only one visible)
@@ -97,7 +93,6 @@ const useGetDecisionOptions: UseGetDecisionOptions = (
       return {
         code,
         title,
-        description,
         isVisible,
         value,
       }

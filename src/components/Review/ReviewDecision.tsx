@@ -28,11 +28,11 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
             <strong>{strings.LABEL_REVIEW_SUBMIT_AS}:</strong>
           </p>
         )}
-        {visibleOptions.map(({ code, description, title, value }) => (
+        {visibleOptions.map(({ code, title, value }) => (
           <Form.Field className="reviewer-decision-checkbox" error={isDecisionError} key={code}>
             <Checkbox
               radio
-              label={value && description ? `${title} - ${description}` : title}
+              label={title}
               name={title}
               value={code}
               checked={value}
