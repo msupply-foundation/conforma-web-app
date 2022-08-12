@@ -247,7 +247,7 @@ export default {
   MENU_ITEM_DASHBOARD: 'Dashboard',
   MENU_ITEM_APPLICATION_LIST: 'Application List',
   MENU_ITEM_DATA: 'Database',
-  MENU_ITEM_MANAGE: 'Admin',
+  MENU_ITEM_MANAGE: 'Manage',
   MENU_ITEM_CONFIG: 'Configuration',
   MENU_ITEM_HELP: 'Help',
   MENU_ITEM_REF_DOCS: 'Reference',
