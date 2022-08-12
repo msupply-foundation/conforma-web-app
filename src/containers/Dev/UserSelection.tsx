@@ -62,6 +62,7 @@ const UserSelection: React.FC = () => {
       verifyOrgResult.JWT,
       verifyOrgResult.user,
       verifyOrgResult.templatePermissions,
+      verifyOrgResult.permissionNames,
       orgList,
       verifyOrgResult.isAdmin
     )

@@ -125,7 +125,7 @@ export function UserProvider({ children }: UserProviderProps) {
     if (JWT == 'undefined' || JWT == undefined) logout()
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
-    if (!user || !templatePermissions || permissionNames)
+    if (!user || !templatePermissions || !permissionNames)
       fetchUserInfo({ dispatch: setUserState }, logout)
     else {
       dispatch({
