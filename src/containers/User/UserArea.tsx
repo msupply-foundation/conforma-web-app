@@ -135,6 +135,17 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       value: '/admin/snapshots',
     })
 
+  // Add Config/Admin templates to Config menu (requires Admin permission)
+  configOptions.push(
+    ...templates
+      .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin))
+      .map((template) => ({
+        key: template.code,
+        text: template.name,
+        value: `/application/new?type=${template.code}`,
+      }))
+  )
+
   const managementOptions = templates
     .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Management))
     .map((template) => ({

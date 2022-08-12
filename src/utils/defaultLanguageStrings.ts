@@ -413,6 +413,7 @@ export default {
   TEMPLATE_NO_CATEGORY: 'No category',
   TEMPLATE_TITLE: 'Title',
   TEMPLATE_UI_ADMIN: 'Admin menu',
+  TEMPLATE_UI_MANAGE: 'Management menu',
   TEMPLATE_UI_DASHBOARD: 'Dashboard',
   TEMPLATE_UI_MENU: 'Application List menu',
   TEMPLATE_UI_USER: 'User menu',
