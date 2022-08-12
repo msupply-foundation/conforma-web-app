@@ -186,7 +186,7 @@ export default {
   LABEL_REVIEW_IN_PROGRESS: 'Review in Progress',
   LABEL_REVIEW_MAKE_DECISION_BY: 'Awaiting decision making by',
   LABEL_REVIEW_OVERALL_COMMENT: 'Overall comment',
-  LABEL_REVIEW_OVERALL_COMMENT_TOOLTIP: 'If application outcome is \'Conform\': Please use this field to include a summary of the internal decision notes.\nIf application outcome is \'Request information from the applicant\': Please use this field to include a summary of the internal decision notes. Note: Any non-conforming comments will be displayed to the applicant for actioning.\nIf application \'Non-conform\': Please use this field to detail the reasons for rejection to the applicant.\n',
+  LABEL_REVIEW_OVERALL_COMMENT_TOOLTIP: 'If application outcome is **Conform**: Please use this field to include a summary of the internal decision notes. If application outcome is **Request information from the applicant**: Please use this field to include a summary of the internal decision notes. Note: Any non-conforming comments will be displayed to the applicant for actioning. If application **Non-conform**: Please use this field to detail the reasons for rejection to the applicant.',
   LABEL_REVIEW_RESSUBMIT: 'Non conform',
   LABEL_REVIEW_SECTION: 'Please complete the section',
   LABEL_REVIEW_SUBMIT_AS: 'Submit as',
