@@ -4,7 +4,7 @@ import MarkdownBlock from '../utils/helpers/semanticReactMarkdown'
 
 interface TooltipProps {
   message: string
-  type?: 'click' | 'hover'
+  triggerEvent?: 'click' | 'hover'
   icon?: SemanticICONS
   color?: SemanticCOLORS
   minWidth?: number
@@ -14,7 +14,7 @@ interface TooltipProps {
 
 const Tooltip: React.FC<TooltipProps> = ({
   message,
-  type = 'click',
+  triggerEvent = 'click',
   icon = 'help circle',
   color = 'grey',
   minWidth = 300,
@@ -29,7 +29,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         ...style,
       }}
       content={<MarkdownBlock text={message} />}
-      on={type}
+      on={triggerEvent}
       pinned
       offset={-12}
       trigger={<Icon name={icon} color={color} className="tooltip-trigger" />}
