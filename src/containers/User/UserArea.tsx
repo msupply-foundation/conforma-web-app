@@ -170,7 +170,6 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   }
 
   const handleManagementChange = (_: SyntheticEvent, { value }: any) => {
-    console.log('Value', value)
     setDropDownsState({ ...dropdownsState, manage: { active: true, selection: value } })
     push(value)
   }
