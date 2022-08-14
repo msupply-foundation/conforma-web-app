@@ -2451,11 +2451,6 @@ a:hover {
   margin-right: 8px;
 }
 
-.popup.tooltip {
-  min-width: 300px !important;
-  max-width: 550px !important;
-}
-
 /*******************************
              Headers
 *******************************/

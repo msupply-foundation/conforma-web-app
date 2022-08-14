@@ -17,12 +17,17 @@ const Tooltip: React.FC<TooltipProps> = ({
   type = 'click',
   icon = 'help circle',
   color = 'grey',
+  minWidth = 300,
+  maxWidth = 550,
   style,
 }) => {
   return (
     <Popup
-      className="tooltip"
-      style={style}
+      style={{
+        minWidth,
+        maxWidth,
+        ...style,
+      }}
       content={<MarkdownBlock text={message} />}
       on={type}
       pinned
