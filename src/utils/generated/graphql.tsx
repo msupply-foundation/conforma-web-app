@@ -34458,7 +34458,7 @@ export type GeTemplateActionByCodeLazyQueryHookResult = ReturnType<typeof useGeT
 export type GeTemplateActionByCodeQueryResult = Apollo.QueryResult<GeTemplateActionByCodeQuery, GeTemplateActionByCodeQueryVariables>;
 export const GetAllActionsDocument = gql`
     query getAllActions {
-  actionPlugins {
+  actionPlugins(orderBy: NAME_ASC) {
     nodes {
       id
       code

@@ -106,6 +106,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 markNeedsUpdate()
               }}
               options={Object.values(allActionsByCode)}
+              search
               labelNegative
               minLabelWidth={50}
             />
