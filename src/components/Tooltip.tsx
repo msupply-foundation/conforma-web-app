@@ -23,6 +23,7 @@ const Tooltip: React.FC<TooltipProps> = ({
 }) => {
   return (
     <Popup
+      className="tooltip"
       style={{
         minWidth,
         maxWidth,

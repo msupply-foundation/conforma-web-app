@@ -2444,11 +2444,24 @@ a:hover {
   border: 1px solid @surfacesMed;
 }
 
-// Tooltip / Popover
+// Tooltip / Popover component
 
 .icon.tooltip-trigger {
   margin-left: 8px;
   margin-right: 8px;
+}
+
+.ui.popup.tooltip {
+  padding: 1.2em;
+  p {
+    margin-bottom: 0.5em;
+  }
+  ul {
+    margin:0;
+  }
+  li {
+    margin-bottom: 0.5em;
+  }
 }
 
 /*******************************
