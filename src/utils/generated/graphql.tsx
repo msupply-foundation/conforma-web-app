@@ -4964,7 +4964,8 @@ export enum UiLocation {
   Dashboard = 'DASHBOARD',
   List = 'LIST',
   User = 'USER',
-  Admin = 'ADMIN'
+  Admin = 'ADMIN',
+  Management = 'MANAGEMENT'
 }
 
 /** A filter to be used against many `Template` object types. All fields are combined with a logical ‘and.’ */
