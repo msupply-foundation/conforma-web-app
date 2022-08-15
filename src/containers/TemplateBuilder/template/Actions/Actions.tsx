@@ -11,7 +11,6 @@ import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import TriggerDisplay from './TriggerDisplay'
 import { useFormStructureState } from '../Form/FormWrapper'
 import { getRequest } from '../../../../utils/helpers/fetchMethods'
-import config from '../../../../config'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 type ActionsByCode = { [actionCode: string]: ActionPlugin }
