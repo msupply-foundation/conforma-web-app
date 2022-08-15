@@ -164,6 +164,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 markNeedsUpdate()
               }}
               options={Object.values(pluginProvider.pluginManifest)}
+              search
               labelNegative
               minLabelWidth={50}
             />

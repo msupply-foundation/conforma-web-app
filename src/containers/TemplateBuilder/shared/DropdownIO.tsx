@@ -18,6 +18,7 @@ type DropdownIOprops = {
   link?: string
   isPropUpdated?: boolean
   options?: any[]
+  search?: boolean
   getKey?: GetterOrKey
   getValue?: GetterOrKey
   getText?: GetterOrKey
@@ -50,6 +51,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   link,
   isPropUpdated = false,
   options = [],
+  search = false,
   getKey = defaultGetters,
   getValue = defaultGetters,
   getText = defaultGetters,
@@ -93,6 +95,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
         className={ioCSS + ' value'}
         options={calculatedOptions}
         scrolling
+        search={search}
         onChange={(_, { value }) => {
           if (typeof value !== 'string' && typeof value !== 'number') return
           setInnerValue(value)
