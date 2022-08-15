@@ -101,7 +101,7 @@ const ListFilters: React.FC<{
           ))}
           <Dropdown.Item key="clear-filters" onClick={resetFilters}>
             <Icon size="small" color="grey" name="delete" />
-            {strings.FILTER_CLEAR_ALL}
+            {strings.FILTER_RESET_ALL}
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>

@@ -62,6 +62,7 @@ interface DropdownsState {
   templates: { active: boolean; selection: string }
   dataViews: { active: boolean; selection: string }
   admin: { active: boolean; selection: string }
+  manage: { active: boolean; selection: string }
   intRefDocs: { active: boolean }
   extRefDocs: { active: boolean }
 }
@@ -76,12 +77,13 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     templates: { active: false, selection: '' },
     dataViews: { active: false, selection: '' },
     admin: { active: false, selection: '' },
+    manage: { active: false, selection: '' },
     intRefDocs: { active: false },
     extRefDocs: { active: false },
   })
   const { push, pathname } = useRouter()
   const {
-    userState: { isAdmin },
+    userState: { isAdmin, isManager },
   } = useUserState()
 
   // Ensures the "selected" state of other dropdowns gets disabled
@@ -105,7 +107,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       value: template.code,
     }))
 
-  const adminOptions: any = [
+  const configOptions = [
     { key: 'templates', text: strings.MENU_ITEM_ADMIN_TEMPLATES, value: '/admin/templates' },
     {
       key: 'lookup_tables',
@@ -127,14 +129,14 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   ]
   // Only include Snapshots menu item in Dev mode
   if (process.env.NODE_ENV === 'development')
-    adminOptions.splice(1, 0, {
+    configOptions.splice(1, 0, {
       key: 'snapshots',
       text: 'Snapshots',
       value: '/admin/snapshots',
     })
 
-  // Add Admin templates to Admin menu
-  adminOptions.push(
+  // Add Config/Admin templates to Config menu (requires Admin permission)
+  configOptions.push(
     ...templates
       .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin))
       .map((template) => ({
@@ -143,6 +145,14 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         value: `/application/new?type=${template.code}`,
       }))
   )
+
+  const managementOptions = templates
+    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Management))
+    .map((template) => ({
+      key: template.code,
+      text: template.name,
+      value: `/application/new?type=${template.code}`,
+    }))
 
   const handleDataViewChange = (_: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
@@ -156,6 +166,11 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
 
   const handleAdminChange = (_: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, admin: { active: true, selection: value } })
+    push(value)
+  }
+
+  const handleManagementChange = (_: SyntheticEvent, { value }: any) => {
+    setDropDownsState({ ...dropdownsState, manage: { active: true, selection: value } })
     push(value)
   }
 
@@ -187,11 +202,22 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             />
           </List.Item>
         )}
+        {isManager && (
+          <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
+            <Dropdown
+              text={strings.MENU_ITEM_MANAGE}
+              options={managementOptions}
+              onChange={handleManagementChange}
+              value={dropdownsState.manage.selection}
+              selectOnBlur={false}
+            />
+          </List.Item>
+        )}
         {isAdmin && (
           <List.Item className={dropdownsState.admin.active ? 'selected-link' : ''}>
             <Dropdown
-              text={strings.MENU_ITEM_ADMIN_CONFIG}
-              options={adminOptions}
+              text={strings.MENU_ITEM_CONFIG}
+              options={configOptions}
               onChange={handleAdminChange}
               value={dropdownsState.admin.selection}
               selectOnBlur={false}
@@ -389,6 +415,7 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         dashboard: { active: true },
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
+        manage: { active: false, selection: '' },
         admin: { active: false, selection: '' },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
@@ -398,6 +425,7 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         dashboard: { active: false },
         templates: { active: true, selection: dropdownsState.templates.selection },
         dataViews: { active: false, selection: '' },
+        manage: { active: false, selection: '' },
         admin: { active: false, selection: '' },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
@@ -407,6 +435,17 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         dashboard: { active: false },
         templates: { active: false, selection: '' },
         dataViews: { active: true, selection: dropdownsState.dataViews.selection },
+        manage: { active: false, selection: '' },
+        admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
+      }
+    case 'manage':
+      return {
+        dashboard: { active: false },
+        templates: { active: false, selection: '' },
+        dataViews: { active: true, selection: dropdownsState.dataViews.selection },
+        manage: { active: true, selection: dropdownsState.manage.selection },
         admin: { active: false, selection: '' },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
@@ -416,6 +455,7 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         dashboard: { active: false },
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
+        manage: { active: false, selection: '' },
         admin: { active: true, selection: dropdownsState.admin.selection },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
@@ -426,6 +466,7 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         dashboard: { active: false },
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
+        manage: { active: false, selection: '' },
         admin: { active: false, selection: '' },
         intRefDocs: { active: false },
         extRefDocs: { active: false },

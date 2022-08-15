@@ -42,8 +42,8 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   }, [])
 
   const onLoginSuccess = async (loginResult: LoginPayload) => {
-    const { JWT, user, templatePermissions, orgList, isAdmin } = loginResult
-    await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
+    const { JWT, user, templatePermissions, permissionNames, orgList, isAdmin } = loginResult
+    await onLogin(JWT, user, templatePermissions, permissionNames, orgList, isAdmin)
     if (option === 'register') push('/application/new?type=UserRegistration')
     else if (option === 'reset-password') push('/application/new?type=PasswordReset')
     else if (option === 'redirect' && redirect) push(redirect)

@@ -10,6 +10,7 @@ interface PrefsState {
     brandLogoFileId?: string
     brandLogoOnDarkFileId?: string
     defaultListFilters?: string[]
+    systemManagerPermissionName?: string
   }
   languageOptions?: LanguageOption[]
   loading: boolean

@@ -32,6 +32,7 @@ const useCategoryInfo = () => {
     { key: UiLocation.List, locationName: strings.TEMPLATE_UI_MENU },
     { key: UiLocation.Dashboard, locationName: strings.TEMPLATE_UI_DASHBOARD },
     { key: UiLocation.User, locationName: strings.TEMPLATE_UI_USER },
+    { key: UiLocation.Management, locationName: strings.TEMPLATE_UI_MANAGE },
     { key: UiLocation.Admin, locationName: strings.TEMPLATE_UI_ADMIN },
   ]
 
