@@ -28,18 +28,14 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
             <strong>{strings.LABEL_REVIEW_SUBMIT_AS}:</strong>
           </p>
         )}
-        {visibleOptions.map((option) => (
-          <Form.Field
-            className="reviewer-decision-checkbox"
-            error={isDecisionError}
-            key={option.code}
-          >
+        {visibleOptions.map(({ code, title, value }) => (
+          <Form.Field className="reviewer-decision-checkbox" error={isDecisionError} key={code}>
             <Checkbox
               radio
-              label={option.title}
-              name={option.title}
-              value={option.code}
-              checked={option.value}
+              label={title}
+              name={title}
+              value={code}
+              checked={value}
               onChange={onChangeDecision}
             />
           </Form.Field>

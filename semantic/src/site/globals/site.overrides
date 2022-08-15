@@ -2336,6 +2336,12 @@ a:hover {
   }
 }
 
+/*******************************
+      Re-useable components
+*******************************/
+
+// Toast
+
 @toastTopMargin: 40px;
 @toastBottomMargin: 40px;
 @toastHorizontalMargin: 20px;
@@ -2436,6 +2442,26 @@ a:hover {
 .config-container-outline {
   .config-container();
   border: 1px solid @surfacesMed;
+}
+
+// Tooltip / Popover component
+
+.icon.tooltip-trigger {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.ui.popup.tooltip {
+  padding: 1.2em;
+  p {
+    margin-bottom: 0.5em;
+  }
+  ul {
+    margin:0;
+  }
+  li {
+    margin-bottom: 0.5em;
+  }
 }
 
 /*******************************
