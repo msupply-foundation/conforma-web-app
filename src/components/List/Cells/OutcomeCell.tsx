@@ -21,7 +21,6 @@ const useOutcomeDisplayMap = () => {
 const OutcomeCell: React.FC<CellProps> = ({ application }) => {
   const outcomeDisplayMap = useOutcomeDisplayMap()
   const { outcome } = application
-  console.log(outcome)
 
   if (outcome === ApplicationOutcome.Pending || outcome === null) return null
   // Only show label if no longer in progress
