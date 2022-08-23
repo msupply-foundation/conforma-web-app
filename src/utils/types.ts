@@ -445,6 +445,7 @@ type SectionAndPage = {
 }
 
 interface SectionDetails {
+  active: boolean
   id: number
   index: number
   code: string
@@ -824,8 +825,8 @@ export type FilterTypeOptions = {
 
 export type FilterDefinition = {
   type: FilterTypes
-  default: boolean,
-  visibleTo: USER_ROLES[],
+  default: boolean
+  visibleTo: USER_ROLES[]
   // Empty or undefined title will be excluded from generic fitler UI display (ListFilters)
   title?: string
   options?: FilterTypeOptions

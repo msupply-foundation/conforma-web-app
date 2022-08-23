@@ -26,6 +26,7 @@ const getSectionDetailsArray = (sectionsList: TemplateSection[]): SectionDetails
     const totalPages = pageBreaks.length + 1
 
     return {
+      active: true,
       id,
       code: code as string,
       title: title as string,
