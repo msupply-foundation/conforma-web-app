@@ -1,6 +1,7 @@
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../utils/types'
 import {
   ReviewAssignmentStatus,
+  Trigger,
   UpdateReviewAssignmentMutation,
   useUpdateReviewAssignmentMutation,
 } from '../../utils/generated/graphql'
@@ -63,9 +64,10 @@ const isChanging = (reviewerId: number, assignedSections: SectionAssignee | null
     )
 }
 interface AssignmentPatch {
-  status: ReviewAssignmentStatus
-  assignedSections?: string[]
   assignerId: number
+  assignedSections?: string[]
+  status: ReviewAssignmentStatus
+  trigger: Trigger
 }
 
 const createAssignmentPatch = (
@@ -73,7 +75,14 @@ const createAssignmentPatch = (
   assignedSections: SectionAssignee | null,
   assignerId: number
 ): AssignmentPatch => {
-  if (!assignedSections) return { status: ReviewAssignmentStatus.Available, assignerId }
+  // When no assignedSections it should be Unassignment
+  if (!assignedSections)
+    return {
+      status: ReviewAssignmentStatus.Available,
+      assignerId,
+      trigger: Trigger.OnReviewUnassign,
+    }
+
   const reviewerId = assignment.reviewer.id
   const assignedSectionsCodes = new Set(assignment.assignedSections)
   const removedSections = Object.entries(assignedSections)
@@ -86,12 +95,20 @@ const createAssignmentPatch = (
   removedSections.forEach((code) => assignedSectionsCodes.delete(code))
   addedSections.forEach((code) => assignedSectionsCodes.add(code))
 
+  const trigger =
+    assignedSectionsCodes.size === 0
+      ? Trigger.OnReviewUnassign
+      : assignment.isSelfAssignable
+      ? Trigger.OnReviewSelfAssign
+      : Trigger.OnReviewAssign
+
   const patch: AssignmentPatch = {
     status:
       assignedSectionsCodes.size === 0
         ? ReviewAssignmentStatus.Available
         : ReviewAssignmentStatus.Assigned,
     assignerId,
+    trigger,
   }
   if (assignedSectionsCodes.size > 0) patch.assignedSections = Array.from(assignedSectionsCodes)
   return patch
