@@ -80,9 +80,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   // When checkbox array changes after initial load (e.g. when its being dynamically loaded from an API)
   useEffect(() => {
-    if (checkboxes[0] !== config.parameterLoadingValues.label && isFirstRender) {
+    if (checkboxes[0] !== config.parameterLoadingValues.label && isFirstRender)
       setIsFirstRender(false)
-    }
     setCheckboxElements(getCheckboxStructure(initialValue, checkboxes, keyMap, isFirstRender))
   }, [checkboxes])
 
