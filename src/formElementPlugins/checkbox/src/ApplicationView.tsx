@@ -4,7 +4,7 @@ import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import config from '../pluginConfig.json'
 
-interface Checkbox {
+export interface Checkbox {
   label: string
   text: string
   textNegative?: string
@@ -12,9 +12,42 @@ interface Checkbox {
   selected: boolean
 }
 
-interface CheckboxSavedState {
+export interface CheckboxSavedState {
   text: string
   values: { [key: string]: Checkbox }
+}
+
+export const CheckboxDisplay: React.FC<{
+  checkboxes: Checkbox[]
+  disabled: boolean
+  type: string
+  layout: string
+  onChange: (e: any, data: any) => void
+}> = ({ checkboxes, disabled, type, layout, onChange }) => {
+  const styles =
+    layout === 'inline'
+      ? {
+          display: 'inline',
+          marginRight: 10,
+        }
+      : {}
+
+  return (
+    <>
+      {checkboxes.map((cb: Checkbox, index: number) => (
+        <Form.Field key={`${index}_${cb.label}`} disabled={disabled} style={styles}>
+          <Checkbox
+            label={cb.label}
+            checked={cb.selected}
+            onChange={onChange}
+            index={index}
+            toggle={type === 'toggle'}
+            slider={type === 'slider'}
+          />
+        </Form.Field>
+      ))}
+    </>
+  )
 }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -42,7 +75,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [isFirstRender, setIsFirstRender] = useState(true)
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
-    getInitialState(initialValue, checkboxes, keyMap, isFirstRender)
+    getCheckboxStructure(initialValue, checkboxes, keyMap, isFirstRender)
   )
 
   // When checkbox array changes after initial load (e.g. when its being dynamically loaded from an API)
@@ -50,7 +83,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     if (checkboxes[0] !== config.parameterLoadingValues.label && isFirstRender) {
       setIsFirstRender(false)
     }
-    setCheckboxElements(getInitialState(initialValue, checkboxes, keyMap, isFirstRender))
+    setCheckboxElements(getCheckboxStructure(initialValue, checkboxes, keyMap, isFirstRender))
   }, [checkboxes])
 
   useEffect(() => {
@@ -92,15 +125,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const resetState = () =>
-    setCheckboxElements(getInitialState(initialValue, checkboxes, keyMap, isFirstRender))
-
-  const styles =
-    layout === 'inline'
-      ? {
-          display: 'inline',
-          marginRight: 10,
-        }
-      : {}
+    setCheckboxElements(getCheckboxStructure(initialValue, checkboxes, keyMap, isFirstRender))
 
   return (
     <>
@@ -110,18 +135,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      {checkboxElements.map((cb: Checkbox, index: number) => (
-        <Form.Field key={`${index}_${cb.label}`} disabled={!isEditable} style={styles}>
-          <Checkbox
-            label={cb.label}
-            checked={cb.selected}
-            onChange={toggle}
-            index={index}
-            toggle={type === 'toggle'}
-            slider={type === 'slider'}
-          />
-        </Form.Field>
-      ))}
+      <CheckboxDisplay
+        checkboxes={checkboxElements}
+        disabled={!isEditable}
+        type={type}
+        layout={layout}
+        onChange={toggle}
+      />
       {resetButton && (
         <div style={{ marginTop: 10 }}>
           <Button primary content={strings.BUTTON_RESET_SELECTION} compact onClick={resetState} />
@@ -144,7 +164,7 @@ type KeyMap = {
   selected?: string
 }
 
-const getInitialState = (
+export const getCheckboxStructure = (
   initialValue: CheckboxSavedState,
   checkboxes: Checkbox[],
   keyMap: KeyMap | undefined,
