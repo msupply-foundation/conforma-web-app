@@ -16,8 +16,7 @@ interface ReviewInlineNewResponseProps {
 /*
 This component is visually the same as "ReviewInlineInput", but is used when
 reviewing elements that don't have an applicantResponse. Instead of updating a
-review response, it needs to create a new review response along with its
-associated applicationResponse.
+reviewResponse, it needs to create a new one and its associated applicationResponse.
 */
 const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
   setIsActiveEdit,
