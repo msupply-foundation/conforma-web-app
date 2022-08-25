@@ -13,6 +13,9 @@ interface ReviewInlineNewResponseProps {
   stageNumber: number
 }
 
+/*
+This component is visually the same as "ReviewInlineInput", but is used when reviewing elements that don't have an applicantResponse. Instead of updating a review response, it needs to create a new review response along with its associated applicationResponse.
+*/
 const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
   setIsActiveEdit,
   summaryViewProps,
@@ -59,7 +62,8 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
         comment: reviewResponse.comment,
         timeSubmitted,
       },
-      refetchQueries: ['getReviewResponses'],
+      // The order of these refetch queries appears to be important!
+      refetchQueries: ['getAllResponses', 'getReviewResponses'],
     })
     setIsActiveEdit(false)
   }

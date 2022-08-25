@@ -48,8 +48,6 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
   const [reviewResponse, setReviewResponse] = useState(initialReviewResponse)
   const updateResponse = useUpdateReviewResponse()
 
-  console.log('reviewResponse', reviewResponse)
-
   const optionsMap = useOptionsMap()
   const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
 
