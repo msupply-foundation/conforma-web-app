@@ -6,6 +6,7 @@ import {
   Page,
   ApplicationDetails,
   StageDetails,
+  ReviewDetails,
 } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
 import styleConstants from '../../utils/data/styleConstants'
@@ -22,12 +23,13 @@ interface SectionProps {
   stages: StageDetails[]
   isActive: boolean
   isConsolidation?: boolean
-  isReview?: boolean
+  reviewInfo?: ReviewDetails
   isSummary?: boolean
   isUpdating?: boolean
   serial: string
   canEdit?: boolean
   isSectionInvalid?: boolean
+  reloadStructure?: () => void
 }
 
 const SectionWrapper: React.FC<SectionProps> = ({
@@ -42,11 +44,12 @@ const SectionWrapper: React.FC<SectionProps> = ({
   stages,
   isActive,
   isConsolidation = false,
-  isReview = false,
+  reviewInfo,
   isSummary = false,
   isUpdating = false,
   canEdit = false,
   isSectionInvalid = false,
+  reloadStructure,
 }) => {
   const { details, pages } = section
   const stickyRef = useRef(null)
@@ -94,11 +97,12 @@ const SectionWrapper: React.FC<SectionProps> = ({
                   stages={stages}
                   serial={serial}
                   sectionAndPage={{ sectionCode: details.code, pageNumber: page.number }}
-                  isReview={isReview}
+                  reviewInfo={reviewInfo}
                   isConsolidation={isConsolidation}
                   isSummary={isSummary}
                   isUpdating={isUpdating}
                   canEdit={canEdit}
+                  reloadStructure={reloadStructure}
                 />
                 {extraPageContent && extraPageContent(page)}
               </div>

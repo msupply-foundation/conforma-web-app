@@ -1,78 +1,86 @@
 import React, { useState } from 'react'
 import { Button, Form, Radio, TextArea } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { ReviewResponse, ReviewResponseDecision } from '../../../utils/generated/graphql'
-import useUpdateReviewResponse from '../../../utils/hooks/useUpdateReviewResponse'
+import { SummaryViewWrapperProps } from '../../../formElementPlugins/types'
+import { ReviewResponseDecision } from '../../../utils/generated/graphql'
+import { useCreateReviewResponseMutation } from '../../../utils/generated/graphql'
+import { ReviewDetails } from '../../../utils/types'
 
 const useOptionsMap = () => {
   const { strings } = useLanguageProvider()
-  const optionsMap = {
-    consolidation: [
-      {
-        label: strings.LABEL_CONSOLIDATION_AGREE,
-        decision: ReviewResponseDecision.Agree,
-      },
-      {
-        label: strings.LABEL_CONSOLIDATION_DISAGREE,
-        decision: ReviewResponseDecision.Disagree,
-      },
-    ],
-    review: [
-      {
-        label: strings.LABEL_REVIEW_APPROVE,
-        decision: ReviewResponseDecision.Approve,
-      },
-      {
-        label: strings.LABEL_REVIEW_RESSUBMIT,
-        decision: ReviewResponseDecision.Decline,
-      },
-    ],
-  }
-  return optionsMap
+  const reviewOptions = [
+    {
+      label: strings.LABEL_REVIEW_APPROVE,
+      decision: ReviewResponseDecision.Approve,
+    },
+    {
+      label: strings.LABEL_REVIEW_RESSUBMIT,
+      decision: ReviewResponseDecision.Decline,
+    },
+  ]
+  return reviewOptions
 }
 
-interface ReviewInlineInputProps {
+interface ReviewInlineNewResponseProps {
   setIsActiveEdit: (_: boolean) => void
-  reviewResponse: ReviewResponse
-  isConsolidation: boolean
+  summaryViewProps: SummaryViewWrapperProps
+  reviewInfo: ReviewDetails
   stageNumber: number
+  reloadStructure: () => void
 }
 
-const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
+const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
   setIsActiveEdit,
-  reviewResponse: initialReviewResponse,
-  isConsolidation,
+  summaryViewProps,
+  reviewInfo,
   stageNumber,
+  reloadStructure,
 }) => {
   const { strings } = useLanguageProvider()
-  const [reviewResponse, setReviewResponse] = useState(initialReviewResponse)
-  const updateResponse = useUpdateReviewResponse()
+  const [reviewResponse, setReviewResponse] = useState<{
+    comment?: string
+    decision?: ReviewResponseDecision
+  }>({})
 
-  console.log('reviewResponse', reviewResponse)
+  const [createResponse] = useCreateReviewResponseMutation({
+    onError: (error) => {
+      // setError(error)
+    },
+  })
 
-  const optionsMap = useOptionsMap()
-  const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
+  const templateElementId = summaryViewProps.element.id as number
+  const applicationId = summaryViewProps?.applicationData?.id as number
+  const reviewId = reviewInfo.id
+
+  const reviewOptions = useOptionsMap()
 
   const submit = async () => {
-    // TODO do we need to handle update error ?
-    await updateResponse(reviewResponse, stageNumber)
+    await createResponse({
+      variables: {
+        templateElementId,
+        applicationId,
+        reviewId,
+        stageNumber,
+        decision: reviewResponse.decision as ReviewResponseDecision,
+        comment: reviewResponse.comment,
+      },
+    })
     setIsActiveEdit(false)
+    reloadStructure()
   }
 
   const isInvalidComment =
     (!reviewResponse.comment || reviewResponse.comment?.trim() === '') &&
-    (isConsolidation
-      ? reviewResponse?.decision === ReviewResponseDecision.Disagree
-      : reviewResponse?.decision === ReviewResponseDecision.Decline)
+    reviewResponse?.decision === ReviewResponseDecision.Decline
 
   return (
     <div className="response-container highlight-background">
       <div className="response-element-content">
         <Form>
           <Form.Field>
-            <label>{isConsolidation ? strings.LABEL_CONSOLIDATE : strings.LABEL_REVIEW}</label>
+            <label>{strings.LABEL_REVIEW}</label>
           </Form.Field>
-          {options.map(({ decision, label }) => (
+          {reviewOptions.map(({ decision, label }) => (
             <Form.Field key={decision}>
               <Radio
                 label={label}
@@ -122,4 +130,4 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
   )
 }
 
-export default ReviewInlineInput
+export default ReviewInlineNewResponse

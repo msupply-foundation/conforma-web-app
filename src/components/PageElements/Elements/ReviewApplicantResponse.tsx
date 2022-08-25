@@ -7,12 +7,15 @@ import ReviewInlineInput from './ReviewInlineInput'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { UpdateIcon } from '../PageElements'
 import ViewHistoryButton from '../ViewHistoryButton'
+import ReviewInlineNewResponse from './ReviewInlineNewResponse'
+import { ReviewDetails } from '../../../utils/types'
 
 type ReviewType =
   | 'NotReviewable'
   | 'FirstReviewApplication'
   | 'UpdateChangesRequested'
   | 'ReReviewApplication' // 'Consolidation' is done in separated component
+  | 'OptionallyReviewable'
 
 interface ReviewApplicantResponseProps {
   elementCode: string
@@ -26,6 +29,8 @@ interface ReviewApplicantResponseProps {
   enableViewHistory: boolean
   isChangeRequest: boolean
   isChanged: boolean
+  reviewInfo: ReviewDetails
+  reloadStructure?: () => void
 }
 
 const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
@@ -40,13 +45,17 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   enableViewHistory,
   isChangeRequest,
   isChanged,
+  reviewInfo,
+  reloadStructure,
 }) => {
   const { strings } = useLanguageProvider()
   const [isActiveEdit, setIsActiveEdit] = useState(false)
   const decisionExists = !!reviewResponse?.decision
   const triggerTitle = isNewApplicationResponse
     ? strings.BUTTON_RE_REVIEW_RESPONSE
-    : strings.BUTTON_REVIEW_RESPONSE
+    : applicationResponse !== undefined
+    ? strings.BUTTON_REVIEW_RESPONSE
+    : 'New Review'
 
   const consolidationReviewResponse = previousReviewResponse?.reviewResponsesByReviewResponseLinkId
     .nodes[0] as ReviewResponse // There is only one reviewResponse associated per review cycle
@@ -57,6 +66,8 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
     ? 'UpdateChangesRequested'
     : reviewResponse
     ? 'FirstReviewApplication'
+    : applicationResponse === undefined
+    ? 'OptionallyReviewable'
     : 'NotReviewable'
 
   const getReviewDecisionOption = () => {
@@ -97,7 +108,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
             </div>
           ) : (
             <>
-              {/* Consolidation Response (in cronological order) */}
+              {/* Consolidation Response (in chronological order) */}
               {isChangeRequest && isChanged && (
                 <ReviewResponseElement
                   isCurrentReview={true}
@@ -133,6 +144,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
 
     case 'ReReviewApplication':
     case 'FirstReviewApplication':
+    case 'OptionallyReviewable':
       return (
         <>
           {isActiveEdit ? (
@@ -142,12 +154,22 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                 applicationResponse={applicationResponse}
                 summaryViewProps={summaryViewProps}
               />
-              <ReviewInlineInput
-                setIsActiveEdit={setIsActiveEdit}
-                reviewResponse={reviewResponse as ReviewResponse}
-                isConsolidation={false}
-                stageNumber={stageNumber}
-              />
+              {reviewType === 'OptionallyReviewable' ? (
+                <ReviewInlineNewResponse
+                  setIsActiveEdit={setIsActiveEdit}
+                  stageNumber={stageNumber}
+                  summaryViewProps={summaryViewProps}
+                  reviewInfo={reviewInfo}
+                  reloadStructure={reloadStructure ?? (() => {})}
+                />
+              ) : (
+                <ReviewInlineInput
+                  setIsActiveEdit={setIsActiveEdit}
+                  reviewResponse={reviewResponse as ReviewResponse}
+                  isConsolidation={false}
+                  stageNumber={stageNumber}
+                />
+              )}
             </div>
           ) : (
             <>
@@ -156,14 +178,21 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                 applicationResponse={applicationResponse}
                 summaryViewProps={summaryViewProps}
               >
-                {!decisionExists && (
-                  <ReviewElementTrigger
-                    title={triggerTitle} // Review or Re-review
-                    onClick={() => setIsActiveEdit(true)}
-                  />
-                )}
+                {!decisionExists &&
+                  (reviewType === 'OptionallyReviewable' ? (
+                    <ReviewElementTrigger
+                      title={triggerTitle} // Optionally review
+                      onClick={() => {
+                        setIsActiveEdit(true)
+                      }}
+                    />
+                  ) : (
+                    <ReviewElementTrigger
+                      title={triggerTitle} // Review or Re-review
+                      onClick={() => setIsActiveEdit(true)}
+                    />
+                  ))}
               </ApplicantResponseElement>
-              {/* Current review response */}
               {decisionExists && (
                 <ReviewResponseElement
                   isCurrentReview={true}

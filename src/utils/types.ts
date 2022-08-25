@@ -271,7 +271,7 @@ interface Filters {
 
 interface FullStructure {
   assignment?: ReviewAssignment
-  thisReview?: ReviewDetails | null
+  thisReview?: ReviewDetails
   elementsById?: ElementsById
   lastValidationTimestamp?: number
   attemptSubmission: boolean
@@ -824,8 +824,8 @@ export type FilterTypeOptions = {
 
 export type FilterDefinition = {
   type: FilterTypes
-  default: boolean,
-  visibleTo: USER_ROLES[],
+  default: boolean
+  visibleTo: USER_ROLES[]
   // Empty or undefined title will be excluded from generic fitler UI display (ListFilters)
   title?: string
   options?: FilterTypeOptions
