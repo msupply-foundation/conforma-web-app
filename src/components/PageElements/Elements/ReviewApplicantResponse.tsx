@@ -51,9 +51,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   const decisionExists = !!reviewResponse?.decision
   const triggerTitle = isNewApplicationResponse
     ? strings.BUTTON_RE_REVIEW_RESPONSE
-    : applicationResponse !== undefined
-    ? strings.BUTTON_REVIEW_RESPONSE
-    : 'New Review'
+    : strings.BUTTON_REVIEW_RESPONSE
 
   const consolidationReviewResponse = previousReviewResponse?.reviewResponsesByReviewResponseLinkId
     .nodes[0] as ReviewResponse // There is only one reviewResponse associated per review cycle
@@ -177,6 +175,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               >
                 {!decisionExists &&
                   (reviewType === 'OptionallyReviewable' ? (
+                    // New review for empty application response
                     <AddIcon onClick={() => setIsActiveEdit(true)} />
                   ) : (
                     <ReviewElementTrigger
@@ -185,6 +184,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                     />
                   ))}
               </ApplicantResponseElement>
+              {/* Current review response */}
               {decisionExists && (
                 <ReviewResponseElement
                   isCurrentReview={true}
