@@ -18,6 +18,7 @@ import {
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
+import { Checkbox } from '../formElementPlugins/checkbox/src/ApplicationView'
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
@@ -360,7 +361,7 @@ interface ApplicationProgress {
 
 interface ResponseFull {
   id: number
-  text: string | null | undefined
+  text: string
   optionIndex?: number
   isValid?: boolean | null
   hash?: string // Used in Password plugin
@@ -371,11 +372,12 @@ interface ResponseFull {
   list?: any // Used in ListBuilder
   date?: any // Used in DatePicker
   number?: number | null // Used in Number plugin
-  // Next 4 used in Checkbox Summary view
+  // Next 5 used in Checkbox Summary view
   textUnselected?: string
   textMarkdownList?: string
   textUnselectedMarkdownList?: string
   textMarkdownPropertyList?: string
+  values: { [key: string]: Checkbox }
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState
@@ -824,8 +826,8 @@ export type FilterTypeOptions = {
 
 export type FilterDefinition = {
   type: FilterTypes
-  default: boolean,
-  visibleTo: USER_ROLES[],
+  default: boolean
+  visibleTo: USER_ROLES[]
   // Empty or undefined title will be excluded from generic fitler UI display (ListFilters)
   title?: string
   options?: FilterTypeOptions
