@@ -5,7 +5,7 @@ import ApplicantResponseElement from './ApplicantResponseElement'
 import ReviewResponseElement from './ReviewResponseElement'
 import ReviewInlineInput from './ReviewInlineInput'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { UpdateIcon } from '../PageElements'
+import { AddIcon, UpdateIcon } from '../PageElements'
 import ViewHistoryButton from '../ViewHistoryButton'
 import ReviewInlineNewResponse from './ReviewInlineNewResponse'
 import { ReviewDetails } from '../../../utils/types'
@@ -177,12 +177,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
               >
                 {!decisionExists &&
                   (reviewType === 'OptionallyReviewable' ? (
-                    <ReviewElementTrigger
-                      title={triggerTitle} // Optionally review
-                      onClick={() => {
-                        setIsActiveEdit(true)
-                      }}
-                    />
+                    <AddIcon onClick={() => setIsActiveEdit(true)} />
                   ) : (
                     <ReviewElementTrigger
                       title={triggerTitle} // Review or Re-review
