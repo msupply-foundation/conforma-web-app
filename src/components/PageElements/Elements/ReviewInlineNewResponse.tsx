@@ -31,9 +31,11 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
     },
   })
 
+  // Values required for creating new applicationResponse and reviewResponse
   const templateElementId = summaryViewProps.element.id as number
-  const applicationId = summaryViewProps?.applicationData?.id as number
+  const applicationId = summaryViewProps.applicationData?.id as number
   const reviewId = reviewInfo.id
+  const timeSubmitted = summaryViewProps.applicationData?.current.timeStatusCreated
 
   const reviewOptions = [
     {
@@ -55,6 +57,7 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
         stageNumber,
         decision: reviewResponse.decision as ReviewResponseDecision,
         comment: reviewResponse.comment,
+        timeSubmitted,
       },
       refetchQueries: ['getReviewResponses'],
     })

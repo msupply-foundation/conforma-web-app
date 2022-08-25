@@ -4448,10 +4448,10 @@ export type TriggerScheduleFilter = {
   data?: Maybe<JsonFilter>;
   /** Filter by the object’s `isActive` field. */
   isActive?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `editorUserId` field. */
   editorUserId?: Maybe<IntFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** Filter by the object’s `template` relation. */
@@ -8104,10 +8104,10 @@ export enum TriggerSchedulesOrderBy {
   DataDesc = 'DATA_DESC',
   IsActiveAsc = 'IS_ACTIVE_ASC',
   IsActiveDesc = 'IS_ACTIVE_DESC',
-  TriggerAsc = 'TRIGGER_ASC',
-  TriggerDesc = 'TRIGGER_DESC',
   EditorUserIdAsc = 'EDITOR_USER_ID_ASC',
   EditorUserIdDesc = 'EDITOR_USER_ID_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -8128,10 +8128,10 @@ export type TriggerScheduleCondition = {
   data?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isActive` field. */
   isActive?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `trigger` field. */
-  trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `editorUserId` field. */
   editorUserId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
 };
 
 /** A connection to a list of `TriggerSchedule` values. */
@@ -8158,8 +8158,8 @@ export type TriggerSchedule = Node & {
   templateId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
   editorUserId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   /** Reads a single `Application` that is related to this `TriggerSchedule`. */
   application?: Maybe<Application>;
   /** Reads a single `Template` that is related to this `TriggerSchedule`. */
@@ -15558,8 +15558,8 @@ export type UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFk
   applicationId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
   editorUserId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
   userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
@@ -16508,8 +16508,8 @@ export type UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationI
   templateId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
   editorUserId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
   userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
@@ -23855,8 +23855,8 @@ export type TriggerSchedulePatch = {
   templateId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
   editorUserId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
   userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
@@ -24071,8 +24071,8 @@ export type TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
   editorUserId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
   userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
@@ -24659,8 +24659,8 @@ export type TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
   editorUserId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
   userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
@@ -27538,8 +27538,8 @@ export type TriggerScheduleInput = {
   templateId?: Maybe<Scalars['Int']>;
   data?: Maybe<Scalars['JSON']>;
   isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
   editorUserId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
   userToEditorUserId?: Maybe<TriggerScheduleEditorUserIdFkeyInput>;
@@ -31902,6 +31902,7 @@ export type CreateReviewResponseMutationVariables = Exact<{
   reviewId: Scalars['Int'];
   decision: ReviewResponseDecision;
   comment?: Maybe<Scalars['String']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
 }>;
 
 
@@ -33430,8 +33431,8 @@ export type CreateReviewMutationHookResult = ReturnType<typeof useCreateReviewMu
 export type CreateReviewMutationResult = Apollo.MutationResult<CreateReviewMutation>;
 export type CreateReviewMutationOptions = Apollo.BaseMutationOptions<CreateReviewMutation, CreateReviewMutationVariables>;
 export const CreateReviewResponseDocument = gql`
-    mutation createReviewResponse($templateElementId: Int!, $applicationId: Int!, $stageNumber: Int!, $reviewId: Int!, $decision: ReviewResponseDecision!, $comment: String) {
-  createApplicationResponse(input: {applicationResponse: {templateElementId: $templateElementId, value: null, reviewResponsesUsingId: {create: {comment: $comment, decision: $decision, status: DRAFT, templateElementId: $templateElementId, reviewId: $reviewId}}, applicationId: $applicationId, status: SUBMITTED, stageNumber: $stageNumber}}) {
+    mutation createReviewResponse($templateElementId: Int!, $applicationId: Int!, $stageNumber: Int!, $reviewId: Int!, $decision: ReviewResponseDecision!, $comment: String, $timeSubmitted: Datetime) {
+  createApplicationResponse(input: {applicationResponse: {templateElementId: $templateElementId, value: null, reviewResponsesUsingId: {create: {comment: $comment, decision: $decision, status: DRAFT, templateElementId: $templateElementId, reviewId: $reviewId}}, applicationId: $applicationId, status: SUBMITTED, stageNumber: $stageNumber, timeSubmitted: $timeSubmitted}}) {
     applicationResponse {
       id
       reviewResponses {
@@ -33466,6 +33467,7 @@ export type CreateReviewResponseMutationFn = Apollo.MutationFunction<CreateRevie
  *      reviewId: // value for 'reviewId'
  *      decision: // value for 'decision'
  *      comment: // value for 'comment'
+ *      timeSubmitted: // value for 'timeSubmitted'
  *   },
  * });
  */

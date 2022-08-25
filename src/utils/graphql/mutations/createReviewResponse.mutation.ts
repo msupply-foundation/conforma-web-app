@@ -14,6 +14,7 @@ export default gql`
     $reviewId: Int!
     $decision: ReviewResponseDecision!
     $comment: String
+    $timeSubmitted: Datetime
   ) {
     createApplicationResponse(
       input: {
@@ -32,6 +33,7 @@ export default gql`
           applicationId: $applicationId
           status: SUBMITTED
           stageNumber: $stageNumber
+          timeSubmitted: $timeSubmitted
         }
       }
     ) {
