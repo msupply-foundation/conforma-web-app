@@ -30,7 +30,6 @@ interface ReviewApplicantResponseProps {
   isChangeRequest: boolean
   isChanged: boolean
   reviewInfo: ReviewDetails
-  reloadStructure?: () => void
 }
 
 const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
@@ -46,7 +45,6 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   isChangeRequest,
   isChanged,
   reviewInfo,
-  reloadStructure,
 }) => {
   const { strings } = useLanguageProvider()
   const [isActiveEdit, setIsActiveEdit] = useState(false)
@@ -160,7 +158,6 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                   stageNumber={stageNumber}
                   summaryViewProps={summaryViewProps}
                   reviewInfo={reviewInfo}
-                  reloadStructure={reloadStructure ?? (() => {})}
                 />
               ) : (
                 <ReviewInlineInput

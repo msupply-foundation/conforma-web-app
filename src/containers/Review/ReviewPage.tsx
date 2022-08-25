@@ -116,7 +116,6 @@ const ReviewPage: React.FC<{
     thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
-    reload,
   } = reviewStructure
 
   const isMissingReviewResponses = (section: string): boolean =>
@@ -206,7 +205,6 @@ const ReviewPage: React.FC<{
               reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||
               reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Locked
             }
-            reloadStructure={reload}
           />
         ))}
         <PreviousStageDecision

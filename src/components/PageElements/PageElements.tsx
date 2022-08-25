@@ -41,7 +41,6 @@ interface PageElementProps {
   serial?: string
   renderConfigElement?: (element: ElementState) => ReactNode
   sectionAndPage?: SectionAndPage
-  reloadStructure?: () => void
 }
 
 const PageElements: React.FC<PageElementProps> = ({
@@ -59,7 +58,6 @@ const PageElements: React.FC<PageElementProps> = ({
   // userLevel,
   serial,
   sectionAndPage,
-  reloadStructure,
 }) => {
   const {
     push,
@@ -236,7 +234,6 @@ const PageElements: React.FC<PageElementProps> = ({
                 summaryViewProps: summaryViewProps,
                 stageNumber: applicationData.current.stage.number,
                 reviewInfo: reviewInfo as ReviewDetails,
-                reloadStructure,
               }
 
               return (

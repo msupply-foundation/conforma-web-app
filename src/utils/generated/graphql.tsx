@@ -31916,7 +31916,7 @@ export type CreateReviewResponseMutation = (
         { __typename?: 'ReviewResponsesConnection' }
         & { nodes: Array<Maybe<(
           { __typename?: 'ReviewResponse' }
-          & Pick<ReviewResponse, 'id'>
+          & Pick<ReviewResponse, 'id' | 'comment' | 'decision'>
         )>> }
       ) }
     )> }
@@ -33437,6 +33437,8 @@ export const CreateReviewResponseDocument = gql`
       reviewResponses {
         nodes {
           id
+          comment
+          decision
         }
       }
     }

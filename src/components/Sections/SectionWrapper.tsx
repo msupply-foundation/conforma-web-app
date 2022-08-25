@@ -29,7 +29,6 @@ interface SectionProps {
   serial: string
   canEdit?: boolean
   isSectionInvalid?: boolean
-  reloadStructure?: () => void
 }
 
 const SectionWrapper: React.FC<SectionProps> = ({
@@ -49,7 +48,6 @@ const SectionWrapper: React.FC<SectionProps> = ({
   isUpdating = false,
   canEdit = false,
   isSectionInvalid = false,
-  reloadStructure,
 }) => {
   const { details, pages } = section
   const stickyRef = useRef(null)
@@ -102,7 +100,6 @@ const SectionWrapper: React.FC<SectionProps> = ({
                   isSummary={isSummary}
                   isUpdating={isUpdating}
                   canEdit={canEdit}
-                  reloadStructure={reloadStructure}
                 />
                 {extraPageContent && extraPageContent(page)}
               </div>

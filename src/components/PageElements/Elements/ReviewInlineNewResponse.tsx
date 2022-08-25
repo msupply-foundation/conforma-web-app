@@ -6,27 +6,11 @@ import { ReviewResponseDecision } from '../../../utils/generated/graphql'
 import { useCreateReviewResponseMutation } from '../../../utils/generated/graphql'
 import { ReviewDetails } from '../../../utils/types'
 
-const useOptionsMap = () => {
-  const { strings } = useLanguageProvider()
-  const reviewOptions = [
-    {
-      label: strings.LABEL_REVIEW_APPROVE,
-      decision: ReviewResponseDecision.Approve,
-    },
-    {
-      label: strings.LABEL_REVIEW_RESSUBMIT,
-      decision: ReviewResponseDecision.Decline,
-    },
-  ]
-  return reviewOptions
-}
-
 interface ReviewInlineNewResponseProps {
   setIsActiveEdit: (_: boolean) => void
   summaryViewProps: SummaryViewWrapperProps
   reviewInfo: ReviewDetails
   stageNumber: number
-  reloadStructure: () => void
 }
 
 const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
@@ -34,7 +18,6 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
   summaryViewProps,
   reviewInfo,
   stageNumber,
-  reloadStructure,
 }) => {
   const { strings } = useLanguageProvider()
   const [reviewResponse, setReviewResponse] = useState<{
@@ -52,7 +35,16 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
   const applicationId = summaryViewProps?.applicationData?.id as number
   const reviewId = reviewInfo.id
 
-  const reviewOptions = useOptionsMap()
+  const reviewOptions = [
+    {
+      label: strings.LABEL_REVIEW_APPROVE,
+      decision: ReviewResponseDecision.Approve,
+    },
+    {
+      label: strings.LABEL_REVIEW_RESSUBMIT,
+      decision: ReviewResponseDecision.Decline,
+    },
+  ]
 
   const submit = async () => {
     await createResponse({
@@ -64,9 +56,9 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
         decision: reviewResponse.decision as ReviewResponseDecision,
         comment: reviewResponse.comment,
       },
+      refetchQueries: ['getReviewResponses'],
     })
     setIsActiveEdit(false)
-    reloadStructure()
   }
 
   const isInvalidComment =

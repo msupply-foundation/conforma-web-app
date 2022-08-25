@@ -40,6 +40,8 @@ export default gql`
         reviewResponses {
           nodes {
             id
+            comment
+            decision
           }
         }
       }
