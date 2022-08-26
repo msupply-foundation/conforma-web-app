@@ -331,17 +331,18 @@ To handle objects returned that don't have the required fields, you can use the 
 - **type**: `string` -- Can be "toggle" to display as a toggle switch, or "slider" to display as a slider switch (defaults to regular checkbox).
 - **layout**: `string` -- if "inline", displays checkboxes horizontally in rows. Useful if there are a lot of checkboxes.
 - **resetButton**: `boolean` -- if `true`, element will show a "Reset" button, which allows user to reset selections to the initial (loading) state. (Default: `false`)
-- **textDisplay**: (Options: `text`, `list` (default), `propertyList`) -- specifies how to show the applicant's response on the Summary page:
+- **displayFormat**: (Options: `text`, `list` (default), `checkboxes`, `propertyList`) -- specifies how to show the applicant's response on the Summary page:
   - `list`: shows the selected checkboxes in a (Markdown) list
   - `text`: shows the selected values in a comma-seperated text string
+  - `checkboxes`: displays the selected values as checkboxes as per the application view
   - `propertyList`: displays in a list with properties (the checkbox `label` field) and values (the checkbox `text` or `textNegative` values, depending on selection).  
-  e.g.  
-    – Option1: YES
+  e.g.
+    - Option1: YES
     - Option 2: NO
     - \<checkbox `label`\>: \<`text`\/`textNegative` value\>  
-Note: this display option is only suitable if you have separately defined `label`, `text` and `textNegative` fields for each checkbox. 
-- **keyMap**: `object` -- if the input `checkboxes` property (above) has different property names that what is required (for example, if pulling from an API), then this `keyMap` parameter can be used to re-map the input property names to the requried property names. For example, if your input "checkbox" data contained an array of objects of the type `{ name: "Nicole", active: true}`, you would provide a `keyMap` object like this:
+Note: this display option is only suitable if you have separately defined `label`, `text` and `textNegative` fields for each checkbox.
 - **preventNonResponse**: `boolean` (default `false`) -- normally, we want to allow the user to leave checkboxes unchecked and be considered a valid response. However, if we want to force the user to tick a box (e.g. for a declaration, say), then set `preventNonResponse` to `true`.
+- **keyMap**: `object` -- if the input `checkboxes` property (above) has different property names that what is required (for example, if pulling from an API), then this `keyMap` parameter can be used to re-map the input property names to the requried property names. For example, if your input "checkbox" data contained an array of objects of the type `{ name: "Nicole", active: true}`, you would provide a `keyMap` object like this:
 ```
 {
   label: "name",
@@ -622,11 +623,13 @@ _Input for numeric fields_
 - **minValue** -- minimum allowed value (default: 0)
 - **maxValue** -- maximum allowed value (default: no limit)
 - **step** -- `number` (default: `1`) If `simple == true` (above), the `step` value specifies the amount the number will be incremented or decremented by when using the stepper.
-  **NOTE**: The parameters below are only relevant is `simple == false` (above)
+- **prefix** / **suffix** -- `string` If specified, the number will display these values either side of the number input. They'll also be pre/appended to the "text" representation of the number in the saved response. Useful if you want to define units with the input number (e.g. `12 km`)
+- **suffixPlural** -- `string` (only relevant if `suffix` is specified above) Changes the displayed/stored suffix depending on the value of the number based on pluralisation rules.  
+(e.g. if `suffix = "month"` and `suffixPlural = "months"`, then when number is 1: "1 month", when number is 2:  "2 months")  
+**NOTE**: The parameters below are only relevant if `simple == false` (above)
 - **locale** -- `string` specifies the international "locale" code (e.g `'ja-JP'`) for displaying the calendar in local format. Default is the local setting.
 - **currency** -- `string` If specified, number will be formatted as a currency value (e.g. $4.95). Should be specified in ISO4217 country code format (e.g. "USD", "JPY") See: [https://www.iban.com/currency-codes](https://www.iban.com/currency-codes)
 - **maxSignificantDigits** -- `number` If specified, number will be rounded to the specified number of significant figures
-- **prefix** / **suffix** -- `string` If specified, formatted number will include these values in the string. Useful if you want to define units with the input number (e.g. `12 km`)
 
 #### Response type
 
@@ -635,6 +638,11 @@ _Input for numeric fields_
   text: <Formatted version of number (as specifed in parameters)>
   number: <number>
   type: <integer | float>
+  currency: <string> (from parameters, only stored if defined)
+  locale: <string> (from parameters, only stored if defined)
+  prefix: <string> (from parameters, only stored if defined)
+  suffix: <string> (from parameters, only stored if defined)
+  suffixPlural: <string> (from parameters, only stored if defined)
 }
 ```
 

@@ -12,7 +12,8 @@ interface SetUserInfoProps {
 const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
   const { preferences } = usePrefs()
 
-  const managementPrefName = preferences?.systemManagerPermissionName || 'systemManager'
+  const managementPrefName =
+    preferences?.systemManagerPermissionName || config.defaultSystemManagerPermissionName
 
   getRequest(getServerUrl('userInfo'))
     .then(({ templatePermissions, permissionNames, JWT, user, success, orgList, isAdmin }) => {
