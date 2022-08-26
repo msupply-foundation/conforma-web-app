@@ -3,6 +3,7 @@ import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import config from '../config'
+import { usePrefs } from '../contexts/SystemPrefs'
 
 type UserState = {
   currentUser: User | null
@@ -103,6 +104,10 @@ export function UserProvider({ children }: UserProviderProps) {
   const userState = state
   const setUserState = dispatch
   const client = useApolloClient()
+  const { preferences } = usePrefs()
+
+  const managementPrefName =
+    preferences?.systemManagerPermissionName || config.defaultSystemManagerPermissionName
 
   const logout = () => {
     // Delete everything EXCEPT language preference in localStorage
@@ -135,7 +140,7 @@ export function UserProvider({ children }: UserProviderProps) {
         newPermissionNames: permissionNames || [],
         newOrgList: orgList || [],
         newIsAdmin: !!isAdmin,
-        newIsManager: false,
+        newIsManager: permissionNames.includes(managementPrefName),
       })
       dispatch({ type: 'setLoading', isLoading: false })
     }
