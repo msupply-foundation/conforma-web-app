@@ -199,7 +199,7 @@ const ReviewPage: React.FC<{
             applicationData={reviewStructure.info}
             stages={reviewStructure.stages.map(({ stage }) => stage)}
             serial={serial}
-            isReview
+            reviewInfo={thisReview}
             isConsolidation={section.assignment?.isConsolidation}
             canEdit={
               reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||

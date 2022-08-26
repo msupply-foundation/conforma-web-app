@@ -101,7 +101,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
           <div className="review-button-container">
             <Button
               primary
-              disabled={isInvalidComment}
+              disabled={isInvalidComment || !reviewResponse.decision}
               content={strings.BUTTON_ADD_REVIEW}
               onClick={submit}
               className="button-med"

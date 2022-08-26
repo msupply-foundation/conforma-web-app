@@ -253,6 +253,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 options={[
                   { value: IsReviewableStatus.Always, text: 'Always' },
                   { value: IsReviewableStatus.Never, text: 'Never' },
+                  {
+                    value: IsReviewableStatus.OptionalIfNoResponse,
+                    text: 'Optional (if no application response)',
+                  },
                   { value: 'default', text: 'Only if applicant answered' },
                 ]}
                 maxLabelWidth={120}
