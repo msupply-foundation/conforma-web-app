@@ -10,7 +10,7 @@ import { useUserState } from '../../contexts/UserState'
 import {
   addEvaluatedResponsesToStructure,
   addElementsById,
-  addSortedSectionsAndPages,
+  updateSectionsAndPages,
   addApplicationResponses,
   addChangeRequestForApplicant,
   generateApplicantChangesRequestedProgress,
@@ -99,7 +99,7 @@ const useGetApplicationStructure = ({
       }
 
       newStructure = addElementsById(newStructure)
-      newStructure = addSortedSectionsAndPages(newStructure)
+      newStructure = updateSectionsAndPages(newStructure)
 
       // even though response is already added to element, we need to add Latest and Previous application response
       addApplicationResponses(newStructure, applicationResponses)

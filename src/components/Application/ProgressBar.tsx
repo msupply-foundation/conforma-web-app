@@ -55,7 +55,9 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
   } = useRouter()
 
   const activeIndex =
-    Object.values(sections).findIndex(({ details }) => details.code === currentSectionCode) || 0
+    Object.values(sections)
+      .filter(({ details }) => details.active)
+      .findIndex(({ details }) => details.code === currentSectionCode) || 0
 
   const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
     if (!isLinear) {
@@ -196,33 +198,35 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
     )
   }
 
-  const sectionsList = Object.values(sections).map(({ details, progress, pages }, index) => {
-    const isStrictSection = !!strictSectionPage && strictSectionPage.sectionCode === details.code
-    const { code, title } = details
-    return {
-      key: `progress_${index}`,
-      title: {
-        children: (
-          <Grid className="progress-row clickable">
-            <Grid.Column
-              textAlign="right"
-              verticalAlign="middle"
-              className="progress-indicator-column"
-            >
-              {progress && getIndicator(progress, isStrictSection, index === activeIndex)}
-            </Grid.Column>
-            <Grid.Column textAlign="left" verticalAlign="middle" className="progress-name-column">
-              {title}
-            </Grid.Column>
-          </Grid>
-        ),
-      },
-      onTitleClick: () => handleChangeToPage(code, 1),
-      content: {
-        content: getPageList(code, pages, isStrictSection, progress as ApplicationProgress),
-      },
-    }
-  })
+  const sectionsList = Object.values(sections)
+    .filter(({ details }) => details.active)
+    .map(({ details, progress, pages }, index) => {
+      const isStrictSection = !!strictSectionPage && strictSectionPage.sectionCode === details.code
+      const { code, title } = details
+      return {
+        key: `progress_${index}`,
+        title: {
+          children: (
+            <Grid className="progress-row clickable">
+              <Grid.Column
+                textAlign="right"
+                verticalAlign="middle"
+                className="progress-indicator-column"
+              >
+                {progress && getIndicator(progress, isStrictSection, index === activeIndex)}
+              </Grid.Column>
+              <Grid.Column textAlign="left" verticalAlign="middle" className="progress-name-column">
+                {title}
+              </Grid.Column>
+            </Grid>
+          ),
+        },
+        onTitleClick: () => handleChangeToPage(code, 1),
+        content: {
+          content: getPageList(code, pages, isStrictSection, progress as ApplicationProgress),
+        },
+      }
+    })
 
   return (
     <Sticky

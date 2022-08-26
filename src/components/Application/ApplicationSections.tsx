@@ -56,8 +56,9 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
     <List
       celled
       relaxed="very"
-      items={Object.entries(sections).map(
-        ([sectionCode, { details, progress, changeRequestsProgress }]) => {
+      items={Object.entries(sections)
+        .filter(([_, { details }]) => details.active)
+        .map(([sectionCode, { details, progress, changeRequestsProgress }]) => {
           const isStrictSection = sectionCode === firstStrictInvalidPage?.sectionCode
           isBeforeStrict = isBeforeStrict
             ? firstStrictInvalidPage === null || !isStrictSection
@@ -100,8 +101,7 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
               </div>
             ),
           }
-        }
-      )}
+        })}
     />
   )
 }

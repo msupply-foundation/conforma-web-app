@@ -33,12 +33,12 @@ const Navigation: React.FC<NavigationProps> = ({
   const currentSectionDetails = sections[current.sectionCode].details
 
   const nextSections = Object.values(sections)
-    .filter(({ details: { index } }) => index > currentSectionDetails.index)
+    .filter(({ details: { active, index } }) => active && index > currentSectionDetails.index)
     .sort(({ details: { index: aIndex } }, { details: { index: bIndex } }) => aIndex - bIndex)
   const nextSection = nextSections.length > 0 ? nextSections[0].details : null
 
   const previousSections = Object.values(sections)
-    .filter(({ details: { index } }) => index < currentSectionDetails.index)
+    .filter(({ details: { active, index } }) => active && index < currentSectionDetails.index)
     .sort(({ details: { index: aIndex } }, { details: { index: bIndex } }) => bIndex - aIndex)
   const previousSection = previousSections.length > 0 ? previousSections[0].details : null
 
