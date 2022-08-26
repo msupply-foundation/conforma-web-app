@@ -1,5 +1,6 @@
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../utils/types'
 import {
+  ReviewAssignmentPatch,
   ReviewAssignmentStatus,
   Trigger,
   UpdateReviewAssignmentMutation,
@@ -63,18 +64,12 @@ const isChanging = (reviewerId: number, assignedSections: SectionAssignee | null
       (section) => section.newAssignee === reviewerId || section.previousAssignee === reviewerId
     )
 }
-interface AssignmentPatch {
-  assignerId: number
-  assignedSections?: string[]
-  status: ReviewAssignmentStatus
-  trigger: Trigger
-}
 
 const createAssignmentPatch = (
   assignment: AssignmentDetails,
   assignedSections: SectionAssignee | null,
   assignerId: number
-): AssignmentPatch => {
+): ReviewAssignmentPatch => {
   // When no assignedSections it should be Unassignment
   if (!assignedSections)
     return {
@@ -98,11 +93,16 @@ const createAssignmentPatch = (
   const trigger =
     assignedSectionsCodes.size === 0 ? Trigger.OnReviewUnassign : Trigger.OnReviewAssign
 
-  const patch: AssignmentPatch = {
-    status:
-      assignedSectionsCodes.size === 0
-        ? ReviewAssignmentStatus.Available
-        : ReviewAssignmentStatus.Assigned,
+  const status =
+    assignedSectionsCodes.size === 0
+      ? ReviewAssignmentStatus.Available
+      : ReviewAssignmentStatus.Assigned
+
+  const patch: ReviewAssignmentPatch = {
+    status,
+    // Required if previously locked (and now Assigned)
+    isLocked:
+      assignment.isLocked && assignment.isSelfAssignable && !ReviewAssignmentStatus.Assigned,
     assignerId,
     trigger,
   }
