@@ -212,6 +212,7 @@ export type Query = Node & {
   reviewIsLastLevel?: Maybe<Scalars['Boolean']>;
   reviewIsLastStage?: Maybe<Scalars['Boolean']>;
   reviewLevel?: Maybe<Scalars['Int']>;
+  reviewList?: Maybe<ReviewListConnection>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
   reviewStage?: Maybe<Scalars['Int']>;
   reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
@@ -1482,6 +1483,19 @@ export type QueryReviewIsLastStageArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewLevelArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewListArgs = {
+  stageid?: Maybe<Scalars['Int']>;
+  reviewerid?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<ReviewListRecordFilter>;
 };
 
 
@@ -8259,8 +8273,7 @@ export enum ReviewerAction {
   ContinueReview = 'CONTINUE_REVIEW',
   MakeDecision = 'MAKE_DECISION',
   RestartReview = 'RESTART_REVIEW',
-  UpdateReview = 'UPDATE_REVIEW',
-  AwaitingResponse = 'AWAITING_RESPONSE'
+  UpdateReview = 'UPDATE_REVIEW'
 }
 
 export enum AssignerAction {
@@ -10855,6 +10868,47 @@ export type AssignmentListEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `AssignmentListRecord` at the end of the edge. */
   node?: Maybe<AssignmentListRecord>;
+};
+
+/** A filter to be used against `ReviewListRecord` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewListRecordFilter = {
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerAction` field. */
+  reviewerAction?: Maybe<ReviewerActionFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewListRecordFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewListRecordFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewListRecordFilter>;
+};
+
+/** A connection to a list of `ReviewListRecord` values. */
+export type ReviewListConnection = {
+  __typename?: 'ReviewListConnection';
+  /** A list of `ReviewListRecord` objects. */
+  nodes: Array<Maybe<ReviewListRecord>>;
+  /** A list of edges which contains the `ReviewListRecord` and cursor to aid in pagination. */
+  edges: Array<ReviewListEdge>;
+  /** The count of *all* `ReviewListRecord` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** The return type of our `reviewList` query. */
+export type ReviewListRecord = {
+  __typename?: 'ReviewListRecord';
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewerAction?: Maybe<ReviewerAction>;
+};
+
+/** A `ReviewListRecord` edge in the connection. */
+export type ReviewListEdge = {
+  __typename?: 'ReviewListEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewListRecord` at the end of the edge. */
+  node?: Maybe<ReviewListRecord>;
 };
 
 /** The root mutation type which contains root level fields which mutate data. */
@@ -29717,6 +29771,35 @@ export type CreateReviewMutation = (
   )> }
 );
 
+export type CreateReviewResponseMutationVariables = Exact<{
+  templateElementId: Scalars['Int'];
+  applicationId: Scalars['Int'];
+  stageNumber: Scalars['Int'];
+  reviewId: Scalars['Int'];
+  decision: ReviewResponseDecision;
+  comment?: Maybe<Scalars['String']>;
+  timeSubmitted?: Maybe<Scalars['Datetime']>;
+}>;
+
+
+export type CreateReviewResponseMutation = (
+  { __typename?: 'Mutation' }
+  & { createApplicationResponse?: Maybe<(
+    { __typename?: 'CreateApplicationResponsePayload' }
+    & { applicationResponse?: Maybe<(
+      { __typename?: 'ApplicationResponse' }
+      & Pick<ApplicationResponse, 'id'>
+      & { reviewResponses: (
+        { __typename?: 'ReviewResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ReviewResponse' }
+          & Pick<ReviewResponse, 'id' | 'comment' | 'decision'>
+        )>> }
+      ) }
+    )> }
+  )> }
+);
+
 export type DeleteApplicationMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -31223,6 +31306,53 @@ export function useCreateReviewMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateReviewMutationHookResult = ReturnType<typeof useCreateReviewMutation>;
 export type CreateReviewMutationResult = Apollo.MutationResult<CreateReviewMutation>;
 export type CreateReviewMutationOptions = Apollo.BaseMutationOptions<CreateReviewMutation, CreateReviewMutationVariables>;
+export const CreateReviewResponseDocument = gql`
+    mutation createReviewResponse($templateElementId: Int!, $applicationId: Int!, $stageNumber: Int!, $reviewId: Int!, $decision: ReviewResponseDecision!, $comment: String, $timeSubmitted: Datetime) {
+  createApplicationResponse(input: {applicationResponse: {templateElementId: $templateElementId, value: null, reviewResponsesUsingId: {create: {comment: $comment, decision: $decision, status: DRAFT, templateElementId: $templateElementId, reviewId: $reviewId, recommendedApplicantVisibility: ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT}}, applicationId: $applicationId, status: SUBMITTED, stageNumber: $stageNumber, timeSubmitted: $timeSubmitted}}) {
+    applicationResponse {
+      id
+      reviewResponses {
+        nodes {
+          id
+          comment
+          decision
+        }
+      }
+    }
+  }
+}
+    `;
+export type CreateReviewResponseMutationFn = Apollo.MutationFunction<CreateReviewResponseMutation, CreateReviewResponseMutationVariables>;
+
+/**
+ * __useCreateReviewResponseMutation__
+ *
+ * To run a mutation, you first call `useCreateReviewResponseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateReviewResponseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createReviewResponseMutation, { data, loading, error }] = useCreateReviewResponseMutation({
+ *   variables: {
+ *      templateElementId: // value for 'templateElementId'
+ *      applicationId: // value for 'applicationId'
+ *      stageNumber: // value for 'stageNumber'
+ *      reviewId: // value for 'reviewId'
+ *      decision: // value for 'decision'
+ *      comment: // value for 'comment'
+ *      timeSubmitted: // value for 'timeSubmitted'
+ *   },
+ * });
+ */
+export function useCreateReviewResponseMutation(baseOptions?: Apollo.MutationHookOptions<CreateReviewResponseMutation, CreateReviewResponseMutationVariables>) {
+        return Apollo.useMutation<CreateReviewResponseMutation, CreateReviewResponseMutationVariables>(CreateReviewResponseDocument, baseOptions);
+      }
+export type CreateReviewResponseMutationHookResult = ReturnType<typeof useCreateReviewResponseMutation>;
+export type CreateReviewResponseMutationResult = Apollo.MutationResult<CreateReviewResponseMutation>;
+export type CreateReviewResponseMutationOptions = Apollo.BaseMutationOptions<CreateReviewResponseMutation, CreateReviewResponseMutationVariables>;
 export const DeleteApplicationDocument = gql`
     mutation deleteApplication($id: Int!) {
   deleteApplication(input: {id: $id}) {
