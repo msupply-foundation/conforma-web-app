@@ -12,12 +12,6 @@ const DeadlineCell: React.FC<CellProps> = ({ application }) => {
   const deadline = DateTime.fromISO(application.applicantDeadline)
   const textColorClass =
     deadline.diff(DateTime.now(), 'days').days < ALERT_FORMAT_DAYS ? 'alert-colour' : ''
-  return (
-    <p className={`slightly-smaller-text ${textColorClass}`}>
-      {deadline.toLocaleString()}
-      <br />
-      {deadline.toLocaleString(DateTime.TIME_SIMPLE)}
-    </p>
-  )
+  return <p className={`slightly-smaller-text ${textColorClass}`}>{deadline.toLocaleString()}</p>
 }
 export default DeadlineCell
