@@ -29,16 +29,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     description,
     default: defaultValue,
     maxWidth,
-    type = NumberType.FLOAT,
+    type = NumberType.INTEGER,
     simple = true,
     minValue = 0,
     maxValue = Infinity,
     step = 1,
-    locale = undefined,
-    currency = undefined,
-    prefix = '',
-    suffix = '',
-    maxSignificantDigits = undefined,
+    locale,
+    currency,
+    prefix,
+    suffix,
+    suffixPlural = suffix,
+    maxSignificantDigits,
   } = parameters
   const [textValue, setTextValue] = useState<string | null | undefined>(currentResponse?.text)
   const [internalValidation, setInternalValidation] = useState(validationState)
@@ -53,17 +54,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useEffect(() => {
     // Ensures defaultValue is saved on first load
     if (!currentResponse?.text && defaultValue !== undefined) {
-      const [number, text] = parseInput(
+      const { number, formattedNumber, fullText } = parseInput(
         String(defaultValue),
         numberFormatter,
         simple,
         prefix,
-        suffix
+        suffix,
+        suffixPlural
       )
       const validation = customValidate(number, type, minValue, maxValue)
       setInternalValidation(validation)
-      if (validation.isValid) onSave({ text, number, type, currency, locale })
-      setTextValue(text)
+      if (validation.isValid) onSave({ text: fullText, number, type, currency, locale })
+      setTextValue(formattedNumber)
     }
   }, [])
 
@@ -74,7 +76,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleChange(e: any) {
     const text = e.target.value
-    const [number, _] = parseInput(text, numberFormatter, simple, prefix, suffix)
+    const { number } = parseInput(text, numberFormatter, simple, prefix, suffix, suffixPlural)
     setInternalValidation(customValidate(number, type, minValue, maxValue))
     onUpdate(text)
     setTextValue(text)
@@ -82,18 +84,37 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   function handleLoseFocus() {
     if (!textValue) return
-    const [number, text] = parseInput(textValue, numberFormatter, simple, prefix, suffix)
+    const { number, formattedNumber, fullText } = parseInput(
+      textValue,
+      numberFormatter,
+      simple,
+      prefix,
+      suffix,
+      suffixPlural
+    )
     const validation = customValidate(number, type, minValue, maxValue)
     setInternalValidation(validation)
-    if (validation.isValid) onSave({ text, number, type, currency, locale })
+    if (validation.isValid)
+      onSave({
+        text: fullText,
+        number,
+        type,
+        currency,
+        locale,
+        prefix,
+        suffix,
+        suffixPlural,
+      })
     else onSave(null)
-    setTextValue(text)
+    setTextValue(formattedNumber)
   }
 
   const styles = maxWidth
     ? {
         maxWidth,
       }
+    : prefix || suffix
+    ? { maxWidth: 100 }
     : {}
 
   const customValidate = (
@@ -130,30 +151,42 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      <Form.Input
-        fluid
-        type={simple ? 'number' : 'text'}
-        min={minValue}
-        max={maxValue}
-        step={step}
-        placeholder={placeholder}
-        onChange={handleChange}
-        onBlur={handleLoseFocus}
-        onClick={handleLoseFocus} // To capture changes via stepper
-        onFocus={setIsActive}
-        value={textValue ? textValue : ''}
-        disabled={!isEditable}
-        style={styles}
-        error={
-          !validationState.isValid || !internalValidation.isValid
-            ? {
-                content:
-                  internalValidation?.validationMessage || validationState?.validationMessage,
-                pointing: 'above',
-              }
-            : null
-        }
-      />
+      <div className="flex-row-start-center" style={{ gap: 5 }}>
+        {prefix && <span>{prefix}</span>}
+        <div style={{ flexGrow: 1, ...styles }}>
+          <Form.Input
+            fluid
+            type={simple ? 'number' : 'text'}
+            min={minValue}
+            max={maxValue}
+            step={step}
+            placeholder={placeholder}
+            onChange={handleChange}
+            onBlur={handleLoseFocus}
+            onClick={handleLoseFocus} // To capture changes via stepper
+            onFocus={setIsActive}
+            value={textValue ? textValue : ''}
+            disabled={!isEditable}
+            error={
+              !validationState.isValid || !internalValidation.isValid
+                ? {
+                    content:
+                      internalValidation?.validationMessage || validationState?.validationMessage,
+                    pointing: 'above',
+                  }
+                : null
+            }
+          />
+        </div>
+        {suffix && (
+          <span>
+            {
+              parseInput(textValue, numberFormatter, simple, prefix, suffix, suffixPlural)
+                .currentSuffix
+            }
+          </span>
+        )}
+      </div>
     </>
   )
 }
@@ -162,18 +195,32 @@ const parseInput = (
   textInput: string | null | undefined,
   numberFormatter: Intl.NumberFormat,
   simple: boolean,
-  prefix: string,
-  suffix: string
-): [number | null, string | null] => {
-  if (!textInput) return [null, null]
+  prefix: string | undefined,
+  suffix: string | undefined,
+  suffixPlural: string | undefined
+): {
+  number: number | null
+  formattedNumber: string | null
+  currentSuffix: string | undefined
+  fullText: string | null
+} => {
+  if (!textInput)
+    return { number: null, formattedNumber: null, currentSuffix: suffixPlural, fullText: null }
   // Strip out any text that isn't a digit, "-" or "." to create the number
   const rawDigits = textInput?.replace(/[^\d\.\-]/g, '')
-  if (rawDigits === '') return [null, textInput]
+  if (rawDigits === '')
+    return { number: null, formattedNumber: textInput, currentSuffix: suffixPlural, fullText: null }
   const number: number = Number(rawDigits)
-  const text: string = simple
-    ? String(number)
-    : ((prefix + numberFormatter.format(number) + suffix) as string)
-  return [number, text]
+  const prefixString = prefix ? prefix + ' ' : ''
+  const suffixString = suffix ? ' ' + (number === 1 ? suffix : suffixPlural) : ''
+  const text: string = simple ? String(number) : (numberFormatter.format(number) as string)
+  const fullText = prefixString + text + suffixString
+  return {
+    number,
+    formattedNumber: text,
+    currentSuffix: number === 1 ? suffix : suffixPlural,
+    fullText,
+  }
 }
 
 export default ApplicationView
