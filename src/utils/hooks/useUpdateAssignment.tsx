@@ -96,11 +96,7 @@ const createAssignmentPatch = (
   addedSections.forEach((code) => assignedSectionsCodes.add(code))
 
   const trigger =
-    assignedSectionsCodes.size === 0
-      ? Trigger.OnReviewUnassign
-      : assignment.isSelfAssignable
-      ? Trigger.OnReviewSelfAssign
-      : Trigger.OnReviewAssign
+    assignedSectionsCodes.size === 0 ? Trigger.OnReviewUnassign : Trigger.OnReviewAssign
 
   const patch: AssignmentPatch = {
     status:
