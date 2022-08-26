@@ -623,11 +623,13 @@ _Input for numeric fields_
 - **minValue** -- minimum allowed value (default: 0)
 - **maxValue** -- maximum allowed value (default: no limit)
 - **step** -- `number` (default: `1`) If `simple == true` (above), the `step` value specifies the amount the number will be incremented or decremented by when using the stepper.
-  **NOTE**: The parameters below are only relevant is `simple == false` (above)
+- **prefix** / **suffix** -- `string` If specified, the number will display these values either side of the number input. They'll also be pre/appended to the "text" representation of the number in the saved response. Useful if you want to define units with the input number (e.g. `12 km`)
+- **suffixPlural** -- `string` (only relevant if `suffix` is specified above) Changes the displayed/stored suffix depending on the value of the number based on pluralisation rules.  
+(e.g. if `suffix = "month"` and `suffixPlural = "months"`, then when number is 1: "1 month", when number is 2:  "2 months")  
+**NOTE**: The parameters below are only relevant if `simple == false` (above)
 - **locale** -- `string` specifies the international "locale" code (e.g `'ja-JP'`) for displaying the calendar in local format. Default is the local setting.
 - **currency** -- `string` If specified, number will be formatted as a currency value (e.g. $4.95). Should be specified in ISO4217 country code format (e.g. "USD", "JPY") See: [https://www.iban.com/currency-codes](https://www.iban.com/currency-codes)
 - **maxSignificantDigits** -- `number` If specified, number will be rounded to the specified number of significant figures
-- **prefix** / **suffix** -- `string` If specified, formatted number will include these values in the string. Useful if you want to define units with the input number (e.g. `12 km`)
 
 #### Response type
 
@@ -636,6 +638,11 @@ _Input for numeric fields_
   text: <Formatted version of number (as specifed in parameters)>
   number: <number>
   type: <integer | float>
+  currency: <string> (from parameters, only stored if defined)
+  locale: <string> (from parameters, only stored if defined)
+  prefix: <string> (from parameters, only stored if defined)
+  suffix: <string> (from parameters, only stored if defined)
+  suffixPlural: <string> (from parameters, only stored if defined)
 }
 ```
 

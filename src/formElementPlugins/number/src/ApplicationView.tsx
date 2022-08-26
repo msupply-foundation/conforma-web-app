@@ -64,7 +64,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       )
       const validation = customValidate(number, type, minValue, maxValue)
       setInternalValidation(validation)
-      if (validation.isValid) onSave({ text: fullText, number, type, currency, locale })
+      if (validation.isValid)
+        onSave({ text: fullText, number, type, currency, locale, prefix, suffix, suffixPlural })
       setTextValue(formattedNumber)
     }
   }, [])
