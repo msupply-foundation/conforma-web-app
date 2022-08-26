@@ -83,9 +83,7 @@ export const Overview: React.FC<{
               {applicantDeadline.deadline && applicantDeadline.isActive && (
                 <p className="right-item">
                   <strong>{strings.REVIEW_OVERVIEW_DEADLINE}: </strong>
-                  {DateTime.fromJSDate(applicantDeadline.deadline).toLocaleString(
-                    DateTime.DATETIME_SHORT
-                  )}
+                  {DateTime.fromJSDate(applicantDeadline.deadline).toLocaleString()}
                 </p>
               )}
             </div>

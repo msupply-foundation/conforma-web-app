@@ -51,6 +51,7 @@ const config = {
   localStorageJWTKey: 'persistJWT',
   applicantDeadlineCode: 'applicantDeadline',
   isProductionBuild,
+  defaultSystemManagerPermissionName: 'systemManager',
 }
 
 export default config
