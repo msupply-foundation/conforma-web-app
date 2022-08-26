@@ -2,7 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { CellProps } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { ApplicationOutcome, AssignerAction, ReviewerAction } from '../../../utils/generated/graphql'
+import {
+  ApplicationOutcome,
+  AssignerAction,
+  ReviewerAction,
+} from '../../../utils/generated/graphql'
 import { Icon } from 'semantic-ui-react'
 
 const ReviewerActionCell: React.FC<CellProps> = ({
@@ -25,6 +29,8 @@ const ReviewerActionCell: React.FC<CellProps> = ({
         return strings.ACTION_START
       case ReviewerAction.MakeDecision:
         return strings.ACTION_MAKE_DECISION
+      case ReviewerAction.AwaitingResponse:
+        return strings.ACTION_AWAITING_RESPONSE
       default:
         // ReviewerAction.ViewReview
         return strings.ACTION_VIEW
@@ -43,10 +49,10 @@ const ReviewerActionCell: React.FC<CellProps> = ({
 
   // Only show actions if application is Pending - TODO: Change logic to back-end
   if (outcome === ApplicationOutcome.Pending) {
-  if (!!reviewerAction) actions.push(getReviewActionString(reviewerAction))
-  if (!!assignerAction && assignerAction != AssignerAction.AssignLocked)
-    actions.push(getAssignActionString(assignerAction))
-}
+    if (!!reviewerAction) actions.push(getReviewActionString(reviewerAction))
+    if (!!assignerAction && assignerAction != AssignerAction.AssignLocked)
+      actions.push(getAssignActionString(assignerAction))
+  }
   if (actions.length == 0)
     return (
       <Link className="user-action" to={`/application/${serial}/review`}>

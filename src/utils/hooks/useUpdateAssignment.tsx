@@ -1,6 +1,8 @@
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../utils/types'
 import {
+  ReviewAssignmentPatch,
   ReviewAssignmentStatus,
+  Trigger,
   UpdateReviewAssignmentMutation,
   useUpdateReviewAssignmentMutation,
 } from '../../utils/generated/graphql'
@@ -62,18 +64,20 @@ const isChanging = (reviewerId: number, assignedSections: SectionAssignee | null
       (section) => section.newAssignee === reviewerId || section.previousAssignee === reviewerId
     )
 }
-interface AssignmentPatch {
-  status: ReviewAssignmentStatus
-  assignedSections?: string[]
-  assignerId: number
-}
 
 const createAssignmentPatch = (
   assignment: AssignmentDetails,
   assignedSections: SectionAssignee | null,
   assignerId: number
-): AssignmentPatch => {
-  if (!assignedSections) return { status: ReviewAssignmentStatus.Available, assignerId }
+): ReviewAssignmentPatch => {
+  // When no assignedSections it should be Unassignment
+  if (!assignedSections)
+    return {
+      status: ReviewAssignmentStatus.Available,
+      assignerId,
+      trigger: Trigger.OnReviewUnassign,
+    }
+
   const reviewerId = assignment.reviewer.id
   const assignedSectionsCodes = new Set(assignment.assignedSections)
   const removedSections = Object.entries(assignedSections)
@@ -86,12 +90,21 @@ const createAssignmentPatch = (
   removedSections.forEach((code) => assignedSectionsCodes.delete(code))
   addedSections.forEach((code) => assignedSectionsCodes.add(code))
 
-  const patch: AssignmentPatch = {
-    status:
-      assignedSectionsCodes.size === 0
-        ? ReviewAssignmentStatus.Available
-        : ReviewAssignmentStatus.Assigned,
+  const trigger =
+    assignedSectionsCodes.size === 0 ? Trigger.OnReviewUnassign : Trigger.OnReviewAssign
+
+  const status =
+    assignedSectionsCodes.size === 0
+      ? ReviewAssignmentStatus.Available
+      : ReviewAssignmentStatus.Assigned
+
+  const patch: ReviewAssignmentPatch = {
+    status,
+    // Required if previously locked (and now Assigned)
+    isLocked:
+      assignment.isLocked && assignment.isSelfAssignable && !ReviewAssignmentStatus.Assigned,
     assignerId,
+    trigger,
   }
   if (assignedSectionsCodes.size > 0) patch.assignedSections = Array.from(assignedSectionsCodes)
   return patch
