@@ -1,6 +1,5 @@
 import React from 'react'
 import { Grid, Form, Image, List } from 'semantic-ui-react'
-import config from '../../../config'
 import prefs from '../config.json'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { SummaryViewProps } from '../../types'
