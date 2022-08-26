@@ -33,7 +33,6 @@ interface PageElementProps {
   canEdit: boolean
   isConsolidation?: boolean
   reviewInfo?: ReviewDetails
-  isReview?: boolean
   isStrictPage?: boolean
   isSummary?: boolean
   isUpdating?: boolean

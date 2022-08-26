@@ -17,6 +17,8 @@ interface ReviewInlineNewResponseProps {
 This component is visually the same as "ReviewInlineInput", but is used when
 reviewing elements that don't have an applicantResponse. Instead of updating a
 reviewResponse, it needs to create a new one and its associated applicationResponse.
+
+Currently, this "optionally reviewable" functionality is only intended to work with first-level reviews (i.e. not Consolidations).
 */
 const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
   setIsActiveEdit,
