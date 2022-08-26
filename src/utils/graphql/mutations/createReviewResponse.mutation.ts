@@ -28,6 +28,7 @@ export default gql`
               status: DRAFT
               templateElementId: $templateElementId
               reviewId: $reviewId
+              recommendedApplicantVisibility: ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT
             }
           }
           applicationId: $applicationId

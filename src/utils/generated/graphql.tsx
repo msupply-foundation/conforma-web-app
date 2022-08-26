@@ -33432,7 +33432,7 @@ export type CreateReviewMutationResult = Apollo.MutationResult<CreateReviewMutat
 export type CreateReviewMutationOptions = Apollo.BaseMutationOptions<CreateReviewMutation, CreateReviewMutationVariables>;
 export const CreateReviewResponseDocument = gql`
     mutation createReviewResponse($templateElementId: Int!, $applicationId: Int!, $stageNumber: Int!, $reviewId: Int!, $decision: ReviewResponseDecision!, $comment: String, $timeSubmitted: Datetime) {
-  createApplicationResponse(input: {applicationResponse: {templateElementId: $templateElementId, value: null, reviewResponsesUsingId: {create: {comment: $comment, decision: $decision, status: DRAFT, templateElementId: $templateElementId, reviewId: $reviewId}}, applicationId: $applicationId, status: SUBMITTED, stageNumber: $stageNumber, timeSubmitted: $timeSubmitted}}) {
+  createApplicationResponse(input: {applicationResponse: {templateElementId: $templateElementId, value: null, reviewResponsesUsingId: {create: {comment: $comment, decision: $decision, status: DRAFT, templateElementId: $templateElementId, reviewId: $reviewId, recommendedApplicantVisibility: ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT}}, applicationId: $applicationId, status: SUBMITTED, stageNumber: $stageNumber, timeSubmitted: $timeSubmitted}}) {
     applicationResponse {
       id
       reviewResponses {
