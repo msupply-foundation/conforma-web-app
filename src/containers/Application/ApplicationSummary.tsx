@@ -109,21 +109,23 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
       </div>
       <div id="application-summary-content">
         <div id="application-sections">
-          {Object.values(sections).map((section) => (
-            <SectionWrapper
-              key={`ApplicationSection_${section.details.id}`}
-              isActive={isSectionActive(section.details.code)}
-              toggleSection={toggleSection(section.details.code)}
-              section={section}
-              responsesByCode={responsesByCode as ResponsesByCode}
-              applicationData={fullStructure.info}
-              stages={stages.map(({ stage }) => stage)}
-              serial={serial}
-              isSummary
-              canEdit={status === ApplicationStatus.Draft}
-              isUpdating={isChangeRequest}
-            />
-          ))}
+          {Object.values(sections)
+            .filter(({ details }) => details.active)
+            .map((section) => (
+              <SectionWrapper
+                key={`ApplicationSection_${section.details.id}`}
+                isActive={isSectionActive(section.details.code)}
+                toggleSection={toggleSection(section.details.code)}
+                section={section}
+                responsesByCode={responsesByCode as ResponsesByCode}
+                applicationData={fullStructure.info}
+                stages={stages.map(({ stage }) => stage)}
+                serial={serial}
+                isSummary
+                canEdit={status === ApplicationStatus.Draft}
+                isUpdating={isChangeRequest}
+              />
+            ))}
         </div>
         {status === ApplicationStatus.Draft ? (
           <div id="application-submit">

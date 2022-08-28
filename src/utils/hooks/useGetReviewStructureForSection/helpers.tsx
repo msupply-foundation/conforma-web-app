@@ -10,7 +10,7 @@ import {
   addChangeRequestForReviewer,
   addElementsById,
   addReviewResponses,
-  addSortedSectionsAndPages,
+  updateSectionsAndPages,
   generateConsolidationValidity,
   generateConsolidatorResponsesProgress,
   generateFinalDecisionProgress,
@@ -36,7 +36,9 @@ const getSectionIds = ({
   filteredSectionIds,
 }: UseGetReviewStructureForSectionProps) =>
   filteredSectionIds ||
-  Object.values(reviewStructure.sections).map((section) => section.details.id) ||
+  Object.values(reviewStructure.sections)
+    .filter(({ details }) => details.active)
+    .map((section) => section.details.id) ||
   []
 
 interface CompileVariablesForReviewResponseQueryProps extends UseGetReviewStructureForSectionProps {
@@ -85,7 +87,7 @@ const generateReviewStructure: GenerateReviewStructure = ({
 
   // This is useful for linking assignments to elements
   newStructure = addElementsById(newStructure)
-  newStructure = addSortedSectionsAndPages(newStructure)
+  newStructure = updateSectionsAndPages(newStructure)
 
   newStructure = addIsAssigned(newStructure, reviewAssignment)
 
