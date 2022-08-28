@@ -10,7 +10,7 @@ const updateSectionsAndPages = (newStructure: FullStructure): FullStructure => {
     )
     .flat()
 
-  // Set if section is or not active (in case no element is visible & active - should be inactive/hidden)
+  // Set if section is or not active (in case no element are visible in section - it should be inactive/hidden)
   sortedSections.forEach((section) => {
     section.details.active = Object.values(section.pages).some((page) =>
       Object.values(page.state).some(({ element: { isVisible } }) => isVisible)
