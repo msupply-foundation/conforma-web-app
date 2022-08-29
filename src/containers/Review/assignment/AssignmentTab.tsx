@@ -35,8 +35,6 @@ const AssignmentTab: React.FC<{
   )
   const [assignmentError, setAssignmentError] = useState<string | null>(null)
 
-  console.log('assignedSectionsByLevel', assignedSectionsByLevel)
-
   const { error, loading, assignments } = useGetReviewInfo({
     applicationId: fullStructure.info.id,
     serial: fullStructure.info.serial,
@@ -82,14 +80,32 @@ const AssignmentTab: React.FC<{
 
   const assignmentsFiltered = getFilteredLevel(assignments)
 
-  console.log('assignmentsFiltered', assignmentsFiltered)
-
   const assignmentGroupedLevel: LevelAssignments = {}
   assignmentsFiltered.forEach((assignment) => {
     const { level } = assignment
     if (!assignmentGroupedLevel[level]) assignmentGroupedLevel[level] = [assignment]
     else assignmentGroupedLevel[level].push(assignment)
   })
+
+  const currentReviewLevel = Math.max(Number(Object.keys(assignmentGroupedLevel)))
+
+  // const isLastLevel = assignments.length > 0 && assignments[0]
+
+  const assignAllSections = (reviewerId: number) => {
+    const alreadyAssignedSections = new Set(
+      assignmentsFiltered.map((assignment) => assignment.assignedSections).flat()
+    )
+    const allowedSections = assignmentsFiltered.find(
+      (assignment) => assignment.reviewer.id === reviewerId
+    )?.allowedSections
+
+    const newAssignments: any = {}
+    allowedSections?.forEach((section) => {
+      if (!alreadyAssignedSections.has(section))
+        newAssignments[section] = { newAssignee: reviewerId }
+    })
+    setAssignedSectionsByLevel({ ...assignedSectionsByLevel, [currentReviewLevel]: newAssignments })
+  }
 
   return (
     <ReviewStateProvider fullApplicationStructure={fullStructure} assignments={assignmentsFiltered}>
@@ -115,7 +131,6 @@ const AssignmentTab: React.FC<{
             <Stage name={stageName} colour={stageColour || ''} />
           </div>
         </div>
-        <AssignAll assignments={assignmentsFiltered} />
         {/* Creates each reviewStructuse in context ReviewsStateContext */}
         {assignmentsFiltered.map((assignment) => (
           <Assignment
@@ -134,6 +149,7 @@ const AssignmentTab: React.FC<{
           setEnableSubmit={setEnableSubmit}
           setAssignmentError={setAssignmentError}
         />
+        <AssignAll assignments={assignmentsFiltered} setReviewerForAll={assignAllSections} />
         {fullStructure.info.outcome === ApplicationOutcome.Pending && (
           <AssignmentSubmit
             fullStructure={fullStructure}
