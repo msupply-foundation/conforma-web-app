@@ -221,7 +221,6 @@ export type Query = Node & {
   reviewIsLastLevel?: Maybe<Scalars['Boolean']>;
   reviewIsLastStage?: Maybe<Scalars['Boolean']>;
   reviewLevel?: Maybe<Scalars['Int']>;
-  reviewList?: Maybe<ReviewListConnection>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
   reviewStage?: Maybe<Scalars['Int']>;
   reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
@@ -1559,19 +1558,6 @@ export type QueryReviewLevelArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewListArgs = {
-  stageid?: Maybe<Scalars['Int']>;
-  reviewerid?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  filter?: Maybe<ReviewListRecordFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryReviewReviewerIdArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
@@ -2409,8 +2395,6 @@ export enum Trigger {
   OnReviewRestart = 'ON_REVIEW_RESTART',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnReviewUnassign = 'ON_REVIEW_UNASSIGN',
-  OnReviewReassign = 'ON_REVIEW_REASSIGN',
-  OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnVerification = 'ON_VERIFICATION',
   OnSchedule = 'ON_SCHEDULE',
@@ -8771,7 +8755,8 @@ export enum ReviewerAction {
   ContinueReview = 'CONTINUE_REVIEW',
   MakeDecision = 'MAKE_DECISION',
   RestartReview = 'RESTART_REVIEW',
-  UpdateReview = 'UPDATE_REVIEW'
+  UpdateReview = 'UPDATE_REVIEW',
+  AwaitingResponse = 'AWAITING_RESPONSE'
 }
 
 export enum AssignerAction {
@@ -11374,47 +11359,6 @@ export type AssignmentListEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `AssignmentListRecord` at the end of the edge. */
   node?: Maybe<AssignmentListRecord>;
-};
-
-/** A filter to be used against `ReviewListRecord` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewListRecordFilter = {
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerAction` field. */
-  reviewerAction?: Maybe<ReviewerActionFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewListRecordFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewListRecordFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewListRecordFilter>;
-};
-
-/** A connection to a list of `ReviewListRecord` values. */
-export type ReviewListConnection = {
-  __typename?: 'ReviewListConnection';
-  /** A list of `ReviewListRecord` objects. */
-  nodes: Array<Maybe<ReviewListRecord>>;
-  /** A list of edges which contains the `ReviewListRecord` and cursor to aid in pagination. */
-  edges: Array<ReviewListEdge>;
-  /** The count of *all* `ReviewListRecord` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** The return type of our `reviewList` query. */
-export type ReviewListRecord = {
-  __typename?: 'ReviewListRecord';
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewerAction?: Maybe<ReviewerAction>;
-};
-
-/** A `ReviewListRecord` edge in the connection. */
-export type ReviewListEdge = {
-  __typename?: 'ReviewListEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewListRecord` at the end of the edge. */
-  node?: Maybe<ReviewListRecord>;
 };
 
 /** The root mutation type which contains root level fields which mutate data. */
