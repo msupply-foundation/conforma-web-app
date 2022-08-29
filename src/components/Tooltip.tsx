@@ -10,6 +10,8 @@ interface TooltipProps {
   minWidth?: number
   maxWidth?: number
   style?: object
+  popupStyle?: object
+  iconStyle?: object
 }
 
 const Tooltip: React.FC<TooltipProps> = ({
@@ -20,6 +22,8 @@ const Tooltip: React.FC<TooltipProps> = ({
   minWidth = 300,
   maxWidth = 550,
   style,
+  popupStyle = style,
+  iconStyle,
 }) => {
   return (
     <Popup
@@ -27,13 +31,13 @@ const Tooltip: React.FC<TooltipProps> = ({
       style={{
         minWidth,
         maxWidth,
-        ...style,
+        ...popupStyle,
       }}
       content={<MarkdownBlock text={message} />}
       on={triggerEvent}
       pinned
       offset={-12}
-      trigger={<Icon name={icon} color={color} className="tooltip-trigger" />}
+      trigger={<Icon name={icon} color={color} className="tooltip-trigger" style={iconStyle} />}
     />
   )
 }
