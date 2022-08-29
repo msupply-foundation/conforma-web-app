@@ -163,50 +163,52 @@ const ReviewPage: React.FC<{
       <ReviewHeader applicationName={name} stage={reviewAssignment.current.stage} />
       <ReviewSubheader />
       <div id="application-summary-content">
-        {Object.values(sections).map((section) => (
-          <SectionWrapper
-            key={`ApplicationSection_${section.details.id}`}
-            isActive={isSectionActive(section.details.code)}
-            toggleSection={toggleSection(section.details.code)}
-            section={section}
-            isSectionInvalid={isMissingReviewResponses(section.details.code)}
-            extraSectionTitleContent={(section: SectionState) => (
-              <div>
-                {isMissingReviewResponses(section.details.code) && (
-                  <Label
-                    icon={<Icon name="exclamation circle" color="pink" />}
-                    className="simple-label alert-text"
-                    content={strings.LABEL_REVIEW_SECTION}
-                  />
-                )}
-                <SectionRowStatus {...section} />
-              </div>
-            )}
-            extraPageContent={(page: Page) => (
-              <ApproveAllButton
-                isConsolidation={!!section.assignment?.isConsolidation}
-                stageNumber={stage.number}
-                page={page}
-              />
-            )}
-            scrollableAttachment={(page: Page) => (
-              <ScrollableAttachment
-                code={`${section.details.code}P${page.number}`}
-                addScrollabe={addScrollable}
-              />
-            )}
-            responsesByCode={responsesByCode as ResponsesByCode}
-            applicationData={reviewStructure.info}
-            stages={reviewStructure.stages.map(({ stage }) => stage)}
-            serial={serial}
-            reviewInfo={thisReview}
-            isConsolidation={section.assignment?.isConsolidation}
-            canEdit={
-              reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||
-              reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Locked
-            }
-          />
-        ))}
+        {Object.values(sections)
+          .filter(({ details }) => details.active)
+          .map((section) => (
+            <SectionWrapper
+              key={`ApplicationSection_${section.details.id}`}
+              isActive={isSectionActive(section.details.code)}
+              toggleSection={toggleSection(section.details.code)}
+              section={section}
+              isSectionInvalid={isMissingReviewResponses(section.details.code)}
+              extraSectionTitleContent={(section: SectionState) => (
+                <div>
+                  {isMissingReviewResponses(section.details.code) && (
+                    <Label
+                      icon={<Icon name="exclamation circle" color="pink" />}
+                      className="simple-label alert-text"
+                      content={strings.LABEL_REVIEW_SECTION}
+                    />
+                  )}
+                  <SectionRowStatus {...section} />
+                </div>
+              )}
+              extraPageContent={(page: Page) => (
+                <ApproveAllButton
+                  isConsolidation={!!section.assignment?.isConsolidation}
+                  stageNumber={stage.number}
+                  page={page}
+                />
+              )}
+              scrollableAttachment={(page: Page) => (
+                <ScrollableAttachment
+                  code={`${section.details.code}P${page.number}`}
+                  addScrollabe={addScrollable}
+                />
+              )}
+              responsesByCode={responsesByCode as ResponsesByCode}
+              applicationData={reviewStructure.info}
+              stages={reviewStructure.stages.map(({ stage }) => stage)}
+              serial={serial}
+              isReview
+              isConsolidation={section.assignment?.isConsolidation}
+              canEdit={
+                reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||
+                reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Locked
+              }
+            />
+          ))}
         <PreviousStageDecision
           isFinalDecision={reviewAssignment.isFinalDecision}
           review={previousAssignment?.review}

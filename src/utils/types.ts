@@ -447,6 +447,7 @@ type SectionAndPage = {
 }
 
 interface SectionDetails {
+  active: boolean
   id: number
   index: number
   code: string
