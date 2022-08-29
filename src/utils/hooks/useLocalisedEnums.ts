@@ -19,7 +19,7 @@ const useLocalisedEnums = () => {
   const AssignAction: { [key in AssignerAction]: string } = {
     ASSIGN: strings.ACTION_ASSIGN,
     ASSIGN_LOCKED: strings.ACTION_LOCKED,
-    RE_ASSIGN: strings.ACTION_RE_ASSIGN
+    RE_ASSIGN: strings.ACTION_RE_ASSIGN,
   }
 
   const Status: { [key in ApplicationStatus]: string } = {
@@ -54,16 +54,16 @@ const useLocalisedEnums = () => {
     CONTINUE_REVIEW: strings.ACTION_CONTINUE,
     RESTART_REVIEW: strings.ACTION_PENDING,
     MAKE_DECISION: strings.ACTION_MAKE_DECISION,
-    UPDATE_REVIEW: strings.ACTION_UPDATE
+    UPDATE_REVIEW: strings.ACTION_UPDATE,
+    AWAITING_RESPONSE: strings.ACTION_AWAITING_RESPONSE,
   }
 
-  const ReviewResponse: { [key in ReviewResponseDecision]: string } =
-    {
-      APPROVE: strings.LABEL_REVIEW_APPROVED,
-      DECLINE: strings.LABEL_REVIEW_DECLINED,
-      AGREE: strings.LABEL_CONSOLIDATION_AGREEMENT,
-      DISAGREE: strings.LABEL_CONSOLIDATION_DISAGREEMENT,
-    }
+  const ReviewResponse: { [key in ReviewResponseDecision]: string } = {
+    APPROVE: strings.LABEL_REVIEW_APPROVED,
+    DECLINE: strings.LABEL_REVIEW_DECLINED,
+    AGREE: strings.LABEL_CONSOLIDATION_AGREEMENT,
+    DISAGREE: strings.LABEL_CONSOLIDATION_DISAGREEMENT,
+  }
 
   return { AssignAction, Status, Outcome, Decision, ReviewAction, ReviewResponse }
 }

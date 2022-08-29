@@ -1,6 +1,7 @@
 export default {
   _APP_NAME: 'conforma',
   _APP_NAME_SUBHEADER: 'Application Manager',
+  ACTION_AWAITING_RESPONSE: 'Awaiting response',
   ACTION_ASSIGN: 'Assign',
   ACTION_CONTINUE: 'Continue',
   ACTION_START: 'Start',

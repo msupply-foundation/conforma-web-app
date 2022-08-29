@@ -1,12 +1,7 @@
 import React, { SetStateAction } from 'react'
 import { Button } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import {
-  AssignedSectionsByLevel,
-  AssignmentDetails,
-  FullStructure,
-  SectionAssignee,
-} from '../../../utils/types'
+import { AssignedSectionsByLevel, AssignmentDetails, FullStructure } from '../../../utils/types'
 import useUpdateAssignment from '../../../utils/hooks/useUpdateAssignment'
 
 interface AssignmentSubmitProps {
