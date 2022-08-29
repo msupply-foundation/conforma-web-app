@@ -7,7 +7,6 @@ import {
   AssignmentDetails,
   FullStructure,
   LevelAssignments,
-  SectionAssignee,
 } from '../../../utils/types'
 import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'

@@ -19,6 +19,7 @@ import ReviewLevel, { ALL_LEVELS } from './ReviewLevel'
 import { ReviewStateProvider } from '../../../contexts/ReviewStructuresState'
 import AssignmentRows from './AssignmentRows'
 import AssignmentSubmit from './AssignmentSubmit'
+import AssignAll from './AssignAll'
 import { ApplicationOutcome } from '../../../utils/generated/graphql'
 
 const AssignmentTab: React.FC<{
@@ -33,6 +34,8 @@ const AssignmentTab: React.FC<{
     {}
   )
   const [assignmentError, setAssignmentError] = useState<string | null>(null)
+
+  console.log('assignedSectionsByLevel', assignedSectionsByLevel)
 
   const { error, loading, assignments } = useGetReviewInfo({
     applicationId: fullStructure.info.id,
@@ -79,6 +82,8 @@ const AssignmentTab: React.FC<{
 
   const assignmentsFiltered = getFilteredLevel(assignments)
 
+  console.log('assignmentsFiltered', assignmentsFiltered)
+
   const assignmentGroupedLevel: LevelAssignments = {}
   assignmentsFiltered.forEach((assignment) => {
     const { level } = assignment
@@ -110,6 +115,7 @@ const AssignmentTab: React.FC<{
             <Stage name={stageName} colour={stageColour || ''} />
           </div>
         </div>
+        <AssignAll assignments={assignmentsFiltered} />
         {/* Creates each reviewStructuse in context ReviewsStateContext */}
         {assignmentsFiltered.map((assignment) => (
           <Assignment
