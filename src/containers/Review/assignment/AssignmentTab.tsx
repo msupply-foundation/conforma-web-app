@@ -89,8 +89,6 @@ const AssignmentTab: React.FC<{
 
   const currentReviewLevel = Math.max(Number(Object.keys(assignmentGroupedLevel)))
 
-  // const isLastLevel = assignments.length > 0 && assignments[0]
-
   const assignAllSections = (reviewerId: number) => {
     const alreadyAssignedSections = new Set(
       assignmentsFiltered.map((assignment) => assignment.assignedSections).flat()

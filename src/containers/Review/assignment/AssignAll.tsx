@@ -22,7 +22,7 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll })
 
   return (
     <div className="flex-row-start-center" id="review-assign-all">
-      <Label className="uppercase-label" content="Assign all to:" />
+      <Label className="uppercase-label" content={strings.ASSIGN_ALL_TO} />
       <Dropdown
         className="reviewer-dropdown"
         options={options}

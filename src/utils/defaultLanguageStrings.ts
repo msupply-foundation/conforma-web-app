@@ -38,6 +38,7 @@ export default {
   ASSIGNMENT_ERROR_TITLE: 'Assignment update error',
   ASSIGNMENT_ERROR_GENERAL: 'Could not complete assignment',
   ASSIGNMENT_ERROR_UNASSIGN: 'Could not unassign reviewer(s)',
+  ASSIGN_ALL_TO: 'Assign all to:',
   ASSIGN_ALL_PLACEHOLDER: 'Select...',
   ASSIGN_ALL_TOOLTIP:
     'Assigns reviewer to all sections that they have permission to review that are currently unassigned.',
