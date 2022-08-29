@@ -272,7 +272,7 @@ interface Filters {
 
 interface FullStructure {
   assignment?: ReviewAssignment
-  thisReview?: ReviewDetails | null
+  thisReview?: ReviewDetails
   elementsById?: ElementsById
   lastValidationTimestamp?: number
   attemptSubmission: boolean
