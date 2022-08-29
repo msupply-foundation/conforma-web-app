@@ -161,7 +161,7 @@ const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: Assi
   )
 
   // review info comes from reviewAssignment that's passed to this hook
-  structure.thisReview = review
+  structure.thisReview = review || undefined
   structure.assignment = {
     assignmentId: reviewAssignment.id,
     assignee: reviewAssignment.reviewer,
