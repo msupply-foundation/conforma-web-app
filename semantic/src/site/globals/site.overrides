@@ -548,6 +548,7 @@ a:hover {
     gap: 10px;
     max-width: 650px;
     margin-top: 20px;
+    margin-bottom: 60px; // to offset the Actions area that covers it.
     .item {
       background-color: @surfacesLight;
       width: 90%;
@@ -715,6 +716,11 @@ a:hover {
   padding-right: 10px;
   margin-left: 10px;
   max-width: 250px;
+}
+
+.reviewer-dropdown .menu {
+  // Keeps menu from disappearing under UserArea bar
+  z-index: 9999 !important;
 }
 
 /*---------------------------------------

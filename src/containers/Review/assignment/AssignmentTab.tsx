@@ -19,6 +19,7 @@ import ReviewLevel, { ALL_LEVELS } from './ReviewLevel'
 import { ReviewStateProvider } from '../../../contexts/ReviewStructuresState'
 import AssignmentRows from './AssignmentRows'
 import AssignmentSubmit from './AssignmentSubmit'
+import AssignAll from './AssignAll'
 import { ApplicationOutcome } from '../../../utils/generated/graphql'
 
 const AssignmentTab: React.FC<{
@@ -86,6 +87,24 @@ const AssignmentTab: React.FC<{
     else assignmentGroupedLevel[level].push(assignment)
   })
 
+  const currentReviewLevel = Math.max(Number(Object.keys(assignmentGroupedLevel)))
+
+  const assignAllSections = (reviewerId: number) => {
+    const alreadyAssignedSections = new Set(
+      assignmentsFiltered.map((assignment) => assignment.assignedSections).flat()
+    )
+    const allowedSections = assignmentsFiltered.find(
+      (assignment) => assignment.reviewer.id === reviewerId
+    )?.allowedSections
+
+    const newAssignments: any = {}
+    allowedSections?.forEach((section) => {
+      if (!alreadyAssignedSections.has(section))
+        newAssignments[section] = { newAssignee: reviewerId }
+    })
+    setAssignedSectionsByLevel({ ...assignedSectionsByLevel, [currentReviewLevel]: newAssignments })
+  }
+
   return (
     <ReviewStateProvider fullApplicationStructure={fullStructure} assignments={assignmentsFiltered}>
       <Container id="assignment-tab">
@@ -128,6 +147,7 @@ const AssignmentTab: React.FC<{
           setEnableSubmit={setEnableSubmit}
           setAssignmentError={setAssignmentError}
         />
+        <AssignAll assignments={assignmentsFiltered} setReviewerForAll={assignAllSections} />
         {fullStructure.info.outcome === ApplicationOutcome.Pending && (
           <AssignmentSubmit
             fullStructure={fullStructure}
