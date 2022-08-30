@@ -5,6 +5,7 @@ import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { SummaryViewProps } from '../../types'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
+  console.log('files', response?.files)
   return (
     <Form.Field required={parameters.isRequired}>
       {parameters?.label && (
@@ -19,7 +20,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
             <List.Item key={file.filename} style={{ maxWidth: 150 }}>
               <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
                 <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-                  <a href={getServerUrl('file', file.uniqueId)} target="_blank">
+                  <a href={getServerUrl('file', { fileId: file.uniqueId })} target="_blank">
                     <Image
                       src={getServerUrl('file', { fileId: file.uniqueId, thumbnail: true })}
                       style={{ maxHeight: prefs.summaryViewThumbnailHeight }}
