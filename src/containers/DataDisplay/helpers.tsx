@@ -8,6 +8,7 @@ import { defaultEvaluatedElement } from '../../utils/hooks/useLoadApplication'
 import { TemplateElementCategory } from '../../utils/generated/graphql'
 import { ApplicationDetails } from '../../utils/types'
 import config from '../../config'
+import { serverREST, serverGraphQL } from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 export const formatCellText = (
   value: any,
@@ -70,11 +71,23 @@ export const constructElement = (value: any, displayDefinition: DisplayDefinitio
     isRequired: false,
     isReviewable: null,
   }
+
   return (
     <SummaryViewWrapper
       element={element}
-      applicationData={{ config } as ApplicationDetails}
-      /* TODO this is a hacky way of passing through server URL, I think it needs to be decoupled from applicationData. Config is needed for log_url in organisation to be displayed with imageDisplays plugin */
+      // Only "config" info is available in "applicationData", as we're not
+      // using as part of an application. We need server urls, as some plugin
+      // displays (e.g. imageDisplay) require local server urls.
+      applicationData={
+        {
+          config: {
+            serverGraphQL,
+            serverREST,
+            isProductionBuild: config.isProductionBuild,
+            version: config.version,
+          },
+        } as ApplicationDetails
+      }
       response={response}
       allResponses={{}}
     />
