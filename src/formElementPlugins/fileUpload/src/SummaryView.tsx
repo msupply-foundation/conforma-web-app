@@ -5,7 +5,6 @@ import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { SummaryViewProps } from '../../types'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
-  console.log('files', response?.files)
   return (
     <Form.Field required={parameters.isRequired}>
       {parameters?.label && (
