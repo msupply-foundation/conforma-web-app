@@ -718,6 +718,11 @@ a:hover {
   max-width: 250px;
 }
 
+.reviewer-dropdown .menu {
+  // Keeps menu from disappearing under UserArea bar
+  z-index: 9999 !important;
+}
+
 /*---------------------------------------
       Review page
 ----------------------------------------*/

@@ -47,7 +47,11 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll })
 
 const getReviewerList = (assignments: AssignmentDetails[]) => {
   const reviewers = assignments
-    .filter((assignment) => assignment.allowedSections.length > 0)
+    // We don't want to filter here, as when the back-end has "allowedSections =
+    // null", it means "allow all". Worst case, if the reviewer really is
+    // allowed "no sections" (which shouldn't happen), then they'll show up in
+    // the menu, but still won't actually be able to be assigned
+    // .filter((assignment) => assignment.allowedSections.length > 0)
     .map((assignment, index) => {
       const {
         reviewer: { id, firstName, lastName },
