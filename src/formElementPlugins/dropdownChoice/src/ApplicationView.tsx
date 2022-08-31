@@ -119,7 +119,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         selection
         clearable
         search={search || hasOther}
-        allowAdditions
+        allowAdditions={hasOther}
         additionLabel={strings.ADD_CUSTOM_OPTION_LABEL}
         onAddItem={(e, data) => addItemHandler(data.value as string)}
         placeholder={placeholder}
