@@ -68,17 +68,20 @@ const Navigation: React.FC<NavigationProps> = ({
   const sendToPage = (sectionPage: SectionAndPage) => {
     const { sectionCode, pageNumber } = sectionPage
     push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+    window.scrollTo({ top: 0 })
   }
 
   const previousButtonHandler = () => {
     const previousSectionPage = getPreviousSectionPage()
     sendToPage(previousSectionPage)
+    window.scrollTo({ top: 0 })
   }
 
   const nextPageButtonHandler = () => {
     const nextSectionPage = getNextSectionPage()
     if (!isLinear) {
       sendToPage(nextSectionPage)
+      window.scrollTo({ top: 0 })
       return
     }
 
