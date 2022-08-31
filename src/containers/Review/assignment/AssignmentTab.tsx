@@ -97,6 +97,9 @@ const AssignmentTab: React.FC<{
       (assignment) => assignment.reviewer.id === reviewerId
     )?.allowedSections
 
+    // An empty (originally NULL) allowedSections array means "Allow all"
+    if (allowedSections?.length === 0) allowedSections.push(...Object.keys(fullStructure.sections))
+
     const newAssignments: any = {}
     allowedSections?.forEach((section) => {
       if (!alreadyAssignedSections.has(section))
@@ -147,7 +150,11 @@ const AssignmentTab: React.FC<{
           setEnableSubmit={setEnableSubmit}
           setAssignmentError={setAssignmentError}
         />
-        <AssignAll assignments={assignmentsFiltered} setReviewerForAll={assignAllSections} />
+        <AssignAll
+          assignments={assignmentsFiltered}
+          setReviewerForAll={assignAllSections}
+          currentUser={currentUser}
+        />
         {fullStructure.info.outcome === ApplicationOutcome.Pending && (
           <AssignmentSubmit
             fullStructure={fullStructure}
