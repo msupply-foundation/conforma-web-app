@@ -35,15 +35,25 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
       )
       break
     case DisplayFormat.CHECKBOXES:
-      displayComponent = response ? (
+      displayComponent = (
         <CheckboxDisplay
-          checkboxes={getCheckboxStructure(response, checkboxes, keyMap, true)}
+          checkboxes={getCheckboxStructure(
+            response ?? {
+              // If no response exists, we still want to display an empty
+              // checkbox array
+              text: '',
+              values: {},
+            },
+            checkboxes,
+            keyMap,
+            true
+          )}
           disabled
           type={type}
           layout={layout}
           onChange={() => {}}
         />
-      ) : null
+      )
       break
     default:
       displayComponent = <Markdown text={(response ? response.text : '') as string} />
