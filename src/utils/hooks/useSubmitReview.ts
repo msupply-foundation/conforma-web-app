@@ -36,6 +36,7 @@ const useSubmitReview: UseSubmitReview = (reviewId, reload) => {
         decision: thisReviewLatestResponse?.decision,
         comment: thisReviewLatestResponse?.comment,
         status: ReviewResponseStatus.Submitted,
+        isLatestReviewSubmission: true,
         recommendedApplicationVisibility: thisReviewLatestResponse?.recommendedApplicantVisibility,
       },
       id: Number(thisReviewLatestResponse?.id),
