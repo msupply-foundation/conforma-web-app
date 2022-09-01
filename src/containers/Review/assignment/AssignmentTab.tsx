@@ -20,7 +20,7 @@ import { ReviewStateProvider } from '../../../contexts/ReviewStructuresState'
 import AssignmentRows from './AssignmentRows'
 import AssignmentSubmit from './AssignmentSubmit'
 import AssignAll from './AssignAll'
-import { ApplicationOutcome } from '../../../utils/generated/graphql'
+import { ApplicationOutcome, ReviewAssignmentStatus } from '../../../utils/generated/graphql'
 
 const AssignmentTab: React.FC<{
   fullApplicationStructure: FullStructure
@@ -89,6 +89,12 @@ const AssignmentTab: React.FC<{
 
   const currentReviewLevel = Math.max(Number(Object.keys(assignmentGroupedLevel)))
 
+  const sectionCodes = Object.keys(fullStructure.sections)
+
+  const isFullyAssigned = currentReviewLevel
+    ? calculateIsFullyAssigned(assignmentGroupedLevel[currentReviewLevel], sectionCodes)
+    : true
+
   const assignAllSections = (reviewerId: number) => {
     const alreadyAssignedSections = new Set(
       assignmentsFiltered.map((assignment) => assignment.assignedSections).flat()
@@ -96,6 +102,9 @@ const AssignmentTab: React.FC<{
     const allowedSections = assignmentsFiltered.find(
       (assignment) => assignment.reviewer.id === reviewerId
     )?.allowedSections
+
+    // An empty (originally NULL) allowedSections array means "Allow all"
+    if (allowedSections?.length === 0) allowedSections.push(...sectionCodes)
 
     const newAssignments: any = {}
     allowedSections?.forEach((section) => {
@@ -147,7 +156,13 @@ const AssignmentTab: React.FC<{
           setEnableSubmit={setEnableSubmit}
           setAssignmentError={setAssignmentError}
         />
-        <AssignAll assignments={assignmentsFiltered} setReviewerForAll={assignAllSections} />
+        {!isFullyAssigned && (
+          <AssignAll
+            assignments={assignmentsFiltered}
+            setReviewerForAll={assignAllSections}
+            currentUser={currentUser}
+          />
+        )}
         {fullStructure.info.outcome === ApplicationOutcome.Pending && (
           <AssignmentSubmit
             fullStructure={fullStructure}
@@ -163,3 +178,23 @@ const AssignmentTab: React.FC<{
 }
 
 export default AssignmentTab
+
+const calculateIsFullyAssigned = (
+  currentLevelAssignments: AssignmentDetails[],
+  sectionCodes: string[]
+) => {
+  console.log(
+    'current',
+    currentLevelAssignments.filter(
+      (assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned
+    )
+  )
+  const assignedSections = new Set(
+    currentLevelAssignments
+      // .filter((assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned)
+      .map((assignment) => assignment.assignedSections)
+      .flat()
+  )
+
+  return assignedSections.size >= sectionCodes.length
+}

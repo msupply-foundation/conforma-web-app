@@ -2,17 +2,22 @@ import React, { useState } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
 import Tooltip from '../../../components/Tooltip'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentDetails } from '../../../utils/types'
+import { AssignmentDetails, User } from '../../../utils/types'
 
 interface AssignAllProps {
   assignments: AssignmentDetails[]
+  currentUser: User | null
   setReviewerForAll: (value: number) => void
 }
 
-const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll }) => {
+const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll, currentUser }) => {
   const { strings } = useLanguageProvider()
   const [selected, setSelected] = useState<number | string>('')
-  const options = getReviewerList(assignments)
+  const options = getReviewerList(
+    assignments,
+    currentUser?.userId ?? 0,
+    strings.ASSIGNMENT_YOURSELF
+  )
 
   // We only want to show when we're not in last level, as that auto-assigns
   // already
@@ -45,7 +50,11 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll })
   )
 }
 
-const getReviewerList = (assignments: AssignmentDetails[]) => {
+const getReviewerList = (
+  assignments: AssignmentDetails[],
+  currentUserId: number,
+  selfString: string
+) => {
   const reviewers = assignments
     // We don't want to filter here, as when the back-end has "allowedSections =
     // null", it means "allow all". Worst case, if the reviewer really is
@@ -56,11 +65,12 @@ const getReviewerList = (assignments: AssignmentDetails[]) => {
       const {
         reviewer: { id, firstName, lastName },
       } = assignment
+      const displayName = id === currentUserId ? selfString : `${firstName} ${lastName}`
       const reviewer = {
         key: id,
         value: index,
         reviewerId: id,
-        text: `${firstName} ${lastName}`,
+        text: displayName,
       }
       return reviewer
     })
