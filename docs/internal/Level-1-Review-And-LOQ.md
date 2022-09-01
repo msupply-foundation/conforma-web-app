@@ -45,7 +45,8 @@ This schema structure allows new responses to be created (previous responses to 
 
 **Front End**
 
-When reviewer start/re-starts a review, new `review_response` entities are created for every `latest` `application_response`. If latest `application_response` already has a `review_response` linked (from previous review), `review_response` is duplicated. Done by `useRestartReview` and `useCreateReview` hooks.
+When reviewer start/re-starts a review, new `review_response` entities are created for every `latest` `application_response`.
+If latest `application_response` already has a `review_response` linked (from previous review), `review_response` is duplicated, which is stored in the `review_response_linked_id` field. Done by `useRestartReview` and `useCreateReview` hooks.
 
 `latest_application_response` is just application response with latest `time_updated` for a given element.
 
@@ -53,9 +54,12 @@ It's possible that latest application response is not visible (it could become i
 
 We only create `review_response` for elements that are assigned to reviewer via `review_question_assignment` (see [Assignment Process](Assignment-Process.md) for more details)
 
+When submitting the review each `review_response` modifyed will be set as `is_latest_review_submission` as TRUE. This helps in actions generating LOQ using GraphQL queries.
+
 **Back End**
 
-When review is submitted, an action will `trim` any responses that haven't changed and will update latest review responses `time_updated` to match review submission time (latest from status and stage history table) `trimResponses` action.
+- There is a Trigger that runs on insert of `review_response` to set previous `review_response` (with the same `review` and `template_elment`) to have the fields `is_latest_review_submission` set to FALSE.
+- When review is submitted, an action will `trim` any responses that haven't changed and will update latest review responses `time_updated` to match review submission time (latest from status and stage history table) `trimResponses` action.
 
 **Review Status**
 
