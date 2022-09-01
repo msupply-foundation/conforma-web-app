@@ -28,7 +28,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
                 </Grid.Row>
                 <Grid.Row centered style={{ boxShadow: 'none' }}>
                   <p style={{ wordBreak: 'break-word' }}>
-                    <a href={getServerUrl('file', file.uniqueId)} target="_blank">
+                    <a href={getServerUrl('file', { fileId: file.uniqueId })} target="_blank">
                       {file.filename}
                     </a>
                   </p>
