@@ -62,6 +62,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
   const handleChangeToPage = (sectionCode: string, pageNumber: number) => {
     if (!isLinear) {
       push(`/application/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+      window.scrollTo({ top: 0 })
       return
     }
 
