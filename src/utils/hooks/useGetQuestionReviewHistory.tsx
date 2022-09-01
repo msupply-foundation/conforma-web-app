@@ -50,51 +50,44 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
 
     applicationResponses.nodes.forEach((applicantResponse) => {
       if (!applicantResponse) return
-      let { stageNumber } = applicantResponse
+      const { stageNumber } = applicantResponse
       const { timeUpdated, application, id, value } = applicantResponse
       const { firstName, lastName } = application?.user as User
 
-      if (!stageNumber) {
-        console.log(`Warning: application_reponse ${id} without any stage_number`)
-        stageNumber = 0
-      }
-
-      if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
-
-      // Set each entry using HistoryElement values
-      allResponsesByStage[stageNumber][timeUpdated] = {
-        author: firstName || '' + ' ' + lastName || '',
-        title: strings.TITLE_HISTORY_SUBMITTED_BY_APPLICANT,
-        // TODO translated message, that nothing is entered
-        message: value?.text || '',
-        timeUpdated,
+      if (stageNumber) {
+        if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
+        // Set each entry using HistoryElement values
+        allResponsesByStage[stageNumber][timeUpdated] = {
+          author: firstName || '' + ' ' + lastName || '',
+          title: strings.TITLE_HISTORY_SUBMITTED_BY_APPLICANT,
+          // TODO translated message, that nothing is entered
+          message: value?.text || '',
+          timeUpdated,
+        }
       }
     })
 
     reviewResponses.nodes.forEach((reviewResponse) => {
       if (!reviewResponse) return
-      let { stageNumber } = reviewResponse
+      const { stageNumber } = reviewResponse
       const { id, timeUpdated, decision, comment, review } = reviewResponse
       // Avoid breaking app when review is restricted so not returned in query (for Applicant)
       const { levelNumber, reviewer } = review ? review : { levelNumber: 1, reviewer: null }
 
-      if (!stageNumber) {
-        console.log(`Warning: review_reponse ${id} without any stage_number`)
-        stageNumber = 0
-      }
-
-      if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
-
       // Set each entry using HistoryElement values
-      allResponsesByStage[stageNumber][timeUpdated] = {
-        author: reviewer ? reviewer?.firstName || '' + ' ' + reviewer?.lastName || '' : '',
-        title:
-          (levelNumber || 1) > 1
-            ? strings.TITLE_HISTORY_CONSOLIDATION
-            : strings.TITLE_HISTORY_REVIEW,
-        message: !!decision ? ReviewResponse[decision] : 'Undefined',
-        timeUpdated,
-        reviewerComment: comment || '',
+      if (stageNumber) {
+        // Exclude *current* review response (which has no stageNumber)
+        if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
+        allResponsesByStage[stageNumber][timeUpdated] = {
+          author: reviewer ? reviewer?.firstName || '' + ' ' + reviewer?.lastName || '' : '',
+          title:
+            (levelNumber || 1) > 1
+              ? strings.TITLE_HISTORY_CONSOLIDATION
+              : strings.TITLE_HISTORY_REVIEW,
+          message: !!decision ? ReviewResponse[decision] : 'Undefined',
+          timeUpdated,
+          reviewerComment: comment || '',
+        }
       }
     })
 
