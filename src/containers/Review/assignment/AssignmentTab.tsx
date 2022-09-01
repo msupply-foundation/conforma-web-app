@@ -183,12 +183,6 @@ const calculateIsFullyAssigned = (
   currentLevelAssignments: AssignmentDetails[],
   sectionCodes: string[]
 ) => {
-  console.log(
-    'current',
-    currentLevelAssignments.filter(
-      (assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned
-    )
-  )
   const assignedSections = new Set(
     currentLevelAssignments
       // .filter((assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned)
