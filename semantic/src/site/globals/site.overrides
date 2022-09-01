@@ -427,7 +427,7 @@ a:hover {
   // border: 1px solid black;
   display: flex;
   flex-direction: row;
-  max-width: 220px;
+  max-width: 300px;
   align-items: center;
 }
 
@@ -439,6 +439,9 @@ a:hover {
   font-size: @fontXXsmall;
   color: @surfacesDark;
   margin-left: 10px;
+  .name {
+    font-size: @fontXsmall;
+  }
 }
 
 /*-----------------------------------

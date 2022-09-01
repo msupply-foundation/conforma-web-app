@@ -13,6 +13,7 @@ interface PrefsState {
     systemManagerPermissionName?: string
   }
   languageOptions?: LanguageOption[]
+  latestSnapshot?: string
   loading: boolean
   error?: Error
 }
@@ -35,10 +36,11 @@ export const SystemPrefsProvider = ({ children }: { children: React.ReactNode })
   const fetchPrefs = async () => {
     getRequest(getServerUrl('prefs'))
       .then((result) => {
-        const { languageOptions, preferences } = result
+        const { languageOptions, preferences, latestSnapshot } = result
         setPrefsState({
           languageOptions,
           preferences,
+          latestSnapshot,
           loading: false,
         })
       })
