@@ -80,6 +80,12 @@ const Permissions: React.FC = () => {
       <PermissionsHeader type={PermissionPolicyType.Apply} header={''} />
       <PermissionNameList type={PermissionPolicyType.Apply} />
       <div className="spacer-20" />
+      <Header as="h3" className="">
+        View
+      </Header>
+      <PermissionsHeader type={PermissionPolicyType.View} header={''} />
+      <PermissionNameList type={PermissionPolicyType.View} />
+      <div className="spacer-20" />
       <div className="flex-row-start-center">
         <Header as="h3" className="no-margin-no-padding">
           Stage

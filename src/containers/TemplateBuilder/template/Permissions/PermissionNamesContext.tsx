@@ -11,7 +11,7 @@ type PermissionNamesContext = {
   }
 }
 const defaultContext: PermissionNamesContext = {
-  permissionNames: { APPLY: [], REVIEW: [], ASSIGN: [] },
+  permissionNames: { APPLY: [], REVIEW: [], ASSIGN: [], VIEW: [] },
 }
 const Context = createContext<PermissionNamesContext>(defaultContext)
 
