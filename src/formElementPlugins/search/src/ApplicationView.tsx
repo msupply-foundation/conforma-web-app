@@ -1,18 +1,20 @@
 const DEBOUNCE_TIMEOUT = 350 //milliseconds
 
 import React, { useEffect, useState } from 'react'
-import { Search, Label, Card, Icon, Form } from 'semantic-ui-react'
+import { Search, Label, Card, Icon, Form, List, ListItem } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import config from '../../../config'
 import useDebounce from './useDebounce'
+import './styles.css'
 
 interface DisplayFormat {
   title?: string
   subtitle?: string
   description?: string
+  simple?: boolean
 }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -112,11 +114,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const createResultsArray = (results: any[], resultsFormat: DisplayFormat) => {
     const { title, description } = resultsFormat
+    const noFormatProvided = !title && !description
     return results.map((result: any, index: number) => {
-      const titleString = title ? substituteValues(title, result) : getDefaultString(result)
-      const descriptionString = description
+      const titleString = noFormatProvided
+        ? getDefaultString(result, strings.MESSAGE_NO_RESULTS)
+        : title
+        ? substituteValues(title, result)
+        : ''
+      const descriptionString = noFormatProvided
+        ? getDefaultString(result, strings.MESSAGE_NO_RESULTS, 'description')
+        : description
         ? substituteValues(description, result)
-        : getDefaultString(result, 'description')
+        : ''
       return {
         index,
         key: `result-${index}`,
@@ -124,24 +133,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         description: descriptionString,
       }
     })
-  }
-
-  type ResultsField = 'title' | 'description'
-  // If a displayFormat is not defined, results will be displayed some combination
-  // of the first two fields in the object
-  const getDefaultString = (result: any, fieldType: ResultsField = 'title') => {
-    if (!(result instanceof Object)) return result
-    const fields = Object.keys(result)
-    switch (fields.length) {
-      case 0:
-        return fieldType === 'title' ? strings.MESSAGE_NO_RESULTS : ''
-      case 1:
-        return fieldType === 'title' ? fields[0] : result[fields[0]]
-      default:
-        return fieldType === 'title'
-          ? `${fields[0]}: ${result[fields[0]]}`
-          : `${fields[1]}: ${result[fields[1]]}`
-    }
   }
 
   const displayProps: DisplayProps = {
@@ -223,9 +214,34 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
   Markdown,
   isEditable = true,
 }) => {
-  const { title, subtitle, description } = displayFormat
+  const { getPluginStrings } = useLanguageProvider()
+  const strings = getPluginStrings('search')
+  const { title, subtitle, description, simple } = displayFormat
   const showFallbackString = !title && !subtitle && !description
-  return (
+  return simple ? (
+    <List bulleted>
+      {selection.map((item, index) => (
+        <ListItem className="list-item">
+          {title
+            ? substituteValues(title, item)
+            : description
+            ? substituteValues(description, item)
+            : getDefaultString(item, strings.MESSAGE_NO_RESULTS, 'description')}{' '}
+          <Icon
+            className="list-item-icon"
+            link
+            name="close"
+            circular
+            fitted
+            size="small"
+            color="blue"
+            onClick={() => deleteItem(index)}
+            style={{ position: 'relative', top: -2 }}
+          />
+        </ListItem>
+      ))}
+    </List>
+  ) : (
     <>
       {selection.map((item, index) => (
         <Card key={`list-item-${index}`}>
@@ -243,6 +259,7 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
             {subtitle && (
               <Card.Meta>
                 <Markdown text={substituteValues(subtitle, item)} semanticComponent="noParagraph" />
+                SUBTITLE
               </Card.Meta>
             )}
             <Card.Description>
@@ -266,5 +283,27 @@ const getFallbackString = (item: any, showFallbackString: boolean) =>
   showFallbackString
     ? Object.keys(item).reduce((str, field) => str + `${field}: ${item[field]}  \n`, '')
     : ''
+
+type ResultsField = 'title' | 'description'
+// If a displayFormat is not defined, results will display some combination of
+// the first two fields in the object
+const getDefaultString = (
+  result: any,
+  noResultString: string,
+  fieldType: ResultsField = 'title'
+) => {
+  if (!(result instanceof Object)) return result
+  const fields = Object.keys(result)
+  switch (fields.length) {
+    case 0:
+      return fieldType === 'title' ? noResultString : ''
+    case 1:
+      return fieldType === 'title' ? fields[0] : result[fields[0]]
+    default:
+      return fieldType === 'title'
+        ? `${fields[0]}: ${result[fields[0]]}`
+        : `${fields[1]}: ${result[fields[1]]}`
+  }
+}
 
 export default ApplicationView

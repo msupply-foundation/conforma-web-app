@@ -1,0 +1,10 @@
+/* This allows the delete (x) icon to become visible when hovering over the
+whole list item */
+
+.list-item-icon {
+    visibility: hidden;
+}
+
+.list-item:hover .list-item-icon {
+    visibility: visible;
+}
