@@ -547,6 +547,7 @@ Once selected, items are displayed in a "card" view:
   }
   ```
   If not specified, a generic "default" display will be shown, using the first 1-2 properties on the result object.
+- **displayType**: `"card" | "list"` (default: `card`). "Card" view will display each result as a simple Semantic [card](https://react.semantic-ui.com/views/card/), using the fields provided in `displayFormat`. For "list" view, the results will show as a simple text list, and only one of either `title` or `description` will be used (`title` has priority). This is useful when there is only one field in the results, in which case a "card" view can look inappropriate.
 - **resultFormat**: `object` -- same as `displayFormat`, but used when specifying a format for the "result" display that is different to the selection card display. If not specified, `resultFormat` will just be the same as `displayFormat`.
   Note that for the "result" display, only the `title` and `description` fields are used (`subtitle` is not shown).
 - **textFormat** `string` -- a formatting substitution string like the above, to be generate the "text" value in the response. Note: currently the only place this text value is ever seen by the user is if it's used inside a listBuilder table (optional)

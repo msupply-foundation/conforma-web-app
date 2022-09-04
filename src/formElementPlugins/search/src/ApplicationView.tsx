@@ -40,6 +40,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     displayFormat = {},
     resultFormat = displayFormat,
     textFormat,
+    displayType = 'card',
   } = parameters
 
   const {
@@ -138,6 +139,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const displayProps: DisplayProps = {
     selection,
     displayFormat,
+    displayType,
     deleteItem: isEditable ? deleteItem : () => {},
     Markdown,
     isEditable,
@@ -202,6 +204,7 @@ const substituteValues = (parameterisedString: string, object: { [key: string]: 
 export interface DisplayProps {
   selection: any[]
   displayFormat: DisplayFormat
+  displayType: 'card' | 'list'
   Markdown: any
   deleteItem?: (index: number) => void
   isEditable?: boolean
@@ -210,15 +213,16 @@ export interface DisplayProps {
 export const DisplaySelection: React.FC<DisplayProps> = ({
   selection,
   displayFormat,
+  displayType,
   deleteItem = () => {},
   Markdown,
   isEditable = true,
 }) => {
   const { getPluginStrings } = useLanguageProvider()
   const strings = getPluginStrings('search')
-  const { title, subtitle, description, simple } = displayFormat
+  const { title, subtitle, description } = displayFormat
   const showFallbackString = !title && !subtitle && !description
-  return simple ? (
+  return displayType === 'list' ? (
     <List bulleted>
       {selection.map((item, index) => (
         <ListItem className="list-item">
