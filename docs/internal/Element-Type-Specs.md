@@ -447,7 +447,7 @@ _Allows user to build a list of items, such as an **Ingredients List**_
   - `visibility_condition` / `is_editable` -- not required, always `true` (for now, may be implemented later)
   - `parameters`, `title`, and `code` are essential
 
-- **displayType** `string` (must be either `table` or `cards` (default)) -- how to present the list of items, as shown here:
+- **displayType** `'table' | 'cards' | 'inline' | 'list'` (default: `cards`) -- how to present the list of items, as shown here:
 
   - **table** view:
 
@@ -460,6 +460,19 @@ _Allows user to build a list of items, such as an **Ingredients List**_
     ![Card View](images/Element-Type-Specs-listBuilder-card-view.png)
 
     The display string(s) for card view are defined in the `displayFormat` field (below)
+
+  - **inline** view:
+
+    ![Inline View](images/Element-Type-Specs-listBuilder-inline-view.png)
+
+    The input form is displayed inline (i.e. no modal), and can be collapsed/opened for each item
+
+  - **list** view:
+
+    ![List View](images/Element-Type-Specs-listBuilder-list-view.png)
+
+    A simple view, best for when each item only has one field
+
 
 - **displayFormat** `object` (only relevant for **card** view) -- defines how to present the input information on the displayed cards. The object defines three fields, representing the Title/Heading (`title`), the Subheading (`subtitle`) and Body (`description`).  
   Each is a **Markdown** formatted string, with the values to be substituted from the input `text` values represented by their element `code` wrapped in `${...}`. An example `displayFormat` object representing the card layout shown above is:
