@@ -225,23 +225,32 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
   return displayType === 'list' ? (
     <List bulleted>
       {selection.map((item, index) => (
-        <ListItem className="list-item">
-          {title
-            ? substituteValues(title, item)
-            : description
-            ? substituteValues(description, item)
-            : getDefaultString(item, strings.MESSAGE_NO_RESULTS, 'description')}{' '}
-          <Icon
-            className="list-item-icon"
-            link
-            name="close"
-            circular
-            fitted
-            size="small"
-            color="blue"
-            onClick={() => deleteItem(index)}
-            style={{ position: 'relative', top: -2 }}
-          />
+        <ListItem className="search-list-item">
+          <div className="flex-row-start">
+            {title ? (
+              <Markdown text={substituteValues(title, item)} semanticComponent="noParagraph" />
+            ) : description ? (
+              <Markdown
+                text={substituteValues(description, item)}
+                semanticComponent="noParagraph"
+              />
+            ) : (
+              getDefaultString(item, strings.MESSAGE_NO_RESULTS, 'description')
+            )}{' '}
+            {isEditable && (
+              <Icon
+                className="search-list-item-icon"
+                link
+                name="close"
+                circular
+                fitted
+                size="small"
+                color="blue"
+                onClick={() => deleteItem(index)}
+                style={{ position: 'relative', top: -2, left: 5 }}
+              />
+            )}
+          </div>
         </ListItem>
       ))}
     </List>
