@@ -76,19 +76,16 @@ const ReviewPage: React.FC<{
   })
 
   useEffect(() => {
-    if (reviewStatus === ReviewStatus.Pending) {
-      console.log('reviewStatus: PENDING')
+    if (reviewStatus === ReviewStatus.Pending)
       showWarningModal({
         title: strings.REVIEW_STATUS_PENDING_TITLE,
         message: strings.REVIEW_STATUS_PENDING_MESSAGE,
       })
-    } else if (reviewStatus === ReviewStatus.Discontinued) {
-      console.log('reviewStatus: DISCONTINUED')
+    else if (reviewStatus === ReviewStatus.Discontinued)
       showWarningModal({
         title: strings.REVIEW_STATUS_DISCONTINUED_TITLE,
         message: strings.REVIEW_STATUS_DISCONTINUED_MESSAGE,
       })
-    }
   }, [reviewStructure])
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
@@ -100,10 +97,7 @@ const ReviewPage: React.FC<{
     reviewStructure?.thisReview?.current.reviewStatus !== ReviewStatus.Discontinued
   ) {
     const {
-      info: {
-        name,
-        current: { stage },
-      },
+      info: { name },
     } = reviewStructure
 
     return (
