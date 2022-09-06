@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Button, Header, Icon, Label, Message, Segment } from 'semantic-ui-react'
 import {
   Loading,
@@ -52,7 +52,6 @@ const ReviewPage: React.FC<{
   const {
     userState: { currentUser },
   } = useUserState()
-  const [reviewStatus, setReviewStatus] = useState(ReviewStatus.Submitted)
 
   const { push } = useRouter()
 
@@ -60,6 +59,8 @@ const ReviewPage: React.FC<{
     reviewAssignment,
     reviewStructure: fullApplicationStructure,
   })
+
+  const reviewStatus = reviewStructure?.thisReview?.current.reviewStatus ?? ReviewStatus.Submitted
 
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
     defaultActiveSectionCodes: [],
@@ -75,11 +76,6 @@ const ReviewPage: React.FC<{
   })
 
   useEffect(() => {
-    if (reviewStructure?.thisReview?.current.reviewStatus) {
-      console.log(reviewStructure.thisReview.current.reviewStatus)
-      setReviewStatus(reviewStructure.thisReview.current.reviewStatus)
-    }
-
     if (reviewStatus === ReviewStatus.Pending) {
       console.log('reviewStatus: PENDING')
       showWarningModal({
@@ -93,7 +89,7 @@ const ReviewPage: React.FC<{
         message: strings.REVIEW_STATUS_DISCONTINUED_MESSAGE,
       })
     }
-  }, [reviewStructure, reviewStatus])
+  }, [reviewStructure])
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!reviewStructure) return <Loading />
