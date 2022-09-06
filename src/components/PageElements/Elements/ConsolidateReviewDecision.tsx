@@ -10,6 +10,7 @@ import ViewHistoryButton from '../ViewHistoryButton'
 
 interface ConsolidateReviewDecisionProps {
   elementCode: string
+  canEdit: boolean
   applicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
   isActiveReviewResponse: boolean
@@ -23,6 +24,7 @@ interface ConsolidateReviewDecisionProps {
 }
 const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   elementCode,
+  canEdit,
   applicationResponse,
   summaryViewProps,
   isActiveReviewResponse,
@@ -74,7 +76,7 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
               isConsolidation={true}
               reviewResponse={reviewResponse}
             >
-              {isActiveReviewResponse && isAssigned && (
+              {canEdit && isActiveReviewResponse && isAssigned && (
                 <UpdateIcon onClick={() => setIsActiveEdit(true)} />
               )}
             </ReviewResponseElement>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Header, Icon, Label, Message, Segment } from 'semantic-ui-react'
 import {
   Loading,
@@ -48,9 +48,11 @@ const ReviewPage: React.FC<{
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, previousAssignment, fullApplicationStructure }) => {
   const { strings } = useLanguageProvider()
+  const { serial } = fullApplicationStructure.info
   const {
     userState: { currentUser },
   } = useUserState()
+  const [reviewStatus, setReviewStatus] = useState(ReviewStatus.Submitted)
 
   const { push } = useRouter()
 
@@ -68,19 +70,30 @@ const ReviewPage: React.FC<{
 
   const { ConfirmModal: WarningModal, showModal: showWarningModal } = useConfirmationModal({
     type: 'warning',
-    title: strings.REVIEW_STATUS_PENDING_TITLE,
-    message: strings.REVIEW_STATUS_PENDING_MESSAGE,
+    onConfirm: () => push(`/application/${serial}/review`),
+    showCancel: false,
   })
 
   useEffect(() => {
-    if (!reviewStructure) return
-    if (thisReview?.current.reviewStatus === ReviewStatus.Pending) {
+    if (reviewStructure?.thisReview?.current.reviewStatus) {
+      console.log(reviewStructure.thisReview.current.reviewStatus)
+      setReviewStatus(reviewStructure.thisReview.current.reviewStatus)
+    }
+
+    if (reviewStatus === ReviewStatus.Pending) {
+      console.log('reviewStatus: PENDING')
       showWarningModal({
-        onConfirm: () => push(`/application/${reviewStructure.info.serial}/review`),
-        showCancel: false,
+        title: strings.REVIEW_STATUS_PENDING_TITLE,
+        message: strings.REVIEW_STATUS_PENDING_MESSAGE,
+      })
+    } else if (reviewStatus === ReviewStatus.Discontinued) {
+      console.log('reviewStatus: DISCONTINUED')
+      showWarningModal({
+        title: strings.REVIEW_STATUS_DISCONTINUED_TITLE,
+        message: strings.REVIEW_STATUS_DISCONTINUED_MESSAGE,
       })
     }
-  }, [reviewStructure])
+  }, [reviewStructure, reviewStatus])
 
   if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
   if (!reviewStructure) return <Loading />
@@ -109,7 +122,6 @@ const ReviewPage: React.FC<{
     sections,
     responsesByCode,
     info: {
-      serial,
       name,
       current: { stage },
     },
@@ -184,13 +196,15 @@ const ReviewPage: React.FC<{
                   <SectionRowStatus {...section} />
                 </div>
               )}
-              extraPageContent={(page: Page) => (
-                <ApproveAllButton
-                  isConsolidation={!!section.assignment?.isConsolidation}
-                  stageNumber={stage.number}
-                  page={page}
-                />
-              )}
+              extraPageContent={(page: Page) =>
+                reviewStatus === ReviewStatus.Draft && (
+                  <ApproveAllButton
+                    isConsolidation={!!section.assignment?.isConsolidation}
+                    stageNumber={stage.number}
+                    page={page}
+                  />
+                )
+              }
               scrollableAttachment={(page: Page) => (
                 <ScrollableAttachment
                   code={`${section.details.code}P${page.number}`}
