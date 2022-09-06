@@ -1,9 +1,5 @@
 import { useState } from 'react'
-import {
-  ApplicationResponseStatus,
-  TemplateElementCategory,
-  useUpdateApplicationMutation,
-} from '../generated/graphql'
+import { ApplicationResponseStatus, useUpdateApplicationMutation } from '../generated/graphql'
 import { FullStructure, UseGetApplicationProps } from '../types'
 
 const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
@@ -21,7 +17,7 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
       return {
         id: latestApplicationResponse.id,
         patch: {
-          value: latestApplicationResponse.value || null,
+          // value: latestApplicationResponse.value || null,
           status: ApplicationResponseStatus.Submitted,
         },
       }
