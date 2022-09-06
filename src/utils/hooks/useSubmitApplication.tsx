@@ -17,6 +17,7 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
       return {
         id: latestApplicationResponse.id,
         patch: {
+          // Don't update values, as it can sometimes make the mutation payload too large:
           // value: latestApplicationResponse.value || null,
           status: ApplicationResponseStatus.Submitted,
         },
