@@ -272,7 +272,6 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
             {subtitle && (
               <Card.Meta>
                 <Markdown text={substituteValues(subtitle, item)} semanticComponent="noParagraph" />
-                SUBTITLE
               </Card.Meta>
             )}
             <Card.Description>
