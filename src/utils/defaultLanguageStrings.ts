@@ -335,6 +335,9 @@ export default {
   REVIEW_DECISION_MISMATCH_TITLE: 'Final decision',
   REVIEW_DECISION_MISMATCH_MESSAGE:
     'You have made a different decision than the previous reviewer.\nAre you sure you wish to proceed with your decision?',
+  REVIEW_STATUS_DISCONTINUED_TITLE: 'Review discontinued',
+  REVIEW_STATUS_DISCONTINUED_MESSAGE:
+    'Sorry, this review has been unassigned and cannot be continued.',
   REVIEW_STATUS_PENDING_TITLE: 'Please reload review before submitting',
   REVIEW_STATUS_PENDING_MESSAGE:
     'All your existing decisions will be kept.\nYou will be redirected to the home page now. Click "Start" in there to reload page with latest responses to review.',

@@ -19,6 +19,7 @@ type ReviewType =
 
 interface ReviewApplicantResponseProps {
   elementCode: string
+  canEdit: boolean
   applicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
   stageNumber: number
@@ -34,6 +35,7 @@ interface ReviewApplicantResponseProps {
 
 const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   elementCode,
+  canEdit,
   applicationResponse,
   summaryViewProps,
   stageNumber,
@@ -67,7 +69,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
     : 'NotReviewable'
 
   const getReviewDecisionOption = () => {
-    if (isActiveReviewResponse && isChangeRequest && !isChanged)
+    if (canEdit && isActiveReviewResponse && isChangeRequest && !isChanged)
       return (
         <ReviewElementTrigger
           title={strings.LABEL_RESPONSE_UPDATE}
@@ -111,7 +113,9 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                   isConsolidation={false}
                   reviewResponse={reviewResponse}
                 >
-                  {isActiveReviewResponse && <UpdateIcon onClick={() => setIsActiveEdit(true)} />}
+                  {canEdit && isActiveReviewResponse && (
+                    <UpdateIcon onClick={() => setIsActiveEdit(true)} />
+                  )}
                 </ReviewResponseElement>
               )}
               {consolidationReviewResponse && (
@@ -173,7 +177,8 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                 applicationResponse={applicationResponse}
                 summaryViewProps={summaryViewProps}
               >
-                {!decisionExists &&
+                {canEdit &&
+                  !decisionExists &&
                   (reviewType === 'OptionallyReviewable' ? (
                     // New review for empty application response
                     <AddIcon onClick={() => setIsActiveEdit(true)} />
@@ -191,7 +196,9 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                   isConsolidation={false}
                   reviewResponse={reviewResponse}
                 >
-                  {isActiveReviewResponse && <UpdateIcon onClick={() => setIsActiveEdit(true)} />}
+                  {canEdit && isActiveReviewResponse && (
+                    <UpdateIcon onClick={() => setIsActiveEdit(true)} />
+                  )}
                 </ReviewResponseElement>
               )}
               {/* Previous review response */}
