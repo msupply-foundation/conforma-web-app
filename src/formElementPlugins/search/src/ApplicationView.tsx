@@ -223,7 +223,7 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
   const { title, subtitle, description } = displayFormat
   const showFallbackString = !title && !subtitle && !description
   return displayType === 'list' ? (
-    <List bulleted>
+    <List bulleted={selection.length > 1}>
       {selection.map((item, index) => (
         <ListItem className="search-list-item">
           <div className="flex-row-start">
