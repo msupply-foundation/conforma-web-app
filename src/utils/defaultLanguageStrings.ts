@@ -148,8 +148,6 @@ export default {
   FILTER_DATE_BEFORE: 'Before',
   FILTER_DATE_AFTER: 'After',
   FILTER_RESET_ALL: 'Reset all filters',
-  FOOTER_APP_NAME: 'conforma',
-  FOOTER_NAME: 'The mSupply Foundation',
   LABEL_APPLICATIONS: 'applications',
   LABEL_APPLICATION_SUBMITTED: 'Application Submitted',
   LABEL_APPLICATION_BACK: 'Back to form',
