@@ -447,7 +447,7 @@ _Allows user to build a list of items, such as an **Ingredients List**_
   - `visibility_condition` / `is_editable` -- not required, always `true` (for now, may be implemented later)
   - `parameters`, `title`, and `code` are essential
 
-- **displayType** `string` (must be either `table` or `cards` (default)) -- how to present the list of items, as shown here:
+- **displayType** `'table' | 'cards' | 'inline' | 'list'` (default: `cards`) -- how to present the list of items, as shown here:
 
   - **table** view:
 
@@ -460,6 +460,19 @@ _Allows user to build a list of items, such as an **Ingredients List**_
     ![Card View](images/Element-Type-Specs-listBuilder-card-view.png)
 
     The display string(s) for card view are defined in the `displayFormat` field (below)
+
+  - **inline** view:
+
+    ![Inline View](images/Element-Type-Specs-listBuilder-inline-view.png)
+
+    The input form is displayed inline (i.e. no modal), and can be collapsed/opened for each item
+
+  - **list** view:
+
+    ![List View](images/Element-Type-Specs-listBuilder-list-view.png)
+
+    A simple view, best for when each item only has one field
+
 
 - **displayFormat** `object` (only relevant for **card** view) -- defines how to present the input information on the displayed cards. The object defines three fields, representing the Title/Heading (`title`), the Subheading (`subtitle`) and Body (`description`).  
   Each is a **Markdown** formatted string, with the values to be substituted from the input `text` values represented by their element `code` wrapped in `${...}`. An example `displayFormat` object representing the card layout shown above is:
@@ -547,6 +560,7 @@ Once selected, items are displayed in a "card" view:
   }
   ```
   If not specified, a generic "default" display will be shown, using the first 1-2 properties on the result object.
+- **displayType**: `"card" | "list"` (default: `card`). "Card" view will display each result as a simple Semantic [card](https://react.semantic-ui.com/views/card/), using the fields provided in `displayFormat`. For "list" view, the results will show as a simple text list, and only one of either `title` or `description` will be used (`title` has priority). This is useful when there is only one field in the results, in which case a "card" view can look inappropriate.
 - **resultFormat**: `object` -- same as `displayFormat`, but used when specifying a format for the "result" display that is different to the selection card display. If not specified, `resultFormat` will just be the same as `displayFormat`.
   Note that for the "result" display, only the `title` and `description` fields are used (`subtitle` is not shown).
 - **textFormat** `string` -- a formatting substitution string like the above, to be generate the "text" value in the response. Note: currently the only place this text value is ever seen by the user is if it's used inside a listBuilder table (optional)

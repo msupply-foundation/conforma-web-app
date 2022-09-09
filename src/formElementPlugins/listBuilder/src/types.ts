@@ -4,6 +4,7 @@ export enum DisplayType {
   CARDS = 'cards',
   TABLE = 'table',
   INLINE = 'inline',
+  LIST = 'list',
 }
 
 export interface InputResponseField {

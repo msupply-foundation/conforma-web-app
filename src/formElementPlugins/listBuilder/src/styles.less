@@ -18,3 +18,14 @@
   width: -moz-fit-content; // Needed for Firefox
   min-width: 250px;
 }
+
+/* This allows the delete (x) icon to become visible when hovering over the
+whole list item */
+
+.list-list-item-icon {
+  visibility: hidden;
+}
+
+.list-list-item:hover .list-list-item-icon {
+  visibility: visible;
+}

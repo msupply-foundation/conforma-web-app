@@ -225,6 +225,7 @@ const PageElements: React.FC<PageElementProps> = ({
 
               const props = {
                 elementCode: element.code,
+                canEdit,
                 applicationResponse: latestApplicationResponse,
                 reviewResponse: thisReviewLatestResponse,
                 previousReviewResponse: thisReviewPreviousResponse,
