@@ -3573,7 +3573,8 @@ export type PermissionPolicyTypeFilter = {
 export enum PermissionPolicyType {
   Review = 'REVIEW',
   Apply = 'APPLY',
-  Assign = 'ASSIGN'
+  Assign = 'ASSIGN',
+  View = 'VIEW'
 }
 
 /** A filter to be used against many `PermissionName` object types. All fields are combined with a logical ‘and.’ */
