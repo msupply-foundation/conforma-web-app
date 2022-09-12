@@ -13,7 +13,7 @@ const ListCardLayout: React.FC<ListLayoutProps> = ({
 }) => {
   const { title, description } = displayFormat
   return (
-    <List bulleted>
+    <List bulleted={listItems.length > 1}>
       {listItems.map((item, index) => (
         <>
           <ListItem className="list-list-item" style={{ marginTop: 5 }}>
