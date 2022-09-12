@@ -21,7 +21,7 @@ const Footer: React.FC = () => {
           {`© ${new Date().getFullYear()} `}
           The mSupply Foundation
           <br />
-          {`v ${config.version}`}
+          {`v${config.version}`}
           {isAdmin && (
             <>
               <br />
