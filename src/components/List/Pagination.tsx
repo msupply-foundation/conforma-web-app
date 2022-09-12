@@ -2,7 +2,7 @@ import React from 'react'
 import { Pagination, Dropdown, Grid } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { LanguageStrings } from '../../contexts/Localisation'
-import usePrefs from '../../utils/hooks/usePrefs'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 interface PaginationProps {
   totalCount: number
@@ -15,9 +15,8 @@ const PaginationBar: React.FC<PaginationProps> = ({
   strings,
   perPageText = strings.LABEL_LIST_PER_PAGE,
 }) => {
-  const { loading, preferences } = usePrefs()
+  const { preferences } = usePrefs()
   const { query, updateQuery } = useRouter()
-  if (loading) return null
 
   const page = Number(query?.page) || 1
   const perPage = Number(query?.perPage) || 20

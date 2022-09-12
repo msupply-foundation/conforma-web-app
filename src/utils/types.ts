@@ -14,19 +14,23 @@ import {
   Organisation as GraphQLOrg,
   Filter,
   UiLocation,
+  IsReviewableStatus,
 } from './generated/graphql'
 
 import { ValidationState } from '../formElementPlugins/types'
+import { Checkbox } from '../formElementPlugins/checkbox/src/ApplicationView'
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../utils/data/LuxonDateTimeConstants'
 import { ErrorResponse } from './hooks/useDataViews'
+import { USER_ROLES } from './data'
 
 export {
   ApplicationDetails,
   ApplicationElementStates,
+  ApplicationScheduledEvent as ApplicationScheduledEvents,
   ApplicationListRow,
   ApplicationProps,
   AssignmentDetails,
@@ -100,6 +104,7 @@ interface ApplicationDetails {
   isChangeRequest: boolean
   current: StageAndStatus
   firstStrictInvalidPage: SectionAndPage | null
+  hasPreviewActions: boolean
   submissionMessage?: string
   startMessage?: string
   user?: GraphQLUser
@@ -120,6 +125,13 @@ interface ApplicationProps {
   requestRevalidation?: MethodRevalidate
   strictSectionPage?: SectionAndPage | null
   isValidating?: boolean
+}
+
+interface ApplicationScheduledEvent {
+  id: number
+  timeScheduled: Date
+  eventCode: string
+  isActive: boolean
 }
 
 interface AssignmentDetails {
@@ -170,6 +182,7 @@ interface CellProps {
 
 interface ColumnDetails {
   headerName: string
+  headerDetail?: string
   sortName: string
   ColumnComponent: React.FunctionComponent<any>
 }
@@ -219,6 +232,8 @@ interface ElementBase extends ElementForEvaluation {
   validationMessage: string | null
   helpText: string | null
   parameters: any
+  isReviewable: IsReviewableStatus | null
+  // reviewRequired: boolean
 }
 
 export type EvaluatedElement = {
@@ -257,13 +272,14 @@ interface Filters {
 
 interface FullStructure {
   assignment?: ReviewAssignment
-  thisReview?: ReviewDetails | null
+  thisReview?: ReviewDetails
   elementsById?: ElementsById
   lastValidationTimestamp?: number
   attemptSubmission: boolean
   info: ApplicationDetails
   canApplicantMakeChanges: boolean
   sections: SectionsStructure
+  applicantDeadline: { deadline: Date | null; isActive: boolean }
   stages: {
     stage: StageDetails
     levels: LevelDetails[]
@@ -345,7 +361,7 @@ interface ApplicationProgress {
 
 interface ResponseFull {
   id: number
-  text: string | null | undefined
+  text: string
   optionIndex?: number
   isValid?: boolean | null
   hash?: string // Used in Password plugin
@@ -356,11 +372,12 @@ interface ResponseFull {
   list?: any // Used in ListBuilder
   date?: any // Used in DatePicker
   number?: number | null // Used in Number plugin
-  // Next 4 used in Checkbox Summary view
+  // Next 5 used in Checkbox Summary view
   textUnselected?: string
   textMarkdownList?: string
   textUnselectedMarkdownList?: string
   textMarkdownPropertyList?: string
+  values: { [key: string]: Checkbox }
   timeCreated?: Date
   reviewResponse?: ReviewResponse
   customValidation?: ValidationState
@@ -430,6 +447,7 @@ type SectionAndPage = {
 }
 
 interface SectionDetails {
+  active: boolean
   id: number
   index: number
   code: string
@@ -636,6 +654,7 @@ interface LoginPayload {
   user: User
   JWT: string
   templatePermissions: TemplatePermissions
+  permissionNames: string[]
   orgList?: OrganisationSimple[]
   isAdmin: boolean
 }
@@ -808,6 +827,8 @@ export type FilterTypeOptions = {
 
 export type FilterDefinition = {
   type: FilterTypes
+  default: boolean
+  visibleTo: USER_ROLES[]
   // Empty or undefined title will be excluded from generic fitler UI display (ListFilters)
   title?: string
   options?: FilterTypeOptions

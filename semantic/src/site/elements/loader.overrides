@@ -1,3 +1,13 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.dimmer .ui.loader {
+    color: @loaderTextColor;
+  }
+.ui.dimmer .ui.loader:before {
+    border: @loaderLineWidth solid @loaderFillColor;
+}
+.ui.dimmer .ui.loader:after {
+    border-color: @shapeBorderColor;
+}

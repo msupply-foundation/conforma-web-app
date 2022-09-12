@@ -50,6 +50,9 @@
 @headersInteractiveMed: #656565;
 @borderColourDark: #777777;
 @activeCommentBackground: azure;
+@inputPlaceholderColor: lighten(@inputColor, 20);
+@inputPlaceholderFocusColor: lighten(@inputColor, 40);
+@disabledOpacity: 0.75;
 //
 @boxShadowColor: #d4d4d5;
 @fullyTransperant: rgba(0, 0, 0, 0);

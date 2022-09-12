@@ -33,12 +33,12 @@ const Navigation: React.FC<NavigationProps> = ({
   const currentSectionDetails = sections[current.sectionCode].details
 
   const nextSections = Object.values(sections)
-    .filter(({ details: { index } }) => index > currentSectionDetails.index)
+    .filter(({ details: { active, index } }) => active && index > currentSectionDetails.index)
     .sort(({ details: { index: aIndex } }, { details: { index: bIndex } }) => aIndex - bIndex)
   const nextSection = nextSections.length > 0 ? nextSections[0].details : null
 
   const previousSections = Object.values(sections)
-    .filter(({ details: { index } }) => index < currentSectionDetails.index)
+    .filter(({ details: { active, index } }) => active && index < currentSectionDetails.index)
     .sort(({ details: { index: aIndex } }, { details: { index: bIndex } }) => bIndex - aIndex)
   const previousSection = previousSections.length > 0 ? previousSections[0].details : null
 
@@ -68,17 +68,20 @@ const Navigation: React.FC<NavigationProps> = ({
   const sendToPage = (sectionPage: SectionAndPage) => {
     const { sectionCode, pageNumber } = sectionPage
     push(`/application/${serialNumber}/${sectionCode}/Page${pageNumber}`)
+    window.scrollTo({ top: 0 })
   }
 
   const previousButtonHandler = () => {
     const previousSectionPage = getPreviousSectionPage()
     sendToPage(previousSectionPage)
+    window.scrollTo({ top: 0 })
   }
 
   const nextPageButtonHandler = () => {
     const nextSectionPage = getNextSectionPage()
     if (!isLinear) {
       sendToPage(nextSectionPage)
+      window.scrollTo({ top: 0 })
       return
     }
 

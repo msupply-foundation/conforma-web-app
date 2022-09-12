@@ -1,5 +1,5 @@
 import React from 'react'
-import { Checkbox, Container, Form, Message } from 'semantic-ui-react'
+import { Checkbox, Form, Message } from 'semantic-ui-react'
 import { Decision } from '../../utils/generated/graphql'
 import { DecisionOption } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -22,29 +22,25 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
     const onChangeDecision = (_: any, { value: code }: any) => setDecision(code)
     const visibleOptions = decisionOptions.filter((option) => option.isVisible)
     return (
-      <Container>
+      <div>
         {visibleOptions.length > 0 && (
           <p>
             <strong>{strings.LABEL_REVIEW_SUBMIT_AS}:</strong>
           </p>
         )}
-        {visibleOptions.map((option) => (
-          <Form.Field
-            className="reviewer-decision-checkbox"
-            error={isDecisionError}
-            key={option.code}
-          >
+        {visibleOptions.map(({ code, title, value }) => (
+          <Form.Field className="reviewer-decision-checkbox" error={isDecisionError} key={code}>
             <Checkbox
               radio
-              label={option.title}
-              name={option.title}
-              value={option.code}
-              checked={option.value}
+              label={title}
+              name={title}
+              value={code}
+              checked={value}
               onChange={onChangeDecision}
             />
           </Form.Field>
         ))}
-      </Container>
+      </div>
     )
   }
   // If review has been submitted/locked:

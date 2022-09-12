@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import config from '../config'
 import strings from '../utils/defaultLanguageStrings'
 import { getRequest } from '../utils/helpers/fetchMethods'
+import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 import { mapValues } from 'lodash'
 
 const { pluginsFolder } = config
@@ -189,7 +190,7 @@ const getLanguageStrings = async (code: string) => {
   if (code === 'default') return strings
   // Else fetch language file from server
   try {
-    const fetchedStrings = await getRequest(config.serverREST + '/public/language/' + code)
+    const fetchedStrings = await getRequest(getServerUrl('language', { code }))
     if (fetchedStrings?.error) throw new Error(`Language code: ${code}, ${fetchedStrings?.message}`)
     return consolidateStrings(strings, fetchedStrings)
   } catch (err) {

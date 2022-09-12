@@ -7,21 +7,25 @@ import { Link } from 'react-router-dom'
 import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useDataViewsList } from '../../utils/hooks/useDataViews'
+import { useReferenceDocs } from '../../utils/hooks/useReferenceDocs'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { usePrefs } from '../../contexts/SystemPrefs'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { UiLocation } from '../../utils/generated/graphql'
-const brandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
+const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
 
 const UserArea: React.FC = () => {
   const {
-    userState: { currentUser, orgList, templatePermissions },
+    userState: { currentUser, orgList, templatePermissions, isAdmin },
     onLogin,
   } = useUserState()
   const {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
+  const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser, isAdmin)
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
@@ -29,7 +33,11 @@ const UserArea: React.FC = () => {
     <Container id="user-area" fluid>
       <BrandArea />
       <div id="user-area-left">
-        <MainMenuBar templates={templates} dataViews={dataViewsList} />
+        <MainMenuBar
+          templates={templates}
+          dataViews={dataViewsList}
+          referenceDocs={{ intReferenceDocs, extReferenceDocs }}
+        />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
       <UserMenu
@@ -44,24 +52,38 @@ const UserArea: React.FC = () => {
 interface MainMenuBarProps {
   templates: TemplateInList[]
   dataViews: { tableName: string; title: string; code: string }[]
+  referenceDocs: {
+    intReferenceDocs: { uniqueId: string; description: string }[]
+    extReferenceDocs: { uniqueId: string; description: string }[]
+  }
 }
 interface DropdownsState {
   dashboard: { active: boolean }
   templates: { active: boolean; selection: string }
   dataViews: { active: boolean; selection: string }
   admin: { active: boolean; selection: string }
+  manage: { active: boolean; selection: string }
+  intRefDocs: { active: boolean }
+  extRefDocs: { active: boolean }
 }
-const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
+const MainMenuBar: React.FC<MainMenuBarProps> = ({
+  templates,
+  dataViews,
+  referenceDocs: { intReferenceDocs, extReferenceDocs },
+}) => {
   const { strings } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     templates: { active: false, selection: '' },
     dataViews: { active: false, selection: '' },
     admin: { active: false, selection: '' },
+    manage: { active: false, selection: '' },
+    intRefDocs: { active: false },
+    extRefDocs: { active: false },
   })
   const { push, pathname } = useRouter()
   const {
-    userState: { isAdmin },
+    userState: { isAdmin, isManager },
   } = useUserState()
 
   // Ensures the "selected" state of other dropdowns gets disabled
@@ -85,7 +107,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
       value: template.code,
     }))
 
-  const adminOptions: any = [
+  const configOptions = [
     { key: 'templates', text: strings.MENU_ITEM_ADMIN_TEMPLATES, value: '/admin/templates' },
     {
       key: 'lookup_tables',
@@ -107,14 +129,14 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
   ]
   // Only include Snapshots menu item in Dev mode
   if (process.env.NODE_ENV === 'development')
-    adminOptions.splice(1, 0, {
+    configOptions.splice(1, 0, {
       key: 'snapshots',
       text: 'Snapshots',
       value: '/admin/snapshots',
     })
 
-  // Add Admin templates to Admin menu
-  adminOptions.push(
+  // Add Config/Admin templates to Config menu (requires Admin permission)
+  configOptions.push(
     ...templates
       .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin))
       .map((template) => ({
@@ -123,6 +145,14 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
         value: `/application/new?type=${template.code}`,
       }))
   )
+
+  const managementOptions = templates
+    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Management))
+    .map((template) => ({
+      key: template.code,
+      text: template.name,
+      value: `/application/new?type=${template.code}`,
+    }))
 
   const handleDataViewChange = (_: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
@@ -139,6 +169,11 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
     push(value)
   }
 
+  const handleManagementChange = (_: SyntheticEvent, { value }: any) => {
+    setDropDownsState({ ...dropdownsState, manage: { active: true, selection: value } })
+    push(value)
+  }
+
   return (
     <div id="menu-bar">
       <List horizontal>
@@ -152,6 +187,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
               options={templateOptions}
               onChange={handleTemplateChange}
               value={dropdownsState.templates.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
@@ -162,17 +198,60 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
               options={dataViewOptions}
               onChange={handleDataViewChange}
               value={dropdownsState.dataViews.selection}
+              selectOnBlur={false}
+            />
+          </List.Item>
+        )}
+        {isManager && (
+          <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
+            <Dropdown
+              text={strings.MENU_ITEM_MANAGE}
+              options={managementOptions}
+              onChange={handleManagementChange}
+              value={dropdownsState.manage.selection}
+              selectOnBlur={false}
             />
           </List.Item>
         )}
         {isAdmin && (
           <List.Item className={dropdownsState.admin.active ? 'selected-link' : ''}>
             <Dropdown
-              text={strings.MENU_ITEM_ADMIN_CONFIG}
-              options={adminOptions}
+              text={strings.MENU_ITEM_CONFIG}
+              options={configOptions}
               onChange={handleAdminChange}
               value={dropdownsState.admin.selection}
+              selectOnBlur={false}
             />
+          </List.Item>
+        )}
+        {extReferenceDocs.length && (
+          <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
+            <Dropdown text={strings.MENU_ITEM_HELP}>
+              <Dropdown.Menu>
+                {extReferenceDocs.map((doc) => (
+                  <Dropdown.Item
+                    key={doc.uniqueId}
+                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
+                    text={doc.description}
+                  />
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </List.Item>
+        )}
+        {intReferenceDocs.length && (
+          <List.Item className={dropdownsState.intRefDocs.active ? 'selected-link' : ''}>
+            <Dropdown text={strings.MENU_ITEM_REF_DOCS}>
+              <Dropdown.Menu>
+                {intReferenceDocs.map((doc) => (
+                  <Dropdown.Item
+                    key={doc.uniqueId}
+                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
+                    text={doc.description}
+                  />
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </List.Item>
         )}
       </List>
@@ -181,18 +260,17 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({ templates, dataViews }) => {
 }
 
 const BrandArea: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { preferences } = usePrefs()
+
+  const logoUrl = preferences?.brandLogoOnDarkFileId
+    ? getServerUrl('file', { fileId: preferences.brandLogoOnDarkFileId })
+    : defaultBrandLogo
+
   return (
     <div id="brand-area" className="hide-on-mobile">
       <Link to="/">
-        <Image src={brandLogo} />
+        <Image src={logoUrl} />
       </Link>
-      <div>
-        {/* <Link to="/">
-          <h2 className="brand-area-text">{strings._APP_NAME}</h2>
-          <h3 className="brand-area-text">{strings._APP_NAME_SUBHEADER}</h3>
-        </Link> */}
-      </div>
     </div>
   )
 }
@@ -205,8 +283,6 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   const { strings } = useLanguageProvider()
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
 
-  const JWT = localStorage.getItem(config.localStorageJWTKey) as string
-
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
     await attemptLoginOrg({ orgId, onLoginOrgSuccess })
   }
@@ -216,8 +292,9 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
     templatePermissions,
     JWT,
     isAdmin,
+    permissionNames,
   }: LoginPayload) => {
-    await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
+    await onLogin(JWT, user, templatePermissions, permissionNames, orgList, isAdmin)
   }
   const dropdownOptions = orgs.map(({ orgId, orgName }) => ({
     key: orgId,
@@ -234,7 +311,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
-        <Image src={getFullUrl(user?.organisation?.logoUrl, config.serverREST + '/public')} />
+        <Image src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))} />
       )}
       <div>
         {dropdownOptions.length === 1 ? (
@@ -339,35 +416,61 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         dashboard: { active: true },
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
+        manage: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
     case 'applications':
       return {
         dashboard: { active: false },
         templates: { active: true, selection: dropdownsState.templates.selection },
         dataViews: { active: false, selection: '' },
+        manage: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
-    case 'outcomes':
+    case 'data':
       return {
         dashboard: { active: false },
         templates: { active: false, selection: '' },
         dataViews: { active: true, selection: dropdownsState.dataViews.selection },
+        manage: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
+      }
+    case 'manage':
+      return {
+        dashboard: { active: false },
+        templates: { active: false, selection: '' },
+        dataViews: { active: true, selection: dropdownsState.dataViews.selection },
+        manage: { active: true, selection: dropdownsState.manage.selection },
+        admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
     case 'admin':
       return {
         dashboard: { active: false },
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
+        manage: { active: false, selection: '' },
         admin: { active: true, selection: dropdownsState.admin.selection },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
+    // Don't need one for ref docs because they open in new tab
     default:
       return {
         dashboard: { active: false },
         templates: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
+        manage: { active: false, selection: '' },
         admin: { active: false, selection: '' },
+        intRefDocs: { active: false },
+        extRefDocs: { active: false },
       }
   }
 }

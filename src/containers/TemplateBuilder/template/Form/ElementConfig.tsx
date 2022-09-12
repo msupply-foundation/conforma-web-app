@@ -1,8 +1,12 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import React, { useEffect, useState } from 'react'
-import { Modal, Label, Icon, Header, Message, ModalProps } from 'semantic-ui-react'
+import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
 import { pluginProvider } from '../../../../formElementPlugins'
-import { TemplateElement, TemplateElementCategory } from '../../../../utils/generated/graphql'
+import {
+  IsReviewableStatus,
+  TemplateElement,
+  TemplateElementCategory,
+} from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
 import Evaluation from '../../shared/Evaluation'
@@ -14,7 +18,7 @@ import { useFullApplicationState } from '../ApplicationWrapper'
 import { useFormState } from './Form'
 import FromExistingElement from './FromExistingElement'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
-import ModalConfirmation from '../../../../components/Main/ModalConfirmation'
+import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 
 type ElementConfigProps = {
   element: TemplateElement | null
@@ -23,17 +27,18 @@ type ElementConfigProps = {
 
 type ElementUpdateState = {
   code: string
-  title: string
+  title: string | null
   category: TemplateElementCategory
   elementTypePluginCode: string
   visibilityCondition: EvaluatorNode
   isRequired: EvaluatorNode
   isEditable: EvaluatorNode
   validation: EvaluatorNode
-  validationMessage: string
-  helpText: string
+  validationMessage: string | null
+  helpText: string | null
   parameters: ParametersType
   defaultValue: EvaluatorNode
+  isReviewable: IsReviewableStatus | null
   id: number
 }
 
@@ -41,17 +46,18 @@ type GetState = (element: TemplateElement) => ElementUpdateState
 
 const getState: GetState = (element: TemplateElement) => ({
   code: element.code || '',
-  title: element.title || '',
+  title: element.title || null,
   category: element.category || TemplateElementCategory.Information,
   elementTypePluginCode: element.elementTypePluginCode || '',
   visibilityCondition: element.visibilityCondition,
   isRequired: element.isRequired,
   isEditable: element.isEditable,
   validation: element.validation,
-  helpText: element.helpText || '',
+  helpText: element.helpText || null,
   validationMessage: element.validationMessage || '',
   parameters: element.parameters || {},
   defaultValue: element.defaultValue || null,
+  isReviewable: element.isReviewable || null,
   id: element.id,
 })
 
@@ -70,12 +76,12 @@ const evaluations: Evaluations = [
 
 const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const { strings } = useLanguageProvider()
-
-  const REMOVE_MESSAGE = {
-    title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
-    message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
-    option: strings.BUTTON_CONFIRM,
-  }
+  const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } =
+    useConfirmationModal({
+      title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
+      message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
+      confirmText: strings.BUTTON_CONFIRM,
+    })
 
   const { structure } = useFullApplicationState()
   const {
@@ -87,7 +93,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
   const [open, setOpen] = useState(false) // TODO: Use ConfirmationModal (2 actions...)
-  const [showRemoveElementModal, setShowRemoveElementModal] = useState<ModalProps>({ open: false })
 
   useEffect(() => {
     if (!element) return setState(null)
@@ -142,18 +147,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
     setShowSaveAlert(false)
   }
 
-  const confirmAndRemove = () => {
-    setShowRemoveElementModal({
-      ...REMOVE_MESSAGE,
-      open: true,
-      onClick: () => {
-        removeElement()
-        setShowRemoveElementModal({ open: false })
-      },
-      onClose: () => setShowRemoveElementModal({ open: false }),
-    })
-  }
-
   return (
     <Modal className="config-modal" open={true}>
       <div className="config-modal-container">
@@ -171,6 +164,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 markNeedsUpdate()
               }}
               options={Object.values(pluginProvider.pluginManifest)}
+              search
               labelNegative
               minLabelWidth={50}
             />
@@ -202,7 +196,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <div className="flex-row-start-start">
               <div className="full-width-container">
                 <TextIO
-                  text={state.title}
+                  text={state?.title || ''}
                   title="Title"
                   setText={(text) => {
                     setState({ ...state, title: text })
@@ -219,7 +213,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 text={state.code}
                 title="Code"
                 setText={(text) => {
-                  setState({ ...state, code: text })
+                  setState({ ...state, code: text ?? '' })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
@@ -243,14 +237,39 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 ]}
               />
             </div>
+            <div className="full-width-container">
+              <DropdownIO
+                title="Is Reviewable"
+                value={state.isReviewable || 'default'}
+                getKey={'value'}
+                getValue={'value'}
+                getText={'text'}
+                isPropUpdated={true}
+                setValue={(value) => {
+                  const updateValue = value === 'default' ? null : value
+                  setState({ ...state, isReviewable: updateValue as IsReviewableStatus | null })
+                  markNeedsUpdate()
+                }}
+                options={[
+                  { value: IsReviewableStatus.Always, text: 'Always' },
+                  { value: IsReviewableStatus.Never, text: 'Never' },
+                  {
+                    value: IsReviewableStatus.OptionalIfNoResponse,
+                    text: 'Optional (if no application response)',
+                  },
+                  { value: 'default', text: 'Only if applicant answered' },
+                ]}
+                maxLabelWidth={120}
+              />
+            </div>
             <div className="flex-row-start-center-wrap">
               <div className="full-width-container">
                 <TextIO
-                  text={state.validationMessage}
+                  text={state?.validationMessage || ''}
                   title="Validation Message"
                   isTextArea={true}
                   setText={(text) => {
-                    setState({ ...state, validationMessage: text })
+                    setState({ ...state, validationMessage: text || null })
                   }}
                   markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
@@ -264,11 +283,11 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <div className="flex-row-start-center-wrap">
               <div className="full-width-container">
                 <TextIO
-                  text={state.helpText}
+                  text={state?.helpText || ''}
                   isTextArea={true}
                   title="Help Text"
                   setText={(text) => {
-                    setState({ ...state, helpText: text })
+                    setState({ ...state, helpText: text || null })
                   }}
                   markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
@@ -321,7 +340,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               disabled={!isDraft}
               disabledMessage={disabledMessage}
               title={strings.BUTTON_REMOVE}
-              onClick={confirmAndRemove}
+              onClick={() => showRemoveElementModal({ onConfirm: () => removeElement() })}
             />
             <ButtonWithFallback
               title={strings.BUTTON_CLOSE}
@@ -352,7 +371,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           </div>
         </div>
       </div>
-      <ModalConfirmation {...showRemoveElementModal} />
+      <RemoveElementModal />
       <Message
         className="alert-success"
         success

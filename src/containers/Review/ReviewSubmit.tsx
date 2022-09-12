@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import { Button, Form, Label, ModalProps } from 'semantic-ui-react'
-import { ModalWarning } from '../../components'
-import ModalConfirmation from '../../components/Main/ModalConfirmation'
+import { Button, Form, Label } from 'semantic-ui-react'
+import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import ReviewComment from '../../components/Review/ReviewComment'
 import ReviewDecision from '../../components/Review/ReviewDecision'
 import { Decision, ReviewStatus } from '../../utils/generated/graphql'
@@ -9,6 +8,7 @@ import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
 import { useGetFullReviewStructureAsync } from '../../utils/hooks/useGetReviewStructureForSection'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
+import { ReviewDecisionPreview } from '../../components/Review/DecisionPreview/ReviewDecisionPreview'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { AssignmentDetails, FullStructure } from '../../utils/types'
 
@@ -23,19 +23,21 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   const {
     structure: { thisReview, assignment, canApplicantMakeChanges },
   } = props
-
   const reviewDecision = thisReview?.reviewDecision
   const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
     useGetDecisionOptions(canApplicantMakeChanges, assignment, thisReview)
 
   return (
     <Form id="review-submit-area">
-      <ReviewDecision
-        decisionOptions={decisionOptions}
-        setDecision={setDecision}
-        isDecisionError={isDecisionError}
-        isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
-      />
+      <div className="flex-row-space-between-flex-end">
+        <ReviewDecision
+          decisionOptions={decisionOptions}
+          setDecision={setDecision}
+          isDecisionError={isDecisionError}
+          isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
+        />
+        <ReviewDecisionPreview structure={props.structure} decision={getDecision()} />
+      </div>
       <ReviewComment
         isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
         reviewDecisionId={reviewDecision?.id}
@@ -73,22 +75,19 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     REVIEW_SUBMISSION_CONFIRM: {
       title: strings.REVIEW_SUBMISSION_CONFIRM_TITLE,
       message: strings.REVIEW_SUBMISSION_CONFIRM_MESSAGE,
-      option: strings.BUTTON_SUBMIT,
+      confirmText: strings.BUTTON_SUBMIT,
     },
     REVIEW_DECISION_SET_FAIL: {
       title: strings.REVIEW_DECISION_SET_FAIL_TITLE,
       message: strings.REVIEW_DECISION_SET_FAIL_MESSAGE,
-      option: strings.OPTION_OK,
     },
     REVIEW_DECISION_MISMATCH: {
       title: strings.REVIEW_DECISION_MISMATCH_TITLE,
       message: strings.REVIEW_DECISION_MISMATCH_MESSAGE,
-      option: strings.OPTION_OK,
     },
     REVIEW_STATUS_PENDING: {
       title: strings.REVIEW_STATUS_PENDING_TITLE,
       message: strings.REVIEW_STATUS_PENDING_MESSAGE,
-      option: strings.OPTION_OK,
     },
   }
 
@@ -98,8 +97,12 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     reviewAssignment: assignment,
   })
 
-  const [showModalConfirmation, setShowModalConfirmation] = useState<ModalProps>({ open: false })
-  const [showWarningModal, setShowWarningModal] = useState<ModalProps>({ open: false })
+  const { ConfirmModal, showModal: showConfirmModal } = useConfirmationModal({
+    ...messages.REVIEW_SUBMISSION_CONFIRM,
+  })
+  const { ConfirmModal: WarningModal, showModal: showWarning } = useConfirmationModal({
+    type: 'warning',
+  })
   // TODO: Show on message
   const [submissionError, setSubmissionError] = useState<boolean>(false)
   const submitReview = useSubmitReview(Number(structure.thisReview?.id), structure.reload)
@@ -107,57 +110,19 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
 
   const showIncompleteSectionWarning = () => {
-    const { title, message, option } = messages.REVIEW_DECISION_SET_FAIL
-    setShowWarningModal({
-      open: true,
-      title,
-      message,
-      option,
-      onClick: () => setShowWarningModal({ open: false }),
-      onClose: () => setShowWarningModal({ open: false }),
-    })
+    showWarning({ ...messages.REVIEW_DECISION_SET_FAIL })
   }
 
   const showPendingReviewWarning = () => {
-    const { title, message, option } = messages.REVIEW_STATUS_PENDING
-    setShowWarningModal({
-      open: true,
-      title,
-      message,
-      option,
-      onClick: () => {
-        setShowWarningModal({ open: false })
-        push(`/application/${structure.info.serial}/review`)
-      },
-      onClose: () => {
-        setShowWarningModal({ open: false })
-        push(`/application/${structure.info.serial}/review`)
-      },
+    showWarning({
+      ...messages.REVIEW_STATUS_PENDING,
+      onConfirm: () => push(`/application/${structure.info.serial}/review`),
+      onCancel: () => push(`/application/${structure.info.serial}/review`),
     })
   }
 
   const showDecisionMismatchWarning = () => {
-    const { title, message, option } = messages.REVIEW_DECISION_MISMATCH
-    setShowWarningModal({
-      open: true,
-      title,
-      message,
-      option,
-      onClick: () => submission(),
-      onClose: () => setShowWarningModal({ open: false }),
-    })
-  }
-
-  const showConfirmation = () => {
-    const { title, message, option } = messages.REVIEW_SUBMISSION_CONFIRM
-    setShowModalConfirmation({
-      open: true,
-      title,
-      message,
-      option,
-      onClick: () => submission(),
-      onClose: () => setShowModalConfirmation({ open: false }),
-    })
+    showWarning({ ...messages.REVIEW_DECISION_MISMATCH, onConfirm: () => submission() })
   }
 
   const onClick = async () => {
@@ -201,7 +166,10 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     }
 
     // Can SUBMIT
-    showConfirmation()
+    showConfirmModal({
+      onConfirm: () => submission(),
+      showCancel: false,
+    })
   }
 
   const submission = async () => {
@@ -209,7 +177,6 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       await submitReview(structure, getDecision())
     } catch (e) {
       console.log(e)
-      setShowModalConfirmation({ open: false })
       setSubmissionError(true)
     }
   }
@@ -227,8 +194,8 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       {attemptSubmissionFailed && (
         <Label className="simple-label alert-text" content={strings.REVIEW_SUBMISSION_FAIL} />
       )}
-      <ModalWarning {...showWarningModal} />
-      <ModalConfirmation {...showModalConfirmation} />
+      <WarningModal />
+      <ConfirmModal />
     </Form.Field>
   )
 }

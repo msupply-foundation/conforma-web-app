@@ -1,4 +1,3 @@
-import config from '../../../config'
 import {
   useUpdateTemplateMutation,
   useUpdateTemplateFilterJoinMutation,
@@ -7,6 +6,7 @@ import {
   useRestartApplicationMutation,
   useUpdateTemplateStageMutation,
 } from '../../../utils/generated/graphql'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import useCreateApplication from '../../../utils/hooks/useCreateApplication'
 import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
@@ -22,13 +22,7 @@ import {
   UpdateTemplateStage,
 } from './OperationContext'
 
-const snapshotsBaseUrl = `${config.serverREST}/admin/snapshot`
-const takeSnapshotUrl = `${snapshotsBaseUrl}/take`
-export const snapshotFilesUrl = `${snapshotsBaseUrl}/files`
-const useSnapshotUrl = `${snapshotsBaseUrl}/use`
-const deleteSnapshotUrl = `${snapshotsBaseUrl}/delete`
 const templateExportOptionName = 'templateExport'
-const uploadSnapshotUrl = `${snapshotsBaseUrl}/upload`
 
 type SetErrorAndLoadingState = (props: ErrorAndLoadingState) => void
 
@@ -195,7 +189,11 @@ export const exportTemplate: TemplateOperationHelper = async (
   setErrorAndLoadingState
 ) =>
   await safeFetch(
-    `${takeSnapshotUrl}?name=${snapshotName}&optionsName=${templateExportOptionName}`,
+    getServerUrl('snapshot', {
+      action: 'take',
+      name: snapshotName,
+      options: templateExportOptionName,
+    }),
     getFitlerBody(id),
     setErrorAndLoadingState
   )
@@ -207,7 +205,11 @@ export const duplicateTemplate: TemplateOperationHelper = async (
   const body = getFitlerBody(id)
 
   const result = await safeFetch(
-    `${takeSnapshotUrl}?name=${snapshotName}&optionsName=${templateExportOptionName}`,
+    getServerUrl('snapshot', {
+      action: 'take',
+      name: snapshotName,
+      options: templateExportOptionName,
+    }),
     body,
     setErrorAndLoadingState
   )
@@ -215,7 +217,11 @@ export const duplicateTemplate: TemplateOperationHelper = async (
   if (!result) return false
 
   return await safeFetch(
-    `${useSnapshotUrl}?name=${snapshotName}&optionsName=${templateExportOptionName}`,
+    getServerUrl('snapshot', {
+      action: 'use',
+      name: snapshotName,
+      options: templateExportOptionName,
+    }),
     body,
     setErrorAndLoadingState
   )
@@ -232,7 +238,7 @@ export const importTemplate: ImportTemplateHelper =
       data.append('file', file)
 
       const result = await safeFetch(
-        `${uploadSnapshotUrl}?name=${snapshotName}`,
+        getServerUrl('snapshot', { action: 'upload', name: snapshotName }),
         data,
         setErrorAndLoadingState
       )
@@ -240,13 +246,17 @@ export const importTemplate: ImportTemplateHelper =
       if (!result) return false
 
       const snapshotResult = await safeFetch(
-        `${useSnapshotUrl}?name=${snapshotName}&optionsName=${templateExportOptionName}`,
+        getServerUrl('snapshot', {
+          action: 'use',
+          name: snapshotName,
+          options: templateExportOptionName,
+        }),
         '{}',
         setErrorAndLoadingState
       )
 
       // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
-      safeFetch(`${deleteSnapshotUrl}?name=${snapshotName}`, {}, () => {})
+      safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})
 
       return snapshotResult
     } catch (error) {
@@ -272,15 +282,11 @@ const safeFetch = async (
   body: any,
   setErrorAndLoadingState: SetErrorAndLoadingState
 ) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
   setErrorAndLoadingState({ isLoading: true })
   try {
     const resultJson = await postRequest({
       url,
-      headers:
-        typeof body === 'string'
-          ? { Authorization: `Bearer ${JWT}`, 'Content-Type': 'application/json' }
-          : { Authorization: `Bearer ${JWT}` },
+      headers: typeof body === 'string' ? { 'Content-Type': 'application/json' } : {},
       otherBody: body,
     })
     if (!!resultJson?.success) {

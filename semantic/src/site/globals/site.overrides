@@ -112,6 +112,11 @@ a:hover {
   flex-wrap: wrap;
 }
 
+.flex-row-space-between-flex-end {
+  .flex-row-space-between-center();
+  align-items: flex-end;
+}
+
 .flex-row-space_evenly-center {
   .flex-row-space_evenly();
   align-items: center;
@@ -291,9 +296,10 @@ a:hover {
   position: fixed; // TO-DO: No fixed on mobile
   background-color: @headersInteractiveLow;
   padding-top: 10px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   padding-left: 20px;
   padding-right: 20px;
+  gap: 20px;
   height: @headerHeight; // TO-DO: Adjust for mobile
   justify-content: space-between;
   z-index: 1000;
@@ -307,7 +313,6 @@ a:hover {
   width: clamp(100px, 25%, 200px);
   display: flex;
   align-items: center;
-  gap: 20px;
   .brand-area-text {
     color: @userAreaText !important;
     margin: 0;
@@ -322,8 +327,12 @@ a:hover {
 
 #menu-bar {
   font-size: inherit;
-  .item {
-    margin-right: 10px;
+  .list {
+    display: flex;
+    gap: 10px;
+  }
+  .ui .dropdown {
+    display: flex;
   }
 }
 // Menu bar links
@@ -331,6 +340,11 @@ a:hover {
   a {
     color: @userAreaText;
     font-size: @fontSmall;
+  }
+  .menu {
+    a {
+      color: @headersInteractiveDarker;
+    }
   }
 }
 
@@ -413,7 +427,7 @@ a:hover {
   // border: 1px solid black;
   display: flex;
   flex-direction: row;
-  max-width: 220px;
+  max-width: 300px;
   align-items: center;
 }
 
@@ -425,6 +439,9 @@ a:hover {
   font-size: @fontXXsmall;
   color: @surfacesDark;
   margin-left: 10px;
+  .name {
+    font-size: @fontXsmall;
+  }
 }
 
 /*-----------------------------------
@@ -510,6 +527,70 @@ a:hover {
 // Message area segment - bottom of application home/create
 .padding-zero {
   padding: 0;
+}
+
+/*---------------------------------------
+      Review Submission Document Preview
+----------------------------------------*/
+
+#preview-modal {
+  min-height: 60vh;
+  max-width: 700px;
+  .content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .actions {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  #preview-items{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 650px;
+    margin-top: 20px;
+    margin-bottom: 60px; // to offset the Actions area that covers it.
+    .item {
+      background-color: @surfacesLight;
+      width: 90%;
+      border-radius: @borderRadius;
+      padding: 10px
+    }
+    .notification-preview {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      h1, h2 {
+        font-size: 1.1em;
+        font-weight: bold;
+      }
+      h3, h4 {
+        font-size: 1.0em;
+      }
+      p {
+        font-size: 0.95em;
+      }
+      .content {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+    .document-preview {
+      .flex-row-start-center();
+      padding-left: 6px;
+      gap: 10px;
+    }
+    .error-item, .fallback-preview{
+      p {
+        font-size: 1em;
+      }
+    }
+    .fallback-preview pre {
+      font-size: 0.9em;
+      margin: 0;
+    }
+  }
 }
 
 /*---------------------------------------
@@ -640,6 +721,11 @@ a:hover {
   max-width: 250px;
 }
 
+.reviewer-dropdown .menu {
+  // Keeps menu from disappearing under UserArea bar
+  z-index: 9999 !important;
+}
+
 /*---------------------------------------
       Review page
 ----------------------------------------*/
@@ -669,6 +755,11 @@ a:hover {
 
 #review-submit-area {
   margin-bottom: 30px;
+  max-width: 500px;
+}
+
+#review-submit-area textarea {
+  max-width: none;
 }
 
 #review-submit-area p {
@@ -1968,7 +2059,11 @@ a:hover {
   color: @attention !important;
 }
 
-.interactive-color {
+.alert-colour {
+  color: @error !important;
+}
+
+.interactive-colour {
   color: @interactiveHigh !important;
 }
 
@@ -2250,6 +2345,12 @@ a:hover {
   }
 }
 
+/*******************************
+      Re-useable components
+*******************************/
+
+// Toast
+
 @toastTopMargin: 40px;
 @toastBottomMargin: 40px;
 @toastHorizontalMargin: 20px;
@@ -2350,6 +2451,26 @@ a:hover {
 .config-container-outline {
   .config-container();
   border: 1px solid @surfacesMed;
+}
+
+// Tooltip / Popover component
+
+.icon.tooltip-trigger {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.ui.popup.tooltip {
+  padding: 1.2em;
+  p {
+    margin-bottom: 0.5em;
+  }
+  ul {
+    margin:0;
+  }
+  li {
+    margin-bottom: 0.5em;
+  }
 }
 
 /*******************************

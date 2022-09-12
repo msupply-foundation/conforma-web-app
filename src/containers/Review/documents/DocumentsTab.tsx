@@ -1,14 +1,11 @@
 import React from 'react'
 import { Container, List, Header, Image } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
-import { File, useGetApplicationDocsQuery } from '../../../utils/generated/graphql'
-import { useUserState } from '../../../contexts/UserState'
+import { useGetApplicationDocsQuery } from '../../../utils/generated/graphql'
 import { FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import config from '../../../config'
 import { DateTime } from 'luxon'
-
-const downloadUrl = `${config.serverREST}/public`
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const DocumentsTab: React.FC<{
   structure: FullStructure
@@ -35,11 +32,11 @@ const DocumentsTab: React.FC<{
         {docs.map((doc) => (
           <List.Item
             className="clickable"
-            onClick={() => window.open(`${downloadUrl}/file?uid=${doc?.uniqueId}`, '_blank')}
+            onClick={() => window.open(getServerUrl('file', { fileId: doc!.uniqueId }), '_blank')}
           >
             <div className="flex-row-start flex-extra">
               <div className="icon-container">
-                <Image src={`${downloadUrl}/file?uid=${doc?.uniqueId}&thumbnail=true`} />
+                <Image src={getServerUrl('file', { fileId: doc!.uniqueId, thumbnail: true })} />
               </div>
               <div>
                 <Header as="h4" content={doc?.description} />
@@ -47,7 +44,7 @@ const DocumentsTab: React.FC<{
                   {DateTime.fromISO(doc?.timestamp).toLocaleString()}
                 </p>
                 <p className="smaller-text">
-                  <a href={`${downloadUrl}/file?uid=${doc?.uniqueId}`} target="_blank">
+                  <a href={getServerUrl('file', { fileId: doc!.uniqueId })} target="_blank">
                     {doc?.originalFilename}
                   </a>
                 </p>

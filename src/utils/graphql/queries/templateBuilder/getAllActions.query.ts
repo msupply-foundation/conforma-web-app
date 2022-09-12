@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export default gql`
   query getAllActions {
-    actionPlugins {
+    actionPlugins(orderBy: NAME_ASC) {
       nodes {
         id
         code

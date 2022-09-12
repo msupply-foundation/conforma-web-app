@@ -1,18 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Button, Icon, Grid, List, Image, Message, Segment, Loader } from 'semantic-ui-react'
+import { Button, Icon, List, Segment } from 'semantic-ui-react'
 import { nanoid } from 'nanoid'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
-import prefs from '../config.json'
+import { FileDisplay, FileDisplayWithDescription } from './components'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 
-interface FileResponseData {
+export interface FileResponseData {
   uniqueId: string
   filename: string
   fileUrl: string
   thumbnailUrl: string
   mimetype: string
+  description?: string
 }
 
 interface FileUploadServerResponse {
@@ -20,7 +22,7 @@ interface FileUploadServerResponse {
   fileData?: FileResponseData[]
 }
 
-interface FileInfo {
+export interface FileInfo {
   key: string
   filename: string
   loading: boolean
@@ -41,13 +43,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { getPluginStrings } = useLanguageProvider()
   const strings = getPluginStrings('fileUpload')
   const { isEditable } = element
-  const { label, description, fileCountLimit, fileExtensions, fileSizeLimit, subfolder } =
-    parameters
-
-  const { config } = applicationData
-
-  const uploadUrl = `${config.serverREST}${config.uploadEndpoint}`
-  const downloadUrl = `${config.serverREST}/public`
+  const {
+    label,
+    description,
+    fileCountLimit,
+    fileExtensions,
+    fileSizeLimit,
+    subfolder,
+    showDescription = false,
+  } = parameters
 
   // These values required for file upload query parameters:
   const {
@@ -122,7 +126,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setUploadedFiles([...newFileData])
     files.forEach(async (file: any) => {
       if (file?.error) return
-      const result: FileUploadServerResponse = await uploadFile(file)
+      const result: FileUploadServerResponse = await uploadFile(file, {
+        serialNumber,
+        userId: currentUser?.userId ?? null,
+        applicationResponseId: application_response_id,
+        subfolder,
+      })
       const index = newFileData.findIndex((f: any) => f.key === file.key)
       if (result.success) {
         newFileData[index] = {
@@ -144,6 +153,23 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const handleDelete = async (key: string) => {
     setUploadedFiles(uploadedFiles.filter((file) => file.key !== key))
+  }
+
+  const handleUpdateDescription = async (uniqueId: string, value: string, key: string) => {
+    try {
+      // Save description to database file record
+      await updateFileDescription(uniqueId, value || null)
+      // Update response
+      const index = uploadedFiles.findIndex((f) => f.key === key)
+      const newFiles = [...uploadedFiles]
+      newFiles[index].fileData = {
+        ...newFiles[index].fileData,
+        description: value,
+      } as FileResponseData
+      setUploadedFiles(newFiles)
+    } catch (err) {
+      console.warn('Error', err.message)
+    }
   }
 
   return (
@@ -176,96 +202,60 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             </Button>
           )}
         </Segment>
-        <List horizontal verticalAlign="top">
-          {uploadedFiles.map((file) => {
-            const { key, loading, error, errorMessage, filename, fileData } = file
-            return (
-              <List.Item key={key} style={{ maxWidth: 150 }}>
-                <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
-                  <Grid.Row style={{ boxShadow: 'none', marginLeft: 150 }} verticalAlign="bottom">
-                    <Icon
-                      link
-                      name="delete"
-                      circular
-                      fitted
-                      color="grey"
-                      onClick={() => handleDelete(key)}
-                    />
-                  </Grid.Row>
-                  {error && (
-                    <>
-                      <Grid.Row
-                        centered
-                        style={{ boxShadow: 'none', height: 120, padding: 10 }}
-                        verticalAlign="middle"
-                      >
-                        <Message negative compact>
-                          <p>{errorMessage}</p>
-                        </Message>
-                      </Grid.Row>
-                      <Grid.Row centered style={{ boxShadow: 'none' }}>
-                        <p style={{ wordBreak: 'break-word' }}>{filename}</p>
-                      </Grid.Row>
-                    </>
-                  )}
-                  {loading && (
-                    <>
-                      <Grid.Row
-                        centered
-                        style={{ boxShadow: 'none', height: 120 }}
-                        verticalAlign="middle"
-                      >
-                        <Loader active size="medium">
-                          Uploading
-                        </Loader>
-                      </Grid.Row>
-                      <Grid.Row centered style={{ boxShadow: 'none' }}>
-                        <p style={{ wordBreak: 'break-word' }}>{filename}</p>
-                      </Grid.Row>
-                    </>
-                  )}
-                  {fileData && (
-                    <>
-                      <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-                        <a href={downloadUrl + fileData.fileUrl} target="_blank">
-                          <Image
-                            src={downloadUrl + fileData.thumbnailUrl}
-                            style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
-                          />
-                        </a>
-                      </Grid.Row>
-                      <Grid.Row centered style={{ boxShadow: 'none' }}>
-                        <p style={{ wordBreak: 'break-word' }}>
-                          <a href={downloadUrl + fileData.fileUrl} target="_blank">
-                            {filename}
-                          </a>
-                        </p>
-                      </Grid.Row>
-                    </>
-                  )}
-                </Grid>
-              </List.Item>
+        <List className="file-list" horizontal={!showDescription} verticalAlign="top">
+          {uploadedFiles.map((file) =>
+            showDescription ? (
+              <FileDisplayWithDescription
+                key={file.key}
+                file={file}
+                onDelete={handleDelete}
+                updateDescription={handleUpdateDescription}
+              />
+            ) : (
+              <FileDisplay key={file.key} file={file} onDelete={handleDelete} />
             )
-          })}
+          )}
         </List>
       </Segment.Group>
     </>
   )
-  async function uploadFile(file: any) {
-    const fileData = new FormData()
-    await fileData.append('file', file)
-    return await postRequest({
-      url: `${uploadUrl}?user_id=${
-        currentUser?.userId
-      }&application_serial=${serialNumber}&application_response_id=${application_response_id}${
-        subfolder ? '&subfolder=' + subfolder : ''
-      }`,
-      otherBody: fileData,
-    })
-  }
 }
 
 export default ApplicationView
+
+const uploadFile = async (
+  file: any,
+  {
+    userId,
+    serialNumber,
+    applicationResponseId,
+    subfolder,
+  }: {
+    userId: number | null
+    serialNumber: string
+    applicationResponseId: number
+    subfolder?: string
+  }
+) => {
+  const fileData = new FormData()
+  await fileData.append('file', file)
+  return await postRequest({
+    url: getServerUrl('upload', {
+      userId,
+      applicationSerial: serialNumber,
+      applicationResponseId: applicationResponseId,
+      subfolder,
+    }),
+    otherBody: fileData,
+  })
+}
+
+const updateFileDescription = async (uniqueId: string, description: string | null) => {
+  if (description === '') return
+  return await postRequest({
+    url: getServerUrl('upload', { uniqueId, description }),
+  })
+}
 
 const createTextString = (files: FileResponseData[]) =>
   files.reduce(

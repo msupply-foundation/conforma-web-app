@@ -5,12 +5,17 @@ import {
   ElementState,
   PageElement,
   ResponsesByCode,
+  ReviewDetails,
   SectionAndPage,
   StageDetails,
 } from '../../utils/types'
 import { ApplicationViewWrapper, SummaryViewWrapper } from '../../formElementPlugins'
 import { ApplicationViewWrapperProps } from '../../formElementPlugins/types'
-import { ReviewResponse, TemplateElementCategory } from '../../utils/generated/graphql'
+import {
+  IsReviewableStatus,
+  ReviewResponse,
+  TemplateElementCategory,
+} from '../../utils/generated/graphql'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import HistoryPanel from '../Review/HistoryPanel'
 import SummaryInformationElement from './Elements/SummaryInformationElement'
@@ -27,7 +32,7 @@ interface PageElementProps {
   stages: StageDetails[]
   canEdit: boolean
   isConsolidation?: boolean
-  isReview?: boolean
+  reviewInfo?: ReviewDetails
   isStrictPage?: boolean
   isSummary?: boolean
   isUpdating?: boolean
@@ -44,12 +49,11 @@ const PageElements: React.FC<PageElementProps> = ({
   stages,
   canEdit = false,
   isConsolidation = false,
-  isReview = false,
+  reviewInfo,
   isStrictPage = false,
   isSummary = false,
   isUpdating = false,
   renderConfigElement = () => null,
-
   // userLevel,
   serial,
   sectionAndPage,
@@ -60,6 +64,7 @@ const PageElements: React.FC<PageElementProps> = ({
   } = useRouter()
 
   const visibleElements = elements.filter(({ element }) => element.isVisible)
+  const isReview = !!reviewInfo
 
   const getSummaryViewProps = (element: ElementState) => ({
     element,
@@ -206,10 +211,11 @@ const PageElements: React.FC<PageElementProps> = ({
             }) => {
               const summaryViewProps = getSummaryViewProps(element)
 
-              // Information or no review
+              // Information or no review, and not optionally reviewable
               if (
-                element.category === TemplateElementCategory.Information ||
-                !thisReviewLatestResponse
+                (element.category === TemplateElementCategory.Information ||
+                  !thisReviewLatestResponse) &&
+                element.isReviewable !== IsReviewableStatus.OptionalIfNoResponse
               )
                 return (
                   <RenderElementWrapper key={element.code}>
@@ -219,6 +225,7 @@ const PageElements: React.FC<PageElementProps> = ({
 
               const props = {
                 elementCode: element.code,
+                canEdit,
                 applicationResponse: latestApplicationResponse,
                 reviewResponse: thisReviewLatestResponse,
                 previousReviewResponse: thisReviewPreviousResponse,
@@ -226,6 +233,7 @@ const PageElements: React.FC<PageElementProps> = ({
                 enableViewHistory,
                 summaryViewProps: summaryViewProps,
                 stageNumber: applicationData.current.stage.number,
+                reviewInfo: reviewInfo as ReviewDetails,
               }
 
               return (

@@ -13,7 +13,7 @@ import {
   StageCell,
   StatusCell,
 } from '../../../components/List/Cells'
-import { APPLICATION_COLUMNS, USER_ROLES } from '../../data'
+import { LIST_COLUMNS, USER_ROLES } from '../../data'
 import COLUMNS_PER_ROLE from '../../data/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -31,7 +31,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 
 export const useMapColumnsByRole = () => {
   const { strings } = useLanguageProvider()
-  const allColumns: { [key in APPLICATION_COLUMNS]: ColumnDetails } = {
+  const allColumns: { [key in LIST_COLUMNS]: ColumnDetails } = {
     SERIAL_NUMBER: {
       headerName: strings.COLUMN_SERIAL,
       sortName: 'serial',
@@ -39,12 +39,14 @@ export const useMapColumnsByRole = () => {
     },
     LAST_ACTIVE_DATE: {
       headerName: strings.COLUMN_LAST_ACTIVE_DATE,
+      headerDetail: strings.COLUMN_LAST_ACTIVE_DATE_TOOLTIP,
       sortName: 'last-active-date',
       ColumnComponent: LastActiveDateCell,
     },
     DEADLINE_DATE: {
       headerName: strings.COLUMN_DEADLINE_DATE,
-      sortName: '', // Not yet implemented
+      headerDetail: strings.COLUMN_DEADLINE_DATE_TOOLTIP,
+      sortName: 'applicant-deadline',
       ColumnComponent: DeadlineCell,
     },
     APPLICATION_NAME: {

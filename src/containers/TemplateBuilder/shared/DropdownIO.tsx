@@ -18,11 +18,13 @@ type DropdownIOprops = {
   link?: string
   isPropUpdated?: boolean
   options?: any[]
+  search?: boolean
   getKey?: GetterOrKey
   getValue?: GetterOrKey
   getText?: GetterOrKey
   placeholder?: string
   minLabelWidth?: number
+  maxLabelWidth?: number
   labelTextAlign?: string
   additionalStyles?: object
 }
@@ -49,16 +51,23 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   link,
   isPropUpdated = false,
   options = [],
+  search = false,
   getKey = defaultGetters,
   getValue = defaultGetters,
   getText = defaultGetters,
   placeholder,
   minLabelWidth = 100,
+  maxLabelWidth,
   labelTextAlign = 'center',
   additionalStyles = {},
 }) => {
   const [innerValue, setInnerValue] = useState(value)
-  const style: any = { minWidth: minLabelWidth, textAlign: labelTextAlign, ...additionalStyles }
+  const style: any = {
+    minWidth: minLabelWidth,
+    maxWidth: maxLabelWidth,
+    textAlign: labelTextAlign,
+    ...additionalStyles,
+  }
   const ioCSS = labelNegative ? 'io-component-negative' : 'io-component'
 
   useEffect(() => {
@@ -86,6 +95,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
         className={ioCSS + ' value'}
         options={calculatedOptions}
         scrolling
+        search={search}
         onChange={(_, { value }) => {
           if (typeof value !== 'string' && typeof value !== 'number') return
           setInnerValue(value)
@@ -119,7 +129,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
       content={disabledMessage}
       disabled={!disabled || !disabledMessage}
       trigger={
-        <div className="io-wrapper" style={style}>
+        <div className="io-wrapper" style={additionalStyles}>
           {renderLabel()}
           {renderText()}
           {renderDropdown()}

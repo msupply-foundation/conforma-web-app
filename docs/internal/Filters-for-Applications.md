@@ -59,6 +59,19 @@ In this example the user has **applicant** role. The user-role can only be `appl
 
 ## Filters
 
+The file `applicationFilters` on the frontend controls the settings for how filters are displayed. They use the localised string to show keys and values to be selected.
+
+A dropdown is displayed for the user by clicking on the option displayed on the top of the Applications list:
+
+![Filters-keys](images/Filters-for-Applications-keys.png)
+
+Each filter type can be selected by the user, it will be displayed on the right alongside to others previously selected. Some filters, already defined with property `default` set to true will be already available in the top area:
+
+![Filters-defaults](images/Filters-for-Applications-defaults.png)
+
+The user can select the value to filter by after clicking on one of the filter and check one or more of the options that are displayed:
+
+ ![Filters-values](images/Filters-for-Applications-values.png)
 ---
 
 ### Label filters:

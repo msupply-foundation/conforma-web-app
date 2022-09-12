@@ -8,9 +8,11 @@ import { ApolloClient, ApolloProvider, createHttpLink, NormalizedCacheObject } f
 import { setContext } from '@apollo/client/link/context'
 import { LanguageOption, LanguageProvider } from './contexts/Localisation'
 import { ToastProvider } from './contexts/Toast/ToastProvider'
-import usePrefs from './utils/hooks/usePrefs'
+import { SystemPrefsProvider } from './contexts/SystemPrefs'
+import { usePrefs } from './contexts/SystemPrefs'
 import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
+import getServerUrl from './utils/helpers/endpoints/endpointUrlBuilder'
 
 // Adds authorisation header with token from local storage (to be used on every request)
 // see https://www.apollographql.com/docs/react/networking/authentication/#header
@@ -28,7 +30,7 @@ const authLink = setContext((_, { headers }) => {
 // see https://www.apollographql.com/docs/react/networking/authentication/#header
 const httpLink = createHttpLink({
   uri: ({ operationName }) => {
-    return `${config.serverGraphQL}?dev=${operationName}`
+    return `${getServerUrl('graphQL')}?dev=${operationName}`
   },
 })
 
@@ -89,4 +91,9 @@ const App: React.FC = () => {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <SystemPrefsProvider>
+    <App />
+  </SystemPrefsProvider>,
+  document.getElementById('root')
+)

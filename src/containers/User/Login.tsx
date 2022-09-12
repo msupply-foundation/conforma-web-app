@@ -6,9 +6,12 @@ import { Link } from 'react-router-dom'
 import { Form, Button, Container, Icon, Image, Header, List, Dropdown } from 'semantic-ui-react'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import { usePrefs } from '../../contexts/SystemPrefs'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
-const logo = require('../../../images/logos/conforma_logo_wide_1024.png').default
+
+const defaultLogo = require('../../../images/logos/conforma_logo_wide_1024.png').default
 import config from '../../config'
 
 const LOGIN_AS_NO_ORG = 0
@@ -25,6 +28,7 @@ const Login: React.FC = () => {
   const { onLogin } = useUserState()
   const client = useApolloClient()
   const { strings, languageOptions } = useLanguageProvider()
+  const { preferences } = usePrefs()
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
@@ -62,8 +66,8 @@ const Login: React.FC = () => {
   }
 
   const finishLogin = async (loginPayload: LoginPayload) => {
-    const { JWT, user, templatePermissions, orgList, isAdmin } = loginPayload
-    await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
+    const { JWT, user, templatePermissions, permissionNames, orgList, isAdmin } = loginPayload
+    await onLogin(JWT, user, templatePermissions, permissionNames, orgList, isAdmin)
     if (history.location?.state?.from) push(history.location.state.from)
     else push('/')
   }
@@ -99,12 +103,16 @@ const Login: React.FC = () => {
     })
   }, [selectedOrgId])
 
+  const logoUrl = preferences?.brandLogoFileId
+    ? getServerUrl('file', { fileId: preferences?.brandLogoFileId })
+    : defaultLogo
+
   return (
     <Container id="login-container">
       {languageOptions.length > 1 && <LanguageSelector />}
       <div id="login-box">
         <div className="flex-column-center">
-          <Image src={logo} className="image-icon" />
+          <Image src={logoUrl} className="image-icon" />
           <Header as="h3" className="login-header">
             {strings.TITLE_LOGIN_HEADER}
           </Header>

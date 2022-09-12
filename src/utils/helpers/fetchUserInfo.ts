@@ -2,15 +2,21 @@ import { Dispatch } from 'react'
 import config from '../../config'
 import { UserActions } from '../../contexts/UserState'
 import { getRequest } from './fetchMethods'
-const userInfoUrl = `${config.serverREST}/user-info`
+import getServerUrl from './endpoints/endpointUrlBuilder'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 interface SetUserInfoProps {
   dispatch: Dispatch<UserActions>
 }
 
 const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
-  getRequest(userInfoUrl)
-    .then(({ templatePermissions, JWT, user, success, orgList, isAdmin }) => {
+  const { preferences } = usePrefs()
+
+  const managementPrefName =
+    preferences?.systemManagerPermissionName || config.defaultSystemManagerPermissionName
+
+  getRequest(getServerUrl('userInfo'))
+    .then(({ templatePermissions, permissionNames, JWT, user, success, orgList, isAdmin }) => {
       if (!success) logout()
       localStorage.setItem(config.localStorageJWTKey, JWT)
       // Set userinfo to context after receiving it from endpoint
@@ -19,8 +25,10 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
           type: 'setCurrentUser',
           newUser: user,
           newPermissions: templatePermissions || {},
+          newPermissionNames: permissionNames || [],
           newOrgList: orgList || [],
           newIsAdmin: !!isAdmin,
+          newIsManager: permissionNames.includes(managementPrefName),
         })
       }
 

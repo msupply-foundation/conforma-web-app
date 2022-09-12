@@ -6,11 +6,9 @@ import config from '../../config'
 import { useGetUsersQuery } from '../../utils/generated/graphql'
 import { User } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const hardcodedPassword = '123456'
-
-const loginURL = config.serverREST + '/public/login'
-const loginOrgURL = config.serverREST + '/login-org'
 
 const UserSelection: React.FC = () => {
   const [users, setUsers] = useState<Array<string>>([])
@@ -33,7 +31,7 @@ const UserSelection: React.FC = () => {
     // Selected User login
     const loginResult = await attemptLogin({
       jsonBody: { username, password: hardcodedPassword },
-      url: loginURL,
+      url: getServerUrl('login'),
       headers: { 'Content-Type': 'application/json' },
     })
     if (!loginResult.success) {
@@ -42,16 +40,16 @@ const UserSelection: React.FC = () => {
     } else localStorage.setItem(config.localStorageJWTKey, loginResult.JWT)
 
     // Organisation login (auto-select first in list)
-    const { JWT, user, templatePermissions, orgList, isAdmin } = loginResult
+    const { JWT, user, templatePermissions, permissionNames, orgList, isAdmin } = loginResult
     if (orgList.length === 0) {
-      await onLogin(JWT, user, templatePermissions, orgList, isAdmin)
+      await onLogin(JWT, user, templatePermissions, permissionNames, orgList, isAdmin)
       return
     }
     const selectedOrg = orgList[0]
 
     const verifyOrgResult = await attemptLogin({
       jsonBody: { userId: user.userId, orgId: selectedOrg.orgId },
-      url: loginOrgURL,
+      url: getServerUrl('loginOrg'),
       headers: { 'Content-Type': 'application/json' },
     })
 
@@ -64,6 +62,7 @@ const UserSelection: React.FC = () => {
       verifyOrgResult.JWT,
       verifyOrgResult.user,
       verifyOrgResult.templatePermissions,
+      verifyOrgResult.permissionNames,
       orgList,
       verifyOrgResult.isAdmin
     )

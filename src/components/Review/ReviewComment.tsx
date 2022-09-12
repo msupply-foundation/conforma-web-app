@@ -6,6 +6,7 @@ import {
   useUpdateReviewDecisionCommentMutation,
 } from '../../utils/generated/graphql'
 import Loading from '../Loading'
+import Tooltip from '../Tooltip'
 
 type ReviewCommentProps = {
   reviewDecisionId?: number
@@ -44,6 +45,7 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
     <div>
       <p>
         <strong>{strings.LABEL_REVIEW_OVERALL_COMMENT}:</strong>
+        <Tooltip message={strings.LABEL_REVIEW_OVERALL_COMMENT_TOOLTIP} />
       </p>
       <Form.Field id="review-commment-content">
         <TextArea

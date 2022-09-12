@@ -6,14 +6,17 @@ import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import { Redirect } from 'react-router'
 
 const AuthenticatedContent: React.FC = () => {
-  const {
-    location: { pathname, search },
-    query: { sessionId },
-  } = useRouter()
-  if (isLoggedIn()) return <SiteLayout />
+  const { location, query } = useRouter()
+
+  const { pathname, search } = location
+
   // If there is a sessionId in the URL, then need to login as nonRegistered
   // before continuing
-  if (sessionId) return <NonRegisteredLogin option="redirect" redirect={pathname + search} />
+  if (query.sessionId && !isLoggedIn())
+    return <NonRegisteredLogin option="redirect" redirect={pathname + search} />
+
+  if (isLoggedIn()) return <SiteLayout />
+
   return <Redirect to={{ pathname: '/login', state: { from: location.pathname } }} />
 }
 

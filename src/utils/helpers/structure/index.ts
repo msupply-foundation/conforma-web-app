@@ -4,7 +4,6 @@ import addApplicationResponses from './addApplicationResponses'
 import addElementsById from './addElementsById'
 import addEvaluatedResponsesToStructure from './addEvaluatedResponsesToStructure'
 import addReviewResponses from './addReviewResponses'
-import addSortedSectionsAndPages from './addSortedSectionsAndPages'
 import addThisReviewResponses from './addReviewResponses'
 import buildSectionsStructure from './buildSectionsStructure'
 import checkPageIsAccessible from './checkPageIsAccessible'
@@ -17,13 +16,13 @@ import generateReviewerChangesRequestedProgress from './generateReviewerChangesR
 import generateReviewerResponsesProgress from './generateReviewerResponsesProgress'
 import generateReviewSectionActions from './generateReviewSectionActions'
 import generateReviewValidity from './generateReviewValidity'
+import updateSectionsAndPages from './updateSectionsAndPages'
 
 export {
   addApplicationResponses,
   addChangeRequestForApplicant,
   addChangeRequestForReviewer,
   addReviewResponses,
-  addSortedSectionsAndPages,
   generateApplicantChangesRequestedProgress,
   generateApplicantResponsesProgress,
   addEvaluatedResponsesToStructure,
@@ -38,4 +37,5 @@ export {
   generateReviewerResponsesProgress,
   generateReviewSectionActions,
   generateReviewValidity,
+  updateSectionsAndPages,
 }

@@ -3,20 +3,24 @@ import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import config from '../config'
+import { usePrefs } from '../contexts/SystemPrefs'
 
 type UserState = {
   currentUser: User | null
   templatePermissions: TemplatePermissions
+  permissionNames: string[]
   orgList: OrganisationSimple[]
   isLoading: boolean
   isNonRegistered: boolean | null
   isAdmin: boolean
+  isManager: boolean
 }
 
 type OnLogin = (
   JWT: string,
   user?: User,
-  permissions?: TemplatePermissions,
+  templatePermissions?: TemplatePermissions,
+  permissionNames?: string[],
   orgList?: OrganisationSimple[],
   isAdmin?: boolean
 ) => void
@@ -29,8 +33,10 @@ export type UserActions =
       type: 'setCurrentUser'
       newUser: User
       newPermissions: TemplatePermissions
+      newPermissionNames: string[]
       newOrgList: OrganisationSimple[]
       newIsAdmin: boolean
+      newIsManager: boolean
     }
   | {
       type: 'setLoading'
@@ -44,13 +50,16 @@ const reducer = (state: UserState, action: UserActions) => {
     case 'resetCurrentUser':
       return initialState
     case 'setCurrentUser':
-      const { newUser, newPermissions, newOrgList, newIsAdmin } = action
+      const { newUser, newPermissions, newPermissionNames, newOrgList, newIsAdmin, newIsManager } =
+        action
       return {
         ...state,
         currentUser: newUser,
         templatePermissions: newPermissions,
+        permissionNames: newPermissionNames,
         orgList: newOrgList,
         isAdmin: newIsAdmin,
+        isManager: newIsManager,
         isNonRegistered: newUser.username === config.nonRegisteredUser,
       }
     case 'setLoading':
@@ -67,10 +76,12 @@ const reducer = (state: UserState, action: UserActions) => {
 const initialState: UserState = {
   currentUser: null,
   templatePermissions: {},
+  permissionNames: [],
   orgList: [],
   isLoading: false,
   isNonRegistered: null,
   isAdmin: false,
+  isManager: false,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
@@ -93,6 +104,10 @@ export function UserProvider({ children }: UserProviderProps) {
   const userState = state
   const setUserState = dispatch
   const client = useApolloClient()
+  const { preferences } = usePrefs()
+
+  const managementPrefName =
+    preferences?.systemManagerPermissionName || config.defaultSystemManagerPermissionName
 
   const logout = () => {
     // Delete everything EXCEPT language preference in localStorage
@@ -103,19 +118,29 @@ export function UserProvider({ children }: UserProviderProps) {
     window.location.href = '/login'
   }
 
-  const onLogin: OnLogin = (JWT: string, user, permissions, orgList, isAdmin) => {
+  const onLogin: OnLogin = (
+    JWT: string,
+    user,
+    templatePermissions,
+    permissionNames,
+    orgList,
+    isAdmin
+  ) => {
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
     if (JWT == 'undefined' || JWT == undefined) logout()
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
-    if (!user || !permissions) fetchUserInfo({ dispatch: setUserState }, logout)
+    if (!user || !templatePermissions || !permissionNames)
+      fetchUserInfo({ dispatch: setUserState }, logout)
     else {
       dispatch({
         type: 'setCurrentUser',
         newUser: user,
-        newPermissions: permissions || {},
+        newPermissions: templatePermissions || {},
+        newPermissionNames: permissionNames || [],
         newOrgList: orgList || [],
         newIsAdmin: !!isAdmin,
+        newIsManager: permissionNames.includes(managementPrefName),
       })
       dispatch({ type: 'setLoading', isLoading: false })
     }

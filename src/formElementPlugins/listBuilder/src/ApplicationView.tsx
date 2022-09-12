@@ -12,7 +12,12 @@ import {
   anyErrorItems,
   createTextString,
 } from './helpers'
-import { ListCardLayout, ListTableLayout, ListInlineLayout } from './displayComponents'
+import {
+  ListCardLayout,
+  ListTableLayout,
+  ListInlineLayout,
+  ListListLayout,
+} from './displayComponents'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 
@@ -155,6 +160,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         innerElementUpdate={innerElementUpdate}
         updateList={updateList}
       />
+    ) : displayType === DisplayType.LIST ? (
+      <ListListLayout {...listDisplayProps} />
     ) : (
       <ListCardLayout {...listDisplayProps} />
     )
@@ -213,12 +220,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      <Button
-        primary
-        content={createModalButtonText}
-        onClick={() => setInputState({ ...inputState, isOpen: true })}
-        disabled={!isEditable}
-      />
+      {displayType !== DisplayType.LIST && (
+        <Button
+          primary
+          content={createModalButtonText}
+          onClick={() => setInputState({ ...inputState, isOpen: true })}
+          disabled={!isEditable}
+        />
+      )}
       {!validationState.isValid && (
         <p className="alert">
           <Icon name="attention" />
@@ -241,6 +250,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Segment className="inline-form fit-content">{ListInputForm}</Segment>
       )}
       {DisplayComponent}
+      {/* In LIST view, show the Button below the list */}
+      {displayType === DisplayType.LIST && (
+        <Button
+          primary
+          size="small"
+          content={createModalButtonText}
+          onClick={() => setInputState({ ...inputState, isOpen: true })}
+          disabled={!isEditable}
+          style={{ marginTop: 5 }}
+        />
+      )}
     </>
   )
 }

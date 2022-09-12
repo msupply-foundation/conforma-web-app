@@ -6,6 +6,7 @@ import {
   Page,
   ApplicationDetails,
   StageDetails,
+  ReviewDetails,
 } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
 import styleConstants from '../../utils/data/styleConstants'
@@ -22,7 +23,7 @@ interface SectionProps {
   stages: StageDetails[]
   isActive: boolean
   isConsolidation?: boolean
-  isReview?: boolean
+  reviewInfo?: ReviewDetails
   isSummary?: boolean
   isUpdating?: boolean
   serial: string
@@ -42,7 +43,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
   stages,
   isActive,
   isConsolidation = false,
-  isReview = false,
+  reviewInfo,
   isSummary = false,
   isUpdating = false,
   canEdit = false,
@@ -94,7 +95,7 @@ const SectionWrapper: React.FC<SectionProps> = ({
                   stages={stages}
                   serial={serial}
                   sectionAndPage={{ sectionCode: details.code, pageNumber: page.number }}
-                  isReview={isReview}
+                  reviewInfo={reviewInfo}
                   isConsolidation={isConsolidation}
                   isSummary={isSummary}
                   isUpdating={isUpdating}

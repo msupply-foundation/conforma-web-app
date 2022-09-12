@@ -3,12 +3,12 @@ import { useState } from 'react'
 import { Button, Header, Icon, Table, Label } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { useOperationState } from './shared/OperationContext'
-import { snapshotFilesUrl } from './shared/OperationContextHelpers'
 import TextIO from './shared/TextIO'
 import useGetTemplates, { Template } from './useGetTemplates'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import config from '../../config'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 type CellPropsTemplate = Template & { numberOfTemplates?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void }
@@ -98,15 +98,22 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
 
   return (
     <div key="export">
-      <a ref={downloadLinkRef} href={`${snapshotFilesUrl}/${snapshotName}.zip`} target="_blank"></a>
+      <a
+        ref={downloadLinkRef}
+        href={getServerUrl('snapshot', { action: 'download', name: snapshotName })}
+        target="_blank"
+      ></a>
       <div
         className="clickable"
         onClick={async (e) => {
           e.stopPropagation()
           if (await exportTemplate({ id, snapshotName })) {
-            const res = await fetch(`${snapshotFilesUrl}/${snapshotName}.zip`, {
-              headers: { Authorization: `Bearer ${JWT}` },
-            })
+            const res = await fetch(
+              getServerUrl('snapshot', { action: 'download', name: snapshotName }),
+              {
+                headers: { Authorization: `Bearer ${JWT}` },
+              }
+            )
             const data = await res.blob()
             var a = document.createElement('a')
             a.href = window.URL.createObjectURL(data)

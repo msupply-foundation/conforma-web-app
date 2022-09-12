@@ -1,15 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Button, Icon, Input, Label, Loader, Modal, Table, Header } from 'semantic-ui-react'
 import config from '../../config'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 
-const baseEndpoint = `${config.serverREST}/admin/snapshot`
-const snapshotListUrl = `${baseEndpoint}/list`
-const takeSnapshotUrl = `${baseEndpoint}/take`
-const useSnapshotUrl = `${baseEndpoint}/use`
-const snapshotFilesUrl = `${baseEndpoint}/files`
-const uploadSnapshotUrl = `${baseEndpoint}/upload`
-const deleteSnapshotUrl = `${baseEndpoint}/delete`
 // const diffSnapshotUrl = `${snapshotsBaseUrl}/diff`
 
 const Snapshots: React.FC = () => {
@@ -32,7 +26,7 @@ const Snapshots: React.FC = () => {
 
   const getList = async () => {
     try {
-      const snapshotListRaw = await getRequest(snapshotListUrl)
+      const snapshotListRaw = await getRequest(getServerUrl('snapshot', { action: 'list' }))
       const snapshotList: string[] = snapshotListRaw.snapshotsNames
 
       setData(snapshotList)
@@ -48,8 +42,7 @@ const Snapshots: React.FC = () => {
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
-        url: `${takeSnapshotUrl}?name=${normaliseSnapshotName(name)}`,
-        headers: { Authorization: `Bearer ${JWT}` },
+        url: getServerUrl('snapshot', { action: 'take', name: normaliseSnapshotName(name) }),
       })
 
       if (resultJson.success) {
@@ -68,8 +61,7 @@ const Snapshots: React.FC = () => {
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
-        url: `${useSnapshotUrl}?name=${name}`,
-        headers: { Authorization: `Bearer ${JWT}` },
+        url: getServerUrl('snapshot', { action: 'use', name }),
       })
 
       if (resultJson.success) return setIsLoading(false)
@@ -84,8 +76,7 @@ const Snapshots: React.FC = () => {
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
-        url: `${deleteSnapshotUrl}?name=${name}`,
-        headers: { Authorization: `Bearer ${JWT}` },
+        url: getServerUrl('snapshot', { action: 'delete', name }),
       })
       if (resultJson.success) {
         await getList()
@@ -111,8 +102,7 @@ const Snapshots: React.FC = () => {
 
       const resultJson = await postRequest({
         otherBody: data,
-        url: `${uploadSnapshotUrl}?name=${snapshotName}`,
-        headers: { Authorization: `Bearer ${JWT}` },
+        url: getServerUrl('snapshot', { action: 'upload', name: snapshotName }),
       })
 
       if (resultJson.success) {
@@ -127,7 +117,7 @@ const Snapshots: React.FC = () => {
   }
 
   const downloadSnapshot = async (snapshotName: string) => {
-    const res = await fetch(`${snapshotFilesUrl}/${snapshotName}.zip`, {
+    const res = await fetch(getServerUrl('snapshot', { action: 'download', name: snapshotName }), {
       headers: { Authorization: `Bearer ${JWT}` },
     })
     const data = await res.blob()
