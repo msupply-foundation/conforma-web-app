@@ -216,7 +216,7 @@ export const duplicateTemplate: TemplateOperationHelper = async (
 
   if (!result) return false
 
-  return await safeFetch(
+  const snapshotResult = await safeFetch(
     getServerUrl('snapshot', {
       action: 'use',
       name: snapshotName,
@@ -225,6 +225,11 @@ export const duplicateTemplate: TemplateOperationHelper = async (
     body,
     setErrorAndLoadingState
   )
+
+  // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
+  safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})
+
+  return snapshotResult
 }
 
 export const importTemplate: ImportTemplateHelper =
