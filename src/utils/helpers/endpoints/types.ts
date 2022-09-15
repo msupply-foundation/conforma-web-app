@@ -46,8 +46,8 @@ export type CheckUniqueEndpoint = [
 export type DataViewEndpoint = [
   endpoint: 'dataViews',
   options?:
-    | { tableName: string; query?: DataViewTableAPIQueries }
-    | { tableName: string; itemId: number }
+    | { tableCode: string; query?: DataViewTableAPIQueries }
+    | { tableCode: string; itemId: number }
 ]
 
 export type UploadEndpoint = [

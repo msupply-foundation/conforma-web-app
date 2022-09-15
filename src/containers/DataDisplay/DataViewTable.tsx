@@ -15,12 +15,12 @@ const DataViewTable: React.FC = () => {
   const {
     push,
     query,
-    params: { tableName },
+    params: { tableCode },
   } = useRouter()
 
   const [apiQueries, setApiQueries] = useState<DataViewTableAPIQueries>({})
   const { dataViewTable, loading, error } = useDataViewsTable({
-    tableName,
+    tableCode,
     apiQueries,
   })
   usePageTitle(dataViewTable?.title || '')
@@ -35,7 +35,7 @@ const DataViewTable: React.FC = () => {
 
   if (loading || !dataViewTable) return <Loading />
 
-  const showDetailsForRow = (id: number) => push(`/data/${tableName}/${id}`)
+  const showDetailsForRow = (id: number) => push(`/data/${tableCode}/${id}`)
 
   const { headerRow, tableRows, title, totalCount } = dataViewTable
 
