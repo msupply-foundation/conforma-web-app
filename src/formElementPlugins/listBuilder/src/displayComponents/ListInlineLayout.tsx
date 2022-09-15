@@ -4,7 +4,8 @@ import { ApplicationDetails, ElementState, User } from '../../../../utils/types'
 import { ListItem, ListLayoutProps } from '../types'
 import ApplicationViewWrapper from '../../../ApplicationViewWrapper'
 import SummaryViewWrapper from '../../../SummaryViewWrapper'
-import { buildElements, substituteValues } from '../helpers'
+import { buildElements } from '../helpers'
+import { substituteValues } from '../../../../utils/helpers/utilityFunctions'
 import '../styles.less'
 
 const ListInlineLayout: React.FC<ListLayoutProps> = (props) => {
@@ -52,8 +53,9 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
 }) => {
   const [open, setOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [currentItemElementsState, setItemResponseElementsState] =
-    useState<{ [key: string]: ElementState }>()
+  const [currentItemElementsState, setItemResponseElementsState] = useState<{
+    [key: string]: ElementState
+  }>()
 
   const editItemInline = () => {
     setIsEditing(true)

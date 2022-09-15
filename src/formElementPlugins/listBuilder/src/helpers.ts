@@ -19,12 +19,6 @@ export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
   return { title: '', subtitle: '', description: displayString }
 }
 
-export const substituteValues = (parameterisedString: string, item: ListItem) => {
-  const getValueFromCode = (_: string, $: string, code: string) => item[code]?.value?.text || ''
-  // Replaces ${ } formatted substitutions with their values
-  return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromCode)
-}
-
 export const createTextString = (listItems: ListItem[], inputFields: TemplateElement[]) =>
   listItems.reduce(
     (outputAcc, item) =>
