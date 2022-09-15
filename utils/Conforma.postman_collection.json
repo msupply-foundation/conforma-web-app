@@ -1,0 +1,1104 @@
+{
+  "info": {
+    "_postman_id": "675a8958-a451-49dd-941f-5c6a5c6d9edc",
+    "name": "Conforma",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "10570256"
+  },
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/public/login",
+              "host": ["{{base_url}}"],
+              "path": ["public", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Copy",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/public/login",
+              "host": ["{{base_url}}"],
+              "path": ["public", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get preferences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/public/get-prefs",
+              "host": ["{{base_url}}"],
+              "path": ["public", "get-prefs"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get language",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/public/language/{{languageCode}}",
+              "host": ["{{base_url}}"],
+              "path": ["public", "language", "{{languageCode}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/public/verify?id=FatzcVDjgxuAcdwQf1h_u",
+              "host": ["{{base_url}}"],
+              "path": ["public", "verify"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "FatzcVDjgxuAcdwQf1h_u"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download file",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/public/file?uid=CylhAzxRhSX_QjtArq3bi",
+              "host": ["{{base_url}}"],
+              "path": ["public", "file"],
+              "query": [
+                {
+                  "key": "uid",
+                  "value": "CylhAzxRhSX_QjtArq3bi"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authorized",
+      "item": [
+        {
+          "name": "Data Views",
+          "item": [
+            {
+              "name": "List Data Views",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/data-views",
+                  "host": ["{{base_url}}"],
+                  "path": ["data-views"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Table",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/data-views/table/{{tableName}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["data-views", "table", "{{tableName}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Item",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/data-views/table/{{tableName}}/item/{{itemId}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["data-views", "table", "{{tableName}}", "item", "{{itemId}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Check unique",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/check-unique?type=username&value=Manager",
+              "host": ["{{base_url}}"],
+              "path": ["check-unique"],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "username",
+                  "description": "Either \"username\", \"email\" organisation\""
+                },
+                {
+                  "key": "value",
+                  "value": "Manager"
+                },
+                {
+                  "key": "table",
+                  "value": null,
+                  "description": "Only required if \"type\" not specified",
+                  "disabled": true
+                },
+                {
+                  "key": "field",
+                  "value": null,
+                  "description": "Only required if \"type\" not specified",
+                  "disabled": true
+                },
+                {
+                  "key": "caseInsensitive",
+                  "value": "false",
+                  "description": "default: true",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Org",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": 2,\n    \"orgId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/login-org",
+              "host": ["{{base_url}}"],
+              "path": ["login-org"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "File upload",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/Users/carl/Dropbox/Mac/Desktop/Data View inserts.sql"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/upload?subfolder=carbone_templates",
+              "host": ["{{base_url}}"],
+              "path": ["upload"],
+              "query": [
+                {
+                  "key": "subfolder",
+                  "value": "carbone_templates"
+                },
+                {
+                  "key": "template_id",
+                  "value": "118",
+                  "disabled": true
+                },
+                {
+                  "key": "description",
+                  "value": "Regulatory Authority logo",
+                  "disabled": true
+                },
+                {
+                  "key": "application_serial",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "application_response_id",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "template_id",
+                  "value": "",
+                  "description": "Only use if it's part of the template configuration, e.g. carbone doc templates",
+                  "disabled": true
+                },
+                {
+                  "key": "isOutputDoc",
+                  "value": "",
+                  "description": "For documents generated by an application process (e.g. certificatess)",
+                  "disabled": true
+                },
+                {
+                  "key": "isInternalReferenceDoc",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "isExternalReferenceDoc",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate PDF",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"fileId\": \"CylhAzxRhSX_QjtArq3bi\",\n    \"data\": {}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/upload",
+              "host": ["{{base_url}}"],
+              "path": ["upload"]
+            },
+            "description": "Options for body json object:\n\n``` typescript\n  \n {\n  fileId: string\n  data: object\n  options?: RenderOptions\n  userId?: number\n  templateId?: number\n  applicationSerial?: string\n  applicationResponseId?: number\n  subFolder?: string\n  description?: string\n  isOutputDoc?: boolean\n  toBeDeleted?: boolean\n}\n\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Preview Actions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"applicationDataOverride\": {\n        \"reviewData\": {\n            \"latestDecision\": {\n                \"decision\": \"CONFORM\",\n                \"comment\": \"Very good\"\n            }\n        }\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/preview-actions?applicationId=1",
+              "host": ["{{base_url}}"],
+              "path": ["preview-actions"],
+              "query": [
+                {
+                  "key": "applicationId",
+                  "value": "1"
+                },
+                {
+                  "key": "reviewId",
+                  "value": "1",
+                  "description": "Only of of either applicationId or reiviewId must be provided",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Options for body json object:\n\n``` typescript\n  \n {\n  fileId: string\n  data: object\n  options?: RenderOptions\n  userId?: number\n  templateId?: number\n  applicationSerial?: string\n  applicationResponseId?: number\n  subFolder?: string\n  description?: string\n  isOutputDoc?: boolean\n  toBeDeleted?: boolean\n}\n\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Extend Application Deadline",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"extensionTime\": {\n        \"days\": 5\n    },\n    \"data\": {}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/extend-application?applicationId=1&eventCode=applicantDeadline",
+              "host": ["{{base_url}}"],
+              "path": ["extend-application"],
+              "query": [
+                {
+                  "key": "applicationId",
+                  "value": "1"
+                },
+                {
+                  "key": "eventCode",
+                  "value": "applicantDeadline",
+                  "description": "Only of of either applicationId or reiviewId must be provided"
+                }
+              ]
+            },
+            "description": "Options for body json object:\n\n``` typescript\n  \n {\n  fileId: string\n  data: object\n  options?: RenderOptions\n  userId?: number\n  templateId?: number\n  applicationSerial?: string\n  applicationResponseId?: number\n  subFolder?: string\n  description?: string\n  isOutputDoc?: boolean\n  toBeDeleted?: boolean\n}\n\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Create hash",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/create-hash",
+              "host": ["{{base_url}}"],
+              "path": ["create-hash"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Info",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user-info",
+              "host": ["{{base_url}}"],
+              "path": ["user-info"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Permissions",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user-permissions?username=admin",
+              "host": ["{{base_url}}"],
+              "path": ["user-permissions"],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "admin",
+                  "description": "Optional (if orgId is provided)"
+                },
+                {
+                  "key": "orgId",
+                  "value": "1",
+                  "description": "Optional (if username is provided)",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check triggers",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/check-triggers?serial=UE-CJD-0100",
+              "host": ["{{base_url}}"],
+              "path": ["check-triggers"],
+              "query": [
+                {
+                  "key": "serial",
+                  "value": "UE-CJD-0100",
+                  "description": "Optional (if orgId is provided)"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Localisation",
+          "item": [
+            {
+              "name": "Get all languages",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"password\": \"{{password}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/admin/all-languages",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "all-languages"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Enable language",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/admin/enable-language?code=en_nz",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "enable-language"],
+                  "query": [
+                    {
+                      "key": "code",
+                      "value": "en_nz"
+                    },
+                    {
+                      "key": "enabled",
+                      "value": "true",
+                      "description": "If omitted, state is toggled",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Install language",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"language\": {\n        \"languageName\": \"New Made-Up Language\",\n        \"description\": \"Just for testing\",\n        \"code\": \"en_xx\",\n        \"flag\": \"😀\",\n        \"enabled\": true\n    },\n    \"strings\": {\n        \"_APP_NAME\": \"Conforma\",\n        \"_APP_NAME_SUBHEADER\": \"Great app for managing applications\"\n    }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/admin/install-language",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "install-language"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Remove (uninstall) language",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/admin/remove-language?code=en_xx",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "remove-language"],
+                  "query": [
+                    {
+                      "key": "code",
+                      "value": "en_xx"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Snapshots",
+          "item": [
+            {
+              "name": "List snapshots",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/admin/snapshot/list",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "snapshot", "list"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Take snapshot",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/admin/snapshot/take?name=testing",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "snapshot", "take"],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "testing"
+                    },
+                    {
+                      "key": "optionsName",
+                      "value": "",
+                      "description": "Uses default if not provided",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload snapshot",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "files",
+                      "type": "file",
+                      "src": "/Users/carl/GitHub/conforma/conforma-server/database/_snapshots/review_structure_testing.zip"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/admin/snapshot/upload?name=testing",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "snapshot", "upload"],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "testing"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Use snapshot",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/admin/snapshot/use?name=testing",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "snapshot", "use"],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "testing"
+                    },
+                    {
+                      "key": "optionsName",
+                      "value": "",
+                      "description": "Uses default if not provided",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete snapshot",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/admin/snapshot/delete?name=testing",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "snapshot", "delete"],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "testing"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Lookup Tables",
+          "item": [
+            {
+              "name": "Import new",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "files",
+                      "type": "file",
+                      "src": "/Users/carl/Library/CloudStorage/GoogleDrive-carl@msupply.foundation/Shared drives/mSupply Foundation/Clients/Angola/Angola Conforma/System Configuration (Templates, Certificates, Lists)/Look up tables/country-no-accent-version.csv"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/admin/lookup-table/import?name=new table",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "lookup-table", "import"],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "new table"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update existing",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "files",
+                      "type": "file",
+                      "src": "/Users/carl/GitHub/conforma/conforma-server/database/_snapshots/review_structure_testing.zip"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/admin/lookup-table/import/{{lookupTableId}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "lookup-table", "import", "{{lookupTableId}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Export",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "files",
+                      "type": "file",
+                      "src": "/Users/carl/GitHub/conforma/conforma-server/database/_snapshots/review_structure_testing.zip"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/admin/lookup-table/export/{{lookupTableId}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["admin", "lookup-table", "export", "{{lookupTableId}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Update row-level policies",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/updateRowPolicies",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "updateRowPolicies"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get applicationData",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/get-application-data?applicationId=1",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "get-application-data"],
+              "query": [
+                {
+                  "key": "applicationId",
+                  "value": "1"
+                },
+                {
+                  "key": "reviewId",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dev",
+      "item": [
+        {
+          "name": "Run action",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwb3N0Z3JhcGhpbGUiLCJ1c2VySWQiOjIsIm9yZ0lkIjoxLCJzZXNzaW9uSWQiOiJhcTF6dHo1S2tIYkh2STdIIiwiaXNBZG1pbiI6dHJ1ZSwicHAyIjoidCIsInBwMl90ZW1wbGF0ZV9pZHMiOiIxLDcsOCw5LDEwLDE1IiwicHA1IjoidCIsInBwNV90ZW1wbGF0ZV9pZHMiOiI3LDksMTUsMTYsMTgsMTksMjAsMjEsMjIsMjMsMjQsMjUsMjYsMjcsMjgsMjksMCIsInBwNyI6InQiLCJwcDdfdGVtcGxhdGVfaWRzIjoiNyw4LDksMTAsMTUsMTYsMTcsMjEsMjIsMjMsMjQsMjUsMjYsMjcsMjgsMjkiLCJwcDYiOiJ0IiwicHA2X3RlbXBsYXRlX2lkcyI6IjkiLCJwcDgiOiJ0IiwicHA4X3RlbXBsYXRlX2lkcyI6IjEyLDEzLDMwLDMxLDMyIiwiaWF0IjoxNjM4MjE2MTkzfQ.7jH3iIGXMo4LAUxzt20P9hAtfm9JplSvKRPcrbyvw7I",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"actionCode\": \"generateTextString\",\n    \"applicationId\": 1,\n    \"parameters\": {\n        \"pattern\": \"<?templateName>-<?productName>\",\n        \"customFields\": {\n            \"templateName\": \"applicationData.templateName\",\n            \"productName\": \"applicationData.responses.Q20.text\"\n        }\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/run-action",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "run-action"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test trigger",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwb3N0Z3JhcGhpbGUiLCJ1c2VySWQiOjIsIm9yZ0lkIjoxLCJzZXNzaW9uSWQiOiJhcTF6dHo1S2tIYkh2STdIIiwiaXNBZG1pbiI6dHJ1ZSwicHAyIjoidCIsInBwMl90ZW1wbGF0ZV9pZHMiOiIxLDcsOCw5LDEwLDE1IiwicHA1IjoidCIsInBwNV90ZW1wbGF0ZV9pZHMiOiI3LDksMTUsMTYsMTgsMTksMjAsMjEsMjIsMjMsMjQsMjUsMjYsMjcsMjgsMjksMCIsInBwNyI6InQiLCJwcDdfdGVtcGxhdGVfaWRzIjoiNyw4LDksMTAsMTUsMTYsMTcsMjEsMjIsMjMsMjQsMjUsMjYsMjcsMjgsMjkiLCJwcDYiOiJ0IiwicHA2X3RlbXBsYXRlX2lkcyI6IjkiLCJwcDgiOiJ0IiwicHA4X3RlbXBsYXRlX2lkcyI6IjEyLDEzLDMwLDMxLDMyIiwiaWF0IjoxNjM4MjE2MTkzfQ.7jH3iIGXMo4LAUxzt20P9hAtfm9JplSvKRPcrbyvw7I",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"templateCode\": \"P1-ProdRegistrationLong\",\n    \"trigger\": \"submit\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/test-trigger",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "test-trigger"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJwb3N0Z3JhcGhpbGUiLCJ1c2VySWQiOjIsIm9yZ0lkIjoxLCJzZXNzaW9uSWQiOiJTaGFsd2dERkNYMUptMHY0IiwiaXNBZG1pbiI6dHJ1ZSwicHAyIjoidCIsInBwMl90ZW1wbGF0ZV9pZHMiOiIxLDcsOCw5LDEwIiwicHA1IjoidCIsInBwNV90ZW1wbGF0ZV9pZHMiOiI3LDksMCIsInBwNyI6InQiLCJwcDdfdGVtcGxhdGVfaWRzIjoiNyw4LDksMTAiLCJwcDYiOiJ0IiwicHA2X3RlbXBsYXRlX2lkcyI6IjkiLCJwcDgiOiJ0IiwicHA4X3RlbXBsYXRlX2lkcyI6IjEyLDEzIiwiaWF0IjoxNjU2Mzk1NDE4fQ.5k2GmYnXBbkc2wq3aAMmsXogPh6zoOheyFJvarvr1IA",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "username",
+      "value": "admin",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "123456",
+      "type": "string"
+    },
+    {
+      "key": "languageCode",
+      "value": "en_nz"
+    },
+    {
+      "key": "tableName",
+      "value": "user"
+    },
+    {
+      "key": "itemId",
+      "value": "1"
+    },
+    {
+      "key": "lookupTableId",
+      "value": "3",
+      "type": "string"
+    }
+  ]
+}
