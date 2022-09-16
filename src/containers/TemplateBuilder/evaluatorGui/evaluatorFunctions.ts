@@ -11,7 +11,7 @@ const generateExpiry = (duration: Duration) => DateTime.now().plus(duration).toJ
 const getYear = (type?: 'short'): string =>
   type === 'short' ? String(new Date().getFullYear()).slice(2) : String(new Date().getFullYear())
 
-  type FormatDate =
+type FormatDate =
   | string
   | {
       format: string
@@ -30,6 +30,7 @@ const getFormattedDate = (formatString: FormatDate, inputDate?: string | Date) =
   if (typeof formatString === 'string') return date.toFormat(formatString)
   const { format, locale } = formatString
   return date.toFormat(format, { locale })
+}
 
 // Returns JS Date object from ISO date string. Returns current timestamp if
 // no parameter supplied
