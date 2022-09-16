@@ -12,10 +12,10 @@ const DataViews: React.FC = () => {
 
   return (
     <Switch>
-      <Route exact path={`${path}/:tableCode/:id`}>
+      <Route exact path={`${path}/:dataViewCode/:id`}>
         <DataViewDetail />
       </Route>
-      <Route exact path={`${path}/:tableCode`}>
+      <Route exact path={`${path}/:dataViewCode`}>
         <DataViewTable />
       </Route>
       <Route>
