@@ -5,6 +5,7 @@ import { Search, Label, Card, Icon, Form, List, ListItem } from 'semantic-ui-rea
 import { ApplicationViewProps } from '../../types'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { substituteValues } from '../../../utils/helpers/utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import config from '../../../config'
 import useDebounce from './useDebounce'
@@ -194,12 +195,6 @@ const getTextFormat = (textFormat: string, selection: any[]): string | undefined
     return `{${itemFields.join(', ')}}`
   })
   return strings.join(', ')
-}
-
-const substituteValues = (parameterisedString: string, object: { [key: string]: any }) => {
-  // TO-DO: Get "nested" object prop (e.g. "user.name"), and display arrays nicely
-  const getValueFromObject = (_: string, $: string, property: string) => object?.[property] || ''
-  return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromObject)
 }
 export interface DisplayProps {
   selection: any[]
