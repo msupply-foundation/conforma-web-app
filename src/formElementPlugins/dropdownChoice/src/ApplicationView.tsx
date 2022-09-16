@@ -50,9 +50,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     if (!currentResponse?.text && defaultOption !== undefined) {
       const optionIndex = getDefaultIndex(defaultOption, options)
       onSave({
-        text: optionsDisplayProperty
-          ? (options[optionIndex] as ObjectOption)[optionsDisplayProperty]
-          : options[optionIndex],
+        text:
+          optionsDisplayProperty &&
+          options[optionIndex] !== undefined &&
+          typeof options[optionIndex] === 'object'
+            ? (options[optionIndex] as ObjectOption)[optionsDisplayProperty]
+            : options[optionIndex],
         selection: options[optionIndex],
         optionIndex,
         isCustomOption: false,
@@ -90,7 +93,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       else
         onSave({
           text:
-            optionsDisplayProperty && options[optionIndex] !== undefined
+            optionsDisplayProperty &&
+            options[optionIndex] !== undefined &&
+            typeof options[optionIndex] === 'object'
               ? (options[optionIndex] as ObjectOption)[optionsDisplayProperty]
               : options[optionIndex],
           selection: options[optionIndex],
