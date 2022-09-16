@@ -5,7 +5,7 @@ import { ListItem, ListLayoutProps } from '../types'
 import ApplicationViewWrapper from '../../../ApplicationViewWrapper'
 import SummaryViewWrapper from '../../../SummaryViewWrapper'
 import { buildElements } from '../helpers'
-import { substituteValues } from '../../../../utils/helpers/utilityFunctions'
+import { substituteValues } from '../helpers'
 import '../styles.less'
 
 const ListInlineLayout: React.FC<ListLayoutProps> = (props) => {
