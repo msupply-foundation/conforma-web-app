@@ -14,9 +14,9 @@ const DataViewDetail: React.FC = () => {
   const { strings } = useLanguageProvider()
   const {
     push,
-    params: { tableCode, id },
+    params: { dataViewCode, id },
   } = useRouter()
-  const { dataViewDetail, loading, error } = useDataViewsDetail({ tableCode, recordId: id })
+  const { dataViewDetail, loading, error } = useDataViewsDetail({ dataViewCode, recordId: id })
   usePageTitle(dataViewDetail?.header?.value || '')
 
   if (error) return <NoMatch header={error?.message} message={error?.detail} />
@@ -34,7 +34,7 @@ const DataViewDetail: React.FC = () => {
       <div className="data-view-nav">
         <Label
           className="back-label clickable"
-          onClick={() => push(`/data/${tableCode}`)}
+          onClick={() => push(`/data/${dataViewCode}`)}
           content={
             <>
               <Icon name="chevron left" className="dark-grey" />
