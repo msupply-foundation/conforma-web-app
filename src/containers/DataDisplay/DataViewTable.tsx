@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Header, Table, Message } from 'semantic-ui-react'
+import { Header, Table, Message, Search } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -9,77 +9,124 @@ import { HeaderRow, DataViewTableAPIQueries } from '../../utils/types'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { constructElement, formatCellText } from './helpers'
 import PaginationBar from '../../components/List/Pagination'
+import buildQueryFilters from '../../utils/helpers/list/buildQueryFilters'
+import useDebounce from '../../formElementPlugins/search/src/useDebounce'
+
+interface FilterObject {
+  search?: string
+  [key: string]: any
+}
 
 const DataViewTable: React.FC = () => {
   const { strings } = useLanguageProvider()
   const {
-    push,
     query,
+    location,
+    updateQuery,
     params: { dataViewCode },
   } = useRouter()
 
   const [apiQueries, setApiQueries] = useState<DataViewTableAPIQueries>({})
+  const [filter, setFilter] = useState<FilterObject>({ search: '' })
+  const [searchText, setSearchText] = useState('')
+  const [debounceOutput, setDebounceInput] = useDebounce('')
   const { dataViewTable, loading, error } = useDataViewsTable({
     dataViewCode,
     apiQueries,
+    filter,
   })
-  usePageTitle(dataViewTable?.title || '')
+  const title = location?.state?.title ?? dataViewTable?.title ?? ''
+  usePageTitle(title)
 
   useEffect(() => {
     setApiQueries(getAPIQueryParams(query))
+    setFilter(
+      buildQueryFilters(query, {
+        search: {
+          type: 'search',
+          default: false,
+          visibleTo: [],
+          options: {
+            orFieldNames: ['name'],
+          },
+        },
+      })
+    )
   }, [query])
+
+  useEffect(() => {
+    updateQuery({ search: debounceOutput })
+  }, [debounceOutput])
 
   if (error) {
     return <Message error header={strings.ERROR_GENERIC} content={error.message} />
   }
 
-  if (loading || !dataViewTable) return <Loading />
-
-  const showDetailsForRow = (id: number) => push(`/data/${dataViewCode}/${id}`)
-
-  const { headerRow, tableRows, title, totalCount } = dataViewTable
-
   return (
     <div id="data-view">
-      <Header as="h4">{title}</Header>
-      <div id="list-container" className="data-view-table-container">
-        <Table stackable selectable>
-          <Table.Header>
-            <Table.Row>
-              {headerRow.map(({ title }: any) => (
-                <Table.HeaderCell key={title} colSpan={1}>
-                  {title}
-                </Table.HeaderCell>
-              ))}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {tableRows.map(({ id, rowValues }: { id: number; rowValues: any }) => (
-              <Table.Row
-                key={`row_${id}`}
-                className="clickable"
-                onClick={() => showDetailsForRow(id)}
-              >
-                {rowValues.map((value: any, index: number) => (
-                  <Table.Cell key={`value_${index}`}>
-                    {getCellComponent(value, headerRow[index], id)}
-                  </Table.Cell>
-                ))}
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
-        <PaginationBar
-          totalCount={totalCount}
-          perPageText={strings.OUTCOMES_TABLE_PAGINATION_TEXT}
-          strings={strings}
-        />
-      </div>
+      <Header as="h3">{title}</Header>
+      <Search
+        className="flex-grow-1"
+        placeholder={strings.DATA_VIEW_SEARCH_PLACEHOLDER}
+        onSearchChange={(e: any) => setSearchText(e.target.value)}
+        input={{ icon: 'search', iconPosition: 'left' }}
+        open={false}
+        value={query.search ?? ''}
+      />
+      {loading && <Loading />}
+      {dataViewTable && <DataViewTableContent dataViewTable={dataViewTable} />}
     </div>
   )
 }
 
 export default DataViewTable
+
+const DataViewTableContent: React.FC<any> = ({ dataViewTable }) => {
+  const { strings } = useLanguageProvider()
+  const {
+    push,
+    params: { dataViewCode },
+  } = useRouter()
+
+  const { headerRow, tableRows, totalCount } = dataViewTable
+  const showDetailsForRow = (id: number) => push(`/data/${dataViewCode}/${id}`)
+
+  return (
+    <div id="list-container" className="data-view-table-container">
+      <Table stackable selectable>
+        <Table.Header>
+          <Table.Row>
+            {headerRow.map(({ title }: any) => (
+              <Table.HeaderCell key={title} colSpan={1}>
+                {title}
+              </Table.HeaderCell>
+            ))}
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {tableRows.map(({ id, rowValues }: { id: number; rowValues: any }) => (
+            <Table.Row
+              key={`row_${id}`}
+              className="clickable"
+              onClick={() => showDetailsForRow(id)}
+            >
+              {rowValues.map((value: any, index: number) => (
+                <Table.Cell key={`value_${index}`}>
+                  {getCellComponent(value, headerRow[index], id)}
+                </Table.Cell>
+              ))}
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+      <PaginationBar
+        totalCount={totalCount}
+        perPageText={strings.OUTCOMES_TABLE_PAGINATION_TEXT}
+        strings={strings}
+      />
+    </div>
+  )
+}
 
 // If the cell contains plugin data, return a SummaryView component, otherwise
 // just format the text and return Markdown component
