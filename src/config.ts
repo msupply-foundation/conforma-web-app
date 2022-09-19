@@ -52,6 +52,7 @@ const config = {
   applicantDeadlineCode: 'applicantDeadline',
   isProductionBuild,
   defaultSystemManagerPermissionName: 'systemManager',
+  debounceTimeout: 350, // milliseconds
 }
 
 export default config
