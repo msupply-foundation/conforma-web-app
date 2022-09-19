@@ -720,6 +720,7 @@ export interface DataViewsTableResponse {
   code: string
   headerRow: HeaderRow[]
   tableRows: TableRow[]
+  searchFields: string[]
   totalCount: number
   message?: string
 }
