@@ -138,6 +138,11 @@ const ReviewPage: React.FC<{
     thisReview?.current.reviewStatus == ReviewStatus.Locked ||
     thisReview?.current.reviewStatus === ReviewStatus.Discontinued
 
+  const canEdit = (sectionCode: string) =>
+    reviewAssignment?.assignedSections.includes(sectionCode) &&
+    (reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||
+      reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Locked)
+
   const ReviewSubheader: React.FC = () =>
     isLocked ? (
       <ReviewLockedLabel
@@ -187,7 +192,7 @@ const ReviewPage: React.FC<{
                 </div>
               )}
               extraPageContent={(page: Page) =>
-                reviewStatus === ReviewStatus.Draft && (
+                canEdit(section.details.code) && (
                   <ApproveAllButton
                     isConsolidation={!!section.assignment?.isConsolidation}
                     stageNumber={stage.number}
@@ -207,10 +212,7 @@ const ReviewPage: React.FC<{
               serial={serial}
               reviewInfo={thisReview}
               isConsolidation={section.assignment?.isConsolidation}
-              canEdit={
-                reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||
-                reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Locked
-              }
+              canEdit={canEdit(section.details.code)}
             />
           ))}
         <PreviousStageDecision
