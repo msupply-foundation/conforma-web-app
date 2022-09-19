@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getRequest } from '../helpers/fetchMethods'
+import { getRequest, postRequest } from '../helpers/fetchMethods'
 import { useUserState } from '../../contexts/UserState'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 import {
@@ -14,6 +14,7 @@ import {
 interface DataViewTableProps {
   dataViewCode: string
   apiQueries: DataViewTableAPIQueries
+  filter: object
 }
 
 interface DataViewDetailsProps {
@@ -40,13 +41,13 @@ export const useDataViewsList = () => {
   } = useUserState()
 
   useEffect(() => {
-    processRequest(getServerUrl('dataViews'), setError, setLoading, setDataViewsList)
+    processGetRequest(getServerUrl('dataViews'), setError, setLoading, setDataViewsList)
   }, [templatePermissions])
 
   return { error, loading, dataViewsList }
 }
 
-export const useDataViewsTable = ({ dataViewCode, apiQueries }: DataViewTableProps) => {
+export const useDataViewsTable = ({ dataViewCode, apiQueries, filter }: DataViewTableProps) => {
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [dataViewTable, setDataViewTable] = useState<DataViewsTableResponse>()
@@ -55,11 +56,12 @@ export const useDataViewsTable = ({ dataViewCode, apiQueries }: DataViewTablePro
   } = useUserState()
 
   useEffect(() => {
-    processRequest(
+    processPostRequest(
       getServerUrl('dataViews', { dataViewCode, query: apiQueries }),
       setError,
       setLoading,
-      setDataViewTable
+      setDataViewTable,
+      filter
     )
   }, [templatePermissions, dataViewCode, apiQueries])
 
@@ -75,7 +77,7 @@ export const useDataViewsDetail = ({ dataViewCode, recordId }: DataViewDetailsPr
   } = useUserState()
 
   useEffect(() => {
-    processRequest(
+    processGetRequest(
       getServerUrl('dataViews', { dataViewCode, itemId: recordId }),
       setError,
       setLoading,
@@ -86,7 +88,7 @@ export const useDataViewsDetail = ({ dataViewCode, recordId }: DataViewDetailsPr
   return { error, loading, dataViewDetail }
 }
 
-const processRequest = (
+const processGetRequest = (
   url: string,
   setErrorMethod: (_: ErrorResponse | null) => void,
   setLoadingMethod: (_: boolean) => void,
@@ -99,6 +101,35 @@ const processRequest = (
   }
   setLoadingMethod(true)
   getRequest(url)
+    .then((response) => {
+      if (response?.error) {
+        setState(response, false, undefined)
+        return
+      }
+      if (response?.statusCode) {
+        setState(response, false, undefined)
+        return
+      } else setState(null, false, response)
+    })
+    .catch((error) => {
+      setState(error, false, undefined)
+    })
+}
+
+const processPostRequest = (
+  url: string,
+  setErrorMethod: (_: ErrorResponse | null) => void,
+  setLoadingMethod: (_: boolean) => void,
+  setStateMethod: (_: any) => void,
+  filter: object
+): void => {
+  const setState = (errorState: ErrorResponse | null, loadingState: boolean, stateState: any) => {
+    setErrorMethod(errorState)
+    setLoadingMethod(loadingState)
+    setStateMethod(stateState)
+  }
+  setLoadingMethod(true)
+  postRequest({ url, headers: { 'Content-Type': 'application/json' }, jsonBody: filter })
     .then((response) => {
       if (response?.error) {
         setState(response, false, undefined)

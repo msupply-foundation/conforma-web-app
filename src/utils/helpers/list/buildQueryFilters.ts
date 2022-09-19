@@ -26,8 +26,6 @@ export default function buildQueryFilters(
     // Case Object of Array filters
     return { ...filterObj, ...constructOrObjectFilters(filterValue as ArrayFilters) }
   }, {})
-  // If no filters, return a dummy filter to prevent GraphQL empty object error
-  if (Object.keys(graphQLfilter).length === 0) return { templateCode: { isNull: false } }
   return graphQLfilter
 }
 
