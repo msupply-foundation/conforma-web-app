@@ -92,7 +92,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
   }, [pathname])
 
-  const dataViewOptions = dataViews.map(({ code, urlSlug, title, tableName }) => ({
+  const dataViewOptions = dataViews.map(({ code, urlSlug, title }) => ({
     key: code,
     text: title,
     value: urlSlug,
@@ -154,9 +154,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       value: `/application/new?type=${template.code}`,
     }))
 
-  const handleDataViewChange = (_: SyntheticEvent, { value }: any) => {
+  const handleDataViewChange = (e: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
-    push(`/data/${value}`)
+    push(`/data/${value}`, dataViewOptions.find((option) => option.value === value)?.text)
   }
 
   const handleTemplateChange = (_: SyntheticEvent, { value }: any) => {

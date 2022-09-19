@@ -6,7 +6,7 @@ import { BasicStringObject } from '../types'
 interface RouterResult {
   goBack: () => void
   pathname: string
-  push: (path: string) => void
+  push: (path: string, state?: any) => void
   query: BasicStringObject
   updateQuery: Function
   replace: (path: string) => void

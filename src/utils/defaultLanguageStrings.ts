@@ -103,6 +103,7 @@ export default {
   DATE_MONTHS_AGO: 'months ago',
   DATE_LAST_YEAR: 'Last Year',
   DATE_YEARS_AGO: 'years ago',
+  DATA_VIEW_SEARCH_PLACEHOLDER: 'Search...',
   DEFAULT_TEMPLATE_CATEGORY_TITLE: 'General',
   DEFAULT_TEMPLATE_CATEGORY_ICON: 'globe',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
