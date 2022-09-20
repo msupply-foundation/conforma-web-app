@@ -12,8 +12,9 @@ import PaginationBar from '../../components/List/Pagination'
 import buildQueryFilters from '../../utils/helpers/list/buildQueryFilters'
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
 import { useToast } from '../../contexts/Toast'
+import ListFilters from '../List/ListFilters/ListFilters'
 
-interface FilterObject {
+interface GqlFilterObject {
   search?: string
   [key: string]: any
 }
@@ -28,20 +29,20 @@ const DataViewTable: React.FC = () => {
   } = useRouter()
 
   const [apiQueries, setApiQueries] = useState<DataViewTableAPIQueries>({})
-  const [filter, setFilter] = useState<FilterObject>({ search: '' })
+  const [gqlFilter, setGqlFilter] = useState<GqlFilterObject>({ search: '' })
   const [searchText, setSearchText] = useState(query.search)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
   const { dataViewTable, loading, error } = useDataViewsTable({
     dataViewCode,
     apiQueries,
-    filter,
+    filter: gqlFilter,
   })
   const title = location?.state?.title ?? dataViewTable?.title ?? ''
   usePageTitle(title)
 
   useEffect(() => {
     setApiQueries(getAPIQueryParams(query))
-    setFilter(
+    setGqlFilter(
       buildQueryFilters(query, {
         search: {
           type: 'search',
@@ -115,7 +116,7 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
     ascending: 'true' | 'false'
   ) => {
     if (!sortColumn) {
-      showToast({ text: `Column "${columnTitle}" not sortable` })
+      showToast({ text: strings.DATA_VIEW_COLUMN_NOT_SORTABLE.replace('%1', columnTitle) })
       return
     }
     // Cycle through ascending/descending/not-sorted (default: id)
