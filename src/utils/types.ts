@@ -701,6 +701,7 @@ export interface DisplayDefinition {
   title: string
   isBasicField: boolean
   dataType?: string
+  sortColumn?: string
   formatting: FormatOptions
 }
 export interface HeaderRow extends DisplayDefinition {
@@ -766,7 +767,7 @@ export type DataViewTableAPIQueries = {
   first?: string | undefined
   offset?: string | undefined
   orderBy?: string | undefined
-  ascending?: string | undefined
+  ascending?: 'true' | 'false' | undefined
 }
 
 // *****************
