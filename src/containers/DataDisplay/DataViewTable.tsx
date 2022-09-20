@@ -118,9 +118,14 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
       showToast({ text: `Column "${columnTitle}" not sortable` })
       return
     }
-    updateQuery({
-      sortBy: `${sortColumn}${ascending === 'true' ? ':desc' : ''}`,
-    })
+    // Cycle through ascending/descending/not-sorted (default: id)
+    if (ascending === 'false') {
+      updateQuery({ sortBy: null })
+    } else if (!apiQueries.orderBy) updateQuery({ sortBy: sortColumn })
+    else
+      updateQuery({
+        sortBy: `${sortColumn}:desc`,
+      })
   }
 
   return (
@@ -128,7 +133,7 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
       <Table stackable selectable sortable>
         <Table.Header>
           <Table.Row>
-            {headerRow.map(({ title, columnName, sortColumn }) => (
+            {headerRow.map(({ title, sortColumn }) => (
               <Table.HeaderCell
                 key={title}
                 colSpan={1}
