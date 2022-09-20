@@ -190,17 +190,24 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                   ))}
               </ApplicantResponseElement>
               {/* Current review response */}
-              {decisionExists && (
-                <ReviewResponseElement
-                  isCurrentReview={true}
-                  isConsolidation={false}
-                  reviewResponse={reviewResponse}
-                >
-                  {canEdit && isActiveReviewResponse && (
-                    <UpdateIcon onClick={() => setIsActiveEdit(true)} />
+              {isActiveReviewResponse
+                ? canEdit &&
+                  decisionExists && (
+                    <ReviewResponseElement
+                      isCurrentReview={true}
+                      isConsolidation={false}
+                      reviewResponse={reviewResponse}
+                    >
+                      {canEdit && <UpdateIcon onClick={() => setIsActiveEdit(true)} />}
+                    </ReviewResponseElement>
+                  )
+                : decisionExists && (
+                    <ReviewResponseElement
+                      isCurrentReview={true}
+                      isConsolidation={false}
+                      reviewResponse={reviewResponse}
+                    />
                   )}
-                </ReviewResponseElement>
-              )}
               {/* Previous review response */}
               {isNewApplicationResponse && !decisionExists && (
                 <ReviewResponseElement
