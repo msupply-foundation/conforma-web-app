@@ -15,7 +15,7 @@ import ApplicationsList from '../../components/List/ApplicationsList'
 import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
 import { useGetFilterDefinitions } from '../../utils/helpers/list/useGetFilterDefinitions'
-import Loading from '../../components/Loading'
+import useDebounce from '../../formElementPlugins/search/src/useDebounce'
 
 const ListWrapper: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -29,6 +29,8 @@ const ListWrapper: React.FC = () => {
   } = useUserState()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
   const [searchText, setSearchText] = useState<string>(query?.search)
+  const [debounceOutput, setDebounceInput] = useDebounce<string>('')
+
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
   usePageTitle(strings.PAGE_TITLE_LIST as string)
@@ -61,7 +63,7 @@ const ListWrapper: React.FC = () => {
 
   useEffect(() => {
     if (searchText !== undefined) updateQuery({ search: searchText })
-  }, [searchText])
+  }, [debounceOutput])
 
   useEffect(() => {
     const { sortColumn, sortDirection } = sortQuery
@@ -87,6 +89,7 @@ const ListWrapper: React.FC = () => {
 
   const handleSearchChange = (e: any) => {
     setSearchText(e.target.value)
+    setDebounceInput(e.target.value)
   }
 
   const handleSort = (sortName: string) => {
@@ -104,8 +107,6 @@ const ListWrapper: React.FC = () => {
         break
     }
   }
-
-  if (loading) return <Loading />
 
   const visibleFilters = Object.fromEntries(
     Object.entries(FILTER_DEFINITIONS).filter(([_, { visibleTo }]) =>
