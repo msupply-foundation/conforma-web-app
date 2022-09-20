@@ -12,12 +12,12 @@ import {
 // 3 simple hooks for returning Outcome state
 
 interface DataViewTableProps {
-  tableName: string
+  dataViewCode: string
   apiQueries: DataViewTableAPIQueries
 }
 
 interface DataViewDetailsProps {
-  tableName: string
+  dataViewCode: string
   recordId: number
 }
 
@@ -46,7 +46,7 @@ export const useDataViewsList = () => {
   return { error, loading, dataViewsList }
 }
 
-export const useDataViewsTable = ({ tableName, apiQueries }: DataViewTableProps) => {
+export const useDataViewsTable = ({ dataViewCode, apiQueries }: DataViewTableProps) => {
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [dataViewTable, setDataViewTable] = useState<DataViewsTableResponse>()
@@ -56,17 +56,17 @@ export const useDataViewsTable = ({ tableName, apiQueries }: DataViewTableProps)
 
   useEffect(() => {
     processRequest(
-      getServerUrl('dataViews', { tableName, query: apiQueries }),
+      getServerUrl('dataViews', { dataViewCode, query: apiQueries }),
       setError,
       setLoading,
       setDataViewTable
     )
-  }, [templatePermissions, tableName, apiQueries])
+  }, [templatePermissions, dataViewCode, apiQueries])
 
   return { error, loading, dataViewTable }
 }
 
-export const useDataViewsDetail = ({ tableName, recordId }: DataViewDetailsProps) => {
+export const useDataViewsDetail = ({ dataViewCode, recordId }: DataViewDetailsProps) => {
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [dataViewDetail, setDataViewDetail] = useState<DataViewsDetailResponse>()
@@ -76,12 +76,12 @@ export const useDataViewsDetail = ({ tableName, recordId }: DataViewDetailsProps
 
   useEffect(() => {
     processRequest(
-      getServerUrl('dataViews', { tableName, itemId: recordId }),
+      getServerUrl('dataViews', { dataViewCode, itemId: recordId }),
       setError,
       setLoading,
       setDataViewDetail
     )
-  }, [templatePermissions, tableName, recordId])
+  }, [templatePermissions, dataViewCode, recordId])
 
   return { error, loading, dataViewDetail }
 }

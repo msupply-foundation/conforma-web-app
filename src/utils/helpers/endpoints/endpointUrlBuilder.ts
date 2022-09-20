@@ -80,17 +80,17 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
 
     case 'dataViews':
       // List view
-      if (!('tableName' in options)) return `${serverREST}${endpointPath}`
+      if (!('dataViewCode' in options)) return `${serverREST}${endpointPath}`
 
       // Detail view
       if ('itemId' in options) {
-        const { tableName, itemId } = options
-        return `${serverREST}${endpointPath}/table/${tableName}/item/${itemId}`
+        const { dataViewCode, itemId } = options
+        return `${serverREST}${endpointPath}/${dataViewCode}/${itemId}`
       }
 
       // Table view
-      const { tableName, query } = options
-      return `${serverREST}${endpointPath}/table/${tableName}${buildQueryString(query)}`
+      const { dataViewCode, query } = options
+      return `${serverREST}${endpointPath}/${dataViewCode}${buildQueryString(query)}`
 
     case 'enableLanguage': {
       const { code, enabled = true } = options as EnableLanguageEndpoint[1]
