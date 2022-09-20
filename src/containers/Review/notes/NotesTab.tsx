@@ -44,7 +44,10 @@ const NotesTab: React.FC<{
   state: NotesState
   setState: (state: NotesState) => void
 }> = ({ structure: fullStructure, state, setState }) => {
-  const { strings } = useLanguageProvider()
+  const {
+    strings,
+    selectedLanguage: { locale },
+  } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -132,7 +135,7 @@ const NotesTab: React.FC<{
                   </p>
                   <p className="slightly-smaller-text dark-grey">
                     {DateTime.fromISO(note.timestamp)
-                      .setLocale(strings.LOCALE)
+                      .setLocale(locale)
                       .toLocaleString(DateTime.DATE_FULL)}
                   </p>
                 </div>

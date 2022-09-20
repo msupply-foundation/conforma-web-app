@@ -20,7 +20,10 @@ import useLocalisedEnums from '../useLocalisedEnums'
 import { TimelineStage, Timeline, TimelineEventType, EventOutput, TimelineEvent } from './types'
 
 const useTimeline = (structure: FullStructure) => {
-  const { strings } = useLanguageProvider()
+  const {
+    strings,
+    selectedLanguage: { locale },
+  } = useLanguageProvider()
   const { Decision: decisionStrings } = useLocalisedEnums()
   const [timeline, setTimeline] = useState<Timeline>()
   const [error, setError] = useState('')
@@ -46,7 +49,8 @@ const useTimeline = (structure: FullStructure) => {
           data?.activityLogs?.nodes as ActivityLog[],
           structure,
           strings,
-          decisionStrings
+          decisionStrings,
+          locale
         )
       )
       setLoading(false)
@@ -62,7 +66,8 @@ const buildTimeline = (
   activityLog: ActivityLog[],
   structure: FullStructure,
   strings: LanguageStrings,
-  decisionStrings: { [key in Decision]: string }
+  decisionStrings: { [key in Decision]: string },
+  locale: string
 ): Timeline => {
   // Group by stage
   const stages: TimelineStage[] = []
@@ -85,7 +90,8 @@ const buildTimeline = (
           structure,
           index,
           strings,
-          decisionStrings
+          decisionStrings,
+          locale
         ),
         logType: event.type,
       }
@@ -157,7 +163,8 @@ const generateTimelineEvent: {
     strings: LanguageStrings,
     decisionStrings: {
       [key in Decision]: string
-    }
+    },
+    locale: string
   ) => EventOutput
 } = {
   STAGE: () =>
@@ -165,7 +172,8 @@ const generateTimelineEvent: {
     ({ eventType: TimelineEventType.Ignore, displayString: '' }),
   STATUS: (event, fullLog, _, __, strings) => getStatusEvent(event, fullLog, strings),
   OUTCOME: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
-  EXTENSION: (event, _, __, ___, strings) => getExtensionEvent(event, strings),
+  EXTENSION: (event, _, __, ___, strings, _____, locale) =>
+    getExtensionEvent(event, strings, locale),
   ASSIGNMENT: (event, _, structure, __, strings) => getAssignmentEvent(event, structure, strings),
   REVIEW: (event, fullLog, structure, index, strings, decisionStrings) =>
     getReviewEvent(event, fullLog, structure, index, strings, decisionStrings),
