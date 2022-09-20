@@ -37,15 +37,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [selectedDate, setSelectedDate] = useState<SelectedDateRange>(
     fromDateSaved(currentResponse?.date)
   )
-  const {
-    selectedLanguage: { locale },
-  } = useLanguageProvider()
+  const { selectedLanguage } = useLanguageProvider()
   const { isEditable } = element
   const {
     label,
     description,
     default: defaultDate,
     allowRange = Array.isArray(defaultDate),
+    locale = selectedLanguage.locale,
     displayFormat = 'short',
     entryFormat = 'YYYY-MM-DD',
     minDate,
@@ -91,7 +90,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       )}
       <Markdown text={description} />
       <SemanticDatepicker
-        locale={(locale as LocaleOptions) || 'en-US'}
+        locale={locale}
         onChange={handleSelect}
         type={allowRange ? 'range' : 'basic'}
         value={selectedDate}
