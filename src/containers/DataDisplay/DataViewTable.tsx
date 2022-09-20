@@ -11,6 +11,7 @@ import { constructElement, formatCellText } from './helpers'
 import PaginationBar from '../../components/List/Pagination'
 import buildQueryFilters from '../../utils/helpers/list/buildQueryFilters'
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
+import { useToast } from '../../contexts/Toast'
 
 interface FilterObject {
   search?: string
@@ -103,25 +104,36 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
     updateQuery,
     params: { dataViewCode },
   } = useRouter()
+  const showToast = useToast({ style: 'negative' })
 
   const { headerRow, tableRows, totalCount } = dataViewTable
   const showDetailsForRow = (id: number) => push(`/data/${dataViewCode}/${id}`)
+
+  const sortByColumn = (
+    sortColumn: string | undefined,
+    columnTitle: string,
+    ascending: 'true' | 'false'
+  ) => {
+    if (!sortColumn) {
+      showToast({ text: `Column "${columnTitle}" not sortable` })
+      return
+    }
+    updateQuery({
+      sortBy: `${sortColumn}${ascending === 'true' ? ':desc' : ''}`,
+    })
+  }
 
   return (
     <div id="list-container" className="data-view-table-container">
       <Table stackable selectable sortable>
         <Table.Header>
           <Table.Row>
-            {headerRow.map(({ title, columnName }: any) => (
+            {headerRow.map(({ title, columnName, sortColumn }) => (
               <Table.HeaderCell
                 key={title}
                 colSpan={1}
-                sorted={isSorted(columnName, apiQueries)}
-                onClick={() =>
-                  updateQuery({
-                    sortBy: `${columnName}${apiQueries.ascending === 'true' ? ':desc' : ''}`,
-                  })
-                }
+                sorted={isSorted(sortColumn, apiQueries)}
+                onClick={() => sortByColumn(sortColumn, title, apiQueries?.ascending ?? 'true')}
               >
                 {title}
               </Table.HeaderCell>
@@ -168,7 +180,7 @@ const getCellComponent = (value: any, columnDetails: HeaderRow, id: number) => {
 const getAPIQueryParams = ({ page, perPage, sortBy }: any) => {
   const offset = page && perPage ? String((Number(page) - 1) * Number(perPage)) : undefined
   let orderBy: string | undefined = undefined
-  let ascending: string | undefined = undefined
+  let ascending: 'true' | 'false' | undefined = undefined
   if (sortBy) {
     const [fieldName, direction] = sortBy.split(':')
     orderBy = fieldName
@@ -177,7 +189,8 @@ const getAPIQueryParams = ({ page, perPage, sortBy }: any) => {
   return { first: perPage, offset, orderBy, ascending }
 }
 
-const isSorted = (columnName: string, apiQueries: DataViewTableAPIQueries) => {
-  if (columnName !== apiQueries.orderBy) return undefined
+const isSorted = (sortColumn: string | undefined, apiQueries: DataViewTableAPIQueries) => {
+  if (!sortColumn) return undefined
+  if (sortColumn !== apiQueries.orderBy) return undefined
   return apiQueries.ascending === 'true' ? 'ascending' : 'descending'
 }
