@@ -14,6 +14,7 @@ const initSelectedLanguage: LanguageOption = {
   languageName: '',
   description: '',
   flag: '',
+  locale: 'en_GB',
   enabled: true,
 }
 
@@ -28,6 +29,7 @@ export type LanguageOption = {
   languageName: string
   description: string
   code: string
+  locale: string
   flag: string // To-do: limit to flag emojis
   enabled: boolean
 }
