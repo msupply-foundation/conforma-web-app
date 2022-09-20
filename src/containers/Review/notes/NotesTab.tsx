@@ -131,7 +131,9 @@ const NotesTab: React.FC<{
                     <strong>{note.user?.fullName}</strong>
                   </p>
                   <p className="slightly-smaller-text dark-grey">
-                    {DateTime.fromISO(note.timestamp).toLocaleString(DateTime.DATETIME_MED)}
+                    {DateTime.fromISO(note.timestamp)
+                      .setLocale(strings.LOCALE)
+                      .toLocaleString(DateTime.DATE_FULL)}
                   </p>
                 </div>
               </div>

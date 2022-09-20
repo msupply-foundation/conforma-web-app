@@ -208,6 +208,7 @@ export default {
   LABEL_VERIFICATION_FAILED: 'Verificaton Failed',
   LINK_NEW_ACCOUNT: 'Create new account',
   LINK_RESET_PASSWORD: 'Forgot my password',
+  LOCALE: 'en-GB',
   LOCALISATION_HEADER: 'Localisation',
   LOCALISATION_CURRENTLY_INSTALLED: 'Currently installed languages',
   LOCALISATION_DELETE_WARNING_TITLE: 'Are you sure?',
