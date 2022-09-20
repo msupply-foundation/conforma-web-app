@@ -172,7 +172,7 @@ const generateTimelineEvent: {
     ({ eventType: TimelineEventType.Ignore, displayString: '' }),
   STATUS: (event, fullLog, _, __, strings) => getStatusEvent(event, fullLog, strings),
   OUTCOME: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
-  EXTENSION: (event, _, __, ___, strings, _____, locale) =>
+  EXTENSION: (event, _, __, ___, strings, ____, locale) =>
     getExtensionEvent(event, strings, locale),
   ASSIGNMENT: (event, _, structure, __, strings) => getAssignmentEvent(event, structure, strings),
   REVIEW: (event, fullLog, structure, index, strings, decisionStrings) =>
