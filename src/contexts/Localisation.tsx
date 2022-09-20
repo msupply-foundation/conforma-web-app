@@ -14,7 +14,7 @@ const initSelectedLanguage: LanguageOption = {
   languageName: '',
   description: '',
   flag: '',
-  locale: 'en_GB',
+  locale: '',
   enabled: true,
 }
 
