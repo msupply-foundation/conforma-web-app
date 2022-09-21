@@ -826,6 +826,8 @@ export type FilterTypeOptions = {
   namedDates?: NamedDates
   // For boolean to show on and of criteria
   booleanMapping?: BooleanFilterMapping
+  // For Data View filter lists
+  getFilterList?: (table: string, column: string) => Promise<string[]>
 }
 
 export type FilterDefinition = {

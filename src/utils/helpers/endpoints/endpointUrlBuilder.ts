@@ -88,6 +88,12 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
         return `${serverREST}${endpointPath}/${dataViewCode}/${itemId}`
       }
 
+      // Filter list
+      if ('column' in options) {
+        const { dataViewCode, column } = options
+        return `${serverREST}${endpointPath}/${dataViewCode}/filterList/${column}`
+      }
+
       // Table view
       const { dataViewCode, query } = options
       return `${serverREST}${endpointPath}/${dataViewCode}${buildQueryString(query)}`

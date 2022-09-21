@@ -155,7 +155,7 @@ const processPostRequest = (
 const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefinitions => {
   if (!tableData) return {}
 
-  const { searchFields, headerRow } = tableData
+  const { searchFields, headerRow, tableName, code } = tableData
 
   const filterDefinitions: FilterDefinitions = {}
 
@@ -179,14 +179,22 @@ const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefin
           title,
           options: {},
         }
+        break
       case 'string':
         filterDefinitions[columnName] = {
           type: 'searchableListIn',
           default: false,
           visibleTo: [],
           title,
-          options: {},
+          options: {
+            getFilterList: async () => {
+              return await getRequest(
+                getServerUrl('dataViews', { dataViewCode: code, column: columnName })
+              )
+            },
+          },
         }
+        break
     }
   })
 
