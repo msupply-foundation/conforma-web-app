@@ -5,7 +5,12 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useDataViewsTable } from '../../utils/hooks/useDataViews'
-import { HeaderRow, DataViewTableAPIQueries, DataViewsTableResponse } from '../../utils/types'
+import {
+  HeaderRow,
+  DataViewTableAPIQueries,
+  DataViewsTableResponse,
+  BasicStringObject,
+} from '../../utils/types'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { constructElement, formatCellText } from './helpers'
 import PaginationBar from '../../components/List/Pagination'
@@ -28,11 +33,11 @@ const DataViewTable: React.FC = () => {
     params: { dataViewCode },
   } = useRouter()
 
-  const [apiQueries, setApiQueries] = useState<DataViewTableAPIQueries>({})
-  const [gqlFilter, setGqlFilter] = useState<GqlFilterObject>({ search: '' })
+  const [apiQueries, setApiQueries] = useState<BasicStringObject>({})
+  const [gqlFilter, setGqlFilter] = useState<GqlFilterObject>({})
   const [searchText, setSearchText] = useState(query.search)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
-  const { dataViewTable, loading, error } = useDataViewsTable({
+  const { dataViewTable, filterDefinitions, loading, error } = useDataViewsTable({
     dataViewCode,
     apiQueries,
     filter: gqlFilter,
@@ -42,18 +47,7 @@ const DataViewTable: React.FC = () => {
 
   useEffect(() => {
     setApiQueries(getAPIQueryParams(query))
-    setGqlFilter(
-      buildQueryFilters(query, {
-        search: {
-          type: 'search',
-          default: false,
-          visibleTo: [],
-          options: {
-            orFieldNames: ['name'],
-          },
-        },
-      })
-    )
+    setGqlFilter(buildQueryFilters(query, filterDefinitions))
   }, [query])
 
   useEffect(() => {
@@ -66,24 +60,28 @@ const DataViewTable: React.FC = () => {
 
   return (
     <div id="data-view">
-      <Header as="h3">{title}</Header>
-      {dataViewTable && dataViewTable?.searchFields?.length > 0 && (
-        <Search
-          className="flex-grow-1"
-          placeholder={strings.DATA_VIEW_SEARCH_PLACEHOLDER}
-          onSearchChange={(e: any) => {
-            setSearchText(e.target.value)
-            setDebounceInput(e.target.value)
-          }}
-          input={{ icon: 'search', iconPosition: 'left' }}
-          open={false}
-          value={searchText}
-        />
-      )}
-      {loading && <Loading />}
-      {dataViewTable && (
-        <DataViewTableContent dataViewTable={dataViewTable} apiQueries={apiQueries} />
-      )}
+      <div id="list-container" className="data-view-table-container">
+        <div className="flex-row-space-between-center" style={{ width: '100%' }}>
+          <Header as="h3">{title}</Header>
+          {dataViewTable && dataViewTable?.searchFields?.length > 0 && (
+            <Search
+              placeholder={strings.DATA_VIEW_SEARCH_PLACEHOLDER}
+              onSearchChange={(e: any) => {
+                setSearchText(e.target.value)
+                setDebounceInput(e.target.value)
+              }}
+              input={{ icon: 'search', iconPosition: 'left' }}
+              open={false}
+              value={searchText}
+            />
+          )}
+        </div>
+        <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
+        {loading && <Loading />}
+        {dataViewTable && (
+          <DataViewTableContent dataViewTable={dataViewTable} apiQueries={apiQueries} />
+        )}
+      </div>
     </div>
   )
 }
@@ -130,7 +128,7 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
   }
 
   return (
-    <div id="list-container" className="data-view-table-container">
+    <>
       <Table stackable selectable sortable>
         <Table.Header>
           <Table.Row>
@@ -167,7 +165,7 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
         perPageText={strings.OUTCOMES_TABLE_PAGINATION_TEXT}
         strings={strings}
       />
-    </div>
+    </>
   )
 }
 
@@ -192,7 +190,7 @@ const getAPIQueryParams = ({ page, perPage, sortBy }: any) => {
     orderBy = fieldName
     ascending = direction === 'desc' ? 'false' : 'true'
   }
-  return { first: perPage, offset, orderBy, ascending }
+  return { first: perPage, offset, orderBy, ascending } as BasicStringObject
 }
 
 const isSorted = (sortColumn: string | undefined, apiQueries: DataViewTableAPIQueries) => {
