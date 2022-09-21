@@ -76,7 +76,9 @@ const DataViewTable: React.FC = () => {
             />
           )}
         </div>
-        <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
+        <div className="flex-row-space-between-center" style={{ width: '100%' }}>
+          <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
+        </div>
         {loading && <Loading />}
         {dataViewTable && (
           <DataViewTableContent dataViewTable={dataViewTable} apiQueries={apiQueries} />
