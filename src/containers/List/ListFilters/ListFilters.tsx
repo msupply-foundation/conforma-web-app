@@ -6,7 +6,12 @@ import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
 import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
-import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
+import {
+  DataViewSearchableFilter,
+  EnumFilter,
+  SearchableListFilter,
+  StaticListFilter,
+} from './OptionFilters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
 
 const getArrayFromString = (string: string = '') =>
@@ -122,6 +127,16 @@ const ListFilters: React.FC<{
               />
             )
           case 'searchableListIn':
+            if (filter?.options?.getFilterList)
+              return (
+                <DataViewSearchableFilter
+                  key={filterName}
+                  title={filter.title}
+                  getFilterList={filter.options.getFilterList}
+                  {...getMethodsForOptionFilter(filterName)}
+                  onRemove={getOnRemove(filterName)}
+                />
+              )
           case 'searchableListInArray':
             if (!filter?.options?.getListQuery) return null
             return (
