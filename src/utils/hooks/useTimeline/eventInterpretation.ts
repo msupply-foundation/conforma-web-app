@@ -107,7 +107,8 @@ const getOutcomeEvent = ({ value }: ActivityLog, strings: LanguageStrings): Even
 
 const getExtensionEvent = (
   { value, details }: ActivityLog,
-  strings: LanguageStrings
+  strings: LanguageStrings,
+  locale: string
 ): EventOutput => {
   if (value !== config.applicantDeadlineCode)
     return {
@@ -123,7 +124,7 @@ const getExtensionEvent = (
     displayString: `${strings.TIMELINE_DEADLINE_EXTENDED.replace(
       '%1',
       `**${name}**`
-    )} ${DateTime.fromISO(newDeadline).toLocaleString(DateTime.DATETIME_SHORT)}`,
+    )} ${DateTime.fromISO(newDeadline).setLocale(locale).toLocaleString(DateTime.DATETIME_SHORT)}`,
   }
 }
 

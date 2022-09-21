@@ -29,26 +29,31 @@ export const importLanguages = async (
       } as LanguageObject)
   )
 
-  // Row 0 -- Language names
-  rows[0].map((name, index) => (languageObjects[index].languageName = name))
+  let rowIndex = 0
 
-  // Row 1 -- Description
-  rows[1].map((description, index) => (languageObjects[index].description = description))
+  // Row 1 -- Language names
+  rows[rowIndex++].map((name, index) => (languageObjects[index].languageName = name))
 
-  // Row 2 -- Code
-  rows[2].map((code, index) => (languageObjects[index].code = code))
+  // Row 2 -- Description
+  rows[rowIndex++].map((description, index) => (languageObjects[index].description = description))
 
-  // Row 3 -- Flag
-  rows[3].map((flag, index) => (languageObjects[index].flag = flag))
+  // Row 3 -- Code
+  rows[rowIndex++].map((code, index) => (languageObjects[index].code = code))
 
-  // Row 4 -- Enabled
-  rows[4].map(
+  // Row 4 -- Flag
+  rows[rowIndex++].map((flag, index) => (languageObjects[index].flag = flag))
+
+  // Row 5 -- Locale
+  rows[rowIndex++].map((locale, index) => (languageObjects[index].locale = locale))
+
+  // Row 6 -- Enabled
+  rows[rowIndex++].map(
     (enabled, index) =>
       (languageObjects[index].enabled = enabled.toLowerCase() === 'true' ? true : false)
   )
 
-  // Iterate over language rows
-  for (let i = 7; i < rows.length; i++) {
+  // Iterate over language rows - starting on first row after headers parsed
+  for (let i = rowIndex + 1; i < rows.length; i++) {
     const row = rows[i]
     const key = row[0] as keyof LanguageStrings
     if (key === ('' as string)) break // End of strings
@@ -61,8 +66,8 @@ export const importLanguages = async (
   const uploadObjects = languageObjects
     .slice(2) // First two are keys and default strings
     .filter((language) => (importDisabled ? true : language.enabled))
-    .map(({ languageName, description, code, flag, enabled, translations }) => ({
-      language: { languageName, description, code, flag, enabled },
+    .map(({ languageName, description, code, flag, locale, enabled, translations }) => ({
+      language: { languageName, description, code, flag, locale, enabled },
       strings: translations,
     }))
 

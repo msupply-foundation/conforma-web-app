@@ -3,6 +3,8 @@ import { ApplicationViewProps } from '../../types'
 import SemanticDatepicker from 'react-semantic-ui-datepickers'
 import { DateTime } from 'luxon'
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import { LocaleOptions } from 'react-semantic-ui-datepickers/dist/types'
 
 // Stored response date format
 interface DateSaved {
@@ -35,13 +37,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [selectedDate, setSelectedDate] = useState<SelectedDateRange>(
     fromDateSaved(currentResponse?.date)
   )
+  const { selectedLanguage } = useLanguageProvider()
   const { isEditable } = element
   const {
     label,
     description,
     default: defaultDate,
     allowRange = Array.isArray(defaultDate),
-    locale = 'en-US',
+    locale = selectedLanguage.locale,
     displayFormat = 'short',
     entryFormat = 'YYYY-MM-DD',
     minDate,
