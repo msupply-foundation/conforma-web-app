@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Dropdown, Input } from 'semantic-ui-react'
 import { EnumFilterProps, StaticListFilterProps, SearchableListFilterProps } from './types'
@@ -109,4 +109,50 @@ const SearchableListFilter: React.FC<SearchableListFilterProps> = ({
   )
 }
 
-export { StaticListFilter, SearchableListFilter, EnumFilter }
+const DataViewSearchableFilter: React.FC<any> = ({
+  getActiveOptions,
+  setActiveOption,
+  setInactiveOption,
+  getFilterList,
+  title,
+  onRemove,
+}) => {
+  const { strings } = useLanguageProvider()
+  const [searchValue, setSearchValue] = useState('')
+  const [filterList, setFilterList] = useState([])
+
+  useEffect(() => {
+    getFilterList().then((result: any) => setFilterList(result))
+  }, [])
+
+  const activeOptions = getActiveOptions()
+
+  // To-do: Handle Error
+  // if (!error && data) matchedOptions = resultExtractor(data).list
+
+  return (
+    <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
+      <Input
+        icon="search"
+        placeholder={strings.FILTER_START_TYPING}
+        iconPosition="left"
+        className="search"
+        onClick={(e: any) => e.stopPropagation()}
+        onChange={(_, { value }) => {
+          setSearchValue(value)
+        }}
+      />
+      <Dropdown.Divider />
+      <FilterOptions
+        setActiveOption={setActiveOption}
+        setInactiveOption={setInactiveOption}
+        activeOptions={activeOptions}
+        optionList={filterList.filter((item: string) =>
+          new RegExp(searchValue.toLowerCase()).test(item.toLowerCase())
+        )}
+      />
+    </FilterContainer>
+  )
+}
+
+export { StaticListFilter, SearchableListFilter, EnumFilter, DataViewSearchableFilter }
