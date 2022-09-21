@@ -7,7 +7,9 @@ import {
   DataViewsTableResponse,
   DataViewsDetailResponse,
   DataViewTableAPIQueries,
+  FilterDefinitions,
 } from '../types'
+import { constructFilterListQuery } from '../helpers/list/useGetFilterDefinitions'
 
 // 3 simple hooks for returning Outcome state
 
@@ -65,7 +67,12 @@ export const useDataViewsTable = ({ dataViewCode, apiQueries, filter }: DataView
     )
   }, [templatePermissions, dataViewCode, apiQueries])
 
-  return { error, loading, dataViewTable }
+  return {
+    error,
+    loading,
+    dataViewTable,
+    filterDefinitions: buildFilterDefinitions(dataViewTable),
+  }
 }
 
 export const useDataViewsDetail = ({ dataViewCode, recordId }: DataViewDetailsProps) => {
@@ -143,4 +150,45 @@ const processPostRequest = (
     .catch((error) => {
       setState(error, false, undefined)
     })
+}
+
+const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefinitions => {
+  if (!tableData) return {}
+
+  const { searchFields, headerRow } = tableData
+
+  const filterDefinitions: FilterDefinitions = {}
+
+  if (searchFields.length > 0)
+    filterDefinitions.search = {
+      type: 'search',
+      default: false,
+      visibleTo: [],
+      options: {
+        orFieldNames: searchFields,
+      },
+    }
+
+  headerRow.forEach(({ dataType, columnName, title, sortColumn, isBasicField }) => {
+    switch (dataType) {
+      case 'Date':
+        filterDefinitions[columnName] = {
+          type: 'date',
+          default: false,
+          visibleTo: [],
+          title,
+          options: {},
+        }
+      case 'string':
+        filterDefinitions[columnName] = {
+          type: 'searchableListIn',
+          default: false,
+          visibleTo: [],
+          title,
+          options: {},
+        }
+    }
+  })
+
+  return filterDefinitions
 }
