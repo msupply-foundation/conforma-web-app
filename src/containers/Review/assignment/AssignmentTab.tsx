@@ -45,9 +45,9 @@ const AssignmentTab: React.FC<{
 
   const getFilteredByStage = (assignments: AssignmentDetails[]) => {
     if (!filters) return []
-    return assignments.filter(
-      (assignment) => assignment.current.stage.number === filters.currentStage
-    )
+    return assignments
+      .filter(({ isLocked }) => !isLocked) // Should not give option to assign if Assignment is locked
+      .filter((assignment) => assignment.current.stage.number === filters.currentStage)
   }
 
   const getFilteredLevel = (assignments: AssignmentDetails[]) => {
@@ -183,12 +183,6 @@ const calculateIsFullyAssigned = (
   currentLevelAssignments: AssignmentDetails[],
   sectionCodes: string[]
 ) => {
-  console.log(
-    'current',
-    currentLevelAssignments.filter(
-      (assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned
-    )
-  )
   const assignedSections = new Set(
     currentLevelAssignments
       // .filter((assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned)
