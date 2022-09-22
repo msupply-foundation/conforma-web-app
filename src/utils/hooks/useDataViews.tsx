@@ -9,7 +9,6 @@ import {
   DataViewTableAPIQueries,
   FilterDefinitions,
 } from '../types'
-import { constructFilterListQuery } from '../helpers/list/useGetFilterDefinitions'
 
 // 3 simple hooks for returning Outcome state
 

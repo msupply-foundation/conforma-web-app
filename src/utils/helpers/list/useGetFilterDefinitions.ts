@@ -201,10 +201,9 @@ export const useGetFilterDefinitions = () => {
   return FILTER_DEFINITIONS
 }
 
-export const constructFilterListQuery = (query: DocumentNode, queryMethod: string) => {
+const constructFilterListQuery = (query: DocumentNode, queryMethod: string) => {
   const getListQuery: GetFilterListQuery = ({ searchValue, filterListParameters }) => {
     const { templateCode = '' } = filterListParameters || {}
-    console.log('filterListParameters', filterListParameters)
     return {
       query,
       variables: {
