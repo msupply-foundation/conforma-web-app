@@ -149,8 +149,6 @@ export type Query = Node & {
   triggerSchedules?: Maybe<TriggerSchedulesConnection>;
   /** Reads and enables pagination through a set of `User`. */
   users?: Maybe<UsersConnection>;
-  /** Reads and enables pagination through a set of `UserApplicationJoin`. */
-  userApplicationJoins?: Maybe<UserApplicationJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrgJoin`. */
   userOrgJoins?: Maybe<UserOrgJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
@@ -225,7 +223,6 @@ export type Query = Node & {
   triggerSchedule?: Maybe<TriggerSchedule>;
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
-  userApplicationJoin?: Maybe<UserApplicationJoin>;
   userOrganisation?: Maybe<UserOrganisation>;
   userOrganisationByUserIdAndOrganisationId?: Maybe<UserOrganisation>;
   userOrganisationApplicationJoin?: Maybe<UserOrganisationApplicationJoin>;
@@ -363,8 +360,6 @@ export type Query = Node & {
   triggerScheduleByNodeId?: Maybe<TriggerSchedule>;
   /** Reads a single `User` using its globally unique `ID`. */
   userByNodeId?: Maybe<User>;
-  /** Reads a single `UserApplicationJoin` using its globally unique `ID`. */
-  userApplicationJoinByNodeId?: Maybe<UserApplicationJoin>;
   /** Reads a single `UserOrganisation` using its globally unique `ID`. */
   userOrganisationByNodeId?: Maybe<UserOrganisation>;
   /** Reads a single `UserOrganisationApplicationJoin` using its globally unique `ID`. */
@@ -1135,19 +1130,6 @@ export type QueryUsersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUserApplicationJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
-  condition?: Maybe<UserApplicationJoinCondition>;
-  filter?: Maybe<UserApplicationJoinFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryUserOrgJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -1596,12 +1578,6 @@ export type QueryUserArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUserByUsernameArgs = {
   username: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUserApplicationJoinArgs = {
-  id: Scalars['Int'];
 };
 
 
@@ -2184,12 +2160,6 @@ export type QueryTriggerScheduleByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUserByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUserApplicationJoinByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -3718,10 +3688,6 @@ export type UserFilter = {
   notifications?: Maybe<UserToManyNotificationFilter>;
   /** Some related `notifications` exist. */
   notificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `userApplicationJoins` relation. */
-  userApplicationJoins?: Maybe<UserToManyUserApplicationJoinFilter>;
-  /** Some related `userApplicationJoins` exist. */
-  userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserFilter>>;
   /** Checks for any expressions in this list. */
@@ -4482,10 +4448,6 @@ export type ApplicationFilter = {
   activityLogs?: Maybe<ApplicationToManyActivityLogFilter>;
   /** Some related `activityLogs` exist. */
   activityLogsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `userApplicationJoins` relation. */
-  userApplicationJoins?: Maybe<ApplicationToManyUserApplicationJoinFilter>;
-  /** Some related `userApplicationJoins` exist. */
-  userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** Filter by the object’s `user` relation. */
@@ -5185,6 +5147,7 @@ export enum EventType {
   Permission = 'PERMISSION'
 }
 
+<<<<<<< HEAD
 /** A filter to be used against many `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationToManyUserApplicationJoinFilter = {
   /** Every related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -5220,6 +5183,8 @@ export type UserApplicationJoinFilter = {
   not?: Maybe<UserApplicationJoinFilter>;
 };
 
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 /** A filter to be used against many `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
 export type OrganisationToManyApplicationNoteFilter = {
   /** Every related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -5505,16 +5470,6 @@ export type UserToManyNotificationFilter = {
   some?: Maybe<NotificationFilter>;
   /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<NotificationFilter>;
-};
-
-/** A filter to be used against many `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyUserApplicationJoinFilter = {
-  /** Every related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<UserApplicationJoinFilter>;
-  /** Some related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<UserApplicationJoinFilter>;
-  /** No related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<UserApplicationJoinFilter>;
 };
 
 /** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
@@ -6509,6 +6464,7 @@ export type Application = Node & {
   verifications: VerificationsConnection;
   /** Reads and enables pagination through a set of `ActivityLog`. */
   activityLogs: ActivityLogsConnection;
+<<<<<<< HEAD
   /** Reads and enables pagination through a set of `UserApplicationJoin`. */
   userApplicationJoins: UserApplicationJoinsConnection;
 <<<<<<< HEAD
@@ -6525,6 +6481,8 @@ export type Application = Node & {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
   stage?: Maybe<Scalars['String']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
@@ -6650,6 +6608,7 @@ export type ApplicationActivityLogsArgs = {
   filter?: Maybe<ActivityLogFilter>;
 };
 
+<<<<<<< HEAD
 
 export type ApplicationUserApplicationJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
@@ -6716,6 +6675,8 @@ export type ApplicationDataTableProductApplicationJoinsArgs = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 export type User = Node & {
   __typename?: 'User';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -6755,8 +6716,6 @@ export type User = Node & {
   files: FilesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
-  /** Reads and enables pagination through a set of `UserApplicationJoin`. */
-  userApplicationJoins: UserApplicationJoinsConnection;
 };
 
 
@@ -6889,18 +6848,6 @@ export type UserNotificationsArgs = {
   orderBy?: Maybe<Array<NotificationsOrderBy>>;
   condition?: Maybe<NotificationCondition>;
   filter?: Maybe<NotificationFilter>;
-};
-
-
-export type UserUserApplicationJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
-  condition?: Maybe<UserApplicationJoinCondition>;
-  filter?: Maybe<UserApplicationJoinFilter>;
 };
 
 /** Methods to use when ordering `UserOrganisation`. */
@@ -8974,64 +8921,6 @@ export type TriggerSchedulesEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `TriggerSchedule` at the end of the edge. */
   node?: Maybe<TriggerSchedule>;
-};
-
-/** Methods to use when ordering `UserApplicationJoin`. */
-export enum UserApplicationJoinsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A condition to be used against `UserApplicationJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type UserApplicationJoinCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `userId` field. */
-  userId?: Maybe<Scalars['Int']>;
-};
-
-/** A connection to a list of `UserApplicationJoin` values. */
-export type UserApplicationJoinsConnection = {
-  __typename?: 'UserApplicationJoinsConnection';
-  /** A list of `UserApplicationJoin` objects. */
-  nodes: Array<Maybe<UserApplicationJoin>>;
-  /** A list of edges which contains the `UserApplicationJoin` and cursor to aid in pagination. */
-  edges: Array<UserApplicationJoinsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `UserApplicationJoin` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type UserApplicationJoin = Node & {
-  __typename?: 'UserApplicationJoin';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  applicationId: Scalars['Int'];
-  userId: Scalars['Int'];
-  /** Reads a single `Application` that is related to this `UserApplicationJoin`. */
-  application?: Maybe<Application>;
-  /** Reads a single `User` that is related to this `UserApplicationJoin`. */
-  user?: Maybe<User>;
-};
-
-/** A `UserApplicationJoin` edge in the connection. */
-export type UserApplicationJoinsEdge = {
-  __typename?: 'UserApplicationJoinsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `UserApplicationJoin` at the end of the edge. */
-  node?: Maybe<UserApplicationJoin>;
 };
 
 /** Methods to use when ordering `Verification`. */
@@ -13506,8 +13395,6 @@ export type Mutation = {
   createTriggerSchedule?: Maybe<CreateTriggerSchedulePayload>;
   /** Creates a single `User`. */
   createUser?: Maybe<CreateUserPayload>;
-  /** Creates a single `UserApplicationJoin`. */
-  createUserApplicationJoin?: Maybe<CreateUserApplicationJoinPayload>;
   /** Creates a single `UserOrganisation`. */
   createUserOrganisation?: Maybe<CreateUserOrganisationPayload>;
   /** Creates a single `UserOrganisationApplicationJoin`. */
@@ -13748,10 +13635,6 @@ export type Mutation = {
   updateUser?: Maybe<UpdateUserPayload>;
   /** Updates a single `User` using a unique key and a patch. */
   updateUserByUsername?: Maybe<UpdateUserPayload>;
-  /** Updates a single `UserApplicationJoin` using its globally unique id and a patch. */
-  updateUserApplicationJoinByNodeId?: Maybe<UpdateUserApplicationJoinPayload>;
-  /** Updates a single `UserApplicationJoin` using a unique key and a patch. */
-  updateUserApplicationJoin?: Maybe<UpdateUserApplicationJoinPayload>;
   /** Updates a single `UserOrganisation` using its globally unique id and a patch. */
   updateUserOrganisationByNodeId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `UserOrganisation` using a unique key and a patch. */
@@ -14002,10 +13885,6 @@ export type Mutation = {
   deleteUser?: Maybe<DeleteUserPayload>;
   /** Deletes a single `User` using a unique key. */
   deleteUserByUsername?: Maybe<DeleteUserPayload>;
-  /** Deletes a single `UserApplicationJoin` using its globally unique id. */
-  deleteUserApplicationJoinByNodeId?: Maybe<DeleteUserApplicationJoinPayload>;
-  /** Deletes a single `UserApplicationJoin` using a unique key. */
-  deleteUserApplicationJoin?: Maybe<DeleteUserApplicationJoinPayload>;
   /** Deletes a single `UserOrganisation` using its globally unique id. */
   deleteUserOrganisationByNodeId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `UserOrganisation` using a unique key. */
@@ -14335,12 +14214,6 @@ export type MutationCreateTriggerScheduleArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateUserApplicationJoinArgs = {
-  input: CreateUserApplicationJoinInput;
 };
 
 
@@ -15061,18 +14934,6 @@ export type MutationUpdateUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserByUsernameArgs = {
   input: UpdateUserByUsernameInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserApplicationJoinByNodeIdArgs = {
-  input: UpdateUserApplicationJoinByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserApplicationJoinArgs = {
-  input: UpdateUserApplicationJoinInput;
 };
 
 
@@ -15823,18 +15684,6 @@ export type MutationDeleteUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserByUsernameArgs = {
   input: DeleteUserByUsernameInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserApplicationJoinByNodeIdArgs = {
-  input: DeleteUserApplicationJoinByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserApplicationJoinArgs = {
-  input: DeleteUserApplicationJoinInput;
 };
 
 
@@ -17050,7 +16899,6 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `userOrganisation` in the `UserInput` mutation. */
@@ -17187,7 +17035,6 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `permissionJoin` in the `UserInput` mutation. */
@@ -17712,6 +17559,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -17723,6 +17571,8 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `template` in the `ApplicationInput` mutation. */
@@ -18108,6 +17958,7 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -18119,6 +17970,8 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationInput` mutation. */
@@ -18178,7 +18031,6 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `UserInput` mutation. */
@@ -18239,6 +18091,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -18250,6 +18103,8 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationInput` mutation. */
@@ -18377,6 +18232,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -18388,6 +18244,8 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `applicationNote` in the `ApplicationInput` mutation. */
@@ -18509,6 +18367,7 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -18520,6 +18379,8 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `applicationStageHistory` in the `ApplicationInput` mutation. */
@@ -18639,6 +18500,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -18650,6 +18512,8 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `applicationResponse` in the `ApplicationInput` mutation. */
@@ -19010,6 +18874,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -19021,6 +18886,8 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `triggerSchedule` in the `ApplicationInput` mutation. */
@@ -19257,7 +19124,6 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationNote` in the `UserInput` mutation. */
@@ -19357,7 +19223,6 @@ export type UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `triggerSchedule` in the `UserInput` mutation. */
@@ -19459,7 +19324,6 @@ export type UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch =
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `UserInput` mutation. */
@@ -19579,7 +19443,6 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `UserInput` mutation. */
@@ -20207,6 +20070,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -20218,6 +20082,8 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `ApplicationInput` mutation. */
@@ -20481,7 +20347,6 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignmentAssignerJoin` in the `UserInput` mutation. */
@@ -20600,7 +20465,6 @@ export type UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJ
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `review` in the `UserInput` mutation. */
@@ -21133,6 +20997,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -21144,6 +21009,8 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `review` in the `ApplicationInput` mutation. */
@@ -21251,7 +21118,6 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `file` in the `UserInput` mutation. */
@@ -21487,6 +21353,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -21498,6 +21365,8 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `file` in the `ApplicationInput` mutation. */
@@ -22855,7 +22724,6 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `notification` in the `UserInput` mutation. */
@@ -22958,6 +22826,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -22969,6 +22838,8 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `notification` in the `ApplicationInput` mutation. */
@@ -23290,6 +23161,7 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -23301,6 +23173,8 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `activityLog` in the `ApplicationInput` mutation. */
@@ -23421,6 +23295,7 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -23513,11 +23388,14 @@ export type UserApplicationJoinApplicationIdFkeyInput = {
   updateByNodeId?: Maybe<UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate>;
   /** A `ApplicationInput` object that will be created and connected to this object. */
   create?: Maybe<UserApplicationJoinApplicationIdFkeyApplicationCreateInput>;
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
+export type ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
+<<<<<<< HEAD
   patch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
   id: Scalars['Int'];
 };
@@ -24057,10 +23935,14 @@ export type ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdF
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+  patch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
+>>>>>>> 4f31d1ef (Update generated types)
   serial: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 export type DataTableProductApplicationJoinOnDataTableProductApplicationJoinForDataTableProductApplicationJoinApplicationIdFkeyNodeIdUpdate = {
@@ -24070,6 +23952,9 @@ export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplic
 =======
 export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+export type ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate = {
+>>>>>>> 4f31d1ef (Update generated types)
   /** The globally unique `ID` which identifies a single `application` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
@@ -24102,6 +23987,7 @@ export type ApplicationPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -25232,6 +25118,8 @@ export type ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate 
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: ApplicationPatch;
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The `application` to be created by this mutation. */
@@ -25260,6 +25148,7 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -25271,6 +25160,8 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -25347,6 +25238,7 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -25358,6 +25250,8 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The fields on `verification` to look up the row to update. */
@@ -25445,6 +25339,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -25456,6 +25351,8 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -25497,6 +25394,29 @@ export type NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate = {
   patch: UserPatch;
 };
 
+/** Represents an update to a `User`. Fields that are set will be updated. */
+export type UserPatch = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  fullName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+};
+
 /** The `user` to be created by this mutation. */
 export type NotificationUserIdFkeyUserCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -25523,7 +25443,6 @@ export type NotificationUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -25898,6 +25817,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -25909,6 +25829,8 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The fields on `file` to look up the row to update. */
@@ -25993,7 +25915,6 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -26066,6 +25987,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -26077,6 +25999,8 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -26466,7 +26390,6 @@ export type ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -26528,7 +26451,6 @@ export type FileUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The fields on `file` to look up the row to update. */
@@ -26690,6 +26612,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -26701,6 +26624,8 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27266,7 +27191,6 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27351,7 +27275,6 @@ export type TriggerScheduleEditorUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27434,7 +27357,6 @@ export type ApplicationNoteUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27499,7 +27421,6 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27643,6 +27564,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -27654,6 +27576,8 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27868,6 +27792,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -27879,6 +27804,8 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27941,6 +27868,7 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -27952,6 +27880,8 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -28015,6 +27945,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -28026,6 +27957,8 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The fields on `organisation` to look up the row to update. */
@@ -28120,6 +28053,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -28131,6 +28065,8 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The fields on `user` to look up the row to update. */
@@ -28174,7 +28110,6 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -28218,6 +28153,7 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -28229,6 +28165,8 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -28403,6 +28341,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -28414,6 +28353,8 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -28749,6 +28690,7 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -28764,6 +28706,8 @@ export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsing
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -28825,7 +28769,6 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -29568,6 +29511,7 @@ export type ApplicationInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -29579,6 +29523,8 @@ export type ApplicationInput = {
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 =======
 >>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
+=======
+>>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The output of our create `Application` mutation. */
@@ -31702,7 +31648,6 @@ export type UserInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The output of our create `User` mutation. */
@@ -31722,46 +31667,6 @@ export type CreateUserPayload = {
 /** The output of our create `User` mutation. */
 export type CreateUserPayloadUserEdgeArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
-};
-
-/** All input for the create `UserApplicationJoin` mutation. */
-export type CreateUserApplicationJoinInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `UserApplicationJoin` to be created by this mutation. */
-  userApplicationJoin: UserApplicationJoinInput;
-};
-
-/** An input for mutations affecting `UserApplicationJoin` */
-export type UserApplicationJoinInput = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
-  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
-};
-
-/** The output of our create `UserApplicationJoin` mutation. */
-export type CreateUserApplicationJoinPayload = {
-  __typename?: 'CreateUserApplicationJoinPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `UserApplicationJoin` that was created by this mutation. */
-  userApplicationJoin?: Maybe<UserApplicationJoin>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `Application` that is related to this `UserApplicationJoin`. */
-  application?: Maybe<Application>;
-  /** Reads a single `User` that is related to this `UserApplicationJoin`. */
-  user?: Maybe<User>;
-  /** An edge for our `UserApplicationJoin`. May be used by Relay 1. */
-  userApplicationJoinEdge?: Maybe<UserApplicationJoinsEdge>;
-};
-
-
-/** The output of our create `UserApplicationJoin` mutation. */
-export type CreateUserApplicationJoinPayloadUserApplicationJoinEdgeArgs = {
-  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
 };
 
 /** All input for the create `UserOrganisation` mutation. */
@@ -34245,48 +34150,6 @@ export type UpdateUserByUsernameInput = {
   username: Scalars['String'];
 };
 
-/** All input for the `updateUserApplicationJoinByNodeId` mutation. */
-export type UpdateUserApplicationJoinByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `UserApplicationJoin` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `UserApplicationJoin` being updated. */
-  patch: UserApplicationJoinPatch;
-};
-
-/** The output of our update `UserApplicationJoin` mutation. */
-export type UpdateUserApplicationJoinPayload = {
-  __typename?: 'UpdateUserApplicationJoinPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `UserApplicationJoin` that was updated by this mutation. */
-  userApplicationJoin?: Maybe<UserApplicationJoin>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `Application` that is related to this `UserApplicationJoin`. */
-  application?: Maybe<Application>;
-  /** Reads a single `User` that is related to this `UserApplicationJoin`. */
-  user?: Maybe<User>;
-  /** An edge for our `UserApplicationJoin`. May be used by Relay 1. */
-  userApplicationJoinEdge?: Maybe<UserApplicationJoinsEdge>;
-};
-
-
-/** The output of our update `UserApplicationJoin` mutation. */
-export type UpdateUserApplicationJoinPayloadUserApplicationJoinEdgeArgs = {
-  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
-};
-
-/** All input for the `updateUserApplicationJoin` mutation. */
-export type UpdateUserApplicationJoinInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `UserApplicationJoin` being updated. */
-  patch: UserApplicationJoinPatch;
-  id: Scalars['Int'];
-};
-
 /** All input for the `updateUserOrganisationByNodeId` mutation. */
 export type UpdateUserOrganisationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -36452,45 +36315,6 @@ export type DeleteUserByUsernameInput = {
   username: Scalars['String'];
 };
 
-/** All input for the `deleteUserApplicationJoinByNodeId` mutation. */
-export type DeleteUserApplicationJoinByNodeIdInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `UserApplicationJoin` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The output of our delete `UserApplicationJoin` mutation. */
-export type DeleteUserApplicationJoinPayload = {
-  __typename?: 'DeleteUserApplicationJoinPayload';
-  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `UserApplicationJoin` that was deleted by this mutation. */
-  userApplicationJoin?: Maybe<UserApplicationJoin>;
-  deletedUserApplicationJoinNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `Application` that is related to this `UserApplicationJoin`. */
-  application?: Maybe<Application>;
-  /** Reads a single `User` that is related to this `UserApplicationJoin`. */
-  user?: Maybe<User>;
-  /** An edge for our `UserApplicationJoin`. May be used by Relay 1. */
-  userApplicationJoinEdge?: Maybe<UserApplicationJoinsEdge>;
-};
-
-
-/** The output of our delete `UserApplicationJoin` mutation. */
-export type DeleteUserApplicationJoinPayloadUserApplicationJoinEdgeArgs = {
-  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
-};
-
-/** All input for the `deleteUserApplicationJoin` mutation. */
-export type DeleteUserApplicationJoinInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
 /** All input for the `deleteUserOrganisationByNodeId` mutation. */
 export type DeleteUserOrganisationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -37717,6 +37541,25 @@ export type GetReviewResponsesQuery = (
       { __typename?: 'ReviewResponse' }
       & ReviewResponseFragmentFragment
     )>> }
+  )> }
+);
+
+export type GetReviewableQuestionsQueryVariables = Exact<{
+  applicationId: Scalars['Int'];
+  stageId: Scalars['Int'];
+  levelNumber: Scalars['Int'];
+}>;
+
+
+export type GetReviewableQuestionsQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'submittedAssignedQuestionsCount'>
+  & { reviewableQuestions?: Maybe<(
+    { __typename?: 'ReviewableQuestionsConnection' }
+    & Pick<ReviewableQuestionsConnection, 'totalCount'>
+  )>, assignedQuestions?: Maybe<(
+    { __typename?: 'AssignedQuestionsConnection' }
+    & Pick<AssignedQuestionsConnection, 'totalCount'>
   )> }
 );
 
@@ -40007,6 +39850,45 @@ export function useGetReviewResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetReviewResponsesQueryHookResult = ReturnType<typeof useGetReviewResponsesQuery>;
 export type GetReviewResponsesLazyQueryHookResult = ReturnType<typeof useGetReviewResponsesLazyQuery>;
 export type GetReviewResponsesQueryResult = Apollo.QueryResult<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>;
+export const GetReviewableQuestionsDocument = gql`
+    query getReviewableQuestions($applicationId: Int!, $stageId: Int!, $levelNumber: Int!) {
+  reviewableQuestions(appId: $applicationId) {
+    totalCount
+  }
+  assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber) {
+    totalCount
+  }
+  submittedAssignedQuestionsCount(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber)
+}
+    `;
+
+/**
+ * __useGetReviewableQuestionsQuery__
+ *
+ * To run a query within a React component, call `useGetReviewableQuestionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewableQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReviewableQuestionsQuery({
+ *   variables: {
+ *      applicationId: // value for 'applicationId'
+ *      stageId: // value for 'stageId'
+ *      levelNumber: // value for 'levelNumber'
+ *   },
+ * });
+ */
+export function useGetReviewableQuestionsQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>) {
+        return Apollo.useQuery<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>(GetReviewableQuestionsDocument, baseOptions);
+      }
+export function useGetReviewableQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>(GetReviewableQuestionsDocument, baseOptions);
+        }
+export type GetReviewableQuestionsQueryHookResult = ReturnType<typeof useGetReviewableQuestionsQuery>;
+export type GetReviewableQuestionsLazyQueryHookResult = ReturnType<typeof useGetReviewableQuestionsLazyQuery>;
+export type GetReviewableQuestionsQueryResult = Apollo.QueryResult<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>;
 export const GetSchemaColumnsDocument = gql`
     query getSchemaColumns($tableNames: [SqlIdentifier!]) {
   schemaColumns(filter: {tableName: {in: $tableNames}}) {
