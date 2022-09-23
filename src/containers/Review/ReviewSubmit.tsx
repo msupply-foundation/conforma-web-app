@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form, Label } from 'semantic-ui-react'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import ReviewComment from '../../components/Review/ReviewComment'
 import ReviewDecision from '../../components/Review/ReviewDecision'
-import { Decision, ReviewStatus } from '../../utils/generated/graphql'
+import {
+  Decision,
+  ReviewStatus,
+  useGetReviewableQuestionsQuery,
+} from '../../utils/generated/graphql'
 import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
 import { useGetFullReviewStructureAsync } from '../../utils/hooks/useGetReviewStructureForSection'
 import { useRouter } from '../../utils/hooks/useRouter'
@@ -21,11 +25,28 @@ type ReviewSubmitProps = {
 
 const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   const {
-    structure: { thisReview, assignment, canApplicantMakeChanges },
+    structure: { info, thisReview, assignment, canApplicantMakeChanges },
   } = props
+
+  const [fullyAssigned, setFullyAssigned] = useState(false)
+
+  const { data, loading, error } = useGetReviewableQuestionsQuery({
+    variables: {
+      applicationId: info.id,
+      stageId: thisReview?.current.stage.id as number,
+      levelNumber: assignment?.assigneeLevel as number,
+    },
+  })
   const reviewDecision = thisReview?.reviewDecision
   const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
     useGetDecisionOptions(canApplicantMakeChanges, assignment, thisReview)
+
+  useEffect(() => {
+    if (!data) return
+    const { assignedQuestions, reviewableQuestions } = data
+    const fullyAssigned = assignedQuestions?.totalCount === reviewableQuestions?.totalCount
+    setFullyAssigned(fullyAssigned)
+  }, [data])
 
   return (
     <Form id="review-submit-area">
@@ -46,6 +67,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
         {...props}
         getDecision={getDecision}
         getAndSetDecisionError={getAndSetDecisionError}
+        fullyAssigned={fullyAssigned}
       />
     </Form>
   )
@@ -54,6 +76,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
 type ReviewSubmitButtonProps = {
   getDecision: () => Decision
   getAndSetDecisionError: () => boolean
+  fullyAssigned: boolean
 }
 
 const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> = ({
@@ -61,6 +84,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   structure,
   getDecision,
   getAndSetDecisionError,
+  fullyAssigned,
   assignment,
   previousAssignment,
 }) => {
@@ -75,6 +99,11 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     REVIEW_SUBMISSION_CONFIRM: {
       title: strings.REVIEW_SUBMISSION_CONFIRM_TITLE,
       message: strings.REVIEW_SUBMISSION_CONFIRM_MESSAGE,
+      confirmText: strings.BUTTON_SUBMIT,
+    },
+    REVIEW_SUBMISSION_INCOMPLETE: {
+      title: strings.REVIEW_SUBMISSION_CONFIRM_TITLE,
+      message: strings.REVIEW_SUBMISSION_INCOMPLETE_MESSAGE,
       confirmText: strings.BUTTON_SUBMIT,
     },
     REVIEW_DECISION_SET_FAIL: {
@@ -98,7 +127,8 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   })
 
   const { ConfirmModal, showModal: showConfirmModal } = useConfirmationModal({
-    ...messages.REVIEW_SUBMISSION_CONFIRM,
+    onConfirm: () => submission(),
+    showCancel: false,
   })
   const { ConfirmModal: WarningModal, showModal: showWarning } = useConfirmationModal({
     type: 'warning',
@@ -165,11 +195,15 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       return
     }
 
+    // Can SUBMIT, but review isn't completed
+    if (!fullyAssigned) {
+      showConfirmModal({
+        ...messages.REVIEW_SUBMISSION_INCOMPLETE,
+      })
+    }
+
     // Can SUBMIT
-    showConfirmModal({
-      onConfirm: () => submission(),
-      showCancel: false,
-    })
+    showConfirmModal({ ...messages.REVIEW_SUBMISSION_CONFIRM })
   }
 
   const submission = async () => {
