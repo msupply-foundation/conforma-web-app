@@ -34,9 +34,6 @@ export default gql`
         assignerAction
         assigners
         reviewers
-        totalQuestions
-        totalAssigned
-        totalAssignLocked
       }
       # Use the page and count info for rendering Pagination UI
       pageInfo {
