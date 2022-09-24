@@ -42,7 +42,12 @@ export const useDataViewsList = () => {
   } = useUserState()
 
   useEffect(() => {
-    processGetRequest(getServerUrl('dataViews'), setError, setLoading, setDataViewsList)
+    processRequest({
+      url: getServerUrl('dataViews'),
+      setError,
+      setLoading,
+      setStateMethod: setDataViewsList,
+    })
   }, [templatePermissions])
 
   return { error, loading, dataViewsList }
@@ -57,13 +62,13 @@ export const useDataViewsTable = ({ dataViewCode, apiQueries, filter }: DataView
   } = useUserState()
 
   useEffect(() => {
-    processPostRequest(
-      getServerUrl('dataViews', { dataViewCode, query: apiQueries }),
+    processRequest({
+      url: getServerUrl('dataViews', { dataViewCode, query: apiQueries }),
       setError,
       setLoading,
-      setDataViewTable,
-      filter
-    )
+      setStateMethod: setDataViewTable,
+      filter,
+    })
   }, [templatePermissions, dataViewCode, apiQueries])
 
   return {
@@ -83,59 +88,37 @@ export const useDataViewsDetail = ({ dataViewCode, recordId }: DataViewDetailsPr
   } = useUserState()
 
   useEffect(() => {
-    processGetRequest(
-      getServerUrl('dataViews', { dataViewCode, itemId: recordId }),
+    processRequest({
+      url: getServerUrl('dataViews', { dataViewCode, itemId: recordId }),
       setError,
       setLoading,
-      setDataViewDetail
-    )
+      setStateMethod: setDataViewDetail,
+    })
   }, [templatePermissions, dataViewCode, recordId])
 
   return { error, loading, dataViewDetail }
 }
 
-const processGetRequest = (
-  url: string,
-  setErrorMethod: (_: ErrorResponse | null) => void,
-  setLoadingMethod: (_: boolean) => void,
+interface RequestProps {
+  url: string
+  setError: (_: ErrorResponse | null) => void
+  setLoading: (_: boolean) => void
   setStateMethod: (_: any) => void
-): void => {
-  const setState = (errorState: ErrorResponse | null, loadingState: boolean, stateState: any) => {
-    setErrorMethod(errorState)
-    setLoadingMethod(loadingState)
-    setStateMethod(stateState)
-  }
-  setLoadingMethod(true)
-  getRequest(url)
-    .then((response) => {
-      if (response?.error) {
-        setState(response, false, undefined)
-        return
-      }
-      if (response?.statusCode) {
-        setState(response, false, undefined)
-        return
-      } else setState(null, false, response)
-    })
-    .catch((error) => {
-      setState(error, false, undefined)
-    })
+  filter?: object
 }
 
-const processPostRequest = (
-  url: string,
-  setErrorMethod: (_: ErrorResponse | null) => void,
-  setLoadingMethod: (_: boolean) => void,
-  setStateMethod: (_: any) => void,
-  filter: object
-): void => {
+const processRequest = ({ url, setError, setLoading, setStateMethod, filter }: RequestProps) => {
+  const requestMethod = filter
+    ? () => postRequest({ url, headers: { 'Content-Type': 'application/json' }, jsonBody: filter })
+    : () => getRequest(url)
+
   const setState = (errorState: ErrorResponse | null, loadingState: boolean, stateState: any) => {
-    setErrorMethod(errorState)
-    setLoadingMethod(loadingState)
+    setError(errorState)
+    setLoading(loadingState)
     setStateMethod(stateState)
   }
-  setLoadingMethod(true)
-  postRequest({ url, headers: { 'Content-Type': 'application/json' }, jsonBody: filter })
+  setLoading(true)
+  requestMethod()
     .then((response) => {
       if (response?.error) {
         setState(response, false, undefined)
