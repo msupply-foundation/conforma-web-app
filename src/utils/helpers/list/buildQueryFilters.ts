@@ -62,22 +62,24 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
   staticList: (filterValue) => inList(filterValue),
   // For string column of searchable values
   search: (filterValue) => ({ includesInsensitive: filterValue }),
-  dataViewFreeText: () => ({}),
-  dataViewList: (filterValue, options) => {
+  dataViewString: (filterValue, options) => {
+    if (!options?.showFilterList) return { includesInsensitive: filterValue }
     if (!options?.delimiter) return inList(filterValue)
+
     const values = splitCommaList(filterValue)
-
     const complexOrFilter: any = { or: [] }
-
     options?.searchFields?.forEach((field) =>
       complexOrFilter.or.push(
         ...values.map((value) => ({ [field]: { includesInsensitive: value } }))
       )
     )
-
-    // console.log('complexOrFilter', complexOrFilter)
     return complexOrFilter
-    // return inList(filterValue)
+  },
+  dataViewNumber: () => ({}),
+  dataViewBoolean: (filterValue) => {
+    return {
+      equalTo: String(filterValue).toLowerCase() === 'true',
+    }
   },
 }
 
@@ -95,8 +97,9 @@ const constructFilter = (
   filterValue: string
 ) => {
   const filter = filterTypeDefinitions[type](filterValue, options)
+
   // If all of the criteria is undefined skip filter
-  if (!Object.values(filter).find((value) => value !== undefined)) return {}
+  // if (!Object.values(filter).find((value) => value !== undefined)) return {}
 
   // For dataViews' multiple matching lists
   if ('or' in filter) return filter

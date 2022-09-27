@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Dropdown, Icon } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useRouter } from '../../../utils/hooks/useRouter'
-import { FilterDefinitions } from '../../../utils/types'
+import { BooleanFilterMapping, FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
 import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
 import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
-import { DataViewSearchableFilter } from '../../DataDisplay/DataViewFilters'
+import { DataViewSearchableList, DataViewTextSearchFilter } from '../../DataDisplay/DataViewFilters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
 
@@ -177,24 +177,51 @@ const ListFilters: React.FC<{
                 namedDates={filter.options?.namedDates}
                 dateString={query[filterName]}
                 onRemove={getOnRemove(filterName)}
-                setDateString={(dateFtiler: string) => {
+                setDateString={(dateFilter: string) => {
                   updateQuery({
-                    [filterName]: dateFtiler,
+                    [filterName]: dateFilter,
                   })
                 }}
               />
             )
-
-          case 'dataViewList':
+          case 'dataViewBoolean':
             return (
-              <DataViewSearchableFilter
+              <BooleanFilter
+                key={filterName}
+                title={filter.title}
+                onRemove={getOnRemove(filterName)}
+                activeOptions={getArrayFromString(query[filterName])}
+                booleanMapping={
+                  filter?.options?.booleanMapping ??
+                  (filter?.options?.valueMap as BooleanFilterMapping) ?? {
+                    true: 'TRUE',
+                    false: 'NOT TRUE',
+                  }
+                }
+                toggleFilter={(value: boolean) =>
+                  updateQuery({
+                    [filterName]: String(value),
+                  })
+                }
+              />
+            )
+          case 'dataViewString':
+          case 'dataViewNumber':
+            return filter.options?.showFilterList ? (
+              <DataViewSearchableList
                 key={filterName}
                 title={filter.title}
                 filterListParameters={filterListParameters}
-                getFilterListQuery={async () => ['One', 'two', 'three']}
-                // getFilterListQuery={filter.options?.getListQuery}
                 options={filter.options}
                 {...getMethodsForOptionFilter(filterName)}
+                onRemove={getOnRemove(filterName)}
+              />
+            ) : (
+              <DataViewTextSearchFilter
+                key={filterName}
+                title={filter.title}
+                options={filter.options}
+                setFilterText={(text: string) => updateQuery({ [filterName]: text })}
                 onRemove={getOnRemove(filterName)}
               />
             )
