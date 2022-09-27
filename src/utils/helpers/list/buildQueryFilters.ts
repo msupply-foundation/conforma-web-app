@@ -62,6 +62,8 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
   staticList: (filterValue) => inList(filterValue),
   // For string column of searchable values
   search: (filterValue) => ({ includesInsensitive: filterValue }),
+  dataViewFreeText: () => ({}),
+  dataViewList: (filterValue) => inList(filterValue),
 }
 
 // Constructs OR filter for object i.e. { or: [ {fieldName1: filter1}, {fieldName2: filter} ] }

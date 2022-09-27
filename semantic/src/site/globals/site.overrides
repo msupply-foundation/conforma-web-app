@@ -1826,6 +1826,15 @@ a:hover {
   }
 }
 
+.filter-list-message {
+  max-width: 250px;
+  min-height: 50px;
+  margin: 15px;
+  p {
+    white-space: normal;
+  }
+}
+
 // Layouts
 #list-filter {
   .flex-row();

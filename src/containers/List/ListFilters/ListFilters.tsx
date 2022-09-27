@@ -6,12 +6,8 @@ import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
 import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
-import {
-  DataViewSearchableFilter,
-  EnumFilter,
-  SearchableListFilter,
-  StaticListFilter,
-} from './OptionFilters'
+import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
+import { DataViewSearchableFilter } from '../../DataDisplay/Filters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
 
 const getArrayFromString = (string: string = '') =>
@@ -55,7 +51,7 @@ const ListFilters: React.FC<{
     else setActiveFilters([...activeFilters, ...newFilters])
   }, [query])
 
-  // Filter criteria/options states is provided by query URL, methods below are get and set query fiter criteria
+  // Filter criteria/options states is provided by query URL, methods below are get and set query filter criteria
   const getMethodsForOptionFilter: GetMethodsForOptionFilter = (filterName) => ({
     getActiveOptions: () => getArrayFromString(query[filterName]),
     setActiveOption: (option: string) =>
@@ -129,16 +125,6 @@ const ListFilters: React.FC<{
               />
             )
           case 'searchableListIn':
-            if (filter?.options?.getFilterList)
-              return (
-                <DataViewSearchableFilter
-                  key={filterName}
-                  title={filter.title}
-                  getFilterList={filter.options.getFilterList}
-                  {...getMethodsForOptionFilter(filterName)}
-                  onRemove={getOnRemove(filterName)}
-                />
-              )
           case 'searchableListInArray':
             if (!filter?.options?.getListQuery) return null
             return (
@@ -197,6 +183,20 @@ const ListFilters: React.FC<{
                     [filterName]: dateFtiler,
                   })
                 }}
+              />
+            )
+
+          case 'dataViewList':
+            return (
+              <DataViewSearchableFilter
+                key={filterName}
+                title={filter.title}
+                filterListParameters={filterListParameters}
+                getFilterListQuery={async () => ['One', 'two', 'three']}
+                // getFilterListQuery={filter.options?.getListQuery}
+                options={filter.options}
+                {...getMethodsForOptionFilter(filterName)}
+                onRemove={getOnRemove(filterName)}
               />
             )
           default:

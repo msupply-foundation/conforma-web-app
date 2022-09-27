@@ -105,6 +105,8 @@ export default {
   DATE_YEARS_AGO: 'years ago',
   DATA_VIEW_SEARCH_PLACEHOLDER: 'Search...',
   DATA_VIEW_COLUMN_NOT_SORTABLE: 'Column "%1" not sortable',
+  DATA_VIEW_FILTER_MORE_RESULTS: 'More results available. Narrow the list by searching above.',
+  DATA_VIEW_FILTER_LIST_LOADING: 'Fetching list...',
   DEFAULT_TEMPLATE_CATEGORY_TITLE: 'General',
   DEFAULT_TEMPLATE_CATEGORY_ICON: 'globe',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
