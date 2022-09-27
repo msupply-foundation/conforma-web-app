@@ -19,9 +19,11 @@ import buildQueryFilters from '../../utils/helpers/list/buildQueryFilters'
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
 import { useToast } from '../../contexts/Toast'
 import ListFilters from '../List/ListFilters/ListFilters'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 const DataViewTable: React.FC = () => {
   const { strings } = useLanguageProvider()
+  const { preferences } = usePrefs()
   const {
     query,
     location,
@@ -54,7 +56,7 @@ const DataViewTable: React.FC = () => {
 
   useEffect(() => {
     if (!filterDefinitions) return
-    setApiQueries(getAPIQueryParams(query))
+    setApiQueries(getAPIQueryParams(query, preferences?.paginationDefault))
     setGqlFilter(buildQueryFilters(query, filterDefinitions))
   }, [query, filterDefinitions])
 
@@ -190,11 +192,11 @@ const getCellComponent = (value: any, columnDetails: HeaderRow, id: number) => {
   else return <Markdown text={formatCellText(value, columnDetails) || ''} />
 }
 
-// NOTE: This is temporary -- when we add more filtering and search
-// functionality, we will build query objects the same way the list works,
-// but it's overkill for this first version
-const getAPIQueryParams = ({ page, perPage, sortBy }: any) => {
-  const offset = page && perPage ? String((Number(page) - 1) * Number(perPage)) : undefined
+// These values are not part of the GraphQL "filter" object, so are handled
+// separately
+const getAPIQueryParams = ({ page = 1, perPage, sortBy }: any, perPageDefault?: number) => {
+  const currentPerPage = perPage ?? perPageDefault ?? 20
+  const offset = page !== 1 ? String((Number(page) - 1) * Number(currentPerPage)) : undefined
   let orderBy: string | undefined = undefined
   let ascending: 'true' | 'false' | undefined = undefined
   if (sortBy) {
@@ -202,7 +204,7 @@ const getAPIQueryParams = ({ page, perPage, sortBy }: any) => {
     orderBy = fieldName
     ascending = direction === 'desc' ? 'false' : 'true'
   }
-  return { first: perPage, offset, orderBy, ascending } as BasicStringObject
+  return { first: currentPerPage, offset, orderBy, ascending } as BasicStringObject
 }
 
 const isSorted = (sortColumn: string | undefined, apiQueries: DataViewTableAPIQueries) => {

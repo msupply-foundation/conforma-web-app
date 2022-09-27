@@ -18,8 +18,10 @@ const PaginationBar: React.FC<PaginationProps> = ({
   const { preferences } = usePrefs()
   const { query, updateQuery } = useRouter()
 
+  const paginationPresets = preferences?.paginationPresets ?? [2, 5, 10, 20, 50]
+  const defaultPaginationValue = preferences?.paginationDefault ?? 20
   const page = Number(query?.page) || 1
-  const perPage = Number(query?.perPage) || 20
+  const perPage = Number(query?.perPage) || defaultPaginationValue
 
   const handlePageChange = (_: any, { activePage }: any) => updateQuery({ page: activePage })
 
@@ -49,7 +51,7 @@ const PaginationBar: React.FC<PaginationProps> = ({
               selection
               compact
               floated="right"
-              options={preferences?.paginationPresets.map((value: number) => ({
+              options={paginationPresets.map((value: number) => ({
                 key: value,
                 text: String(value),
                 value,
