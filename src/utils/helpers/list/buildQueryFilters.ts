@@ -1,5 +1,4 @@
 import { parseDateRange, formatDateGraphQl } from '../../dateAndTime/parseDateRange'
-import { ApplicationListShape } from '../../generated/graphql'
 import {
   BasicStringObject,
   FilterDefinition,
