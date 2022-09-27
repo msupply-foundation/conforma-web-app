@@ -10,6 +10,7 @@ import {
   DataViewTableAPIQueries,
   DataViewsTableResponse,
   BasicStringObject,
+  GqlFilterObject,
 } from '../../utils/types'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { constructElement, formatCellText } from './helpers'
@@ -18,11 +19,6 @@ import buildQueryFilters from '../../utils/helpers/list/buildQueryFilters'
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
 import { useToast } from '../../contexts/Toast'
 import ListFilters from '../List/ListFilters/ListFilters'
-
-interface GqlFilterObject {
-  search?: string
-  [key: string]: any
-}
 
 const DataViewTable: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -42,8 +38,19 @@ const DataViewTable: React.FC = () => {
     apiQueries,
     filter: gqlFilter,
   })
+
   const title = location?.state?.title ?? dataViewTable?.title ?? ''
   usePageTitle(title)
+
+  // Reset filters if navigating here from Menu bar
+  useEffect(() => {
+    if (location?.state?.resetFilters) {
+      setGqlFilter({})
+      setApiQueries({})
+      setSearchText('')
+      setDebounceInput('')
+    }
+  }, [dataViewCode])
 
   useEffect(() => {
     if (!filterDefinitions) return

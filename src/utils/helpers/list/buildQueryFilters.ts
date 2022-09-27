@@ -1,9 +1,11 @@
 import { parseDateRange, formatDateGraphQl } from '../../dateAndTime/parseDateRange'
+import { ApplicationListShape } from '../../generated/graphql'
 import {
   BasicStringObject,
   FilterDefinition,
   FilterDefinitions,
   FilterTypeDefinitions,
+  GqlFilterObject,
 } from '../../types'
 
 export default function buildQueryFilters(
@@ -13,8 +15,17 @@ export default function buildQueryFilters(
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [filterName, filterValue]) => {
     const filterDefinition = filterDefinitions[filterName]
     if (!filterDefinition) return filterObj
-    return { ...filterObj, ...constructFilter(filterDefinition, filterName, filterValue) }
+    const filter = constructFilter(filterDefinition, filterName, filterValue)
+    // If "or" field exists, we need to merge them, otherwise newer one will
+    // overwrite previous
+    if ('or' in filterObj && 'or' in filter)
+      return {
+        ...(filterObj as GqlFilterObject),
+        or: [...(filterObj as GqlFilterObject).or, ...(filter as GqlFilterObject).or],
+      }
+    return { ...filterObj, ...filter }
   }, {})
+
   return graphQLfilter
 }
 
@@ -52,7 +63,22 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
   // For string column of searchable values
   search: (filterValue) => ({ includesInsensitive: filterValue }),
   dataViewFreeText: () => ({}),
-  dataViewList: (filterValue) => inList(filterValue),
+  dataViewList: (filterValue, options) => {
+    if (!options?.delimiter) return inList(filterValue)
+    const values = splitCommaList(filterValue)
+
+    const complexOrFilter: any = { or: [] }
+
+    options?.searchFields?.forEach((field) =>
+      complexOrFilter.or.push(
+        ...values.map((value) => ({ [field]: { includesInsensitive: value } }))
+      )
+    )
+
+    // console.log('complexOrFilter', complexOrFilter)
+    return complexOrFilter
+    // return inList(filterValue)
+  },
 }
 
 // Constructs OR filter i.e. { or: [fieldName1: filter, fieldName2: filter]}
@@ -71,6 +97,9 @@ const constructFilter = (
   const filter = filterTypeDefinitions[type](filterValue, options)
   // If all of the criteria is undefined skip filter
   if (!Object.values(filter).find((value) => value !== undefined)) return {}
+
+  // For dataViews' multiple matching lists
+  if ('or' in filter) return filter
 
   const { orFieldNames = [], substituteColumnName = '' } = options || {}
   // If orFieldNames are provided return or statement

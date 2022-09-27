@@ -7,8 +7,9 @@ import BooleanFilter from './BooleanFilter'
 import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
 import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
-import { DataViewSearchableFilter } from '../../DataDisplay/Filters'
+import { DataViewSearchableFilter } from '../../DataDisplay/DataViewFilters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
+import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
 
 const getArrayFromString = (string: string = '') =>
   string.split(',').filter((option) => !!option.trim())

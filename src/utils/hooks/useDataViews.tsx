@@ -175,7 +175,13 @@ const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefin
       default: false,
       visibleTo: [],
       title,
-      options: { column, code, searchFields, delimiter, valueMap },
+      options: {
+        column,
+        code,
+        searchFields,
+        delimiter,
+        valueMap,
+      },
     }
   })
 

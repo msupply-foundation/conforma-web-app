@@ -17,7 +17,6 @@ import { TemplateElementCategory } from '../../utils/generated/graphql'
 import { ApplicationDetails } from '../../utils/types'
 import config from '../../config'
 import { serverREST, serverGraphQL } from '../../utils/helpers/endpoints/endpointUrlBuilder'
-import buildQueryFilters from '../../utils/helpers/list/buildQueryFilters'
 
 export const formatCellText = (
   value: any,
