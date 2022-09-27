@@ -784,6 +784,11 @@ export type DataViewTableAPIQueries = {
 // LIST FILTERS
 // *****************
 
+export interface GqlFilterObject {
+  search?: string
+  [key: string]: any
+}
+
 export type FilterTypeMethod = (filterKey: string, options?: FilterTypeOptions) => object
 
 export type FilterTypeDefinitions = {
