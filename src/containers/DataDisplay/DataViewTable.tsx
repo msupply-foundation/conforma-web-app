@@ -46,9 +46,10 @@ const DataViewTable: React.FC = () => {
   usePageTitle(title)
 
   useEffect(() => {
+    if (!filterDefinitions) return
     setApiQueries(getAPIQueryParams(query))
     setGqlFilter(buildQueryFilters(query, filterDefinitions))
-  }, [query])
+  }, [query, filterDefinitions])
 
   useEffect(() => {
     updateQuery({ search: debounceOutput })
@@ -77,7 +78,9 @@ const DataViewTable: React.FC = () => {
           )}
         </div>
         <div className="flex-row-space-between-center" style={{ width: '100%' }}>
-          <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
+          {filterDefinitions && (
+            <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
+          )}
         </div>
         {loading && <Loading />}
         {dataViewTable && (

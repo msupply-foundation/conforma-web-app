@@ -714,6 +714,8 @@ interface TableRow {
   item: { [key: string]: any }
 }
 
+export type DataViewFilterType = 'LIST' | 'TEXT' | 'DATE'
+
 // Response object of /data-views/table endpoint
 export interface DataViewsTableResponse {
   tableName: string
@@ -722,6 +724,14 @@ export interface DataViewsTableResponse {
   headerRow: HeaderRow[]
   tableRows: TableRow[]
   searchFields: string[]
+  filterDefinitions: {
+    column: string
+    title: string
+    type: DataViewFilterType
+    searchFields: string[]
+    delimiter?: string
+    valueMap?: { [key: string]: string }
+  }[]
   totalCount: number
   message?: string
 }
@@ -786,7 +796,9 @@ export type FilterTypeDefinitions = {
     | 'searchableListIn'
     | 'searchableListInArray'
     | 'staticList'
-    | 'search']: FilterTypeMethod
+    | 'search'
+    | 'dataViewFreeText'
+    | 'dataViewList']: FilterTypeMethod
 }
 
 export type FilterTypes = keyof FilterTypeDefinitions
@@ -826,8 +838,12 @@ export type FilterTypeOptions = {
   namedDates?: NamedDates
   // For boolean to show on and of criteria
   booleanMapping?: BooleanFilterMapping
-  // For Data View filter lists
-  getFilterList?: (table: string, column: string) => Promise<string[]>
+  // For Data View filters
+  column?: string
+  code?: string
+  searchFields?: string[]
+  delimiter?: string
+  valueMap?: object
 }
 
 export type FilterDefinition = {

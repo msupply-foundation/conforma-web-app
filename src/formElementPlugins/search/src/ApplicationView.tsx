@@ -220,7 +220,7 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
   return displayType === 'list' ? (
     <List bulleted={selection.length > 1}>
       {selection.map((item, index) => (
-        <ListItem className="search-list-item">
+        <ListItem key={index} className="search-list-item">
           <div className="flex-row-start">
             {title ? (
               <Markdown text={substituteValues(title, item)} semanticComponent="noParagraph" />
