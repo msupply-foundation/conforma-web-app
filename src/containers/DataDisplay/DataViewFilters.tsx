@@ -45,9 +45,6 @@ export const DataViewSearchableFilter: React.FC<any> = ({
 
   const activeOptions = getActiveOptions()
 
-  // To-do: Handle Error
-  // if (!error && data) matchedOptions = resultExtractor(data).list
-
   return (
     <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
       {!error && filterList ? (
