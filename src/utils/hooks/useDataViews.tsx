@@ -170,7 +170,7 @@ const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefin
     }
 
   filterDefinitions.forEach(
-    ({ column, title, dataType, showFilterList, searchFields, delimiter, valueMap }) => {
+    ({ column, title, dataType, showFilterList, searchFields, delimiter, booleanMapping }) => {
       returnFilterDefinitions[column] = {
         type: filterTypeMap[dataType],
         default: false,
@@ -183,7 +183,7 @@ const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefin
           showFilterList,
           searchFields,
           delimiter,
-          valueMap,
+          booleanMapping,
         },
       }
     }

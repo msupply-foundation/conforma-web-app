@@ -714,8 +714,6 @@ interface TableRow {
   item: { [key: string]: any }
 }
 
-// export type DataViewFilterType = 'LIST' | 'TEXT' | 'DATE'
-
 // Response object of /data-views/table endpoint
 export interface DataViewsTableResponse {
   tableName: string
@@ -727,12 +725,11 @@ export interface DataViewsTableResponse {
   filterDefinitions: {
     column: string
     title: string
-    // type: DataViewFilterType
     dataType: string
     showFilterList: boolean
     searchFields: string[]
     delimiter?: string
-    valueMap?: { [key: string]: string }
+    booleanMapping?: { true: string; false: string }
   }[]
   totalCount: number
   message?: string
@@ -853,7 +850,6 @@ export type FilterTypeOptions = {
   showFilterList?: boolean
   searchFields?: string[]
   delimiter?: string
-  valueMap?: object
 }
 
 export type FilterDefinition = {

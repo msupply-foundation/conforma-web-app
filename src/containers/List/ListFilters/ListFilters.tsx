@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Dropdown, Icon } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useRouter } from '../../../utils/hooks/useRouter'
-import { BooleanFilterMapping, FilterDefinitions } from '../../../utils/types'
+import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
 import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
 import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
 import { DataViewSearchableList, DataViewTextSearchFilter } from '../../DataDisplay/DataViewFilters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
-import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
 
 const getArrayFromString = (string: string = '') =>
   string.split(',').filter((option) => !!option.trim())
@@ -192,10 +191,9 @@ const ListFilters: React.FC<{
                 onRemove={getOnRemove(filterName)}
                 activeOptions={getArrayFromString(query[filterName])}
                 booleanMapping={
-                  filter?.options?.booleanMapping ??
-                  (filter?.options?.valueMap as BooleanFilterMapping) ?? {
-                    true: 'TRUE',
-                    false: 'NOT TRUE',
+                  filter?.options?.booleanMapping ?? {
+                    true: strings.DATA_VIEW_FILTER_TRUE,
+                    false: strings.DATA_VIEW_FILTER_FALSE,
                   }
                 }
                 toggleFilter={(value: boolean) =>
