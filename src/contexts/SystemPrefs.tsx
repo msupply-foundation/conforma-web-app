@@ -5,7 +5,8 @@ import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 
 interface PrefsState {
   preferences?: {
-    paginationPresets: number[]
+    paginationPresets?: number[]
+    paginationDefault?: number
     defaultLanguageCode: string
     brandLogoFileId?: string
     brandLogoOnDarkFileId?: string
