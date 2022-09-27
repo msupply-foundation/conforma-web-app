@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { getRequest, postRequest } from '../helpers/fetchMethods'
 import { useUserState } from '../../contexts/UserState'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
@@ -8,7 +8,6 @@ import {
   DataViewsDetailResponse,
   DataViewTableAPIQueries,
   FilterDefinitions,
-  DataViewFilterType,
   FilterTypes,
 } from '../types'
 
@@ -64,17 +63,20 @@ export const useDataViewsTable = ({ dataViewCode, apiQueries, filter }: DataView
     userState: { templatePermissions },
   } = useUserState()
 
-  const updateDataViewTable = (dataViewTable: DataViewsTableResponse) => {
-    // We only want to load filterDefinitions once, otherwise it gets into an
-    // infinite loop. Similarly, we don't want to set the dataViewTable data
-    // until we've loaded filterDefinitions, or the Table page will display the
-    // full list briefly before showing the filtered list.
+  const updateDataViewTable = (newDataViewTable: DataViewsTableResponse) => {
+    // We only want to load filterDefinitions once (per dataView code),
+    // otherwise it gets into an infinite loop. Similarly, we don't want to set
+    // the dataViewTable data until we've loaded filterDefinitions, or the Table
+    // page will display the full list briefly before showing the filtered list.
 
-    // TO-DO: Additional endpoint to *only* get filter definitions before we
-    // fetch the table data
+    // TO-DO: Fetch filter definitions in a separate query *before* requesting
+    // dataViewTable
 
-    if (filterDefinitions) setDataViewTable(dataViewTable)
-    if (!filterDefinitions) setFilterDefinitions(buildFilterDefinitions(dataViewTable))
+    const currentDataViewCode = dataViewTable?.code
+
+    if (filterDefinitions) setDataViewTable(newDataViewTable)
+    if (!filterDefinitions || newDataViewTable.code !== currentDataViewCode)
+      setFilterDefinitions(buildFilterDefinitions(newDataViewTable))
   }
 
   useEffect(() => {
@@ -157,8 +159,6 @@ const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefin
 
   const returnFilterDefinitions: FilterDefinitions = {}
 
-  // const filterDefinitions: FilterDefinitions = {}
-
   if (searchFields.length > 0)
     returnFilterDefinitions.search = {
       type: 'search',
@@ -169,27 +169,32 @@ const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefin
       },
     }
 
-  filterDefinitions.forEach(({ column, title, type, searchFields, delimiter, valueMap }) => {
-    returnFilterDefinitions[column] = {
-      type: filterTypeMap[type],
-      default: false,
-      visibleTo: [],
-      title,
-      options: {
-        column,
-        code,
-        searchFields,
-        delimiter,
-        valueMap,
-      },
+  filterDefinitions.forEach(
+    ({ column, title, dataType, showFilterList, searchFields, delimiter, valueMap }) => {
+      returnFilterDefinitions[column] = {
+        type: filterTypeMap[dataType],
+        default: false,
+        visibleTo: [],
+        title,
+        options: {
+          column,
+          code,
+          dataType,
+          showFilterList,
+          searchFields,
+          delimiter,
+          valueMap,
+        },
+      }
     }
-  })
+  )
 
   return returnFilterDefinitions
 }
 
-const filterTypeMap: { [key in DataViewFilterType]: FilterTypes } = {
-  TEXT: 'dataViewFreeText',
-  LIST: 'dataViewList',
-  DATE: 'date',
+const filterTypeMap: { [key: string]: FilterTypes } = {
+  string: 'dataViewString',
+  number: 'dataViewNumber',
+  boolean: 'dataViewBoolean',
+  Date: 'date',
 }

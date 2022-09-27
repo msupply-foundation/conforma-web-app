@@ -4,14 +4,15 @@ their methods for querying the database
 */
 
 import React, { useState, useEffect } from 'react'
-import { Dropdown, Input } from 'semantic-ui-react'
+import { Checkbox, Dropdown, Input } from 'semantic-ui-react'
 import { FilterContainer, FilterOptions } from '../List/ListFilters/common'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { postRequest } from '../../utils/helpers/fetchMethods'
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
+import { BooleanFilterProps } from '../List/ListFilters/types'
 
-export const DataViewSearchableFilter: React.FC<any> = ({
+export const DataViewSearchableList: React.FC<any> = ({
   getActiveOptions,
   setActiveOption,
   setInactiveOption,
@@ -20,13 +21,13 @@ export const DataViewSearchableFilter: React.FC<any> = ({
   onRemove,
 }) => {
   const { strings } = useLanguageProvider()
-  const [searchText, setSearchText] = useState('')
+  const [searchText, setSearchText] = useState<any>()
   const [filterList, setFilterList] = useState<string[]>()
   const [error, setError] = useState<string>()
   const [moreResults, setMoreResults] = useState(false)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
 
-  const { column, code, searchFields, delimiter, valueMap } = options
+  const { column, code, dataType, showFilterList, searchFields, delimiter, valueMap } = options
 
   useEffect(() => {
     postRequest({
@@ -61,13 +62,17 @@ export const DataViewSearchableFilter: React.FC<any> = ({
             }}
           />
           <Dropdown.Divider />
-          <FilterOptions
-            setActiveOption={setActiveOption}
-            setInactiveOption={setInactiveOption}
-            activeOptions={activeOptions}
-            optionList={filterList || []}
-          />
-          {moreResults && <FilterListInfo message={strings.DATA_VIEW_FILTER_MORE_RESULTS} />}
+          {showFilterList && (
+            <FilterOptions
+              setActiveOption={setActiveOption}
+              setInactiveOption={setInactiveOption}
+              activeOptions={activeOptions}
+              optionList={filterList || []}
+            />
+          )}
+          {showFilterList && moreResults && (
+            <FilterListInfo message={strings.DATA_VIEW_FILTER_MORE_RESULTS} />
+          )}
         </>
       ) : (
         <FilterListInfo
@@ -86,5 +91,31 @@ const FilterListInfo: React.FC<{ message: string; error?: boolean }> = ({ messag
         <em>{message}</em>
       </p>
     </div>
+  )
+}
+
+export const DataViewTextSearchFilter: React.FC<any> = ({ setFilterText, title, onRemove }) => {
+  const { strings } = useLanguageProvider()
+  const [searchText, setSearchText] = useState<any>()
+  const [debounceOutput, setDebounceInput] = useDebounce(searchText)
+
+  useEffect(() => {
+    setFilterText(debounceOutput)
+  }, [debounceOutput])
+
+  return (
+    <FilterContainer title={title} onRemove={onRemove}>
+      <Input
+        icon="search"
+        placeholder={strings.FILTER_START_TYPING}
+        iconPosition="left"
+        className="search"
+        onClick={(e: any) => e.stopPropagation()}
+        onChange={(_, { value }) => {
+          setSearchText(value)
+          setDebounceInput(value)
+        }}
+      />
+    </FilterContainer>
   )
 }
