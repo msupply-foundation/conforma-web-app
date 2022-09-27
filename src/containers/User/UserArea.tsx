@@ -156,7 +156,10 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
 
   const handleDataViewChange = (e: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
-    push(`/data/${value}`, dataViewOptions.find((option) => option.value === value)?.text)
+    push(`/data/${value}`, {
+      title: dataViewOptions.find((option) => option.value === value)?.text,
+      resetFilters: true,
+    })
   }
 
   const handleTemplateChange = (_: SyntheticEvent, { value }: any) => {
