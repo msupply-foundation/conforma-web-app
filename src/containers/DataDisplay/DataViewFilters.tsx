@@ -4,13 +4,12 @@ their methods for querying the database
 */
 
 import React, { useState, useEffect } from 'react'
-import { Checkbox, Dropdown, Input } from 'semantic-ui-react'
+import { Dropdown, Input } from 'semantic-ui-react'
 import { FilterContainer, FilterOptions } from '../List/ListFilters/common'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { postRequest } from '../../utils/helpers/fetchMethods'
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
-import { BooleanFilterProps } from '../List/ListFilters/types'
 
 export const DataViewSearchableList: React.FC<any> = ({
   getActiveOptions,
@@ -27,12 +26,12 @@ export const DataViewSearchableList: React.FC<any> = ({
   const [moreResults, setMoreResults] = useState(false)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
 
-  const { column, code, dataType, showFilterList, searchFields, delimiter, valueMap } = options
+  const { column, code, showFilterList, searchFields, delimiter } = options
 
   useEffect(() => {
     postRequest({
       url: getServerUrl('dataViews', { dataViewCode: code, column }),
-      jsonBody: { searchText, searchFields, delimiter, valueMap },
+      jsonBody: { searchText, searchFields, delimiter },
       headers: { 'Content-Type': 'application/json' },
     }).then(({ list, moreResultsAvailable, error, message }) => {
       if (error) {
