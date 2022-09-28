@@ -22,13 +22,10 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, c
         <Label
           className="back-label clickable"
           onClick={() => replace(`/applications?type=${code}`)}
-          content={
-            <>
-              <Icon name="chevron left" className="dark-grey" />
-              {`${name} ${strings.LABEL_APPLICATIONS}`}
-            </>
-          }
-        />
+        >
+          <Icon name="chevron left" className="dark-grey" />
+          {strings.LABEL_APPLICATIONS.replace('%1', name)}
+        </Label>
         {currentUser?.organisation?.orgName && (
           <Header
             as="h2"

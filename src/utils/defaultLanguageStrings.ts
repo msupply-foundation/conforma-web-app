@@ -148,7 +148,7 @@ export default {
   FILTER_DATE_BEFORE: 'Before',
   FILTER_DATE_AFTER: 'After',
   FILTER_RESET_ALL: 'Reset all filters',
-  LABEL_APPLICATIONS: 'applications',
+  LABEL_APPLICATIONS: '%1 applications',
   LABEL_APPLICATION_SUBMITTED: 'Application Submitted',
   LABEL_APPLICATION_BACK: 'Back to form',
   LABEL_ASSIGNED_TO_YOU: 'Assigned to you',
