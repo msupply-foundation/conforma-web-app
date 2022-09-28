@@ -14,6 +14,9 @@ export default function buildQueryFilters(
 ) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [filterName, filterValue]) => {
     const filterDefinition = filterDefinitions[filterName]
+
+    // For "non-standard" columns, we need to re-map the filtername etc.
+
     if (!filterDefinition) return filterObj
     const filter = constructFilter(filterDefinition, filterName, filterValue)
     // If "or" field exists, we need to merge them, otherwise newer one will
@@ -63,8 +66,11 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
   // For string column of searchable values
   search: (filterValue) => ({ includesInsensitive: filterValue }),
   dataViewString: (filterValue, options) => {
-    if (!options?.showFilterList) return { includesInsensitive: filterValue }
-    if (!options?.delimiter) return inList(filterValue)
+    const searchFields = options?.searchFields ?? []
+    if (searchFields.length === 1) {
+      if (!options?.showFilterList) return { includesInsensitive: filterValue }
+      if (!options?.delimiter) return inList(filterValue)
+    }
 
     const values = replaceCommasArray(splitCommaList(filterValue))
     const complexOrFilter: any = { or: [] }
@@ -101,7 +107,8 @@ const constructFilter = (
   // If all of the criteria is undefined skip filter
   // if (!Object.values(filter).find((value) => value !== undefined)) return {}
 
-  // For dataViews' multiple matching lists
+  // If there is an "or" clause, the filterNames/searchFields are already
+  // included within the "or" array
   if ('or' in filter) return filter
 
   const { orFieldNames = [], substituteColumnName = '' } = options || {}
@@ -112,7 +119,8 @@ const constructFilter = (
   if (substituteColumnName) return { [substituteColumnName]: filter }
 
   // otherwise use filterName
-  return { [filterName]: filter }
+  const gqlFilterName = options?.searchFields ? options.searchFields[0] : filterName
+  return { [gqlFilterName]: filter }
 }
 
 const splitCommaList = (values: string) => values.split(',')
