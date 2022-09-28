@@ -9,6 +9,7 @@ import DateFilter from './DateFilter/DateFilter'
 import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
 import { DataViewSearchableList, DataViewTextSearchFilter } from '../../DataDisplay/DataViewFilters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
+import { removeCommas } from '../../../utils/helpers/utilityFunctions'
 
 const getArrayFromString = (string: string = '') =>
   string.split(',').filter((option) => !!option.trim())
@@ -52,8 +53,11 @@ const ListFilters: React.FC<{
   // Filter criteria/options states is provided by query URL, methods below are get and set query filter criteria
   const getMethodsForOptionFilter: GetMethodsForOptionFilter = (filterName) => ({
     getActiveOptions: () => getArrayFromString(query[filterName]),
-    setActiveOption: (option: string) =>
-      updateQuery({ [filterName]: [...getArrayFromString(query[filterName]), option].join(',') }),
+    setActiveOption: (option: string) => {
+      updateQuery({
+        [filterName]: [...getArrayFromString(query[filterName]), removeCommas(option)].join(','),
+      })
+    },
     setInactiveOption: (option: string) =>
       updateQuery({
         [filterName]: getArrayFromString(query[filterName])
