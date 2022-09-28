@@ -6,6 +6,7 @@ import {
   FilterTypeDefinitions,
   GqlFilterObject,
 } from '../../types'
+import { replaceCommas, replaceCommasArray } from '../utilityFunctions'
 
 export default function buildQueryFilters(
   filters: BasicStringObject,
@@ -65,7 +66,7 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
     if (!options?.showFilterList) return { includesInsensitive: filterValue }
     if (!options?.delimiter) return inList(filterValue)
 
-    const values = splitCommaList(filterValue)
+    const values = replaceCommasArray(splitCommaList(filterValue))
     const complexOrFilter: any = { or: [] }
     options?.searchFields?.forEach((field) =>
       complexOrFilter.or.push(
@@ -117,4 +118,4 @@ const constructFilter = (
 const splitCommaList = (values: string) => values.split(',')
 
 // Use this if the values can be free text strings (e.g. stage name)
-const inList = (values: string) => ({ inInsensitive: splitCommaList(values) })
+const inList = (values: string) => ({ inInsensitive: replaceCommasArray(splitCommaList(values)) })
