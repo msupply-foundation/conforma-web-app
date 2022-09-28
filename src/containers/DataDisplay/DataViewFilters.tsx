@@ -61,17 +61,13 @@ export const DataViewSearchableList: React.FC<any> = ({
             }}
           />
           <Dropdown.Divider />
-          {showFilterList && (
-            <FilterOptions
-              setActiveOption={setActiveOption}
-              setInactiveOption={setInactiveOption}
-              activeOptions={activeOptions}
-              optionList={filterList || []}
-            />
-          )}
-          {showFilterList && moreResults && (
-            <FilterListInfo message={strings.DATA_VIEW_FILTER_MORE_RESULTS} />
-          )}
+          <FilterOptions
+            setActiveOption={setActiveOption}
+            setInactiveOption={setInactiveOption}
+            activeOptions={activeOptions}
+            optionList={filterList || []}
+          />
+          {moreResults && <FilterListInfo message={strings.DATA_VIEW_FILTER_MORE_RESULTS} />}
         </>
       ) : (
         <FilterListInfo
