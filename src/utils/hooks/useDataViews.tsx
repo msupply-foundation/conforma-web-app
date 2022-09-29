@@ -74,6 +74,8 @@ export const useDataViewsTable = ({ dataViewCode, apiQueries, filter }: DataView
     // TO-DO: Fetch filter definitions in a separate query *before* requesting
     // dataViewTable
 
+    if (!newDataViewTable) return
+
     const currentDataViewCode = dataViewTable?.code
 
     if (filterDefinitions) setDataViewTable(newDataViewTable)
@@ -89,7 +91,7 @@ export const useDataViewsTable = ({ dataViewCode, apiQueries, filter }: DataView
       setStateMethod: updateDataViewTable,
       filter,
     })
-  }, [templatePermissions, dataViewCode, apiQueries])
+  }, [templatePermissions, dataViewCode, apiQueries, filter])
 
   return {
     error,
