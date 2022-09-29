@@ -109,6 +109,7 @@ export default {
   DATA_VIEW_FILTER_LIST_LOADING: 'Fetching list...',
   DATA_VIEW_FILTER_TRUE: 'True',
   DATA_VIEW_FILTER_FALSE: 'False',
+  DATA_VIEW_NULL_VALUE: '(Blank)',
   DEFAULT_TEMPLATE_CATEGORY_TITLE: 'General',
   DEFAULT_TEMPLATE_CATEGORY_ICON: 'globe',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',

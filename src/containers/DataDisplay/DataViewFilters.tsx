@@ -26,7 +26,7 @@ export const DataViewSearchableList: React.FC<any> = ({
   const [moreResults, setMoreResults] = useState(false)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
 
-  const { column, code, showFilterList, searchFields, delimiter } = options
+  const { column, code, searchFields, delimiter } = options
 
   useEffect(() => {
     postRequest({
@@ -37,7 +37,7 @@ export const DataViewSearchableList: React.FC<any> = ({
       if (error) {
         setError(message)
       } else {
-        setFilterList(list)
+        setFilterList(list.map((val: string | null) => (val === null ? options.nullString : val)))
         setMoreResults(moreResultsAvailable)
       }
     })

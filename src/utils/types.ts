@@ -867,6 +867,7 @@ export type FilterTypeOptions = {
   showFilterList?: boolean
   searchFields?: string[]
   delimiter?: string
+  nullString?: string
 }
 
 export type FilterDefinition = {
