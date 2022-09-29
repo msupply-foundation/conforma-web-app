@@ -6,7 +6,7 @@ import {
   FilterTypeDefinitions,
   GqlFilterObject,
 } from '../../types'
-import { replaceCommas, replaceCommasArray } from '../utilityFunctions'
+import { replaceCommasArray } from '../utilityFunctions'
 
 export default function buildQueryFilters(
   filters: BasicStringObject,
@@ -58,25 +58,27 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
       .filter((value) => (options?.enumList || []).includes(value)),
   }),
   // For string column of search and select values
-  searchableListIn: (filterValue) => inList(filterValue),
+  searchableListIn: (filterValue) => inList(filterValue, '', ''),
   // For array column of search and select values
   searchableListInArray: (filterValue) => ({ overlaps: splitCommaList(filterValue) }),
   // For array column of static select values
-  staticList: (filterValue) => inList(filterValue),
+  staticList: (filterValue) => inList(filterValue, '', ''),
   // For string column of searchable values
   search: (filterValue) => ({ includesInsensitive: filterValue }),
   dataViewString: (filterValue, options) => {
     const searchFields = options?.searchFields ?? []
     if (searchFields.length === 1) {
       if (!options?.showFilterList) return { includesInsensitive: filterValue }
-      if (!options?.delimiter) return inList(filterValue)
+      if (!options?.delimiter) return inList(filterValue, searchFields[0], options.nullString ?? '')
     }
 
     const values = replaceCommasArray(splitCommaList(filterValue))
     const complexOrFilter: any = { or: [] }
     options?.searchFields?.forEach((field) =>
       complexOrFilter.or.push(
-        ...values.map((value) => ({ [field]: { includesInsensitive: value } }))
+        ...values.map((value) => ({
+          [field]: value === options.nullString ? { isNull: true } : { includesInsensitive: value },
+        }))
       )
     )
     return complexOrFilter
@@ -126,4 +128,16 @@ const constructFilter = (
 const splitCommaList = (values: string) => values.split(',')
 
 // Use this if the values can be free text strings (e.g. stage name)
-const inList = (values: string) => ({ inInsensitive: replaceCommasArray(splitCommaList(values)) })
+const inList = (values: string, searchField: string, nullString: string) => {
+  const valuesArray = splitCommaList(values)
+  if (!valuesArray.includes(nullString) || searchField === '')
+    return { inInsensitive: replaceCommasArray(valuesArray) }
+
+  const nonBlankValues = valuesArray.filter((val) => val !== nullString)
+  return {
+    or: [
+      { [searchField]: { inInsensitive: replaceCommasArray(nonBlankValues) } },
+      { [searchField]: { isNull: true } },
+    ],
+  }
+}
