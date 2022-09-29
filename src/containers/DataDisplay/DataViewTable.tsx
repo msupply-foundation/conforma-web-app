@@ -31,7 +31,9 @@ const DataViewTable: React.FC = () => {
     params: { dataViewCode },
   } = useRouter()
 
-  const [apiQueries, setApiQueries] = useState<BasicStringObject>({})
+  const [apiQueries, setApiQueries] = useState<BasicStringObject>(
+    getAPIQueryParams(query, preferences?.paginationDefault)
+  )
   const [gqlFilter, setGqlFilter] = useState<GqlFilterObject>({})
   const [searchText, setSearchText] = useState(query.search)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
