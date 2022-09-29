@@ -120,7 +120,8 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
   const showToast = useToast({ style: 'negative' })
 
   const { headerRow, tableRows, totalCount } = dataViewTable
-  const showDetailsForRow = (id: number) => push(`/data/${dataViewCode}/${id}`)
+  const showDetailsForRow = (id: number) =>
+    push(`/data/${dataViewCode}/${id}`, { dataTableFilterQuery: location.search })
 
   const sortByColumn = (
     sortColumn: string | undefined,
