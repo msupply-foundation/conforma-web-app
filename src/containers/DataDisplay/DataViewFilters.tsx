@@ -82,7 +82,7 @@ export const DataViewSearchableList: React.FC<any> = ({
 const FilterListInfo: React.FC<{ message: string; error?: boolean }> = ({ message, error }) => {
   return (
     <div className={`flex-row-center-center filter-list-message${error ? ' alert-colour' : ''}`}>
-      <p>
+      <p className="slightly-smaller-text ">
         <em>{message}</em>
       </p>
     </div>
