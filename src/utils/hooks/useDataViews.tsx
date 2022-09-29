@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getRequest, postRequest } from '../helpers/fetchMethods'
 import { useUserState } from '../../contexts/UserState'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import {
   DataViewsResponse,
   DataViewsTableResponse,
@@ -55,6 +56,7 @@ export const useDataViewsList = () => {
 }
 
 export const useDataViewsTable = ({ dataViewCode, apiQueries, filter }: DataViewTableProps) => {
+  const { strings } = useLanguageProvider()
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [dataViewTable, setDataViewTable] = useState<DataViewsTableResponse>()
@@ -76,7 +78,7 @@ export const useDataViewsTable = ({ dataViewCode, apiQueries, filter }: DataView
 
     if (filterDefinitions) setDataViewTable(newDataViewTable)
     if (!filterDefinitions || newDataViewTable.code !== currentDataViewCode)
-      setFilterDefinitions(buildFilterDefinitions(newDataViewTable))
+      setFilterDefinitions(buildFilterDefinitions(newDataViewTable, strings.DATA_VIEW_NULL_VALUE))
   }
 
   useEffect(() => {
@@ -152,7 +154,10 @@ const processRequest = ({ url, setError, setLoading, setStateMethod, filter }: R
     })
 }
 
-const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefinitions => {
+const buildFilterDefinitions = (
+  tableData: DataViewsTableResponse | undefined,
+  nullString: string
+): FilterDefinitions => {
   if (!tableData) return {}
 
   const { searchFields, headerRow, tableName, code, filterDefinitions } = tableData
@@ -184,6 +189,7 @@ const buildFilterDefinitions = (tableData?: DataViewsTableResponse): FilterDefin
           searchFields,
           delimiter,
           booleanMapping,
+          nullString,
         },
       }
     }
