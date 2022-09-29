@@ -33,8 +33,6 @@ const useSubmitReview: UseSubmitReview = (reviewId, reload) => {
 
     const reviewResponsesPatches = reviewResponses.map(({ thisReviewLatestResponse }) => ({
       patch: {
-        decision: thisReviewLatestResponse?.decision,
-        comment: thisReviewLatestResponse?.comment,
         status: ReviewResponseStatus.Submitted,
         recommendedApplicationVisibility: thisReviewLatestResponse?.recommendedApplicantVisibility,
       },
