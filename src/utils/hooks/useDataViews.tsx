@@ -12,7 +12,7 @@ import {
   FilterTypes,
 } from '../types'
 
-// 3 simple hooks for returning Outcome state
+// 3 simple hooks for returning Data View state
 
 interface DataViewTableProps {
   dataViewCode: string
