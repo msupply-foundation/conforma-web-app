@@ -39,13 +39,15 @@ const ListFilters: React.FC<{
   const defaultDisplayFilters = getDefaultDisplayFilters(filterDefinitions)
 
   const filterNames = Object.keys(displayableFilters)
-  const [activeFilters, setActiveFilters] = useState<string[]>(defaultDisplayFilters)
+  const [activeFilters, setActiveFilters] = useState<string[]>([])
 
   // Add filters from URL to activeFilters, filters may not have criteria/options yet thus we have to use activeFilter state variable
   useEffect(() => {
     const filtersInQuery = filterNames.filter((filterName) => !!query[filterName])
     const newFilters = filtersInQuery.filter((filterName) => !activeFilters.includes(filterName))
-    setActiveFilters([...activeFilters, ...newFilters])
+    if (activeFilters.length === 0 && newFilters.length === 0)
+      setActiveFilters(defaultDisplayFilters)
+    else setActiveFilters([...activeFilters, ...newFilters])
   }, [query])
 
   // Filter criteria/options states is provided by query URL, methods below are get and set query fiter criteria
