@@ -202,7 +202,7 @@ const buildFilterDefinitions = (
 
 const filterTypeMap: { [key: string]: FilterTypes } = {
   string: 'dataViewString',
-  number: 'dataViewNumber',
+  number: 'number',
   boolean: 'dataViewBoolean',
   Date: 'date',
 }

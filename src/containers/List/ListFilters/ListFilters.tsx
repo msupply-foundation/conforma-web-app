@@ -191,6 +191,17 @@ const ListFilters: React.FC<{
                 }}
               />
             )
+          case 'number':
+            return (
+              <DataViewNumberFilter
+                key={filterName}
+                title={filter.title}
+                options={filter.options}
+                setFilterText={(text: string) => updateQuery({ [filterName]: text })}
+                numberRangeString={query[filterName]}
+                onRemove={getOnRemove(filterName)}
+              />
+            )
           case 'dataViewBoolean':
             return (
               <BooleanFilter
@@ -228,17 +239,7 @@ const ListFilters: React.FC<{
                 options={filter.options}
                 currentValue={query[filterName] ?? ''}
                 setFilterText={(text: string) => updateQuery({ [filterName]: text })}
-                currentValue={query[filterName] ?? ''}
                 onRemove={getOnRemove(filterName)}
-              />
-            )
-          case 'dataViewNumber':
-            return (
-              <DataViewNumberFilter
-                key={filterName}
-                title={filter.title}
-                options={filter.options}
-                setFilterText={(text: string) => updateQuery({ [filterName]: text })}
               />
             )
           default:
