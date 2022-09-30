@@ -37,7 +37,10 @@ export const substituteValues = (
 }
 
 /*
- We are using ',' as a delimiter for url queries with multiple values. This means that values with *actual* commas in them get messed up. These functions can be used to remove commas before updating url query, then re-inserting them after extraction from url query
+ We are using ',' as a delimiter for url queries with multiple values. This
+ means that values with *actual* commas in them get messed up. These functions
+ can be used to remove commas before updating url query, then re-inserting them
+ after extraction from url query
 */
 
 // Use anything obscure than doesn't have special meaning in urls or regex
