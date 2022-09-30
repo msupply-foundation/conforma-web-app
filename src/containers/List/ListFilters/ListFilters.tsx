@@ -7,7 +7,11 @@ import BooleanFilter from './BooleanFilter'
 import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
 import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
-import { DataViewSearchableList, DataViewTextSearchFilter } from '../../DataDisplay/DataViewFilters'
+import {
+  DataViewNumberFilter,
+  DataViewSearchableList,
+  DataViewTextSearchFilter,
+} from '../../DataDisplay/DataViewFilters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
 import { removeCommas } from '../../../utils/helpers/utilityFunctions'
 
@@ -210,7 +214,6 @@ const ListFilters: React.FC<{
               />
             )
           case 'dataViewString':
-          case 'dataViewNumber':
             return filter.options?.showFilterList ? (
               <DataViewSearchableList
                 key={filterName}
@@ -225,8 +228,18 @@ const ListFilters: React.FC<{
                 key={filterName}
                 title={filter.title}
                 options={filter.options}
+                currentValue={query[filterName] ?? ''}
                 setFilterText={(text: string) => updateQuery({ [filterName]: text })}
                 onRemove={getOnRemove(filterName)}
+              />
+            )
+          case 'dataViewNumber':
+            return (
+              <DataViewNumberFilter
+                key={filterName}
+                title={filter.title}
+                options={filter.options}
+                setFilterText={(text: string) => updateQuery({ [filterName]: text })}
               />
             )
           default:
