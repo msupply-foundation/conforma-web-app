@@ -4,7 +4,7 @@ their methods for querying the database
 */
 
 import React, { useState, useEffect } from 'react'
-import { Dropdown, Input } from 'semantic-ui-react'
+import { Dropdown, Input, Segment } from 'semantic-ui-react'
 import { FilterContainer, FilterOptions } from '../List/ListFilters/common'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
@@ -89,9 +89,14 @@ const FilterListInfo: React.FC<{ message: string; error?: boolean }> = ({ messag
   )
 }
 
-export const DataViewTextSearchFilter: React.FC<any> = ({ setFilterText, title, onRemove }) => {
+export const DataViewTextSearchFilter: React.FC<any> = ({
+  setFilterText,
+  title,
+  onRemove,
+  currentValue,
+}) => {
   const { strings } = useLanguageProvider()
-  const [searchText, setSearchText] = useState<any>()
+  const [searchText, setSearchText] = useState<string>(currentValue)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
 
   useEffect(() => {
@@ -105,12 +110,57 @@ export const DataViewTextSearchFilter: React.FC<any> = ({ setFilterText, title, 
         placeholder={strings.FILTER_START_TYPING}
         iconPosition="left"
         className="search"
+        value={searchText}
         onClick={(e: any) => e.stopPropagation()}
         onChange={(_, { value }) => {
           setSearchText(value)
           setDebounceInput(value)
         }}
       />
+    </FilterContainer>
+  )
+}
+
+export const DataViewNumberFilter: React.FC<any> = ({ setFilterText, title, onRemove }) => {
+  const { strings } = useLanguageProvider()
+  const [lowerBound, setLowerBound] = useState<number>()
+  const [upperBound, setUPperBound] = useState<number>()
+  const [debounceOutput, setDebounceInput] = useDebounce<number | null>(null)
+
+  useEffect(() => {
+    setFilterText(debounceOutput)
+  }, [debounceOutput])
+
+  return (
+    <FilterContainer title={title} onRemove={onRemove}>
+      <Segment basic className="flex-row">
+        <p>Higher than:</p>
+        <Input
+          type="number"
+          // placeholder={strings.FILTER_START_TYPING}
+          size="small"
+          className="search"
+          onClick={(e: any) => e.stopPropagation()}
+          onChange={(_, { value }) => {
+            setLowerBound(Number(value))
+            setDebounceInput(Number(value))
+          }}
+        />
+      </Segment>
+      <Segment basic className="flex-row">
+        <p>Lower than:</p>
+        <Input
+          type="number"
+          // placeholder={strings.FILTER_START_TYPING}
+          size="small"
+          className="search"
+          onClick={(e: any) => e.stopPropagation()}
+          onChange={(_, { value }) => {
+            setUPperBound(Number(value))
+            setDebounceInput(Number(value))
+          }}
+        />
+      </Segment>
     </FilterContainer>
   )
 }
