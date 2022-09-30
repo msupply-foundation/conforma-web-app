@@ -36,9 +36,8 @@ export default function buildQueryFilters(
 const filterTypeDefinitions: FilterTypeDefinitions = {
   number: (filterValue) => {
     const [fromNumber, toNumber] = filterValue.split(':')
-    const greaterThanOrEqualTo = fromNumber ? fromNumber : undefined
-    const lessThanOrEqualTo = toNumber ? toNumber : undefined
-
+    const greaterThanOrEqualTo = fromNumber !== '' ? parseInt(fromNumber) : undefined
+    const lessThanOrEqualTo = toNumber !== '' ? parseInt(toNumber) : undefined
     return { greaterThanOrEqualTo, lessThanOrEqualTo }
   },
   date: (filterValue, options) => {
