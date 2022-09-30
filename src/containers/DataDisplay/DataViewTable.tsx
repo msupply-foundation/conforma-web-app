@@ -177,6 +177,9 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
           ))}
         </Table.Body>
       </Table>
+      {tableRows.length === 0 && (
+        <Message warning header={strings.DATA_VIEW_NO_ITEMS_FOUND} style={{ width: '80%' }} />
+      )}
       <PaginationBar
         totalCount={totalCount}
         perPageText={strings.OUTCOMES_TABLE_PAGINATION_TEXT}
