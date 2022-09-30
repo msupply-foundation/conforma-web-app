@@ -228,6 +228,7 @@ const ListFilters: React.FC<{
                 options={filter.options}
                 currentValue={query[filterName] ?? ''}
                 setFilterText={(text: string) => updateQuery({ [filterName]: text })}
+                currentValue={query[filterName] ?? ''}
                 onRemove={getOnRemove(filterName)}
               />
             )
