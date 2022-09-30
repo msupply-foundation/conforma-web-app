@@ -89,9 +89,14 @@ const FilterListInfo: React.FC<{ message: string; error?: boolean }> = ({ messag
   )
 }
 
-export const DataViewTextSearchFilter: React.FC<any> = ({ setFilterText, title, onRemove }) => {
+export const DataViewTextSearchFilter: React.FC<any> = ({
+  setFilterText,
+  title,
+  onRemove,
+  currentValue,
+}) => {
   const { strings } = useLanguageProvider()
-  const [searchText, setSearchText] = useState<any>()
+  const [searchText, setSearchText] = useState<string>(currentValue)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
 
   useEffect(() => {
@@ -105,6 +110,7 @@ export const DataViewTextSearchFilter: React.FC<any> = ({ setFilterText, title, 
         placeholder={strings.FILTER_START_TYPING}
         iconPosition="left"
         className="search"
+        value={searchText}
         onClick={(e: any) => e.stopPropagation()}
         onChange={(_, { value }) => {
           setSearchText(value)
