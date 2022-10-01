@@ -35,6 +35,7 @@
     "pluralize": "^8.0.0",
     "query-string": "^6.13.5",
     "react": "^16.13.1",
+    "react-cool-onclickoutside": "^1.7.0",
     "react-dom": "^16.13.1",
     "react-json-view": "^1.21.3",
     "react-markdown": "^5.0.3",
