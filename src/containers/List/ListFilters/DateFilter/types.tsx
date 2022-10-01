@@ -1,4 +1,5 @@
 import { DateTime, Interval } from 'luxon'
+import { SemanticICONS } from 'semantic-ui-react'
 import { ParsedDate } from '../../../../utils/dateAndTime/types'
 import { NamedDates } from '../../../../utils/types'
 import { FiltersCommon } from '../types'
@@ -63,4 +64,5 @@ export type CalendarMonthProps = {
 export type FilterTitleProps = {
   title: string
   criteria: string
+  icon?: SemanticICONS
 }

@@ -5,10 +5,11 @@ filters
 
 import React, { useState, useEffect } from 'react'
 import { Input, Segment } from 'semantic-ui-react'
-import { FilterContainer } from '../../List/ListFilters/common'
+import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
 import { FiltersCommon } from '../../List/ListFilters/types'
+import { isUndefined } from 'lodash'
 
 type NumberFilterProps = FiltersCommon & {
   setFilterText: (text: string) => void
@@ -26,12 +27,12 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
   const [lowerInput, setLowerInput] = useState(numberRange.lowerBound ?? '')
   const [upperInput, setUpperInput] = useState(numberRange.upperBound ?? '')
   const [inputError, setInputError] = useState<InputError>({})
-  const [debounceOutput, setDebounceInput] = useDebounce('')
+  const [debounceOutput, setDebounceInput] = useDebounce(0)
 
   const { lowerBound, upperBound } = numberRange
 
   useEffect(() => {
-    if (lowerBound === undefined && upperBound === undefined) {
+    if (isUndefined(lowerBound) && isUndefined(upperBound)) {
       setFilterText('')
       return
     }
@@ -39,7 +40,18 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
   }, [debounceOutput])
 
   const isValid = (input: string) => {
-    return /^[0-9,]*$/.test(input)
+    // Digits, commas, and an optional negative sign at the start
+    // Commas are stripped before converting to number
+    return /^-?[0-9,]*$/.test(input)
+  }
+
+  const getRangeAsText = (): string => {
+    const lower = !isUndefined(lowerBound)
+    const upper = !isUndefined(upperBound)
+    if (lower && upper) return `${lowerBound} – ${upperBound}`
+    if (lower) return `${strings.DATA_VIEW_FILTER_HIGHER.replace(':', '')} ${lowerBound}`
+    if (upper) return `${strings.DATA_VIEW_FILTER_LOWER.replace(':', '')} ${upperBound}`
+    return ''
   }
 
   const handleChange = async (input: string, type: keyof NumberRange) => {
@@ -58,7 +70,7 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
         ...numberRange,
         [type]: input !== '' ? Number(input.replace(/,/g, '')) : undefined,
       })
-      setDebounceInput(input)
+      setDebounceInput(Math.random())
     } else setInputError({ ...inputError, [type]: true })
   }
 
@@ -66,7 +78,17 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
   const inputStyle = { maxWidth: 100 }
 
   return (
-    <FilterContainer title={title} onRemove={onRemove}>
+    <FilterContainer
+      title={title}
+      onRemove={onRemove}
+      replacementTrigger={
+        <FilterTitle
+          title={title ?? ''}
+          criteria={getRangeAsText()}
+          icon={!isUndefined(lowerBound) || !isUndefined(upperBound) ? 'calculator' : undefined}
+        />
+      }
+    >
       <Segment basic className="flex-row-space-between-center" style={segmentStyle}>
         <p className="no-margin-no-padding">{strings.DATA_VIEW_FILTER_HIGHER}</p>
         <Input

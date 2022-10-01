@@ -41,7 +41,7 @@ export type FilterOptionsProps = {
 }
 
 export type FilterContainerProps = FiltersCommon & {
-  selectedCount?: number
+  label?: number | string
   replacementTrigger?: ReactNode
 }
 

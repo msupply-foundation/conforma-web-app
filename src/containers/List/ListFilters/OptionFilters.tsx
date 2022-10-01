@@ -16,7 +16,7 @@ const EnumFilter: React.FC<EnumFilterProps> = ({
   const activeOptions = getActiveOptions()
 
   return (
-    <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
+    <FilterContainer label={activeOptions.length} title={title} onRemove={onRemove}>
       <FilterOptions
         setActiveOption={setActiveOption}
         setInactiveOption={setInactiveOption}
@@ -87,7 +87,7 @@ const SearchableListFilter: React.FC<SearchableListFilterProps> = ({
   if (!error && data) matchedOptions = resultExtractor(data).list
 
   return (
-    <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
+    <FilterContainer label={activeOptions.length} title={title} onRemove={onRemove}>
       <Input
         icon="search"
         placeholder={strings.FILTER_START_TYPING}

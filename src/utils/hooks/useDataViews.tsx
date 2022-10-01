@@ -58,7 +58,7 @@ export const useDataViewsList = () => {
 
 export const useDataViewFilterDefinitions = (dataViewCode: string) => {
   const { strings } = useLanguageProvider()
-  const [filterDefinitions, setFilterDefinitions] = useState<FilterDefinitions>({})
+  const [filterDefinitions, setFilterDefinitions] = useState<FilterDefinitions>()
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(true)
 

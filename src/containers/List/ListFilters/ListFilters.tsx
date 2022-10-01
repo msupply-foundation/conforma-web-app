@@ -255,6 +255,9 @@ const iconMapping: FilterIconMapping = {
   searchableListInArray: 'search',
   date: 'calendar alternate',
   boolean: 'toggle on',
+  dataViewBoolean: 'toggle on',
+  dataViewString: 'search',
+  number: 'calculator',
 }
 
 export default ListFilters
