@@ -198,7 +198,6 @@ const ListFilters: React.FC<{
               <DataViewNumberFilter
                 key={filterName}
                 title={filter.title}
-                options={filter.options}
                 setFilterText={(text: string) => updateQuery({ [filterName]: text })}
                 numberRangeString={query[filterName]}
                 onRemove={getOnRemove(filterName)}
@@ -238,7 +237,6 @@ const ListFilters: React.FC<{
               <DataViewTextSearchFilter
                 key={filterName}
                 title={filter.title}
-                options={filter.options}
                 currentValue={query[filterName] ?? ''}
                 setFilterText={(text: string) => updateQuery({ [filterName]: text })}
                 onRemove={getOnRemove(filterName)}
