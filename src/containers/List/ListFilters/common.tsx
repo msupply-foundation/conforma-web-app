@@ -20,7 +20,7 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
   title = '',
   label,
   onRemove,
-  replacementTrigger,
+  trigger,
   setFocus = () => {},
 }) => {
   const { strings } = useLanguageProvider()
@@ -38,9 +38,9 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
       <div ref={ref}>
         <Dropdown
           multiple
-          text={!replacementTrigger ? title : undefined}
-          trigger={replacementTrigger}
-          icon={replacementTrigger ? null : undefined}
+          text={!trigger ? title : undefined}
+          trigger={trigger && <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>}
+          icon={trigger ? null : undefined}
           open={isOpen}
           onOpen={() => {
             setIsOpen(true)
@@ -104,7 +104,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
     </>
   )
 }
-const FilterTitle: React.FC<FilterTitleProps> = ({ title, criteria, icon }) => {
+const FilterTitle: React.FC<FilterTitleProps> = ({ title, criteria = '', icon }) => {
   return (
     <div className="filter-title">
       {icon && <Icon name={icon} />}

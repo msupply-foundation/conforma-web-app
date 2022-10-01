@@ -42,7 +42,7 @@ export type FilterOptionsProps = {
 
 export type FilterContainerProps = FiltersCommon & {
   label?: number | string
-  replacementTrigger?: ReactNode
+  trigger?: ReactNode
   setFocus?: () => void
 }
 

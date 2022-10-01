@@ -3,7 +3,7 @@ Filter uses existing filter-handling and building logic from Application List
 filters
 */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Input, Segment, Form } from 'semantic-ui-react'
 import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -77,25 +77,28 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
   const segmentStyle = { gap: 10, margin: 0 }
   const inputStyle = { maxWidth: 100 }
 
+  const inputRef = useRef(null)
+
   return (
     <FilterContainer
       title={title}
       onRemove={onRemove}
-      replacementTrigger={
+      trigger={
         <FilterTitle
           title={title ?? ''}
           criteria={getRangeAsText()}
           icon={!isUndefined(lowerBound) || !isUndefined(upperBound) ? 'calculator' : undefined}
         />
       }
+      setFocus={() => setTimeout((inputRef as any).current.focus, 100)}
     >
       <Form>
         <Segment basic className="flex-row-space-between-center" style={segmentStyle}>
           <p className="no-margin-no-padding">{strings.DATA_VIEW_FILTER_HIGHER}</p>
           <Input
+            ref={inputRef}
             size="small"
             className="search"
-            onClick={(e: any) => e.stopPropagation()}
             onChange={(_, { value }) => handleChange(value, 'lowerBound')}
             value={lowerInput}
             error={inputError.lowerBound}
@@ -107,7 +110,6 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
           <Input
             size="small"
             className="search"
-            onClick={(e: any) => e.stopPropagation()}
             onChange={(_, { value }) => handleChange(value, 'upperBound')}
             value={upperInput}
             error={inputError.upperBound}
