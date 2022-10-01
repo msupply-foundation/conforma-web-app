@@ -26,7 +26,7 @@ export const DataViewSearchableList: React.FC<SearchableListProps> = ({
   onRemove,
 }) => {
   const { strings } = useLanguageProvider()
-  const [searchText, setSearchText] = useState<any>()
+  const [searchText, setSearchText] = useState<string>()
   const [filterList, setFilterList] = useState<string[]>()
   const [error, setError] = useState<string>()
   const [moreResults, setMoreResults] = useState(false)
