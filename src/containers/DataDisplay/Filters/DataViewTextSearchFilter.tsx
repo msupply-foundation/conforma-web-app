@@ -3,7 +3,7 @@ This filter is based <DataViewSearchableList>, but without the List part
 */
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Input, Form } from 'semantic-ui-react'
+import { Input } from 'semantic-ui-react'
 import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
@@ -34,7 +34,7 @@ export const DataViewTextSearchFilter: React.FC<TextSearchFilterProps> = ({
     <FilterContainer
       title={title}
       onRemove={onRemove}
-      replacementTrigger={
+      trigger={
         <FilterTitle
           title={title ?? ''}
           criteria={searchText}
