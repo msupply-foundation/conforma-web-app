@@ -4,7 +4,7 @@ import { Loading } from '../../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { useDataViewsTable } from '../../utils/hooks/useDataViews'
+import { useDataViewsTable, useDataViewFilterDefinitions } from '../../utils/hooks/useDataViews'
 import {
   HeaderRow,
   DataViewTableAPIQueries,
@@ -31,16 +31,19 @@ const DataViewTable: React.FC = () => {
     params: { dataViewCode },
   } = useRouter()
 
+  const [searchText, setSearchText] = useState(query.search)
+  const [debounceOutput, setDebounceInput] = useDebounce(searchText)
+  const { filterDefinitions, loading: filtersLoading } = useDataViewFilterDefinitions(dataViewCode)
   const [apiQueries, setApiQueries] = useState<BasicStringObject>(
     getAPIQueryParams(query, preferences?.paginationDefault)
   )
   const [gqlFilter, setGqlFilter] = useState<GqlFilterObject>({})
-  const [searchText, setSearchText] = useState(query.search)
-  const [debounceOutput, setDebounceInput] = useDebounce(searchText)
-  const { dataViewTable, filterDefinitions, loading, error } = useDataViewsTable({
+
+  const { dataViewTable, loading, error } = useDataViewsTable({
     dataViewCode,
     apiQueries,
     filter: gqlFilter,
+    filtersReady: !filtersLoading,
   })
 
   const title = location?.state?.title ?? dataViewTable?.title ?? ''
