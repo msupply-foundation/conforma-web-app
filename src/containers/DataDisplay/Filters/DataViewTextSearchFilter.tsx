@@ -24,7 +24,7 @@ export const DataViewTextSearchFilter: React.FC<TextSearchFilterProps> = ({
   const [searchText, setSearchText] = useState<string>(currentValue)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
 
-  const inputRef = useRef(null)
+  const inputRef = useRef<Input>(null)
 
   useEffect(() => {
     setFilterText(debounceOutput)
@@ -41,7 +41,9 @@ export const DataViewTextSearchFilter: React.FC<TextSearchFilterProps> = ({
           icon={searchText ? 'search' : undefined}
         />
       }
-      setFocus={() => setTimeout((inputRef as any).current.focus, 100)}
+      setFocus={() => {
+        if (inputRef.current !== null) setTimeout(inputRef.current.focus, 100)
+      }}
     >
       <Input
         ref={inputRef}
