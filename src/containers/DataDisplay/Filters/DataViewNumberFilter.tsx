@@ -4,7 +4,7 @@ filters
 */
 
 import React, { useState, useEffect } from 'react'
-import { Input, Segment } from 'semantic-ui-react'
+import { Input, Segment, Form } from 'semantic-ui-react'
 import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
@@ -89,30 +89,32 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
         />
       }
     >
-      <Segment basic className="flex-row-space-between-center" style={segmentStyle}>
-        <p className="no-margin-no-padding">{strings.DATA_VIEW_FILTER_HIGHER}</p>
-        <Input
-          size="small"
-          className="search"
-          onClick={(e: any) => e.stopPropagation()}
-          onChange={(_, { value }) => handleChange(value, 'lowerBound')}
-          value={lowerInput}
-          error={inputError.lowerBound}
-          style={inputStyle}
-        />
-      </Segment>
-      <Segment basic className="flex-row-space-between-center" style={segmentStyle}>
-        <p className="no-margin-no-padding">{strings.DATA_VIEW_FILTER_LOWER}</p>
-        <Input
-          size="small"
-          className="search"
-          onClick={(e: any) => e.stopPropagation()}
-          onChange={(_, { value }) => handleChange(value, 'upperBound')}
-          value={upperInput}
-          error={inputError.upperBound}
-          style={inputStyle}
-        />
-      </Segment>
+      <Form>
+        <Segment basic className="flex-row-space-between-center" style={segmentStyle}>
+          <p className="no-margin-no-padding">{strings.DATA_VIEW_FILTER_HIGHER}</p>
+          <Input
+            size="small"
+            className="search"
+            onClick={(e: any) => e.stopPropagation()}
+            onChange={(_, { value }) => handleChange(value, 'lowerBound')}
+            value={lowerInput}
+            error={inputError.lowerBound}
+            style={inputStyle}
+          />
+        </Segment>
+        <Segment basic className="flex-row-space-between-center" style={segmentStyle}>
+          <p className="no-margin-no-padding">{strings.DATA_VIEW_FILTER_LOWER}</p>
+          <Input
+            size="small"
+            className="search"
+            onClick={(e: any) => e.stopPropagation()}
+            onChange={(_, { value }) => handleChange(value, 'upperBound')}
+            value={upperInput}
+            error={inputError.upperBound}
+            style={inputStyle}
+          />
+        </Segment>
+      </Form>
     </FilterContainer>
   )
 }
