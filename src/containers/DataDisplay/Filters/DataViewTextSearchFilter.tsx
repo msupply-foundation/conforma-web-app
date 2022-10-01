@@ -2,8 +2,8 @@
 This filter is based <DataViewSearchableList>, but without the List part
 */
 
-import React, { useState, useEffect } from 'react'
-import { Input } from 'semantic-ui-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { Input, Form } from 'semantic-ui-react'
 import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
@@ -24,6 +24,8 @@ export const DataViewTextSearchFilter: React.FC<TextSearchFilterProps> = ({
   const [searchText, setSearchText] = useState<string>(currentValue)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
 
+  const inputRef = useRef(null)
+
   useEffect(() => {
     setFilterText(debounceOutput)
   }, [debounceOutput])
@@ -39,15 +41,15 @@ export const DataViewTextSearchFilter: React.FC<TextSearchFilterProps> = ({
           icon={searchText ? 'search' : undefined}
         />
       }
+      setFocus={() => setTimeout((inputRef as any).current.focus, 100)}
     >
       <Input
-        id="this-one"
+        ref={inputRef}
         icon="search"
         placeholder={strings.FILTER_START_TYPING}
         iconPosition="left"
         className="search"
         value={searchText}
-        onClick={(e: any) => e.stopPropagation()}
         onChange={(_, { value }) => {
           setSearchText(value)
           setDebounceInput(value)

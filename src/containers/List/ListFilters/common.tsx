@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import useOnclickOutside from 'react-cool-onclickoutside'
 import { startCase as lodashStartCase } from 'lodash'
 import { Checkbox, Dropdown, Icon, Label } from 'semantic-ui-react'
 import { FilterContainerProps, FilterOptionsProps } from './types'
@@ -20,8 +21,13 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
   label,
   onRemove,
   replacementTrigger,
+  setFocus = () => {},
 }) => {
   const { strings } = useLanguageProvider()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const ref = useOnclickOutside(() => setIsOpen(false))
+
   return (
     <div className="active-filter">
       {label && (
@@ -29,21 +35,28 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
           {label}
         </Label>
       )}
-      <Dropdown
-        multiple
-        text={!replacementTrigger ? title : undefined}
-        trigger={replacementTrigger}
-        icon={replacementTrigger ? null : undefined}
-      >
-        <Dropdown.Menu>
-          {children}
-          <Dropdown.Divider />
-          <Dropdown.Item className="remove-filter" key="removeFilter" onClick={() => onRemove()}>
-            <Icon name="remove circle" />
-            {strings.FILTER_REMOVE}
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
+      <div ref={ref}>
+        <Dropdown
+          multiple
+          text={!replacementTrigger ? title : undefined}
+          trigger={replacementTrigger}
+          icon={replacementTrigger ? null : undefined}
+          open={isOpen}
+          onOpen={() => {
+            setIsOpen(true)
+            setFocus()
+          }}
+        >
+          <Dropdown.Menu>
+            {children}
+            <Dropdown.Divider />
+            <Dropdown.Item className="remove-filter" key="removeFilter" onClick={() => onRemove()}>
+              <Icon name="remove circle" />
+              {strings.FILTER_REMOVE}
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
     </div>
   )
 }
