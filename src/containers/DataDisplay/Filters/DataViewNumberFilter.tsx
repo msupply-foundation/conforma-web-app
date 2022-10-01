@@ -3,7 +3,7 @@ Filter uses existing filter-handling and building logic from Application List
 filters
 */
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, MutableRefObject } from 'react'
 import { Input, Segment, Form } from 'semantic-ui-react'
 import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -77,7 +77,7 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
   const segmentStyle = { gap: 10, margin: 0 }
   const inputStyle = { maxWidth: 100 }
 
-  const inputRef = useRef(null)
+  const inputRef = useRef<Input>(null)
 
   return (
     <FilterContainer
@@ -90,7 +90,9 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
           icon={!isUndefined(lowerBound) || !isUndefined(upperBound) ? 'calculator' : undefined}
         />
       }
-      setFocus={() => setTimeout((inputRef as any).current.focus, 100)}
+      setFocus={() => {
+        if (inputRef.current !== null) setTimeout(inputRef.current.focus, 100)
+      }}
     >
       <Form>
         <Segment basic className="flex-row-space-between-center" style={segmentStyle}>
