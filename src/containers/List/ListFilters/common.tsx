@@ -10,22 +10,23 @@ import {
   ReviewerAction,
 } from '../../../utils/generated/graphql'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
+import { FilterTitleProps } from './DateFilter/types'
 
 export const startCase = (string: string) => lodashStartCase(string.toLowerCase())
 
 const FilterContainer: React.FC<FilterContainerProps> = ({
   children,
   title = '',
-  selectedCount = 0,
+  label,
   onRemove,
   replacementTrigger,
 }) => {
   const { strings } = useLanguageProvider()
   return (
     <div className="active-filter">
-      {selectedCount > 0 && (
+      {label && (
         <Label color="grey" circular size="mini" floating>
-          {selectedCount}
+          {label}
         </Label>
       )}
       <Dropdown
@@ -90,5 +91,16 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
     </>
   )
 }
+const FilterTitle: React.FC<FilterTitleProps> = ({ title, criteria, icon }) => {
+  return (
+    <div className="filter-title">
+      {icon && <Icon name={icon} />}
+      <div className={title && criteria ? 'title-and-criteria' : ''}>
+        {criteria && <div className="filter-criteria">{criteria}</div>}
+        {title && <div>{title}</div>}
+      </div>
+    </div>
+  )
+}
 
-export { FilterOptions, FilterContainer }
+export { FilterOptions, FilterContainer, FilterTitle }

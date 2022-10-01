@@ -82,7 +82,6 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
     )
     return complexOrFilter
   },
-  dataViewNumber: () => ({}),
   dataViewBoolean: (filterValue) => {
     return {
       equalTo: String(filterValue).toLowerCase() === 'true',
