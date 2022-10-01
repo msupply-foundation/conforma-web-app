@@ -12,7 +12,7 @@ import {
   FilterTypes,
 } from '../types'
 
-// 3 simple hooks for returning Data View state
+// 4 simple hooks for returning Data View state
 
 interface DataViewTableProps {
   dataViewCode: string
@@ -89,26 +89,7 @@ export const useDataViewsTable = ({
     userState: { templatePermissions },
   } = useUserState()
 
-  // const updateDataViewTable = (newDataViewTable: DataViewsTableResponse) => {
-  // We only want to load filterDefinitions once (per dataView code),
-  // otherwise it gets into an infinite loop. Similarly, we don't want to set
-  // the dataViewTable data until we've loaded filterDefinitions, or the Table
-  // page will display the full list briefly before showing the filtered list.
-
-  // TO-DO: Fetch filter definitions in a separate query *before* requesting
-  // dataViewTable
-
-  //   if (!newDataViewTable) return
-
-  //   const currentDataViewCode = dataViewTable?.code
-
-  //   if (filterDefinitions) setDataViewTable(newDataViewTable)
-  //   if (!filterDefinitions || newDataViewTable.code !== currentDataViewCode)
-  //     setFilterDefinitions(buildFilterDefinitions(newDataViewTable, strings.DATA_VIEW_NULL_VALUE))
-  // }
-
   useEffect(() => {
-    console.log('filtersReady', filtersReady)
     if (!filtersReady) return
     processRequest({
       url: getServerUrl('dataViews', { dataViewCode, query: apiQueries }),
