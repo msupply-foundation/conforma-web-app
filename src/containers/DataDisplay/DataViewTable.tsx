@@ -4,7 +4,7 @@ import { Loading } from '../../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { useDataViewsTable } from '../../utils/hooks/useDataViews'
+import { useDataViewsTable, useDataViewFilterDefinitions } from '../../utils/hooks/useDataViews'
 import {
   HeaderRow,
   DataViewTableAPIQueries,
@@ -31,30 +31,44 @@ const DataViewTable: React.FC = () => {
     params: { dataViewCode },
   } = useRouter()
 
+  const [searchText, setSearchText] = useState(query.search)
+  const [debounceOutput, setDebounceInput] = useDebounce(searchText)
+  const { filterDefinitions, loading: filtersLoading } = useDataViewFilterDefinitions(dataViewCode)
   const [apiQueries, setApiQueries] = useState<BasicStringObject>(
     getAPIQueryParams(query, preferences?.paginationDefault)
   )
   const [gqlFilter, setGqlFilter] = useState<GqlFilterObject>({})
-  const [searchText, setSearchText] = useState(query.search)
-  const [debounceOutput, setDebounceInput] = useDebounce(searchText)
-  const { dataViewTable, filterDefinitions, loading, error } = useDataViewsTable({
+
+  console.log('filtersLoading', filtersLoading)
+
+  // const apiQueries = {}
+  //  getAPIQueryParams(query, preferences?.paginationDefault)
+  // const gqlFilter = {}
+  // buildQueryFilters(query, filterDefinitions)
+
+  const { dataViewTable, loading, error } = useDataViewsTable({
     dataViewCode,
     apiQueries,
     filter: gqlFilter,
+    filtersReady: !filtersLoading,
   })
+
+  // const dataViewTable: any = undefined
+  // const error: any = false
+  // const loading = true
 
   const title = location?.state?.title ?? dataViewTable?.title ?? ''
   usePageTitle(title)
 
   // Reset filters if navigating here from Menu bar
-  useEffect(() => {
-    if (location?.state?.resetFilters) {
-      setGqlFilter({})
-      setApiQueries({})
-      setSearchText('')
-      setDebounceInput('')
-    }
-  }, [dataViewCode])
+  // useEffect(() => {
+  //   if (location?.state?.resetFilters) {
+  //     setGqlFilter({})
+  //     setApiQueries({})
+  //     setSearchText('')
+  //     setDebounceInput('')
+  //   }
+  // }, [dataViewCode])
 
   useEffect(() => {
     if (!filterDefinitions) return
@@ -62,9 +76,9 @@ const DataViewTable: React.FC = () => {
     setGqlFilter(buildQueryFilters(query, filterDefinitions))
   }, [query, filterDefinitions])
 
-  useEffect(() => {
-    updateQuery({ search: debounceOutput })
-  }, [debounceOutput])
+  // useEffect(() => {
+  //   updateQuery({ search: debounceOutput })
+  // }, [debounceOutput])
 
   if (error) {
     return <Message error header={strings.ERROR_GENERIC} content={error.message} />
