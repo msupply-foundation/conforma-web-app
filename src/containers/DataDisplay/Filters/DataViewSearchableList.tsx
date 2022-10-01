@@ -1,5 +1,6 @@
 /*
-This filter is based <DataViewSearchableList>, but without the List part
+This filter is based on the Application List filter <SearchableListFilter>. The
+main difference is the method for querying the database
 */
 
 import React, { useState, useEffect } from 'react'
@@ -9,8 +10,14 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
+import { SearchableListFilterProps } from '../../List/ListFilters/types'
+import { FilterTypeOptions } from '../../../utils/types'
 
-export const DataViewSearchableList: React.FC<any> = ({
+type SearchableListProps = Omit<SearchableListFilterProps, 'getFilterListQuery'> & {
+  options: FilterTypeOptions
+}
+
+export const DataViewSearchableList: React.FC<SearchableListProps> = ({
   getActiveOptions,
   setActiveOption,
   setInactiveOption,
@@ -28,6 +35,7 @@ export const DataViewSearchableList: React.FC<any> = ({
   const { column, code, searchFields, delimiter } = options
 
   useEffect(() => {
+    if (!code || !column) return
     postRequest({
       url: getServerUrl('dataViews', { dataViewCode: code, column }),
       jsonBody: { searchText, searchFields, delimiter },

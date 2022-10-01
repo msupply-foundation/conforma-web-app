@@ -8,8 +8,14 @@ import { Input, Segment } from 'semantic-ui-react'
 import { FilterContainer } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
+import { FiltersCommon } from '../../List/ListFilters/types'
 
-export const DataViewNumberFilter: React.FC<any> = ({
+type NumberFilterProps = FiltersCommon & {
+  setFilterText: (text: string) => void
+  numberRangeString: string
+}
+
+export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
   setFilterText,
   title,
   numberRangeString,

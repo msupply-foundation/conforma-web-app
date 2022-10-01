@@ -1,6 +1,5 @@
 /*
-This filter is based on the Application List filter <SearchableListFilter>. The
-main difference is the method for querying the database
+This filter is based <DataViewSearchableList>, but without the List part
 */
 
 import React, { useState, useEffect } from 'react'
@@ -8,8 +7,14 @@ import { Input } from 'semantic-ui-react'
 import { FilterContainer } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
+import { FiltersCommon } from '../../List/ListFilters/types'
 
-export const DataViewTextSearchFilter: React.FC<any> = ({
+type TextSearchFilterProps = FiltersCommon & {
+  setFilterText: (text: string) => void
+  currentValue: string
+}
+
+export const DataViewTextSearchFilter: React.FC<TextSearchFilterProps> = ({
   setFilterText,
   title,
   onRemove,
