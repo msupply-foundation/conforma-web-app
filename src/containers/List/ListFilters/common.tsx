@@ -43,6 +43,7 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
           icon={trigger ? null : undefined}
           open={isOpen}
           onOpen={() => {
+            if (isOpen) return
             setIsOpen(true)
             setFocus()
           }}
