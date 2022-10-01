@@ -724,6 +724,16 @@ interface TableRow {
 }
 
 // Response object of /data-views/table endpoint
+
+export interface DataViewFilterDefinition {
+  column: string
+  title: string
+  dataType: string
+  showFilterList: boolean
+  searchFields: string[]
+  delimiter?: string
+  booleanMapping?: { true: string; false: string }
+}
 export interface DataViewsTableResponse {
   tableName: string
   title: string
@@ -731,15 +741,7 @@ export interface DataViewsTableResponse {
   headerRow: HeaderRow[]
   tableRows: TableRow[]
   searchFields: string[]
-  filterDefinitions: {
-    column: string
-    title: string
-    dataType: string
-    showFilterList: boolean
-    searchFields: string[]
-    delimiter?: string
-    booleanMapping?: { true: string; false: string }
-  }[]
+  filterDefinitions: DataViewFilterDefinition[]
   totalCount: number
   message?: string
 }
