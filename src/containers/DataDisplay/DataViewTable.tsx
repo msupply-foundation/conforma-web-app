@@ -39,13 +39,6 @@ const DataViewTable: React.FC = () => {
   )
   const [gqlFilter, setGqlFilter] = useState<GqlFilterObject>({})
 
-  console.log('filtersLoading', filtersLoading)
-
-  // const apiQueries = {}
-  //  getAPIQueryParams(query, preferences?.paginationDefault)
-  // const gqlFilter = {}
-  // buildQueryFilters(query, filterDefinitions)
-
   const { dataViewTable, loading, error } = useDataViewsTable({
     dataViewCode,
     apiQueries,
@@ -53,22 +46,18 @@ const DataViewTable: React.FC = () => {
     filtersReady: !filtersLoading,
   })
 
-  // const dataViewTable: any = undefined
-  // const error: any = false
-  // const loading = true
-
   const title = location?.state?.title ?? dataViewTable?.title ?? ''
   usePageTitle(title)
 
   // Reset filters if navigating here from Menu bar
-  // useEffect(() => {
-  //   if (location?.state?.resetFilters) {
-  //     setGqlFilter({})
-  //     setApiQueries({})
-  //     setSearchText('')
-  //     setDebounceInput('')
-  //   }
-  // }, [dataViewCode])
+  useEffect(() => {
+    if (location?.state?.resetFilters) {
+      setGqlFilter({})
+      setApiQueries({})
+      setSearchText('')
+      setDebounceInput('')
+    }
+  }, [dataViewCode])
 
   useEffect(() => {
     if (!filterDefinitions) return
@@ -76,9 +65,9 @@ const DataViewTable: React.FC = () => {
     setGqlFilter(buildQueryFilters(query, filterDefinitions))
   }, [query, filterDefinitions])
 
-  // useEffect(() => {
-  //   updateQuery({ search: debounceOutput })
-  // }, [debounceOutput])
+  useEffect(() => {
+    updateQuery({ search: debounceOutput })
+  }, [debounceOutput])
 
   if (error) {
     return <Message error header={strings.ERROR_GENERIC} content={error.message} />
