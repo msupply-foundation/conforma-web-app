@@ -53,7 +53,7 @@ export const DataViewSearchableList: React.FC<SearchableListProps> = ({
   const activeOptions = getActiveOptions()
 
   return (
-    <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
+    <FilterContainer label={activeOptions.length || ''} title={title} onRemove={onRemove}>
       {!error && filterList ? (
         <>
           <Input
