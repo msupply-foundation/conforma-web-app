@@ -52,7 +52,9 @@ export const exportLanguages = async (
     ]
     const row3code = ['Code:', '', ...languageOptions.map((opt) => opt.code)]
     const row4Flag = ['Flag:', '', ...languageOptions.map((opt) => opt.flag)]
-    const row5Enabled = ['Enabled?', '', ...languageOptions.map((opt) => opt.enabled)]
+    const row5Locale = ['Locale:', '', ...languageOptions.map((opt) => opt.locale)]
+    const row6Enabled = ['Enabled?', '', ...languageOptions.map((opt) => opt.enabled)]
+
     const translationRows = Object.keys(defaultLanguageStrings).map((key) => [
       key,
       ...Object.values(translationsObject[key as keyof LanguageStrings]),
@@ -67,7 +69,8 @@ export const exportLanguages = async (
       row2Description,
       row3code,
       row4Flag,
-      row5Enabled,
+      row5Locale,
+      row6Enabled,
       [],
       ['KEYS'],
       ...translationRows,
