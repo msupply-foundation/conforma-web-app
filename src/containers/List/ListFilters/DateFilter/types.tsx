@@ -63,6 +63,6 @@ export type CalendarMonthProps = {
 }
 export type FilterTitleProps = {
   title: string
-  criteria: string
+  criteria?: string
   icon?: SemanticICONS
 }
