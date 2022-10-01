@@ -78,7 +78,7 @@ const DateFilter: React.FC<DateFilterProps> = ({
 
   return (
     <FilterContainer
-      replacementTrigger={
+      trigger={
         <FilterTitle title={title} criteria={getFilterCriteria()} icon="calendar alternate" />
       }
       onRemove={onRemove}

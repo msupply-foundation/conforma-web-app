@@ -5,7 +5,7 @@ main difference is the method for querying the database
 
 import React, { useState, useEffect } from 'react'
 import { Dropdown, Input } from 'semantic-ui-react'
-import { FilterContainer, FilterOptions } from '../../List/ListFilters/common'
+import { FilterContainer, FilterOptions, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
@@ -53,15 +53,19 @@ export const DataViewSearchableList: React.FC<SearchableListProps> = ({
   const activeOptions = getActiveOptions()
 
   return (
-    <FilterContainer label={activeOptions.length || ''} title={title} onRemove={onRemove}>
+    <FilterContainer
+      label={activeOptions.length || ''}
+      title={title}
+      onRemove={onRemove}
+      trigger={<FilterTitle title={title ?? ''} />}
+    >
       {!error && filterList ? (
         <>
           <Input
             icon="search"
-            placeholder={strings.FILTER_START_TYPING}
+            placeholder={strings.FILTER_SEARCH_LIST}
             iconPosition="left"
             className="search"
-            onClick={(e: any) => e.stopPropagation()}
             onChange={(_, { value }) => {
               setSearchText(value)
               setDebounceInput(value)
