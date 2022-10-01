@@ -1907,7 +1907,7 @@ a:hover {
   border-bottom-right-radius: 5px;
 }
 
-.date-filter-title {
+.filter-title {
   .flex-row();
   align-items: center;
 

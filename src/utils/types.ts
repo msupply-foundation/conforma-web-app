@@ -813,7 +813,6 @@ export type FilterTypeDefinitions = {
     | 'staticList'
     | 'search'
     | 'dataViewString'
-    | 'dataViewNumber'
     | 'dataViewBoolean']: FilterTypeMethod
 }
 
