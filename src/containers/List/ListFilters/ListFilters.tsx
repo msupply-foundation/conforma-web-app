@@ -8,10 +8,10 @@ import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
 import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
 import {
-  DataViewNumberFilter,
   DataViewSearchableList,
   DataViewTextSearchFilter,
-} from '../../DataDisplay/DataViewFilters'
+  DataViewNumberFilter,
+} from '../../DataDisplay/Filters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
 import { removeCommas } from '../../../utils/helpers/utilityFunctions'
 

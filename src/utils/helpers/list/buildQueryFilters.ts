@@ -72,7 +72,7 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
     }
 
     const values = replaceCommasArray(splitCommaList(filterValue))
-    const complexOrFilter: any = { or: [] }
+    const complexOrFilter: { or: object[] } = { or: [] }
     options?.searchFields?.forEach((field) =>
       complexOrFilter.or.push(
         ...values.map((value) => ({
