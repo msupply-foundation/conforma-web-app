@@ -18,6 +18,7 @@ interface DataViewTableProps {
   dataViewCode: string
   apiQueries: DataViewTableAPIQueries
   filter: object
+  filtersReady: boolean
 }
 
 interface DataViewDetailsProps {
@@ -55,49 +56,73 @@ export const useDataViewsList = () => {
   return { error, loading, dataViewsList }
 }
 
-export const useDataViewsTable = ({ dataViewCode, apiQueries, filter }: DataViewTableProps) => {
+export const useDataViewFilterDefinitions = (dataViewCode: string) => {
   const { strings } = useLanguageProvider()
+  const [filterDefinitions, setFilterDefinitions] = useState<FilterDefinitions>({})
   const [error, setError] = useState<ErrorResponse | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    processRequest({
+      url: getServerUrl('dataViews', { dataViewCode, query: { first: '0' } }),
+      setError,
+      setLoading,
+      setStateMethod: (response: DataViewsTableResponse) =>
+        setFilterDefinitions(buildFilterDefinitions(response, strings.DATA_VIEW_NULL_VALUE)),
+      filter: {},
+    })
+  }, [dataViewCode])
+
+  return { filterDefinitions, loading, error }
+}
+
+export const useDataViewsTable = ({
+  dataViewCode,
+  apiQueries,
+  filter,
+  filtersReady,
+}: DataViewTableProps) => {
+  const [error, setError] = useState<ErrorResponse | null>(null)
+  const [loading, setLoading] = useState(true)
   const [dataViewTable, setDataViewTable] = useState<DataViewsTableResponse>()
-  const [filterDefinitions, setFilterDefinitions] = useState<any>()
   const {
     userState: { templatePermissions },
   } = useUserState()
 
-  const updateDataViewTable = (newDataViewTable: DataViewsTableResponse) => {
-    // We only want to load filterDefinitions once (per dataView code),
-    // otherwise it gets into an infinite loop. Similarly, we don't want to set
-    // the dataViewTable data until we've loaded filterDefinitions, or the Table
-    // page will display the full list briefly before showing the filtered list.
+  // const updateDataViewTable = (newDataViewTable: DataViewsTableResponse) => {
+  // We only want to load filterDefinitions once (per dataView code),
+  // otherwise it gets into an infinite loop. Similarly, we don't want to set
+  // the dataViewTable data until we've loaded filterDefinitions, or the Table
+  // page will display the full list briefly before showing the filtered list.
 
-    // TO-DO: Fetch filter definitions in a separate query *before* requesting
-    // dataViewTable
+  // TO-DO: Fetch filter definitions in a separate query *before* requesting
+  // dataViewTable
 
-    if (!newDataViewTable) return
+  //   if (!newDataViewTable) return
 
-    const currentDataViewCode = dataViewTable?.code
+  //   const currentDataViewCode = dataViewTable?.code
 
-    if (filterDefinitions) setDataViewTable(newDataViewTable)
-    if (!filterDefinitions || newDataViewTable.code !== currentDataViewCode)
-      setFilterDefinitions(buildFilterDefinitions(newDataViewTable, strings.DATA_VIEW_NULL_VALUE))
-  }
+  //   if (filterDefinitions) setDataViewTable(newDataViewTable)
+  //   if (!filterDefinitions || newDataViewTable.code !== currentDataViewCode)
+  //     setFilterDefinitions(buildFilterDefinitions(newDataViewTable, strings.DATA_VIEW_NULL_VALUE))
+  // }
 
   useEffect(() => {
+    console.log('filtersReady', filtersReady)
+    if (!filtersReady) return
     processRequest({
       url: getServerUrl('dataViews', { dataViewCode, query: apiQueries }),
       setError,
       setLoading,
-      setStateMethod: updateDataViewTable,
+      setStateMethod: setDataViewTable,
       filter,
     })
-  }, [templatePermissions, dataViewCode, apiQueries, filter])
+  }, [templatePermissions, apiQueries, filter])
 
   return {
     error,
     loading,
     dataViewTable,
-    filterDefinitions,
   }
 }
 
