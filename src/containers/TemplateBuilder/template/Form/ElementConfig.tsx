@@ -247,7 +247,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 isPropUpdated={true}
                 setValue={(value) => {
                   const updateValue = value === 'default' ? null : value
-                  setState({ ...state, reviewability: updateValue as Reviewability | null })
+                  setState({ ...state, reviewability: updateValue as Reviewability })
                   markNeedsUpdate()
                 }}
                 options={[
