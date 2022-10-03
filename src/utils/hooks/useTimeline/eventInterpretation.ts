@@ -245,7 +245,10 @@ const getReviewEvent = (
           : strings.TIMELINE_CONSOLIDATION_SUBMITTED
         )
           .replace('%1', `**${reviewer?.name}**`)
-          .replace(hyperlinkReplaceString, 'LINK'),
+          .replace(
+            hyperlinkReplaceString,
+            getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
+          ),
       }
     case value === 'SUBMITTED' && reviewDecision && !isResubmission:
       return {
