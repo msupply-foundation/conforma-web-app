@@ -128,7 +128,6 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
 
   const { ConfirmModal, showModal: showConfirmModal } = useConfirmationModal({
     onConfirm: () => submission(),
-    showCancel: false,
   })
   const { ConfirmModal: WarningModal, showModal: showWarning } = useConfirmationModal({
     type: 'warning',
