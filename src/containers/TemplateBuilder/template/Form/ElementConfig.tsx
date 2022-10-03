@@ -247,7 +247,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 isPropUpdated={true}
                 setValue={(value) => {
                   const updateValue = value === 'default' ? null : value
-                  setState({ ...state, isReviewable: updateValue as IsReviewableStatus | null })
+                  setState({ ...state, isReviewable: updateValue as IsReviewableStatus })
                   markNeedsUpdate()
                 }}
                 options={[
@@ -257,7 +257,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                     value: IsReviewableStatus.OptionalIfNoResponse,
                     text: 'Optional (if no application response)',
                   },
-                  { value: 'default', text: 'Only if applicant answered' },
+                  {
+                    value: IsReviewableStatus.OnlyIfApplicantAnswer,
+                    text: 'Only if applicant answered',
+                  },
                 ]}
                 maxLabelWidth={120}
               />
