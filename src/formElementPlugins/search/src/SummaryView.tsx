@@ -1,9 +1,10 @@
 import React from 'react'
+import { Form } from 'semantic-ui-react'
 import { SummaryViewProps } from '../../types'
 import { DisplaySelection, DisplayProps } from './ApplicationView'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
-  const { displayFormat, displayType = 'card' } = parameters
+  const { label, displayFormat, displayType = 'card' } = parameters
 
   const displayProps: DisplayProps = {
     selection: response?.selection ?? [],
@@ -13,7 +14,16 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
     isEditable: false,
   }
 
-  return <DisplaySelection {...displayProps} />
+  return (
+    <Form.Field>
+      {label && (
+        <label>
+          <Markdown text={label} semanticComponent="noParagraph" />
+        </label>
+      )}
+      <DisplaySelection {...displayProps} />
+    </Form.Field>
+  )
 }
 
 export default SummaryView
