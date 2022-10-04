@@ -456,7 +456,7 @@ a:hover {
 #content-area .top-container {
   margin-top: 20px;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: space-between;
 }
