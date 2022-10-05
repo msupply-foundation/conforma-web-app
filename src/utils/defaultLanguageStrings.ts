@@ -132,6 +132,8 @@ export default {
   FILTER_REMOVE: 'Remove filter',
   FILTER_START_TYPING: 'Start typing...',
   FILTER_SEARCH_LIST: 'Search list...',
+  FILTER_SORT_BY: 'Sort by',
+  FILTER_RESET_SORT: 'Reset sort',
   FILTER_NAMED_DATE_TODAY: 'Today',
   FILTER_NAMED_DATE_YESTERDAY: 'Yesterday',
   FILTER_NAMED_DATE_THIS_WEEK: 'This Week',
