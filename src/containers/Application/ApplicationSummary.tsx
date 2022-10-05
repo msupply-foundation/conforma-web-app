@@ -45,6 +45,9 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     if (fullStructure.info.current.status === ApplicationStatus.ChangesRequired)
       replace(`/application/${fullStructure.info.serial}`)
 
+    // Don't check further if completed, otherwise gets into re-direct loop
+    if (fullStructure.info.current.status === ApplicationStatus.Completed) return
+
     // Re-direct if application is not valid
     if (fullStructure.info.firstStrictInvalidPage) {
       const { sectionCode, pageNumber } = fullStructure.info.firstStrictInvalidPage
