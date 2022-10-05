@@ -1727,7 +1727,7 @@ a:hover {
   }
 
   .data-view-nav {
-    width: 70%;
+    width: 90%;
   }
 
   .data-view-table-container {
