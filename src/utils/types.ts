@@ -701,6 +701,7 @@ export interface DisplayDefinition {
   title: string
   isBasicField: boolean
   dataType?: string
+  sortColumn?: string
   formatting: FormatOptions
 }
 export interface HeaderRow extends DisplayDefinition {
@@ -720,6 +721,7 @@ export interface DataViewsTableResponse {
   code: string
   headerRow: HeaderRow[]
   tableRows: TableRow[]
+  searchFields: string[]
   totalCount: number
   message?: string
 }
@@ -765,7 +767,7 @@ export type DataViewTableAPIQueries = {
   first?: string | undefined
   offset?: string | undefined
   orderBy?: string | undefined
-  ascending?: string | undefined
+  ascending?: 'true' | 'false' | undefined
 }
 
 // *****************
@@ -824,6 +826,8 @@ export type FilterTypeOptions = {
   namedDates?: NamedDates
   // For boolean to show on and of criteria
   booleanMapping?: BooleanFilterMapping
+  // For Data View filter lists
+  getFilterList?: (table: string, column: string) => Promise<string[]>
 }
 
 export type FilterDefinition = {

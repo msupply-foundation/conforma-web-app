@@ -48,6 +48,7 @@ export type DataViewEndpoint = [
   options?:
     | { dataViewCode: string; query?: DataViewTableAPIQueries }
     | { dataViewCode: string; itemId: number }
+    | { dataViewCode: string; column: string }
 ]
 
 export type UploadEndpoint = [

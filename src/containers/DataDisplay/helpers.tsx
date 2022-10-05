@@ -1,7 +1,15 @@
 import React from 'react'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../../utils/data/LuxonDateTimeConstants'
-import { DisplayDefinition, DisplayDefinitionBasic, HeaderRow } from '../../utils/types'
+import {
+  BasicStringObject,
+  DataViewsTableResponse,
+  DataViewTableAPIQueries,
+  DisplayDefinition,
+  DisplayDefinitionBasic,
+  FilterDefinitions,
+  HeaderRow,
+} from '../../utils/types'
 import { substituteValues } from '../../utils/helpers/utilityFunctions'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { defaultEvaluatedElement } from '../../utils/hooks/useLoadApplication'
@@ -9,6 +17,7 @@ import { TemplateElementCategory } from '../../utils/generated/graphql'
 import { ApplicationDetails } from '../../utils/types'
 import config from '../../config'
 import { serverREST, serverGraphQL } from '../../utils/helpers/endpoints/endpointUrlBuilder'
+import buildQueryFilters from '../../utils/helpers/list/buildQueryFilters'
 
 export const formatCellText = (
   value: any,
