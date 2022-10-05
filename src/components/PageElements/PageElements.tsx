@@ -12,7 +12,7 @@ import {
 import { ApplicationViewWrapper, SummaryViewWrapper } from '../../formElementPlugins'
 import { ApplicationViewWrapperProps } from '../../formElementPlugins/types'
 import {
-  IsReviewableStatus,
+  Reviewability,
   ReviewResponse,
   TemplateElementCategory,
 } from '../../utils/generated/graphql'
@@ -215,7 +215,7 @@ const PageElements: React.FC<PageElementProps> = ({
               if (
                 (element.category === TemplateElementCategory.Information ||
                   !thisReviewLatestResponse) &&
-                element.isReviewable !== IsReviewableStatus.OptionalIfNoResponse
+                element.reviewability !== Reviewability.OptionalIfNoResponse
               )
                 return (
                   <RenderElementWrapper key={element.code}>
