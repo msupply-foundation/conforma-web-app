@@ -97,7 +97,7 @@ const ListFilters: React.FC<{
   )
 
   return (
-    <div id="list-filter">
+    <div className="list-filter-container">
       <Dropdown trigger={renderTitle()} icon={null}>
         <Dropdown.Menu>
           {availableFilterNames.map((filterName) => (
