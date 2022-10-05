@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Header, Table, Message, Search } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -12,6 +12,7 @@ import {
   BasicStringObject,
   GqlFilterObject,
 } from '../../utils/types'
+import { SortReset } from './Filters'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { constructElement, formatCellText } from './helpers'
 import PaginationBar from '../../components/List/Pagination'
@@ -20,6 +21,11 @@ import useDebounce from '../../formElementPlugins/search/src/useDebounce'
 import { useToast } from '../../contexts/Toast'
 import ListFilters from '../List/ListFilters/ListFilters'
 import { usePrefs } from '../../contexts/SystemPrefs'
+
+export type SortColumn = {
+  title: string
+  ascending: boolean
+} | null
 
 const DataViewTable: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -46,6 +52,8 @@ const DataViewTable: React.FC = () => {
     filtersReady: !filtersLoading,
   })
 
+  const [currentSortColumn, setCurrentSortColumn] = useState<SortColumn>(null)
+
   const title = location?.state?.title ?? dataViewTable?.title ?? ''
   usePageTitle(title)
 
@@ -60,9 +68,14 @@ const DataViewTable: React.FC = () => {
   }, [dataViewCode])
 
   useEffect(() => {
+    setCurrentSortColumn(getSortColumnInfo(dataViewTable, query.sortBy))
+  }, [dataViewTable])
+
+  useEffect(() => {
     if (!filterDefinitions) return
     setApiQueries(getAPIQueryParams(query, preferences?.paginationDefault))
     setGqlFilter(buildQueryFilters(query, filterDefinitions))
+    setCurrentSortColumn(getSortColumnInfo(dataViewTable, query.sortBy))
   }, [query, filterDefinitions])
 
   useEffect(() => {
@@ -95,10 +108,15 @@ const DataViewTable: React.FC = () => {
           {filterDefinitions && (
             <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
           )}
+          {currentSortColumn && <SortReset {...currentSortColumn} />}
         </div>
         {loading && <Loading />}
         {dataViewTable && (
-          <DataViewTableContent dataViewTable={dataViewTable} apiQueries={apiQueries} />
+          <DataViewTableContent
+            dataViewTable={dataViewTable}
+            apiQueries={apiQueries}
+            setSortColumn={setCurrentSortColumn}
+          />
         )}
       </div>
     </div>
@@ -110,11 +128,13 @@ export default DataViewTable
 interface DataViewTableContentProps {
   dataViewTable: DataViewsTableResponse
   apiQueries: DataViewTableAPIQueries
+  setSortColumn: Dispatch<SetStateAction<SortColumn | null>>
 }
 
 const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
   dataViewTable,
   apiQueries,
+  setSortColumn,
 }) => {
   const { strings } = useLanguageProvider()
   const {
@@ -137,14 +157,16 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
       showToast({ text: strings.DATA_VIEW_COLUMN_NOT_SORTABLE.replace('%1', columnTitle) })
       return
     }
-    // Cycle through ascending/descending/not-sorted (default: id)
-    if (ascending === 'false') {
-      updateQuery({ sortBy: null })
-    } else if (!apiQueries.orderBy) updateQuery({ sortBy: sortColumn })
-    else
+
+    if (ascending === 'false' || !apiQueries.orderBy) {
+      updateQuery({ sortBy: sortColumn })
+      setSortColumn({ title: columnTitle, ascending: true })
+    } else {
       updateQuery({
         sortBy: `${sortColumn}:desc`,
       })
+      setSortColumn({ title: columnTitle, ascending: false })
+    }
   }
 
   return (
@@ -220,4 +242,15 @@ const isSorted = (sortColumn: string | undefined, apiQueries: DataViewTableAPIQu
   if (!sortColumn) return undefined
   if (sortColumn !== apiQueries.orderBy) return undefined
   return apiQueries.ascending === 'true' ? 'ascending' : 'descending'
+}
+
+const getSortColumnInfo = (
+  dataViewTable: DataViewsTableResponse | undefined,
+  sortBy: string
+): SortColumn => {
+  if (!sortBy || !dataViewTable) return null
+  const [fieldName, direction] = sortBy.split(':')
+  const ascending = direction === 'desc' ? false : true
+  const column = dataViewTable.headerRow.find((col) => col.columnName === fieldName)
+  return { title: column?.title || '', ascending }
 }
