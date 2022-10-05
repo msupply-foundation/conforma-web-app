@@ -19,16 +19,6 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, c
   return (
     <Container id="application-area" className={isNonRegistered ? 'non-registered' : ''}>
       <div className={`top-container ${isNonRegistered ? 'hidden-element' : ''}`}>
-        <Label
-          className="back-label clickable"
-          onClick={() => replace(`/applications?type=${code}`)}
-          content={
-            <>
-              <Icon name="chevron left" className="dark-grey" />
-              {`${name} ${strings.LABEL_APPLICATIONS}`}
-            </>
-          }
-        />
         {currentUser?.organisation?.orgName && (
           <Header
             as="h2"
@@ -37,6 +27,13 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, c
             content={currentUser?.organisation?.orgName}
           />
         )}
+        <Label
+          className="back-label clickable"
+          onClick={() => replace(`/applications?type=${code}`)}
+        >
+          <Icon name="chevron left" className="dark-grey" />
+          {strings.LABEL_APPLICATIONS.replace('%1', name)}
+        </Label>
       </div>
       {children}
     </Container>
