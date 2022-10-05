@@ -69,7 +69,7 @@ export const constructElement = (value: any, displayDefinition: DisplayDefinitio
     sectionCode: '0',
     ...defaultEvaluatedElement,
     isRequired: false,
-    isReviewable: null,
+    reviewability: null,
   }
 
   return (

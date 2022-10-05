@@ -17,11 +17,11 @@ export type Scalars = {
   Datetime: any;
   /** The day, does not include a time. */
   Date: any;
-  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
-  BigInt: any;
   CharacterData: any;
   SqlIdentifier: any;
   YesOrNo: any;
+  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
+  BigInt: any;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -146,7 +146,6 @@ export type Query = Node & {
   dataTable?: Maybe<DataTable>;
   dataTableByTableName?: Maybe<DataTable>;
   dataView?: Maybe<DataView>;
-  dataViewByTableNameAndCode?: Maybe<DataView>;
   dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
   dataViewColumnDefinitionByTableNameAndColumnName?: Maybe<DataViewColumnDefinition>;
   elementTypePlugin?: Maybe<ElementTypePlugin>;
@@ -187,6 +186,7 @@ export type Query = Node & {
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
+  userOrganisationByUserIdAndOrganisationId?: Maybe<UserOrganisation>;
   verification?: Maybe<Verification>;
   verificationByUniqueId?: Maybe<Verification>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
@@ -198,6 +198,7 @@ export type Query = Node & {
   applicationListFilterStage?: Maybe<ApplicationListFilterStageConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   assignableQuestionsCount?: Maybe<Scalars['BigInt']>;
+  assignedQuestions?: Maybe<AssignedQuestionsConnection>;
   assignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignerList?: Maybe<AssignerListConnection>;
   assignmentList?: Maybe<AssignmentListConnection>;
@@ -216,6 +217,8 @@ export type Query = Node & {
   reviewReviewerId?: Maybe<Scalars['Int']>;
   reviewStage?: Maybe<Scalars['Int']>;
   reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
+  reviewableQuestions?: Maybe<ReviewableQuestionsConnection>;
+  reviewableQuestionsCount?: Maybe<Scalars['BigInt']>;
   submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
@@ -1036,13 +1039,6 @@ export type QueryDataViewArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryDataViewByTableNameAndCodeArgs = {
-  tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryDataViewColumnDefinitionArgs = {
   id: Scalars['Int'];
 };
@@ -1287,6 +1283,13 @@ export type QueryUserOrganisationArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryUserOrganisationByUserIdAndOrganisationIdArgs = {
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryVerificationArgs = {
   id: Scalars['Int'];
 };
@@ -1384,6 +1387,20 @@ export type QueryApplicationStatusHistoryApplicationIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAssignableQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAssignedQuestionsArgs = {
+  appId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<AssignedQuestionsRecordFilter>;
 };
 
 
@@ -1515,6 +1532,24 @@ export type QueryReviewStageArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewTimeStageCreatedArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewableQuestionsArgs = {
+  appId?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<ReviewableQuestionsRecordFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewableQuestionsCountArgs = {
+  appId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -2589,8 +2624,8 @@ export type TemplateElementFilter = {
   helpText?: Maybe<StringFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `isReviewable` field. */
-  isReviewable?: Maybe<IsReviewableStatusFilter>;
+  /** Filter by the object’s `reviewability` field. */
+  reviewability?: Maybe<ReviewabilityFilter>;
   /** Filter by the object’s `templateCode` field. */
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateVersion` field. */
@@ -2646,35 +2681,36 @@ export enum TemplateElementCategory {
   Information = 'INFORMATION'
 }
 
-/** A filter to be used against IsReviewableStatus fields. All fields are combined with a logical ‘and.’ */
-export type IsReviewableStatusFilter = {
+/** A filter to be used against Reviewability fields. All fields are combined with a logical ‘and.’ */
+export type ReviewabilityFilter = {
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
   isNull?: Maybe<Scalars['Boolean']>;
   /** Equal to the specified value. */
-  equalTo?: Maybe<IsReviewableStatus>;
+  equalTo?: Maybe<Reviewability>;
   /** Not equal to the specified value. */
-  notEqualTo?: Maybe<IsReviewableStatus>;
+  notEqualTo?: Maybe<Reviewability>;
   /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<IsReviewableStatus>;
+  distinctFrom?: Maybe<Reviewability>;
   /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<IsReviewableStatus>;
+  notDistinctFrom?: Maybe<Reviewability>;
   /** Included in the specified list. */
-  in?: Maybe<Array<IsReviewableStatus>>;
+  in?: Maybe<Array<Reviewability>>;
   /** Not included in the specified list. */
-  notIn?: Maybe<Array<IsReviewableStatus>>;
+  notIn?: Maybe<Array<Reviewability>>;
   /** Less than the specified value. */
-  lessThan?: Maybe<IsReviewableStatus>;
+  lessThan?: Maybe<Reviewability>;
   /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<IsReviewableStatus>;
+  lessThanOrEqualTo?: Maybe<Reviewability>;
   /** Greater than the specified value. */
-  greaterThan?: Maybe<IsReviewableStatus>;
+  greaterThan?: Maybe<Reviewability>;
   /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<IsReviewableStatus>;
+  greaterThanOrEqualTo?: Maybe<Reviewability>;
 };
 
-export enum IsReviewableStatus {
+export enum Reviewability {
   Always = 'ALWAYS',
   Never = 'NEVER',
+  OnlyIfApplicantAnswer = 'ONLY_IF_APPLICANT_ANSWER',
   OptionalIfNoResponse = 'OPTIONAL_IF_NO_RESPONSE'
 }
 
@@ -5264,8 +5300,8 @@ export enum TemplateElementsOrderBy {
   HelpTextDesc = 'HELP_TEXT_DESC',
   ParametersAsc = 'PARAMETERS_ASC',
   ParametersDesc = 'PARAMETERS_DESC',
-  IsReviewableAsc = 'IS_REVIEWABLE_ASC',
-  IsReviewableDesc = 'IS_REVIEWABLE_DESC',
+  ReviewabilityAsc = 'REVIEWABILITY_ASC',
+  ReviewabilityDesc = 'REVIEWABILITY_DESC',
   TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   TemplateVersionAsc = 'TEMPLATE_VERSION_ASC',
@@ -5306,8 +5342,8 @@ export type TemplateElementCondition = {
   helpText?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `isReviewable` field. */
-  isReviewable?: Maybe<IsReviewableStatus>;
+  /** Checks for equality with the object’s `reviewability` field. */
+  reviewability?: Maybe<Reviewability>;
   /** Checks for equality with the object’s `templateCode` field. */
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateVersion` field. */
@@ -5346,7 +5382,7 @@ export type TemplateElement = Node & {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability: Reviewability;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
@@ -8220,13 +8256,7 @@ export enum ApplicationListShapesOrderBy {
   ReviewerActionAsc = 'REVIEWER_ACTION_ASC',
   ReviewerActionDesc = 'REVIEWER_ACTION_DESC',
   AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
-  AssignerActionDesc = 'ASSIGNER_ACTION_DESC',
-  TotalQuestionsAsc = 'TOTAL_QUESTIONS_ASC',
-  TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC',
-  TotalAssignedAsc = 'TOTAL_ASSIGNED_ASC',
-  TotalAssignedDesc = 'TOTAL_ASSIGNED_DESC',
-  TotalAssignLockedAsc = 'TOTAL_ASSIGN_LOCKED_ASC',
-  TotalAssignLockedDesc = 'TOTAL_ASSIGN_LOCKED_DESC'
+  AssignerActionDesc = 'ASSIGNER_ACTION_DESC'
 }
 
 /** A condition to be used against `ApplicationListShape` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -8265,12 +8295,6 @@ export type ApplicationListShapeCondition = {
   reviewerAction?: Maybe<ReviewerAction>;
   /** Checks for equality with the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerAction>;
-  /** Checks for equality with the object’s `totalQuestions` field. */
-  totalQuestions?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `totalAssigned` field. */
-  totalAssigned?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `totalAssignLocked` field. */
-  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 export enum ReviewerAction {
@@ -8289,7 +8313,6 @@ export enum AssignerAction {
   AssignLocked = 'ASSIGN_LOCKED',
   ReAssign = 'RE_ASSIGN'
 }
-
 
 /** A filter to be used against `ApplicationListShape` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationListShapeFilter = {
@@ -8327,12 +8350,6 @@ export type ApplicationListShapeFilter = {
   reviewerAction?: Maybe<ReviewerActionFilter>;
   /** Filter by the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerActionFilter>;
-  /** Filter by the object’s `totalQuestions` field. */
-  totalQuestions?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `totalAssigned` field. */
-  totalAssigned?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `totalAssignLocked` field. */
-  totalAssignLocked?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListShapeFilter>>;
   /** Checks for any expressions in this list. */
@@ -8393,32 +8410,6 @@ export type AssignerActionFilter = {
   greaterThanOrEqualTo?: Maybe<AssignerAction>;
 };
 
-/** A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’ */
-export type BigIntFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<Scalars['BigInt']>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<Scalars['BigInt']>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<Scalars['BigInt']>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<Scalars['BigInt']>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<Scalars['BigInt']>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<Scalars['BigInt']>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<Scalars['BigInt']>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<Scalars['BigInt']>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<Scalars['BigInt']>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<Scalars['BigInt']>;
-};
-
 /** A connection to a list of `ApplicationListShape` values. */
 export type ApplicationListShapesConnection = {
   __typename?: 'ApplicationListShapesConnection';
@@ -8451,9 +8442,6 @@ export type ApplicationListShape = {
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
-  totalQuestions?: Maybe<Scalars['BigInt']>;
-  totalAssigned?: Maybe<Scalars['BigInt']>;
-  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** A `ApplicationListShape` edge in the connection. */
@@ -10784,18 +10772,72 @@ export type ApplicationListFilterStageEdge = {
   node?: Maybe<Scalars['String']>;
 };
 
+
+/** A filter to be used against `AssignedQuestionsRecord` object types. All fields are combined with a logical ‘and.’ */
+export type AssignedQuestionsRecordFilter = {
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `responseId` field. */
+  responseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewResponseCode` field. */
+  reviewResponseCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `reviewResponseStatus` field. */
+  reviewResponseStatus?: Maybe<ReviewResponseStatusFilter>;
+  /** Filter by the object’s `decision` field. */
+  decision?: Maybe<ReviewResponseDecisionFilter>;
+  /** Filter by the object’s `isOptional` field. */
+  isOptional?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLastestReview` field. */
+  isLastestReview?: Maybe<BooleanFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<AssignedQuestionsRecordFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<AssignedQuestionsRecordFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<AssignedQuestionsRecordFilter>;
+};
+
+/** A connection to a list of `AssignedQuestionsRecord` values. */
+export type AssignedQuestionsConnection = {
+  __typename?: 'AssignedQuestionsConnection';
+  /** A list of `AssignedQuestionsRecord` objects. */
+  nodes: Array<Maybe<AssignedQuestionsRecord>>;
+  /** A list of edges which contains the `AssignedQuestionsRecord` and cursor to aid in pagination. */
+  edges: Array<AssignedQuestionEdge>;
+  /** The count of *all* `AssignedQuestionsRecord` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** The return type of our `assignedQuestions` query. */
+export type AssignedQuestionsRecord = {
+  __typename?: 'AssignedQuestionsRecord';
+  reviewId?: Maybe<Scalars['Int']>;
+  responseId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewResponseCode?: Maybe<Scalars['String']>;
+  reviewResponseStatus?: Maybe<ReviewResponseStatus>;
+  decision?: Maybe<ReviewResponseDecision>;
+  isOptional?: Maybe<Scalars['Boolean']>;
+  isLastestReview?: Maybe<Scalars['Boolean']>;
+};
+
+/** A `AssignedQuestionsRecord` edge in the connection. */
+export type AssignedQuestionEdge = {
+  __typename?: 'AssignedQuestionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AssignedQuestionsRecord` at the end of the edge. */
+  node?: Maybe<AssignedQuestionsRecord>;
+};
+
 /** A filter to be used against `AssignerListRecord` object types. All fields are combined with a logical ‘and.’ */
 export type AssignerListRecordFilter = {
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerActionFilter>;
-  /** Filter by the object’s `totalQuestions` field. */
-  totalQuestions?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `totalAssigned` field. */
-  totalAssigned?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `totalAssignLocked` field. */
-  totalAssignLocked?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AssignerListRecordFilter>>;
   /** Checks for any expressions in this list. */
@@ -10820,9 +10862,6 @@ export type AssignerListRecord = {
   __typename?: 'AssignerListRecord';
   applicationId?: Maybe<Scalars['Int']>;
   assignerAction?: Maybe<AssignerAction>;
-  totalQuestions?: Maybe<Scalars['BigInt']>;
-  totalAssigned?: Maybe<Scalars['BigInt']>;
-  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** A `AssignerListRecord` edge in the connection. */
@@ -10917,6 +10956,56 @@ export type ReviewListEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `ReviewListRecord` at the end of the edge. */
   node?: Maybe<ReviewListRecord>;
+};
+
+/** A filter to be used against `ReviewableQuestionsRecord` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewableQuestionsRecordFilter = {
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `reviewability` field. */
+  reviewability?: Maybe<ReviewabilityFilter>;
+  /** Filter by the object’s `responseId` field. */
+  responseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `responseValue` field. */
+  responseValue?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isOptional` field. */
+  isOptional?: Maybe<BooleanFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewableQuestionsRecordFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewableQuestionsRecordFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewableQuestionsRecordFilter>;
+};
+
+/** A connection to a list of `ReviewableQuestionsRecord` values. */
+export type ReviewableQuestionsConnection = {
+  __typename?: 'ReviewableQuestionsConnection';
+  /** A list of `ReviewableQuestionsRecord` objects. */
+  nodes: Array<Maybe<ReviewableQuestionsRecord>>;
+  /** A list of edges which contains the `ReviewableQuestionsRecord` and cursor to aid in pagination. */
+  edges: Array<ReviewableQuestionEdge>;
+  /** The count of *all* `ReviewableQuestionsRecord` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** The return type of our `reviewableQuestions` query. */
+export type ReviewableQuestionsRecord = {
+  __typename?: 'ReviewableQuestionsRecord';
+  code?: Maybe<Scalars['String']>;
+  reviewability?: Maybe<Reviewability>;
+  responseId?: Maybe<Scalars['Int']>;
+  responseValue?: Maybe<Scalars['JSON']>;
+  isOptional?: Maybe<Scalars['Boolean']>;
+};
+
+/** A `ReviewableQuestionsRecord` edge in the connection. */
+export type ReviewableQuestionEdge = {
+  __typename?: 'ReviewableQuestionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewableQuestionsRecord` at the end of the edge. */
+  node?: Maybe<ReviewableQuestionsRecord>;
 };
 
 /** The root mutation type which contains root level fields which mutate data. */
@@ -11058,8 +11147,6 @@ export type Mutation = {
   updateDataViewByNodeId?: Maybe<UpdateDataViewPayload>;
   /** Updates a single `DataView` using a unique key and a patch. */
   updateDataView?: Maybe<UpdateDataViewPayload>;
-  /** Updates a single `DataView` using a unique key and a patch. */
-  updateDataViewByTableNameAndCode?: Maybe<UpdateDataViewPayload>;
   /** Updates a single `DataViewColumnDefinition` using its globally unique id and a patch. */
   updateDataViewColumnDefinitionByNodeId?: Maybe<UpdateDataViewColumnDefinitionPayload>;
   /** Updates a single `DataViewColumnDefinition` using a unique key and a patch. */
@@ -11198,6 +11285,8 @@ export type Mutation = {
   updateUserOrganisationByNodeId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `UserOrganisation` using a unique key and a patch. */
   updateUserOrganisation?: Maybe<UpdateUserOrganisationPayload>;
+  /** Updates a single `UserOrganisation` using a unique key and a patch. */
+  updateUserOrganisationByUserIdAndOrganisationId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `Verification` using its globally unique id and a patch. */
   updateVerificationByNodeId?: Maybe<UpdateVerificationPayload>;
   /** Updates a single `Verification` using a unique key and a patch. */
@@ -11256,8 +11345,6 @@ export type Mutation = {
   deleteDataViewByNodeId?: Maybe<DeleteDataViewPayload>;
   /** Deletes a single `DataView` using a unique key. */
   deleteDataView?: Maybe<DeleteDataViewPayload>;
-  /** Deletes a single `DataView` using a unique key. */
-  deleteDataViewByTableNameAndCode?: Maybe<DeleteDataViewPayload>;
   /** Deletes a single `DataViewColumnDefinition` using its globally unique id. */
   deleteDataViewColumnDefinitionByNodeId?: Maybe<DeleteDataViewColumnDefinitionPayload>;
   /** Deletes a single `DataViewColumnDefinition` using a unique key. */
@@ -11396,6 +11483,8 @@ export type Mutation = {
   deleteUserOrganisationByNodeId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `UserOrganisation` using a unique key. */
   deleteUserOrganisation?: Maybe<DeleteUserOrganisationPayload>;
+  /** Deletes a single `UserOrganisation` using a unique key. */
+  deleteUserOrganisationByUserIdAndOrganisationId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `Verification` using its globally unique id. */
   deleteVerificationByNodeId?: Maybe<DeleteVerificationPayload>;
   /** Deletes a single `Verification` using a unique key. */
@@ -11815,12 +11904,6 @@ export type MutationUpdateDataViewArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDataViewByTableNameAndCodeArgs = {
-  input: UpdateDataViewByTableNameAndCodeInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataViewColumnDefinitionByNodeIdArgs = {
   input: UpdateDataViewColumnDefinitionByNodeIdInput;
 };
@@ -12235,6 +12318,12 @@ export type MutationUpdateUserOrganisationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserOrganisationByUserIdAndOrganisationIdArgs = {
+  input: UpdateUserOrganisationByUserIdAndOrganisationIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateVerificationByNodeIdArgs = {
   input: UpdateVerificationByNodeIdInput;
 };
@@ -12405,12 +12494,6 @@ export type MutationDeleteDataViewByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataViewArgs = {
   input: DeleteDataViewInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDataViewByTableNameAndCodeArgs = {
-  input: DeleteDataViewByTableNameAndCodeInput;
 };
 
 
@@ -12825,6 +12908,12 @@ export type MutationDeleteUserOrganisationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserOrganisationArgs = {
   input: DeleteUserOrganisationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserOrganisationByUserIdAndOrganisationIdArgs = {
+  input: DeleteUserOrganisationByUserIdAndOrganisationIdInput;
 };
 
 
@@ -14014,13 +14103,19 @@ export type UserOrganisationUserIdFkeyInverseInput = {
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   connectById?: Maybe<Array<UserOrganisationUserOrganisationPkeyConnect>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  connectByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect>>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<UserOrganisationNodeIdConnect>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteById?: Maybe<Array<UserOrganisationUserOrganisationPkeyDelete>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  deleteByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete>>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<UserOrganisationNodeIdDelete>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
   updateById?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
+  updateByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate>>;
   /** A `UserOrganisationInput` object that will be created and connected to this object. */
@@ -14032,6 +14127,12 @@ export type UserOrganisationUserOrganisationPkeyConnect = {
   id: Scalars['Int'];
 };
 
+/** The fields on `userOrganisation` to look up the row to connect. */
+export type UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect = {
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to connect. */
 export type UserOrganisationNodeIdConnect = {
   /** The globally unique `ID` which identifies a single `userOrganisation` to be connected. */
@@ -14041,6 +14142,12 @@ export type UserOrganisationNodeIdConnect = {
 /** The fields on `userOrganisation` to look up the row to delete. */
 export type UserOrganisationUserOrganisationPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** The fields on `userOrganisation` to look up the row to delete. */
+export type UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete = {
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to delete. */
@@ -14259,13 +14366,19 @@ export type UserOrganisationOrganisationIdFkeyInverseInput = {
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   connectById?: Maybe<Array<UserOrganisationUserOrganisationPkeyConnect>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  connectByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationUserOrganisationUserIdOrganisationIdKeyConnect>>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<UserOrganisationNodeIdConnect>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteById?: Maybe<Array<UserOrganisationUserOrganisationPkeyDelete>>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
+  deleteByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationUserOrganisationUserIdOrganisationIdKeyDelete>>;
+  /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<UserOrganisationNodeIdDelete>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
   updateById?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
+  updateByUserIdAndOrganisationId?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate>>;
   /** A `UserOrganisationInput` object that will be created and connected to this object. */
@@ -15610,7 +15723,7 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -15709,7 +15822,7 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -18988,7 +19101,7 @@ export type UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElemen
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -19138,7 +19251,7 @@ export type TemplateElementPatch = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -19163,7 +19276,7 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -22470,7 +22583,7 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -22550,7 +22663,7 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -23267,6 +23380,14 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
 };
 
+/** The fields on `userOrganisation` to look up the row to update. */
+export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `userOrganisation` being updated. */
+  patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `userOrganisation` to be connected. */
@@ -23387,6 +23508,14 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+};
+
+/** The fields on `userOrganisation` to look up the row to update. */
+export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserOrganisationUserIdOrganisationIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `userOrganisation` being updated. */
+  patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -24238,9 +24367,6 @@ export type ApplicationListShapeInput = {
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
-  totalQuestions?: Maybe<Scalars['BigInt']>;
-  totalAssigned?: Maybe<Scalars['BigInt']>;
-  totalAssignLocked?: Maybe<Scalars['BigInt']>;
 };
 
 /** The output of our create `ApplicationListShape` mutation. */
@@ -25464,7 +25590,7 @@ export type TemplateElementInput = {
   validationMessage?: Maybe<Scalars['String']>;
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
+  reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
   templateVersion?: Maybe<Scalars['Int']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
@@ -26452,16 +26578,6 @@ export type UpdateDataViewInput = {
   /** An object where the defined keys will be set on the `DataView` being updated. */
   patch: DataViewPatch;
   id: Scalars['Int'];
-};
-
-/** All input for the `updateDataViewByTableNameAndCode` mutation. */
-export type UpdateDataViewByTableNameAndCodeInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `DataView` being updated. */
-  patch: DataViewPatch;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
 };
 
 /** All input for the `updateDataViewColumnDefinitionByNodeId` mutation. */
@@ -27795,6 +27911,16 @@ export type UpdateUserOrganisationInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `updateUserOrganisationByUserIdAndOrganisationId` mutation. */
+export type UpdateUserOrganisationByUserIdAndOrganisationIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `UserOrganisation` being updated. */
+  patch: UserOrganisationPatch;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
 /** All input for the `updateVerificationByNodeId` mutation. */
 export type UpdateVerificationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -28283,14 +28409,6 @@ export type DeleteDataViewInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
-};
-
-/** All input for the `deleteDataViewByTableNameAndCode` mutation. */
-export type DeleteDataViewByTableNameAndCodeInput = {
-  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
-  clientMutationId?: Maybe<Scalars['String']>;
-  tableName: Scalars['String'];
-  code: Scalars['String'];
 };
 
 /** All input for the `deleteDataViewColumnDefinitionByNodeId` mutation. */
@@ -29483,6 +29601,14 @@ export type DeleteUserOrganisationInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `deleteUserOrganisationByUserIdAndOrganisationId` mutation. */
+export type DeleteUserOrganisationByUserIdAndOrganisationIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
+};
+
 /** All input for the `deleteVerificationByNodeId` mutation. */
 export type DeleteVerificationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -29571,7 +29697,7 @@ export type ConsolidatorResponseFragmentFragment = (
 
 export type ElementFragmentFragment = (
   { __typename?: 'TemplateElement' }
-  & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'helpText' | 'defaultValue' | 'parameters' | 'isReviewable'>
+  & Pick<TemplateElement, 'id' | 'code' | 'index' | 'title' | 'elementTypePluginCode' | 'category' | 'visibilityCondition' | 'isRequired' | 'isEditable' | 'validation' | 'validationMessage' | 'helpText' | 'defaultValue' | 'parameters' | 'reviewability'>
 );
 
 export type FullTemplateFragment = (
@@ -30349,7 +30475,7 @@ export type GetApplicationListQuery = (
     & Pick<ApplicationListShapesConnection, 'totalCount'>
     & { nodes: Array<Maybe<(
       { __typename?: 'ApplicationListShape' }
-      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'orgName' | 'stage' | 'stageColour' | 'status' | 'outcome' | 'lastActiveDate' | 'applicantDeadline' | 'reviewerAction' | 'assignerAction' | 'assigners' | 'reviewers' | 'totalQuestions' | 'totalAssigned' | 'totalAssignLocked'>
+      & Pick<ApplicationListShape, 'id' | 'serial' | 'name' | 'templateCode' | 'templateName' | 'applicant' | 'orgName' | 'stage' | 'stageColour' | 'status' | 'outcome' | 'lastActiveDate' | 'applicantDeadline' | 'reviewerAction' | 'assignerAction' | 'assigners' | 'reviewers'>
     )>>, pageInfo: (
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'hasPreviousPage' | 'hasNextPage'>
@@ -31055,7 +31181,7 @@ export const ElementFragmentFragmentDoc = gql`
   helpText
   defaultValue
   parameters
-  isReviewable
+  reviewability
 }
     `;
 export const FullTemplateFragmentDoc = gql`
@@ -32409,9 +32535,6 @@ export const GetApplicationListDocument = gql`
       assignerAction
       assigners
       reviewers
-      totalQuestions
-      totalAssigned
-      totalAssignLocked
     }
     pageInfo {
       hasPreviousPage
