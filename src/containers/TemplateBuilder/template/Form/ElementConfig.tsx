@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
 import { pluginProvider } from '../../../../formElementPlugins'
 import {
-  IsReviewableStatus,
+  Reviewability,
   TemplateElement,
   TemplateElementCategory,
 } from '../../../../utils/generated/graphql'
@@ -38,7 +38,7 @@ type ElementUpdateState = {
   helpText: string | null
   parameters: ParametersType
   defaultValue: EvaluatorNode
-  isReviewable: IsReviewableStatus | null
+  reviewability: Reviewability | null
   id: number
 }
 
@@ -57,7 +57,7 @@ const getState: GetState = (element: TemplateElement) => ({
   validationMessage: element.validationMessage || '',
   parameters: element.parameters || {},
   defaultValue: element.defaultValue || null,
-  isReviewable: element.isReviewable || null,
+  reviewability: element.reviewability || null,
   id: element.id,
 })
 
@@ -240,25 +240,25 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <div className="full-width-container">
               <DropdownIO
                 title="Is Reviewable"
-                value={state.isReviewable || 'default'}
+                value={state.reviewability || 'default'}
                 getKey={'value'}
                 getValue={'value'}
                 getText={'text'}
                 isPropUpdated={true}
                 setValue={(value) => {
                   const updateValue = value === 'default' ? null : value
-                  setState({ ...state, isReviewable: updateValue as IsReviewableStatus })
+                  setState({ ...state, reviewability: updateValue as Reviewability | null })
                   markNeedsUpdate()
                 }}
                 options={[
-                  { value: IsReviewableStatus.Always, text: 'Always' },
-                  { value: IsReviewableStatus.Never, text: 'Never' },
+                  { value: Reviewability.Always, text: 'Always' },
+                  { value: Reviewability.Never, text: 'Never' },
                   {
-                    value: IsReviewableStatus.OptionalIfNoResponse,
+                    value: Reviewability.OptionalIfNoResponse,
                     text: 'Optional (if no application response)',
                   },
                   {
-                    value: IsReviewableStatus.OnlyIfApplicantAnswer,
+                    value: Reviewability.OnlyIfApplicantAnswer,
                     text: 'Only if applicant answered',
                   },
                 ]}

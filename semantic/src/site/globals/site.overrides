@@ -454,18 +454,18 @@ a:hover {
 }
 
 #content-area .top-container {
+  margin-top: 20px;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding-bottom: 20px;
 }
 
 // Back to application list label
 #content-area .back-label {
   min-width: 132px;
-  max-width: 350px;
   background-color: transparent;
   font-size: @fontSmall;
   font-weight: @regularWeight;
+  padding-left: 10%;
 }
 
 // Fix for company header on mobile to not clash with 'back to applications'
@@ -1741,7 +1741,7 @@ a:hover {
       max-height: 50px;
     }
     padding-top: 0;
-    width: clamp(700px, 65%, 1127px);
+    width: clamp(700px, 90%, 1127px);
   }
 
   .summary-page-element {

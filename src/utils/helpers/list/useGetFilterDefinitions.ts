@@ -22,7 +22,12 @@ export const useGetFilterDefinitions = () => {
 
   const { preferences } = usePrefs()
 
-  const defaultFilters = preferences?.defaultListFilters || []
+  const defaultFilters = preferences?.defaultListFilters || [
+    'applicantDeadline',
+    'reviewers',
+    'reviewerAction',
+    'stage',
+  ]
 
   const NAMED_DATE_RANGES: NamedDates = {
     today: { getDates: () => [today(), today()], title: strings.FILTER_NAMED_DATE_TODAY },

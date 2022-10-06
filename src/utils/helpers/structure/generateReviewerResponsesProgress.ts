@@ -1,4 +1,4 @@
-import { IsReviewableStatus, ReviewResponseDecision } from '../../generated/graphql'
+import { Reviewability, ReviewResponseDecision } from '../../generated/graphql'
 
 import { FullStructure, SectionState, Page, ReviewProgress } from '../../types'
 
@@ -41,7 +41,7 @@ const generatePageReviewProgress = (page: Page, assignedSections: string[]) => {
       }) =>
         (isAssigned || !!thisReviewLatestResponse || !!latestOriginalReviewResponse) &&
         element.isVisible &&
-        element.isReviewable !== IsReviewableStatus.Never &&
+        element.reviewability !== Reviewability.Never &&
         // element.reviewRequired && -- TO-DO: make elements optionally reviewable
         latestApplicationResponse?.id
     )
