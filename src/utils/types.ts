@@ -722,6 +722,15 @@ export interface DataViewsTableResponse {
   headerRow: HeaderRow[]
   tableRows: TableRow[]
   searchFields: string[]
+  filterDefinitions: {
+    column: string
+    title: string
+    dataType: string
+    showFilterList: boolean
+    searchFields: string[]
+    delimiter?: string
+    booleanMapping?: { true: string; false: string }
+  }[]
   totalCount: number
   message?: string
 }
@@ -774,6 +783,11 @@ export type DataViewTableAPIQueries = {
 // LIST FILTERS
 // *****************
 
+export interface GqlFilterObject {
+  search?: string
+  [key: string]: any
+}
+
 export type FilterTypeMethod = (filterKey: string, options?: FilterTypeOptions) => object
 
 export type FilterTypeDefinitions = {
@@ -786,7 +800,10 @@ export type FilterTypeDefinitions = {
     | 'searchableListIn'
     | 'searchableListInArray'
     | 'staticList'
-    | 'search']: FilterTypeMethod
+    | 'search'
+    | 'dataViewString'
+    | 'dataViewNumber'
+    | 'dataViewBoolean']: FilterTypeMethod
 }
 
 export type FilterTypes = keyof FilterTypeDefinitions
@@ -826,8 +843,14 @@ export type FilterTypeOptions = {
   namedDates?: NamedDates
   // For boolean to show on and of criteria
   booleanMapping?: BooleanFilterMapping
-  // For Data View filter lists
-  getFilterList?: (table: string, column: string) => Promise<string[]>
+  // For Data View filters
+  column?: string
+  code?: string
+  dataType?: string
+  showFilterList?: boolean
+  searchFields?: string[]
+  delimiter?: string
+  nullString?: string
 }
 
 export type FilterDefinition = {

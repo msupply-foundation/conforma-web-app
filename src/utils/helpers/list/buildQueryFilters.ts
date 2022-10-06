@@ -4,7 +4,9 @@ import {
   FilterDefinition,
   FilterDefinitions,
   FilterTypeDefinitions,
+  GqlFilterObject,
 } from '../../types'
+import { replaceCommasArray } from '../utilityFunctions'
 
 export default function buildQueryFilters(
   filters: BasicStringObject,
@@ -12,9 +14,21 @@ export default function buildQueryFilters(
 ) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [filterName, filterValue]) => {
     const filterDefinition = filterDefinitions[filterName]
+
+    // For "non-standard" columns, we need to re-map the filtername etc.
+
     if (!filterDefinition) return filterObj
-    return { ...filterObj, ...constructFilter(filterDefinition, filterName, filterValue) }
+    const filter = constructFilter(filterDefinition, filterName, filterValue)
+    // If "or" field exists, we need to merge them, otherwise newer one will
+    // overwrite previous
+    if ('or' in filterObj && 'or' in filter)
+      return {
+        ...(filterObj as GqlFilterObject),
+        or: [...(filterObj as GqlFilterObject).or, ...(filter as GqlFilterObject).or],
+      }
+    return { ...filterObj, ...filter }
   }, {})
+
   return graphQLfilter
 }
 
@@ -44,13 +58,42 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
       .filter((value) => (options?.enumList || []).includes(value)),
   }),
   // For string column of search and select values
-  searchableListIn: (filterValue) => inList(filterValue),
+  searchableListIn: (filterValue) => inList({ values: filterValue }),
   // For array column of search and select values
   searchableListInArray: (filterValue) => ({ overlaps: splitCommaList(filterValue) }),
   // For array column of static select values
-  staticList: (filterValue) => inList(filterValue),
+  staticList: (filterValue) => inList({ values: filterValue }),
   // For string column of searchable values
   search: (filterValue) => ({ includesInsensitive: filterValue }),
+  dataViewString: (filterValue, options) => {
+    const searchFields = options?.searchFields ?? []
+    if (searchFields.length === 1) {
+      if (!options?.showFilterList) return { includesInsensitive: filterValue }
+      if (!options?.delimiter)
+        return inList({
+          values: filterValue,
+          searchField: searchFields[0],
+          nullString: options.nullString ?? '',
+        })
+    }
+
+    const values = replaceCommasArray(splitCommaList(filterValue))
+    const complexOrFilter: any = { or: [] }
+    options?.searchFields?.forEach((field) =>
+      complexOrFilter.or.push(
+        ...values.map((value) => ({
+          [field]: value === options.nullString ? { isNull: true } : { includesInsensitive: value },
+        }))
+      )
+    )
+    return complexOrFilter
+  },
+  dataViewNumber: () => ({}),
+  dataViewBoolean: (filterValue) => {
+    return {
+      equalTo: String(filterValue).toLowerCase() === 'true',
+    }
+  },
 }
 
 // Constructs OR filter i.e. { or: [fieldName1: filter, fieldName2: filter]}
@@ -67,8 +110,13 @@ const constructFilter = (
   filterValue: string
 ) => {
   const filter = filterTypeDefinitions[type](filterValue, options)
+
   // If all of the criteria is undefined skip filter
-  if (!Object.values(filter).find((value) => value !== undefined)) return {}
+  // if (!Object.values(filter).find((value) => value !== undefined)) return {}
+
+  // If there is an "or" clause, the filterNames/searchFields are already
+  // included within the "or" array
+  if ('or' in filter) return filter
 
   const { orFieldNames = [], substituteColumnName = '' } = options || {}
   // If orFieldNames are provided return or statement
@@ -78,10 +126,32 @@ const constructFilter = (
   if (substituteColumnName) return { [substituteColumnName]: filter }
 
   // otherwise use filterName
-  return { [filterName]: filter }
+  const gqlFilterName = options?.searchFields ? options.searchFields[0] : filterName
+  return { [gqlFilterName]: filter }
 }
 
 const splitCommaList = (values: string) => values.split(',')
 
 // Use this if the values can be free text strings (e.g. stage name)
-const inList = (values: string) => ({ inInsensitive: splitCommaList(values) })
+const inList = ({
+  values,
+  searchField = '',
+  nullString = '',
+}: {
+  values: string
+  searchField?: string
+  nullString?: string
+}) => {
+  const valuesArray = splitCommaList(values)
+  if (!valuesArray.includes(nullString) || searchField === '')
+    return { inInsensitive: replaceCommasArray(valuesArray) }
+
+  // Null values (passed in as nullString) require special handling
+  const nonBlankValues = valuesArray.filter((val) => val !== nullString)
+  return {
+    or: [
+      { [searchField]: { inInsensitive: replaceCommasArray(nonBlankValues) } },
+      { [searchField]: { isNull: true } },
+    ],
+  }
+}

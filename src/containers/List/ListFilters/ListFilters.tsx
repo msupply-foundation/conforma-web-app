@@ -6,13 +6,10 @@ import { FilterDefinitions } from '../../../utils/types'
 import BooleanFilter from './BooleanFilter'
 import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
-import {
-  DataViewSearchableFilter,
-  EnumFilter,
-  SearchableListFilter,
-  StaticListFilter,
-} from './OptionFilters'
+import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
+import { DataViewSearchableList, DataViewTextSearchFilter } from '../../DataDisplay/DataViewFilters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
+import { removeCommas } from '../../../utils/helpers/utilityFunctions'
 
 const getArrayFromString = (string: string = '') =>
   string.split(',').filter((option) => !!option.trim())
@@ -55,11 +52,14 @@ const ListFilters: React.FC<{
     else setActiveFilters([...activeFilters, ...newFilters])
   }, [query])
 
-  // Filter criteria/options states is provided by query URL, methods below are get and set query fiter criteria
+  // Filter criteria/options states is provided by query URL, methods below are get and set query filter criteria
   const getMethodsForOptionFilter: GetMethodsForOptionFilter = (filterName) => ({
     getActiveOptions: () => getArrayFromString(query[filterName]),
-    setActiveOption: (option: string) =>
-      updateQuery({ [filterName]: [...getArrayFromString(query[filterName]), option].join(',') }),
+    setActiveOption: (option: string) => {
+      updateQuery({
+        [filterName]: [...getArrayFromString(query[filterName]), removeCommas(option)].join(','),
+      })
+    },
     setInactiveOption: (option: string) =>
       updateQuery({
         [filterName]: getArrayFromString(query[filterName])
@@ -129,16 +129,6 @@ const ListFilters: React.FC<{
               />
             )
           case 'searchableListIn':
-            if (filter?.options?.getFilterList)
-              return (
-                <DataViewSearchableFilter
-                  key={filterName}
-                  title={filter.title}
-                  getFilterList={filter.options.getFilterList}
-                  {...getMethodsForOptionFilter(filterName)}
-                  onRemove={getOnRemove(filterName)}
-                />
-              )
           case 'searchableListInArray':
             if (!filter?.options?.getListQuery) return null
             return (
@@ -192,11 +182,52 @@ const ListFilters: React.FC<{
                 namedDates={filter.options?.namedDates}
                 dateString={query[filterName]}
                 onRemove={getOnRemove(filterName)}
-                setDateString={(dateFtiler: string) => {
+                setDateString={(dateFilter: string) => {
                   updateQuery({
-                    [filterName]: dateFtiler,
+                    [filterName]: dateFilter,
                   })
                 }}
+              />
+            )
+          case 'dataViewBoolean':
+            return (
+              <BooleanFilter
+                key={filterName}
+                title={filter.title}
+                onRemove={getOnRemove(filterName)}
+                activeOptions={getArrayFromString(query[filterName])}
+                booleanMapping={
+                  filter?.options?.booleanMapping ?? {
+                    true: strings.DATA_VIEW_FILTER_TRUE,
+                    false: strings.DATA_VIEW_FILTER_FALSE,
+                  }
+                }
+                toggleFilter={(value: boolean) =>
+                  updateQuery({
+                    [filterName]: String(value),
+                  })
+                }
+              />
+            )
+          case 'dataViewString':
+          case 'dataViewNumber':
+            return filter.options?.showFilterList ? (
+              <DataViewSearchableList
+                key={filterName}
+                title={filter.title}
+                filterListParameters={filterListParameters}
+                options={filter.options}
+                {...getMethodsForOptionFilter(filterName)}
+                onRemove={getOnRemove(filterName)}
+              />
+            ) : (
+              <DataViewTextSearchFilter
+                key={filterName}
+                title={filter.title}
+                options={filter.options}
+                setFilterText={(text: string) => updateQuery({ [filterName]: text })}
+                currentValue={query[filterName] ?? ''}
+                onRemove={getOnRemove(filterName)}
               />
             )
           default:

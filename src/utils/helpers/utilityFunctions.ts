@@ -35,3 +35,19 @@ export const substituteValues = (
   // Match ${...} using regex and replace ... with property from object
   return parameterisedString.replace(/(\${)(.*?)(})/gm, getObjectProperty)
 }
+
+/*
+ We are using ',' as a delimiter for url queries with multiple values. This
+ means that values with *actual* commas in them get messed up. These functions
+ can be used to remove commas before updating url query, then re-inserting them
+ after extraction from url query
+*/
+
+// Use anything obscure than doesn't have special meaning in urls or regex
+const MAGIC_STRING = '~~~'
+
+export const removeCommas = (value: string) => value.replace(/,/g, MAGIC_STRING)
+export const replaceCommas = (value: string) => value.replace(new RegExp(MAGIC_STRING, 'g'), ',')
+
+export const removeCommasArray = (values: string[]) => values.map((value) => removeCommas(value))
+export const replaceCommasArray = (values: string[]) => values.map((value) => replaceCommas(value))

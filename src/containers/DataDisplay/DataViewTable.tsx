@@ -10,6 +10,7 @@ import {
   DataViewTableAPIQueries,
   DataViewsTableResponse,
   BasicStringObject,
+  GqlFilterObject,
 } from '../../utils/types'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { constructElement, formatCellText } from './helpers'
@@ -18,14 +19,11 @@ import buildQueryFilters from '../../utils/helpers/list/buildQueryFilters'
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
 import { useToast } from '../../contexts/Toast'
 import ListFilters from '../List/ListFilters/ListFilters'
-
-interface GqlFilterObject {
-  search?: string
-  [key: string]: any
-}
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 const DataViewTable: React.FC = () => {
   const { strings } = useLanguageProvider()
+  const { preferences } = usePrefs()
   const {
     query,
     location,
@@ -33,7 +31,9 @@ const DataViewTable: React.FC = () => {
     params: { dataViewCode },
   } = useRouter()
 
-  const [apiQueries, setApiQueries] = useState<BasicStringObject>({})
+  const [apiQueries, setApiQueries] = useState<BasicStringObject>(
+    getAPIQueryParams(query, preferences?.paginationDefault)
+  )
   const [gqlFilter, setGqlFilter] = useState<GqlFilterObject>({})
   const [searchText, setSearchText] = useState(query.search)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
@@ -42,13 +42,25 @@ const DataViewTable: React.FC = () => {
     apiQueries,
     filter: gqlFilter,
   })
+
   const title = location?.state?.title ?? dataViewTable?.title ?? ''
   usePageTitle(title)
 
+  // Reset filters if navigating here from Menu bar
   useEffect(() => {
-    setApiQueries(getAPIQueryParams(query))
+    if (location?.state?.resetFilters) {
+      setGqlFilter({})
+      setApiQueries({})
+      setSearchText('')
+      setDebounceInput('')
+    }
+  }, [dataViewCode])
+
+  useEffect(() => {
+    if (!filterDefinitions) return
+    setApiQueries(getAPIQueryParams(query, preferences?.paginationDefault))
     setGqlFilter(buildQueryFilters(query, filterDefinitions))
-  }, [query])
+  }, [query, filterDefinitions])
 
   useEffect(() => {
     updateQuery({ search: debounceOutput })
@@ -77,7 +89,9 @@ const DataViewTable: React.FC = () => {
           )}
         </div>
         <div className="flex-row-space-between-center" style={{ width: '100%' }}>
-          <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
+          {filterDefinitions && (
+            <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
+          )}
         </div>
         {loading && <Loading />}
         {dataViewTable && (
@@ -108,7 +122,8 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
   const showToast = useToast({ style: 'negative' })
 
   const { headerRow, tableRows, totalCount } = dataViewTable
-  const showDetailsForRow = (id: number) => push(`/data/${dataViewCode}/${id}`)
+  const showDetailsForRow = (id: number) =>
+    push(`/data/${dataViewCode}/${id}`, { dataTableFilterQuery: location.search })
 
   const sortByColumn = (
     sortColumn: string | undefined,
@@ -162,6 +177,9 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
           ))}
         </Table.Body>
       </Table>
+      {tableRows.length === 0 && (
+        <Message warning header={strings.DATA_VIEW_NO_ITEMS_FOUND} style={{ width: '80%' }} />
+      )}
       <PaginationBar
         totalCount={totalCount}
         perPageText={strings.OUTCOMES_TABLE_PAGINATION_TEXT}
@@ -180,11 +198,11 @@ const getCellComponent = (value: any, columnDetails: HeaderRow, id: number) => {
   else return <Markdown text={formatCellText(value, columnDetails) || ''} />
 }
 
-// NOTE: This is temporary -- when we add more filtering and search
-// functionality, we will build query objects the same way the list works,
-// but it's overkill for this first version
-const getAPIQueryParams = ({ page, perPage, sortBy }: any) => {
-  const offset = page && perPage ? String((Number(page) - 1) * Number(perPage)) : undefined
+// These values are not part of the GraphQL "filter" object, so are handled
+// separately
+const getAPIQueryParams = ({ page = 1, perPage, sortBy }: any, perPageDefault?: number) => {
+  const currentPerPage = perPage ?? perPageDefault ?? 20
+  const offset = page !== 1 ? String((Number(page) - 1) * Number(currentPerPage)) : undefined
   let orderBy: string | undefined = undefined
   let ascending: 'true' | 'false' | undefined = undefined
   if (sortBy) {
@@ -192,7 +210,7 @@ const getAPIQueryParams = ({ page, perPage, sortBy }: any) => {
     orderBy = fieldName
     ascending = direction === 'desc' ? 'false' : 'true'
   }
-  return { first: perPage, offset, orderBy, ascending } as BasicStringObject
+  return { first: currentPerPage, offset, orderBy, ascending } as BasicStringObject
 }
 
 const isSorted = (sortColumn: string | undefined, apiQueries: DataViewTableAPIQueries) => {
