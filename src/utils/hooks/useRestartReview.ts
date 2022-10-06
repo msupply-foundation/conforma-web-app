@@ -4,7 +4,7 @@ import {
   Trigger,
   Decision,
   ReviewStatus,
-  IsReviewableStatus,
+  Reviewability,
 } from '../generated/graphql'
 import { AssignmentDetails, FullStructure, PageElement } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
@@ -44,14 +44,14 @@ const useRestartReview: UseRestartReview = ({ reviewStructure, reviewAssignment 
         isAssigned,
         isActiveReviewResponse,
         response,
-        element: { isReviewable },
+        element: { reviewability },
       } = element
       return (
         shouldCreateConsolidationReviewResponse(element) &&
         !!response &&
         isAssigned &&
         !isActiveReviewResponse &&
-        isReviewable !== IsReviewableStatus.Never
+        reviewability !== Reviewability.Never
       )
     })
 

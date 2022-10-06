@@ -162,7 +162,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             validationMessage: element.validationMessage || '',
             helpText: element.helpText || '',
             title: element.title || '',
-            isReviewable: element?.isReviewable || null,
+            reviewability: element.reviewability,
             // reviewRequired: element.reviewRequired,
             defaultValueExpression: element.defaultValue,
             ...defaultEvaluatedElement,
