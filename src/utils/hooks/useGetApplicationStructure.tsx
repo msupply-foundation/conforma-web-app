@@ -32,7 +32,7 @@ const useGetApplicationStructure = ({
   shouldRevalidate = false,
   minRefetchTimestampForRevalidation = 0,
   firstRunValidation = true,
-  shouldCalculateProgress = true,
+  shouldCalculateProgress = structure.info.current.status !== ApplicationStatus.Completed,
   shouldGetDraftResponses = true,
   forceRun = false,
 }: UseGetApplicationStructureProps) => {

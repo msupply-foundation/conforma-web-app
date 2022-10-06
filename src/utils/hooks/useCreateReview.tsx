@@ -1,6 +1,6 @@
 import {
   Decision,
-  IsReviewableStatus,
+  Reviewability,
   ReviewInput,
   Trigger,
   useCreateReviewMutation,
@@ -32,8 +32,8 @@ const useCreateReview: UseCreateReview = ({ reviewStructure, reviewAssignment })
     // Only create review for elements that are pendingReview and are assigned
     // and are reviewable
     const reviewableElements = elements.filter(
-      ({ isPendingReview, isAssigned, element: { isReviewable } }) =>
-        isPendingReview && isAssigned && isReviewable !== IsReviewableStatus.Never
+      ({ isPendingReview, isAssigned, element: { reviewability } }) =>
+        isPendingReview && isAssigned && reviewability !== Reviewability.Never
     )
 
     const reviewResponseCreate = reviewableElements.map(
