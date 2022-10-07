@@ -295,6 +295,9 @@ interface HistoryElement {
   author?: string
   title: string
   message: string
+  response?: any
+  templateElementCode?: string
+  parameters?: { [key: string]: any } | null
   timeUpdated: Date
   reviewerComment?: string
 }

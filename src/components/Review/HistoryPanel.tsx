@@ -34,6 +34,8 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplica
     isApplicant,
   })
 
+  console.log('historyList', historyList)
+
   return (
     <Modal
       id="history-panel"
