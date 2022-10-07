@@ -10,6 +10,7 @@ import useListTemplates from '../utils/hooks/useListTemplates'
 import usePageTitle from '../utils/hooks/usePageTitle'
 import { TemplateDetails, TemplateInList } from '../utils/types'
 import LoadingSmall from './LoadingSmall'
+import { usePrefs } from '../contexts/SystemPrefs'
 
 const Dashboard: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -88,15 +89,19 @@ const PanelComponent: React.FC<{
   template: TemplateDetails
   filters: Filter[]
 }> = ({ template, filters }) => {
+  const { preferences } = usePrefs()
   const templateType = template.code
   const [loadedFiltersCount, setLoadedFiltersCount] = useState(0)
   const [totalMatchFilter, setTotalMatchFilter] = useState<{ [key: number]: number }>(
     filters.reduce((totalPerFilter, filter) => ({ ...totalPerFilter, [filter.id]: 0 }), {})
   )
 
+  // Convert to string - Default is 100 is nothing is preset on preferences
+  const perPage = preferences?.dashboardFetchedApplications || '100'
+
   const { loading, applications } = useListApplications({
     type: templateType,
-    perPage: '1000',
+    perPage,
     sortBy: 'last-active-date',
   })
 
