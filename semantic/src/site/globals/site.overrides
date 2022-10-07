@@ -1648,12 +1648,10 @@ a:hover {
       }
 
       .filters {
-        .flex-column();
         flex-grow: 1;
       }
 
       .filter {
-        display: flex;
         align-items: center;
       }
     }
