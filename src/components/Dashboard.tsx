@@ -58,8 +58,6 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
       ? USER_ROLES.APPLICANT
       : USER_ROLES.REVIEWER
 
-  const [loadedFiltersCount, setLoadedFiltersCount] = useState(0)
-
   return (
     <div className="template">
       <div className="content">
@@ -69,16 +67,8 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
               {template?.namePlural || `${name} ${strings.LABEL_APPLICATIONS}`}
             </a>
             <Icon name="chevron right" />
-            {loadedFiltersCount !== filters.length && <LoadingSmall />}
           </Label>
-          {filters.map((filter) => (
-            <FilterComponent
-              key={filter.id}
-              template={template}
-              filter={filter}
-              setFiltersCount={setLoadedFiltersCount}
-            />
-          ))}
+          <PanelComponent key={`${template?.id}_filters`} template={template} filters={filters} />
         </div>
         {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
       </div>
@@ -94,38 +84,77 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
   )
 }
 
-const FilterComponent: React.FC<{
+const PanelComponent: React.FC<{
   template: TemplateDetails
-  filter: Filter
-  setFiltersCount: Function
-}> = ({ template, filter, setFiltersCount: setLoadingFilters }) => {
+  filters: Filter[]
+}> = ({ template, filters }) => {
   const templateType = template.code
-  const { loading, applicationCount } = useListApplications({
+  const [loadedFiltersCount, setLoadedFiltersCount] = useState(0)
+  const [totalMatchFilter, setTotalMatchFilter] = useState<{ [key: number]: number }>(
+    filters.reduce((totalPerFilter, filter) => ({ ...totalPerFilter, [filter.id]: 0 }), {})
+  )
+
+  const { loading, applications } = useListApplications({
     type: templateType,
-    perPage: 1,
-    ...filter.query,
+    perPage: '1000',
+    sortBy: 'last-active-date',
   })
 
   useEffect(() => {
-    if (!loading) setLoadingFilters((currentCount: number) => currentCount + 1)
-  }, [loading])
+    if (applications) {
+      filters.forEach(({ id, query, userRole }) => {
+        if (typeof query === 'object') {
+          const queryObj = query as { [key: string]: string }
+          const filteredApplications = Object.entries(applications).filter(([_, application]) => {
+            // Filter currently dilimited to single check!
+            const key = Object.keys(queryObj)[0]
+            const value = Object.values(queryObj)[0]
 
-  const applicationListUserRole =
+            switch (key) {
+              case 'outcome':
+                return application.outcome === value
+              case 'status':
+                return application.status === value
+              case 'reviewerAction':
+                return application.reviewerAction === value
+              case 'assignerAction':
+                return application.assignerAction === value
+              default:
+                return false
+            }
+          })
+          totalMatchFilter[id] = filteredApplications.length
+        }
+        setTotalMatchFilter(totalMatchFilter)
+        setLoadedFiltersCount((currentCount: number) => currentCount + 1)
+      })
+    }
+  }, [applications])
+
+  const userRole = (filter: Filter) =>
     filter.userRole === PermissionPolicyType.Apply ? USER_ROLES.APPLICANT : USER_ROLES.REVIEWER
 
-  const constructLink = () =>
-    `/applications?type=${templateType}&user-role=${applicationListUserRole}&${Object.entries(
-      filter.query
-    )
+  const constructLink = (filter: Filter) =>
+    `/applications?type=${templateType}&user-role=${userRole(filter)}&${Object.entries(filter.query)
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`
 
-  if (applicationCount === 0) return null
+  if (!loading && applications.length === 0) return null
+  if (loadedFiltersCount < filters.length) return <LoadingSmall />
 
   return (
-    <div className="filter">
-      <Link to={constructLink()}>{`${filter.title} (${applicationCount})`}</Link>
-    </div>
+    <>
+      {filters.map(
+        (filter) =>
+          totalMatchFilter[filter.id] > 0 && (
+            <div className="filter" key={`filter_${filter.id}`}>
+              <Link to={constructLink(filter)}>{`${filter.title} (${
+                totalMatchFilter[filter.id]
+              })`}</Link>
+            </div>
+          )
+      )}
+    </>
   )
 }
 
