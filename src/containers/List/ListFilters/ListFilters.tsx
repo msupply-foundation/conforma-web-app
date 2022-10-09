@@ -118,7 +118,7 @@ const ListFilters: React.FC<{
       </Dropdown>
       {activeFilters.map((filterName) => {
         const filter = displayableFilters[filterName]
-        if (!filter.title) return null
+        if (!filter?.title) return null
 
         switch (filter.type) {
           case 'enumList':
