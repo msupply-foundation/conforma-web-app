@@ -63,6 +63,8 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
           nullString: options.nullString ?? '',
         })
     }
+  },
+}
 
 // Constructs OR filter i.e. { or: [fieldName1: filter, fieldName2: filter]}
 const constructOrFilter = (filter: object, orFieldNames: string[]) => ({
