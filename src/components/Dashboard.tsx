@@ -10,7 +10,6 @@ import useListTemplates from '../utils/hooks/useListTemplates'
 import usePageTitle from '../utils/hooks/usePageTitle'
 import { TemplateDetails, TemplateInList } from '../utils/types'
 import LoadingSmall from './LoadingSmall'
-import { usePrefs } from '../contexts/SystemPrefs'
 
 const Dashboard: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -89,25 +88,14 @@ const PanelComponent: React.FC<{
   template: TemplateDetails
   filters: Filter[]
 }> = ({ template, filters }) => {
-  const { preferences } = usePrefs()
   const templateType = template.code
   const [loadedFiltersCount, setLoadedFiltersCount] = useState(0)
   const [totalMatchFilter, setTotalMatchFilter] = useState<{ [key: number]: number }>(
     filters.reduce((totalPerFilter, filter) => ({ ...totalPerFilter, [filter.id]: 0 }), {})
   )
 
-  const arrayFilters = filters.reduce((arrayFilters: { [key: string]: string }[], element) => {
-    if (typeof element.query === 'object') {
-      const queryObj = element.query as { [key: string]: string }
-      arrayFilters.push(queryObj)
-    }
-    return arrayFilters
-  }, [])
-
-  const queryMultiFilters = { or: arrayFilters }
   const { loading, applications } = useListApplications({
     type: templateType,
-    ...queryMultiFilters,
   })
 
   useEffect(() => {
