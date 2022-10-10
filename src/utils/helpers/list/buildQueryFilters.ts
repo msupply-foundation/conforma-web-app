@@ -74,6 +74,8 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
           nullString: options.nullString ?? '',
         })
     }
+  },
+}
 
     const values = replaceCommasArray(splitCommaList(filterValue))
     const complexOrFilter: { or: object[] } = { or: [] }

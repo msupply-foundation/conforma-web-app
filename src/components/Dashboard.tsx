@@ -10,6 +10,7 @@ import useListTemplates from '../utils/hooks/useListTemplates'
 import usePageTitle from '../utils/hooks/usePageTitle'
 import { TemplateDetails, TemplateInList } from '../utils/types'
 import LoadingSmall from './LoadingSmall'
+import { constructOrObjectFilters } from '../utils/helpers/utilityFunctions'
 
 const Dashboard: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -102,11 +103,15 @@ const PanelComponent: React.FC<{
     return arrayFilters
   }, [])
 
-  const queryMultiFilters = { or: arrayFilters }
-  const { loading, applications } = useListApplications({
-    type: templateType,
-    ...queryMultiFilters,
-  })
+  const queryMultiFilters = {
+    templateCode: { equalToInsensitive: templateType },
+    ...constructOrObjectFilters(arrayFilters),
+  }
+
+  const { loading, applications } = useListApplications(
+    {}, // Passing empty to use already construct GraphQL query on queryMultiFilters
+    queryMultiFilters
+  )
 
   useEffect(() => {
     if (applications) {
