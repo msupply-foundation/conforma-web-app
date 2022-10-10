@@ -94,8 +94,18 @@ const PanelComponent: React.FC<{
     filters.reduce((totalPerFilter, filter) => ({ ...totalPerFilter, [filter.id]: 0 }), {})
   )
 
+  const arrayFilters = filters.reduce((arrayFilters: { [key: string]: string }[], element) => {
+    if (typeof element.query === 'object') {
+      const queryObj = element.query as { [key: string]: string }
+      arrayFilters.push(queryObj)
+    }
+    return arrayFilters
+  }, [])
+
+  const queryMultiFilters = { or: arrayFilters }
   const { loading, applications } = useListApplications({
     type: templateType,
+    ...queryMultiFilters,
   })
 
   useEffect(() => {
