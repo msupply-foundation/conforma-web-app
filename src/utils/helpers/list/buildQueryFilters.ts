@@ -4,7 +4,6 @@ import {
   FilterDefinition,
   FilterDefinitions,
   FilterTypeDefinitions,
-  GqlFilterObject,
 } from '../../types'
 import { replaceCommasArray } from '../utilityFunctions'
 
@@ -14,19 +13,8 @@ export default function buildQueryFilters(
 ) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [filterName, filterValue]) => {
     const filterDefinition = filterDefinitions[filterName]
-
-    // For "non-standard" columns, we need to re-map the filtername etc.
-
     if (!filterDefinition) return filterObj
-    const filter = constructFilter(filterDefinition, filterName, filterValue)
-    // If "or" field exists, we need to merge them, otherwise newer one will
-    // overwrite previous
-    if ('or' in filterObj && 'or' in filter)
-      return {
-        ...(filterObj as GqlFilterObject),
-        or: [...(filterObj as GqlFilterObject).or, ...(filter as GqlFilterObject).or],
-      }
-    return { ...filterObj, ...filter }
+    return { ...filterObj, ...constructFilter(filterDefinition, filterName, filterValue) }
   }, {})
 
   return graphQLfilter
@@ -75,24 +63,6 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
           nullString: options.nullString ?? '',
         })
     }
-
-    const values = replaceCommasArray(splitCommaList(filterValue))
-    const complexOrFilter: { or: object[] } = { or: [] }
-    options?.searchFields?.forEach((field) =>
-      complexOrFilter.or.push(
-        ...values.map((value) => ({
-          [field]: value === options.nullString ? { isNull: true } : { includesInsensitive: value },
-        }))
-      )
-    )
-    return complexOrFilter
-  },
-  dataViewBoolean: (filterValue) => {
-    return {
-      equalTo: String(filterValue).toLowerCase() === 'true',
-    }
-  },
-}
 
 // Constructs OR filter i.e. { or: [fieldName1: filter, fieldName2: filter]}
 const constructOrFilter = (filter: object, orFieldNames: string[]) => ({
