@@ -14,6 +14,7 @@ export default function buildQueryFilters(
 ) {
   const graphQLfilter = Object.entries(filters).reduce((filterObj, [filterName, filterValue]) => {
     const filterDefinition = filterDefinitions[filterName]
+
     // For "non-standard" columns, we need to re-map the filtername etc.
 
     if (!filterDefinition) return filterObj
