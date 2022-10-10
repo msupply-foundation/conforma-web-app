@@ -94,8 +94,18 @@ const PanelComponent: React.FC<{
     filters.reduce((totalPerFilter, filter) => ({ ...totalPerFilter, [filter.id]: 0 }), {})
   )
 
+  const arrayFilters = filters.reduce((arrayFilters: { [key: string]: string }[], element) => {
+    if (typeof element.query === 'object') {
+      const queryObj = element.query as { [key: string]: string }
+      arrayFilters.push(queryObj)
+    }
+    return arrayFilters
+  }, [])
+
+  const queryMultiFilters = { or: arrayFilters }
   const { loading, applications } = useListApplications({
     type: templateType,
+    ...queryMultiFilters,
   })
 
   useEffect(() => {
@@ -104,7 +114,7 @@ const PanelComponent: React.FC<{
         if (typeof query === 'object') {
           const queryObj = query as { [key: string]: string }
           const filteredApplications = Object.entries(applications).filter(([_, application]) => {
-            // Filter currently dilimited to single check!
+            // Each filter is currently delimited to a single check!
             const key = Object.keys(queryObj)[0]
             const value = Object.values(queryObj)[0]
 
