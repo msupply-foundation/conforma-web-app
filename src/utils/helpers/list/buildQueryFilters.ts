@@ -1,19 +1,30 @@
 import { parseDateRange, formatDateGraphQl } from '../../dateAndTime/parseDateRange'
 import {
-  BasicStringObject,
   FilterDefinition,
   FilterDefinitions,
   FilterTypeDefinitions,
+  FilterParams,
+  ArrayFilters,
 } from '../../types'
 
 export default function buildQueryFilters(
-  filters: BasicStringObject,
+  filters: FilterParams,
   filterDefinitions: FilterDefinitions
 ) {
-  const graphQLfilter = Object.entries(filters).reduce((filterObj, [filterName, filterValue]) => {
-    const filterDefinition = filterDefinitions[filterName]
-    if (!filterDefinition) return filterObj
-    return { ...filterObj, ...constructFilter(filterDefinition, filterName, filterValue) }
+  const graphQLfilter = Object.entries(filters).reduce((filterObj, params) => {
+    const [filterName, filterValue] = params
+    if (typeof filterValue === 'string') {
+      // Case String of filters
+      const filterDefinition = filterDefinitions[filterName]
+      if (!filterDefinition) return filterObj
+
+      return {
+        ...filterObj,
+        ...constructFilter(filterDefinition, filterName, filterValue as string),
+      }
+    }
+    // Case Object of Array filters
+    return { ...filterObj, ...constructOrObjectFilters(filterValue as ArrayFilters) }
   }, {})
   // If no filters, return a dummy filter to prevent GraphQL empty object error
   if (Object.keys(graphQLfilter).length === 0) return { templateCode: { isNull: false } }
@@ -54,6 +65,17 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
   // For string column of searchable values
   search: (filterValue) => ({ includesInsensitive: filterValue }),
 }
+
+// Constructs OR filter for object i.e. { or: [ {fieldName1: filter1}, {fieldName2: filter} ] }
+// This is useful for when we need to filter same key with many values using OR statement
+const constructOrObjectFilters = (filters: ArrayFilters) => ({
+  or: Object.values(filters).map((filter) => {
+    // Each filter is currently delimited to a single check!
+    const filterKey = Object.keys(filter)[0]
+    const filterValue = Object.values(filter)[0]
+    return { [filterKey]: { equalTo: filterValue } }
+  }),
+})
 
 // Constructs OR filter i.e. { or: [fieldName1: filter, fieldName2: filter]}
 const constructOrFilter = (filter: object, orFieldNames: string[]) => ({
