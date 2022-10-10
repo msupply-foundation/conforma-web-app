@@ -3,11 +3,17 @@ import { useRouter } from '../hooks/useRouter'
 import buildFilter from '../helpers/list/buildQueryFilters'
 import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQueryVariables'
 import { useGetApplicationListQuery, ApplicationListShape } from '../../utils/generated/graphql'
-import { FilterParams, TemplateType } from '../types'
+import { BasicStringObject, TemplateType } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useGetFilterDefinitions } from '../helpers/list/useGetFilterDefinitions'
 
-const useListApplications = ({ sortBy, page, perPage, type, ...queryFilters }: FilterParams) => {
+const useListApplications = ({
+  sortBy,
+  page,
+  perPage,
+  type,
+  ...queryFilters
+}: BasicStringObject) => {
   const FILTER_DEFINITIONS = useGetFilterDefinitions()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
@@ -18,8 +24,8 @@ const useListApplications = ({ sortBy, page, perPage, type, ...queryFilters }: F
     userState: { currentUser },
   } = useUserState()
 
-  let filters = buildFilter({ type, ...queryFilters }, FILTER_DEFINITIONS)
-  const sortFields = sortBy ? buildSortFields(sortBy as string) : []
+  const filters = buildFilter({ type, ...queryFilters }, FILTER_DEFINITIONS)
+  const sortFields = sortBy ? buildSortFields(sortBy) : []
   const { paginationOffset, numberToFetch } = getPaginationVariables(
     page ? Number(page) : 1,
     perPage ? Number(perPage) : undefined
@@ -36,7 +42,7 @@ const useListApplications = ({ sortBy, page, perPage, type, ...queryFilters }: F
       paginationOffset,
       numberToFetch,
       userId: currentUser?.userId as number,
-      templateCode: (type as string) || '',
+      templateCode: type || '',
     },
     fetchPolicy: 'network-only',
   })

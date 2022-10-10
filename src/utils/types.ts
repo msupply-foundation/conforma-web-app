@@ -92,8 +92,6 @@ export {
   Organisation,
   LoginPayload,
   BasicStringObject,
-  ArrayFilters,
-  FilterParams,
 }
 
 interface ApplicationDetails {
@@ -174,13 +172,6 @@ interface AssignmentOption {
 
 interface BasicStringObject {
   [key: string]: string
-}
-
-type ArrayFilters = {
-  [key: string]: string
-}[]
-interface FilterParams {
-  [key: string]: string | ArrayFilters
 }
 
 interface CellProps {
@@ -818,14 +809,6 @@ export type FilterTypeDefinitions = {
 
 export type FilterTypes = keyof FilterTypeDefinitions
 
-export type ArrayFiltersMethod = (filterArray: object[]) => object
-
-export type ArrayFiltersDefinitions = {
-  [filterArray in 'or']: ArrayFiltersMethod
-}
-
-export type ArrayFiltersTypes = keyof FilterTypeDefinitions
-
 export type FilterListQueryResult = { [queryName: string]: any }
 export type FilterListResultExtractor = (props: FilterListQueryResult) => {
   list: string[]
@@ -872,7 +855,7 @@ export type FilterTypeOptions = {
 }
 
 export type FilterDefinition = {
-  type: FilterTypes | ArrayFiltersTypes
+  type: FilterTypes
   default: boolean
   visibleTo: USER_ROLES[]
   // Empty or undefined title will be excluded from generic fitler UI display (ListFilters)
