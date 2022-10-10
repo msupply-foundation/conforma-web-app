@@ -5,7 +5,6 @@ import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 
 interface PrefsState {
   preferences?: {
-    dashboardFetchedApplications: string
     paginationPresets: number[]
     defaultLanguageCode: string
     brandLogoFileId?: string
