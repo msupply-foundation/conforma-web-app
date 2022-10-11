@@ -4,8 +4,8 @@ export default gql`
   query getApplicationList(
     $filters: ApplicationListShapeFilter
     $sortFields: [ApplicationListShapesOrderBy!]
-    $paginationOffset: Int!
-    $numberToFetch: Int!
+    $paginationOffset: Int
+    $numberToFetch: Int
     $userId: Int! = 0
     $templateCode: String!
   ) {
