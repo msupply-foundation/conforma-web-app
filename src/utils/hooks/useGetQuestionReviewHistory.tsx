@@ -43,7 +43,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
   useEffect(() => {
     if (!data) return
     // Organise ReviewResponse and Applicant Responses from latest to oldest
-    const { applicationResponses, reviewResponses } =
+    const { applicationResponses, reviewResponses, elementTypePluginCode, parameters } =
       data?.templateElementByTemplateCodeAndCodeAndTemplateVersion as TemplateElement
 
     const allResponsesByStage: ResponsesByStageByDate = {}
@@ -51,7 +51,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
     applicationResponses.nodes.forEach((applicantResponse) => {
       if (!applicantResponse) return
       const { stageNumber } = applicantResponse
-      const { timeUpdated, application, id, value, templateElement } = applicantResponse
+      const { timeUpdated, application, value } = applicantResponse
       const { firstName, lastName } = application?.user as User
 
       if (stageNumber) {
@@ -63,8 +63,8 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
           // TODO translated message, that nothing is entered
           message: value?.text || '',
           response: value,
-          templateElementCode: templateElement?.code,
-          parameters: templateElement?.parameters ?? null,
+          elementTypePluginCode,
+          parameters,
           timeUpdated,
         }
       }
@@ -73,7 +73,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
     reviewResponses.nodes.forEach((reviewResponse) => {
       if (!reviewResponse) return
       const { stageNumber } = reviewResponse
-      const { id, timeUpdated, decision, comment, review } = reviewResponse
+      const { timeUpdated, decision, comment, review } = reviewResponse
       // Avoid breaking app when review is restricted so not returned in query (for Applicant)
       const { levelNumber, reviewer } = review ? review : { levelNumber: 1, reviewer: null }
 
