@@ -1,23 +1,19 @@
 import React from 'react'
 import { Header, Icon } from 'semantic-ui-react'
+import { SummaryViewWrapper } from '../../../formElementPlugins'
 import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
+import { ElementState, HistoryElement } from '../../../utils/types'
 
-interface HistoryResponseElementProps {
-  author?: string
-  title: string
-  message: string
-  timeUpdated: Date
-  // attentionRequired?: boolean
-  reviewerComment?: string
-}
-
-const HistoryResponseElement: React.FC<HistoryResponseElementProps> = ({
+const HistoryResponseElement: React.FC<HistoryElement> = ({
   author = '',
   title,
   message,
   timeUpdated,
   // attentionRequired = false,
   reviewerComment,
+  response,
+  elementTypePluginCode,
+  parameters,
 }) => {
   return (
     <div className="response-element-content">
@@ -31,7 +27,22 @@ const HistoryResponseElement: React.FC<HistoryResponseElementProps> = ({
           />
           <p className="secondary date-indicator">{getSimplifiedTimeDifference(timeUpdated)}</p>
         </div>
-        <p>{message}</p>
+        {elementTypePluginCode ? (
+          <SummaryViewWrapper
+            element={
+              {
+                parameters,
+                pluginCode: elementTypePluginCode,
+                isRequired: true,
+                isVisible: true,
+              } as ElementState
+            }
+            response={response}
+            allResponses={{}}
+          />
+        ) : (
+          <p>{message}</p>
+        )}
         {!!reviewerComment && (
           <div className="comment-container">
             <Icon name="comment alternate outline" color="grey" />

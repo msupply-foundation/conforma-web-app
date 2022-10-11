@@ -297,7 +297,7 @@ interface HistoryElement {
   title: string
   message: string
   response?: any
-  templateElementCode?: string
+  elementTypePluginCode?: string | null
   parameters?: { [key: string]: any } | null
   timeUpdated: Date
   reviewerComment?: string
