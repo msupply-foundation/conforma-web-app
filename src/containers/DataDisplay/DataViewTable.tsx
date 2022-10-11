@@ -111,7 +111,7 @@ const DataViewTable: React.FC = () => {
           {currentSortColumn && <SortReset {...currentSortColumn} />}
         </div>
         {loading && <Loading />}
-        {dataViewTable && (
+        {!loading && dataViewTable && (
           <DataViewTableContent
             dataViewTable={dataViewTable}
             apiQueries={apiQueries}
