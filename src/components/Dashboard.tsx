@@ -152,8 +152,8 @@ const PanelComponent: React.FC<{
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`
 
-  if (!loading && applications.length === 0) return null
-  if (loadedFiltersCount < filters.length) return <LoadingSmall />
+  if (loading || loadedFiltersCount < filters.length) return <LoadingSmall />
+  if (applications.length === 0) return null
 
   return (
     <>
