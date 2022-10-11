@@ -3,7 +3,7 @@ Filter uses existing filter-handling and building logic from Application List
 filters
 */
 
-import React, { useState, useEffect, useRef, MutableRefObject } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Input, Segment, Form } from 'semantic-ui-react'
 import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
