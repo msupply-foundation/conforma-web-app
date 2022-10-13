@@ -7,7 +7,11 @@ import BooleanFilter from './BooleanFilter'
 import { startCase } from './common'
 import DateFilter from './DateFilter/DateFilter'
 import { EnumFilter, SearchableListFilter, StaticListFilter } from './OptionFilters'
-import { DataViewSearchableList, DataViewTextSearchFilter } from '../../DataDisplay/DataViewFilters'
+import {
+  DataViewSearchableList,
+  DataViewTextSearchFilter,
+  DataViewNumberFilter,
+} from '../../DataDisplay/Filters'
 import { FilterIconMapping, GetMethodsForOptionFilter } from './types'
 import { removeCommas } from '../../../utils/helpers/utilityFunctions'
 
@@ -50,7 +54,7 @@ const ListFilters: React.FC<{
     if (activeFilters.length === 0 && newFilters.length === 0)
       setActiveFilters(defaultDisplayFilters)
     else setActiveFilters([...activeFilters, ...newFilters])
-  }, [query])
+  }, [query, filterDefinitions])
 
   // Filter criteria/options states is provided by query URL, methods below are get and set query filter criteria
   const getMethodsForOptionFilter: GetMethodsForOptionFilter = (filterName) => ({
@@ -93,7 +97,7 @@ const ListFilters: React.FC<{
   )
 
   return (
-    <div id="list-filter">
+    <div className="list-filter-container">
       <Dropdown trigger={renderTitle()} icon={null}>
         <Dropdown.Menu>
           {availableFilterNames.map((filterName) => (
@@ -189,6 +193,16 @@ const ListFilters: React.FC<{
                 }}
               />
             )
+          case 'number':
+            return (
+              <DataViewNumberFilter
+                key={filterName}
+                title={filter.title}
+                setFilterText={(text: string) => updateQuery({ [filterName]: text })}
+                numberRangeString={query[filterName]}
+                onRemove={getOnRemove(filterName)}
+              />
+            )
           case 'dataViewBoolean':
             return (
               <BooleanFilter
@@ -210,7 +224,6 @@ const ListFilters: React.FC<{
               />
             )
           case 'dataViewString':
-          case 'dataViewNumber':
             return filter.options?.showFilterList ? (
               <DataViewSearchableList
                 key={filterName}
@@ -224,9 +237,8 @@ const ListFilters: React.FC<{
               <DataViewTextSearchFilter
                 key={filterName}
                 title={filter.title}
-                options={filter.options}
-                setFilterText={(text: string) => updateQuery({ [filterName]: text })}
                 currentValue={query[filterName] ?? ''}
+                setFilterText={(text: string) => updateQuery({ [filterName]: text })}
                 onRemove={getOnRemove(filterName)}
               />
             )
@@ -245,6 +257,9 @@ const iconMapping: FilterIconMapping = {
   searchableListInArray: 'search',
   date: 'calendar alternate',
   boolean: 'toggle on',
+  dataViewBoolean: 'toggle on',
+  dataViewString: 'search',
+  number: 'calculator',
 }
 
 export default ListFilters

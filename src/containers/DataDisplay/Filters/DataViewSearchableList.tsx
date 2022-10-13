@@ -1,17 +1,23 @@
 /*
-These filters are based on the Application List filters. The main difference is
-their methods for querying the database
+This filter is based on the Application List filter <SearchableListFilter>. The
+main difference is the method for querying the database
 */
 
 import React, { useState, useEffect } from 'react'
 import { Dropdown, Input } from 'semantic-ui-react'
-import { FilterContainer, FilterOptions } from '../List/ListFilters/common'
-import { useLanguageProvider } from '../../contexts/Localisation'
-import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
-import { postRequest } from '../../utils/helpers/fetchMethods'
-import useDebounce from '../../formElementPlugins/search/src/useDebounce'
+import { FilterContainer, FilterOptions, FilterTitle } from '../../List/ListFilters/common'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { postRequest } from '../../../utils/helpers/fetchMethods'
+import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
+import { SearchableListFilterProps } from '../../List/ListFilters/types'
+import { FilterTypeOptions } from '../../../utils/types'
 
-export const DataViewSearchableList: React.FC<any> = ({
+type SearchableListProps = Omit<SearchableListFilterProps, 'getFilterListQuery'> & {
+  options: FilterTypeOptions
+}
+
+export const DataViewSearchableList: React.FC<SearchableListProps> = ({
   getActiveOptions,
   setActiveOption,
   setInactiveOption,
@@ -20,7 +26,7 @@ export const DataViewSearchableList: React.FC<any> = ({
   onRemove,
 }) => {
   const { strings } = useLanguageProvider()
-  const [searchText, setSearchText] = useState<any>()
+  const [searchText, setSearchText] = useState<string>()
   const [filterList, setFilterList] = useState<string[]>()
   const [error, setError] = useState<string>()
   const [moreResults, setMoreResults] = useState(false)
@@ -29,6 +35,7 @@ export const DataViewSearchableList: React.FC<any> = ({
   const { column, code, searchFields, delimiter } = options
 
   useEffect(() => {
+    if (!code || !column) return
     postRequest({
       url: getServerUrl('dataViews', { dataViewCode: code, column }),
       jsonBody: { searchText, searchFields, delimiter },
@@ -46,15 +53,19 @@ export const DataViewSearchableList: React.FC<any> = ({
   const activeOptions = getActiveOptions()
 
   return (
-    <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
+    <FilterContainer
+      label={activeOptions.length || ''}
+      title={title}
+      onRemove={onRemove}
+      trigger={<FilterTitle title={title ?? ''} />}
+    >
       {!error && filterList ? (
         <>
           <Input
             icon="search"
-            placeholder={strings.FILTER_START_TYPING}
+            placeholder={strings.FILTER_SEARCH_LIST}
             iconPosition="left"
             className="search"
-            onClick={(e: any) => e.stopPropagation()}
             onChange={(_, { value }) => {
               setSearchText(value)
               setDebounceInput(value)
@@ -86,37 +97,5 @@ const FilterListInfo: React.FC<{ message: string; error?: boolean }> = ({ messag
         <em>{message}</em>
       </p>
     </div>
-  )
-}
-
-export const DataViewTextSearchFilter: React.FC<any> = ({
-  setFilterText,
-  title,
-  onRemove,
-  currentValue,
-}) => {
-  const { strings } = useLanguageProvider()
-  const [searchText, setSearchText] = useState<string>(currentValue)
-  const [debounceOutput, setDebounceInput] = useDebounce(searchText)
-
-  useEffect(() => {
-    setFilterText(debounceOutput)
-  }, [debounceOutput])
-
-  return (
-    <FilterContainer title={title} onRemove={onRemove}>
-      <Input
-        icon="search"
-        placeholder={strings.FILTER_START_TYPING}
-        iconPosition="left"
-        className="search"
-        value={searchText}
-        onClick={(e: any) => e.stopPropagation()}
-        onChange={(_, { value }) => {
-          setSearchText(value)
-          setDebounceInput(value)
-        }}
-      />
-    </FilterContainer>
   )
 }

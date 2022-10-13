@@ -36,9 +36,8 @@ export default function buildQueryFilters(
 const filterTypeDefinitions: FilterTypeDefinitions = {
   number: (filterValue) => {
     const [fromNumber, toNumber] = filterValue.split(':')
-    const greaterThanOrEqualTo = fromNumber ? fromNumber : undefined
-    const lessThanOrEqualTo = toNumber ? toNumber : undefined
-
+    const greaterThanOrEqualTo = fromNumber !== '' ? parseInt(fromNumber) : undefined
+    const lessThanOrEqualTo = toNumber !== '' ? parseInt(toNumber) : undefined
     return { greaterThanOrEqualTo, lessThanOrEqualTo }
   },
   date: (filterValue, options) => {
@@ -78,7 +77,7 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
     }
 
     const values = replaceCommasArray(splitCommaList(filterValue))
-    const complexOrFilter: any = { or: [] }
+    const complexOrFilter: { or: object[] } = { or: [] }
     options?.searchFields?.forEach((field) =>
       complexOrFilter.or.push(
         ...values.map((value) => ({
@@ -88,7 +87,6 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
     )
     return complexOrFilter
   },
-  dataViewNumber: () => ({}),
   dataViewBoolean: (filterValue) => {
     return {
       equalTo: String(filterValue).toLowerCase() === 'true',

@@ -24,7 +24,11 @@ const BooleanFilter: React.FC<BooleanFilterProps> = ({
   )
 
   return (
-    <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
+    <FilterContainer
+      title={title}
+      label={option !== null ? booleanMapping[option ? 'true' : 'false'] : ''}
+      onRemove={onRemove}
+    >
       {renderOption(true)}
       {renderOption(false)}
     </FilterContainer>
