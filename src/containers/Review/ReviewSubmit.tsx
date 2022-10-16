@@ -39,6 +39,11 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
     useGetDecisionOptions(canApplicantMakeChanges, assignment, thisReview)
 
+  if (!data) return null
+
+  const { assignedQuestions, reviewableQuestions } = data
+  const fullyAssigned = assignedQuestions?.totalCount === reviewableQuestions?.totalCount
+
   return (
     <Form id="review-submit-area">
       <div className="flex-row-space-between-flex-end">
@@ -58,7 +63,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
         {...props}
         getDecision={getDecision}
         getAndSetDecisionError={getAndSetDecisionError}
-        fullyAssigned={!!data && data.assignedQuestions === data.reviewableQuestions}
+        fullyAssigned={fullyAssigned}
       />
     </Form>
   )
