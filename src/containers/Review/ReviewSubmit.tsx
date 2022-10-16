@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Form, Label } from 'semantic-ui-react'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import ReviewComment from '../../components/Review/ReviewComment'
@@ -28,9 +28,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
     structure: { info, thisReview, assignment, canApplicantMakeChanges },
   } = props
 
-  const [fullyAssigned, setFullyAssigned] = useState(false)
-
-  const { data, loading, error } = useGetReviewableQuestionsQuery({
+  const { data } = useGetReviewableQuestionsQuery({
     variables: {
       applicationId: info.id,
       stageId: thisReview?.current.stage.id as number,
@@ -40,13 +38,6 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   const reviewDecision = thisReview?.reviewDecision
   const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
     useGetDecisionOptions(canApplicantMakeChanges, assignment, thisReview)
-
-  useEffect(() => {
-    if (!data) return
-    const { assignedQuestions, reviewableQuestions } = data
-    const fullyAssigned = assignedQuestions?.totalCount === reviewableQuestions?.totalCount
-    setFullyAssigned(fullyAssigned)
-  }, [data])
 
   return (
     <Form id="review-submit-area">
@@ -67,7 +58,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
         {...props}
         getDecision={getDecision}
         getAndSetDecisionError={getAndSetDecisionError}
-        fullyAssigned={fullyAssigned}
+        fullyAssigned={!!data && data.assignedQuestions === data.reviewableQuestions}
       />
     </Form>
   )
