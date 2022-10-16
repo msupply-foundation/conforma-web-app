@@ -61,8 +61,14 @@ export type Query = Node & {
   counters?: Maybe<CountersConnection>;
   /** Reads and enables pagination through a set of `DataTable`. */
   dataTables?: Maybe<DataTablesConnection>;
+  /** Reads and enables pagination through a set of `DataTableManufacturingStep`. */
+  dataTableManufacturingSteps?: Maybe<DataTableManufacturingStepsConnection>;
+  /** Reads and enables pagination through a set of `DataTableActiveIngredient`. */
+  dataTableActiveIngredients?: Maybe<DataTableActiveIngredientsConnection>;
   /** Reads and enables pagination through a set of `DataTableAdministrationRoute`. */
   dataTableAdministrationRoutes?: Maybe<DataTableAdministrationRoutesConnection>;
+  /** Reads and enables pagination through a set of `DataTableAtcTherapeuticCategory`. */
+  dataTableAtcTherapeuticCategories?: Maybe<DataTableAtcTherapeuticCategoriesConnection>;
   /** Reads and enables pagination through a set of `DataTableContainer`. */
   dataTableContainers?: Maybe<DataTableContainersConnection>;
   /** Reads and enables pagination through a set of `DataTableCountry`. */
@@ -149,6 +155,8 @@ export type Query = Node & {
   triggerSchedules?: Maybe<TriggerSchedulesConnection>;
   /** Reads and enables pagination through a set of `User`. */
   users?: Maybe<UsersConnection>;
+  /** Reads and enables pagination through a set of `UserApplicationJoin`. */
+  userApplicationJoins?: Maybe<UserApplicationJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrgJoin`. */
   userOrgJoins?: Maybe<UserOrgJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
@@ -171,7 +179,10 @@ export type Query = Node & {
   counterByName?: Maybe<Counter>;
   dataTable?: Maybe<DataTable>;
   dataTableByTableName?: Maybe<DataTable>;
+  dataTableManufacturingStep?: Maybe<DataTableManufacturingStep>;
+  dataTableActiveIngredient?: Maybe<DataTableActiveIngredient>;
   dataTableAdministrationRoute?: Maybe<DataTableAdministrationRoute>;
+  dataTableAtcTherapeuticCategory?: Maybe<DataTableAtcTherapeuticCategory>;
   dataTableContainer?: Maybe<DataTableContainer>;
   dataTableCountry?: Maybe<DataTableCountry>;
   dataTableDosageForm?: Maybe<DataTableDosageForm>;
@@ -223,6 +234,7 @@ export type Query = Node & {
   triggerSchedule?: Maybe<TriggerSchedule>;
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
+  userApplicationJoin?: Maybe<UserApplicationJoin>;
   userOrganisation?: Maybe<UserOrganisation>;
   userOrganisationByUserIdAndOrganisationId?: Maybe<UserOrganisation>;
   userOrganisationApplicationJoin?: Maybe<UserOrganisationApplicationJoin>;
@@ -278,8 +290,14 @@ export type Query = Node & {
   counterByNodeId?: Maybe<Counter>;
   /** Reads a single `DataTable` using its globally unique `ID`. */
   dataTableByNodeId?: Maybe<DataTable>;
+  /** Reads a single `DataTableManufacturingStep` using its globally unique `ID`. */
+  dataTableManufacturingStepByNodeId?: Maybe<DataTableManufacturingStep>;
+  /** Reads a single `DataTableActiveIngredient` using its globally unique `ID`. */
+  dataTableActiveIngredientByNodeId?: Maybe<DataTableActiveIngredient>;
   /** Reads a single `DataTableAdministrationRoute` using its globally unique `ID`. */
   dataTableAdministrationRouteByNodeId?: Maybe<DataTableAdministrationRoute>;
+  /** Reads a single `DataTableAtcTherapeuticCategory` using its globally unique `ID`. */
+  dataTableAtcTherapeuticCategoryByNodeId?: Maybe<DataTableAtcTherapeuticCategory>;
   /** Reads a single `DataTableContainer` using its globally unique `ID`. */
   dataTableContainerByNodeId?: Maybe<DataTableContainer>;
   /** Reads a single `DataTableCountry` using its globally unique `ID`. */
@@ -360,6 +378,8 @@ export type Query = Node & {
   triggerScheduleByNodeId?: Maybe<TriggerSchedule>;
   /** Reads a single `User` using its globally unique `ID`. */
   userByNodeId?: Maybe<User>;
+  /** Reads a single `UserApplicationJoin` using its globally unique `ID`. */
+  userApplicationJoinByNodeId?: Maybe<UserApplicationJoin>;
   /** Reads a single `UserOrganisation` using its globally unique `ID`. */
   userOrganisationByNodeId?: Maybe<UserOrganisation>;
   /** Reads a single `UserOrganisationApplicationJoin` using its globally unique `ID`. */
@@ -558,6 +578,32 @@ export type QueryDataTablesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTableManufacturingStepsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataTableManufacturingStepsOrderBy>>;
+  condition?: Maybe<DataTableManufacturingStepCondition>;
+  filter?: Maybe<DataTableManufacturingStepFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableActiveIngredientsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataTableActiveIngredientsOrderBy>>;
+  condition?: Maybe<DataTableActiveIngredientCondition>;
+  filter?: Maybe<DataTableActiveIngredientFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableAdministrationRoutesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -567,6 +613,19 @@ export type QueryDataTableAdministrationRoutesArgs = {
   orderBy?: Maybe<Array<DataTableAdministrationRoutesOrderBy>>;
   condition?: Maybe<DataTableAdministrationRouteCondition>;
   filter?: Maybe<DataTableAdministrationRouteFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableAtcTherapeuticCategoriesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataTableAtcTherapeuticCategoriesOrderBy>>;
+  condition?: Maybe<DataTableAtcTherapeuticCategoryCondition>;
+  filter?: Maybe<DataTableAtcTherapeuticCategoryFilter>;
 };
 
 
@@ -1130,6 +1189,19 @@ export type QueryUsersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryUserApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
+  condition?: Maybe<UserApplicationJoinCondition>;
+  filter?: Maybe<UserApplicationJoinFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryUserOrgJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -1266,7 +1338,25 @@ export type QueryDataTableByTableNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTableManufacturingStepArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableActiveIngredientArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableAdministrationRouteArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableAtcTherapeuticCategoryArgs = {
   id: Scalars['Int'];
 };
 
@@ -1578,6 +1668,12 @@ export type QueryUserArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUserByUsernameArgs = {
   username: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserApplicationJoinArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -1919,7 +2015,25 @@ export type QueryDataTableByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTableManufacturingStepByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableActiveIngredientByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableAdministrationRouteByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableAtcTherapeuticCategoryByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -2160,6 +2274,12 @@ export type QueryTriggerScheduleByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUserByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserApplicationJoinByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -3592,10 +3712,14 @@ export type NotificationFilter = {
   message?: Maybe<StringFilter>;
   /** Filter by the object’s `attachments` field. */
   attachments?: Maybe<StringListFilter>;
-  /** Filter by the object’s `emailSent` field. */
-  emailSent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isRead` field. */
   isRead?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `emailSent` field. */
+  emailSent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `emailServerLog` field. */
+  emailServerLog?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -3688,6 +3812,10 @@ export type UserFilter = {
   notifications?: Maybe<UserToManyNotificationFilter>;
   /** Some related `notifications` exist. */
   notificationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `userApplicationJoins` relation. */
+  userApplicationJoins?: Maybe<UserToManyUserApplicationJoinFilter>;
+  /** Some related `userApplicationJoins` exist. */
+  userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserFilter>>;
   /** Checks for any expressions in this list. */
@@ -3859,14 +3987,6 @@ export type ApplicationFilter = {
   activityLogs?: Maybe<ApplicationToManyActivityLogFilter>;
   /** Some related `activityLogs` exist. */
   activityLogsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `userApplicationJoins` relation. */
-  userApplicationJoins?: Maybe<ApplicationToManyUserApplicationJoinFilter>;
-  /** Some related `userApplicationJoins` exist. */
-  userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `userOrganisationApplicationJoins` relation. */
-  userOrganisationApplicationJoins?: Maybe<ApplicationToManyUserOrganisationApplicationJoinFilter>;
-  /** Some related `userOrganisationApplicationJoins` exist. */
-  userOrganisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `productApplicationJoins` relation. */
   productApplicationJoins?: Maybe<ApplicationToManyProductApplicationJoinFilter>;
   /** Some related `productApplicationJoins` exist. */
@@ -3875,6 +3995,14 @@ export type ApplicationFilter = {
   organisationApplicationJoins?: Maybe<ApplicationToManyOrganisationApplicationJoinFilter>;
   /** Some related `organisationApplicationJoins` exist. */
   organisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `userApplicationJoins` relation. */
+  userApplicationJoins?: Maybe<ApplicationToManyUserApplicationJoinFilter>;
+  /** Some related `userApplicationJoins` exist. */
+  userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `userOrganisationApplicationJoins` relation. */
+  userOrganisationApplicationJoins?: Maybe<ApplicationToManyUserOrganisationApplicationJoinFilter>;
+  /** Some related `userOrganisationApplicationJoins` exist. */
+  userOrganisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `dataTableProductApplicationJoins` relation. */
   dataTableProductApplicationJoins?: Maybe<ApplicationToManyDataTableProductApplicationJoinFilter>;
   /** Some related `dataTableProductApplicationJoins` exist. */
@@ -4123,6 +4251,8 @@ export type OrganisationFilter = {
   registrationDate?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `agentId` field. */
   agentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `typeFilterData` field. */
+  typeFilterData?: Maybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
   userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
@@ -4376,165 +4506,6 @@ export type OrganisationToManyApplicationFilter = {
   none?: Maybe<ApplicationFilter>;
 };
 
-<<<<<<< HEAD
-=======
-/** A filter to be used against `Application` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateId` field. */
-  templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `orgId` field. */
-  orgId?: Maybe<IntFilter>;
-  /** Filter by the object’s `sessionId` field. */
-  sessionId?: Maybe<StringFilter>;
-  /** Filter by the object’s `serial` field. */
-  serial?: Maybe<StringFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `outcome` field. */
-  outcome?: Maybe<ApplicationOutcomeFilter>;
-  /** Filter by the object’s `isActive` field. */
-  isActive?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `isConfig` field. */
-  isConfig?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `stage` field. */
-  stage?: Maybe<StringFilter>;
-  /** Filter by the object’s `stageNumber` field. */
-  stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ApplicationStatusFilter>;
-  /** Filter by the object’s `applicationNotes` relation. */
-  applicationNotes?: Maybe<ApplicationToManyApplicationNoteFilter>;
-  /** Some related `applicationNotes` exist. */
-  applicationNotesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationStageHistories` relation. */
-  applicationStageHistories?: Maybe<ApplicationToManyApplicationStageHistoryFilter>;
-  /** Some related `applicationStageHistories` exist. */
-  applicationStageHistoriesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationResponses` relation. */
-  applicationResponses?: Maybe<ApplicationToManyApplicationResponseFilter>;
-  /** Some related `applicationResponses` exist. */
-  applicationResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `triggerSchedules` relation. */
-  triggerSchedules?: Maybe<ApplicationToManyTriggerScheduleFilter>;
-  /** Some related `triggerSchedules` exist. */
-  triggerSchedulesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewAssignments` relation. */
-  reviewAssignments?: Maybe<ApplicationToManyReviewAssignmentFilter>;
-  /** Some related `reviewAssignments` exist. */
-  reviewAssignmentsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviews` relation. */
-  reviews?: Maybe<ApplicationToManyReviewFilter>;
-  /** Some related `reviews` exist. */
-  reviewsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `filesByApplicationSerial` relation. */
-  filesByApplicationSerial?: Maybe<ApplicationToManyFileFilter>;
-  /** Some related `filesByApplicationSerial` exist. */
-  filesByApplicationSerialExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `notifications` relation. */
-  notifications?: Maybe<ApplicationToManyNotificationFilter>;
-  /** Some related `notifications` exist. */
-  notificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `verifications` relation. */
-  verifications?: Maybe<ApplicationToManyVerificationFilter>;
-  /** Some related `verifications` exist. */
-  verificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `activityLogs` relation. */
-  activityLogs?: Maybe<ApplicationToManyActivityLogFilter>;
-  /** Some related `activityLogs` exist. */
-  activityLogsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `template` relation. */
-  template?: Maybe<TemplateFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `org` relation. */
-  org?: Maybe<OrganisationFilter>;
-  /** A related `org` exists. */
-  orgExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ApplicationFilter>;
-};
-
-/** A filter to be used against ApplicationOutcome fields. All fields are combined with a logical ‘and.’ */
-export type ApplicationOutcomeFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<ApplicationOutcome>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ApplicationOutcome>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ApplicationOutcome>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ApplicationOutcome>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<ApplicationOutcome>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<ApplicationOutcome>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<ApplicationOutcome>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ApplicationOutcome>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<ApplicationOutcome>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ApplicationOutcome>;
-};
-
-export enum ApplicationOutcome {
-  Pending = 'PENDING',
-  Approved = 'APPROVED',
-  Rejected = 'REJECTED',
-  Expired = 'EXPIRED',
-  Withdrawn = 'WITHDRAWN'
-}
-
-/** A filter to be used against ApplicationStatus fields. All fields are combined with a logical ‘and.’ */
-export type ApplicationStatusFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<ApplicationStatus>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ApplicationStatus>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ApplicationStatus>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ApplicationStatus>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<ApplicationStatus>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<ApplicationStatus>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<ApplicationStatus>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ApplicationStatus>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<ApplicationStatus>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ApplicationStatus>;
-};
-
-export enum ApplicationStatus {
-  Draft = 'DRAFT',
-  Submitted = 'SUBMITTED',
-  ChangesRequired = 'CHANGES_REQUIRED',
-  ReSubmitted = 'RE_SUBMITTED',
-  Completed = 'COMPLETED'
-}
-
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 /** A filter to be used against many `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
 export type OrganisationToManyApplicationNoteFilter = {
   /** Every related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -5147,85 +5118,6 @@ export enum EventType {
   Permission = 'PERMISSION'
 }
 
-<<<<<<< HEAD
-/** A filter to be used against many `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationToManyUserApplicationJoinFilter = {
-  /** Every related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<UserApplicationJoinFilter>;
-  /** Some related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<UserApplicationJoinFilter>;
-  /** No related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<UserApplicationJoinFilter>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-};
-
-/** A filter to be used against `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
-export type UserApplicationJoinFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<UserApplicationJoinFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<UserApplicationJoinFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<UserApplicationJoinFilter>;
-};
-
-=======
->>>>>>> 4f31d1ef (Update generated types)
-/** A filter to be used against many `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
-export type OrganisationToManyApplicationNoteFilter = {
-  /** Every related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ApplicationNoteFilter>;
-  /** Some related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ApplicationNoteFilter>;
-  /** No related `ApplicationNote` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ApplicationNoteFilter>;
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-};
-
-/** A filter to be used against `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
-export type UserApplicationJoinFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: Maybe<UserFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<UserApplicationJoinFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<UserApplicationJoinFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<UserApplicationJoinFilter>;
-};
-
-/** A filter to be used against many `UserOrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationToManyUserOrganisationApplicationJoinFilter = {
-  /** Every related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<UserOrganisationApplicationJoinFilter>;
-  /** Some related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<UserOrganisationApplicationJoinFilter>;
-  /** No related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<UserOrganisationApplicationJoinFilter>;
-};
-
 /** A filter to be used against many `ProductApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationToManyProductApplicationJoinFilter = {
   /** Every related `ProductApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -5262,6 +5154,46 @@ export type ApplicationToManyOrganisationApplicationJoinFilter = {
   some?: Maybe<OrganisationApplicationJoinFilter>;
   /** No related `OrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<OrganisationApplicationJoinFilter>;
+};
+
+/** A filter to be used against many `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyUserApplicationJoinFilter = {
+  /** Every related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<UserApplicationJoinFilter>;
+  /** Some related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<UserApplicationJoinFilter>;
+  /** No related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<UserApplicationJoinFilter>;
+};
+
+/** A filter to be used against `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type UserApplicationJoinFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: Maybe<UserFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<UserApplicationJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<UserApplicationJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<UserApplicationJoinFilter>;
+};
+
+/** A filter to be used against many `UserOrganisationApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyUserOrganisationApplicationJoinFilter = {
+  /** Every related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<UserOrganisationApplicationJoinFilter>;
+  /** Some related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<UserOrganisationApplicationJoinFilter>;
+  /** No related `UserOrganisationApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<UserOrganisationApplicationJoinFilter>;
 };
 
 /** A filter to be used against many `DataTableProductApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -5356,10 +5288,10 @@ export type DataTableProductFilter = {
   storageConditionsOpened?: Maybe<StringFilter>;
   /** Filter by the object’s `storageConditionsProposed` field. */
   storageConditionsProposed?: Maybe<StringFilter>;
-  /** Filter by the object’s `genericNamesText` field. */
-  genericNamesText?: Maybe<StringFilter>;
-  /** Filter by the object’s `amount` field. */
-  amount?: Maybe<IntFilter>;
+  /** Filter by the object’s `genericNamesFilterData` field. */
+  genericNamesFilterData?: Maybe<StringFilter>;
+  /** Filter by the object’s `manufacturersListFilterData` field. */
+  manufacturersListFilterData?: Maybe<StringFilter>;
   /** Filter by the object’s `dataTableProductApplicationJoins` relation. */
   dataTableProductApplicationJoins?: Maybe<DataTableProductToManyDataTableProductApplicationJoinFilter>;
   /** Some related `dataTableProductApplicationJoins` exist. */
@@ -5470,6 +5402,16 @@ export type UserToManyNotificationFilter = {
   some?: Maybe<NotificationFilter>;
   /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<NotificationFilter>;
+};
+
+/** A filter to be used against many `UserApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyUserApplicationJoinFilter = {
+  /** Every related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<UserApplicationJoinFilter>;
+  /** Some related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<UserApplicationJoinFilter>;
+  /** No related `UserApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<UserApplicationJoinFilter>;
 };
 
 /** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
@@ -6464,25 +6406,16 @@ export type Application = Node & {
   verifications: VerificationsConnection;
   /** Reads and enables pagination through a set of `ActivityLog`. */
   activityLogs: ActivityLogsConnection;
-<<<<<<< HEAD
-  /** Reads and enables pagination through a set of `UserApplicationJoin`. */
-  userApplicationJoins: UserApplicationJoinsConnection;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  /** Reads and enables pagination through a set of `UserOrganisationApplicationJoin`. */
-  userOrganisationApplicationJoins: UserOrganisationApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `ProductApplicationJoin`. */
   productApplicationJoins: ProductApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `OrganisationApplicationJoin`. */
   organisationApplicationJoins: OrganisationApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `UserApplicationJoin`. */
+  userApplicationJoins: UserApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `UserOrganisationApplicationJoin`. */
+  userOrganisationApplicationJoins: UserOrganisationApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `DataTableProductApplicationJoin`. */
   dataTableProductApplicationJoins: DataTableProductApplicationJoinsConnection;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
   stage?: Maybe<Scalars['String']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
@@ -6608,33 +6541,6 @@ export type ApplicationActivityLogsArgs = {
   filter?: Maybe<ActivityLogFilter>;
 };
 
-<<<<<<< HEAD
-
-export type ApplicationUserApplicationJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
-  condition?: Maybe<UserApplicationJoinCondition>;
-  filter?: Maybe<UserApplicationJoinFilter>;
-};
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-export type ApplicationUserOrganisationApplicationJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<UserOrganisationApplicationJoinsOrderBy>>;
-  condition?: Maybe<UserOrganisationApplicationJoinCondition>;
-  filter?: Maybe<UserOrganisationApplicationJoinFilter>;
-};
-
 
 export type ApplicationProductApplicationJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
@@ -6660,6 +6566,30 @@ export type ApplicationOrganisationApplicationJoinsArgs = {
 };
 
 
+export type ApplicationUserApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
+  condition?: Maybe<UserApplicationJoinCondition>;
+  filter?: Maybe<UserApplicationJoinFilter>;
+};
+
+
+export type ApplicationUserOrganisationApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UserOrganisationApplicationJoinsOrderBy>>;
+  condition?: Maybe<UserOrganisationApplicationJoinCondition>;
+  filter?: Maybe<UserOrganisationApplicationJoinFilter>;
+};
+
+
 export type ApplicationDataTableProductApplicationJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -6671,12 +6601,6 @@ export type ApplicationDataTableProductApplicationJoinsArgs = {
   filter?: Maybe<DataTableProductApplicationJoinFilter>;
 };
 
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 export type User = Node & {
   __typename?: 'User';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -6716,6 +6640,8 @@ export type User = Node & {
   files: FilesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
+  /** Reads and enables pagination through a set of `UserApplicationJoin`. */
+  userApplicationJoins: UserApplicationJoinsConnection;
 };
 
 
@@ -6850,6 +6776,18 @@ export type UserNotificationsArgs = {
   filter?: Maybe<NotificationFilter>;
 };
 
+
+export type UserUserApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
+  condition?: Maybe<UserApplicationJoinCondition>;
+  filter?: Maybe<UserApplicationJoinFilter>;
+};
+
 /** Methods to use when ordering `UserOrganisation`. */
 export enum UserOrganisationsOrderBy {
   Natural = 'NATURAL',
@@ -6941,6 +6879,7 @@ export type Organisation = Node & {
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
@@ -8614,10 +8553,14 @@ export enum NotificationsOrderBy {
   MessageDesc = 'MESSAGE_DESC',
   AttachmentsAsc = 'ATTACHMENTS_ASC',
   AttachmentsDesc = 'ATTACHMENTS_DESC',
-  EmailSentAsc = 'EMAIL_SENT_ASC',
-  EmailSentDesc = 'EMAIL_SENT_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
   IsReadAsc = 'IS_READ_ASC',
   IsReadDesc = 'IS_READ_DESC',
+  EmailSentAsc = 'EMAIL_SENT_ASC',
+  EmailSentDesc = 'EMAIL_SENT_DESC',
+  EmailServerLogAsc = 'EMAIL_SERVER_LOG_ASC',
+  EmailServerLogDesc = 'EMAIL_SERVER_LOG_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -8640,10 +8583,14 @@ export type NotificationCondition = {
   message?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `attachments` field. */
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `emailSent` field. */
-  emailSent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isRead` field. */
   isRead?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `emailSent` field. */
+  emailSent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `emailServerLog` field. */
+  emailServerLog?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `Notification` values. */
@@ -8671,8 +8618,10 @@ export type Notification = Node & {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp: Scalars['Datetime'];
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `Notification`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
@@ -8921,6 +8870,64 @@ export type TriggerSchedulesEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `TriggerSchedule` at the end of the edge. */
   node?: Maybe<TriggerSchedule>;
+};
+
+/** Methods to use when ordering `UserApplicationJoin`. */
+export enum UserApplicationJoinsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `UserApplicationJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type UserApplicationJoinCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `UserApplicationJoin` values. */
+export type UserApplicationJoinsConnection = {
+  __typename?: 'UserApplicationJoinsConnection';
+  /** A list of `UserApplicationJoin` objects. */
+  nodes: Array<Maybe<UserApplicationJoin>>;
+  /** A list of edges which contains the `UserApplicationJoin` and cursor to aid in pagination. */
+  edges: Array<UserApplicationJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UserApplicationJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type UserApplicationJoin = Node & {
+  __typename?: 'UserApplicationJoin';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  applicationId: Scalars['Int'];
+  userId: Scalars['Int'];
+  /** Reads a single `Application` that is related to this `UserApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `UserApplicationJoin`. */
+  user?: Maybe<User>;
+};
+
+/** A `UserApplicationJoin` edge in the connection. */
+export type UserApplicationJoinsEdge = {
+  __typename?: 'UserApplicationJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `UserApplicationJoin` at the end of the edge. */
+  node?: Maybe<UserApplicationJoin>;
 };
 
 /** Methods to use when ordering `Verification`. */
@@ -9234,8 +9241,8 @@ export type DataTableProduct = Node & {
   shelfLifeReconstructed?: Maybe<Scalars['String']>;
   storageConditionsOpened?: Maybe<Scalars['String']>;
   storageConditionsProposed?: Maybe<Scalars['String']>;
-  genericNamesText?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['Int']>;
+  genericNamesFilterData?: Maybe<Scalars['String']>;
+  manufacturersListFilterData?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `DataTableProductApplicationJoin`. */
   dataTableProductApplicationJoins: DataTableProductApplicationJoinsConnection;
 };
@@ -10538,6 +10545,153 @@ export type DataTablesEdge = {
   node?: Maybe<DataTable>;
 };
 
+/** Methods to use when ordering `DataTableManufacturingStep`. */
+export enum DataTableManufacturingStepsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TipoDeFabricanteAsc = 'TIPO_DE_FABRICANTE_ASC',
+  TipoDeFabricanteDesc = 'TIPO_DE_FABRICANTE_DESC',
+  ManufacturingOperationAsc = 'MANUFACTURING_OPERATION_ASC',
+  ManufacturingOperationDesc = 'MANUFACTURING_OPERATION_DESC',
+  DefinitionAsc = 'DEFINITION_ASC',
+  DefinitionDesc = 'DEFINITION_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `DataTableManufacturingStep` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type DataTableManufacturingStepCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `tipoDeFabricante` field. */
+  tipoDeFabricante?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `manufacturingOperation` field. */
+  manufacturingOperation?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `definition` field. */
+  definition?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `DataTableManufacturingStep` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableManufacturingStepFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `tipoDeFabricante` field. */
+  tipoDeFabricante?: Maybe<StringFilter>;
+  /** Filter by the object’s `manufacturingOperation` field. */
+  manufacturingOperation?: Maybe<StringFilter>;
+  /** Filter by the object’s `definition` field. */
+  definition?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<DataTableManufacturingStepFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<DataTableManufacturingStepFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<DataTableManufacturingStepFilter>;
+};
+
+/** A connection to a list of `DataTableManufacturingStep` values. */
+export type DataTableManufacturingStepsConnection = {
+  __typename?: 'DataTableManufacturingStepsConnection';
+  /** A list of `DataTableManufacturingStep` objects. */
+  nodes: Array<Maybe<DataTableManufacturingStep>>;
+  /** A list of edges which contains the `DataTableManufacturingStep` and cursor to aid in pagination. */
+  edges: Array<DataTableManufacturingStepsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableManufacturingStep` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type DataTableManufacturingStep = Node & {
+  __typename?: 'DataTableManufacturingStep';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  tipoDeFabricante?: Maybe<Scalars['String']>;
+  manufacturingOperation?: Maybe<Scalars['String']>;
+  definition?: Maybe<Scalars['String']>;
+};
+
+/** A `DataTableManufacturingStep` edge in the connection. */
+export type DataTableManufacturingStepsEdge = {
+  __typename?: 'DataTableManufacturingStepsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `DataTableManufacturingStep` at the end of the edge. */
+  node?: Maybe<DataTableManufacturingStep>;
+};
+
+/** Methods to use when ordering `DataTableActiveIngredient`. */
+export enum DataTableActiveIngredientsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  LatinaAsc = 'LATINA_ASC',
+  LatinaDesc = 'LATINA_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `DataTableActiveIngredient` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type DataTableActiveIngredientCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `latina` field. */
+  latina?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `DataTableActiveIngredient` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableActiveIngredientFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `latina` field. */
+  latina?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<DataTableActiveIngredientFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<DataTableActiveIngredientFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<DataTableActiveIngredientFilter>;
+};
+
+/** A connection to a list of `DataTableActiveIngredient` values. */
+export type DataTableActiveIngredientsConnection = {
+  __typename?: 'DataTableActiveIngredientsConnection';
+  /** A list of `DataTableActiveIngredient` objects. */
+  nodes: Array<Maybe<DataTableActiveIngredient>>;
+  /** A list of edges which contains the `DataTableActiveIngredient` and cursor to aid in pagination. */
+  edges: Array<DataTableActiveIngredientsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableActiveIngredient` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type DataTableActiveIngredient = Node & {
+  __typename?: 'DataTableActiveIngredient';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  latina?: Maybe<Scalars['String']>;
+};
+
+/** A `DataTableActiveIngredient` edge in the connection. */
+export type DataTableActiveIngredientsEdge = {
+  __typename?: 'DataTableActiveIngredientsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `DataTableActiveIngredient` at the end of the edge. */
+  node?: Maybe<DataTableActiveIngredient>;
+};
+
 /** Methods to use when ordering `DataTableAdministrationRoute`. */
 export enum DataTableAdministrationRoutesOrderBy {
   Natural = 'NATURAL',
@@ -10606,6 +10760,90 @@ export type DataTableAdministrationRoutesEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `DataTableAdministrationRoute` at the end of the edge. */
   node?: Maybe<DataTableAdministrationRoute>;
+};
+
+/** Methods to use when ordering `DataTableAtcTherapeuticCategory`. */
+export enum DataTableAtcTherapeuticCategoriesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  WhoAtcIdAsc = 'WHO_ATC_ID_ASC',
+  WhoAtcIdDesc = 'WHO_ATC_ID_DESC',
+  AtcCodeAsc = 'ATC_CODE_ASC',
+  AtcCodeDesc = 'ATC_CODE_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  CategoryAsc = 'CATEGORY_ASC',
+  CategoryDesc = 'CATEGORY_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `DataTableAtcTherapeuticCategory` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type DataTableAtcTherapeuticCategoryCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `whoAtcId` field. */
+  whoAtcId?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `atcCode` field. */
+  atcCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `category` field. */
+  category?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `DataTableAtcTherapeuticCategory` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableAtcTherapeuticCategoryFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `whoAtcId` field. */
+  whoAtcId?: Maybe<StringFilter>;
+  /** Filter by the object’s `atcCode` field. */
+  atcCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `category` field. */
+  category?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<DataTableAtcTherapeuticCategoryFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<DataTableAtcTherapeuticCategoryFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<DataTableAtcTherapeuticCategoryFilter>;
+};
+
+/** A connection to a list of `DataTableAtcTherapeuticCategory` values. */
+export type DataTableAtcTherapeuticCategoriesConnection = {
+  __typename?: 'DataTableAtcTherapeuticCategoriesConnection';
+  /** A list of `DataTableAtcTherapeuticCategory` objects. */
+  nodes: Array<Maybe<DataTableAtcTherapeuticCategory>>;
+  /** A list of edges which contains the `DataTableAtcTherapeuticCategory` and cursor to aid in pagination. */
+  edges: Array<DataTableAtcTherapeuticCategoriesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableAtcTherapeuticCategory` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type DataTableAtcTherapeuticCategory = Node & {
+  __typename?: 'DataTableAtcTherapeuticCategory';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  whoAtcId?: Maybe<Scalars['String']>;
+  atcCode?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  category?: Maybe<Scalars['String']>;
+};
+
+/** A `DataTableAtcTherapeuticCategory` edge in the connection. */
+export type DataTableAtcTherapeuticCategoriesEdge = {
+  __typename?: 'DataTableAtcTherapeuticCategoriesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `DataTableAtcTherapeuticCategory` at the end of the edge. */
+  node?: Maybe<DataTableAtcTherapeuticCategory>;
 };
 
 /** Methods to use when ordering `DataTableContainer`. */
@@ -11056,10 +11294,10 @@ export enum DataTableProductsOrderBy {
   StorageConditionsOpenedDesc = 'STORAGE_CONDITIONS_OPENED_DESC',
   StorageConditionsProposedAsc = 'STORAGE_CONDITIONS_PROPOSED_ASC',
   StorageConditionsProposedDesc = 'STORAGE_CONDITIONS_PROPOSED_DESC',
-  GenericNamesTextAsc = 'GENERIC_NAMES_TEXT_ASC',
-  GenericNamesTextDesc = 'GENERIC_NAMES_TEXT_DESC',
-  AmountAsc = 'AMOUNT_ASC',
-  AmountDesc = 'AMOUNT_DESC',
+  GenericNamesFilterDataAsc = 'GENERIC_NAMES_FILTER_DATA_ASC',
+  GenericNamesFilterDataDesc = 'GENERIC_NAMES_FILTER_DATA_DESC',
+  ManufacturersListFilterDataAsc = 'MANUFACTURERS_LIST_FILTER_DATA_ASC',
+  ManufacturersListFilterDataDesc = 'MANUFACTURERS_LIST_FILTER_DATA_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -11126,10 +11364,10 @@ export type DataTableProductCondition = {
   storageConditionsOpened?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `storageConditionsProposed` field. */
   storageConditionsProposed?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `genericNamesText` field. */
-  genericNamesText?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `amount` field. */
-  amount?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `genericNamesFilterData` field. */
+  genericNamesFilterData?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `manufacturersListFilterData` field. */
+  manufacturersListFilterData?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `DataTableProduct` values. */
@@ -11822,6 +12060,8 @@ export enum OrganisationsOrderBy {
   RegistrationDateDesc = 'REGISTRATION_DATE_DESC',
   AgentIdAsc = 'AGENT_ID_ASC',
   AgentIdDesc = 'AGENT_ID_DESC',
+  TypeFilterDataAsc = 'TYPE_FILTER_DATA_ASC',
+  TypeFilterDataDesc = 'TYPE_FILTER_DATA_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -11866,6 +12106,8 @@ export type OrganisationCondition = {
   registrationDate?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `agentId` field. */
   agentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `typeFilterData` field. */
+  typeFilterData?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `Organisation` values. */
@@ -13188,106 +13430,6 @@ export type ReviewableQuestionEdge = {
   node?: Maybe<ReviewableQuestionsRecord>;
 };
 
-/** A filter to be used against `ReviewableQuestionsRecord` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewableQuestionsRecordFilter = {
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
-  /** Filter by the object’s `responseId` field. */
-  responseId?: Maybe<IntFilter>;
-  /** Filter by the object’s `isReviewable` field. */
-  isReviewable?: Maybe<IsReviewableStatusFilter>;
-  /** Filter by the object’s `responseValue` field. */
-  responseValue?: Maybe<JsonFilter>;
-  /** Filter by the object’s `isOptional` field. */
-  isOptional?: Maybe<BooleanFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewableQuestionsRecordFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewableQuestionsRecordFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewableQuestionsRecordFilter>;
-};
-
-/** A connection to a list of `ReviewableQuestionsRecord` values. */
-export type ReviewableQuestionsConnection = {
-  __typename?: 'ReviewableQuestionsConnection';
-  /** A list of `ReviewableQuestionsRecord` objects. */
-  nodes: Array<Maybe<ReviewableQuestionsRecord>>;
-  /** A list of edges which contains the `ReviewableQuestionsRecord` and cursor to aid in pagination. */
-  edges: Array<ReviewableQuestionEdge>;
-  /** The count of *all* `ReviewableQuestionsRecord` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** The return type of our `reviewableQuestions` query. */
-export type ReviewableQuestionsRecord = {
-  __typename?: 'ReviewableQuestionsRecord';
-  code?: Maybe<Scalars['String']>;
-  responseId?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
-  responseValue?: Maybe<Scalars['JSON']>;
-  isOptional?: Maybe<Scalars['Boolean']>;
-};
-
-/** A `ReviewableQuestionsRecord` edge in the connection. */
-export type ReviewableQuestionEdge = {
-  __typename?: 'ReviewableQuestionEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewableQuestionsRecord` at the end of the edge. */
-  node?: Maybe<ReviewableQuestionsRecord>;
-};
-
-/** A filter to be used against `ReviewableQuestionsRecord` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewableQuestionsRecordFilter = {
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
-  /** Filter by the object’s `responseId` field. */
-  responseId?: Maybe<IntFilter>;
-  /** Filter by the object’s `isReviewable` field. */
-  isReviewable?: Maybe<IsReviewableStatusFilter>;
-  /** Filter by the object’s `responseValue` field. */
-  responseValue?: Maybe<JsonFilter>;
-  /** Filter by the object’s `isOptional` field. */
-  isOptional?: Maybe<BooleanFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewableQuestionsRecordFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewableQuestionsRecordFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewableQuestionsRecordFilter>;
-};
-
-/** A connection to a list of `ReviewableQuestionsRecord` values. */
-export type ReviewableQuestionsConnection = {
-  __typename?: 'ReviewableQuestionsConnection';
-  /** A list of `ReviewableQuestionsRecord` objects. */
-  nodes: Array<Maybe<ReviewableQuestionsRecord>>;
-  /** A list of edges which contains the `ReviewableQuestionsRecord` and cursor to aid in pagination. */
-  edges: Array<ReviewableQuestionEdge>;
-  /** The count of *all* `ReviewableQuestionsRecord` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** The return type of our `reviewableQuestions` query. */
-export type ReviewableQuestionsRecord = {
-  __typename?: 'ReviewableQuestionsRecord';
-  code?: Maybe<Scalars['String']>;
-  responseId?: Maybe<Scalars['Int']>;
-  isReviewable?: Maybe<IsReviewableStatus>;
-  responseValue?: Maybe<Scalars['JSON']>;
-  isOptional?: Maybe<Scalars['Boolean']>;
-};
-
-/** A `ReviewableQuestionsRecord` edge in the connection. */
-export type ReviewableQuestionEdge = {
-  __typename?: 'ReviewableQuestionEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewableQuestionsRecord` at the end of the edge. */
-  node?: Maybe<ReviewableQuestionsRecord>;
-};
-
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -13313,8 +13455,14 @@ export type Mutation = {
   createCounter?: Maybe<CreateCounterPayload>;
   /** Creates a single `DataTable`. */
   createDataTable?: Maybe<CreateDataTablePayload>;
+  /** Creates a single `DataTableManufacturingStep`. */
+  createDataTableManufacturingStep?: Maybe<CreateDataTableManufacturingStepPayload>;
+  /** Creates a single `DataTableActiveIngredient`. */
+  createDataTableActiveIngredient?: Maybe<CreateDataTableActiveIngredientPayload>;
   /** Creates a single `DataTableAdministrationRoute`. */
   createDataTableAdministrationRoute?: Maybe<CreateDataTableAdministrationRoutePayload>;
+  /** Creates a single `DataTableAtcTherapeuticCategory`. */
+  createDataTableAtcTherapeuticCategory?: Maybe<CreateDataTableAtcTherapeuticCategoryPayload>;
   /** Creates a single `DataTableContainer`. */
   createDataTableContainer?: Maybe<CreateDataTableContainerPayload>;
   /** Creates a single `DataTableCountry`. */
@@ -13395,6 +13543,8 @@ export type Mutation = {
   createTriggerSchedule?: Maybe<CreateTriggerSchedulePayload>;
   /** Creates a single `User`. */
   createUser?: Maybe<CreateUserPayload>;
+  /** Creates a single `UserApplicationJoin`. */
+  createUserApplicationJoin?: Maybe<CreateUserApplicationJoinPayload>;
   /** Creates a single `UserOrganisation`. */
   createUserOrganisation?: Maybe<CreateUserOrganisationPayload>;
   /** Creates a single `UserOrganisationApplicationJoin`. */
@@ -13449,10 +13599,22 @@ export type Mutation = {
   updateDataTable?: Maybe<UpdateDataTablePayload>;
   /** Updates a single `DataTable` using a unique key and a patch. */
   updateDataTableByTableName?: Maybe<UpdateDataTablePayload>;
+  /** Updates a single `DataTableManufacturingStep` using its globally unique id and a patch. */
+  updateDataTableManufacturingStepByNodeId?: Maybe<UpdateDataTableManufacturingStepPayload>;
+  /** Updates a single `DataTableManufacturingStep` using a unique key and a patch. */
+  updateDataTableManufacturingStep?: Maybe<UpdateDataTableManufacturingStepPayload>;
+  /** Updates a single `DataTableActiveIngredient` using its globally unique id and a patch. */
+  updateDataTableActiveIngredientByNodeId?: Maybe<UpdateDataTableActiveIngredientPayload>;
+  /** Updates a single `DataTableActiveIngredient` using a unique key and a patch. */
+  updateDataTableActiveIngredient?: Maybe<UpdateDataTableActiveIngredientPayload>;
   /** Updates a single `DataTableAdministrationRoute` using its globally unique id and a patch. */
   updateDataTableAdministrationRouteByNodeId?: Maybe<UpdateDataTableAdministrationRoutePayload>;
   /** Updates a single `DataTableAdministrationRoute` using a unique key and a patch. */
   updateDataTableAdministrationRoute?: Maybe<UpdateDataTableAdministrationRoutePayload>;
+  /** Updates a single `DataTableAtcTherapeuticCategory` using its globally unique id and a patch. */
+  updateDataTableAtcTherapeuticCategoryByNodeId?: Maybe<UpdateDataTableAtcTherapeuticCategoryPayload>;
+  /** Updates a single `DataTableAtcTherapeuticCategory` using a unique key and a patch. */
+  updateDataTableAtcTherapeuticCategory?: Maybe<UpdateDataTableAtcTherapeuticCategoryPayload>;
   /** Updates a single `DataTableContainer` using its globally unique id and a patch. */
   updateDataTableContainerByNodeId?: Maybe<UpdateDataTableContainerPayload>;
   /** Updates a single `DataTableContainer` using a unique key and a patch. */
@@ -13635,6 +13797,10 @@ export type Mutation = {
   updateUser?: Maybe<UpdateUserPayload>;
   /** Updates a single `User` using a unique key and a patch. */
   updateUserByUsername?: Maybe<UpdateUserPayload>;
+  /** Updates a single `UserApplicationJoin` using its globally unique id and a patch. */
+  updateUserApplicationJoinByNodeId?: Maybe<UpdateUserApplicationJoinPayload>;
+  /** Updates a single `UserApplicationJoin` using a unique key and a patch. */
+  updateUserApplicationJoin?: Maybe<UpdateUserApplicationJoinPayload>;
   /** Updates a single `UserOrganisation` using its globally unique id and a patch. */
   updateUserOrganisationByNodeId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `UserOrganisation` using a unique key and a patch. */
@@ -13699,10 +13865,22 @@ export type Mutation = {
   deleteDataTable?: Maybe<DeleteDataTablePayload>;
   /** Deletes a single `DataTable` using a unique key. */
   deleteDataTableByTableName?: Maybe<DeleteDataTablePayload>;
+  /** Deletes a single `DataTableManufacturingStep` using its globally unique id. */
+  deleteDataTableManufacturingStepByNodeId?: Maybe<DeleteDataTableManufacturingStepPayload>;
+  /** Deletes a single `DataTableManufacturingStep` using a unique key. */
+  deleteDataTableManufacturingStep?: Maybe<DeleteDataTableManufacturingStepPayload>;
+  /** Deletes a single `DataTableActiveIngredient` using its globally unique id. */
+  deleteDataTableActiveIngredientByNodeId?: Maybe<DeleteDataTableActiveIngredientPayload>;
+  /** Deletes a single `DataTableActiveIngredient` using a unique key. */
+  deleteDataTableActiveIngredient?: Maybe<DeleteDataTableActiveIngredientPayload>;
   /** Deletes a single `DataTableAdministrationRoute` using its globally unique id. */
   deleteDataTableAdministrationRouteByNodeId?: Maybe<DeleteDataTableAdministrationRoutePayload>;
   /** Deletes a single `DataTableAdministrationRoute` using a unique key. */
   deleteDataTableAdministrationRoute?: Maybe<DeleteDataTableAdministrationRoutePayload>;
+  /** Deletes a single `DataTableAtcTherapeuticCategory` using its globally unique id. */
+  deleteDataTableAtcTherapeuticCategoryByNodeId?: Maybe<DeleteDataTableAtcTherapeuticCategoryPayload>;
+  /** Deletes a single `DataTableAtcTherapeuticCategory` using a unique key. */
+  deleteDataTableAtcTherapeuticCategory?: Maybe<DeleteDataTableAtcTherapeuticCategoryPayload>;
   /** Deletes a single `DataTableContainer` using its globally unique id. */
   deleteDataTableContainerByNodeId?: Maybe<DeleteDataTableContainerPayload>;
   /** Deletes a single `DataTableContainer` using a unique key. */
@@ -13885,6 +14063,10 @@ export type Mutation = {
   deleteUser?: Maybe<DeleteUserPayload>;
   /** Deletes a single `User` using a unique key. */
   deleteUserByUsername?: Maybe<DeleteUserPayload>;
+  /** Deletes a single `UserApplicationJoin` using its globally unique id. */
+  deleteUserApplicationJoinByNodeId?: Maybe<DeleteUserApplicationJoinPayload>;
+  /** Deletes a single `UserApplicationJoin` using a unique key. */
+  deleteUserApplicationJoin?: Maybe<DeleteUserApplicationJoinPayload>;
   /** Deletes a single `UserOrganisation` using its globally unique id. */
   deleteUserOrganisationByNodeId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `UserOrganisation` using a unique key. */
@@ -13972,8 +14154,26 @@ export type MutationCreateDataTableArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableManufacturingStepArgs = {
+  input: CreateDataTableManufacturingStepInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableActiveIngredientArgs = {
+  input: CreateDataTableActiveIngredientInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDataTableAdministrationRouteArgs = {
   input: CreateDataTableAdministrationRouteInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableAtcTherapeuticCategoryArgs = {
+  input: CreateDataTableAtcTherapeuticCategoryInput;
 };
 
 
@@ -14218,6 +14418,12 @@ export type MutationCreateUserArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateUserApplicationJoinArgs = {
+  input: CreateUserApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserOrganisationArgs = {
   input: CreateUserOrganisationInput;
 };
@@ -14380,6 +14586,30 @@ export type MutationUpdateDataTableByTableNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableManufacturingStepByNodeIdArgs = {
+  input: UpdateDataTableManufacturingStepByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableManufacturingStepArgs = {
+  input: UpdateDataTableManufacturingStepInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableActiveIngredientByNodeIdArgs = {
+  input: UpdateDataTableActiveIngredientByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableActiveIngredientArgs = {
+  input: UpdateDataTableActiveIngredientInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableAdministrationRouteByNodeIdArgs = {
   input: UpdateDataTableAdministrationRouteByNodeIdInput;
 };
@@ -14388,6 +14618,18 @@ export type MutationUpdateDataTableAdministrationRouteByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableAdministrationRouteArgs = {
   input: UpdateDataTableAdministrationRouteInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableAtcTherapeuticCategoryByNodeIdArgs = {
+  input: UpdateDataTableAtcTherapeuticCategoryByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableAtcTherapeuticCategoryArgs = {
+  input: UpdateDataTableAtcTherapeuticCategoryInput;
 };
 
 
@@ -14938,6 +15180,18 @@ export type MutationUpdateUserByUsernameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserApplicationJoinByNodeIdArgs = {
+  input: UpdateUserApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserApplicationJoinArgs = {
+  input: UpdateUserApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserOrganisationByNodeIdArgs = {
   input: UpdateUserOrganisationByNodeIdInput;
 };
@@ -15130,6 +15384,30 @@ export type MutationDeleteDataTableByTableNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableManufacturingStepByNodeIdArgs = {
+  input: DeleteDataTableManufacturingStepByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableManufacturingStepArgs = {
+  input: DeleteDataTableManufacturingStepInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableActiveIngredientByNodeIdArgs = {
+  input: DeleteDataTableActiveIngredientByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableActiveIngredientArgs = {
+  input: DeleteDataTableActiveIngredientInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableAdministrationRouteByNodeIdArgs = {
   input: DeleteDataTableAdministrationRouteByNodeIdInput;
 };
@@ -15138,6 +15416,18 @@ export type MutationDeleteDataTableAdministrationRouteByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableAdministrationRouteArgs = {
   input: DeleteDataTableAdministrationRouteInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableAtcTherapeuticCategoryByNodeIdArgs = {
+  input: DeleteDataTableAtcTherapeuticCategoryByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableAtcTherapeuticCategoryArgs = {
+  input: DeleteDataTableAtcTherapeuticCategoryInput;
 };
 
 
@@ -15684,6 +15974,18 @@ export type MutationDeleteUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserByUsernameArgs = {
   input: DeleteUserByUsernameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserApplicationJoinByNodeIdArgs = {
+  input: DeleteUserApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserApplicationJoinArgs = {
+  input: DeleteUserApplicationJoinInput;
 };
 
 
@@ -16899,6 +17201,7 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `userOrganisation` in the `UserInput` mutation. */
@@ -17035,6 +17338,7 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `permissionJoin` in the `UserInput` mutation. */
@@ -17175,6 +17479,7 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -17285,6 +17590,7 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -17559,20 +17865,11 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `template` in the `ApplicationInput` mutation. */
@@ -17958,20 +18255,11 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationInput` mutation. */
@@ -18031,6 +18319,7 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `UserInput` mutation. */
@@ -18091,20 +18380,11 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationInput` mutation. */
@@ -18165,6 +18445,7 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -18232,20 +18513,11 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `applicationNote` in the `ApplicationInput` mutation. */
@@ -18367,20 +18639,11 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `applicationStageHistory` in the `ApplicationInput` mutation. */
@@ -18500,20 +18763,11 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `applicationResponse` in the `ApplicationInput` mutation. */
@@ -18874,20 +19128,11 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `triggerSchedule` in the `ApplicationInput` mutation. */
@@ -19124,6 +19369,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationNote` in the `UserInput` mutation. */
@@ -19223,6 +19469,7 @@ export type UpdateUserOnApplicationNoteForApplicationNoteUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `triggerSchedule` in the `UserInput` mutation. */
@@ -19324,6 +19571,7 @@ export type UpdateUserOnTriggerScheduleForTriggerScheduleEditorUserIdFkeyPatch =
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `UserInput` mutation. */
@@ -19443,6 +19691,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `UserInput` mutation. */
@@ -19563,6 +19812,7 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -19670,6 +19920,7 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -20070,20 +20321,11 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `ApplicationInput` mutation. */
@@ -20347,6 +20589,7 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignmentAssignerJoin` in the `UserInput` mutation. */
@@ -20465,6 +20708,7 @@ export type UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJ
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `review` in the `UserInput` mutation. */
@@ -20787,6 +21031,7 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -20997,20 +21242,11 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `review` in the `ApplicationInput` mutation. */
@@ -21118,6 +21354,7 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `file` in the `UserInput` mutation. */
@@ -21353,20 +21590,11 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `file` in the `ApplicationInput` mutation. */
@@ -22660,8 +22888,10 @@ export type UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -22724,6 +22954,7 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `notification` in the `UserInput` mutation. */
@@ -22762,8 +22993,10 @@ export type UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -22826,20 +23059,11 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `notification` in the `ApplicationInput` mutation. */
@@ -22878,8 +23102,10 @@ export type UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatc
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -23002,8 +23228,10 @@ export type NotificationPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -23018,8 +23246,10 @@ export type NotificationApplicationIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -23161,20 +23391,11 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** Input for the nested mutation of `activityLog` in the `ApplicationInput` mutation. */
@@ -23295,264 +23516,10 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-};
-
-/** Input for the nested mutation of `userApplicationJoin` in the `ApplicationInput` mutation. */
-export type UserApplicationJoinApplicationIdFkeyInverseInput = {
-  /** Flag indicating whether all other `userApplicationJoin` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<UserApplicationJoinUserApplicationJoinPkeyConnect>>;
-  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<UserApplicationJoinNodeIdConnect>>;
-  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<UserApplicationJoinUserApplicationJoinPkeyDelete>>;
-  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<UserApplicationJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `userApplicationJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingUserApplicationJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `userApplicationJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
-  /** A `UserApplicationJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput>>;
-};
-
-/** The fields on `userApplicationJoin` to look up the row to connect. */
-export type UserApplicationJoinUserApplicationJoinPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type UserApplicationJoinNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `userApplicationJoin` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `userApplicationJoin` to look up the row to delete. */
-export type UserApplicationJoinUserApplicationJoinPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type UserApplicationJoinNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `userApplicationJoin` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `userApplicationJoin` to look up the row to update. */
-export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingUserApplicationJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
-  patch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
-export type UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
-  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `application` in the `UserApplicationJoinInput` mutation. */
-export type UserApplicationJoinApplicationIdFkeyInput = {
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySerial?: Maybe<ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateByNodeId?: Maybe<UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate>;
-  /** A `ApplicationInput` object that will be created and connected to this object. */
-  create?: Maybe<UserApplicationJoinApplicationIdFkeyApplicationCreateInput>;
-=======
->>>>>>> 4f31d1ef (Update generated types)
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-<<<<<<< HEAD
-  patch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `application` being updated. */
-export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  sessionId?: Maybe<Scalars['String']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `userOrganisationApplicationJoin` in the `ApplicationInput` mutation. */
-export type UserOrganisationApplicationJoinApplicationIdFkeyInverseInput = {
-  /** Flag indicating whether all other `userOrganisationApplicationJoin` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyConnect>>;
-  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<UserOrganisationApplicationJoinNodeIdConnect>>;
-  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyDelete>>;
-  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<UserOrganisationApplicationJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `userOrganisationApplicationJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingUserOrganisationApplicationJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `userOrganisationApplicationJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
-  /** A `UserOrganisationApplicationJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<UserOrganisationApplicationJoinApplicationIdFkeyUserOrganisationApplicationJoinCreateInput>>;
-};
-
-/** The fields on `userOrganisationApplicationJoin` to look up the row to connect. */
-export type UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type UserOrganisationApplicationJoinNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `userOrganisationApplicationJoin` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `userOrganisationApplicationJoin` to look up the row to delete. */
-export type UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type UserOrganisationApplicationJoinNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `userOrganisationApplicationJoin` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `userOrganisationApplicationJoin` to look up the row to update. */
-export type UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingUserOrganisationApplicationJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
-  patch: UpdateUserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
-export type UpdateUserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  userOrganisationId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInput>;
-  userOrganisationToUserOrganisationId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `application` in the `UserOrganisationApplicationJoinInput` mutation. */
-export type UserOrganisationApplicationJoinApplicationIdFkeyInput = {
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySerial?: Maybe<ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateByNodeId?: Maybe<UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>;
-  /** A `ApplicationInput` object that will be created and connected to this object. */
-  create?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `application` being updated. */
-export type UpdateApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  sessionId?: Maybe<Scalars['String']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
@@ -23669,10 +23636,10 @@ export type UpdateApplicationOnProductApplicationJoinForProductApplicationJoinAp
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
@@ -23790,10 +23757,252 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `userApplicationJoin` in the `ApplicationInput` mutation. */
+export type UserApplicationJoinApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `userApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<UserApplicationJoinUserApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<UserApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<UserApplicationJoinUserApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `userApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<UserApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `userApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingUserApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `userApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+  /** A `UserApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput>>;
+};
+
+/** The fields on `userApplicationJoin` to look up the row to connect. */
+export type UserApplicationJoinUserApplicationJoinPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type UserApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `userApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `userApplicationJoin` to look up the row to delete. */
+export type UserApplicationJoinUserApplicationJoinPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type UserApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `userApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `userApplicationJoin` to look up the row to update. */
+export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingUserApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
+  patch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `userApplicationJoin` being updated. */
+export type UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
+  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `application` in the `UserApplicationJoinInput` mutation. */
+export type UserApplicationJoinApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<UserApplicationJoinApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `userOrganisationApplicationJoin` in the `ApplicationInput` mutation. */
+export type UserOrganisationApplicationJoinApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `userOrganisationApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<UserOrganisationApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<UserOrganisationApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingUserOrganisationApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `userOrganisationApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+  /** A `UserOrganisationApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<UserOrganisationApplicationJoinApplicationIdFkeyUserOrganisationApplicationJoinCreateInput>>;
+};
+
+/** The fields on `userOrganisationApplicationJoin` to look up the row to connect. */
+export type UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type UserOrganisationApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `userOrganisationApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `userOrganisationApplicationJoin` to look up the row to delete. */
+export type UserOrganisationApplicationJoinUserOrganisationApplicationJoinPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type UserOrganisationApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `userOrganisationApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `userOrganisationApplicationJoin` to look up the row to update. */
+export type UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingUserOrganisationApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
+  patch: UpdateUserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `userOrganisationApplicationJoin` being updated. */
+export type UpdateUserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  userOrganisationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInput>;
+  userOrganisationToUserOrganisationId?: Maybe<UserOrganisationApplicationJoinUserOrganisationIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `application` in the `UserOrganisationApplicationJoinInput` mutation. */
+export type UserOrganisationApplicationJoinApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<UserOrganisationApplicationJoinOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnUserOrganisationApplicationJoinForUserOrganisationApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
@@ -23911,10 +24120,10 @@ export type UpdateApplicationOnDataTableProductApplicationJoinForDataTableProduc
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
@@ -23922,39 +24131,11 @@ export type UpdateApplicationOnDataTableProductApplicationJoinForDataTableProduc
 export type ApplicationOnDataTableProductApplicationJoinForDataTableProductApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnDataTableProductApplicationJoinForDataTableProductApplicationJoinApplicationIdFkeyPatch;
-=======
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
-<<<<<<< HEAD
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
-  patch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
->>>>>>> 4f31d1ef (Update generated types)
   serial: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 export type DataTableProductApplicationJoinOnDataTableProductApplicationJoinForDataTableProductApplicationJoinApplicationIdFkeyNodeIdUpdate = {
-=======
-export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate = {
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
-export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate = {
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
-export type ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate = {
->>>>>>> 4f31d1ef (Update generated types)
   /** The globally unique `ID` which identifies a single `application` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
@@ -23987,13 +24168,10 @@ export type ApplicationPatch = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
@@ -24023,10 +24201,10 @@ export type DataTableProductApplicationJoinApplicationIdFkeyApplicationCreateInp
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
@@ -24109,8 +24287,8 @@ export type UpdateDataTableProductOnDataTableProductApplicationJoinForDataTableP
   shelfLifeReconstructed?: Maybe<Scalars['String']>;
   storageConditionsOpened?: Maybe<Scalars['String']>;
   storageConditionsProposed?: Maybe<Scalars['String']>;
-  genericNamesText?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['Int']>;
+  genericNamesFilterData?: Maybe<Scalars['String']>;
+  manufacturersListFilterData?: Maybe<Scalars['String']>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinDataTableProductIdFkeyInverseInput>;
 };
 
@@ -24214,8 +24392,8 @@ export type DataTableProductPatch = {
   shelfLifeReconstructed?: Maybe<Scalars['String']>;
   storageConditionsOpened?: Maybe<Scalars['String']>;
   storageConditionsProposed?: Maybe<Scalars['String']>;
-  genericNamesText?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['Int']>;
+  genericNamesFilterData?: Maybe<Scalars['String']>;
+  manufacturersListFilterData?: Maybe<Scalars['String']>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinDataTableProductIdFkeyInverseInput>;
 };
 
@@ -24251,8 +24429,8 @@ export type DataTableProductApplicationJoinDataTableProductIdFkeyDataTableProduc
   shelfLifeReconstructed?: Maybe<Scalars['String']>;
   storageConditionsOpened?: Maybe<Scalars['String']>;
   storageConditionsProposed?: Maybe<Scalars['String']>;
-  genericNamesText?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['Int']>;
+  genericNamesFilterData?: Maybe<Scalars['String']>;
+  manufacturersListFilterData?: Maybe<Scalars['String']>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinDataTableProductIdFkeyInverseInput>;
 };
 
@@ -24270,350 +24448,6 @@ export type DataTableProductApplicationJoinApplicationIdFkeyDataTableProductAppl
   dataTableProductId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInput>;
   dataTableProductToDataTableProductId?: Maybe<DataTableProductApplicationJoinDataTableProductIdFkeyInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
-  serial: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `application` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: ApplicationPatch;
-};
-
-/** The `application` to be created by this mutation. */
-export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  sessionId?: Maybe<Scalars['String']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `organisation` in the `OrganisationApplicationJoinInput` mutation. */
-export type OrganisationApplicationJoinOrganisationIdFkeyInput = {
-  /** The primary key(s) for `organisation` for the far side of the relationship. */
-  connectById?: Maybe<OrganisationOrganisationPkeyConnect>;
-  /** The primary key(s) for `organisation` for the far side of the relationship. */
-  connectByName?: Maybe<OrganisationOrganisationNameKeyConnect>;
-  /** The primary key(s) for `organisation` for the far side of the relationship. */
-  connectByRegistration?: Maybe<OrganisationOrganisationRegistrationKeyConnect>;
-  /** The primary key(s) for `organisation` for the far side of the relationship. */
-  connectByNodeId?: Maybe<OrganisationNodeIdConnect>;
-  /** The primary key(s) for `organisation` for the far side of the relationship. */
-  deleteById?: Maybe<OrganisationOrganisationPkeyDelete>;
-  /** The primary key(s) for `organisation` for the far side of the relationship. */
-  deleteByName?: Maybe<OrganisationOrganisationNameKeyDelete>;
-  /** The primary key(s) for `organisation` for the far side of the relationship. */
-  deleteByRegistration?: Maybe<OrganisationOrganisationRegistrationKeyDelete>;
-  /** The primary key(s) for `organisation` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<OrganisationNodeIdDelete>;
-  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateById?: Maybe<OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate>;
-  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateByName?: Maybe<OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate>;
-  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateByRegistration?: Maybe<OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate>;
-  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateByNodeId?: Maybe<OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyNodeIdUpdate>;
-  /** A `OrganisationInput` object that will be created and connected to this object. */
-  create?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput>;
-};
-
-/** The fields on `organisation` to look up the row to update. */
-export type OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate = {
-  /** An object where the defined keys will be set on the `organisation` being updated. */
-  patch: UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `organisation` being updated. */
-export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  registration?: Maybe<Scalars['String']>;
-  address?: Maybe<Scalars['String']>;
-  logoUrl?: Maybe<Scalars['String']>;
-  isSystemOrg?: Maybe<Scalars['Boolean']>;
-  registrationDocumentation?: Maybe<Scalars['JSON']>;
-  agent?: Maybe<Scalars['JSON']>;
-  contact?: Maybe<Scalars['JSON']>;
-  authorisation?: Maybe<Scalars['JSON']>;
-  country?: Maybe<Scalars['String']>;
-  province?: Maybe<Scalars['String']>;
-  postalAddress?: Maybe<Scalars['String']>;
-  postalCountry?: Maybe<Scalars['String']>;
-  postalProvince?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['JSON']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  registrationDate?: Maybe<Scalars['Datetime']>;
-  agentId?: Maybe<Scalars['Int']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `organisationApplicationJoin` in the `OrganisationInput` mutation. */
-export type OrganisationApplicationJoinOrganisationIdFkeyInverseInput = {
-  /** Flag indicating whether all other `organisationApplicationJoin` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect>>;
-  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<OrganisationApplicationJoinNodeIdConnect>>;
-  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete>>;
-  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<OrganisationApplicationJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `organisationApplicationJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `organisationApplicationJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyNodeIdUpdate>>;
-  /** A `OrganisationApplicationJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<OrganisationApplicationJoinOrganisationIdFkeyOrganisationApplicationJoinCreateInput>>;
-};
-
-/** The fields on `organisationApplicationJoin` to look up the row to update. */
-export type OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
-  patch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
-export type UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `organisationApplicationJoin` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
-  patch: OrganisationApplicationJoinPatch;
-};
-
-/** Represents an update to a `OrganisationApplicationJoin`. Fields that are set will be updated. */
-export type OrganisationApplicationJoinPatch = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
-};
-
-/** The `organisationApplicationJoin` to be created by this mutation. */
-export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationApplicationJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
-};
-
-/** The fields on `organisation` to look up the row to update. */
-export type OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate = {
-  /** An object where the defined keys will be set on the `organisation` being updated. */
-  patch: UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch;
-  name: Scalars['String'];
-};
-
-/** The fields on `organisation` to look up the row to update. */
-export type OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate = {
-  /** An object where the defined keys will be set on the `organisation` being updated. */
-  patch: UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch;
-  registration: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `organisation` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `organisation` being updated. */
-  patch: OrganisationPatch;
-};
-
-/** Represents an update to a `Organisation`. Fields that are set will be updated. */
-export type OrganisationPatch = {
-  id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  registration?: Maybe<Scalars['String']>;
-  address?: Maybe<Scalars['String']>;
-  logoUrl?: Maybe<Scalars['String']>;
-  isSystemOrg?: Maybe<Scalars['Boolean']>;
-  registrationDocumentation?: Maybe<Scalars['JSON']>;
-  agent?: Maybe<Scalars['JSON']>;
-  contact?: Maybe<Scalars['JSON']>;
-  authorisation?: Maybe<Scalars['JSON']>;
-  country?: Maybe<Scalars['String']>;
-  province?: Maybe<Scalars['String']>;
-  postalAddress?: Maybe<Scalars['String']>;
-  postalCountry?: Maybe<Scalars['String']>;
-  postalProvince?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['JSON']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  registrationDate?: Maybe<Scalars['Datetime']>;
-  agentId?: Maybe<Scalars['Int']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
-};
-
-/** The `organisation` to be created by this mutation. */
-export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  registration?: Maybe<Scalars['String']>;
-  address?: Maybe<Scalars['String']>;
-  logoUrl?: Maybe<Scalars['String']>;
-  isSystemOrg?: Maybe<Scalars['Boolean']>;
-  registrationDocumentation?: Maybe<Scalars['JSON']>;
-  agent?: Maybe<Scalars['JSON']>;
-  contact?: Maybe<Scalars['JSON']>;
-  authorisation?: Maybe<Scalars['JSON']>;
-  country?: Maybe<Scalars['String']>;
-  province?: Maybe<Scalars['String']>;
-  postalAddress?: Maybe<Scalars['String']>;
-  postalCountry?: Maybe<Scalars['String']>;
-  postalProvince?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['JSON']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  registrationDate?: Maybe<Scalars['Datetime']>;
-  agentId?: Maybe<Scalars['Int']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `organisationApplicationJoin` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
-  patch: OrganisationApplicationJoinPatch;
-};
-
-/** The `organisationApplicationJoin` to be created by this mutation. */
-export type OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
-  serial: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `application` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: ApplicationPatch;
-};
-
-/** The `application` to be created by this mutation. */
-export type ProductApplicationJoinApplicationIdFkeyApplicationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  sessionId?: Maybe<Scalars['String']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `productApplicationJoin` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `productApplicationJoin` being updated. */
-  patch: ProductApplicationJoinPatch;
-};
-
-/** Represents an update to a `ProductApplicationJoin`. Fields that are set will be updated. */
-export type ProductApplicationJoinPatch = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  productId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
-};
-
-/** The `productApplicationJoin` to be created by this mutation. */
-export type ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  productId: Scalars['Int'];
-  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -24657,10 +24491,10 @@ export type UserOrganisationApplicationJoinApplicationIdFkeyApplicationCreateInp
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
@@ -24833,10 +24667,6 @@ export type UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplic
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: ApplicationPatch;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 };
 
 /** The `application` to be created by this mutation. */
@@ -24865,17 +24695,11 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
 };
 
 /** Input for the nested mutation of `user` in the `UserApplicationJoinInput` mutation. */
@@ -24919,17 +24743,11 @@ export type UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-<<<<<<< HEAD
-<<<<<<< HEAD
   phone?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -25029,17 +24847,11 @@ export type UserPatch = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-<<<<<<< HEAD
-<<<<<<< HEAD
   phone?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -25064,17 +24876,11 @@ export type UserApplicationJoinUserIdFkeyUserCreateInput = {
   email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-<<<<<<< HEAD
-<<<<<<< HEAD
   phone?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   country?: Maybe<Scalars['String']>;
   province?: Maybe<Scalars['String']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -25106,6 +24912,353 @@ export type UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput =
 };
 
 /** The fields on `application` to look up the row to update. */
+export type ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The `application` to be created by this mutation. */
+export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `organisation` in the `OrganisationApplicationJoinInput` mutation. */
+export type OrganisationApplicationJoinOrganisationIdFkeyInput = {
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectById?: Maybe<OrganisationOrganisationPkeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByName?: Maybe<OrganisationOrganisationNameKeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByRegistration?: Maybe<OrganisationOrganisationRegistrationKeyConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  connectByNodeId?: Maybe<OrganisationNodeIdConnect>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteById?: Maybe<OrganisationOrganisationPkeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByName?: Maybe<OrganisationOrganisationNameKeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByRegistration?: Maybe<OrganisationOrganisationRegistrationKeyDelete>;
+  /** The primary key(s) for `organisation` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<OrganisationNodeIdDelete>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateById?: Maybe<OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByName?: Maybe<OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByRegistration?: Maybe<OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate>;
+  /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
+  updateByNodeId?: Maybe<OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyNodeIdUpdate>;
+  /** A `OrganisationInput` object that will be created and connected to this object. */
+  create?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput>;
+};
+
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `organisation` being updated. */
+export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
+  registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  registrationDate?: Maybe<Scalars['Datetime']>;
+  agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `organisationApplicationJoin` in the `OrganisationInput` mutation. */
+export type OrganisationApplicationJoinOrganisationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `organisationApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<OrganisationApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `organisationApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<OrganisationApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `organisationApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `organisationApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyNodeIdUpdate>>;
+  /** A `OrganisationApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<OrganisationApplicationJoinOrganisationIdFkeyOrganisationApplicationJoinCreateInput>>;
+};
+
+/** The fields on `organisationApplicationJoin` to look up the row to update. */
+export type OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
+  patch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
+export type UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `organisationApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
+  patch: OrganisationApplicationJoinPatch;
+};
+
+/** Represents an update to a `OrganisationApplicationJoin`. Fields that are set will be updated. */
+export type OrganisationApplicationJoinPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
+};
+
+/** The `organisationApplicationJoin` to be created by this mutation. */
+export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
+};
+
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `organisation` to look up the row to update. */
+export type OrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate = {
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyPatch;
+  registration: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinOrganisationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `organisation` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `organisation` being updated. */
+  patch: OrganisationPatch;
+};
+
+/** Represents an update to a `Organisation`. Fields that are set will be updated. */
+export type OrganisationPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
+  registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  registrationDate?: Maybe<Scalars['Datetime']>;
+  agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
+};
+
+/** The `organisation` to be created by this mutation. */
+export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  registration?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
+  registrationDocumentation?: Maybe<Scalars['JSON']>;
+  agent?: Maybe<Scalars['JSON']>;
+  contact?: Maybe<Scalars['JSON']>;
+  authorisation?: Maybe<Scalars['JSON']>;
+  country?: Maybe<Scalars['String']>;
+  province?: Maybe<Scalars['String']>;
+  postalAddress?: Maybe<Scalars['String']>;
+  postalCountry?: Maybe<Scalars['String']>;
+  postalProvince?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  registrationDate?: Maybe<Scalars['Datetime']>;
+  agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteOrgIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentOrganisationIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `organisationApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `organisationApplicationJoin` being updated. */
+  patch: OrganisationApplicationJoinPatch;
+};
+
+/** The `organisationApplicationJoin` to be created by this mutation. */
+export type OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<OrganisationApplicationJoinOrganisationIdFkeyInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The `application` to be created by this mutation. */
+export type ProductApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `productApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `productApplicationJoin` being updated. */
+  patch: ProductApplicationJoinPatch;
+};
+
+/** Represents an update to a `ProductApplicationJoin`. Fields that are set will be updated. */
+export type ProductApplicationJoinPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  productId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
+};
+
+/** The `productApplicationJoin` to be created by this mutation. */
+export type ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  productId: Scalars['Int'];
+  applicationToApplicationId?: Maybe<ProductApplicationJoinApplicationIdFkeyInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
 export type ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
@@ -25118,8 +25271,6 @@ export type ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate 
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: ApplicationPatch;
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The `application` to be created by this mutation. */
@@ -25148,20 +25299,11 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -25238,20 +25380,11 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The fields on `verification` to look up the row to update. */
@@ -25339,20 +25472,11 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -25372,8 +25496,10 @@ export type NotificationUserIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -25392,29 +25518,6 @@ export type NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate = {
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `user` being updated. */
   patch: UserPatch;
-};
-
-/** Represents an update to a `User`. Fields that are set will be updated. */
-export type UserPatch = {
-  id?: Maybe<Scalars['Int']>;
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  fullName?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['Date']>;
-  passwordHash?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteUserIdFkeyInverseInput>;
-  triggerSchedulesUsingId?: Maybe<TriggerScheduleEditorUserIdFkeyInverseInput>;
-  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
-  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
 /** The `user` to be created by this mutation. */
@@ -25443,6 +25546,7 @@ export type NotificationUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -25462,8 +25566,10 @@ export type NotificationReviewIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -25817,20 +25923,11 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The fields on `file` to look up the row to update. */
@@ -25915,6 +26012,7 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -25987,20 +26085,11 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -26180,6 +26269,7 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -26390,6 +26480,7 @@ export type ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -26451,6 +26542,7 @@ export type FileUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The fields on `file` to look up the row to update. */
@@ -26612,20 +26704,11 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27027,6 +27110,7 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -27100,6 +27184,7 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -27191,6 +27276,7 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27275,6 +27361,7 @@ export type TriggerScheduleEditorUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27357,6 +27444,7 @@ export type ApplicationNoteUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27421,6 +27509,7 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27564,20 +27653,11 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27792,20 +27872,11 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27868,20 +27939,11 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -27945,20 +28007,11 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The fields on `organisation` to look up the row to update. */
@@ -28004,6 +28057,7 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -28053,20 +28107,11 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The fields on `user` to look up the row to update. */
@@ -28110,6 +28155,7 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -28153,20 +28199,11 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -28341,20 +28378,11 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -28543,6 +28571,7 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -28621,6 +28650,7 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -28690,10 +28720,7 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-<<<<<<< HEAD
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
 };
 
 /** The fields on `userOrganisation` to look up the row to update. */
@@ -28702,12 +28729,6 @@ export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsing
   patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
   userId: Scalars['Int'];
   organisationId: Scalars['Int'];
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -28769,6 +28790,7 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -29511,20 +29533,11 @@ export type ApplicationInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userOrganisationApplicationJoinsUsingId?: Maybe<UserOrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> e57ab507 (Remove the use of counters in ApplicationList)
-=======
->>>>>>> 4f31d1ef (Update generated types)
 };
 
 /** The output of our create `Application` mutation. */
@@ -29849,6 +29862,75 @@ export type CreateDataTablePayloadDataTableEdgeArgs = {
   orderBy?: Maybe<Array<DataTablesOrderBy>>;
 };
 
+/** All input for the create `DataTableManufacturingStep` mutation. */
+export type CreateDataTableManufacturingStepInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableManufacturingStep` to be created by this mutation. */
+  dataTableManufacturingStep: DataTableManufacturingStepInput;
+};
+
+/** An input for mutations affecting `DataTableManufacturingStep` */
+export type DataTableManufacturingStepInput = {
+  id?: Maybe<Scalars['Int']>;
+  tipoDeFabricante?: Maybe<Scalars['String']>;
+  manufacturingOperation?: Maybe<Scalars['String']>;
+  definition?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `DataTableManufacturingStep` mutation. */
+export type CreateDataTableManufacturingStepPayload = {
+  __typename?: 'CreateDataTableManufacturingStepPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableManufacturingStep` that was created by this mutation. */
+  dataTableManufacturingStep?: Maybe<DataTableManufacturingStep>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableManufacturingStep`. May be used by Relay 1. */
+  dataTableManufacturingStepEdge?: Maybe<DataTableManufacturingStepsEdge>;
+};
+
+
+/** The output of our create `DataTableManufacturingStep` mutation. */
+export type CreateDataTableManufacturingStepPayloadDataTableManufacturingStepEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableManufacturingStepsOrderBy>>;
+};
+
+/** All input for the create `DataTableActiveIngredient` mutation. */
+export type CreateDataTableActiveIngredientInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableActiveIngredient` to be created by this mutation. */
+  dataTableActiveIngredient: DataTableActiveIngredientInput;
+};
+
+/** An input for mutations affecting `DataTableActiveIngredient` */
+export type DataTableActiveIngredientInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  latina?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `DataTableActiveIngredient` mutation. */
+export type CreateDataTableActiveIngredientPayload = {
+  __typename?: 'CreateDataTableActiveIngredientPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableActiveIngredient` that was created by this mutation. */
+  dataTableActiveIngredient?: Maybe<DataTableActiveIngredient>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableActiveIngredient`. May be used by Relay 1. */
+  dataTableActiveIngredientEdge?: Maybe<DataTableActiveIngredientsEdge>;
+};
+
+
+/** The output of our create `DataTableActiveIngredient` mutation. */
+export type CreateDataTableActiveIngredientPayloadDataTableActiveIngredientEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableActiveIngredientsOrderBy>>;
+};
+
 /** All input for the create `DataTableAdministrationRoute` mutation. */
 export type CreateDataTableAdministrationRouteInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -29881,6 +29963,42 @@ export type CreateDataTableAdministrationRoutePayload = {
 /** The output of our create `DataTableAdministrationRoute` mutation. */
 export type CreateDataTableAdministrationRoutePayloadDataTableAdministrationRouteEdgeArgs = {
   orderBy?: Maybe<Array<DataTableAdministrationRoutesOrderBy>>;
+};
+
+/** All input for the create `DataTableAtcTherapeuticCategory` mutation. */
+export type CreateDataTableAtcTherapeuticCategoryInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableAtcTherapeuticCategory` to be created by this mutation. */
+  dataTableAtcTherapeuticCategory: DataTableAtcTherapeuticCategoryInput;
+};
+
+/** An input for mutations affecting `DataTableAtcTherapeuticCategory` */
+export type DataTableAtcTherapeuticCategoryInput = {
+  id?: Maybe<Scalars['Int']>;
+  whoAtcId?: Maybe<Scalars['String']>;
+  atcCode?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  category?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `DataTableAtcTherapeuticCategory` mutation. */
+export type CreateDataTableAtcTherapeuticCategoryPayload = {
+  __typename?: 'CreateDataTableAtcTherapeuticCategoryPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableAtcTherapeuticCategory` that was created by this mutation. */
+  dataTableAtcTherapeuticCategory?: Maybe<DataTableAtcTherapeuticCategory>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableAtcTherapeuticCategory`. May be used by Relay 1. */
+  dataTableAtcTherapeuticCategoryEdge?: Maybe<DataTableAtcTherapeuticCategoriesEdge>;
+};
+
+
+/** The output of our create `DataTableAtcTherapeuticCategory` mutation. */
+export type CreateDataTableAtcTherapeuticCategoryPayloadDataTableAtcTherapeuticCategoryEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableAtcTherapeuticCategoriesOrderBy>>;
 };
 
 /** All input for the create `DataTableContainer` mutation. */
@@ -30098,8 +30216,8 @@ export type DataTableProductInput = {
   shelfLifeReconstructed?: Maybe<Scalars['String']>;
   storageConditionsOpened?: Maybe<Scalars['String']>;
   storageConditionsProposed?: Maybe<Scalars['String']>;
-  genericNamesText?: Maybe<Scalars['String']>;
-  amount?: Maybe<Scalars['Int']>;
+  genericNamesFilterData?: Maybe<Scalars['String']>;
+  manufacturersListFilterData?: Maybe<Scalars['String']>;
   dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinDataTableProductIdFkeyInverseInput>;
 };
 
@@ -30483,8 +30601,10 @@ export type NotificationInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  emailSent?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   isRead?: Maybe<Scalars['Boolean']>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
   reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
@@ -30544,6 +30664,7 @@ export type OrganisationInput = {
   isActive?: Maybe<Scalars['Boolean']>;
   registrationDate?: Maybe<Scalars['Datetime']>;
   agentId?: Maybe<Scalars['Int']>;
+  typeFilterData?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -31648,6 +31769,7 @@ export type UserInput = {
   reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinUserIdFkeyInverseInput>;
 };
 
 /** The output of our create `User` mutation. */
@@ -31667,6 +31789,46 @@ export type CreateUserPayload = {
 /** The output of our create `User` mutation. */
 export type CreateUserPayloadUserEdgeArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
+};
+
+/** All input for the create `UserApplicationJoin` mutation. */
+export type CreateUserApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `UserApplicationJoin` to be created by this mutation. */
+  userApplicationJoin: UserApplicationJoinInput;
+};
+
+/** An input for mutations affecting `UserApplicationJoin` */
+export type UserApplicationJoinInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<UserApplicationJoinApplicationIdFkeyInput>;
+  userToUserId?: Maybe<UserApplicationJoinUserIdFkeyInput>;
+};
+
+/** The output of our create `UserApplicationJoin` mutation. */
+export type CreateUserApplicationJoinPayload = {
+  __typename?: 'CreateUserApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `UserApplicationJoin` that was created by this mutation. */
+  userApplicationJoin?: Maybe<UserApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `UserApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `UserApplicationJoin`. */
+  user?: Maybe<User>;
+  /** An edge for our `UserApplicationJoin`. May be used by Relay 1. */
+  userApplicationJoinEdge?: Maybe<UserApplicationJoinsEdge>;
+};
+
+
+/** The output of our create `UserApplicationJoin` mutation. */
+export type CreateUserApplicationJoinPayloadUserApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
 };
 
 /** All input for the create `UserOrganisation` mutation. */
@@ -32267,6 +32429,97 @@ export type UpdateDataTableByTableNameInput = {
   tableName: Scalars['String'];
 };
 
+/** All input for the `updateDataTableManufacturingStepByNodeId` mutation. */
+export type UpdateDataTableManufacturingStepByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableManufacturingStep` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `DataTableManufacturingStep` being updated. */
+  patch: DataTableManufacturingStepPatch;
+};
+
+/** Represents an update to a `DataTableManufacturingStep`. Fields that are set will be updated. */
+export type DataTableManufacturingStepPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tipoDeFabricante?: Maybe<Scalars['String']>;
+  manufacturingOperation?: Maybe<Scalars['String']>;
+  definition?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `DataTableManufacturingStep` mutation. */
+export type UpdateDataTableManufacturingStepPayload = {
+  __typename?: 'UpdateDataTableManufacturingStepPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableManufacturingStep` that was updated by this mutation. */
+  dataTableManufacturingStep?: Maybe<DataTableManufacturingStep>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableManufacturingStep`. May be used by Relay 1. */
+  dataTableManufacturingStepEdge?: Maybe<DataTableManufacturingStepsEdge>;
+};
+
+
+/** The output of our update `DataTableManufacturingStep` mutation. */
+export type UpdateDataTableManufacturingStepPayloadDataTableManufacturingStepEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableManufacturingStepsOrderBy>>;
+};
+
+/** All input for the `updateDataTableManufacturingStep` mutation. */
+export type UpdateDataTableManufacturingStepInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataTableManufacturingStep` being updated. */
+  patch: DataTableManufacturingStepPatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateDataTableActiveIngredientByNodeId` mutation. */
+export type UpdateDataTableActiveIngredientByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableActiveIngredient` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `DataTableActiveIngredient` being updated. */
+  patch: DataTableActiveIngredientPatch;
+};
+
+/** Represents an update to a `DataTableActiveIngredient`. Fields that are set will be updated. */
+export type DataTableActiveIngredientPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  latina?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `DataTableActiveIngredient` mutation. */
+export type UpdateDataTableActiveIngredientPayload = {
+  __typename?: 'UpdateDataTableActiveIngredientPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableActiveIngredient` that was updated by this mutation. */
+  dataTableActiveIngredient?: Maybe<DataTableActiveIngredient>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableActiveIngredient`. May be used by Relay 1. */
+  dataTableActiveIngredientEdge?: Maybe<DataTableActiveIngredientsEdge>;
+};
+
+
+/** The output of our update `DataTableActiveIngredient` mutation. */
+export type UpdateDataTableActiveIngredientPayloadDataTableActiveIngredientEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableActiveIngredientsOrderBy>>;
+};
+
+/** All input for the `updateDataTableActiveIngredient` mutation. */
+export type UpdateDataTableActiveIngredientInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataTableActiveIngredient` being updated. */
+  patch: DataTableActiveIngredientPatch;
+  id: Scalars['Int'];
+};
+
 /** All input for the `updateDataTableAdministrationRouteByNodeId` mutation. */
 export type UpdateDataTableAdministrationRouteByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -32309,6 +32562,53 @@ export type UpdateDataTableAdministrationRouteInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** An object where the defined keys will be set on the `DataTableAdministrationRoute` being updated. */
   patch: DataTableAdministrationRoutePatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateDataTableAtcTherapeuticCategoryByNodeId` mutation. */
+export type UpdateDataTableAtcTherapeuticCategoryByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableAtcTherapeuticCategory` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `DataTableAtcTherapeuticCategory` being updated. */
+  patch: DataTableAtcTherapeuticCategoryPatch;
+};
+
+/** Represents an update to a `DataTableAtcTherapeuticCategory`. Fields that are set will be updated. */
+export type DataTableAtcTherapeuticCategoryPatch = {
+  id?: Maybe<Scalars['Int']>;
+  whoAtcId?: Maybe<Scalars['String']>;
+  atcCode?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  category?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `DataTableAtcTherapeuticCategory` mutation. */
+export type UpdateDataTableAtcTherapeuticCategoryPayload = {
+  __typename?: 'UpdateDataTableAtcTherapeuticCategoryPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableAtcTherapeuticCategory` that was updated by this mutation. */
+  dataTableAtcTherapeuticCategory?: Maybe<DataTableAtcTherapeuticCategory>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableAtcTherapeuticCategory`. May be used by Relay 1. */
+  dataTableAtcTherapeuticCategoryEdge?: Maybe<DataTableAtcTherapeuticCategoriesEdge>;
+};
+
+
+/** The output of our update `DataTableAtcTherapeuticCategory` mutation. */
+export type UpdateDataTableAtcTherapeuticCategoryPayloadDataTableAtcTherapeuticCategoryEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableAtcTherapeuticCategoriesOrderBy>>;
+};
+
+/** All input for the `updateDataTableAtcTherapeuticCategory` mutation. */
+export type UpdateDataTableAtcTherapeuticCategoryInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataTableAtcTherapeuticCategory` being updated. */
+  patch: DataTableAtcTherapeuticCategoryPatch;
   id: Scalars['Int'];
 };
 
@@ -34150,6 +34450,48 @@ export type UpdateUserByUsernameInput = {
   username: Scalars['String'];
 };
 
+/** All input for the `updateUserApplicationJoinByNodeId` mutation. */
+export type UpdateUserApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `UserApplicationJoin` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `UserApplicationJoin` being updated. */
+  patch: UserApplicationJoinPatch;
+};
+
+/** The output of our update `UserApplicationJoin` mutation. */
+export type UpdateUserApplicationJoinPayload = {
+  __typename?: 'UpdateUserApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `UserApplicationJoin` that was updated by this mutation. */
+  userApplicationJoin?: Maybe<UserApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `UserApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `UserApplicationJoin`. */
+  user?: Maybe<User>;
+  /** An edge for our `UserApplicationJoin`. May be used by Relay 1. */
+  userApplicationJoinEdge?: Maybe<UserApplicationJoinsEdge>;
+};
+
+
+/** The output of our update `UserApplicationJoin` mutation. */
+export type UpdateUserApplicationJoinPayloadUserApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `updateUserApplicationJoin` mutation. */
+export type UpdateUserApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `UserApplicationJoin` being updated. */
+  patch: UserApplicationJoinPatch;
+  id: Scalars['Int'];
+};
+
 /** All input for the `updateUserOrganisationByNodeId` mutation. */
 export type UpdateUserOrganisationByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -34699,6 +35041,76 @@ export type DeleteDataTableByTableNameInput = {
   tableName: Scalars['String'];
 };
 
+/** All input for the `deleteDataTableManufacturingStepByNodeId` mutation. */
+export type DeleteDataTableManufacturingStepByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableManufacturingStep` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `DataTableManufacturingStep` mutation. */
+export type DeleteDataTableManufacturingStepPayload = {
+  __typename?: 'DeleteDataTableManufacturingStepPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableManufacturingStep` that was deleted by this mutation. */
+  dataTableManufacturingStep?: Maybe<DataTableManufacturingStep>;
+  deletedDataTableManufacturingStepNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableManufacturingStep`. May be used by Relay 1. */
+  dataTableManufacturingStepEdge?: Maybe<DataTableManufacturingStepsEdge>;
+};
+
+
+/** The output of our delete `DataTableManufacturingStep` mutation. */
+export type DeleteDataTableManufacturingStepPayloadDataTableManufacturingStepEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableManufacturingStepsOrderBy>>;
+};
+
+/** All input for the `deleteDataTableManufacturingStep` mutation. */
+export type DeleteDataTableManufacturingStepInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteDataTableActiveIngredientByNodeId` mutation. */
+export type DeleteDataTableActiveIngredientByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableActiveIngredient` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `DataTableActiveIngredient` mutation. */
+export type DeleteDataTableActiveIngredientPayload = {
+  __typename?: 'DeleteDataTableActiveIngredientPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableActiveIngredient` that was deleted by this mutation. */
+  dataTableActiveIngredient?: Maybe<DataTableActiveIngredient>;
+  deletedDataTableActiveIngredientNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableActiveIngredient`. May be used by Relay 1. */
+  dataTableActiveIngredientEdge?: Maybe<DataTableActiveIngredientsEdge>;
+};
+
+
+/** The output of our delete `DataTableActiveIngredient` mutation. */
+export type DeleteDataTableActiveIngredientPayloadDataTableActiveIngredientEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableActiveIngredientsOrderBy>>;
+};
+
+/** All input for the `deleteDataTableActiveIngredient` mutation. */
+export type DeleteDataTableActiveIngredientInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
 /** All input for the `deleteDataTableAdministrationRouteByNodeId` mutation. */
 export type DeleteDataTableAdministrationRouteByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -34729,6 +35141,41 @@ export type DeleteDataTableAdministrationRoutePayloadDataTableAdministrationRout
 
 /** All input for the `deleteDataTableAdministrationRoute` mutation. */
 export type DeleteDataTableAdministrationRouteInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteDataTableAtcTherapeuticCategoryByNodeId` mutation. */
+export type DeleteDataTableAtcTherapeuticCategoryByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableAtcTherapeuticCategory` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `DataTableAtcTherapeuticCategory` mutation. */
+export type DeleteDataTableAtcTherapeuticCategoryPayload = {
+  __typename?: 'DeleteDataTableAtcTherapeuticCategoryPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableAtcTherapeuticCategory` that was deleted by this mutation. */
+  dataTableAtcTherapeuticCategory?: Maybe<DataTableAtcTherapeuticCategory>;
+  deletedDataTableAtcTherapeuticCategoryNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableAtcTherapeuticCategory`. May be used by Relay 1. */
+  dataTableAtcTherapeuticCategoryEdge?: Maybe<DataTableAtcTherapeuticCategoriesEdge>;
+};
+
+
+/** The output of our delete `DataTableAtcTherapeuticCategory` mutation. */
+export type DeleteDataTableAtcTherapeuticCategoryPayloadDataTableAtcTherapeuticCategoryEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableAtcTherapeuticCategoriesOrderBy>>;
+};
+
+/** All input for the `deleteDataTableAtcTherapeuticCategory` mutation. */
+export type DeleteDataTableAtcTherapeuticCategoryInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
@@ -36313,6 +36760,45 @@ export type DeleteUserByUsernameInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   username: Scalars['String'];
+};
+
+/** All input for the `deleteUserApplicationJoinByNodeId` mutation. */
+export type DeleteUserApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `UserApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `UserApplicationJoin` mutation. */
+export type DeleteUserApplicationJoinPayload = {
+  __typename?: 'DeleteUserApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `UserApplicationJoin` that was deleted by this mutation. */
+  userApplicationJoin?: Maybe<UserApplicationJoin>;
+  deletedUserApplicationJoinNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `UserApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `UserApplicationJoin`. */
+  user?: Maybe<User>;
+  /** An edge for our `UserApplicationJoin`. May be used by Relay 1. */
+  userApplicationJoinEdge?: Maybe<UserApplicationJoinsEdge>;
+};
+
+
+/** The output of our delete `UserApplicationJoin` mutation. */
+export type DeleteUserApplicationJoinPayloadUserApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `deleteUserApplicationJoin` mutation. */
+export type DeleteUserApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
 };
 
 /** All input for the `deleteUserOrganisationByNodeId` mutation. */
