@@ -134,6 +134,10 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const setAttemptSubmission = () => (structure.attemptSubmission = true)
   const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
 
+  const showIncompleteReviewsWarning = () => {
+    showWarning({ ...messages.REVIEW_SUBMISSION_INCOMPLETE, onConfirm: () => submission() })
+  }
+
   const showIncompleteSectionWarning = () => {
     showWarning({ ...messages.REVIEW_DECISION_SET_FAIL })
   }
@@ -191,10 +195,9 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     }
 
     // Can SUBMIT, but review isn't completed
-    if (!fullyAssigned) {
-      showConfirmModal({
-        ...messages.REVIEW_SUBMISSION_INCOMPLETE,
-      })
+    if (!fullyAssigned && getDecision() === Decision.Conform) {
+      showIncompleteReviewsWarning()
+      return
     }
 
     // Can SUBMIT
