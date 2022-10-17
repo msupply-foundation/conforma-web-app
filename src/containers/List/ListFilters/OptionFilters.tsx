@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { Dropdown, Input } from 'semantic-ui-react'
 import { EnumFilterProps, StaticListFilterProps, SearchableListFilterProps } from './types'
-import { FilterContainer, FilterOptions } from './common'
+import { FilterContainer, FilterOptions, FilterTitle } from './common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
 const EnumFilter: React.FC<EnumFilterProps> = ({
@@ -16,7 +16,12 @@ const EnumFilter: React.FC<EnumFilterProps> = ({
   const activeOptions = getActiveOptions()
 
   return (
-    <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
+    <FilterContainer
+      label={activeOptions.length || ''}
+      title={title}
+      onRemove={onRemove}
+      trigger={<FilterTitle title={title ?? ''} />}
+    >
       <FilterOptions
         setActiveOption={setActiveOption}
         setInactiveOption={setInactiveOption}
@@ -87,13 +92,17 @@ const SearchableListFilter: React.FC<SearchableListFilterProps> = ({
   if (!error && data) matchedOptions = resultExtractor(data).list
 
   return (
-    <FilterContainer selectedCount={activeOptions.length} title={title} onRemove={onRemove}>
+    <FilterContainer
+      label={activeOptions.length || ''}
+      title={title}
+      onRemove={onRemove}
+      trigger={<FilterTitle title={title ?? ''} />}
+    >
       <Input
         icon="search"
-        placeholder={strings.FILTER_START_TYPING}
+        placeholder={strings.FILTER_SEARCH_LIST}
         iconPosition="left"
         className="search"
-        onClick={(e: any) => e.stopPropagation()}
         onChange={(_, { value }) => {
           setSearchValue(value)
         }}
