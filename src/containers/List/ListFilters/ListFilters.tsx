@@ -54,7 +54,7 @@ const ListFilters: React.FC<{
     if (activeFilters.length === 0 && newFilters.length === 0)
       setActiveFilters(defaultDisplayFilters)
     else setActiveFilters([...activeFilters, ...newFilters])
-  }, [query])
+  }, [query, filterDefinitions])
 
   // Filter criteria/options states is provided by query URL, methods below are get and set query filter criteria
   const getMethodsForOptionFilter: GetMethodsForOptionFilter = (filterName) => ({
