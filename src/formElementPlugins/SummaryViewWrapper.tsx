@@ -79,7 +79,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   const PluginComponent = (
     <SummaryView
-      parameters={{ ...simpleParameters, ...evaluatedParameters }}
+      parameters={{ ...simpleParameters, ...evaluatedParameters, ...response?.evaluatedParameters }}
       response={response}
       Markdown={Markdown}
       DefaultSummaryView={DefaultSummaryView}
