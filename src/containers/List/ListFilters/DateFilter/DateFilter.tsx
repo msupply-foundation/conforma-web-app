@@ -11,9 +11,8 @@ import {
   ChangeMonth,
   ChangeMonthDirection,
   Day,
-  FilterTitleProps,
 } from './types'
-import { FilterContainer } from '../common'
+import { FilterContainer, FilterTitle } from '../common'
 import { Icon } from 'semantic-ui-react'
 import {
   formatDateLabel,
@@ -79,7 +78,9 @@ const DateFilter: React.FC<DateFilterProps> = ({
 
   return (
     <FilterContainer
-      replacementTrigger={<FilterTitle title={title} criteria={getFilterCriteria()} />}
+      trigger={
+        <FilterTitle title={title} criteria={getFilterCriteria()} icon="calendar alternate" />
+      }
       onRemove={onRemove}
     >
       <div className="date-filter" onClick={(e) => e.stopPropagation()}>
@@ -88,18 +89,6 @@ const DateFilter: React.FC<DateFilterProps> = ({
         {renderCalendar('TO')}
       </div>
     </FilterContainer>
-  )
-}
-
-const FilterTitle: React.FC<FilterTitleProps> = ({ title, criteria }) => {
-  return (
-    <div className="date-filter-title">
-      <Icon name="calendar alternate" />
-      <div className={title && criteria ? 'title-and-criteria' : ''}>
-        {criteria && <div className="filter-criteria">{criteria}</div>}
-        {title && <div>{title}</div>}
-      </div>
-    </div>
   )
 }
 

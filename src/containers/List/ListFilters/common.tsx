@@ -1,43 +1,63 @@
-import React from 'react'
+import React, { useState } from 'react'
+import useOnclickOutside from 'react-cool-onclickoutside'
 import { startCase as lodashStartCase } from 'lodash'
 import { Checkbox, Dropdown, Icon, Label } from 'semantic-ui-react'
 import { FilterContainerProps, FilterOptionsProps } from './types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { ApplicationOutcome, ApplicationStatus, AssignerAction, ReviewerAction } from '../../../utils/generated/graphql'
+import {
+  ApplicationOutcome,
+  ApplicationStatus,
+  AssignerAction,
+  ReviewerAction,
+} from '../../../utils/generated/graphql'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
+import { FilterTitleProps } from './DateFilter/types'
 
 export const startCase = (string: string) => lodashStartCase(string.toLowerCase())
 
 const FilterContainer: React.FC<FilterContainerProps> = ({
   children,
   title = '',
-  selectedCount = 0,
+  label,
   onRemove,
-  replacementTrigger,
+  trigger,
+  setFocus = () => {},
 }) => {
   const { strings } = useLanguageProvider()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const ref = useOnclickOutside(() => setIsOpen(false))
+
   return (
     <div className="active-filter">
-      {selectedCount > 0 && (
+      {label && (
         <Label color="grey" circular size="mini" floating>
-          {selectedCount}
+          {label}
         </Label>
       )}
-      <Dropdown
-        multiple
-        text={!replacementTrigger ? title : undefined}
-        trigger={replacementTrigger}
-        icon={replacementTrigger ? null : undefined}
-      >
-        <Dropdown.Menu>
-          {children}
-          <Dropdown.Divider />
-          <Dropdown.Item className="remove-filter" key="removeFilter" onClick={() => onRemove()}>
-            <Icon name="remove circle" />
-            {strings.FILTER_REMOVE}
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
+      <div ref={ref}>
+        <Dropdown
+          multiple
+          text={!trigger ? title : undefined}
+          trigger={trigger && <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>}
+          icon={trigger ? null : undefined}
+          open={isOpen}
+          onOpen={() => {
+            if (isOpen) return
+            setIsOpen(true)
+            setFocus()
+          }}
+        >
+          <Dropdown.Menu>
+            {children}
+            <Dropdown.Divider />
+            <Dropdown.Item className="remove-filter" key="removeFilter" onClick={() => onRemove()}>
+              <Icon name="remove circle" />
+              {strings.FILTER_REMOVE}
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
     </div>
   )
 }
@@ -75,7 +95,7 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
                 Status?.[option as ApplicationStatus] ??
                 AssignAction?.[option as AssignerAction] ??
                 ReviewAction?.[option as ReviewerAction] ??
-                startCase(option)
+                option
               }
               checked={isOptionActive}
             />
@@ -85,5 +105,16 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
     </>
   )
 }
+const FilterTitle: React.FC<FilterTitleProps> = ({ title, criteria = '', icon }) => {
+  return (
+    <div className="filter-title">
+      {icon && <Icon name={icon} />}
+      <div className={title && criteria ? 'title-and-criteria' : ''}>
+        {criteria && <div className="filter-criteria">{criteria}</div>}
+        {title && <div>{title}</div>}
+      </div>
+    </div>
+  )
+}
 
-export { FilterOptions, FilterContainer }
+export { FilterOptions, FilterContainer, FilterTitle }

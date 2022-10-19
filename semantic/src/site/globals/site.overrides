@@ -1729,7 +1729,7 @@ a:hover {
   }
 
   .data-view-nav {
-    width: 70%;
+    width: 90%;
   }
 
   .data-view-table-container {
@@ -1828,8 +1828,17 @@ a:hover {
   }
 }
 
+.filter-list-message {
+  max-width: 250px;
+  min-height: 50px;
+  margin: 15px;
+  p {
+    white-space: normal;
+  }
+}
+
 // Layouts
-#list-filter {
+.list-filter-container {
   .flex-row();
 
   align-items: center;
@@ -1852,9 +1861,13 @@ a:hover {
     }
   }
 
-  // multiple is used to make sure filter menu stays open, but it adds extra margin on text
+  // multiple is used to make sure filter menu stays open, but it adds extra
+  // margin on text
   .ui.multiple.dropdown > .text {
-    margin: 0px;
+    margin: 0px ;    
+  }
+  .ui.multiple.dropdown {
+    padding: 5px 10px 5px 10px;
   }
 
   // Add filter selector
@@ -1900,7 +1913,7 @@ a:hover {
   border-bottom-right-radius: 5px;
 }
 
-.date-filter-title {
+.filter-title {
   .flex-row();
   align-items: center;
 

@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react'
-import { getRequest } from '../helpers/fetchMethods'
+import { getRequest, postRequest } from '../helpers/fetchMethods'
 import { useUserState } from '../../contexts/UserState'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
+import { useLanguageProvider } from '../../contexts/Localisation'
 import {
   DataViewsResponse,
   DataViewsTableResponse,
   DataViewsDetailResponse,
   DataViewTableAPIQueries,
+  FilterDefinitions,
+  FilterTypes,
 } from '../types'
 
-// 3 simple hooks for returning Outcome state
+// 4 simple hooks for returning Data View state
 
 interface DataViewTableProps {
   dataViewCode: string
   apiQueries: DataViewTableAPIQueries
+  filter: object
+  filtersReady: boolean
 }
 
 interface DataViewDetailsProps {
@@ -40,30 +45,66 @@ export const useDataViewsList = () => {
   } = useUserState()
 
   useEffect(() => {
-    processRequest(getServerUrl('dataViews'), setError, setLoading, setDataViewsList)
+    processRequest({
+      url: getServerUrl('dataViews'),
+      setError,
+      setLoading,
+      setStateMethod: setDataViewsList,
+    })
   }, [templatePermissions])
 
   return { error, loading, dataViewsList }
 }
 
-export const useDataViewsTable = ({ dataViewCode, apiQueries }: DataViewTableProps) => {
+export const useDataViewFilterDefinitions = (dataViewCode: string) => {
+  const { strings } = useLanguageProvider()
+  const [filterDefinitions, setFilterDefinitions] = useState<FilterDefinitions>()
   const [error, setError] = useState<ErrorResponse | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    processRequest({
+      url: getServerUrl('dataViews', { dataViewCode, query: { first: '0' } }),
+      setError,
+      setLoading,
+      setStateMethod: (response: DataViewsTableResponse) =>
+        setFilterDefinitions(buildFilterDefinitions(response, strings.DATA_VIEW_NULL_VALUE)),
+      filter: {},
+    })
+  }, [dataViewCode])
+
+  return { filterDefinitions, loading, error }
+}
+
+export const useDataViewsTable = ({
+  dataViewCode,
+  apiQueries,
+  filter,
+  filtersReady,
+}: DataViewTableProps) => {
+  const [error, setError] = useState<ErrorResponse | null>(null)
+  const [loading, setLoading] = useState(true)
   const [dataViewTable, setDataViewTable] = useState<DataViewsTableResponse>()
   const {
     userState: { templatePermissions },
   } = useUserState()
 
   useEffect(() => {
-    processRequest(
-      getServerUrl('dataViews', { dataViewCode, query: apiQueries }),
+    if (!filtersReady) return
+    processRequest({
+      url: getServerUrl('dataViews', { dataViewCode, query: apiQueries }),
       setError,
       setLoading,
-      setDataViewTable
-    )
-  }, [templatePermissions, dataViewCode, apiQueries])
+      setStateMethod: setDataViewTable,
+      filter,
+    })
+  }, [templatePermissions, apiQueries, filter])
 
-  return { error, loading, dataViewTable }
+  return {
+    error,
+    loading,
+    dataViewTable,
+  }
 }
 
 export const useDataViewsDetail = ({ dataViewCode, recordId }: DataViewDetailsProps) => {
@@ -75,30 +116,37 @@ export const useDataViewsDetail = ({ dataViewCode, recordId }: DataViewDetailsPr
   } = useUserState()
 
   useEffect(() => {
-    processRequest(
-      getServerUrl('dataViews', { dataViewCode, itemId: recordId }),
+    processRequest({
+      url: getServerUrl('dataViews', { dataViewCode, itemId: recordId }),
       setError,
       setLoading,
-      setDataViewDetail
-    )
+      setStateMethod: setDataViewDetail,
+    })
   }, [templatePermissions, dataViewCode, recordId])
 
   return { error, loading, dataViewDetail }
 }
 
-const processRequest = (
-  url: string,
-  setErrorMethod: (_: ErrorResponse | null) => void,
-  setLoadingMethod: (_: boolean) => void,
+interface RequestProps {
+  url: string
+  setError: (_: ErrorResponse | null) => void
+  setLoading: (_: boolean) => void
   setStateMethod: (_: any) => void
-): void => {
+  filter?: object
+}
+
+const processRequest = ({ url, setError, setLoading, setStateMethod, filter }: RequestProps) => {
+  const requestMethod = filter
+    ? () => postRequest({ url, headers: { 'Content-Type': 'application/json' }, jsonBody: filter })
+    : () => getRequest(url)
+
   const setState = (errorState: ErrorResponse | null, loadingState: boolean, stateState: any) => {
-    setErrorMethod(errorState)
-    setLoadingMethod(loadingState)
+    setError(errorState)
+    setLoading(loadingState)
     setStateMethod(stateState)
   }
-  setLoadingMethod(true)
-  getRequest(url)
+  setLoading(true)
+  requestMethod()
     .then((response) => {
       if (response?.error) {
         setState(response, false, undefined)
@@ -112,4 +160,55 @@ const processRequest = (
     .catch((error) => {
       setState(error, false, undefined)
     })
+}
+
+const buildFilterDefinitions = (
+  tableData: DataViewsTableResponse | undefined,
+  nullString: string
+): FilterDefinitions => {
+  if (!tableData) return {}
+
+  const { searchFields, headerRow, tableName, code, filterDefinitions } = tableData
+
+  const returnFilterDefinitions: FilterDefinitions = {}
+
+  if (searchFields.length > 0)
+    returnFilterDefinitions.search = {
+      type: 'search',
+      default: false,
+      visibleTo: [],
+      options: {
+        orFieldNames: searchFields,
+      },
+    }
+
+  filterDefinitions.forEach(
+    ({ column, title, dataType, showFilterList, searchFields, delimiter, booleanMapping }) => {
+      returnFilterDefinitions[column] = {
+        type: filterTypeMap[dataType],
+        default: false,
+        visibleTo: [],
+        title,
+        options: {
+          column,
+          code,
+          dataType,
+          showFilterList,
+          searchFields,
+          delimiter,
+          booleanMapping,
+          nullString,
+        },
+      }
+    }
+  )
+
+  return returnFilterDefinitions
+}
+
+const filterTypeMap: { [key: string]: FilterTypes } = {
+  string: 'dataViewString',
+  number: 'number',
+  boolean: 'dataViewBoolean',
+  Date: 'date',
 }

@@ -14,6 +14,7 @@ const DataViewDetail: React.FC = () => {
   const { strings } = useLanguageProvider()
   const {
     push,
+    location,
     params: { dataViewCode, id },
   } = useRouter()
   const { dataViewDetail, loading, error } = useDataViewsDetail({ dataViewCode, recordId: id })
@@ -29,12 +30,14 @@ const DataViewDetail: React.FC = () => {
   if (linkedApplicationsError)
     console.error(linkedApplicationsError.message + '\n' + linkedApplicationsError?.detail)
 
+  const prevPageQuery = location?.state?.dataTableFilterQuery ?? ''
+
   return (
     <div id="data-view">
       <div className="data-view-nav">
         <Label
           className="back-label clickable"
-          onClick={() => push(`/data/${dataViewCode}`)}
+          onClick={() => push(`/data/${dataViewCode}${prevPageQuery}`)}
           content={
             <>
               <Icon name="chevron left" className="dark-grey" />

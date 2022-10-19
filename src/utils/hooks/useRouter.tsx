@@ -2,11 +2,12 @@ import { useParams, useLocation, useHistory, useRouteMatch, match } from 'react-
 import queryString from 'query-string'
 import { useMemo } from 'react'
 import { BasicStringObject } from '../types'
+import { isEqual } from 'lodash'
 
 interface RouterResult {
   goBack: () => void
   pathname: string
-  push: (path: string) => void
+  push: (path: string, state?: any) => void
   query: BasicStringObject
   updateQuery: Function
   replace: (path: string) => void
@@ -64,6 +65,10 @@ export function useRouter(): RouterResult {
           delete newQueryObject[key]
         } else newQueryObject[key] = value
       })
+
+      // Prevents un-necessary re-renders when query hasn't actually changed
+      if (isEqual(newQueryObject, queryFilters)) return
+
       if (replace)
         history.replace({
           search: queryString.stringify(restoreKebabCaseKeys(newQueryObject), { sort: false }),
