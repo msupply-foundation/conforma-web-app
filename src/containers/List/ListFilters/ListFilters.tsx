@@ -39,7 +39,7 @@ const ListFilters: React.FC<{
   filterListParameters: any
 }> = ({ filterDefinitions, filterListParameters }) => {
   const { strings } = useLanguageProvider()
-  const { query, updateQuery } = useRouter()
+  const { query, updateQuery, location } = useRouter()
 
   const displayableFilters = getDisplayableFilters(filterDefinitions)
   const defaultDisplayFilters = getDefaultDisplayFilters(filterDefinitions)
@@ -49,6 +49,12 @@ const ListFilters: React.FC<{
 
   // Add filters from URL to activeFilters, filters may not have criteria/options yet thus we have to use activeFilter state variable
   useEffect(() => {
+    // Reset active filters if coming from Database menu selection
+    if (location?.state?.resetFilters) {
+      setActiveFilters([])
+      return
+    }
+
     const filtersInQuery = filterNames.filter((filterName) => !!query[filterName])
     const newFilters = filtersInQuery.filter((filterName) => !activeFilters.includes(filterName))
     if (activeFilters.length === 0 && newFilters.length === 0)
