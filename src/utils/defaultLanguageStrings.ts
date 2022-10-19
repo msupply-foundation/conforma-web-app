@@ -330,7 +330,7 @@ export default {
   REVIEW_SUBMISSION_FAIL: 'Not all sections have been reviewed',
   REVIEW_SUBMISSION_ERROR: 'Something wrong with server - review mutation failed',
   REVIEW_SUBMISSION_INCOMPLETE_MESSAGE:
-    'You are about to submit your review. Some sections have not be completed by others, which means your decision is not changing the outcome - if aplicable. Are you sure you wish to proceed?',
+    'You are about to submit your review. Although your decision is not changing going to change the outcome yet - due to some sections not have been completed by others. Are you sure you wish to proceed?',
   REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE: 'No decision selected',
   REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TEXT:
     'You must select a decision before you can preview the output',
