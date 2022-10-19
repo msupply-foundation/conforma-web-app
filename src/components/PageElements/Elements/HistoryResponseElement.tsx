@@ -38,6 +38,8 @@ const HistoryResponseElement: React.FC<HistoryElement> = ({
               } as ElementState
             }
             response={response}
+            // Not passing any other reponses, as these elements will be using
+            // pre-evaluated paramaters, not doing new evaluations
             allResponses={{}}
           />
         ) : (

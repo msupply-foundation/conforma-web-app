@@ -51,7 +51,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
     applicationResponses.nodes.forEach((applicantResponse) => {
       if (!applicantResponse) return
       const { stageNumber } = applicantResponse
-      const { timeUpdated, application, value } = applicantResponse
+      const { timeUpdated, application, value, evaluatedParameters } = applicantResponse
       const { firstName, lastName } = application?.user as User
 
       if (stageNumber) {
@@ -62,7 +62,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
           title: strings.TITLE_HISTORY_SUBMITTED_BY_APPLICANT,
           // TODO translated message, that nothing is entered
           message: value?.text || '',
-          response: value,
+          response: { ...value, evaluatedParameters },
           elementTypePluginCode,
           parameters,
           timeUpdated,
