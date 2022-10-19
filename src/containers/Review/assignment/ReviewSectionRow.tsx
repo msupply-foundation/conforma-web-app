@@ -80,9 +80,8 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     isAssignedToCurrentUser,
   }
 
-  // TODO: Needs to check this perviously - so it won't show
-  // loading while waiting for ReviewAssignment which is not
-  // for the current user
+  // A few checks required to render only if there is an
+  // action associated to the current user to click
   const canRenderRow =
     section?.assignment?.isAssignedToCurrentUser ||
     section?.assignment?.action === ReviewAction.canMakeDecision ||
