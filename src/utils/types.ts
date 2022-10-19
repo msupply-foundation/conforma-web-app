@@ -367,6 +367,7 @@ interface ResponseFull {
   text: string
   optionIndex?: number
   isValid?: boolean | null
+  evaluatedParameters: object
   hash?: string // Used in Password plugin
   files?: any[] // Used in FileUpload plugin
   other?: string // Used in RadioChoice plugin
