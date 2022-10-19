@@ -10,6 +10,7 @@ interface AssignmentSubmitProps {
   assignmentsFiltered: AssignmentDetails[]
   enableSubmit: boolean
   setAssignmentError: React.Dispatch<SetStateAction<string | null>>
+  refetch: () => void
 }
 
 const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
@@ -18,6 +19,7 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   assignmentsFiltered,
   enableSubmit,
   setAssignmentError,
+  refetch,
 }) => {
   const { strings } = useLanguageProvider()
   const { submitAssignments } = useUpdateAssignment({
@@ -28,6 +30,7 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
     try {
       for (const [level, assignedSections] of Object.entries(assignedSectionsByLevel)) {
         await submitAssignments(Number(level), assignedSections, assignmentsFiltered)
+        refetch()
       }
     } catch (err) {
       console.log(err)
