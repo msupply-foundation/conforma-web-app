@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Header, Table, Message, Search } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -51,8 +51,6 @@ const DataViewTable: React.FC = () => {
     filtersReady: !filtersLoading,
   })
 
-  const [currentSortColumn, setCurrentSortColumn] = useState<SortColumn>(null)
-
   const title = location?.state?.title ?? dataViewTable?.title ?? ''
   usePageTitle(title)
 
@@ -67,14 +65,9 @@ const DataViewTable: React.FC = () => {
   }, [dataViewCode])
 
   useEffect(() => {
-    setCurrentSortColumn(getSortColumnInfo(dataViewTable, query.sortBy))
-  }, [dataViewTable])
-
-  useEffect(() => {
     if (!filterDefinitions) return
     setApiQueries(getAPIQueryParams(query, preferences?.paginationDefault))
     setGqlFilter(buildQueryFilters(query, filterDefinitions))
-    setCurrentSortColumn(getSortColumnInfo(dataViewTable, query.sortBy))
   }, [query, filterDefinitions])
 
   useEffect(() => {
@@ -110,11 +103,7 @@ const DataViewTable: React.FC = () => {
         </div>
         {loading && <Loading />}
         {!loading && dataViewTable && (
-          <DataViewTableContent
-            dataViewTable={dataViewTable}
-            apiQueries={apiQueries}
-            setSortColumn={setCurrentSortColumn}
-          />
+          <DataViewTableContent dataViewTable={dataViewTable} apiQueries={apiQueries} />
         )}
       </div>
     </div>
@@ -126,13 +115,11 @@ export default DataViewTable
 interface DataViewTableContentProps {
   dataViewTable: DataViewsTableResponse
   apiQueries: DataViewTableAPIQueries
-  setSortColumn: Dispatch<SetStateAction<SortColumn | null>>
 }
 
 const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
   dataViewTable,
   apiQueries,
-  setSortColumn,
 }) => {
   const { strings } = useLanguageProvider()
   const {
@@ -156,15 +143,11 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
       return
     }
 
-    if (ascending === 'false' || !apiQueries.orderBy) {
-      updateQuery({ sortBy: sortColumn })
-      setSortColumn({ title: columnTitle, ascending: true })
-    } else {
+    if (ascending === 'false' || !apiQueries.orderBy) updateQuery({ sortBy: sortColumn })
+    else
       updateQuery({
         sortBy: `${sortColumn}:desc`,
       })
-      setSortColumn({ title: columnTitle, ascending: false })
-    }
   }
 
   return (

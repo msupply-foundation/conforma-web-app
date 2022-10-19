@@ -51,3 +51,7 @@ export const replaceCommas = (value: string) => value.replace(new RegExp(MAGIC_S
 
 export const removeCommasArray = (values: string[]) => values.map((value) => removeCommas(value))
 export const replaceCommasArray = (values: string[]) => values.map((value) => replaceCommas(value))
+
+// If input value is longer than maxLength, returns truncated string with "..."
+export const truncateString = (string: string, length: number = 30) =>
+  string.length < length ? string : `${string.slice(0, length - 2).trim()}...`

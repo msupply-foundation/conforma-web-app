@@ -96,7 +96,6 @@ const ListFilters: React.FC<{
     </div>
   )
 
-  console.log(activeFilters)
   return (
     <div className="list-filter-container">
       <Dropdown trigger={renderTitle()} icon={null}>
