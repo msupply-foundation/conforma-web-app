@@ -96,6 +96,7 @@ const ListFilters: React.FC<{
     </div>
   )
 
+  console.log(activeFilters)
   return (
     <div className="list-filter-container">
       <Dropdown trigger={renderTitle()} icon={null}>
@@ -110,10 +111,27 @@ const ListFilters: React.FC<{
               {displayableFilters[filterName].title}
             </Dropdown.Item>
           ))}
-          <Dropdown.Item key="clear-filters" onClick={resetFilters}>
-            <Icon size="small" color="grey" name="delete" />
-            {strings.FILTER_RESET_ALL}
-          </Dropdown.Item>
+          {!!activeFilters.length && (
+            <Dropdown.Item key="clear-filters" onClick={resetFilters}>
+              <Icon size="small" color="grey" name="delete" />
+              {strings.FILTER_RESET_ALL}
+            </Dropdown.Item>
+          )}
+          {query.sortBy && (
+            <Dropdown.Item key="clear-sort" onClick={() => updateQuery({ sortBy: null })}>
+              <Icon size="small" color="grey" name="delete" />
+              {strings.FILTER_RESET_SORT}
+            </Dropdown.Item>
+          )}
+          {(query.page || query.perPage) && (
+            <Dropdown.Item
+              key="clear-pagination"
+              onClick={() => updateQuery({ page: null, perPage: null })}
+            >
+              <Icon size="small" color="grey" name="delete" />
+              {strings.FILTER_RESET_PAGINATION}
+            </Dropdown.Item>
+          )}
         </Dropdown.Menu>
       </Dropdown>
       {activeFilters.map((filterName) => {

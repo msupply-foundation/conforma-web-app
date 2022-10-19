@@ -12,7 +12,6 @@ import {
   BasicStringObject,
   GqlFilterObject,
 } from '../../utils/types'
-import { SortReset } from './Filters'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { constructElement, formatCellText } from './helpers'
 import PaginationBar from '../../components/List/Pagination'
@@ -108,7 +107,6 @@ const DataViewTable: React.FC = () => {
           {filterDefinitions && (
             <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
           )}
-          {currentSortColumn && <SortReset {...currentSortColumn} />}
         </div>
         {loading && <Loading />}
         {!loading && dataViewTable && (
