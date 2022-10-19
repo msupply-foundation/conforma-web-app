@@ -54,16 +54,6 @@ const DataViewTable: React.FC = () => {
   const title = location?.state?.title ?? dataViewTable?.title ?? ''
   usePageTitle(title)
 
-  // Reset filters if navigating here from Menu bar
-  useEffect(() => {
-    if (location?.state?.resetFilters) {
-      setGqlFilter({})
-      setApiQueries({})
-      setSearchText('')
-      setDebounceInput('')
-    }
-  }, [dataViewCode])
-
   useEffect(() => {
     if (!filterDefinitions) return
     setApiQueries(getAPIQueryParams(query, preferences?.paginationDefault))
