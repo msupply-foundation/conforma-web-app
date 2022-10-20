@@ -182,26 +182,22 @@ const buildFilterDefinitions = (
       },
     }
 
-  filterDefinitions.forEach(
-    ({ column, title, dataType, showFilterList, searchFields, delimiter, booleanMapping }) => {
-      returnFilterDefinitions[column] = {
-        type: filterTypeMap[dataType],
-        default: false,
-        visibleTo: [],
-        title,
-        options: {
-          column,
-          code,
-          dataType,
-          showFilterList,
-          searchFields,
-          delimiter,
-          booleanMapping,
-          nullString,
-        },
-      }
+  filterDefinitions.forEach(({ column, title, dataType, showFilterList, ...otherOptions }) => {
+    returnFilterDefinitions[column] = {
+      type: filterTypeMap[dataType],
+      default: false,
+      visibleTo: [],
+      title,
+      options: {
+        column,
+        code,
+        dataType,
+        showFilterList,
+        ...otherOptions,
+        nullString,
+      },
     }
-  )
+  })
 
   return returnFilterDefinitions
 }
