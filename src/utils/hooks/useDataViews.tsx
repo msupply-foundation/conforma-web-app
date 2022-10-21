@@ -168,7 +168,7 @@ const buildFilterDefinitions = (
 ): FilterDefinitions => {
   if (!tableData) return {}
 
-  const { searchFields, headerRow, tableName, code, filterDefinitions } = tableData
+  const { searchFields, code, filterDefinitions } = tableData
 
   const returnFilterDefinitions: FilterDefinitions = {}
 
