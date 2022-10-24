@@ -90,7 +90,6 @@ const PanelComponent: React.FC<{
   filters: Filter[]
 }> = ({ template, filters }) => {
   const templateType = template.code
-  const [loadedFiltersCount, setLoadedFiltersCount] = useState(0)
   const [totalMatchFilter, setTotalMatchFilter] = useState<{ [key: number]: number }>(
     filters.reduce((totalPerFilter, filter) => ({ ...totalPerFilter, [filter.id]: 0 }), {})
   )
@@ -99,6 +98,7 @@ const PanelComponent: React.FC<{
     if (typeof element.query === 'object') {
       const queryObj = element.query as { [key: string]: string }
       arrayFilters.push(queryObj)
+      console.log('arrayFilters', arrayFilters)
     }
     return arrayFilters
   }, [])
@@ -139,7 +139,6 @@ const PanelComponent: React.FC<{
           totalMatchFilter[id] = filteredApplications.length
         }
         setTotalMatchFilter(totalMatchFilter)
-        setLoadedFiltersCount((currentCount: number) => currentCount + 1)
       })
     }
   }, [applications])
@@ -152,7 +151,7 @@ const PanelComponent: React.FC<{
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`
 
-  if (loading || loadedFiltersCount < filters.length) return <LoadingSmall />
+  if (loading) return <LoadingSmall />
   if (applications.length === 0) return null
 
   return (
