@@ -94,35 +94,33 @@ const PanelComponent: React.FC<{
     filters.reduce((totalPerFilter, filter) => ({ ...totalPerFilter, [filter.id]: 0 }), {})
   )
 
-  const arrayFilters = filters.reduce((arrayFilters: { [key: string]: string }[], element) => {
-    if (typeof element.query === 'object') {
-      const queryObj = element.query as { [key: string]: string }
+  const filterObjectArray = filters.reduce((arrayFilters: { [key: string]: string }[], element) => {
+    if (element.query !== null) {
+      const queryObj = element.query
       arrayFilters.push(queryObj)
-      console.log('arrayFilters', arrayFilters)
     }
     return arrayFilters
   }, [])
 
-  const queryMultiFilters = {
+  const graphQLFilterObject = {
     templateCode: { equalToInsensitive: templateType },
-    ...constructOrObjectFilters(arrayFilters),
+    ...constructOrObjectFilters(filterObjectArray),
   }
 
   const { loading, applications } = useListApplications(
-    {}, // Passing empty to use already construct GraphQL query on queryMultiFilters
-    queryMultiFilters
+    {}, // Passing empty as graphQLFilterObject is already constructed
+    graphQLFilterObject
   )
 
   useEffect(() => {
     if (applications) {
       filters.forEach(({ id, query }) => {
-        if (typeof query === 'object') {
-          const queryObj = query as { [key: string]: string }
+        if (query !== null) {
+          const queryObj = query
           const filteredApplications = Object.entries(applications).filter(([_, application]) => {
             // Each filter is currently delimited to a single check!
             const key = Object.keys(queryObj)[0]
             const value = Object.values(queryObj)[0]
-
             switch (key) {
               case 'outcome':
                 return application.outcome === value
@@ -156,16 +154,22 @@ const PanelComponent: React.FC<{
 
   return (
     <>
-      {filters.map(
-        (filter) =>
-          totalMatchFilter[filter.id] > 0 && (
-            <div className="filter" key={`filter_${filter.id}`}>
-              <Link to={constructLink(filter)}>{`${filter.title} (${
-                totalMatchFilter[filter.id]
-              })`}</Link>
-            </div>
-          )
-      )}
+      {filters.map((filter) => {
+        console.log(
+          'filter',
+          filter,
+          'totalMatch',
+          totalMatchFilter,
+          'matching',
+          totalMatchFilter[filter.id]
+        )
+
+        return totalMatchFilter[filter.id] > 0 ? (
+          <Link to={constructLink(filter)}>{`${filter.title} (${
+            totalMatchFilter[filter.id]
+          })`}</Link>
+        ) : null
+      })}
     </>
   )
 }

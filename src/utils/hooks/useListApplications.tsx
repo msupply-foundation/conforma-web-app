@@ -9,7 +9,7 @@ import { useGetFilterDefinitions } from '../helpers/list/useGetFilterDefinitions
 
 const useListApplications = (
   { sortBy, page, perPage, type, ...queryFilters }: BasicStringObject,
-  queryMultiFilters?: object
+  graphQLFilterObject?: object
 ) => {
   const FILTER_DEFINITIONS = useGetFilterDefinitions()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
@@ -21,11 +21,10 @@ const useListApplications = (
     userState: { currentUser },
   } = useUserState()
 
-  // If queryMultiFilters is passed it will be considering only that
-  // for filtering the list of applications - otherwise will have to
-  // buildFilters parsing to GraphQL what is passed on the URL
-  const filters = queryMultiFilters
-    ? queryMultiFilters
+  // The "filters" object is either passed in already constructed
+  // (graphQLFilterObject), OR we'll need to "buildFilters" from url query key-values.
+  const filters = graphQLFilterObject
+    ? graphQLFilterObject
     : buildFilter({ type, ...queryFilters }, FILTER_DEFINITIONS)
   const sortFields = sortBy ? buildSortFields(sortBy) : []
   const { paginationOffset, numberToFetch } = getPaginationVariables(
