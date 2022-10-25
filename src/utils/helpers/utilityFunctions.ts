@@ -57,7 +57,7 @@ export const replaceCommasArray = (values: string[]) => values.map((value) => re
 // This is useful to filter same key with many values using OR statement
 export const constructOrObjectFilters = (filters: { [key: string]: string }[]) => ({
   or: Object.values(filters).map((filter) => {
-    // Each filter is currently delimited to a single check!
+    // Each filter is currently limited to a single check!
     const filterKey = Object.keys(filter)[0]
     const filterValue = Object.values(filter)[0]
     return { [filterKey]: { equalTo: filterValue } }
