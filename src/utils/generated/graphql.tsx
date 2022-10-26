@@ -1824,7 +1824,7 @@ export type QueryAssignedQuestionsArgs = {
 export type QueryAssignedQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
 };
 
 
