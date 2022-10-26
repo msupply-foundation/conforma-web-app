@@ -30,10 +30,9 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
     ready: triggersReady,
     loading: triggersLoading,
     error: triggersError,
-    recheckTriggers,
   } = useTriggers(serial)
 
-  const { data, loading, error } = useGetReviewInfoQuery({
+  const { data, loading, error, refetch } = useGetReviewInfoQuery({
     variables: {
       applicationId,
       assignerId: currentUser?.userId as number,
@@ -141,6 +140,7 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
     error: fetchingError || error?.message,
     loading: loading || isFetching,
     assignments,
+    refetch,
   }
 }
 
