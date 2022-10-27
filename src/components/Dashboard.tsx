@@ -10,6 +10,7 @@ import useListTemplates from '../utils/hooks/useListTemplates'
 import usePageTitle from '../utils/hooks/usePageTitle'
 import { TemplateDetails, TemplateInList } from '../utils/types'
 import LoadingSmall from './LoadingSmall'
+import { constructOrObjectFilters } from '../utils/helpers/utilityFunctions'
 
 const Dashboard: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -58,8 +59,6 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
       ? USER_ROLES.APPLICANT
       : USER_ROLES.REVIEWER
 
-  const [loadedFiltersCount, setLoadedFiltersCount] = useState(0)
-
   return (
     <div className="template">
       <div className="content">
@@ -69,16 +68,8 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
               {template?.namePlural || `${name} ${strings.LABEL_APPLICATIONS}`}
             </a>
             <Icon name="chevron right" />
-            {loadedFiltersCount !== filters.length && <LoadingSmall />}
           </Label>
-          {filters.map((filter) => (
-            <FilterComponent
-              key={filter.id}
-              template={template}
-              filter={filter}
-              setFiltersCount={setLoadedFiltersCount}
-            />
-          ))}
+          <PanelComponent key={`${template?.id}_filters`} template={template} filters={filters} />
         </div>
         {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
       </div>
@@ -94,38 +85,83 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
   )
 }
 
-const FilterComponent: React.FC<{
+const PanelComponent: React.FC<{
   template: TemplateDetails
-  filter: Filter
-  setFiltersCount: Function
-}> = ({ template, filter, setFiltersCount: setLoadingFilters }) => {
+  filters: Filter[]
+}> = ({ template, filters }) => {
   const templateType = template.code
-  const { loading, applicationCount } = useListApplications({
-    type: templateType,
-    perPage: 1,
-    ...filter.query,
-  })
+  const [totalMatchFilter, setTotalMatchFilter] = useState<{ [key: number]: number }>(
+    filters.reduce((totalPerFilter, filter) => ({ ...totalPerFilter, [filter.id]: 0 }), {})
+  )
+
+  const filterObjectArray = filters.reduce((arrayFilters: { [key: string]: string }[], element) => {
+    if (element.query !== null) {
+      const queryObj = element.query
+      arrayFilters.push(queryObj)
+    }
+    return arrayFilters
+  }, [])
+
+  const graphQLFilterObject = {
+    templateCode: { equalToInsensitive: templateType },
+    ...constructOrObjectFilters(filterObjectArray),
+  }
+
+  const { loading, applications } = useListApplications(
+    {}, // Passing empty as graphQLFilterObject is already constructed
+    graphQLFilterObject
+  )
 
   useEffect(() => {
-    if (!loading) setLoadingFilters((currentCount: number) => currentCount + 1)
-  }, [loading])
+    if (applications) {
+      const resultMatchingFilters = filters.reduce((matchingFilters, { id, query }) => {
+        if (query === null) return matchingFilters
 
-  const applicationListUserRole =
+        const queryObj = query
+        const filteredApplications = Object.entries(applications).filter(([_, application]) => {
+          // Each filter is currently limited to a single check!
+          const key = Object.keys(queryObj)[0]
+          const value = Object.values(queryObj)[0]
+          switch (key) {
+            case 'outcome':
+              return application.outcome === value
+            case 'status':
+              return application.status === value
+            case 'reviewerAction':
+              return application.reviewerAction === value
+            case 'assignerAction':
+              return application.assignerAction === value
+            default:
+              return false
+          }
+        })
+        return { ...matchingFilters, [id]: filteredApplications.length }
+      }, {})
+      setTotalMatchFilter(resultMatchingFilters)
+    }
+  }, [applications])
+
+  const userRole = (filter: Filter) =>
     filter.userRole === PermissionPolicyType.Apply ? USER_ROLES.APPLICANT : USER_ROLES.REVIEWER
 
-  const constructLink = () =>
-    `/applications?type=${templateType}&user-role=${applicationListUserRole}&${Object.entries(
-      filter.query
-    )
+  const constructLink = (filter: Filter) =>
+    `/applications?type=${templateType}&user-role=${userRole(filter)}&${Object.entries(filter.query)
       .map(([key, value]) => `${key}=${value}`)
       .join('&')}`
 
-  if (applicationCount === 0) return null
+  if (loading) return <LoadingSmall />
+  if (applications.length === 0) return null
 
   return (
-    <div className="filter">
-      <Link to={constructLink()}>{`${filter.title} (${applicationCount})`}</Link>
-    </div>
+    <>
+      {filters.map((filter) =>
+        totalMatchFilter[filter.id] > 0 ? (
+          <Link to={constructLink(filter)}>{`${filter.title} (${
+            totalMatchFilter[filter.id]
+          })`}</Link>
+        ) : null
+      )}
+    </>
   )
 }
 

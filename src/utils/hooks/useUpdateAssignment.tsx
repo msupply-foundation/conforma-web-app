@@ -51,7 +51,6 @@ const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }
     } catch (err) {
       throw new Error('Assignment update error')
     }
-    fullStructure.reload()
   }
 
   return { submitAssignments }
