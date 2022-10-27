@@ -30565,8 +30565,8 @@ export type GetApplicationSerialQuery = (
 export type GetApplicationListQueryVariables = Exact<{
   filters?: Maybe<ApplicationListShapeFilter>;
   sortFields?: Maybe<Array<ApplicationListShapesOrderBy>>;
-  paginationOffset: Scalars['Int'];
-  numberToFetch: Scalars['Int'];
+  paginationOffset?: Maybe<Scalars['Int']>;
+  numberToFetch?: Maybe<Scalars['Int']>;
   userId?: Scalars['Int'];
   templateCode: Scalars['String'];
 }>;
@@ -32640,7 +32640,7 @@ export type GetApplicationSerialQueryHookResult = ReturnType<typeof useGetApplic
 export type GetApplicationSerialLazyQueryHookResult = ReturnType<typeof useGetApplicationSerialLazyQuery>;
 export type GetApplicationSerialQueryResult = Apollo.QueryResult<GetApplicationSerialQuery, GetApplicationSerialQueryVariables>;
 export const GetApplicationListDocument = gql`
-    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int!, $numberToFetch: Int!, $userId: Int! = 0, $templateCode: String!) {
+    query getApplicationList($filters: ApplicationListShapeFilter, $sortFields: [ApplicationListShapesOrderBy!], $paginationOffset: Int, $numberToFetch: Int, $userId: Int! = 0, $templateCode: String!) {
   applicationList(filter: $filters, orderBy: $sortFields, offset: $paginationOffset, first: $numberToFetch, userid: $userId) {
     nodes {
       id
