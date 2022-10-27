@@ -30,10 +30,13 @@ const mapSortFields: any = {
 // ----
 
 interface PaginationValues {
-  numberToFetch: number
-  paginationOffset: number
+  numberToFetch?: number
+  paginationOffset?: number
 }
 
-export function getPaginationVariables(page: number, perPage = 20): PaginationValues {
-  return { numberToFetch: perPage, paginationOffset: (page - 1) * perPage }
+export function getPaginationVariables(
+  page: number,
+  perPage: number | undefined
+): PaginationValues {
+  return { numberToFetch: perPage, paginationOffset: perPage ? (page - 1) * perPage : undefined }
 }

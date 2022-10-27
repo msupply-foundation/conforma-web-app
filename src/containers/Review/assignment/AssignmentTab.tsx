@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Label, Message } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
-import Assignment from './Assignment'
 import { useUserState } from '../../../contexts/UserState'
 import {
   AssignedSectionsByLevel,
@@ -20,7 +19,7 @@ import { ReviewStateProvider } from '../../../contexts/ReviewStructuresState'
 import AssignmentRows from './AssignmentRows'
 import AssignmentSubmit from './AssignmentSubmit'
 import AssignAll from './AssignAll'
-import { ApplicationOutcome, ReviewAssignmentStatus } from '../../../utils/generated/graphql'
+import { ApplicationOutcome } from '../../../utils/generated/graphql'
 
 const AssignmentTab: React.FC<{
   fullApplicationStructure: FullStructure
@@ -33,21 +32,29 @@ const AssignmentTab: React.FC<{
   const [assignedSectionsByLevel, setAssignedSectionsByLevel] = useState<AssignedSectionsByLevel>(
     {}
   )
-  const [assignmentError, setAssignmentError] = useState<string | null>(null)
 
-  const { error, loading, assignments } = useGetReviewInfo({
+  const [filters, setFilters] = useState<Filters | null>(null)
+  const [assignmentError, setAssignmentError] = useState<string | null>(null)
+  const [assignmentsFiltered, setAssignmentsFiltered] = useState<AssignmentDetails[]>([])
+
+  const { error, loading, assignments, refetch } = useGetReviewInfo({
     applicationId: fullStructure.info.id,
     serial: fullStructure.info.serial,
     userId: currentUser?.userId as number,
   })
 
-  const [filters, setFilters] = useState<Filters | null>(null)
+  useEffect(() => {
+    if (assignments) {
+      const filteredByLevel = getFilteredLevel(assignments)
+      setAssignmentsFiltered(filteredByLevel)
+    }
+  }, [filters, assignments])
 
   const getFilteredByStage = (assignments: AssignmentDetails[]) => {
     if (!filters) return []
-    return assignments.filter(
-      (assignment) => assignment.current.stage.number === filters.currentStage
-    )
+    return assignments
+      .filter(({ isLocked }) => !isLocked) // Should not give option to assign if Assignment is locked
+      .filter((assignment) => assignment.current.stage.number === filters.currentStage)
   }
 
   const getFilteredLevel = (assignments: AssignmentDetails[]) => {
@@ -78,22 +85,7 @@ const AssignmentTab: React.FC<{
     },
   } = fullStructure
 
-  const assignmentsFiltered = getFilteredLevel(assignments)
-
-  const assignmentGroupedLevel: LevelAssignments = {}
-  assignmentsFiltered.forEach((assignment) => {
-    const { level } = assignment
-    if (!assignmentGroupedLevel[level]) assignmentGroupedLevel[level] = [assignment]
-    else assignmentGroupedLevel[level].push(assignment)
-  })
-
-  const currentReviewLevel = Math.max(Number(Object.keys(assignmentGroupedLevel)))
-
   const sectionCodes = Object.keys(fullStructure.sections)
-
-  const isFullyAssigned = currentReviewLevel
-    ? calculateIsFullyAssigned(assignmentGroupedLevel[currentReviewLevel], sectionCodes)
-    : true
 
   const assignAllSections = (reviewerId: number) => {
     const alreadyAssignedSections = new Set(
@@ -114,66 +106,73 @@ const AssignmentTab: React.FC<{
     setAssignedSectionsByLevel({ ...assignedSectionsByLevel, [currentReviewLevel]: newAssignments })
   }
 
+  const assignmentGroupedLevel: LevelAssignments = {}
+  assignmentsFiltered.forEach((assignment) => {
+    const { level } = assignment
+    if (!assignmentGroupedLevel[level]) assignmentGroupedLevel[level] = [assignment]
+    else assignmentGroupedLevel[level].push(assignment)
+  })
+
+  const currentReviewLevel = Math.max(Number(Object.keys(assignmentGroupedLevel)))
+
+  const isFullyAssigned = currentReviewLevel
+    ? calculateIsFullyAssigned(assignmentGroupedLevel[currentReviewLevel], sectionCodes)
+    : true
+
   return (
-    <ReviewStateProvider fullApplicationStructure={fullStructure} assignments={assignmentsFiltered}>
-      <Container id="assignment-tab">
-        {assignmentError && (
-          <Message
-            icon="warning"
-            size="small"
-            error
-            header={strings.ASSIGNMENT_ERROR_TITLE}
-            content={assignmentError}
-          />
-        )}
-        <div className="flex-row-space-between-center" id="review-filters-container">
-          <ReviewLevel
-            filters={filters}
-            setFilters={setFilters}
-            structure={fullStructure}
-            assignments={assignments}
-          />
-          <div className="centered-flex-box-row">
-            <Label className="uppercase-label" content={strings.REVIEW_OVERVIEW_STAGE} />
-            <Stage name={stageName} colour={stageColour || ''} />
-          </div>
-        </div>
-        {/* Creates each reviewStructuse in context ReviewsStateContext */}
-        {assignmentsFiltered.map((assignment) => (
-          <Assignment
-            key={`assginment_struct_${assignment.id}`}
-            assignment={assignment}
-            structure={fullStructure}
-          />
-        ))}
-        {/* Then render each Assignment/Review section rows using the reviewStructures generated */}
-        <AssignmentRows
-          fullStructure={fullStructure}
-          assignmentInPreviousStage={assignmentInPreviousStage}
-          assignmentGroupedLevel={assignmentGroupedLevel}
-          assignedSectionsByLevel={assignedSectionsByLevel}
-          setAssignedSectionsByLevel={setAssignedSectionsByLevel}
-          setEnableSubmit={setEnableSubmit}
-          setAssignmentError={setAssignmentError}
+    <Container id="assignment-tab">
+      {assignmentError && (
+        <Message
+          icon="warning"
+          size="small"
+          error
+          header={strings.ASSIGNMENT_ERROR_TITLE}
+          content={assignmentError}
         />
-        {!isFullyAssigned && (
-          <AssignAll
-            assignments={assignmentsFiltered}
-            setReviewerForAll={assignAllSections}
-            currentUser={currentUser}
-          />
-        )}
-        {fullStructure.info.outcome === ApplicationOutcome.Pending && (
-          <AssignmentSubmit
+      )}
+      <div className="flex-row-space-between-center" id="review-filters-container">
+        <ReviewLevel
+          filters={filters}
+          setFilters={setFilters}
+          structure={fullStructure}
+          assignments={assignments}
+        />
+        <div className="centered-flex-box-row">
+          <Label className="uppercase-label" content={strings.REVIEW_OVERVIEW_STAGE} />
+          <Stage name={stageName} colour={stageColour || ''} />
+        </div>
+      </div>
+      {assignmentsFiltered.length > 0 && (
+        <ReviewStateProvider assignments={assignmentsFiltered}>
+          <AssignmentRows
             fullStructure={fullStructure}
+            assignmentInPreviousStage={assignmentInPreviousStage}
+            assignmentGroupedLevel={assignmentGroupedLevel}
             assignedSectionsByLevel={assignedSectionsByLevel}
-            assignmentsFiltered={assignmentsFiltered}
-            enableSubmit={enableSubmit}
+            setAssignedSectionsByLevel={setAssignedSectionsByLevel}
+            setEnableSubmit={setEnableSubmit}
             setAssignmentError={setAssignmentError}
           />
-        )}
-      </Container>
-    </ReviewStateProvider>
+        </ReviewStateProvider>
+      )}
+      {!isFullyAssigned && (
+        <AssignAll
+          assignments={assignmentsFiltered}
+          setReviewerForAll={assignAllSections}
+          currentUser={currentUser}
+        />
+      )}
+      {fullStructure.info.outcome === ApplicationOutcome.Pending && (
+        <AssignmentSubmit
+          fullStructure={fullStructure}
+          assignedSectionsByLevel={assignedSectionsByLevel}
+          assignmentsFiltered={assignmentsFiltered}
+          enableSubmit={enableSubmit}
+          setAssignmentError={setAssignmentError}
+          refetch={refetch}
+        />
+      )}
+    </Container>
   )
 }
 
@@ -183,12 +182,6 @@ const calculateIsFullyAssigned = (
   currentLevelAssignments: AssignmentDetails[],
   sectionCodes: string[]
 ) => {
-  console.log(
-    'current',
-    currentLevelAssignments.filter(
-      (assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned
-    )
-  )
   const assignedSections = new Set(
     currentLevelAssignments
       // .filter((assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned)

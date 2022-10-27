@@ -2,46 +2,33 @@ import React, { createContext, useContext, useReducer } from 'react'
 import { AssignmentDetails, FullStructure } from '../utils/types'
 
 type ReviewStructuresState = {
-  [assignmentId: number]: FullStructure
+  [assignmentId: number]: {
+    loading: boolean
+    review?: FullStructure
+  }
 }
 
-export type ReviewStructuresActions =
-  | {
-      type: 'addReviewStructure'
-      reviewStructure: FullStructure
-      assignment: AssignmentDetails
-    }
-  | {
-      type: 'resetReviewStructures'
-      fullApplicationStructure: FullStructure
-      assignments: AssignmentDetails[]
-    }
+export type ReviewStructuresActions = {
+  type: 'addAssignmentDetails'
+  reviewStructure: FullStructure
+  assignment: AssignmentDetails
+}
 
-type InitialState = (props: {
-  fullApplicationStructure: FullStructure
-  assignments: AssignmentDetails[]
-}) => ReviewStructuresState
+type InitialState = (assignments: AssignmentDetails[]) => ReviewStructuresState
 
-const initialState: InitialState = ({ fullApplicationStructure, assignments }) => {
-  return assignments.reduce(
-    (reviewStructures: ReviewStructuresState, assignment) => ({
-      ...reviewStructures,
-      [assignment.id]: fullApplicationStructure,
-    }),
+const initialState: InitialState = (assignments) =>
+  assignments.reduce(
+    (reviewStructureState, { id }) => ({ ...reviewStructureState, [id]: { loading: true } }),
     {}
   )
-}
 
 const reducer = (state: ReviewStructuresState, action: ReviewStructuresActions) => {
   switch (action.type) {
-    case 'resetReviewStructures':
-      const { fullApplicationStructure, assignments } = action
-      return initialState({ fullApplicationStructure, assignments })
-    case 'addReviewStructure':
+    case 'addAssignmentDetails':
       const { reviewStructure, assignment } = action
       return {
         ...state,
-        [assignment.id]: reviewStructure,
+        [assignment.id]: { loading: false, review: reviewStructure },
       }
     default:
       return state
@@ -50,28 +37,27 @@ const reducer = (state: ReviewStructuresState, action: ReviewStructuresActions) 
 
 const initialReviewStateContext: {
   reviewStructuresState: ReviewStructuresState
-  setReviewStructures: React.Dispatch<ReviewStructuresActions>
+  setReviewStructureState: React.Dispatch<ReviewStructuresActions>
 } = {
   reviewStructuresState: {},
-  setReviewStructures: () => {},
+  setReviewStructureState: () => {},
 }
 
 const ReviewsStateContext = createContext(initialReviewStateContext)
 
 interface ReviewStructureProviderProps {
   children: React.ReactNode
-  fullApplicationStructure: FullStructure
   assignments: AssignmentDetails[]
 }
 
-export function ReviewStateProvider({ children, ...props }: ReviewStructureProviderProps) {
-  const [state, dispatch] = useReducer(reducer, initialState(props))
+export function ReviewStateProvider({ children, assignments }: ReviewStructureProviderProps) {
+  const [state, dispatch] = useReducer(reducer, initialState(assignments))
   const reviewStructuresState = state
-  const setReviewStructures = dispatch
+  const setReviewStructureState = dispatch
 
   // Return the state and reducer to the context (wrap around the children)
   return (
-    <ReviewsStateContext.Provider value={{ reviewStructuresState, setReviewStructures }}>
+    <ReviewsStateContext.Provider value={{ reviewStructuresState, setReviewStructureState }}>
       {children}
     </ReviewsStateContext.Provider>
   )
