@@ -114,30 +114,30 @@ const PanelComponent: React.FC<{
 
   useEffect(() => {
     if (applications) {
-      filters.forEach(({ id, query }) => {
-        if (query !== null) {
-          const queryObj = query
-          const filteredApplications = Object.entries(applications).filter(([_, application]) => {
-            // Each filter is currently limited to a single check!
-            const key = Object.keys(queryObj)[0]
-            const value = Object.values(queryObj)[0]
-            switch (key) {
-              case 'outcome':
-                return application.outcome === value
-              case 'status':
-                return application.status === value
-              case 'reviewerAction':
-                return application.reviewerAction === value
-              case 'assignerAction':
-                return application.assignerAction === value
-              default:
-                return false
-            }
-          })
-          totalMatchFilter[id] = filteredApplications.length
-        }
-        setTotalMatchFilter(totalMatchFilter)
-      })
+      const resultMatchingFilters = filters.reduce((machingFilters, { id, query }) => {
+        if (query === null) return machingFilters
+
+        const queryObj = query
+        const filteredApplications = Object.entries(applications).filter(([_, application]) => {
+          // Each filter is currently limited to a single check!
+          const key = Object.keys(queryObj)[0]
+          const value = Object.values(queryObj)[0]
+          switch (key) {
+            case 'outcome':
+              return application.outcome === value
+            case 'status':
+              return application.status === value
+            case 'reviewerAction':
+              return application.reviewerAction === value
+            case 'assignerAction':
+              return application.assignerAction === value
+            default:
+              return false
+          }
+        })
+        return { ...machingFilters, [id]: filteredApplications.length }
+      }, {})
+      setTotalMatchFilter(resultMatchingFilters)
     }
   }, [applications])
 
@@ -154,22 +154,13 @@ const PanelComponent: React.FC<{
 
   return (
     <>
-      {filters.map((filter) => {
-        console.log(
-          'filter',
-          filter,
-          'totalMatch',
-          totalMatchFilter,
-          'matching',
-          totalMatchFilter[filter.id]
-        )
-
-        return totalMatchFilter[filter.id] > 0 ? (
+      {filters.map((filter) =>
+        totalMatchFilter[filter.id] > 0 ? (
           <Link to={constructLink(filter)}>{`${filter.title} (${
             totalMatchFilter[filter.id]
           })`}</Link>
         ) : null
-      })}
+      )}
     </>
   )
 }
