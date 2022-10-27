@@ -114,8 +114,8 @@ const PanelComponent: React.FC<{
 
   useEffect(() => {
     if (applications) {
-      const resultMatchingFilters = filters.reduce((machingFilters, { id, query }) => {
-        if (query === null) return machingFilters
+      const resultMatchingFilters = filters.reduce((matchingFilters, { id, query }) => {
+        if (query === null) return matchingFilters
 
         const queryObj = query
         const filteredApplications = Object.entries(applications).filter(([_, application]) => {
@@ -135,7 +135,7 @@ const PanelComponent: React.FC<{
               return false
           }
         })
-        return { ...machingFilters, [id]: filteredApplications.length }
+        return { ...matchingFilters, [id]: filteredApplications.length }
       }, {})
       setTotalMatchFilter(resultMatchingFilters)
     }
