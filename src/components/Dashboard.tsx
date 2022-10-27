@@ -118,7 +118,7 @@ const PanelComponent: React.FC<{
         if (query !== null) {
           const queryObj = query
           const filteredApplications = Object.entries(applications).filter(([_, application]) => {
-            // Each filter is currently delimited to a single check!
+            // Each filter is currently limited to a single check!
             const key = Object.keys(queryObj)[0]
             const value = Object.values(queryObj)[0]
             switch (key) {
