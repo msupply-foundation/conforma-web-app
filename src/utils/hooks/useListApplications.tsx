@@ -7,13 +7,10 @@ import { BasicStringObject, TemplateType } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useGetFilterDefinitions } from '../helpers/list/useGetFilterDefinitions'
 
-const useListApplications = ({
-  sortBy,
-  page,
-  perPage,
-  type,
-  ...queryFilters
-}: BasicStringObject) => {
+const useListApplications = (
+  { sortBy, page, perPage, type, ...queryFilters }: BasicStringObject,
+  graphQLFilterObject?: object
+) => {
   const FILTER_DEFINITIONS = useGetFilterDefinitions()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   const [applicationCount, setApplicationCount] = useState<number>(0)
@@ -24,7 +21,11 @@ const useListApplications = ({
     userState: { currentUser },
   } = useUserState()
 
-  const filters = buildFilter({ type, ...queryFilters }, FILTER_DEFINITIONS)
+  // The "filters" object is either passed in already constructed
+  // (graphQLFilterObject), OR we'll need to "buildFilters" from url query key-values.
+  const filters = graphQLFilterObject
+    ? graphQLFilterObject
+    : buildFilter({ type, ...queryFilters }, FILTER_DEFINITIONS)
   const sortFields = sortBy ? buildSortFields(sortBy) : []
   const { paginationOffset, numberToFetch } = getPaginationVariables(
     page ? Number(page) : 1,
