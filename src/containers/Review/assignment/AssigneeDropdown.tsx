@@ -20,7 +20,7 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({ assignmentOptions, onChange
   return (
     <Dropdown
       className="reviewer-dropdown"
-      options={options}
+      options={options.sort((a, b) => (a.text < b.text ? -1 : 1))}
       value={selected}
       disabled={isCompleted}
       onChange={(_: any, { value }: any) => onChangeMethod(value as number)}
