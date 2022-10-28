@@ -76,7 +76,7 @@ const evaluateSingleElement: EvaluateElement = async (
         ? await evaluateExpression(expressionOrValue, evaluationParameters)
         : expressionOrValue
     } catch (e) {
-      console.log(e, expressionOrValue)
+      // console.log(e, expressionOrValue)
     }
   }
 
