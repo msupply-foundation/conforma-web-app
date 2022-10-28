@@ -19,6 +19,7 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({ assignmentOptions, onChange
 
   return (
     <Dropdown
+      scrolling
       className="reviewer-dropdown"
       options={options.sort((a, b) => (a.text < b.text ? -1 : 1))}
       value={selected}
