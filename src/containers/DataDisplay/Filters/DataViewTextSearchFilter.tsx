@@ -8,6 +8,7 @@ import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
 import { FiltersCommon } from '../../List/ListFilters/types'
+import { truncateString } from '../../../utils/helpers/utilityFunctions'
 
 type TextSearchFilterProps = FiltersCommon & {
   setFilterText: (text: string) => void
@@ -37,7 +38,7 @@ export const DataViewTextSearchFilter: React.FC<TextSearchFilterProps> = ({
       trigger={
         <FilterTitle
           title={title ?? ''}
-          criteria={searchText}
+          criteria={truncateString(searchText, 15)}
           icon={searchText ? 'search' : undefined}
         />
       }
