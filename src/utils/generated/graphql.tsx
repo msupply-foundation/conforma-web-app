@@ -3212,12 +3212,12 @@ export type NotificationFilter = {
   message?: Maybe<StringFilter>;
   /** Filter by the object’s `attachments` field. */
   attachments?: Maybe<StringListFilter>;
-  /** Filter by the object’s `timestamp` field. */
-  timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `isRead` field. */
-  isRead?: Maybe<BooleanFilter>;
   /** Filter by the object’s `emailSent` field. */
   emailSent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isRead` field. */
+  isRead?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `emailServerLog` field. */
   emailServerLog?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
@@ -7591,12 +7591,12 @@ export enum NotificationsOrderBy {
   MessageDesc = 'MESSAGE_DESC',
   AttachmentsAsc = 'ATTACHMENTS_ASC',
   AttachmentsDesc = 'ATTACHMENTS_DESC',
-  TimestampAsc = 'TIMESTAMP_ASC',
-  TimestampDesc = 'TIMESTAMP_DESC',
-  IsReadAsc = 'IS_READ_ASC',
-  IsReadDesc = 'IS_READ_DESC',
   EmailSentAsc = 'EMAIL_SENT_ASC',
   EmailSentDesc = 'EMAIL_SENT_DESC',
+  IsReadAsc = 'IS_READ_ASC',
+  IsReadDesc = 'IS_READ_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
   EmailServerLogAsc = 'EMAIL_SERVER_LOG_ASC',
   EmailServerLogDesc = 'EMAIL_SERVER_LOG_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -7621,12 +7621,12 @@ export type NotificationCondition = {
   message?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `attachments` field. */
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `timestamp` field. */
-  timestamp?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `isRead` field. */
-  isRead?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `emailSent` field. */
   emailSent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isRead` field. */
+  isRead?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `emailServerLog` field. */
   emailServerLog?: Maybe<Scalars['String']>;
 };
@@ -7656,9 +7656,9 @@ export type Notification = Node & {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp: Scalars['Datetime'];
-  isRead?: Maybe<Scalars['Boolean']>;
   emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  timestamp: Scalars['Datetime'];
   emailServerLog?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `Notification`. */
   user?: Maybe<User>;
@@ -9272,12 +9272,6 @@ export enum DataViewsOrderBy {
   ShowLinkedApplicationsDesc = 'SHOW_LINKED_APPLICATIONS_DESC',
   PriorityAsc = 'PRIORITY_ASC',
   PriorityDesc = 'PRIORITY_DESC',
-  TableSearchColumnsAsc = 'TABLE_SEARCH_COLUMNS_ASC',
-  TableSearchColumnsDesc = 'TABLE_SEARCH_COLUMNS_DESC',
-  FilterIncludeColumnsAsc = 'FILTER_INCLUDE_COLUMNS_ASC',
-  FilterIncludeColumnsDesc = 'FILTER_INCLUDE_COLUMNS_DESC',
-  FilterExcludeColumnsAsc = 'FILTER_EXCLUDE_COLUMNS_ASC',
-  FilterExcludeColumnsDesc = 'FILTER_EXCLUDE_COLUMNS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9310,12 +9304,6 @@ export type DataViewCondition = {
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `priority` field. */
   priority?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `tableSearchColumns` field. */
-  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `filterIncludeColumns` field. */
-  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `filterExcludeColumns` field. */
-  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -9346,12 +9334,6 @@ export type DataViewFilter = {
   showLinkedApplications?: Maybe<BooleanFilter>;
   /** Filter by the object’s `priority` field. */
   priority?: Maybe<IntFilter>;
-  /** Filter by the object’s `tableSearchColumns` field. */
-  tableSearchColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `filterIncludeColumns` field. */
-  filterIncludeColumns?: Maybe<StringListFilter>;
-  /** Filter by the object’s `filterExcludeColumns` field. */
-  filterExcludeColumns?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -9390,9 +9372,6 @@ export type DataView = Node & {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications: Scalars['Boolean'];
   priority?: Maybe<Scalars['Int']>;
-  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A `DataView` edge in the connection. */
@@ -9423,14 +9402,6 @@ export enum DataViewColumnDefinitionsOrderBy {
   AdditionalFormattingDesc = 'ADDITIONAL_FORMATTING_DESC',
   ValueExpressionAsc = 'VALUE_EXPRESSION_ASC',
   ValueExpressionDesc = 'VALUE_EXPRESSION_DESC',
-  SortColumnAsc = 'SORT_COLUMN_ASC',
-  SortColumnDesc = 'SORT_COLUMN_DESC',
-  FilterParametersAsc = 'FILTER_PARAMETERS_ASC',
-  FilterParametersDesc = 'FILTER_PARAMETERS_DESC',
-  FilterExpressionAsc = 'FILTER_EXPRESSION_ASC',
-  FilterExpressionDesc = 'FILTER_EXPRESSION_DESC',
-  FilterDataTypeAsc = 'FILTER_DATA_TYPE_ASC',
-  FilterDataTypeDesc = 'FILTER_DATA_TYPE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9453,14 +9424,6 @@ export type DataViewColumnDefinitionCondition = {
   additionalFormatting?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `valueExpression` field. */
   valueExpression?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `sortColumn` field. */
-  sortColumn?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `filterParameters` field. */
-  filterParameters?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `filterExpression` field. */
-  filterExpression?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `filterDataType` field. */
-  filterDataType?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataViewColumnDefinition` object types. All fields are combined with a logical ‘and.’ */
@@ -9481,14 +9444,6 @@ export type DataViewColumnDefinitionFilter = {
   additionalFormatting?: Maybe<JsonFilter>;
   /** Filter by the object’s `valueExpression` field. */
   valueExpression?: Maybe<JsonFilter>;
-  /** Filter by the object’s `sortColumn` field. */
-  sortColumn?: Maybe<StringFilter>;
-  /** Filter by the object’s `filterParameters` field. */
-  filterParameters?: Maybe<JsonFilter>;
-  /** Filter by the object’s `filterExpression` field. */
-  filterExpression?: Maybe<JsonFilter>;
-  /** Filter by the object’s `filterDataType` field. */
-  filterDataType?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewColumnDefinitionFilter>>;
   /** Checks for any expressions in this list. */
@@ -9522,10 +9477,6 @@ export type DataViewColumnDefinition = Node & {
   elementParameters?: Maybe<Scalars['JSON']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
-  sortColumn?: Maybe<Scalars['String']>;
-  filterParameters?: Maybe<Scalars['JSON']>;
-  filterExpression?: Maybe<Scalars['JSON']>;
-  filterDataType?: Maybe<Scalars['String']>;
 };
 
 /** A `DataViewColumnDefinition` edge in the connection. */
@@ -19653,9 +19604,9 @@ export type UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -19752,9 +19703,9 @@ export type UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -19856,9 +19807,9 @@ export type UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatc
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -19982,9 +19933,9 @@ export type NotificationPatch = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -20000,9 +19951,9 @@ export type NotificationApplicationIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -20518,9 +20469,9 @@ export type NotificationUserIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -20605,9 +20556,9 @@ export type NotificationReviewIdFkeyNotificationCreateInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -24747,9 +24698,6 @@ export type DataViewInput = {
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
-  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** The output of our create `DataView` mutation. */
@@ -24789,10 +24737,6 @@ export type DataViewColumnDefinitionInput = {
   elementParameters?: Maybe<Scalars['JSON']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
-  sortColumn?: Maybe<Scalars['String']>;
-  filterParameters?: Maybe<Scalars['JSON']>;
-  filterExpression?: Maybe<Scalars['JSON']>;
-  filterDataType?: Maybe<Scalars['String']>;
 };
 
 /** The output of our create `DataViewColumnDefinition` mutation. */
@@ -24972,9 +24916,9 @@ export type NotificationInput = {
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  isRead?: Maybe<Scalars['Boolean']>;
   emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
   emailServerLog?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
@@ -26646,9 +26590,6 @@ export type DataViewPatch = {
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   priority?: Maybe<Scalars['Int']>;
-  tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
-  filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** The output of our update `DataView` mutation. */
@@ -26699,10 +26640,6 @@ export type DataViewColumnDefinitionPatch = {
   elementParameters?: Maybe<Scalars['JSON']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
-  sortColumn?: Maybe<Scalars['String']>;
-  filterParameters?: Maybe<Scalars['JSON']>;
-  filterExpression?: Maybe<Scalars['JSON']>;
-  filterDataType?: Maybe<Scalars['String']>;
 };
 
 /** The output of our update `DataViewColumnDefinition` mutation. */
