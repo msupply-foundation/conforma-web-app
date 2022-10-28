@@ -36,8 +36,13 @@ const useGetAssignmentOptions = () => {
       ({ allowedSections }) => allowedSections.length === 0 || allowedSections.includes(sectionCode)
     )
 
-    const currentUserAssignable = currentSectionAssignable.filter(
-      ({ isCurrentUserAssigner, isSelfAssignable, isCurrentUserReviewer }) => isCurrentUserAssigner || (isSelfAssignable && isCurrentUserReviewer)
+    const currentUserAssignable = currentSectionAssignable.find(
+      ({ isCurrentUserReviewer }) => isCurrentUserReviewer
+    )
+
+    const otherAssignableUsers = currentSectionAssignable.filter(
+      ({ isCurrentUserAssigner, isCurrentUserReviewer }) =>
+        isCurrentUserAssigner && !isCurrentUserReviewer
     )
 
     const currentlyAssigned = assignments.find(
@@ -46,28 +51,25 @@ const useGetAssignmentOptions = () => {
         assignedSections.includes(sectionCode)
     )
 
+    const orderedAssignees = otherAssignableUsers
+      .map((assignment) => getOptionFromAssignment(assignment))
+      .sort((a, b) => (a.text < b.text ? -1 : 1))
+    const assignees = currentUserAssignable
+      ? [getOptionFromAssignment(currentUserAssignable), ...orderedAssignees]
+      : orderedAssignees
+
     if (!previousAssignee && currentlyAssigned)
       return {
         selected: currentlyAssigned.reviewer.id,
         isCompleted: currentlyAssigned.review?.current.reviewStatus === ReviewStatus.Submitted,
-        options: [
-          ...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment)),
-        ],
+        options: assignees,
       }
 
-    const assigneeOptions = {
+    return {
       selected: previousAssignee || NOT_ASSIGNED,
       isCompleted: false,
-      options: [...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment))],
+      options: assignees,
     }
-
-    assigneeOptions.options.push({
-      key: NOT_ASSIGNED,
-      value: NOT_ASSIGNED,
-      text: strings.ASSIGNMENT_NOT_ASSIGNED,
-    })
-
-    return assigneeOptions
   }
 
   return getAssignmentOptions

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dropdown } from 'semantic-ui-react'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 interface AssigneeProps {
   assignmentOptions: {
     isCompleted: boolean
@@ -16,16 +17,26 @@ interface AssigneeProps {
 
 const AssigneeDropdown: React.FC<AssigneeProps> = ({ assignmentOptions, onChangeMethod }) => {
   const { isCompleted, options, selected } = assignmentOptions
+  const { strings } = useLanguageProvider()
 
   return (
     <Dropdown
       scrolling
       className="reviewer-dropdown"
-      options={options.sort((a, b) => (a.text < b.text ? -1 : 1))}
+      text={strings.ASSIGNMENT_NOT_ASSIGNED}
+      labeled
       value={selected}
       disabled={isCompleted}
       onChange={(_: any, { value }: any) => onChangeMethod(value as number)}
-    />
+    >
+      <Dropdown.Menu>
+        <Dropdown.Header icon="tags" content={strings.ASSIGNMENT_NOT_ASSIGNED} />
+        <Dropdown.Divider />
+        {options.map((assignee) => (
+          <Dropdown.Item {...assignee} />
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
   )
 }
 
