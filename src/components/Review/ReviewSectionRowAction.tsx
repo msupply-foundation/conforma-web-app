@@ -145,7 +145,9 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
     let reviewId = reviewStructure.thisReview?.id as number
     if (reviewStructure.thisReview?.current.reviewStatus == ReviewStatus.Draft)
       return push(
-        `${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`
+        `${pathname}/${reviewId}?activeSections=${
+          isFinalDecision ? 'none' : reviewAssignment.assignedSections.join(',')
+        }`
       )
 
     try {
@@ -153,7 +155,11 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
         reviewId = (await remakeReview()).data?.createReview?.review?.id as number
       else if (reviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
-      push(`${pathname}/${reviewId}?activeSections=${isFinalDecision ? 'none' : details.code}`)
+      push(
+        `${pathname}/${reviewId}?activeSections=${
+          isFinalDecision ? 'none' : reviewAssignment.assignedSections.join(',')
+        }`
+      )
     } catch (e) {
       console.log(e)
       return setError(true)
