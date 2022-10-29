@@ -26,14 +26,14 @@ export type SortColumn = {
   ascending: boolean
 } | null
 
-const DataViewTable: React.FC = () => {
+const DataViewTable: React.FC<{ codeFromLookupTable?: string }> = ({ codeFromLookupTable }) => {
   const { strings } = useLanguageProvider()
   const { preferences } = usePrefs()
   const {
     query,
     location,
     updateQuery,
-    params: { dataViewCode },
+    params: { dataViewCode = codeFromLookupTable },
   } = useRouter()
 
   const [searchText, setSearchText] = useState(query.search)
@@ -72,7 +72,7 @@ const DataViewTable: React.FC = () => {
     <div id="data-view">
       <div id="list-container" className="data-view-table-container">
         <div className="flex-row-space-between-center" style={{ width: '100%' }}>
-          <Header as="h3">{title}</Header>
+          {!codeFromLookupTable && <Header as="h3">{title}</Header>}
           {dataViewTable && dataViewTable?.searchFields?.length > 0 && (
             <Search
               placeholder={strings.DATA_VIEW_SEARCH_PLACEHOLDER}
