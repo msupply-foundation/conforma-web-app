@@ -7,6 +7,7 @@ import { useGetSingleTableStructure } from '../hooks'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ImportCsvModal } from '../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import DataViewTable from '../../containers/DataDisplay/DataViewTable'
 
 const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   const { strings } = useLanguageProvider()
@@ -31,6 +32,8 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
     setStructureID(Number(structureID))
   }, [structureID])
 
+  const dataViewCode = structure?.dataViewCode
+
   return (
     <React.Fragment>
       {error ? (
@@ -41,7 +44,8 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
         <Container style={{ padding: '2em 0em' }}>
           <LookUpMainMenu tableLabel={structure?.displayName} tableId={structure?.id} />
           <Divider />
-          <LookUpTable structure={structure} />
+          {dataViewCode && <DataViewTable codeFromLookupTable={dataViewCode} />}
+          {!structure.dataViewCode && <LookUpTable structure={structure} />}
         </Container>
       ) : (
         <Message error header={strings.LOOKUP_ERROR_NOT_FOUND} />
