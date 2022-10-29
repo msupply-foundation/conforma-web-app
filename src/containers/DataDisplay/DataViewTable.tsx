@@ -115,13 +115,15 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
   const {
     push,
     updateQuery,
-    params: { dataViewCode },
+    params: { lookupTableID },
   } = useRouter()
   const showToast = useToast({ style: 'negative' })
 
   const { headerRow, tableRows, totalCount } = dataViewTable
   const showDetailsForRow = (id: number) =>
-    push(`/data/${dataViewCode}/${id}`, { dataTableFilterQuery: location.search })
+    push(`${location.pathname}/${lookupTableID ? dataViewTable.code + '/' : ''}${id}`, {
+      dataTableFilterQuery: location.search,
+    })
 
   const sortByColumn = (
     sortColumn: string | undefined,
@@ -213,15 +215,4 @@ const isSorted = (sortColumn: string | undefined, apiQueries: DataViewTableAPIQu
   if (!sortColumn) return undefined
   if (sortColumn !== apiQueries.orderBy) return undefined
   return apiQueries.ascending === 'true' ? 'ascending' : 'descending'
-}
-
-const getSortColumnInfo = (
-  dataViewTable: DataViewsTableResponse | undefined,
-  sortBy: string
-): SortColumn => {
-  if (!sortBy || !dataViewTable) return null
-  const [fieldName, direction] = sortBy.split(':')
-  const ascending = direction === 'desc' ? false : true
-  const column = dataViewTable.headerRow.find((col) => col.columnName === fieldName)
-  return { title: column?.title || '', ascending }
 }
