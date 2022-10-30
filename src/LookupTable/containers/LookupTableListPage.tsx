@@ -10,11 +10,13 @@ import { useGetAllTableStructures } from '../hooks'
 import { useHistory } from 'react-router'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 
 const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   const { strings } = useLanguageProvider()
   const { pathname } = useRouter()
   const history = useHistory()
+  usePageTitle(strings.LOOKUP_TABLES_TITLE)
 
   const {
     allTableStructures,
