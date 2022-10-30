@@ -1,17 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Divider, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
 import { LookUpMainMenu, LookUpTable } from '../components/single'
-import { matchPath, useHistory, useParams } from 'react-router'
-import { useGetSingleTableStructure } from '../hooks'
+import { matchPath } from 'react-router'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ImportCsvModal } from '../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import DataViewTable from '../../containers/DataDisplay/DataViewTable'
+import { useGetLookupTableStructureByIdQuery } from '../../utils/generated/graphql'
+import { LookUpTableType } from '../types'
 
-const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
+const LookupTablePage: React.FC<{ basePath?: string }> = ({ basePath = '' }) => {
   const { strings } = useLanguageProvider()
-  const { pathname } = useRouter()
+
+  const { pathname, params, history } = useRouter()
+  const [structure, setStructure] = useState<LookUpTableType>()
+  const [loaded, setLoaded] = useState(false)
 
   const match: any = matchPath(pathname, {
     path: `${basePath}/:lookupTableID/import`,
@@ -19,18 +23,23 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
     strict: false,
   })
 
-  const history = useHistory()
+  console.log('match', match)
 
-  let { lookupTableID: structureID } = useParams<{ lookupTableID: string }>()
+  const { lookupTableID: structureID } = params
 
-  const { structureLoadState, structure, getStructure, setStructureID } =
-    useGetSingleTableStructure()
-
-  const { loading, error, called }: any = structureLoadState
+  const { data, loading, error, refetch } = useGetLookupTableStructureByIdQuery({
+    variables: { lookupTableID: Number(structureID) },
+    fetchPolicy: 'network-only',
+    skip: loaded,
+  })
 
   useEffect(() => {
-    setStructureID(Number(structureID))
-  }, [structureID])
+    if (!loading && !error && data?.dataTable) {
+      const lookupTable = data.dataTable as LookUpTableType
+      setStructure(lookupTable)
+      setLoaded(true)
+    }
+  }, [data])
 
   const dataViewCode = structure?.dataViewCode
 
@@ -38,12 +47,13 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
     <React.Fragment>
       {error ? (
         <Message error header={strings.LOOKUP_ERROR_TITLE} list={[error.message]} />
-      ) : loading || !called ? (
+      ) : loading ? (
         <Loading />
       ) : structure ? (
         <Container style={{ padding: '2em 0em' }}>
           <LookUpMainMenu tableLabel={structure?.displayName} tableId={structure?.id} />
           <Divider />
+          {/* Show data view table if defined, otherwise default table display */}
           {dataViewCode && <DataViewTable codeFromLookupTable={dataViewCode} />}
           {!structure.dataViewCode && <LookUpTable structure={structure} />}
         </Container>
@@ -57,7 +67,7 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
         onClose={() => {
           match && history.replace(`${basePath}/${match.params.lookupTableID}`)
         }}
-        onImportSuccess={getStructure}
+        onImportSuccess={refetch}
       />
     </React.Fragment>
   )
