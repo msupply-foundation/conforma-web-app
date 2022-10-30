@@ -10,12 +10,11 @@ import DataViewTable from '../../containers/DataDisplay/DataViewTable'
 import { useGetLookupTableStructureByIdQuery } from '../../utils/generated/graphql'
 import { LookUpTableType } from '../types'
 
-const LookupTablePage: React.FC<{ basePath?: string }> = ({ basePath = '' }) => {
+const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   const { strings } = useLanguageProvider()
 
   const { pathname, params, history } = useRouter()
   const [structure, setStructure] = useState<LookUpTableType>()
-  const [loaded, setLoaded] = useState(false)
 
   const match: any = matchPath(pathname, {
     path: `${basePath}/:lookupTableID/import`,
@@ -28,14 +27,12 @@ const LookupTablePage: React.FC<{ basePath?: string }> = ({ basePath = '' }) => 
   const { data, loading, error, refetch } = useGetLookupTableStructureByIdQuery({
     variables: { lookupTableID: Number(structureID) },
     fetchPolicy: 'network-only',
-    skip: loaded,
   })
 
   useEffect(() => {
     if (!loading && !error && data?.dataTable) {
       const lookupTable = data.dataTable as LookUpTableType
       setStructure(lookupTable)
-      setLoaded(true)
     }
   }, [data])
 
