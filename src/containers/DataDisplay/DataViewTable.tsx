@@ -68,28 +68,34 @@ const DataViewTable: React.FC<{ codeFromLookupTable?: string }> = ({ codeFromLoo
     return <Message error header={strings.ERROR_GENERIC} content={error.message} />
   }
 
+  const searchComponent =
+    dataViewTable && dataViewTable?.searchFields?.length > 0 ? (
+      <Search
+        placeholder={strings.DATA_VIEW_SEARCH_PLACEHOLDER}
+        onSearchChange={(e: any) => {
+          setSearchText(e.target.value)
+          setDebounceInput(e.target.value)
+        }}
+        input={{ icon: 'search', iconPosition: 'left' }}
+        open={false}
+        value={searchText}
+      />
+    ) : null
+
   return (
     <div id="data-view">
       <div id="list-container" className="data-view-table-container">
-        <div className="flex-row-space-between-center" style={{ width: '100%' }}>
-          {!codeFromLookupTable && <Header as="h3">{title}</Header>}
-          {dataViewTable && dataViewTable?.searchFields?.length > 0 && (
-            <Search
-              placeholder={strings.DATA_VIEW_SEARCH_PLACEHOLDER}
-              onSearchChange={(e: any) => {
-                setSearchText(e.target.value)
-                setDebounceInput(e.target.value)
-              }}
-              input={{ icon: 'search', iconPosition: 'left' }}
-              open={false}
-              value={searchText}
-            />
-          )}
-        </div>
+        {!codeFromLookupTable && (
+          <div className="flex-row-space-between-center" style={{ width: '100%' }}>
+            <Header as="h3">{title}</Header>
+            {searchComponent}
+          </div>
+        )}
         <div className="flex-row-space-between-center" style={{ width: '100%' }}>
           {filterDefinitions && (
             <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
           )}
+          {codeFromLookupTable && searchComponent}
         </div>
         {loading && <Loading />}
         {!loading && dataViewTable && (
