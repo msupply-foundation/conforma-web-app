@@ -23,8 +23,6 @@ const LookupTablePage: React.FC<{ basePath?: string }> = ({ basePath = '' }) => 
     strict: false,
   })
 
-  console.log('match', match)
-
   const { lookupTableID: structureID } = params
 
   const { data, loading, error, refetch } = useGetLookupTableStructureByIdQuery({
