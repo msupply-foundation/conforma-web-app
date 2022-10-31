@@ -122,9 +122,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     reviewAssignment: assignment,
   })
 
-  const { ConfirmModal, showModal: showConfirmModal } = useConfirmationModal({
-    onConfirm: () => submission(),
-  })
+  const { ConfirmModal, showModal: showConfirmModal } = useConfirmationModal()
   const { ConfirmModal: WarningModal, showModal: showWarning } = useConfirmationModal({
     type: 'warning',
   })
@@ -201,7 +199,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     }
 
     // Can SUBMIT
-    showConfirmModal({ ...messages.REVIEW_SUBMISSION_CONFIRM })
+    showConfirmModal({ ...messages.REVIEW_SUBMISSION_CONFIRM, onConfirm: () => submission() })
   }
 
   const submission = async () => {
