@@ -33,10 +33,9 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll, c
         options={options}
         placeholder={strings.ASSIGN_ALL_PLACEHOLDER}
         value={selected}
-        clearable
+        scrolling
         onChange={(_, { value }) => {
-          const reviewerId = value !== '' ? options[value as number].reviewerId : 0
-          setReviewerForAll(reviewerId)
+          setReviewerForAll(value as number)
           setSelected(value as number | string)
         }}
       />
@@ -55,26 +54,45 @@ const getReviewerList = (
   currentUserId: number,
   selfString: string
 ) => {
-  const reviewers = assignments
+  const currentUserAssignable = assignments.find(
+    ({ isCurrentUserReviewer }) => isCurrentUserReviewer
+  )
+
+  const assignableUsers = assignments.filter(
+    ({ isCurrentUserAssigner, isCurrentUserReviewer }) =>
+      isCurrentUserAssigner && !isCurrentUserReviewer
+  )
+
+  const reviewers = assignableUsers
     // We don't want to filter here, as when the back-end has "allowedSections =
     // null", it means "allow all". Worst case, if the reviewer really is
     // allowed "no sections" (which shouldn't happen), then they'll show up in
     // the menu, but still won't actually be able to be assigned
     // .filter((assignment) => assignment.allowedSections.length > 0)
-    .map((assignment, index) => {
+    .map((assignment) => {
       const {
         reviewer: { id, firstName, lastName },
       } = assignment
       const displayName = id === currentUserId ? selfString : `${firstName} ${lastName}`
       const reviewer = {
         key: id,
-        value: index,
-        reviewerId: id,
+        value: assignment.reviewer.id,
         text: displayName,
       }
       return reviewer
     })
-  return reviewers
+    .sort((a, b) => (a.text < b.text ? -1 : 1))
+
+  return currentUserAssignable
+    ? [
+        {
+          key: currentUserAssignable.id,
+          reviewerId: currentUserAssignable.reviewer.id as number,
+          text: selfString,
+        },
+        ...reviewers,
+      ]
+    : reviewers
 }
 
 export default AssignAll

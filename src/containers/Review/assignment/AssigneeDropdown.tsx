@@ -17,26 +17,24 @@ interface AssigneeProps {
 
 const AssigneeDropdown: React.FC<AssigneeProps> = ({ assignmentOptions, onChangeMethod }) => {
   const { isCompleted, options, selected } = assignmentOptions
+
   const { strings } = useLanguageProvider()
 
   return (
     <Dropdown
       scrolling
+      search
       className="reviewer-dropdown"
       text={strings.ASSIGNMENT_NOT_ASSIGNED}
       labeled
       value={selected}
       disabled={isCompleted}
-      onChange={(_: any, { value }: any) => onChangeMethod(value as number)}
-    >
-      <Dropdown.Menu>
-        <Dropdown.Header icon="tags" content={strings.ASSIGNMENT_NOT_ASSIGNED} />
-        <Dropdown.Divider />
-        {options.map((assignee) => (
-          <Dropdown.Item {...assignee} />
-        ))}
-      </Dropdown.Menu>
-    </Dropdown>
+      onChange={(_: any, { value }: any) => {
+        console.log('onChange', value)
+        onChangeMethod(value as number)
+      }}
+      options={options}
+    />
   )
 }
 
