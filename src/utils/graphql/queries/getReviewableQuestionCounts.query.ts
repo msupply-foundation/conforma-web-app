@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query getReviewableQuestions($applicationId: Int!, $stageId: Int!, $levelNumber: Int!) {
+  query getReviewableQuestionCounts($applicationId: Int!, $stageId: Int!, $levelNumber: Int!) {
     reviewableQuestions(appId: $applicationId) {
       totalCount
     }

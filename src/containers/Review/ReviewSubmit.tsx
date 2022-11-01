@@ -6,7 +6,7 @@ import ReviewDecision from '../../components/Review/ReviewDecision'
 import {
   Decision,
   ReviewStatus,
-  useGetReviewableQuestionsQuery,
+  useGetReviewableQuestionCountsQuery,
 } from '../../utils/generated/graphql'
 import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
 import { useGetFullReviewStructureAsync } from '../../utils/hooks/useGetReviewStructureForSection'
@@ -28,7 +28,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
     structure: { info, thisReview, assignment, canApplicantMakeChanges },
   } = props
 
-  const { data } = useGetReviewableQuestionsQuery({
+  const { data } = useGetReviewableQuestionCountsQuery({
     variables: {
       applicationId: info.id,
       stageId: thisReview?.current.stage.id as number,
@@ -42,7 +42,8 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   if (!data) return null
 
   const { assignedQuestions, reviewableQuestions } = data
-  const fullyAssigned = assignedQuestions?.totalCount === reviewableQuestions?.totalCount
+  const fullyAssigned =
+    (assignedQuestions?.totalCount || 0) >= (reviewableQuestions?.totalCount || 0)
 
   return (
     <Form id="review-submit-area">
