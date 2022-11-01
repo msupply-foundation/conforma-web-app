@@ -5,13 +5,13 @@ export default gql`
     reviewableQuestions(appId: $applicationId) {
       totalCount
     }
-    assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber) {
-      totalCount
-    }
-    submittedAssignedQuestionsCount(
+    assignedQuestions(
       appId: $applicationId
       stageId: $stageId
       levelNumber: $levelNumber
-    )
+      filter: { or: [{ decision: { equalTo: APPROVE } }, { decision: { equalTo: AGREE } }] }
+    ) {
+      totalCount
+    }
   }
 `
