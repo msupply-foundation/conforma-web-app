@@ -9278,6 +9278,8 @@ export enum DataViewsOrderBy {
   FilterIncludeColumnsDesc = 'FILTER_INCLUDE_COLUMNS_DESC',
   FilterExcludeColumnsAsc = 'FILTER_EXCLUDE_COLUMNS_ASC',
   FilterExcludeColumnsDesc = 'FILTER_EXCLUDE_COLUMNS_DESC',
+  DefaultSortColumnAsc = 'DEFAULT_SORT_COLUMN_ASC',
+  DefaultSortColumnDesc = 'DEFAULT_SORT_COLUMN_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9316,6 +9318,8 @@ export type DataViewCondition = {
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `filterExcludeColumns` field. */
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `defaultSortColumn` field. */
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -9352,6 +9356,8 @@ export type DataViewFilter = {
   filterIncludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `filterExcludeColumns` field. */
   filterExcludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `defaultSortColumn` field. */
+  defaultSortColumn?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -9393,6 +9399,7 @@ export type DataView = Node & {
   tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** A `DataView` edge in the connection. */
@@ -24750,6 +24757,7 @@ export type DataViewInput = {
   tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** The output of our create `DataView` mutation. */
@@ -26649,6 +26657,7 @@ export type DataViewPatch = {
   tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** The output of our update `DataView` mutation. */
@@ -30865,7 +30874,6 @@ export type GetReviewableQuestionsQueryVariables = Exact<{
 
 export type GetReviewableQuestionsQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'submittedAssignedQuestionsCount'>
   & { reviewableQuestions?: Maybe<(
     { __typename?: 'ReviewableQuestionsConnection' }
     & Pick<ReviewableQuestionsConnection, 'totalCount'>
@@ -33169,10 +33177,9 @@ export const GetReviewableQuestionsDocument = gql`
   reviewableQuestions(appId: $applicationId) {
     totalCount
   }
-  assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber) {
+  assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber, filter: {or: [{decision: {equalTo: APPROVE}}, {decision: {equalTo: AGREE}}]}) {
     totalCount
   }
-  submittedAssignedQuestionsCount(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber)
 }
     `;
 
