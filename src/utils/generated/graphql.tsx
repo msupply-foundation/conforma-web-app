@@ -38568,7 +38568,7 @@ export type ApplicationFragment = (
 
 export type ApplicationResponseFragmentFragment = (
   { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'stageNumber' | 'templateElementId' | 'timeUpdated'>
+  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'stageNumber' | 'templateElementId' | 'evaluatedParameters' | 'timeUpdated'>
   & { templateElement?: Maybe<(
     { __typename?: 'TemplateElement' }
     & Pick<TemplateElement, 'code'>
@@ -39049,6 +39049,7 @@ export type UpdateResponseMutationVariables = Exact<{
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
 }>;
 
 
@@ -39245,7 +39246,7 @@ export type GetAllLookupTableStructuresQuery = (
     { __typename?: 'DataTablesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'DataTable' }
-      & Pick<DataTable, 'id' | 'tableName' | 'displayName' | 'fieldMap' | 'dataViewCode'>
+      & Pick<DataTable, 'id' | 'tableName' | 'displayName' | 'fieldMap'>
     )>> }
   )> }
 );
@@ -39652,7 +39653,6 @@ export type GetReviewableQuestionsQueryVariables = Exact<{
 
 export type GetReviewableQuestionsQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'submittedAssignedQuestionsCount'>
   & { reviewableQuestions?: Maybe<(
     { __typename?: 'ReviewableQuestionsConnection' }
     & Pick<ReviewableQuestionsConnection, 'totalCount'>
@@ -39981,6 +39981,7 @@ export const ApplicationResponseFragmentFragmentDoc = gql`
     code
   }
   templateElementId
+  evaluatedParameters
   timeUpdated
 }
     `;
@@ -40806,8 +40807,8 @@ export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApp
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 export const UpdateResponseDocument = gql`
-    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean, $stageNumber: Int) {
-  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid, stageNumber: $stageNumber}}) {
+    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean, $stageNumber: Int, $evaluatedParameters: JSON) {
+  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid, stageNumber: $stageNumber, evaluatedParameters: $evaluatedParameters}}) {
     applicationResponse {
       ...applicationResponseFragment
       templateElement {
@@ -40837,6 +40838,7 @@ export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMut
  *      value: // value for 'value'
  *      isValid: // value for 'isValid'
  *      stageNumber: // value for 'stageNumber'
+ *      evaluatedParameters: // value for 'evaluatedParameters'
  *   },
  * });
  */
@@ -41234,7 +41236,6 @@ export const GetAllLookupTableStructuresDocument = gql`
       tableName
       displayName
       fieldMap
-      dataViewCode
     }
   }
 }
@@ -41956,10 +41957,9 @@ export const GetReviewableQuestionsDocument = gql`
   reviewableQuestions(appId: $applicationId) {
     totalCount
   }
-  assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber) {
+  assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber, filter: {or: [{decision: {equalTo: APPROVE}}, {decision: {equalTo: AGREE}}]}) {
     totalCount
   }
-  submittedAssignedQuestionsCount(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber)
 }
     `;
 
