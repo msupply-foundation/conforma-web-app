@@ -41,4 +41,23 @@ const getJSDate = (date?: string) => (date ? DateTime.fromISO(date).toJSDate() :
 const getISODate = (date?: Date) =>
   date ? DateTime.fromJSDate(date).toISO() : DateTime.now().toISO()
 
-export default { generateExpiry, getYear, getFormattedDate, getJSDate, getISODate }
+// Extracts any numeric content from a string
+const extractNumber = (input: string) => {
+  const numberMatch = input.match(/(-?(\d+\.\d+))|(-?((?<!\.)\.\d+))|(-?\d+)/gm)
+  if (!numberMatch) return 0
+  return Number(numberMatch[0])
+}
+
+// Remove diacritics (accented characters) from strings
+// See https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
+const removeAccents = (input: string) => input.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+export default {
+  generateExpiry,
+  getYear,
+  getFormattedDate,
+  getJSDate,
+  getISODate,
+  extractNumber,
+  removeAccents,
+}

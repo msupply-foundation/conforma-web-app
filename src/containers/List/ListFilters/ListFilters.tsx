@@ -39,7 +39,7 @@ const ListFilters: React.FC<{
   filterListParameters: any
 }> = ({ filterDefinitions, filterListParameters }) => {
   const { strings } = useLanguageProvider()
-  const { query, updateQuery } = useRouter()
+  const { query, updateQuery, location } = useRouter()
 
   const displayableFilters = getDisplayableFilters(filterDefinitions)
   const defaultDisplayFilters = getDefaultDisplayFilters(filterDefinitions)
@@ -49,6 +49,12 @@ const ListFilters: React.FC<{
 
   // Add filters from URL to activeFilters, filters may not have criteria/options yet thus we have to use activeFilter state variable
   useEffect(() => {
+    // Reset active filters if coming from Database menu selection
+    if (location?.state?.resetFilters) {
+      setActiveFilters([])
+      return
+    }
+
     const filtersInQuery = filterNames.filter((filterName) => !!query[filterName])
     const newFilters = filtersInQuery.filter((filterName) => !activeFilters.includes(filterName))
     if (activeFilters.length === 0 && newFilters.length === 0)
@@ -110,10 +116,27 @@ const ListFilters: React.FC<{
               {displayableFilters[filterName].title}
             </Dropdown.Item>
           ))}
-          <Dropdown.Item key="clear-filters" onClick={resetFilters}>
-            <Icon size="small" color="grey" name="delete" />
-            {strings.FILTER_RESET_ALL}
-          </Dropdown.Item>
+          {!!activeFilters.length && (
+            <Dropdown.Item key="clear-filters" onClick={resetFilters}>
+              <Icon size="small" color="grey" name="delete" />
+              {strings.FILTER_RESET_ALL}
+            </Dropdown.Item>
+          )}
+          {query.sortBy && (
+            <Dropdown.Item key="clear-sort" onClick={() => updateQuery({ sortBy: null })}>
+              <Icon size="small" color="grey" name="delete" />
+              {strings.FILTER_RESET_SORT}
+            </Dropdown.Item>
+          )}
+          {(query.page || query.perPage) && (
+            <Dropdown.Item
+              key="clear-pagination"
+              onClick={() => updateQuery({ page: null, perPage: null })}
+            >
+              <Icon size="small" color="grey" name="delete" />
+              {strings.FILTER_RESET_PAGINATION}
+            </Dropdown.Item>
+          )}
         </Dropdown.Menu>
       </Dropdown>
       {activeFilters.map((filterName) => {

@@ -29,37 +29,37 @@ const Admin: React.FC = () => {
     {
       route: 'templates',
       header: strings.MENU_ITEM_ADMIN_TEMPLATES,
-      Element: () => <Templates />,
+      Element: <Templates />,
     },
     {
       route: 'lookup-tables',
       header: strings.MENU_ITEM_ADMIN_LOOKUP_TABLES,
-      Element: () => <LookupTableRoutes />,
+      Element: <LookupTableRoutes />,
     },
     // {
     //   route: 'data',
     //   header: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
-    //   Element: () => <AdminDataViews />,
+    //   Element: <AdminDataViews />,
     // },
     // {
     //   route: 'permissions',
     //   header: strings.MENU_ITEM_ADMIN_PERMISSIONS,
-    //   Element: () => <AdminPermissions />,
+    //   Element: <AdminPermissions />,
     // },
     // {
     //   route: 'plugins',
     //   header: 'Plugins',
-    //   Element: () => <AdminPlugins />,
+    //   Element: <AdminPlugins />,
     // },
     {
       route: 'localisations',
       header: strings.MENU_ITEM_ADMIN_LOCALISATION,
-      Element: () => <AdminLocalisations />,
+      Element: <AdminLocalisations />,
     },
     {
       route: 'snapshots',
       header: 'Snapshots',
-      Element: () => <Snapshots />,
+      Element: <Snapshots />,
     },
   ]
 
@@ -70,7 +70,7 @@ const Admin: React.FC = () => {
       </Route>
       {adminOption.map(({ route, Element }) => (
         <Route key={route} path={`${path}/${route}`}>
-          <Element />
+          {Element}
         </Route>
       ))}
 

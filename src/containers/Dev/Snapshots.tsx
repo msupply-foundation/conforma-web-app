@@ -64,7 +64,11 @@ const Snapshots: React.FC = () => {
         url: getServerUrl('snapshot', { action: 'use', name }),
       })
 
-      if (resultJson.success) return setIsLoading(false)
+      if (resultJson.success) {
+        setIsLoading(false)
+        location.reload(true)
+        return
+      }
 
       setSnapshotError(resultJson)
     } catch (error) {
