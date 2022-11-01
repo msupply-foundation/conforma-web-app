@@ -9172,6 +9172,8 @@ export enum DataTablesOrderBy {
   FieldMapDesc = 'FIELD_MAP_DESC',
   IsLookupTableAsc = 'IS_LOOKUP_TABLE_ASC',
   IsLookupTableDesc = 'IS_LOOKUP_TABLE_DESC',
+  DataViewCodeAsc = 'DATA_VIEW_CODE_ASC',
+  DataViewCodeDesc = 'DATA_VIEW_CODE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9188,6 +9190,8 @@ export type DataTableCondition = {
   fieldMap?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isLookupTable` field. */
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `dataViewCode` field. */
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataTable` object types. All fields are combined with a logical ‘and.’ */
@@ -9202,6 +9206,8 @@ export type DataTableFilter = {
   fieldMap?: Maybe<JsonFilter>;
   /** Filter by the object’s `isLookupTable` field. */
   isLookupTable?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `dataViewCode` field. */
+  dataViewCode?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataTableFilter>>;
   /** Checks for any expressions in this list. */
@@ -9232,6 +9238,7 @@ export type DataTable = Node & {
   displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 /** A `DataTable` edge in the connection. */
@@ -9278,6 +9285,8 @@ export enum DataViewsOrderBy {
   FilterIncludeColumnsDesc = 'FILTER_INCLUDE_COLUMNS_DESC',
   FilterExcludeColumnsAsc = 'FILTER_EXCLUDE_COLUMNS_ASC',
   FilterExcludeColumnsDesc = 'FILTER_EXCLUDE_COLUMNS_DESC',
+  DefaultSortColumnAsc = 'DEFAULT_SORT_COLUMN_ASC',
+  DefaultSortColumnDesc = 'DEFAULT_SORT_COLUMN_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9316,6 +9325,8 @@ export type DataViewCondition = {
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `filterExcludeColumns` field. */
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `defaultSortColumn` field. */
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -9352,6 +9363,8 @@ export type DataViewFilter = {
   filterIncludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `filterExcludeColumns` field. */
   filterExcludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `defaultSortColumn` field. */
+  defaultSortColumn?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -9393,6 +9406,7 @@ export type DataView = Node & {
   tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** A `DataView` edge in the connection. */
@@ -24703,6 +24717,7 @@ export type DataTableInput = {
   displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 /** The output of our create `DataTable` mutation. */
@@ -24750,6 +24765,7 @@ export type DataViewInput = {
   tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** The output of our create `DataView` mutation. */
@@ -26582,6 +26598,7 @@ export type DataTablePatch = {
   displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 /** The output of our update `DataTable` mutation. */
@@ -26649,6 +26666,7 @@ export type DataViewPatch = {
   tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** The output of our update `DataView` mutation. */
@@ -30856,16 +30874,15 @@ export type GetReviewResponsesQuery = (
   )> }
 );
 
-export type GetReviewableQuestionsQueryVariables = Exact<{
+export type GetReviewableQuestionCountsQueryVariables = Exact<{
   applicationId: Scalars['Int'];
   stageId: Scalars['Int'];
   levelNumber: Scalars['Int'];
 }>;
 
 
-export type GetReviewableQuestionsQuery = (
+export type GetReviewableQuestionCountsQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'submittedAssignedQuestionsCount'>
   & { reviewableQuestions?: Maybe<(
     { __typename?: 'ReviewableQuestionsConnection' }
     & Pick<ReviewableQuestionsConnection, 'totalCount'>
@@ -33164,29 +33181,28 @@ export function useGetReviewResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetReviewResponsesQueryHookResult = ReturnType<typeof useGetReviewResponsesQuery>;
 export type GetReviewResponsesLazyQueryHookResult = ReturnType<typeof useGetReviewResponsesLazyQuery>;
 export type GetReviewResponsesQueryResult = Apollo.QueryResult<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>;
-export const GetReviewableQuestionsDocument = gql`
-    query getReviewableQuestions($applicationId: Int!, $stageId: Int!, $levelNumber: Int!) {
+export const GetReviewableQuestionCountsDocument = gql`
+    query getReviewableQuestionCounts($applicationId: Int!, $stageId: Int!, $levelNumber: Int!) {
   reviewableQuestions(appId: $applicationId) {
     totalCount
   }
-  assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber) {
+  assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber, filter: {or: [{decision: {equalTo: APPROVE}}, {decision: {equalTo: AGREE}}]}) {
     totalCount
   }
-  submittedAssignedQuestionsCount(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber)
 }
     `;
 
 /**
- * __useGetReviewableQuestionsQuery__
+ * __useGetReviewableQuestionCountsQuery__
  *
- * To run a query within a React component, call `useGetReviewableQuestionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetReviewableQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetReviewableQuestionCountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewableQuestionCountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetReviewableQuestionsQuery({
+ * const { data, loading, error } = useGetReviewableQuestionCountsQuery({
  *   variables: {
  *      applicationId: // value for 'applicationId'
  *      stageId: // value for 'stageId'
@@ -33194,15 +33210,15 @@ export const GetReviewableQuestionsDocument = gql`
  *   },
  * });
  */
-export function useGetReviewableQuestionsQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>) {
-        return Apollo.useQuery<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>(GetReviewableQuestionsDocument, baseOptions);
+export function useGetReviewableQuestionCountsQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>) {
+        return Apollo.useQuery<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>(GetReviewableQuestionCountsDocument, baseOptions);
       }
-export function useGetReviewableQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>) {
-          return Apollo.useLazyQuery<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>(GetReviewableQuestionsDocument, baseOptions);
+export function useGetReviewableQuestionCountsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>(GetReviewableQuestionCountsDocument, baseOptions);
         }
-export type GetReviewableQuestionsQueryHookResult = ReturnType<typeof useGetReviewableQuestionsQuery>;
-export type GetReviewableQuestionsLazyQueryHookResult = ReturnType<typeof useGetReviewableQuestionsLazyQuery>;
-export type GetReviewableQuestionsQueryResult = Apollo.QueryResult<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>;
+export type GetReviewableQuestionCountsQueryHookResult = ReturnType<typeof useGetReviewableQuestionCountsQuery>;
+export type GetReviewableQuestionCountsLazyQueryHookResult = ReturnType<typeof useGetReviewableQuestionCountsLazyQuery>;
+export type GetReviewableQuestionCountsQueryResult = Apollo.QueryResult<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>;
 export const GetSchemaColumnsDocument = gql`
     query getSchemaColumns($tableNames: [SqlIdentifier!]) {
   schemaColumns(filter: {tableName: {in: $tableNames}}) {
