@@ -1,15 +1,8 @@
 import React from 'react'
 import { Dropdown } from 'semantic-ui-react'
+import { AssignmentOptions } from '../../../utils/types'
 interface AssigneeProps {
-  assignmentOptions: {
-    isCompleted: boolean
-    selected: number
-    options: {
-      key: number
-      value: number
-      text: string
-    }[]
-  }
+  assignmentOptions: AssignmentOptions
   sectionCode: string
   onChangeMethod: (selected: number) => void
 }

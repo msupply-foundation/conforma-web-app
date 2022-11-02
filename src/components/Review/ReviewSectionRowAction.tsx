@@ -89,7 +89,7 @@ const getConsolidatorChangesRequestedCount = (progress?: ChangeRequestsProgress)
 const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   reviewStructure,
   reviewAssignment,
-  section: { details, reviewProgress, consolidationProgress, changeRequestsProgress },
+  section: { reviewProgress, consolidationProgress, changeRequestsProgress },
   previousAssignment,
   action,
 }) => {
@@ -100,12 +100,6 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   } = useRouter()
 
   const [error, setError] = useState(false)
-
-  const remakeReview = useRemakePreviousReview({
-    reviewStructure,
-    reviewAssignment,
-    previousAssignment,
-  })
 
   const restartReview = useRestartReview({ reviewStructure, reviewAssignment })
 
@@ -151,9 +145,14 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
       )
 
     try {
-      if (isFinalDecision)
+      if (isFinalDecision && previousAssignment) {
+        const remakeReview = useRemakePreviousReview({
+          reviewStructure,
+          reviewAssignment,
+          previousAssignment,
+        })
         reviewId = (await remakeReview()).data?.createReview?.review?.id as number
-      else if (reviewStructure.thisReview) await restartReview()
+      } else if (reviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
       push(
         `${pathname}/${reviewId}?activeSections=${
