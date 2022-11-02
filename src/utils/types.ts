@@ -408,7 +408,7 @@ type ReviewSectionComponentProps = {
   reviewStructure: FullStructure
   reviewAssignment: AssignmentDetails
   section: SectionState
-  previousAssignment: AssignmentDetails
+  previousAssignment?: AssignmentDetails
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean

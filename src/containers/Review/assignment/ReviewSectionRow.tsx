@@ -23,7 +23,7 @@ type ReviewSectionRowProps = {
   sectionId: number
   fullStructure: FullStructure
   reviewAssignment: AssignmentDetails
-  previousAssignment: AssignmentDetails
+  previousAssignment?: AssignmentDetails
 }
 
 const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({

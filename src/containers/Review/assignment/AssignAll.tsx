@@ -2,20 +2,23 @@ import React, { useState } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
 import Tooltip from '../../../components/Tooltip'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { useUserState } from '../../../contexts/UserState'
 import { AssignmentDetails, User } from '../../../utils/types'
 
 interface AssignAllProps {
   assignments: AssignmentDetails[]
-  currentUser: User | null
   setReviewerForAll: (value: number) => void
 }
 
-const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll, currentUser }) => {
+const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll }) => {
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const { strings } = useLanguageProvider()
   const [selected, setSelected] = useState<number | string>('')
   const options = getReviewerList(
     assignments,
-    currentUser?.userId ?? 0,
+    currentUser?.userId || 0,
     strings.ASSIGNMENT_YOURSELF
   )
 
