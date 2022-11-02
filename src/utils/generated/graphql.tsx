@@ -39644,14 +39644,14 @@ export type GetReviewResponsesQuery = (
   )> }
 );
 
-export type GetReviewableQuestionsQueryVariables = Exact<{
+export type GetReviewableQuestionCountsQueryVariables = Exact<{
   applicationId: Scalars['Int'];
   stageId: Scalars['Int'];
   levelNumber: Scalars['Int'];
 }>;
 
 
-export type GetReviewableQuestionsQuery = (
+export type GetReviewableQuestionCountsQuery = (
   { __typename?: 'Query' }
   & { reviewableQuestions?: Maybe<(
     { __typename?: 'ReviewableQuestionsConnection' }
@@ -41952,8 +41952,8 @@ export function useGetReviewResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetReviewResponsesQueryHookResult = ReturnType<typeof useGetReviewResponsesQuery>;
 export type GetReviewResponsesLazyQueryHookResult = ReturnType<typeof useGetReviewResponsesLazyQuery>;
 export type GetReviewResponsesQueryResult = Apollo.QueryResult<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>;
-export const GetReviewableQuestionsDocument = gql`
-    query getReviewableQuestions($applicationId: Int!, $stageId: Int!, $levelNumber: Int!) {
+export const GetReviewableQuestionCountsDocument = gql`
+    query getReviewableQuestionCounts($applicationId: Int!, $stageId: Int!, $levelNumber: Int!) {
   reviewableQuestions(appId: $applicationId) {
     totalCount
   }
@@ -41964,16 +41964,16 @@ export const GetReviewableQuestionsDocument = gql`
     `;
 
 /**
- * __useGetReviewableQuestionsQuery__
+ * __useGetReviewableQuestionCountsQuery__
  *
- * To run a query within a React component, call `useGetReviewableQuestionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetReviewableQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetReviewableQuestionCountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewableQuestionCountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetReviewableQuestionsQuery({
+ * const { data, loading, error } = useGetReviewableQuestionCountsQuery({
  *   variables: {
  *      applicationId: // value for 'applicationId'
  *      stageId: // value for 'stageId'
@@ -41981,15 +41981,15 @@ export const GetReviewableQuestionsDocument = gql`
  *   },
  * });
  */
-export function useGetReviewableQuestionsQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>) {
-        return Apollo.useQuery<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>(GetReviewableQuestionsDocument, baseOptions);
+export function useGetReviewableQuestionCountsQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>) {
+        return Apollo.useQuery<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>(GetReviewableQuestionCountsDocument, baseOptions);
       }
-export function useGetReviewableQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>) {
-          return Apollo.useLazyQuery<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>(GetReviewableQuestionsDocument, baseOptions);
+export function useGetReviewableQuestionCountsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>(GetReviewableQuestionCountsDocument, baseOptions);
         }
-export type GetReviewableQuestionsQueryHookResult = ReturnType<typeof useGetReviewableQuestionsQuery>;
-export type GetReviewableQuestionsLazyQueryHookResult = ReturnType<typeof useGetReviewableQuestionsLazyQuery>;
-export type GetReviewableQuestionsQueryResult = Apollo.QueryResult<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>;
+export type GetReviewableQuestionCountsQueryHookResult = ReturnType<typeof useGetReviewableQuestionCountsQuery>;
+export type GetReviewableQuestionCountsLazyQueryHookResult = ReturnType<typeof useGetReviewableQuestionCountsLazyQuery>;
+export type GetReviewableQuestionCountsQueryResult = Apollo.QueryResult<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>;
 export const GetSchemaColumnsDocument = gql`
     query getSchemaColumns($tableNames: [SqlIdentifier!]) {
   schemaColumns(filter: {tableName: {in: $tableNames}}) {
