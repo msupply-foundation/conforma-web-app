@@ -30,7 +30,7 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   })
 
   useEffect(() => {
-    if (!loading && !error && data?.dataTable) {
+    if (data?.dataTable) {
       const lookupTable = data.dataTable as LookUpTableType
       setStructure(lookupTable)
     }
