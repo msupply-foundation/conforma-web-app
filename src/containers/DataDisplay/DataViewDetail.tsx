@@ -9,13 +9,13 @@ import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { DisplayDefinition, LinkedApplication } from '../../utils/types'
 import { constructElement, formatCellText } from './helpers'
 import ApplicationLinks from './ApplicationLinks'
+import { Link } from 'react-router-dom'
 
 const DataViewDetail: React.FC = () => {
   const { strings } = useLanguageProvider()
   const {
-    push,
     location,
-    params: { dataViewCode, id },
+    params: { dataViewCode, id, lookupTableID },
   } = useRouter()
   const { dataViewDetail, loading, error } = useDataViewsDetail({ dataViewCode, recordId: id })
   usePageTitle(dataViewDetail?.header?.value || '')
@@ -37,12 +37,20 @@ const DataViewDetail: React.FC = () => {
       <div className="data-view-nav">
         <Label
           className="back-label clickable"
-          onClick={() => push(`/data/${dataViewCode}${prevPageQuery}`)}
           content={
-            <>
+            <Link
+              to={{
+                pathname: location.pathname
+                  .split('/')
+                  // Go up one level for dataViews, 2 for lookupTables
+                  .slice(0, lookupTableID ? -2 : -1)
+                  .join('/'),
+                search: prevPageQuery,
+              }}
+            >
               <Icon name="chevron left" className="dark-grey" />
               {tableTitle}
-            </>
+            </Link>
           }
         />
       </div>

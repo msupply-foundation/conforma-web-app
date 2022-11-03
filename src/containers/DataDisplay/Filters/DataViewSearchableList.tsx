@@ -32,13 +32,13 @@ export const DataViewSearchableList: React.FC<SearchableListProps> = ({
   const [moreResults, setMoreResults] = useState(false)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
 
-  const { column, code, searchFields, delimiter } = options
+  const { column, code, ...otherOptions } = options
 
   useEffect(() => {
     if (!code || !column) return
     postRequest({
       url: getServerUrl('dataViews', { dataViewCode: code, column }),
-      jsonBody: { searchText, searchFields, delimiter },
+      jsonBody: { searchText, ...otherOptions },
       headers: { 'Content-Type': 'application/json' },
     }).then(({ list, moreResultsAvailable, error, message }) => {
       if (error) {
