@@ -159,12 +159,97 @@
             {
               "name": "Table",
               "request": {
-                "method": "GET",
+                "method": "POST",
                 "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
                 "url": {
-                  "raw": "{{base_url}}/data-views/table/{{tableName}}",
+                  "raw": "{{base_url}}/data-views/organisation",
                   "host": ["{{base_url}}"],
-                  "path": ["data-views", "table", "{{tableName}}"]
+                  "path": ["data-views", "organisation"],
+                  "query": [
+                    {
+                      "key": "first",
+                      "value": "1",
+                      "disabled": true
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0",
+                      "disabled": true
+                    },
+                    {
+                      "key": "ascending",
+                      "value": "false",
+                      "disabled": true
+                    },
+                    {
+                      "key": "orderBy",
+                      "value": "name",
+                      "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": "123",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "FilterList",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"searchText\": \"imp\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/data-views/organisation/filterList/typeFilterData",
+                  "host": ["{{base_url}}"],
+                  "path": ["data-views", "organisation", "filterList", "typeFilterData"],
+                  "query": [
+                    {
+                      "key": "first",
+                      "value": "1",
+                      "disabled": true
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0",
+                      "disabled": true
+                    },
+                    {
+                      "key": "ascending",
+                      "value": "false",
+                      "disabled": true
+                    },
+                    {
+                      "key": "orderBy",
+                      "value": "name",
+                      "disabled": true
+                    },
+                    {
+                      "key": "search",
+                      "value": "123",
+                      "disabled": true
+                    }
+                  ]
                 }
               },
               "response": []
@@ -175,9 +260,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/data-views/table/{{tableName}}/item/{{itemId}}",
+                  "raw": "{{base_url}}/data-views/organisation/2",
                   "host": ["{{base_url}}"],
-                  "path": ["data-views", "table", "{{tableName}}", "item", "{{itemId}}"]
+                  "path": ["data-views", "organisation", "2"]
                 }
               },
               "response": []
@@ -992,7 +1077,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"actionCode\": \"generateTextString\",\n    \"applicationId\": 1,\n    \"parameters\": {\n        \"pattern\": \"<?templateName>-<?productName>\",\n        \"customFields\": {\n            \"templateName\": \"applicationData.templateName\",\n            \"productName\": \"applicationData.responses.Q20.text\"\n        }\n    }\n}",
+              "raw": "{\n    \"actionCode\": \"sendNotification\",\n    \"applicationId\": 378,\n    \"parameters\": {\n        \"to\": \"carl@msupply.foundation\",\"bcc\":\"nicole@m\"\n        \"subject\": \"Test Mailhog\",\n        \"message\": \"Not sure how this works exactly\"\n    }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1035,6 +1120,35 @@
               "raw": "{{base_url}}/admin/test-trigger",
               "host": ["{{base_url}}"],
               "path": ["admin", "test-trigger"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate Filter Text Columns",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/generate-filter-data-fields",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "generate-filter-data-fields"],
+              "query": [
+                {
+                  "key": "table",
+                  "value": "organisation",
+                  "disabled": true
+                }
+              ]
             }
           },
           "response": []
