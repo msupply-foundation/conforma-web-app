@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form, Label } from 'semantic-ui-react'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import ReviewComment from '../../components/Review/ReviewComment'
@@ -24,11 +24,11 @@ type ReviewSubmitProps = {
 }
 
 const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
-  const {
-    structure: { info, thisReview, assignment, canApplicantMakeChanges },
-  } = props
+  const { structure } = props
 
-  const { data } = useGetReviewableQuestionCountsQuery({
+  const { info, thisReview, assignment, canApplicantMakeChanges } = structure
+
+  const { data, refetch } = useGetReviewableQuestionCountsQuery({
     variables: {
       applicationId: info.id,
       stageId: thisReview?.current.stage.id as number,
@@ -39,6 +39,10 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   const { decisionOptions, getDecision, setDecision, getAndSetDecisionError, isDecisionError } =
     useGetDecisionOptions(canApplicantMakeChanges, assignment, thisReview)
 
+  // This will recalculate assignableQuestions after each reviewResponse is updated
+  useEffect(() => {
+    refetch()
+  }, [structure])
   if (!data) return null
 
   const { assignedQuestions, reviewableQuestions } = data
