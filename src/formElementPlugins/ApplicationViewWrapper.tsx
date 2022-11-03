@@ -124,6 +124,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
             value: response,
             isValid: validationResult.isValid,
             stageNumber,
+            evaluatedParameters: { ...simpleParameters, ...evaluatedParameters },
           },
         })
       if (response === null || response?.text == undefined)
