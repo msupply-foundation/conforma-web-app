@@ -2739,6 +2739,8 @@ export type ApplicationResponseFilter = {
   timeUpdated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeSubmitted` field. */
   timeSubmitted?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `evaluatedParameters` field. */
+  evaluatedParameters?: Maybe<JsonFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ApplicationResponseToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -5438,6 +5440,8 @@ export enum ApplicationResponsesOrderBy {
   TimeUpdatedDesc = 'TIME_UPDATED_DESC',
   TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
   TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
+  EvaluatedParametersAsc = 'EVALUATED_PARAMETERS_ASC',
+  EvaluatedParametersDesc = 'EVALUATED_PARAMETERS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -5464,6 +5468,8 @@ export type ApplicationResponseCondition = {
   timeUpdated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeSubmitted` field. */
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `evaluatedParameters` field. */
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
 };
 
 /** A connection to a list of `ApplicationResponse` values. */
@@ -5493,6 +5499,7 @@ export type ApplicationResponse = Node & {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   /** Reads a single `TemplateElement` that is related to this `ApplicationResponse`. */
   templateElement?: Maybe<TemplateElement>;
   /** Reads a single `Application` that is related to this `ApplicationResponse`. */
@@ -9165,6 +9172,8 @@ export enum DataTablesOrderBy {
   FieldMapDesc = 'FIELD_MAP_DESC',
   IsLookupTableAsc = 'IS_LOOKUP_TABLE_ASC',
   IsLookupTableDesc = 'IS_LOOKUP_TABLE_DESC',
+  DataViewCodeAsc = 'DATA_VIEW_CODE_ASC',
+  DataViewCodeDesc = 'DATA_VIEW_CODE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9181,6 +9190,8 @@ export type DataTableCondition = {
   fieldMap?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isLookupTable` field. */
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `dataViewCode` field. */
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataTable` object types. All fields are combined with a logical ‘and.’ */
@@ -9195,6 +9206,8 @@ export type DataTableFilter = {
   fieldMap?: Maybe<JsonFilter>;
   /** Filter by the object’s `isLookupTable` field. */
   isLookupTable?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `dataViewCode` field. */
+  dataViewCode?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataTableFilter>>;
   /** Checks for any expressions in this list. */
@@ -9225,6 +9238,7 @@ export type DataTable = Node & {
   displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 /** A `DataTable` edge in the connection. */
@@ -9271,6 +9285,8 @@ export enum DataViewsOrderBy {
   FilterIncludeColumnsDesc = 'FILTER_INCLUDE_COLUMNS_DESC',
   FilterExcludeColumnsAsc = 'FILTER_EXCLUDE_COLUMNS_ASC',
   FilterExcludeColumnsDesc = 'FILTER_EXCLUDE_COLUMNS_DESC',
+  DefaultSortColumnAsc = 'DEFAULT_SORT_COLUMN_ASC',
+  DefaultSortColumnDesc = 'DEFAULT_SORT_COLUMN_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -9309,6 +9325,8 @@ export type DataViewCondition = {
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `filterExcludeColumns` field. */
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `defaultSortColumn` field. */
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -9345,6 +9363,8 @@ export type DataViewFilter = {
   filterIncludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `filterExcludeColumns` field. */
   filterExcludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `defaultSortColumn` field. */
+  defaultSortColumn?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -9386,6 +9406,7 @@ export type DataView = Node & {
   tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** A `DataView` edge in the connection. */
@@ -15689,6 +15710,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -15924,6 +15946,7 @@ export type UpdateApplicationResponseOnApplicationResponseForApplicationResponse
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -18445,6 +18468,7 @@ export type UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -18561,6 +18585,7 @@ export type UpdateApplicationResponseOnReviewResponseForReviewResponseApplicatio
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -18889,6 +18914,7 @@ export type ApplicationResponsePatch = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -18907,6 +18933,7 @@ export type ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInpu
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -20861,6 +20888,7 @@ export type FileApplicationResponseIdFkeyApplicationResponseCreateInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -22614,6 +22642,7 @@ export type ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInp
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -22760,6 +22789,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput =
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -24525,6 +24555,7 @@ export type ApplicationResponseInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
   templateElementToTemplateElementId?: Maybe<ApplicationResponseTemplateElementIdFkeyInput>;
   applicationToApplicationId?: Maybe<ApplicationResponseApplicationIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseApplicationResponseIdFkeyInverseInput>;
@@ -24686,6 +24717,7 @@ export type DataTableInput = {
   displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 /** The output of our create `DataTable` mutation. */
@@ -24733,6 +24765,7 @@ export type DataViewInput = {
   tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** The output of our create `DataView` mutation. */
@@ -26565,6 +26598,7 @@ export type DataTablePatch = {
   displayName?: Maybe<Scalars['String']>;
   fieldMap?: Maybe<Scalars['JSON']>;
   isLookupTable?: Maybe<Scalars['Boolean']>;
+  dataViewCode?: Maybe<Scalars['String']>;
 };
 
 /** The output of our update `DataTable` mutation. */
@@ -26632,6 +26666,7 @@ export type DataViewPatch = {
   tableSearchColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   filterExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  defaultSortColumn?: Maybe<Scalars['String']>;
 };
 
 /** The output of our update `DataView` mutation. */
@@ -29763,7 +29798,7 @@ export type ApplicationFragment = (
 
 export type ApplicationResponseFragmentFragment = (
   { __typename?: 'ApplicationResponse' }
-  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'stageNumber' | 'templateElementId' | 'timeUpdated'>
+  & Pick<ApplicationResponse, 'id' | 'isValid' | 'value' | 'stageNumber' | 'templateElementId' | 'evaluatedParameters' | 'timeUpdated'>
   & { templateElement?: Maybe<(
     { __typename?: 'TemplateElement' }
     & Pick<TemplateElement, 'code'>
@@ -30244,6 +30279,7 @@ export type UpdateResponseMutationVariables = Exact<{
   value?: Maybe<Scalars['JSON']>;
   isValid?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
+  evaluatedParameters?: Maybe<Scalars['JSON']>;
 }>;
 
 
@@ -30838,16 +30874,15 @@ export type GetReviewResponsesQuery = (
   )> }
 );
 
-export type GetReviewableQuestionsQueryVariables = Exact<{
+export type GetReviewableQuestionCountsQueryVariables = Exact<{
   applicationId: Scalars['Int'];
   stageId: Scalars['Int'];
   levelNumber: Scalars['Int'];
 }>;
 
 
-export type GetReviewableQuestionsQuery = (
+export type GetReviewableQuestionCountsQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'submittedAssignedQuestionsCount'>
   & { reviewableQuestions?: Maybe<(
     { __typename?: 'ReviewableQuestionsConnection' }
     & Pick<ReviewableQuestionsConnection, 'totalCount'>
@@ -31176,6 +31211,7 @@ export const ApplicationResponseFragmentFragmentDoc = gql`
     code
   }
   templateElementId
+  evaluatedParameters
   timeUpdated
 }
     `;
@@ -32001,8 +32037,8 @@ export type UpdateApplicationMutationHookResult = ReturnType<typeof useUpdateApp
 export type UpdateApplicationMutationResult = Apollo.MutationResult<UpdateApplicationMutation>;
 export type UpdateApplicationMutationOptions = Apollo.BaseMutationOptions<UpdateApplicationMutation, UpdateApplicationMutationVariables>;
 export const UpdateResponseDocument = gql`
-    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean, $stageNumber: Int) {
-  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid, stageNumber: $stageNumber}}) {
+    mutation updateResponse($id: Int!, $value: JSON, $isValid: Boolean, $stageNumber: Int, $evaluatedParameters: JSON) {
+  updateApplicationResponse(input: {id: $id, patch: {value: $value, isValid: $isValid, stageNumber: $stageNumber, evaluatedParameters: $evaluatedParameters}}) {
     applicationResponse {
       ...applicationResponseFragment
       templateElement {
@@ -32032,6 +32068,7 @@ export type UpdateResponseMutationFn = Apollo.MutationFunction<UpdateResponseMut
  *      value: // value for 'value'
  *      isValid: // value for 'isValid'
  *      stageNumber: // value for 'stageNumber'
+ *      evaluatedParameters: // value for 'evaluatedParameters'
  *   },
  * });
  */
@@ -33144,29 +33181,28 @@ export function useGetReviewResponsesLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetReviewResponsesQueryHookResult = ReturnType<typeof useGetReviewResponsesQuery>;
 export type GetReviewResponsesLazyQueryHookResult = ReturnType<typeof useGetReviewResponsesLazyQuery>;
 export type GetReviewResponsesQueryResult = Apollo.QueryResult<GetReviewResponsesQuery, GetReviewResponsesQueryVariables>;
-export const GetReviewableQuestionsDocument = gql`
-    query getReviewableQuestions($applicationId: Int!, $stageId: Int!, $levelNumber: Int!) {
+export const GetReviewableQuestionCountsDocument = gql`
+    query getReviewableQuestionCounts($applicationId: Int!, $stageId: Int!, $levelNumber: Int!) {
   reviewableQuestions(appId: $applicationId) {
     totalCount
   }
-  assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber) {
+  assignedQuestions(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber, filter: {or: [{decision: {equalTo: APPROVE}}, {decision: {equalTo: AGREE}}]}) {
     totalCount
   }
-  submittedAssignedQuestionsCount(appId: $applicationId, stageId: $stageId, levelNumber: $levelNumber)
 }
     `;
 
 /**
- * __useGetReviewableQuestionsQuery__
+ * __useGetReviewableQuestionCountsQuery__
  *
- * To run a query within a React component, call `useGetReviewableQuestionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetReviewableQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetReviewableQuestionCountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReviewableQuestionCountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetReviewableQuestionsQuery({
+ * const { data, loading, error } = useGetReviewableQuestionCountsQuery({
  *   variables: {
  *      applicationId: // value for 'applicationId'
  *      stageId: // value for 'stageId'
@@ -33174,15 +33210,15 @@ export const GetReviewableQuestionsDocument = gql`
  *   },
  * });
  */
-export function useGetReviewableQuestionsQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>) {
-        return Apollo.useQuery<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>(GetReviewableQuestionsDocument, baseOptions);
+export function useGetReviewableQuestionCountsQuery(baseOptions?: Apollo.QueryHookOptions<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>) {
+        return Apollo.useQuery<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>(GetReviewableQuestionCountsDocument, baseOptions);
       }
-export function useGetReviewableQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>) {
-          return Apollo.useLazyQuery<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>(GetReviewableQuestionsDocument, baseOptions);
+export function useGetReviewableQuestionCountsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>) {
+          return Apollo.useLazyQuery<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>(GetReviewableQuestionCountsDocument, baseOptions);
         }
-export type GetReviewableQuestionsQueryHookResult = ReturnType<typeof useGetReviewableQuestionsQuery>;
-export type GetReviewableQuestionsLazyQueryHookResult = ReturnType<typeof useGetReviewableQuestionsLazyQuery>;
-export type GetReviewableQuestionsQueryResult = Apollo.QueryResult<GetReviewableQuestionsQuery, GetReviewableQuestionsQueryVariables>;
+export type GetReviewableQuestionCountsQueryHookResult = ReturnType<typeof useGetReviewableQuestionCountsQuery>;
+export type GetReviewableQuestionCountsLazyQueryHookResult = ReturnType<typeof useGetReviewableQuestionCountsLazyQuery>;
+export type GetReviewableQuestionCountsQueryResult = Apollo.QueryResult<GetReviewableQuestionCountsQuery, GetReviewableQuestionCountsQueryVariables>;
 export const GetSchemaColumnsDocument = gql`
     query getSchemaColumns($tableNames: [SqlIdentifier!]) {
   schemaColumns(filter: {tableName: {in: $tableNames}}) {

@@ -58,7 +58,11 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   if (!pluginCode || !isVisible) return null
 
   const DefaultSummaryView: React.FC = () => {
-    const combinedParams = { ...simpleParameters, ...evaluatedParameters }
+    const combinedParams = {
+      ...simpleParameters,
+      ...evaluatedParameters,
+      ...response?.evaluatedParameters,
+    }
     return (
       <Form.Field
         className="element-summary-view"
@@ -79,7 +83,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   const PluginComponent = (
     <SummaryView
-      parameters={{ ...simpleParameters, ...evaluatedParameters }}
+      parameters={{ ...simpleParameters, ...evaluatedParameters, ...response?.evaluatedParameters }}
       response={response}
       Markdown={Markdown}
       DefaultSummaryView={DefaultSummaryView}
