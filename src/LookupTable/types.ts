@@ -18,6 +18,7 @@ type LookUpTableType = {
   displayName: string
   tableName: string
   fieldMap: Array<FieldMapType>
+  dataViewCode: string | null
   isExpanded?: boolean
 }
 

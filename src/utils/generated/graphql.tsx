@@ -30721,7 +30721,7 @@ export type GetLookupTableStructureByIdQuery = (
   { __typename?: 'Query' }
   & { dataTable?: Maybe<(
     { __typename?: 'DataTable' }
-    & Pick<DataTable, 'id' | 'displayName' | 'tableName' | 'fieldMap'>
+    & Pick<DataTable, 'id' | 'displayName' | 'tableName' | 'fieldMap' | 'dataViewCode'>
   )> }
 );
 
@@ -32892,6 +32892,7 @@ export const GetLookupTableStructureByIdDocument = gql`
     displayName
     tableName
     fieldMap
+    dataViewCode
   }
 }
     `;
