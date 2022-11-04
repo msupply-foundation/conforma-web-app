@@ -48,6 +48,7 @@ const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }
           }
         })
       await Promise.all(results)
+      fullStructure.reload()
     } catch (err) {
       throw new Error('Assignment update error')
     }
