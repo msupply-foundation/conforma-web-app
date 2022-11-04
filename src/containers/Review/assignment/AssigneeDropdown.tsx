@@ -15,24 +15,15 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({ assignmentOptions, onChange
   return (
     <Dropdown
       className="reviewer-dropdown"
-      text={
-        options.find(({ value }) => value === selected)?.text || strings.ASSIGNMENT_NOT_ASSIGNED
-      }
+      placeholder={strings.ASSIGNMENT_NOT_ASSIGNED}
+      options={options}
+      value={selected}
       disabled={isCompleted}
       labeled
       scrolling
-    >
-      <Dropdown.Menu>
-        <Dropdown.Header icon="tags" content={strings.ASSIGNMENT_NOT_ASSIGNED} />
-        <Dropdown.Divider />
-        {options.map((assignee) => (
-          <Dropdown.Item
-            {...assignee}
-            onClick={(_: any, { value }: any) => onChangeMethod(value as number)}
-          />
-        ))}
-      </Dropdown.Menu>
-    </Dropdown>
+      search
+      onChange={(_: any, { value }: any) => onChangeMethod(value as number)}
+    />
   )
 }
 

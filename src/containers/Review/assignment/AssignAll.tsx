@@ -33,25 +33,16 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll })
       <Label className="uppercase-label" content={strings.ASSIGN_ALL_TO} />
       <Dropdown
         className="reviewer-dropdown"
-        text={
-          options.find(({ value }) => value === selected)?.text || strings.ASSIGNMENT_NOT_ASSIGNED
-        }
+        placeholder={strings.ASSIGNMENT_NOT_ASSIGNED}
+        options={options}
+        value={selected}
         scrolling
-      >
-        <Dropdown.Menu>
-          <Dropdown.Header icon="tags" content={strings.ASSIGNMENT_NOT_ASSIGNED} />
-          <Dropdown.Divider />
-          {options.map((assignee) => (
-            <Dropdown.Item
-              {...assignee}
-              onClick={(_, { value }) => {
-                setReviewerForAll(value as number)
-                setSelected(value as number | string)
-              }}
-            />
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
+        search
+        onChange={(_, { value }) => {
+          setReviewerForAll(value as number)
+          setSelected(value as number | string)
+        }}
+      />
       <Tooltip
         message={strings.ASSIGN_ALL_TOOLTIP}
         maxWidth={400}
