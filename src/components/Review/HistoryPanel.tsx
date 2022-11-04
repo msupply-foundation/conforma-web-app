@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, Segment } from 'semantic-ui-react'
+import { Button, Modal, Segment, Form } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useGetQuestionReviewHistory from '../../utils/hooks/useGetQuestionReviewHistory'
 import HistoryResponseElement from '../PageElements/Elements/HistoryResponseElement'
@@ -44,25 +44,27 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplica
       <Modal.Header>{strings.TITLE_HISTORY_PANEL}</Modal.Header>
       <Modal.Content scrolling>
         <Modal.Description>
-          {historyList.map(({ stageNumber, historyElements }) => {
-            const stageDetails = stages.find(({ number }) => number === stageNumber)
-            const stageName = stageDetails?.name || strings.ERROR_STAGE_NOT_FOUND
-            const stageColour = stageDetails?.colour || ''
-            return (
-              <div key={`history_stage_${stageName}`} className="history-block">
-                <div className="stage-label-spacing">
-                  <Stage name={stageName} colour={stageColour} />
+          <Form>
+            {historyList.map(({ stageNumber, historyElements }) => {
+              const stageDetails = stages.find(({ number }) => number === stageNumber)
+              const stageName = stageDetails?.name || strings.ERROR_STAGE_NOT_FOUND
+              const stageColour = stageDetails?.colour || ''
+              return (
+                <div key={`history_stage_${stageName}`} className="history-block">
+                  <div className="stage-label-spacing">
+                    <Stage name={stageName} colour={stageColour} />
+                  </div>
+                  {historyElements.map((historyElement, index) => (
+                    <Segment basic className="summary-page-element-container" key={index}>
+                      <div className="response-container">
+                        <HistoryResponseElement {...historyElement} />
+                      </div>
+                    </Segment>
+                  ))}
                 </div>
-                {historyElements.map((historyElement, index) => (
-                  <Segment basic className="summary-page-element-container" key={index}>
-                    <div className="response-container">
-                      <HistoryResponseElement {...historyElement} />
-                    </div>
-                  </Segment>
-                ))}
-              </div>
-            )
-          })}
+              )
+            })}
+          </Form>
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
