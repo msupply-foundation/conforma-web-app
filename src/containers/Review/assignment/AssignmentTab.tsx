@@ -153,7 +153,7 @@ const AssignmentTab: React.FC<{
       ) : (
         <ReviewStateProvider assignments={assignmentsFiltered}>
           {Object.values(fullStructure.sections).map(({ details }) => (
-            <AssignmentSection {...details} />
+            <AssignmentSection key={`assignment-section-${details.code}`} {...details} />
           ))}
         </ReviewStateProvider>
       )}
