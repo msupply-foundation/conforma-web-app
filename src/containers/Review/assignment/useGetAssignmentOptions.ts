@@ -2,7 +2,7 @@ import { AssignmentDetails, AssignmentOptions, AssignmentOption } from '../../..
 import { ReviewAssignmentStatus, ReviewStatus } from '../../../utils/generated/graphql'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
-const NOT_ASSIGNED = 0
+export const NOT_ASSIGNED = -1
 
 const useGetAssignmentOptions = () => {
   const { strings } = useLanguageProvider()
@@ -37,7 +37,8 @@ const useGetAssignmentOptions = () => {
     )
 
     const currentUserAssignable = currentSectionAssignable.filter(
-      ({ isCurrentUserAssigner, isSelfAssignable, isCurrentUserReviewer }) => isCurrentUserAssigner || (isSelfAssignable && isCurrentUserReviewer)
+      ({ isCurrentUserAssigner, isSelfAssignable, isCurrentUserReviewer }) =>
+        isCurrentUserAssigner || (isSelfAssignable && isCurrentUserReviewer)
     )
 
     const currentlyAssigned = assignments.find(
@@ -60,12 +61,6 @@ const useGetAssignmentOptions = () => {
       isCompleted: false,
       options: [...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment))],
     }
-
-    assigneeOptions.options.push({
-      key: NOT_ASSIGNED,
-      value: NOT_ASSIGNED,
-      text: strings.ASSIGNMENT_NOT_ASSIGNED,
-    })
 
     return assigneeOptions
   }
