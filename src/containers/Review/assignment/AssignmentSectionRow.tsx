@@ -136,7 +136,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
               setIsUnassignment={() => showModal({ onConfirm: () => unassignAssignee() })}
             />
           ) : (
-            assignmentOptions.options.length > 1 && (
+            assignmentOptions.options.length > 0 && (
               <>
                 <Label className="simple-label" content={strings.LABEL_REVIEWER} />
                 <AssigneeDropdown
