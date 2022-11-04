@@ -126,7 +126,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
           </Label>
         </Grid.Column>
         <Grid.Column className="centered-flex-box-row" width={9}>
-          {originalAssignee ? (
+          {originalAssignee && assignmentOptions.isSubmitted ? (
             <AssigneeLabel
               assignee={originalAssignee}
               isCompleted={assignmentOptions.isCompleted}
