@@ -15,9 +15,10 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({ assignmentOptions, onChange
   return (
     <Dropdown
       className="reviewer-dropdown"
-      value={selected}
+      text={
+        options.find(({ value }) => value === selected)?.text || strings.ASSIGNMENT_NOT_ASSIGNED
+      }
       disabled={isCompleted}
-      placeholder={strings.ASSIGNMENT_NOT_ASSIGNED}
       labeled
       scrolling
     >

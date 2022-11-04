@@ -159,6 +159,7 @@ interface AssignmentDetails {
 
 interface AssignmentOptions {
   selected: number
+  isSubmitted: boolean
   isCompleted: boolean
   options: AssignmentOption[]
 }
