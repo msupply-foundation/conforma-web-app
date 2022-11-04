@@ -1,11 +1,15 @@
 import { AssignmentDetails, AssignmentOptions, AssignmentOption } from '../../../utils/types'
 import { ReviewAssignmentStatus, ReviewStatus } from '../../../utils/generated/graphql'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { useUserState } from '../../../contexts/UserState'
 
 export const NOT_ASSIGNED = -1
 
 const useGetAssignmentOptions = () => {
   const { strings } = useLanguageProvider()
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const getOptionFromAssignment = ({
     review,
@@ -63,6 +67,14 @@ const useGetAssignmentOptions = () => {
       isCompleted: false,
       options: [...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment))],
     }
+
+    // Move current user "Yourself" to top of list
+    const currentUserOption = assigneeOptions.options.find(
+      (option) => option.value === currentUser?.userId
+    )
+    const sortedOptions = assigneeOptions.options.filter((option) => currentUser?.userId)
+    if (currentUserOption) sortedOptions.unshift(currentUserOption)
+    assigneeOptions.options = sortedOptions
 
     return assigneeOptions
   }
