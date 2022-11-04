@@ -4,12 +4,10 @@ import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
-import useGetAssignmentOptions from './useGetAssignmentOptions'
+import useGetAssignmentOptions, { NOT_ASSIGNED } from './useGetAssignmentOptions'
 import Reassignment from './Reassignment'
 import AssigneeLabel from './AssigneeLabel'
 import useUpdateAssignment from '../../../utils/hooks/useUpdateAssignment'
-
-const NOT_ASSIGNED = 0
 
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
