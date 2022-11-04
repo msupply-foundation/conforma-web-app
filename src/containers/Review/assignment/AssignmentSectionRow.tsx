@@ -152,12 +152,11 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
       {isReassignment && (
         <Grid.Row>
           <Reassignment
-            assignments={assignments}
             sectionCode={sectionCode}
-            isLastLevel={isLastLevel}
-            previousAssignee={assignmentOptions.selected}
+            isLastLevel={isLastLevel()}
             assignedSections={assignedSections}
             setAssignedSections={setAssignedSections}
+            assignmentOptions={assignmentOptions}
           />
         </Grid.Row>
       )}
