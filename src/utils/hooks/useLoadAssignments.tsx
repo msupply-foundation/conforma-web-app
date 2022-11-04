@@ -49,7 +49,6 @@ const useLoadAssignments = ({
   const getFilteredLevel = (assignments: AssignmentDetails[]) => {
     if (!filters) return []
     return assignments
-      .filter(({ isLocked }) => !isLocked) // Should not give option to assign if Assignment is locked
       .filter((assignment) => assignment.current.stage.number === filters.currentStage)
       .filter(
         (assignment) =>
