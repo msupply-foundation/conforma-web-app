@@ -105,6 +105,12 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 
   const createReview = useCreateReview({ reviewStructure, reviewAssignment })
 
+  const remakeReview = useRemakePreviousReview({
+    reviewStructure,
+    reviewAssignment,
+    previousAssignment,
+  })
+
   const getButtonName = () => {
     switch (action) {
       case ReviewAction.canUpdate: {
@@ -146,11 +152,6 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 
     try {
       if (isFinalDecision && previousAssignment) {
-        const remakeReview = useRemakePreviousReview({
-          reviewStructure,
-          reviewAssignment,
-          previousAssignment,
-        })
         reviewId = (await remakeReview()).data?.createReview?.review?.id as number
       } else if (reviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
