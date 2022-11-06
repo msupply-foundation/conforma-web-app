@@ -12,7 +12,7 @@ import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSectio
 type UseRemakePreviousReviewMutationReturnType = ReturnType<typeof useCreateReviewMutation>
 type PromiseReturnType = ReturnType<UseRemakePreviousReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseRemakePreviousReview = (props: {
+type UseCreateFinalDecisionReview = (props: {
   reviewStructure: FullStructure
   reviewAssignment: AssignmentDetails
   previousAssignment?: AssignmentDetails
@@ -21,7 +21,7 @@ type UseRemakePreviousReview = (props: {
 type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 
 // Need to duplicate or create new review responses for all assigned questions
-const useRemakePreviousReview: UseRemakePreviousReview = ({
+const useCreateFinalDecisionReview: UseCreateFinalDecisionReview = ({
   reviewStructure,
   reviewAssignment,
   previousAssignment,
@@ -98,7 +98,7 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
   }
 }
 
-export default useRemakePreviousReview
+export default useCreateFinalDecisionReview
 
 /* shape of reviewPatch
 {
