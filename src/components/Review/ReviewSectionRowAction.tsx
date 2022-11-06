@@ -13,7 +13,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
-import useRemakePreviousReview from '../../utils/hooks/useRemakePreviousReview'
+import useCreateFinalDecisionReview from '../../utils/hooks/useCreateFinalDecisionReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const { strings } = useLanguageProvider()
@@ -105,7 +105,7 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 
   const createReview = useCreateReview({ reviewStructure, reviewAssignment })
 
-  const remakeReview = useRemakePreviousReview({
+  const copyPreviousStageReview = useCreateFinalDecisionReview({
     reviewStructure,
     reviewAssignment,
     previousAssignment,
@@ -152,7 +152,7 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 
     try {
       if (isFinalDecision && previousAssignment) {
-        reviewId = (await remakeReview()).data?.createReview?.review?.id as number
+        reviewId = (await copyPreviousStageReview()).data?.createReview?.review?.id as number
       } else if (reviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
       push(
