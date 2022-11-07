@@ -43,8 +43,6 @@ const ListWrapper: React.FC = () => {
   const { error, loading, refetch, templateType, applications, applicationCount } =
     useListApplications(query)
 
-  console.log('Loading wrapper', loading)
-
   useEffect(() => {
     if (!templatePermissions) return
     if (!type || !userRole || !checkExistingUserRole(templatePermissions, type, userRole))
