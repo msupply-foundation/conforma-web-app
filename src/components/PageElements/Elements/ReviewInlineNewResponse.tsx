@@ -62,7 +62,6 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
         templateElementId,
         applicationId,
         reviewId,
-        stageNumber,
         decision: reviewResponse.decision as ReviewResponseDecision,
         comment: reviewResponse.comment,
         timeSubmitted,
