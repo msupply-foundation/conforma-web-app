@@ -32,7 +32,7 @@ const ListWrapper: React.FC = () => {
   const [debounceOutput, setDebounceInput] = useDebounce<string>('')
 
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
-  const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>()
+  const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>([])
   usePageTitle(strings.PAGE_TITLE_LIST as string)
 
   if (isNonRegistered) {
@@ -42,6 +42,8 @@ const ListWrapper: React.FC = () => {
 
   const { error, loading, refetch, templateType, applications, applicationCount } =
     useListApplications(query)
+
+  console.log('Loading wrapper', loading)
 
   useEffect(() => {
     if (!templatePermissions) return
@@ -140,7 +142,7 @@ const ListWrapper: React.FC = () => {
         filterDefinitions={visibleFilters}
         filterListParameters={{ userId: currentUser?.userId || 0, templateCode: type }}
       />
-      {columns && applicationsRows && (
+      {columns && (
         <ApplicationsList
           columns={columns}
           applications={applicationsRows}
