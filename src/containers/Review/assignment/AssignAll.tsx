@@ -58,26 +58,30 @@ const getReviewerList = (
   currentUserId: number,
   selfString: string
 ) => {
-  const reviewers = assignments
+  const assigneeOptions = assignments
     // We don't want to filter here, as when the back-end has "allowedSections =
     // null", it means "allow all". Worst case, if the reviewer really is
     // allowed "no sections" (which shouldn't happen), then they'll show up in
     // the menu, but still won't actually be able to be assigned
     // .filter((assignment) => assignment.allowedSections.length > 0)
-    .map((assignment, index) => {
-      const {
-        reviewer: { id, firstName, lastName },
-      } = assignment
-      const displayName = id === currentUserId ? selfString : `${firstName} ${lastName}`
-      const reviewer = {
-        key: id,
-        value: index,
-        reviewerId: id,
-        text: displayName,
-      }
-      return reviewer
-    })
-  return reviewers
+    .map(({ reviewer }) => ({
+      key: reviewer.id,
+      value: reviewer.id,
+      text:
+        currentUserId === reviewer.id ? selfString : `${reviewer.firstName} ${reviewer.lastName}`,
+    }))
+
+  // Move current user "Yourself" to top of list
+  const currentUserOption = assigneeOptions.find((option) => option.value === currentUserId)
+
+  // Sort and Remove currentUser from the list (to be added at the top)
+  const sortedOptions = assigneeOptions
+    .filter((option) => option.key !== currentUserId)
+    .sort((a, b) => (a.text < b.text ? -1 : 1))
+
+  if (currentUserOption) sortedOptions.unshift(currentUserOption)
+
+  return sortedOptions
 }
 
 export default AssignAll
