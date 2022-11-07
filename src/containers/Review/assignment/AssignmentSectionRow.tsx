@@ -4,12 +4,10 @@ import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { AssignmentDetails, FullStructure, SectionAssignee } from '../../../utils/types'
 import AssigneeDropdown from './AssigneeDropdown'
-import useGetAssignmentOptions from './useGetAssignmentOptions'
+import useGetAssignmentOptions, { NOT_ASSIGNED } from './useGetAssignmentOptions'
 import Reassignment from './Reassignment'
 import AssigneeLabel from './AssigneeLabel'
 import useUpdateAssignment from '../../../utils/hooks/useUpdateAssignment'
-
-const NOT_ASSIGNED = 0
 
 type AssignmentSectionRowProps = {
   assignments: AssignmentDetails[]
@@ -128,7 +126,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
           </Label>
         </Grid.Column>
         <Grid.Column className="centered-flex-box-row" width={9}>
-          {originalAssignee ? (
+          {originalAssignee && assignmentOptions.isSubmitted ? (
             <AssigneeLabel
               assignee={originalAssignee}
               isCompleted={assignmentOptions.isCompleted}
@@ -138,7 +136,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
               setIsUnassignment={() => showModal({ onConfirm: () => unassignAssignee() })}
             />
           ) : (
-            assignmentOptions.options.length > 1 && (
+            assignmentOptions.options.length > 0 && (
               <>
                 <Label className="simple-label" content={strings.LABEL_REVIEWER} />
                 <AssigneeDropdown
@@ -154,12 +152,11 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
       {isReassignment && (
         <Grid.Row>
           <Reassignment
-            assignments={assignments}
             sectionCode={sectionCode}
-            isLastLevel={isLastLevel}
-            previousAssignee={assignmentOptions.selected}
+            isLastLevel={isLastLevel()}
             assignedSections={assignedSections}
             setAssignedSections={setAssignedSections}
+            assignmentOptions={assignmentOptions}
           />
         </Grid.Row>
       )}

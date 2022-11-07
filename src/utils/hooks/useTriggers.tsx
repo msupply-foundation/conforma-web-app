@@ -1,7 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { Trigger } from '../generated/graphql'
-import config from '../../config'
 import { getRequest } from '../../utils/helpers/fetchMethods'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 

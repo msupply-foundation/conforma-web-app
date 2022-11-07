@@ -12,16 +12,16 @@ import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSectio
 type UseRemakePreviousReviewMutationReturnType = ReturnType<typeof useCreateReviewMutation>
 type PromiseReturnType = ReturnType<UseRemakePreviousReviewMutationReturnType[0]>
 // hook used to restart a review, , as per type definition below (returns promise that resolve with mutation result data)
-type UseRemakePreviousReview = (props: {
+type UseCreateFinalDecisionReview = (props: {
   reviewStructure: FullStructure
   reviewAssignment: AssignmentDetails
-  previousAssignment: AssignmentDetails
+  previousAssignment?: AssignmentDetails
 }) => () => PromiseReturnType
 
 type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 
 // Need to duplicate or create new review responses for all assigned questions
-const useRemakePreviousReview: UseRemakePreviousReview = ({
+const useCreateFinalDecisionReview: UseCreateFinalDecisionReview = ({
   reviewStructure,
   reviewAssignment,
   previousAssignment,
@@ -35,7 +35,7 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
   })
 
   const shouldRemakeFinalDecisionReviewResponse = (element: PageElement) => {
-    if (previousAssignment.level === 1) return true
+    if (previousAssignment?.level === 1) return true
     return element?.thisReviewLatestResponse?.decision === ReviewResponseDecision.Agree
   }
 
@@ -54,9 +54,12 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
     // not necessarily this thisReviewLatestResponse (would be just latestReviewResponse, from all reviews at this level)
     const reviewResponseCreate = reviewableElements.map(
       ({ isPendingReview, thisReviewLatestResponse, response, lowerLevelReviewLatestResponse }) => {
-        const applicationResponseId = previousAssignment.level > 1 ? undefined : response?.id
+        const applicationResponseId =
+          !previousAssignment || previousAssignment.level > 1 ? undefined : response?.id
         const reviewResponseLinkId =
-          previousAssignment.level === 1 ? undefined : lowerLevelReviewLatestResponse?.id
+          !previousAssignment || previousAssignment.level === 1
+            ? undefined
+            : lowerLevelReviewLatestResponse?.id
         // create new if element is awaiting review
         const shouldCreateNew = isPendingReview
         return {
@@ -95,7 +98,7 @@ const useRemakePreviousReview: UseRemakePreviousReview = ({
   }
 }
 
-export default useRemakePreviousReview
+export default useCreateFinalDecisionReview
 
 /* shape of reviewPatch
 {
