@@ -73,10 +73,11 @@ const useGetAssignmentOptions = () => {
       (option) => option.value === currentUser?.userId
     )
 
-    // Remove currentUser from the list and add at the top
-    const sortedOptions = assigneeOptions.options.filter(
-      (option) => option.key !== currentUser?.userId
-    )
+    // Sort and Remove currentUser from the list (to be added at the top)
+    const sortedOptions = assigneeOptions.options
+      .filter((option) => option.key !== currentUser?.userId)
+      .sort((a, b) => (a.text < b.text ? -1 : 1))
+
     if (currentUserOption) sortedOptions.unshift(currentUserOption)
     assigneeOptions.options = sortedOptions
 
