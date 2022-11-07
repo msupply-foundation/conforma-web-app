@@ -18,7 +18,7 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll })
   const [selected, setSelected] = useState<number | string>('')
   const options = getReviewerList(
     assignments,
-    currentUser?.userId || 0,
+    currentUser?.userId ?? 0,
     strings.ASSIGNMENT_YOURSELF
   )
 

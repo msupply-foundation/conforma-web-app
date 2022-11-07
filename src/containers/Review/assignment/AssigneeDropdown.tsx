@@ -19,7 +19,6 @@ const AssigneeDropdown: React.FC<AssigneeProps> = ({ assignmentOptions, onChange
       options={options}
       value={selected}
       disabled={isCompleted}
-      labeled
       scrolling
       search
       onChange={(_: any, { value }: any) => onChangeMethod(value as number)}
