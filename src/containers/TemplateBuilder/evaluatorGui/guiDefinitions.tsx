@@ -215,17 +215,36 @@ export const guis: GuisType = [
       children: ['firstName', null],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'objectProperties',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
-      <React.Fragment key="objectProperties">
-        <ComponentLibrary.Label key="objectPath" title="Object path (e.g. thisResponse.text): " />
-        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
-        <ComponentLibrary.Label
-          key="fallback"
-          title="Fallback (in case object path is not found): "
-        />
-        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, evaluatorParameters)}
-      </React.Fragment>
-    ),
+    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
+      const isFallbackSpecified = evaluation.asOperator.children.length === 2
+      return (
+        <React.Fragment key="objectProperties">
+          <ComponentLibrary.Label key="objectPath" title="Object path (e.g. thisResponse.text): " />
+          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+          <ComponentLibrary.Label
+            key="fallback"
+            title="Fallback (in case object path is not found): "
+          />
+          <ComponentLibrary.FlexRow key="internalFallback">
+            <ComponentLibrary.Checkbox
+              checked={isFallbackSpecified}
+              setChecked={(_) => {
+                if (isFallbackSpecified) setEvaluation(removeFromArray(evaluation, 1))
+                else setEvaluation(addToArray(evaluation, getTypedEvaluation(null)))
+              }}
+            />
+            {isFallbackSpecified &&
+              renderSingleChild(
+                evaluation,
+                1,
+                setEvaluation,
+                ComponentLibrary,
+                evaluatorParameters
+              )}
+          </ComponentLibrary.FlexRow>
+        </React.Fragment>
+      )
+    },
   },
   {
     selector: 'Object functions',
