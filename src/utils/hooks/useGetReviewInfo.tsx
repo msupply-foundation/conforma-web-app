@@ -87,7 +87,6 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
         isFinalDecision,
         isLastLevel,
         isSelfAssignable,
-        isLocked,
       } = reviewAssignment
 
       const stage = {
@@ -112,7 +111,6 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
         isFinalDecision: !!isFinalDecision,
         isLastLevel: !!isLastLevel,
         isSelfAssignable: !!isSelfAssignable,
-        isLocked: !!isLocked,
         allowedSections: (allowedSections as string[]) || [],
         assignedSections: assignedSections as string[],
         review: review
