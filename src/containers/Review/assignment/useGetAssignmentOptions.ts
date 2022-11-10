@@ -1,11 +1,15 @@
 import { AssignmentDetails, AssignmentOptions, AssignmentOption } from '../../../utils/types'
 import { ReviewAssignmentStatus, ReviewStatus } from '../../../utils/generated/graphql'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { useUserState } from '../../../contexts/UserState'
 
-const NOT_ASSIGNED = 0
+export const NOT_ASSIGNED = -1
 
 const useGetAssignmentOptions = () => {
   const { strings } = useLanguageProvider()
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const getOptionFromAssignment = ({
     review,
@@ -37,7 +41,8 @@ const useGetAssignmentOptions = () => {
     )
 
     const currentUserAssignable = currentSectionAssignable.filter(
-      ({ isCurrentUserAssigner, isSelfAssignable, isCurrentUserReviewer }) => isCurrentUserAssigner || (isSelfAssignable && isCurrentUserReviewer)
+      ({ isCurrentUserAssigner, isSelfAssignable, isCurrentUserReviewer }) =>
+        isCurrentUserAssigner || (isSelfAssignable && isCurrentUserReviewer)
     )
 
     const currentlyAssigned = assignments.find(
@@ -49,6 +54,7 @@ const useGetAssignmentOptions = () => {
     if (!previousAssignee && currentlyAssigned)
       return {
         selected: currentlyAssigned.reviewer.id,
+        isSubmitted: true,
         isCompleted: currentlyAssigned.review?.current.reviewStatus === ReviewStatus.Submitted,
         options: [
           ...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment)),
@@ -57,15 +63,23 @@ const useGetAssignmentOptions = () => {
 
     const assigneeOptions = {
       selected: previousAssignee || NOT_ASSIGNED,
+      isSubmitted: false,
       isCompleted: false,
       options: [...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment))],
     }
 
-    assigneeOptions.options.push({
-      key: NOT_ASSIGNED,
-      value: NOT_ASSIGNED,
-      text: strings.ASSIGNMENT_NOT_ASSIGNED,
-    })
+    // Move current user "Yourself" to top of list
+    const currentUserOption = assigneeOptions.options.find(
+      (option) => option.value === currentUser?.userId
+    )
+
+    // Sort and Remove currentUser from the list (to be added at the top)
+    const sortedOptions = assigneeOptions.options
+      .filter((option) => option.key !== currentUser?.userId)
+      .sort((a, b) => (a.text < b.text ? -1 : 1))
+
+    if (currentUserOption) sortedOptions.unshift(currentUserOption)
+    assigneeOptions.options = sortedOptions
 
     return assigneeOptions
   }

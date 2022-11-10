@@ -148,7 +148,6 @@ const setIsNewApplicationResponse = (structure: FullStructure) => {
 const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: AssignmentDetails) => {
   const {
     isLastLevel,
-    isLocked,
     isFinalDecision,
     isSelfAssignable,
     review,
@@ -171,7 +170,6 @@ const setReviewAndAssignment = (structure: FullStructure, reviewAssignment: Assi
     assignmentDate: reviewAssignment.current.timeStatusUpdated,
     assignedSections: reviewAssignment.assignedSections,
     isLastLevel,
-    isLocked,
     isSelfAssignable,
     isFinalDecision,
     isFinalDecisionOnConsolidation: isPreviousStageConsolidation,

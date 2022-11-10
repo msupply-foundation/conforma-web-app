@@ -2,15 +2,18 @@ import React, { useState } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
 import Tooltip from '../../../components/Tooltip'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { useUserState } from '../../../contexts/UserState'
 import { AssignmentDetails, User } from '../../../utils/types'
 
 interface AssignAllProps {
   assignments: AssignmentDetails[]
-  currentUser: User | null
   setReviewerForAll: (value: number) => void
 }
 
-const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll, currentUser }) => {
+const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll }) => {
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const { strings } = useLanguageProvider()
   const [selected, setSelected] = useState<number | string>('')
   const options = getReviewerList(
@@ -30,13 +33,13 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll, c
       <Label className="uppercase-label" content={strings.ASSIGN_ALL_TO} />
       <Dropdown
         className="reviewer-dropdown"
+        placeholder={strings.ASSIGNMENT_NOT_ASSIGNED}
         options={options}
-        placeholder={strings.ASSIGN_ALL_PLACEHOLDER}
         value={selected}
-        clearable
+        scrolling
+        search
         onChange={(_, { value }) => {
-          const reviewerId = value !== '' ? options[value as number].reviewerId : 0
-          setReviewerForAll(reviewerId)
+          setReviewerForAll(value as number)
           setSelected(value as number | string)
         }}
       />
@@ -55,26 +58,30 @@ const getReviewerList = (
   currentUserId: number,
   selfString: string
 ) => {
-  const reviewers = assignments
+  const assigneeOptions = assignments
     // We don't want to filter here, as when the back-end has "allowedSections =
     // null", it means "allow all". Worst case, if the reviewer really is
     // allowed "no sections" (which shouldn't happen), then they'll show up in
     // the menu, but still won't actually be able to be assigned
     // .filter((assignment) => assignment.allowedSections.length > 0)
-    .map((assignment, index) => {
-      const {
-        reviewer: { id, firstName, lastName },
-      } = assignment
-      const displayName = id === currentUserId ? selfString : `${firstName} ${lastName}`
-      const reviewer = {
-        key: id,
-        value: index,
-        reviewerId: id,
-        text: displayName,
-      }
-      return reviewer
-    })
-  return reviewers
+    .map(({ reviewer }) => ({
+      key: reviewer.id,
+      value: reviewer.id,
+      text:
+        currentUserId === reviewer.id ? selfString : `${reviewer.firstName} ${reviewer.lastName}`,
+    }))
+
+  // Move current user "Yourself" to top of list
+  const currentUserOption = assigneeOptions.find((option) => option.value === currentUserId)
+
+  // Sort and Remove currentUser from the list (to be added at the top)
+  const sortedOptions = assigneeOptions
+    .filter((option) => option.key !== currentUserId)
+    .sort((a, b) => (a.text < b.text ? -1 : 1))
+
+  if (currentUserOption) sortedOptions.unshift(currentUserOption)
+
+  return sortedOptions
 }
 
 export default AssignAll

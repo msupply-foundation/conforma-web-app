@@ -15,9 +15,10 @@ interface UseGetReviewInfoProps {
   applicationId: number
   serial: string
   userId: number
+  skip?: boolean
 }
 
-const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
+const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewInfoProps) => {
   const { strings } = useLanguageProvider()
   const [assignments, setAssignments] = useState<AssignmentDetails[]>()
   const [isFetching, setIsFetching] = useState(true)
@@ -42,7 +43,7 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
     // it's either this or removing 'totalCount' in `reviewQuestionAssignments` from this query
     // ended up removing totalCount from query and keeping this as nextFetchPolicy (was still seeing glitched with totalCount and had "can't update unmounted component error")
     fetchPolicy: 'network-only',
-    skip: !triggersReady,
+    skip: !triggersReady || skip,
   })
 
   useEffect(() => {
@@ -86,7 +87,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
         isFinalDecision,
         isLastLevel,
         isSelfAssignable,
-        isLocked,
       } = reviewAssignment
 
       const stage = {
@@ -111,7 +111,6 @@ const useGetReviewInfo = ({ applicationId, serial }: UseGetReviewInfoProps) => {
         isFinalDecision: !!isFinalDecision,
         isLastLevel: !!isLastLevel,
         isSelfAssignable: !!isSelfAssignable,
-        isLocked: !!isLocked,
         allowedSections: (allowedSections as string[]) || [],
         assignedSections: assignedSections as string[],
         review: review

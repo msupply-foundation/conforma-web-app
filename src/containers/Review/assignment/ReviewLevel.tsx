@@ -9,15 +9,9 @@ type ReviewLevelProps = {
   filters: Filters | null
   setFilters: (filters: Filters) => void
   structure: FullStructure
-  assignments: AssignmentDetails[]
 }
 
-const ReviewLevel: React.FC<ReviewLevelProps> = ({
-  assignments,
-  structure,
-  filters,
-  setFilters,
-}) => {
+const ReviewLevel: React.FC<ReviewLevelProps> = ({ structure, filters, setFilters }) => {
   const { strings } = useLanguageProvider()
 
   useEffect(() => {

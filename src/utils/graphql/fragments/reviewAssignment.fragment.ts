@@ -7,7 +7,6 @@ export default gql`
     timeUpdated
     levelNumber
     reviewerId
-    isLocked
     isLastLevel
     isFinalDecision
     isSelfAssignable

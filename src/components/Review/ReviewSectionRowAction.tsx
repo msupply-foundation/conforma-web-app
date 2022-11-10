@@ -13,7 +13,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
-import useRemakePreviousReview from '../../utils/hooks/useRemakePreviousReview'
+import useCreateFinalDecisionReview from '../../utils/hooks/useCreateFinalDecisionReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const { strings } = useLanguageProvider()
@@ -89,7 +89,7 @@ const getConsolidatorChangesRequestedCount = (progress?: ChangeRequestsProgress)
 const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   reviewStructure,
   reviewAssignment,
-  section: { details, reviewProgress, consolidationProgress, changeRequestsProgress },
+  section: { reviewProgress, consolidationProgress, changeRequestsProgress },
   previousAssignment,
   action,
 }) => {
@@ -101,15 +101,15 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
 
   const [error, setError] = useState(false)
 
-  const remakeReview = useRemakePreviousReview({
+  const restartReview = useRestartReview({ reviewStructure, reviewAssignment })
+
+  const createReview = useCreateReview({ reviewStructure, reviewAssignment })
+
+  const copyPreviousStageReview = useCreateFinalDecisionReview({
     reviewStructure,
     reviewAssignment,
     previousAssignment,
   })
-
-  const restartReview = useRestartReview({ reviewStructure, reviewAssignment })
-
-  const createReview = useCreateReview({ reviewStructure, reviewAssignment })
 
   const getButtonName = () => {
     switch (action) {
@@ -151,9 +151,9 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
       )
 
     try {
-      if (isFinalDecision)
-        reviewId = (await remakeReview()).data?.createReview?.review?.id as number
-      else if (reviewStructure.thisReview) await restartReview()
+      if (isFinalDecision && previousAssignment) {
+        reviewId = (await copyPreviousStageReview()).data?.createReview?.review?.id as number
+      } else if (reviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
       push(
         `${pathname}/${reviewId}?activeSections=${

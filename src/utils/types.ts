@@ -152,13 +152,13 @@ interface AssignmentDetails {
   isFinalDecision: boolean
   isLastLevel: boolean
   isSelfAssignable: boolean
-  isLocked: boolean
   allowedSections: string[]
   assignedSections: string[]
 }
 
 interface AssignmentOptions {
   selected: number
+  isSubmitted: boolean
   isCompleted: boolean
   options: AssignmentOption[]
 }
@@ -401,7 +401,6 @@ interface ReviewAssignment {
   assignedSections: string[]
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
-  isLocked: boolean
   isSelfAssignable: boolean
   isFinalDecision: boolean
   isFinalDecisionOnConsolidation: boolean
@@ -411,7 +410,7 @@ type ReviewSectionComponentProps = {
   reviewStructure: FullStructure
   reviewAssignment: AssignmentDetails
   section: SectionState
-  previousAssignment: AssignmentDetails
+  previousAssignment?: AssignmentDetails
   action: ReviewAction
   isAssignedToCurrentUser: boolean
   isConsolidation: boolean
@@ -490,7 +489,6 @@ enum ReviewAction {
   canView = 'CAN_VIEW',
   canReReview = 'CAN_RE_REVIEW',
   canSelfAssign = 'CAN_SELF_ASSIGN',
-  canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
   canReStartReview = 'CAN_RE_START_REVIEW', // User for second review (for consolidator)
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
