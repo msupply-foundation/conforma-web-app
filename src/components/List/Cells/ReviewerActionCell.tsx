@@ -50,8 +50,7 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   // Only show actions if application is Pending - TODO: Change logic to back-end
   if (outcome === ApplicationOutcome.Pending) {
     if (!!reviewerAction) actions.push(getReviewActionString(reviewerAction))
-    if (!!assignerAction && assignerAction != AssignerAction.AssignLocked)
-      actions.push(getAssignActionString(assignerAction))
+    if (!!assignerAction) actions.push(getAssignActionString(assignerAction))
   }
   if (actions.length == 0)
     return (
