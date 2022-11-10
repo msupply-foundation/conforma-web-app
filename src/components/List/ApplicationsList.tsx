@@ -62,7 +62,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
         </Table.Body>
       </Table>
       {loading && <Loading />}
-      {applications && applications.length === 0 && (
+      {applications && applications.length === 0 && !loading && (
         <Message floating color="yellow" header={strings.APPLICATIONS_LIST_EMPTY} />
       )}
     </>
