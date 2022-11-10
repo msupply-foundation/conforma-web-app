@@ -28,26 +28,26 @@ const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }
     // Deduce which review assignments need to change and create patches, then
     // mutate one by one
     try {
-      assignmentsFiltered
-        .filter(({ level: assignmentLevel }) => assignmentLevel === level)
-        .forEach((assignment) => {
-          if (isChanging(assignment.reviewer.id, assignedSections)) {
-            const assignmentPatch = createAssignmentPatch(
-              assignment,
-              assignedSections,
-              currentUser?.userId as number
-            )
-            results.push(
-              updateReviewAssignment({
-                variables: {
-                  assignmentId: assignment.id,
-                  assignmentPatch,
-                },
-              })
-            )
-          }
-        })
-      await Promise.all(results)
+      const filteredAssignments = assignmentsFiltered.filter(
+        ({ level: assignmentLevel }) => assignmentLevel === level
+      )
+      for (var i = 0; i < filteredAssignments.length; i++) {
+        if (await isChanging(filteredAssignments[i].reviewer.id, assignedSections)) {
+          const assignmentPatch = createAssignmentPatch(
+            filteredAssignments[i],
+            assignedSections,
+            currentUser?.userId as number
+          )
+          results.push(
+            updateReviewAssignment({
+              variables: {
+                assignmentId: filteredAssignments[i].id,
+                assignmentPatch,
+              },
+            })
+          )
+        }
+      }
       fullStructure.reload()
     } catch (err) {
       throw new Error('Assignment update error')
