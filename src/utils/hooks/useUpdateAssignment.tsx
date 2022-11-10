@@ -101,8 +101,7 @@ const createAssignmentPatch = (
   const patch: ReviewAssignmentPatch = {
     status,
     // Required if previously locked (and now Assigned)
-    isLocked:
-      assignment.isLocked && assignment.isSelfAssignable && !ReviewAssignmentStatus.Assigned,
+    isLocked: assignment.isSelfAssignable && !ReviewAssignmentStatus.Assigned,
     assignerId,
     trigger,
   }
