@@ -31,17 +31,17 @@ const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }
       const filteredAssignments = assignmentsFiltered.filter(
         ({ level: assignmentLevel }) => assignmentLevel === level
       )
-      for (var i = 0; i < filteredAssignments.length; i++) {
-        if (await isChanging(filteredAssignments[i].reviewer.id, assignedSections)) {
+      for await (const assignment of filteredAssignments) {
+        if (isChanging(assignment.reviewer.id, assignedSections)) {
           const assignmentPatch = createAssignmentPatch(
-            filteredAssignments[i],
+            assignment,
             assignedSections,
             currentUser?.userId as number
           )
           results.push(
             updateReviewAssignment({
               variables: {
-                assignmentId: filteredAssignments[i].id,
+                assignmentId: assignment.id,
                 assignmentPatch,
               },
             })
