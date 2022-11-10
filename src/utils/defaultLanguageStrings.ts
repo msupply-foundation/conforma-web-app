@@ -394,6 +394,7 @@ export default {
   REVIEW_NOTES_DELETE_TITLE: 'Are you sure?',
   REVIEW_NOTES_DELETE_MESSAGE:
     'Clicking "Confirm" will permanently delete your comment, including any associated files. Close this dialog to go back.',
+  REVIEW_HISTORY_NO_RESPONSE: 'No response',
   STATUS_SUBMITTED: 'Submitted',
   STATUS_DRAFT: 'Draft',
   STATUS_CHANGES_REQUIRED: 'Changes required',
@@ -417,7 +418,7 @@ export default {
   TEMPLATE_GEN_BUTTON_AVAILABLE_DISABLED:
     'At least one template with the same code is already available, or this template already available',
   TEMPLATE_GEN_BUTTON_DRAFT: 'Make Draft',
-  TEMPLATE_GEN_BUTTON_DRAFT_DISABLED: 'Already has appications or is draft',
+  TEMPLATE_GEN_BUTTON_DRAFT_DISABLED: 'Already has applications or is draft',
   TEMPLATE_GEN_BUTTON_DISABLE: 'Disable',
   TEMPLATE_GEN_BUTTON_DISABLE_DISABLED: 'Already disabled',
   TEMPLATE_ICON: 'Icon',

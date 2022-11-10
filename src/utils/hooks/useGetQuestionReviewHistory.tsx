@@ -26,10 +26,8 @@ interface StageHistoryElements {
   historyElements: HistoryElement[]
 }
 
-interface ResponsesByStageByDate {
-  [stage: string]: {
-    [date: string]: HistoryElement
-  }
+interface ResponsesByStage {
+  [stage: string]: HistoryElement[]
 }
 
 const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuestionHistoryProps) => {
@@ -46,7 +44,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
     const { applicationResponses, reviewResponses, elementTypePluginCode, parameters } =
       data?.templateElementByTemplateCodeAndCodeAndTemplateVersion as TemplateElement
 
-    const allResponsesByStage: ResponsesByStageByDate = {}
+    const allResponsesByStage: ResponsesByStage = {}
 
     applicationResponses.nodes.forEach((applicantResponse) => {
       if (!applicantResponse) return
@@ -55,18 +53,18 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
       const { firstName, lastName } = application?.user as User
 
       if (stageNumber) {
-        if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
-        // Set each entry using HistoryElement values
-        allResponsesByStage[stageNumber][timeUpdated] = {
+        if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = []
+
+        allResponsesByStage[stageNumber].push({
           author: firstName || '' + ' ' + lastName || '',
           title: strings.TITLE_HISTORY_SUBMITTED_BY_APPLICANT,
           // TODO translated message, that nothing is entered
-          message: value?.text || '',
+          message: value?.text,
           response: { ...value, evaluatedParameters },
           elementTypePluginCode,
           parameters,
           timeUpdated,
-        }
+        })
       }
     })
 
@@ -79,9 +77,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
 
       // Set each entry using HistoryElement values
       if (stageNumber) {
-        // Exclude *current* review response (which has no stageNumber)
-        if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = {}
-        allResponsesByStage[stageNumber][timeUpdated] = {
+        allResponsesByStage[stageNumber].push({
           author: reviewer ? reviewer?.firstName || '' + ' ' + reviewer?.lastName || '' : '',
           title:
             (levelNumber || 1) > 1
@@ -90,7 +86,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
           message: !!decision ? ReviewResponse[decision] : 'Undefined',
           timeUpdated,
           reviewerComment: comment || '',
-        }
+        })
       }
     })
 
@@ -99,13 +95,23 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
 
     Object.entries(allResponsesByStage)
       .reverse()
-      .map(([stage, elements]) => {
+      .forEach(([stage, elements]) => {
         const stageHistoryElementsList: HistoryElement[] = []
 
-        Object.keys(elements)
-          .sort()
-          .reverse()
-          .forEach((key) => stageHistoryElementsList.push(allResponsesByStage[stage][key]))
+        elements
+          .sort((a, b) => {
+            const bTime = new Date(b.timeUpdated).getTime()
+            const aTime = new Date(a.timeUpdated).getTime()
+            // It's possible for timestamps to be equal if applicationResponse
+            // created at the same time as its reviewResponse (happens with
+            // optional review elements), so we need to make sure the
+            // reviewResponse comes first
+            if (aTime === bTime) {
+              return a.reviewerComment ? -1 : 1
+            }
+            return bTime - aTime
+          })
+          .forEach((e) => stageHistoryElementsList.push(e))
 
         orderedHistoryElementsByStage.push({
           stageNumber: Number(stage),
