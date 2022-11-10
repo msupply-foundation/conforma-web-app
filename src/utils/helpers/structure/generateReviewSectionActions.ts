@@ -29,7 +29,6 @@ type ActionDefinition = {
     reviewStatus: ReviewStatus | undefined
     isReviewActive: boolean
     isSelfAssignable: boolean
-    isLocked: boolean
   }) => boolean
 }
 
@@ -79,13 +78,8 @@ const actionDefinitions: ActionDefinition[] = [
   },
   {
     action: ReviewAction.canSelfAssign,
-    checkMethod: ({ reviewAssignmentStatus, isSelfAssignable, isLocked }) =>
-      reviewAssignmentStatus === ReviewAssignmentStatus.Available && isSelfAssignable && !isLocked,
-  },
-  {
-    action: ReviewAction.canSelfAssignLocked,
-    checkMethod: ({ reviewAssignmentStatus, isSelfAssignable, isLocked }) =>
-      reviewAssignmentStatus === ReviewAssignmentStatus.Available && isSelfAssignable && isLocked,
+    checkMethod: ({ reviewAssignmentStatus, isSelfAssignable }) =>
+      reviewAssignmentStatus === ReviewAssignmentStatus.Available && isSelfAssignable,
   },
   {
     action: ReviewAction.canContinue,
@@ -117,7 +111,6 @@ const generateReviewSectionActions: GenerateSectionActions = ({
     isFinalDecisionOnConsolidation,
     assignmentStatus,
     isSelfAssignable,
-    isLocked,
   },
   thisReview,
   currentUserId,
@@ -151,7 +144,6 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       isPendingReview: (totalPendingReview || 0) > 0,
       isReviewActive: (totalActive || 0) > 0,
       isSelfAssignable,
-      isLocked,
     }
 
     const foundAction = actionDefinitions.find(({ checkMethod }) => checkMethod(checkMethodProps))

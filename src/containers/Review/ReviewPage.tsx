@@ -329,7 +329,7 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
     <Segment.Group horizontal id="previous-review">
       <Segment>
         <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
-        <ReviewByLabel user={review.reviewer} strings={strings} />
+        <ReviewByLabel user={review.reviewer} isSubmitted={true} strings={strings} />
         <Button
           className="button-med"
           as={Link}
