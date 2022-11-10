@@ -38820,7 +38820,6 @@ export type CreateReviewMutation = (
 export type CreateReviewResponseMutationVariables = Exact<{
   templateElementId: Scalars['Int'];
   applicationId: Scalars['Int'];
-  stageNumber: Scalars['Int'];
   reviewId: Scalars['Int'];
   decision: ReviewResponseDecision;
   comment?: Maybe<Scalars['String']>;
@@ -40372,8 +40371,8 @@ export type CreateReviewMutationHookResult = ReturnType<typeof useCreateReviewMu
 export type CreateReviewMutationResult = Apollo.MutationResult<CreateReviewMutation>;
 export type CreateReviewMutationOptions = Apollo.BaseMutationOptions<CreateReviewMutation, CreateReviewMutationVariables>;
 export const CreateReviewResponseDocument = gql`
-    mutation createReviewResponse($templateElementId: Int!, $applicationId: Int!, $stageNumber: Int!, $reviewId: Int!, $decision: ReviewResponseDecision!, $comment: String, $timeSubmitted: Datetime) {
-  createApplicationResponse(input: {applicationResponse: {templateElementId: $templateElementId, value: null, reviewResponsesUsingId: {create: {comment: $comment, decision: $decision, status: DRAFT, templateElementId: $templateElementId, reviewId: $reviewId, recommendedApplicantVisibility: ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT}}, applicationId: $applicationId, status: SUBMITTED, stageNumber: $stageNumber, timeSubmitted: $timeSubmitted}}) {
+    mutation createReviewResponse($templateElementId: Int!, $applicationId: Int!, $reviewId: Int!, $decision: ReviewResponseDecision!, $comment: String, $timeSubmitted: Datetime) {
+  createApplicationResponse(input: {applicationResponse: {templateElementId: $templateElementId, value: null, reviewResponsesUsingId: {create: {comment: $comment, decision: $decision, status: DRAFT, templateElementId: $templateElementId, reviewId: $reviewId, recommendedApplicantVisibility: ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT}}, applicationId: $applicationId, status: SUBMITTED, timeSubmitted: $timeSubmitted}}) {
     applicationResponse {
       id
       reviewResponses {
@@ -40404,7 +40403,6 @@ export type CreateReviewResponseMutationFn = Apollo.MutationFunction<CreateRevie
  *   variables: {
  *      templateElementId: // value for 'templateElementId'
  *      applicationId: // value for 'applicationId'
- *      stageNumber: // value for 'stageNumber'
  *      reviewId: // value for 'reviewId'
  *      decision: // value for 'decision'
  *      comment: // value for 'comment'
