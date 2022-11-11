@@ -45,30 +45,24 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {loading ? (
-            <Table.Row colSpan={columns.length} textAlign="center">
-              <Table.Cell colSpan={columns.length} textAlign="center">
-                <Loading />
-              </Table.Cell>
-            </Table.Row>
-          ) : (
-            applications.map((application, index) => {
-              const rowProps = {
-                refetch,
-                columns,
-                application,
-              }
-              return (
-                <Fragment key={`ApplicationList-application-${index}`}>
-                  <ApplicationRow {...rowProps} />
-                </Fragment>
-              )
-            })
-          )}
+          {loading
+            ? null
+            : applications.map((application, index) => {
+                const rowProps = {
+                  refetch,
+                  columns,
+                  application,
+                }
+                return (
+                  <Fragment key={`ApplicationList-application-${index}`}>
+                    <ApplicationRow {...rowProps} />
+                  </Fragment>
+                )
+              })}
         </Table.Body>
       </Table>
       {loading && <Loading />}
-      {applications && applications.length === 0 && (
+      {applications && applications.length === 0 && !loading && (
         <Message floating color="yellow" header={strings.APPLICATIONS_LIST_EMPTY} />
       )}
     </>

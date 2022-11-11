@@ -13,7 +13,6 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   application: { serial, reviewerAction, assignerAction, outcome },
 }) => {
   const { strings } = useLanguageProvider()
-  const actions = []
 
   const getReviewActionString = (reviewerAction: ReviewerAction) => {
     switch (reviewerAction) {
@@ -40,19 +39,26 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   const getAssignActionString = (assignerAction: AssignerAction) => {
     switch (assignerAction) {
       case AssignerAction.ReAssign:
-        return strings.ACTION_RE_ASSIGN
+        // We don't want to show "Re-assign" here, makes it too inviting to
+        // change -- re-assigning should be an occasional task
+        return null
       default:
         // AssignerAction.Assign
         return strings.ACTION_ASSIGN
     }
   }
 
-  // Only show actions if application is Pending - TODO: Change logic to back-end
-  if (outcome === ApplicationOutcome.Pending) {
-    if (!!reviewerAction) actions.push(getReviewActionString(reviewerAction))
-    if (!!assignerAction) actions.push(getAssignActionString(assignerAction))
-  }
-  if (actions.length == 0)
+  // Reviewer action takes priority, and only show if Application is PENDING
+  const action =
+    outcome === ApplicationOutcome.Pending
+      ? !!reviewerAction
+        ? getReviewActionString(reviewerAction)
+        : !!assignerAction
+        ? getAssignActionString(assignerAction)
+        : null
+      : null
+
+  if (!action)
     return (
       <Link className="user-action" to={`/application/${serial}/review`}>
         <Icon name="chevron right" />
@@ -60,23 +66,18 @@ const ReviewerActionCell: React.FC<CellProps> = ({
     )
 
   return (
-    <>
-      {actions.map((action, index) => {
-        const linkUrl =
+    <div>
+      <Link
+        className="user-action"
+        to={
           action === strings.ACTION_VIEW
             ? `/application/${serial}/review`
             : `/application/${serial}/review?tab=assignment`
-        return (
-          <div key={index}>
-            {/* To-do: style the | once we can see it properly */}
-            {index > 0 ? <span key={`divider_${index}`}>{' | '}</span> : ''}
-            <Link className="user-action" to={linkUrl}>
-              {action}
-            </Link>
-          </div>
-        )
-      })}
-    </>
+        }
+      >
+        {action}
+      </Link>
+    </div>
   )
 }
 
