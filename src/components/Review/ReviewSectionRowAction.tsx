@@ -90,7 +90,6 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   reviewStructure,
   reviewAssignment,
   section: { reviewProgress, consolidationProgress, changeRequestsProgress },
-  previousAssignment,
   action,
 }) => {
   const { strings } = useLanguageProvider()
@@ -108,7 +107,6 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   const copyPreviousStageReview = useCreateFinalDecisionReview({
     reviewStructure,
     reviewAssignment,
-    previousAssignment,
   })
 
   const getButtonName = () => {
@@ -151,8 +149,9 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
       )
 
     try {
-      if (isFinalDecision && previousAssignment) {
+      if (isFinalDecision) {
         reviewId = (await copyPreviousStageReview()).data?.createReview?.review?.id as number
+        push(`${pathname}/${reviewId}?activeSections=none`)
       } else if (reviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
       push(

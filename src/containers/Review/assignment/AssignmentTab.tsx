@@ -118,7 +118,6 @@ const AssignmentTab: React.FC<{
                   sectionId={id}
                   fullStructure={fullStructure}
                   reviewAssignment={assignment}
-                  previousAssignment={assignmentInPreviousStage}
                 />
               ) : null
             )}

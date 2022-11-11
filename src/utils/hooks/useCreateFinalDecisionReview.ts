@@ -18,13 +18,12 @@ type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 const useCreateFinalDecisionReview: UseCreateFinalDecisionReview = ({
   reviewStructure,
   reviewAssignment,
-  previousAssignment,
 }) => {
   const [createReview] = useCreateReviewMutation()
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
     reviewStructure,
-    reviewAssignment: previousAssignment,
+    reviewAssignment,
   })
 
   const constructReviewPatch: ConstructReviewPatch = (structure) => {
@@ -36,26 +35,24 @@ const useCreateFinalDecisionReview: UseCreateFinalDecisionReview = ({
       return isAssigned && !isActiveReviewResponse
     })
 
-    // Generate each reviewResponse for FinalStage review as a copy of previus lastLevel review
+    // Generate each reviewResponse for FinalStage review as a copy of previous Lower Level review
+    // The lowerLevelReview responses are mapped to latestOriginalReviewResponse in helpers
+    // addAllReviewResponses function after being stored on query getReviewResponses under
+    // previousOriginalReviewResponses (not very easy to track - so commented here for reference!)
     const reviewResponseCreate = reviewableElements.map(
-      ({
-        response,
-        thisReviewLatestResponse,
-        latestOriginalReviewResponse,
-        lowerLevelReviewLatestResponse,
-      }) => {
-        const applicationResponseId =
-          (previousAssignment?.level || 1) > 1 ? undefined : response?.id
+      ({ response, latestOriginalReviewResponse, thisReviewLatestResponse }) => {
+        const applicationResponseId = response?.id
         const reviewResponseLinkId =
-          thisReviewLatestResponse?.reviewResponseLinkId ?? lowerLevelReviewLatestResponse?.id
+          latestOriginalReviewResponse?.reviewResponseLinkId ??
+          thisReviewLatestResponse?.reviewResponseLinkId
         return {
           // Create new decision and comment if lower level review response or application was change, otherwise duplicate previous review response
-          decision: thisReviewLatestResponse?.decision
-            ? lowerLevelReviewLatestResponse?.decision ?? null
-            : latestOriginalReviewResponse?.decision ?? null,
-          comment: thisReviewLatestResponse?.decision
-            ? lowerLevelReviewLatestResponse?.comment ?? null
-            : latestOriginalReviewResponse?.comment ?? null,
+          decision: latestOriginalReviewResponse?.decision
+            ? latestOriginalReviewResponse?.decision
+            : thisReviewLatestResponse?.decision ?? null,
+          comment: latestOriginalReviewResponse?.decision
+            ? latestOriginalReviewResponse?.comment
+            : thisReviewLatestResponse?.comment ?? null,
           applicationResponseId,
           reviewResponseLinkId,
         }
