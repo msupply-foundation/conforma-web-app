@@ -22,31 +22,42 @@ const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }
   ) => {
     // NOTE: If "assignedSections ==  null", then ALL sections will be
     // UNASSIGNED from the review assignments in assignmentsFiltered
-    const results: Promise<
-      FetchResult<UpdateReviewAssignmentMutation, Record<string, any>, Record<string, any>>
-    >[] = []
+
     // Deduce which review assignments need to change and create patches, then
     // mutate one by one
     try {
       const filteredAssignments = assignmentsFiltered.filter(
         ({ level: assignmentLevel }) => assignmentLevel === level
       )
-      for await (const assignment of filteredAssignments) {
+
+      const assignmentsToPatch: {
+        assignment: AssignmentDetails
+        assignmentPatch: ReviewAssignmentPatch
+      }[] = []
+
+      filteredAssignments.forEach((assignment) => {
         if (isChanging(assignment.reviewer.id, assignedSections)) {
           const assignmentPatch = createAssignmentPatch(
             assignment,
             assignedSections,
             currentUser?.userId as number
           )
-          results.push(
-            updateReviewAssignment({
-              variables: {
-                assignmentId: assignment.id,
-                assignmentPatch,
-              },
-            })
-          )
+          assignmentsToPatch.push({ assignment, assignmentPatch })
         }
+      })
+
+      // Need to sort so that we're sure UNASSIGNMENTS happen before
+      // ASSIGNMENTS, otherwise back-end won't allow it
+      assignmentsToPatch.sort((a, b) =>
+        (a.assignmentPatch.status ?? '') > (b.assignmentPatch.status ?? '') ? -1 : 1
+      )
+      for (const { assignment, assignmentPatch } of assignmentsToPatch) {
+        await updateReviewAssignment({
+          variables: {
+            assignmentId: assignment.id,
+            assignmentPatch,
+          },
+        })
       }
       fullStructure.reload()
     } catch (err) {
