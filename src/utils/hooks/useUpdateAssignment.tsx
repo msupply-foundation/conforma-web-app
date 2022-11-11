@@ -3,10 +3,8 @@ import {
   ReviewAssignmentPatch,
   ReviewAssignmentStatus,
   Trigger,
-  UpdateReviewAssignmentMutation,
   useUpdateReviewAssignmentMutation,
 } from '../../utils/generated/graphql'
-import { FetchResult } from '@apollo/client'
 import { useUserState } from '../../contexts/UserState'
 
 const useUpdateAssignment = ({ fullStructure }: { fullStructure: FullStructure }) => {
