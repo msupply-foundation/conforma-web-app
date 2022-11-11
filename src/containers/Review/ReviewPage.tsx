@@ -111,10 +111,7 @@ const ReviewPage: React.FC<{
   const {
     sections,
     responsesByCode,
-    info: {
-      name,
-      current: { stage },
-    },
+    info: { name },
     thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
@@ -195,7 +192,6 @@ const ReviewPage: React.FC<{
                 canEdit(section.details.code) && (
                   <ApproveAllButton
                     isConsolidation={!!section.assignment?.isConsolidation}
-                    stageNumber={stage.number}
                     page={page}
                   />
                 )
@@ -257,15 +253,10 @@ const SectionRowStatus: React.FC<SectionState> = (section) => {
 
 interface ApproveAllButtonProps {
   isConsolidation: boolean
-  stageNumber: number
   page: Page
 }
 
-const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
-  isConsolidation,
-  stageNumber,
-  page,
-}) => {
+const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({ isConsolidation, page }) => {
   const { strings } = useLanguageProvider()
   const updateReviewResponse = useUpdateReviewResponse()
 
@@ -282,15 +273,10 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   const massApprove = () => {
     responsesToReview.forEach((reviewResponse) => {
       if (reviewResponse)
-        updateReviewResponse(
-          {
-            ...reviewResponse,
-            decision: isConsolidation
-              ? ReviewResponseDecision.Agree
-              : ReviewResponseDecision.Approve,
-          },
-          stageNumber
-        )
+        updateReviewResponse({
+          ...reviewResponse,
+          decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
+        })
     })
   }
 

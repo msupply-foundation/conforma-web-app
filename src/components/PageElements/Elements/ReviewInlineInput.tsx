@@ -53,7 +53,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
 
   const submit = async () => {
     // TODO do we need to handle update error ?
-    await updateResponse(reviewResponse, stageNumber)
+    await updateResponse(reviewResponse)
     setIsActiveEdit(false)
   }
 

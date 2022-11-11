@@ -5,7 +5,6 @@ export default gql`
     $id: Int!
     $decision: ReviewResponseDecision
     $comment: String
-    $stageNumber: Int!
     $recommendedApplicantVisibility: ReviewResponseRecommendedApplicantVisibility = ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT
   ) {
     updateReviewResponse(
@@ -14,7 +13,6 @@ export default gql`
         patch: {
           decision: $decision
           comment: $comment
-          stageNumber: $stageNumber
           recommendedApplicantVisibility: $recommendedApplicantVisibility
         }
       }
