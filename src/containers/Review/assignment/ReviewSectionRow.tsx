@@ -72,7 +72,6 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     reviewStructure,
     reviewAssignment,
     section,
-    previousAssignment,
     action: section?.assignment?.action || ReviewAction.unknown,
     isConsolidation: section.assignment?.isConsolidation || false,
     isAssignedToCurrentUser,
