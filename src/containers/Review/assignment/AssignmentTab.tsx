@@ -39,7 +39,6 @@ const AssignmentTab: React.FC<{
     error,
     loading,
     assignmentsFiltered,
-    assignmentInPreviousStage,
     assignmentGroupedLevel,
     isFullyAssigned,
   } = useLoadAssignments({
