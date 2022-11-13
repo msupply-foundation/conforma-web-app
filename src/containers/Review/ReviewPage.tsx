@@ -212,7 +212,7 @@ const ReviewPage: React.FC<{
             />
           ))}
         <PreviousStageDecision
-          isFinalDecision={reviewAssignment.isFinalDecision}
+          isMakeDecision={reviewAssignment.isMakeDecision}
           review={previousAssignment?.review}
           serial={serial}
         />
@@ -300,18 +300,18 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({ isConsolidation, pa
 
 interface PreviousStageDecisionProps {
   review: ReviewDetails | null | undefined
-  isFinalDecision: boolean
+  isMakeDecision: boolean
   serial: string
 }
 
 const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
   review,
-  isFinalDecision,
+  isMakeDecision,
   serial,
 }) => {
   const { strings } = useLanguageProvider()
   const { Decision } = useLocalisedEnums()
-  return isFinalDecision && !!review ? (
+  return isMakeDecision && !!review ? (
     <Segment.Group horizontal id="previous-review">
       <Segment>
         <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>

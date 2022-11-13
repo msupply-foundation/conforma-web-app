@@ -13,7 +13,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
-import useCreateFinalDecisionReview from '../../utils/hooks/useCreateFinalDecisionReview'
+import useCreateFinalDecisionReview from '../../utils/hooks/useCreateMakeDecisionReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const { strings } = useLanguageProvider()
@@ -139,24 +139,24 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   }
 
   const doAction = async () => {
-    const { isFinalDecision } = reviewStructure.assignment as ReviewAssignment
+    const { isMakeDecision } = reviewStructure.assignment as ReviewAssignment
     let reviewId = reviewStructure.thisReview?.id as number
     if (reviewStructure.thisReview?.current.reviewStatus == ReviewStatus.Draft)
       return push(
         `${pathname}/${reviewId}?activeSections=${
-          isFinalDecision ? 'none' : reviewAssignment.assignedSections.join(',')
+          isMakeDecision ? 'none' : reviewAssignment.assignedSections.join(',')
         }`
       )
 
     try {
-      if (isFinalDecision) {
+      if (isMakeDecision) {
         reviewId = (await copyPreviousStageReview()).data?.createReview?.review?.id as number
         push(`${pathname}/${reviewId}?activeSections=none`)
       } else if (reviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
       push(
         `${pathname}/${reviewId}?activeSections=${
-          isFinalDecision ? 'none' : reviewAssignment.assignedSections.join(',')
+          isMakeDecision ? 'none' : reviewAssignment.assignedSections.join(',')
         }`
       )
     } catch (e) {
