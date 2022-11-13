@@ -13,19 +13,17 @@ type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
 // also computes and updates recommendedApplicantVisibility
 type UseUpdateReviewResponse = () => (
   reviewResponse: ReviewResponse,
-  stageNumber: number
 ) => PromiseReturnType
 
 const useUpdateReviewResponse: UseUpdateReviewResponse = () => {
   const [updateReviewResponse] = useUpdateReviewResponseMutation()
 
-  return async (reviewResponse, stageNumber) =>
+  return async (reviewResponse) =>
     updateReviewResponse({
       variables: {
         id: reviewResponse.id,
         comment: reviewResponse.comment,
         decision: reviewResponse.decision,
-        stageNumber: stageNumber,
         recommendedApplicantVisibility: computeVisibility(reviewResponse),
       },
     })

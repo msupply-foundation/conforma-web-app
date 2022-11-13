@@ -1,11 +1,5 @@
-import {
-  useCreateReviewMutation,
-  ReviewPatch,
-  Trigger,
-  Decision,
-  ReviewResponseDecision,
-} from '../generated/graphql'
-import { AssignmentDetails, FullStructure, PageElement } from '../types'
+import { useCreateReviewMutation, ReviewPatch, Trigger, Decision } from '../generated/graphql'
+import { AssignmentDetails, FullStructure } from '../types'
 import { useGetFullReviewStructureAsync } from './useGetReviewStructureForSection'
 
 // below lines are used to get return type of the function that is returned by useRestartReviewMutation
@@ -24,20 +18,13 @@ type ConstructReviewPatch = (structure: FullStructure) => ReviewPatch
 const useCreateFinalDecisionReview: UseCreateFinalDecisionReview = ({
   reviewStructure,
   reviewAssignment,
-  previousAssignment,
 }) => {
   const [createReview] = useCreateReviewMutation()
 
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
     reviewStructure,
     reviewAssignment,
-    previousAssignment,
   })
-
-  const shouldRemakeFinalDecisionReviewResponse = (element: PageElement) => {
-    if (previousAssignment?.level === 1) return true
-    return element?.thisReviewLatestResponse?.decision === ReviewResponseDecision.Agree
-  }
 
   const constructReviewPatch: ConstructReviewPatch = (structure) => {
     const elements = Object.values(structure?.elementsById || {})
@@ -45,27 +32,27 @@ const useCreateFinalDecisionReview: UseCreateFinalDecisionReview = ({
     // Exclude not assigned, not visible and missing responses
     const reviewableElements = elements.filter((element) => {
       const { isAssigned, isActiveReviewResponse } = element
-      return (
-        shouldRemakeFinalDecisionReviewResponse(element) && isAssigned && !isActiveReviewResponse
-      )
+      return isAssigned && !isActiveReviewResponse
     })
 
-    // For re-assignment this would be slightly different, we need to consider latest review response of this level
-    // not necessarily this thisReviewLatestResponse (would be just latestReviewResponse, from all reviews at this level)
+    // Generate each reviewResponse for a MakeDecision review as a copy of previous Lower Level review.
+    // The lowerLevelReview responses are mapped to latestOriginalReviewResponse in helpers
+    // addAllReviewResponses function after being stored on query getReviewResponses under
+    // previousOriginalReviewResponses (not very easy to track - so commented here for reference!)
     const reviewResponseCreate = reviewableElements.map(
-      ({ isPendingReview, thisReviewLatestResponse, response, lowerLevelReviewLatestResponse }) => {
-        const applicationResponseId =
-          !previousAssignment || previousAssignment.level > 1 ? undefined : response?.id
+      ({ response, latestOriginalReviewResponse, thisReviewLatestResponse }) => {
+        const applicationResponseId = response?.id
         const reviewResponseLinkId =
-          !previousAssignment || previousAssignment.level === 1
-            ? undefined
-            : lowerLevelReviewLatestResponse?.id
-        // create new if element is awaiting review
-        const shouldCreateNew = isPendingReview
+          latestOriginalReviewResponse?.reviewResponseLinkId ??
+          thisReviewLatestResponse?.reviewResponseLinkId
         return {
           // Create new decision and comment if lower level review response or application was change, otherwise duplicate previous review response
-          decision: shouldCreateNew ? null : thisReviewLatestResponse?.decision,
-          comment: shouldCreateNew ? null : thisReviewLatestResponse?.comment,
+          decision: latestOriginalReviewResponse?.decision
+            ? latestOriginalReviewResponse?.decision
+            : thisReviewLatestResponse?.decision ?? null,
+          comment: latestOriginalReviewResponse?.decision
+            ? latestOriginalReviewResponse?.comment
+            : thisReviewLatestResponse?.comment ?? null,
           applicationResponseId,
           reviewResponseLinkId,
         }

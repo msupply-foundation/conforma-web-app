@@ -21,7 +21,7 @@ type ActionDefinition = {
     reviewLevel: number
     isReviewable: boolean
     isAssignedToCurrentUser: boolean
-    isFinalDecision: boolean
+    isMakeDecision: boolean
     reviewAssignmentStatus: ReviewAssignmentStatus | null
     isSecondReview: boolean
     isPendingReview: boolean
@@ -35,10 +35,10 @@ type ActionDefinition = {
 const actionDefinitions: ActionDefinition[] = [
   {
     action: ReviewAction.canMakeDecision,
-    checkMethod: ({ reviewAssignmentStatus, isFinalDecision, isReviewExisting }) =>
+    checkMethod: ({ reviewAssignmentStatus, isMakeDecision, isReviewExisting }) =>
       reviewAssignmentStatus === ReviewAssignmentStatus.Assigned &&
       !isReviewExisting &&
-      isFinalDecision,
+      isMakeDecision,
   },
   {
     action: ReviewAction.canStartReview,
@@ -107,15 +107,15 @@ const generateReviewSectionActions: GenerateSectionActions = ({
     assignee,
     assigneeLevel,
     assignedSections,
-    isFinalDecision,
-    isFinalDecisionOnConsolidation,
+    isMakeDecision,
+    isMakeDecisionOnConsolidation,
     assignmentStatus,
     isSelfAssignable,
   },
   thisReview,
   currentUserId,
 }) => {
-  const isConsolidation = assigneeLevel > 1 || (isFinalDecision && isFinalDecisionOnConsolidation)
+  const isConsolidation = assigneeLevel > 1 || (isMakeDecision && isMakeDecisionOnConsolidation)
 
   sections.forEach((section) => {
     const { totalReviewable, totalPendingReview, totalActive } = isConsolidation
@@ -130,12 +130,12 @@ const generateReviewSectionActions: GenerateSectionActions = ({
       assignedSections.includes(section.details.code)
 
     const isAssignedToCurrentUser =
-      assignee?.id === currentUserId && (isReviewable || isFinalDecision)
+      assignee?.id === currentUserId && (isReviewable || isMakeDecision)
 
     const checkMethodProps = {
       isReviewable,
       isAssignedToCurrentUser,
-      isFinalDecision: !!isFinalDecision,
+      isMakeDecision: !!isMakeDecision,
       reviewLevel: assigneeLevel,
       reviewAssignmentStatus: assignmentStatus,
       isReviewExisting: !!thisReview,
