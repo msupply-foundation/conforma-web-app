@@ -131,14 +131,11 @@ const ReviewPage: React.FC<{
   const isSubmitted =
     thisReview?.current.reviewStatus === ReviewStatus.Submitted ||
     thisReview?.current.reviewStatus === ReviewStatus.ChangesRequested
-  const isLocked =
-    thisReview?.current.reviewStatus == ReviewStatus.Locked ||
-    thisReview?.current.reviewStatus === ReviewStatus.Discontinued
+  const isLocked = thisReview?.isLocked
 
   const canEdit = (sectionCode: string) =>
     reviewAssignment?.assignedSections.includes(sectionCode) &&
-    (reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||
-      reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Locked)
+    reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft
 
   const ReviewSubheader: React.FC = () =>
     isLocked ? (

@@ -422,6 +422,7 @@ interface ReviewDetails {
   reviewDecision?: ReviewDecision | null
   reviewer: GraphQLUser
   current: ReviewStageAndStatus
+  isLocked: boolean
 }
 
 interface ReviewQuestion {
