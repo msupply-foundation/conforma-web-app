@@ -8,6 +8,7 @@ export default gql`
     levelNumber
     reviewerId
     isLastLevel
+    # TODO: Rename property in Backend to isMakeDecision
     isFinalDecision
     isSelfAssignable
     allowedSections

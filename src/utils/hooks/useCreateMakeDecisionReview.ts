@@ -35,7 +35,7 @@ const useCreateFinalDecisionReview: UseCreateFinalDecisionReview = ({
       return isAssigned && !isActiveReviewResponse
     })
 
-    // Generate each reviewResponse for FinalStage review as a copy of previous Lower Level review
+    // Generate each reviewResponse for a MakeDecision review as a copy of previous Lower Level review.
     // The lowerLevelReview responses are mapped to latestOriginalReviewResponse in helpers
     // addAllReviewResponses function after being stored on query getReviewResponses under
     // previousOriginalReviewResponses (not very easy to track - so commented here for reference!)

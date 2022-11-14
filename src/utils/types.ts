@@ -149,7 +149,7 @@ interface AssignmentDetails {
   }
   isCurrentUserAssigner: boolean
   isCurrentUserReviewer: boolean
-  isFinalDecision: boolean
+  isMakeDecision: boolean
   isLastLevel: boolean
   isSelfAssignable: boolean
   allowedSections: string[]
@@ -402,8 +402,8 @@ interface ReviewAssignment {
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
   isSelfAssignable: boolean
-  isFinalDecision: boolean
-  isFinalDecisionOnConsolidation: boolean
+  isMakeDecision: boolean
+  isMakeDecisionOnConsolidation: boolean
 }
 
 type ReviewSectionComponentProps = {

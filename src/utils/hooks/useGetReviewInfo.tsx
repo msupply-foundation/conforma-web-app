@@ -108,7 +108,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
         },
         isCurrentUserReviewer: reviewer?.id === (currentUser?.userId as number),
         isCurrentUserAssigner: reviewAssignmentAssignerJoins.nodes.length > 0,
-        isFinalDecision: !!isFinalDecision,
+        isMakeDecision: !!isFinalDecision,
         isLastLevel: !!isLastLevel,
         isSelfAssignable: !!isSelfAssignable,
         allowedSections: (allowedSections as string[]) || [],
