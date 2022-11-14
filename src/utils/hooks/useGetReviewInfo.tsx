@@ -125,6 +125,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
               },
               reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
               reviewer: reviewer as User,
+              isLocked: review.isLocked as boolean,
             }
           : null,
       }

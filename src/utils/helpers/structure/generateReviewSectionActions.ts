@@ -73,8 +73,7 @@ const actionDefinitions: ActionDefinition[] = [
   },
   {
     action: ReviewAction.canContinueLocked,
-    checkMethod: ({ reviewStatus }) =>
-      reviewStatus === ReviewStatus.Locked || reviewStatus === ReviewStatus.Discontinued,
+    checkMethod: ({ reviewStatus }) => reviewStatus === ReviewStatus.Discontinued,
   },
   {
     action: ReviewAction.canSelfAssign,
