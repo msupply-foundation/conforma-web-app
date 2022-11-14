@@ -154,6 +154,7 @@ interface AssignmentDetails {
   isSelfAssignable: boolean
   allowedSections: string[]
   assignedSections: string[]
+  availableSections: string[]
 }
 
 interface AssignmentOptions {

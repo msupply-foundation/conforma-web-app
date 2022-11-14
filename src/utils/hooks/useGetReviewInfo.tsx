@@ -84,6 +84,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
         reviewAssignmentAssignerJoins,
         allowedSections,
         assignedSections,
+        availableSections,
         isFinalDecision,
         isLastLevel,
         isSelfAssignable,
@@ -113,6 +114,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
         isSelfAssignable: !!isSelfAssignable,
         allowedSections: (allowedSections as string[]) || [],
         assignedSections: assignedSections as string[],
+        availableSections: availableSections as string[],
         review: review
           ? {
               id: review.id,
