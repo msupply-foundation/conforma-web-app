@@ -49,8 +49,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     fileCountLimit,
     fileExtensions,
     fileSizeLimit,
-    subfolder,
     showDescription = false,
+    ...fileOptions
   } = parameters
 
   // These values required for file upload query parameters:
@@ -130,7 +130,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         serialNumber,
         userId: currentUser?.userId ?? null,
         applicationResponseId: application_response_id,
-        subfolder,
+        ...fileOptions,
       })
       const index = newFileData.findIndex((f: any) => f.key === file.key)
       if (result.success) {
@@ -229,12 +229,12 @@ const uploadFile = async (
     userId,
     serialNumber,
     applicationResponseId,
-    subfolder,
+    ...fileOptions
   }: {
     userId: number | null
     serialNumber: string
     applicationResponseId: number
-    subfolder?: string
+    fileOptions?: any
   }
 ) => {
   const fileData = new FormData()
@@ -244,7 +244,7 @@ const uploadFile = async (
       userId,
       applicationSerial: serialNumber,
       applicationResponseId: applicationResponseId,
-      subfolder,
+      ...fileOptions,
     }),
     otherBody: fileData,
   })
