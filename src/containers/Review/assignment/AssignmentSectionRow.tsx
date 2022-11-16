@@ -64,7 +64,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   const assignmentOptions = getAssignmentOptions({
     assignments,
     sectionCode,
-    // elements,
     assignee: assignedSections?.[sectionCode]?.newAssignee,
   })
   if (!assignmentOptions) return null
@@ -135,17 +134,17 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
               setIsReassignment={setIsReassignment}
               setIsUnassignment={() => showModal({ onConfirm: () => unassignAssignee() })}
             />
+          ) : assignmentOptions.options.length === 0 ? (
+            <Label className="simple-label" content={strings.ASSIGNMENT_NOT_AVAILABLE} />
           ) : (
-            assignmentOptions.options.length > 0 && (
-              <>
-                <Label className="simple-label" content={strings.LABEL_REVIEWER} />
-                <AssigneeDropdown
-                  assignmentOptions={assignmentOptions}
-                  sectionCode={sectionCode}
-                  onChangeMethod={(selected: number) => onAssigneeSelection(selected)}
-                />
-              </>
-            )
+            <>
+              <Label className="simple-label" content={strings.LABEL_REVIEWER} />
+              <AssigneeDropdown
+                assignmentOptions={assignmentOptions}
+                sectionCode={sectionCode}
+                onChangeMethod={(selected: number) => onAssigneeSelection(selected)}
+              />
+            </>
           )}
         </Grid.Column>
       </Grid.Row>
