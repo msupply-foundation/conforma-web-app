@@ -1,23 +1,28 @@
 _Ongoing authoritative reference of Template Question/Element types, including input parameters and response type (shape). Please ensure this document matches the current implementation at all times._
 
-## Contents
+## Contents <!-- omit in toc -->
 
-- [Template Element fields](#element-fields)
-- [Question/Element types](#types)
-  - [Short Text Input](#short-text)
-  - [Long Text (Multi-line) Input](#long-text)
-  - [Password](#password)
-  - [Text Information](#text)
-  - [Image Display](#image)
-  - [Drop-down Selector](#dropdown)
-  - [Radio Buttons](#radio)
-  - [Checkboxes](#checkbox)
-  - [File Upload](#file)
-  - [List Builder](#list-builder)
-  - [Search](#search)
+<!-- toc -->
+
+- [Template Element fields](#template-element-fields)
+- [Question/Element types](#questionelement-types)
+  - [Short Text Input](#short-text-input)
+  - [Long Text (Multi-line) Input](#long-text-multi-line-input)
+  - [Password Input](#password-input)
+  - [Text Information](#text-information)
+  - [Image Display](#image-display)
+  - [Drop-down Selector](#drop-down-selector)
+  - [Radio Buttons](#radio-buttons)
+  - [Checkboxes](#checkboxes)
+  - [File Upload](#file-upload)
+  - [List Builder (Ingredients list)](#list-builder-ingredients-list)
+  - [Search (Lookup)](#search-lookup)
   - [Date Picker](#date-picker)
   - [Number](#number)
-  - [Page Break](#page)
+  - [Page Break](#page-break)
+
+<!-- tocstop -->
+
 
 <a name="element-fields"/>
 
@@ -179,31 +184,31 @@ _For displaying blocks of text in the application_
 
 ![style:none](./images/Element-Type-Specs-textInfo-none.png)
 
-### `style: basic`
+#### `style: basic`
 
 ![style:basic](./images/Element-Type-Specs-textInfo-basic.png)
 
-### `style: info`
+#### `style: info`
 
 ![style:info](./images/Element-Type-Specs-textInfo-info.png)
 
-### `style: warning`
+#### `style: warning`
 
 ![style:warning](./images/Element-Type-Specs-textInfo-warning.png)
 
-### `style: success`
+#### `style: success`
 
 ![style:success](./images/Element-Type-Specs-textInfo-success.png)
 
-### `style: positive`
+#### `style: positive`
 
 ![style:positive](./images/Element-Type-Specs-textInfo-positive.png)
 
-### `style: error`
+#### `style: error`
 
 ![style:error](./images/Element-Type-Specs-textInfo-error.png)
 
-### `style: negative`
+#### `style: negative`
 
 ![style:negative](./images/Element-Type-Specs-textInfo-negative.png)
 
@@ -560,7 +565,9 @@ Once selected, items are displayed in a "card" view:
   }
   ```
   If not specified, a generic "default" display will be shown, using the first 1-2 properties on the result object.
-- **displayType**: `"card" | "list"` (default: `card`). "Card" view will display each result as a simple Semantic [card](https://react.semantic-ui.com/views/card/), using the fields provided in `displayFormat`. For "list" view, the results will show as a simple text list, and only one of either `title` or `description` will be used (`title` has priority). This is useful when there is only one field in the results, in which case a "card" view can look inappropriate.
+- **displayType**: `"card" | "list" | "input"` (default: `card`). "card" view will display each result as a simple Semantic [card](https://react.semantic-ui.com/views/card/), using the fields provided in `displayFormat`.  
+  For "list" view, the results will show as a simple text list, and only one of either `title` or `description` will be used (`title` has priority). This is useful when there is only one field in the results, in which case a "card" view can look inappropriate.  
+  "input" is even simpler than list -- only a single text result can be displayed, but it will show the selected value in the input/search field itself. And like "list", it uses the `displayFormat` to define how to present the selection.
 - **resultFormat**: `object` -- same as `displayFormat`, but used when specifying a format for the "result" display that is different to the selection card display. If not specified, `resultFormat` will just be the same as `displayFormat`.
   Note that for the "result" display, only the `title` and `description` fields are used (`subtitle` is not shown).
 - **textFormat** `string` -- a formatting substitution string like the above, to be generate the "text" value in the response. Note: currently the only place this text value is ever seen by the user is if it's used inside a listBuilder table (optional)
