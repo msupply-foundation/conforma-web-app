@@ -34,6 +34,7 @@ export default {
   ASSIGNED: 'assigned',
   ASSIGNED_TO: 'assigned to',
   ASSIGNMENT_NOT_ASSIGNED: 'Not assigned',
+  ASSIGNMENT_NOT_AVAILABLE: 'Assignment not available',
   ASSIGNMENT_YOURSELF: 'Yourself',
   ASSIGNMENT_ERROR_TITLE: 'Assignment update error',
   ASSIGNMENT_ERROR_GENERAL: 'Could not complete assignment',

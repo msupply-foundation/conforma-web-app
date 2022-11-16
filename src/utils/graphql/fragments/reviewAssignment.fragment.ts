@@ -13,5 +13,6 @@ export default gql`
     isSelfAssignable
     allowedSections
     assignedSections
+    availableSections
   }
 `

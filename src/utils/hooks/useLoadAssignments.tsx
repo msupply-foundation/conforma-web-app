@@ -56,7 +56,11 @@ const useLoadAssignments = ({
   const currentReviewLevel = Math.max(Number(Object.keys(assignmentGroupedLevel)))
 
   const isFullyAssigned = currentReviewLevel
-    ? calculateIsFullyAssigned(assignmentGroupedLevel[currentReviewLevel], sectionCodes)
+    ? !assignmentGroupedLevel[currentReviewLevel].some(
+        ({ availableSections }) =>
+          availableSections.length > 0 &&
+          sectionCodes.some((code) => availableSections.includes(code))
+      )
     : true
 
   return {
@@ -69,17 +73,3 @@ const useLoadAssignments = ({
 }
 
 export default useLoadAssignments
-
-const calculateIsFullyAssigned = (
-  currentLevelAssignments: AssignmentDetails[],
-  sectionCodes: string[]
-) => {
-  const assignedSections = new Set(
-    currentLevelAssignments
-      // .filter((assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned)
-      .map((assignment) => assignment.assignedSections)
-      .flat()
-  )
-
-  return assignedSections.size >= sectionCodes.length
-}
