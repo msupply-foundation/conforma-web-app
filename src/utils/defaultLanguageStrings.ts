@@ -90,7 +90,7 @@ export default {
   COLUMN_OUTCOME: 'Outcome',
   COLUMN_REVIEWER_ACTION: '',
   COLUMN_APPLICANT_ACTION: '',
-  DECISION_LIST_OF_QUESTIONS: 'List Of Questions',
+  DECISION_LIST_OF_QUESTIONS: 'Send back to applicant',
   DECISION_CHANGES_REQUESTED: 'Changes Requested',
   DECISION_CONFORM: 'Conform',
   DECISION_NON_CONFORM: 'Non-conform',
@@ -206,7 +206,7 @@ export default {
   LABEL_REVIEW_MAKE_DECISION_BY: 'Awaiting decision making by',
   LABEL_REVIEW_OVERALL_COMMENT: 'Overall comment',
   LABEL_REVIEW_OVERALL_COMMENT_TOOLTIP:
-    '_If application outcome is_: \n- **Conform**: Please use this field to include a summary of the internal decision notes.\n- **Request information from the applicant**: Please use this field to include a summary of the internal decision notes. Note: Any non-conforming comments will be displayed to the applicant for actioning.\n- **Non-conform**: Please use this field to detail the reasons for rejection to the applicant.',
+    '_If application outcome is_: \n- **Conform**: Please use this field to include a summary of the internal decision notes.\n- **Send back to applicant**: Please use this field to include a summary of the internal decision notes. Note: Any non-conforming comments will be displayed to the applicant for actioning.\n- **Non-conform**: Please use this field to detail the reasons for rejection to the applicant.',
   LABEL_REVIEW_RESSUBMIT: 'Non conform',
   LABEL_REVIEW_SECTION: 'Please complete the section',
   LABEL_REVIEW_SUBMIT_AS: 'Submit as',
@@ -346,7 +346,8 @@ export default {
   REVIEW_PREVIEW_NOTIFICATION: 'Email message:',
   REVIEW_PREVIEW_ERROR: 'Problem generating preview:',
   REVIEW_DECISION_SET_FAIL_TITLE: 'Problem submitting review',
-  REVIEW_DECISION_SET_FAIL_MESSAGE: 'Please select a decision: List Of Questions or Non Conformity',
+  REVIEW_DECISION_SET_FAIL_MESSAGE:
+    'Please select a decision: Send back to applicant or Non Conformity',
   REVIEW_DECISION_MISMATCH_TITLE: 'Final decision',
   REVIEW_DECISION_MISMATCH_MESSAGE:
     'You have made a different decision than the previous reviewer.\nAre you sure you wish to proceed with your decision?',

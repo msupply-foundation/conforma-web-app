@@ -3,6 +3,8 @@ import { Button, Icon, Input, Label, Loader, Modal, Table, Header } from 'semant
 import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
+import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
+import { useToast } from '../../contexts/Toast'
 
 // const diffSnapshotUrl = `${snapshotsBaseUrl}/diff`
 
@@ -15,7 +17,11 @@ const Snapshots: React.FC = () => {
 
   const [data, setData] = useState<string[] | null>(null)
 
+  const { ConfirmModal, showModal } = useConfirmationModal({ type: 'warning', awaitAction: false })
+  const showToast = useToast({ style: 'success' })
+
   const JWT = localStorage.getItem(config.localStorageJWTKey)
+  const isProductionBuild = config.isProductionBuild
 
   useEffect(() => {
     setData(null)
@@ -148,7 +154,15 @@ const Snapshots: React.FC = () => {
                     size="large"
                     className="clickable"
                     name="play circle"
-                    onClick={() => useSnapshot(snapshotName)}
+                    onClick={() => {
+                      if (isProductionBuild)
+                        showModal({
+                          title: 'Are you sure?',
+                          message: `This will overwrite ALL existing data on: ${window.location.host}`,
+                          onConfirm: () => useSnapshot(snapshotName),
+                        })
+                      else useSnapshot(snapshotName)
+                    }}
                   />
                 </Table.Cell>
                 <Table.Cell width={1}>
@@ -156,7 +170,18 @@ const Snapshots: React.FC = () => {
                     size="large"
                     className="clickable"
                     name="record"
-                    onClick={() => takeSnapshot(snapshotName)}
+                    onClick={() => {
+                      if (isProductionBuild)
+                        showModal({
+                          title: 'Are you sure?',
+                          message: `This will overwrite saved snapshot: ${snapshotName} with the current system state`,
+                          onConfirm: async () => {
+                            await takeSnapshot(snapshotName)
+                            showToast({ title: 'Snapshot saved', text: snapshotName })
+                          },
+                        })
+                      else takeSnapshot(snapshotName)
+                    }}
                   />
                 </Table.Cell>
                 <Table.Cell>
@@ -164,7 +189,15 @@ const Snapshots: React.FC = () => {
                     name="download"
                     size="large"
                     className="clickable blue"
-                    onClick={() => downloadSnapshot(snapshotName)}
+                    onClick={async () => {
+                      showToast({ title: 'Download started...', timeout: 2000 })
+                      await downloadSnapshot(snapshotName)
+                      showToast({
+                        title: 'Download complete',
+                        text: snapshotName,
+                        timeout: 30000,
+                      })
+                    }}
                   />
                 </Table.Cell>
                 <Table.Cell textAlign="left">
@@ -172,15 +205,18 @@ const Snapshots: React.FC = () => {
                     size="large"
                     className="clickable"
                     name="trash alternate"
-                    onClick={() => deleteSnapshot(snapshotName)}
+                    onClick={async () => {
+                      await deleteSnapshot(snapshotName)
+                      showToast({ title: 'Snapshot deleted', text: snapshotName })
+                    }}
                   />
                 </Table.Cell>
                 {/* <Icon
-                    className="clickable"
-                    size="big"
-                    name="random"
-                    onClick={() => setCompareFrom(snapshotName)}
-                  /> */}
+                  className="clickable"
+                  size="big"
+                  name="random"
+                  onClick={() => setCompareFrom(snapshotName)}
+                /> */}
               </>
             )}
             {/* {compareFrom !== snapshotName && compareFrom !== '' ? (
@@ -279,6 +315,7 @@ const Snapshots: React.FC = () => {
 
   return (
     <div id="list-container" style={{ width: 400 }}>
+      <ConfirmModal />
       <Header>Snapshots</Header>
       <Table stackable>
         <Table.Body>

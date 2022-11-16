@@ -50,7 +50,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const graphQLEndpoint = applicationData.config.getServerUrl('graphQL')
 
-  const [searchText, setSearchText] = useState('')
+  const [searchText, setSearchText] = useState(
+    displayType === 'input' && !!currentResponse?.selection
+      ? substituteValues(
+          displayFormat.title ?? displayFormat.description,
+          currentResponse.selection[0]
+        )
+      : ''
+  )
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<any[]>([])
   const [selection, setSelection] = useState<any[]>(currentResponse?.selection || [])
@@ -107,7 +114,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     if (!selectedResult) return // Don't select "Loading" item
     if (!multiSelect) setSelection([selectedResult])
     else setSelection([...selection, selectedResult])
-    setSearchText('')
+    setSearchText(
+      displayType === 'input'
+        ? substituteValues(displayFormat.title ?? displayFormat.description, selectedResult)
+        : ''
+    )
   }
 
   const deleteItem = async (index: number) => {
@@ -168,14 +179,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               : createResultsArray(results, resultFormat)
           }
           disabled={!isEditable}
-          input={{ icon: icon, iconPosition: 'left' }}
+          input={{ icon, iconPosition: 'left' }}
           noResultsMessage={strings.MESSAGE_NO_RESULTS}
         />
         {validationState.isValid ? null : (
           <Label pointing prompt content={validationState?.validationMessage} />
         )}
       </Form.Field>
-      <DisplaySelection {...displayProps} />
+      {displayType !== 'input' && <DisplaySelection {...displayProps} />}
     </>
   )
 }
@@ -199,7 +210,7 @@ const getTextFormat = (textFormat: string, selection: any[]): string | undefined
 export interface DisplayProps {
   selection: any[]
   displayFormat: DisplayFormat
-  displayType: 'card' | 'list'
+  displayType: 'card' | 'list' | 'input'
   Markdown: any
   deleteItem?: (index: number) => void
   isEditable?: boolean
@@ -217,7 +228,7 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
   const strings = getPluginStrings('search')
   const { title, subtitle, description } = displayFormat
   const showFallbackString = !title && !subtitle && !description
-  return displayType === 'list' ? (
+  return displayType === 'list' || displayType === 'input' ? (
     <List bulleted={selection.length > 1}>
       {selection.map((item, index) => (
         <ListItem key={index} className="search-list-item">
