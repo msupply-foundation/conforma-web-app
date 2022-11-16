@@ -194,7 +194,7 @@ export const exportTemplate: TemplateOperationHelper = async (
       name: snapshotName,
       options: templateExportOptionName,
     }),
-    getFitlerBody(id),
+    getFilterBody(id),
     setErrorAndLoadingState
   )
 
@@ -202,7 +202,7 @@ export const duplicateTemplate: TemplateOperationHelper = async (
   { id, snapshotName },
   setErrorAndLoadingState
 ) => {
-  const body = getFitlerBody(id)
+  const body = getFilterBody(id)
 
   const result = await safeFetch(
     getServerUrl('snapshot', {
@@ -270,7 +270,7 @@ export const importTemplate: ImportTemplateHelper =
     }
   }
 
-const getFitlerBody = (id: number) => {
+const getFilterBody = (id: number) => {
   const equalToTemplateId = { equalTo: id }
   const allElementsMatchTemplateId = { some: { templateId: equalToTemplateId } }
   const filters = {
@@ -278,6 +278,7 @@ const getFitlerBody = (id: number) => {
       template: { id: equalToTemplateId },
       filter: { templateFilterJoins: allElementsMatchTemplateId },
       permissionName: { templatePermissions: allElementsMatchTemplateId },
+      templateCategory: { templates: { some: { id: { equalTo: id } } } },
     },
   }
   return JSON.stringify(filters)
