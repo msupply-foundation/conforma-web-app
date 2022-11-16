@@ -12,7 +12,7 @@ type EvaluationOutputTypeProps = {
 const EvaluationFallback: React.FC<EvaluationOutputTypeProps> = ({ evaluation, setEvaluation }) => {
   const { fallback } = evaluation.asOperator
 
-  const [fallbackEnabled, setFallbackEnabled] = useState(!!fallback)
+  const [fallbackEnabled, setFallbackEnabled] = useState(fallback !== undefined)
   if (evaluation.type !== 'operator') return null
 
   const setFallback = (fallbackValue?: any) => {
@@ -26,8 +26,21 @@ const EvaluationFallback: React.FC<EvaluationOutputTypeProps> = ({ evaluation, s
     <div className="flex-row-start-center">
       <ComponentLibrary.Checkbox
         title="Enable Fallback"
-        checked={!!fallback}
-        setChecked={() => setFallbackEnabled(!fallbackEnabled)}
+        checked={fallbackEnabled}
+        setChecked={() => {
+          const newState = !fallbackEnabled
+          if (newState)
+            setEvaluation({
+              ...evaluation,
+              asOperator: { ...evaluation.asOperator, fallback: null },
+            })
+          else
+            setEvaluation({
+              ...evaluation,
+              asOperator: { ...evaluation.asOperator, fallback: undefined },
+            })
+          setFallbackEnabled(newState)
+        }}
         minLabelWidth={110}
       />
       {fallbackEnabled && (
