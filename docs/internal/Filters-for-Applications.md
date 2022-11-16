@@ -15,37 +15,19 @@ The `type` is the template code related to the applications type to be listed.
 The `user-role` is used to determine which columns should be displayed.
 In this example the user has **applicant** role. The user-role can only be `applicant` or `reviewer` and is deduced from the permissions that the current user has to view this application type.
 
-## Table of contents
+**Table of contents**
 
 - [Overview](#overview)
 - [Examples: UI Design](#examples-ui-design)
 - [Filters](#filters)
+- [!Filters-values](#)
   - [Label filters:](#label-filters)
-    - [type](#type)
-    - [category (_not yet implemented in schema_)](#category-not-yet-implemented-in-schema)
-    - [stage](#stage)
-    - [status](#status)
-    - [sort-by](#sort-by)
-    - [user-role](#user-role)
-    - [outcome](#outcome)
-  - [applicant action _not implemented_](#applicant-action-not-implemented)
-    - [assigner action](#assigner-action)
-    - [reviewer action](#reviewer-action)
+  - [applicant action](#applicant-action)
   - [String filters:](#string-filters)
-    - [reviewer](#reviewer)
-    - [assigner](#assigner)
-    - [applicant](#applicant)
-    - [org](#org)
-    - [search](#search)
   - [Date filters:](#date-filters)
-    - [last-active-date](#last-active-date)
-    - [deadline-date](#deadline-date)
   - [Number filters:](#number-filters)
-    - [page](#page)
-    - [per-page](#per-page)
   - [Boolean filters](#boolean-filters)
-    - [Is fully assigned level 1](#is-fully-assigned-level-1)
-- [Formats & Rules](#formats-&-rules)
+- [Formats & Rules](#formats--rules)
   - [Pre-defined dates](#pre-defined-dates)
   - [Strings](#strings)
   - [Labels](#labels)
@@ -165,13 +147,20 @@ Options: Set of static `outcome` from `ApplicationOutcome` ENUM
 
 <a name="applicant-action"></a>
 
-### applicant action _not implemented_
+### applicant action
 
-- Applicant:
-  `edit-draft`
-  `make-updates`
-  `renew`
-  `view` (Submitted)
+The applicant actions are simpler and deduces in Front-end based
+on current Application status. 
+Included: **Yes**
+Can have combined values: **No**
+Examples: 
+- `ACTION_UPDATE` meaning some changes for applicant to take care (after reviewed) and re-submit.
+- `ACTION_CONTINUE` meaning application in in Draft - either before submission or after started updating
+
+Options:
+- `ACTION_UPDATE`
+- `ACTION_CONTINUE`
+- Default `VIEW` (Submitted)
 
 <a name="assigner-action"></a>
 
@@ -201,6 +190,7 @@ Options:
 - `SELF_ASSIGN`
 - `START_REVIEW`
 - `CONTINUE_REVIEW`
+- `MAKE_DECISION`
 - `RESTART_REVIEW`
 - `UPDATE_REVIEW`
 - `VIEW_REVIEW`

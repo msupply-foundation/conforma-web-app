@@ -3,11 +3,6 @@
 Please see [ReadMe](__README.md) for information about maintaining this documentation.
 
 ## Contents
-
-### Setup
-
-- [Setup](setup/Setup.md)
-
 ### Overview
 
 - [Overview of Navigation/URL structure](Overview-of-Navigation-&-URL-structure.md)
@@ -20,12 +15,16 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 
 ### Admin
 
-- [Template Builder](Template-Builder.md)
-- [List of Core Actions](List-Core-Actions.md)
-- [Localisation](Localisation.md)
+- [Template Builder](admin/Template-Builder.md)
+- [List of Core Actions](admin/List-Core-Actions.md)
+- [List of Element Types](admin/Element-Type-Specs.md)
+- [Localisation](admin/Localisation.md)
 
 ### Development
 
+- [Setup](setup/Setup.md)
 - [Workflow](Development-Workflow.md)
 - [Sections Structure](Sections-Structure.md)
+- [Toast Notifications](Toast-Notifications.md)
+- [Styles-Guide](Styles-Guide.md)
 - [Back-end Docs](https://github.com/openmsupply/conforma-server/wiki)
