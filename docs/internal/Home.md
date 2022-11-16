@@ -13,12 +13,12 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 - [Assignment Process](Assignment-Process.md)
 - [Actions on Applications](Actions-on-Applications.md)
 
-### Admin
+### Administration
 
-- [Template Builder](admin/Template-Builder.md)
-- [List of Core Actions](admin/List-Core-Actions.md)
-- [List of Element Types](admin/Element-Type-Specs.md)
-- [Localisation](admin/Localisation.md)
+- [Template Builder](config/Template-Builder.md)
+- [List of Core Actions](config/List-Core-Actions.md)
+- [List of Element Types](config/Element-Type-Specs.md)
+- [Localisation](config/Localisation.md)
 
 ### Development
 
