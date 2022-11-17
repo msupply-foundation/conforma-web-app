@@ -187,22 +187,29 @@ export const createApplication: CreateApplicationHelper =
 export const exportTemplate: TemplateOperationHelper = async (
   { id, snapshotName },
   setErrorAndLoadingState
-) =>
-  await safeFetch(
+) => {
+  const result = await safeFetch(
     getServerUrl('snapshot', {
       action: 'take',
       name: snapshotName,
       options: templateExportOptionName,
     }),
-    getFitlerBody(id),
+    getFilterBody(id),
     setErrorAndLoadingState
   )
+
+  // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
+  if (result)
+    safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})
+
+  return result
+}
 
 export const duplicateTemplate: TemplateOperationHelper = async (
   { id, snapshotName },
   setErrorAndLoadingState
 ) => {
-  const body = getFitlerBody(id)
+  const body = getFilterBody(id)
 
   const result = await safeFetch(
     getServerUrl('snapshot', {
@@ -270,7 +277,7 @@ export const importTemplate: ImportTemplateHelper =
     }
   }
 
-const getFitlerBody = (id: number) => {
+const getFilterBody = (id: number) => {
   const equalToTemplateId = { equalTo: id }
   const allElementsMatchTemplateId = { some: { templateId: equalToTemplateId } }
   const filters = {
@@ -278,6 +285,7 @@ const getFitlerBody = (id: number) => {
       template: { id: equalToTemplateId },
       filter: { templateFilterJoins: allElementsMatchTemplateId },
       permissionName: { templatePermissions: allElementsMatchTemplateId },
+      templateCategory: { templates: { some: { id: { equalTo: id } } } },
     },
   }
   return JSON.stringify(filters)
