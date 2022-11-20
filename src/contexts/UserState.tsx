@@ -16,9 +16,7 @@ type OnLogin = (
   JWT: string,
   user?: User,
   templatePermissions?: TemplatePermissions,
-  permissionNames?: string[],
-  orgList?: OrganisationSimple[],
-  isAdmin?: boolean
+  orgList?: OrganisationSimple[]
 ) => void
 
 export type UserActions =
@@ -100,12 +98,12 @@ export function UserProvider({ children }: UserProviderProps) {
     window.location.href = '/login'
   }
 
-  const onLogin: OnLogin = (JWT: string, user, templatePermissions, permissionNames, orgList) => {
+  const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
     if (JWT == 'undefined' || JWT == undefined) logout()
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
-    if (!user || !templatePermissions || !permissionNames)
+    if (!user || !templatePermissions || !user.permissionNames)
       fetchUserInfo({ dispatch: setUserState }, logout)
     else {
       dispatch({
