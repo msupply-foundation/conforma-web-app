@@ -290,14 +290,8 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
     await attemptLoginOrg({ orgId, onLoginOrgSuccess })
   }
 
-  const onLoginOrgSuccess = async ({
-    user,
-    orgList,
-    templatePermissions,
-    JWT,
-    permissionNames,
-  }: LoginPayload) => {
-    await onLogin(JWT, user, templatePermissions, permissionNames, orgList)
+  const onLoginOrgSuccess = async ({ user, orgList, templatePermissions, JWT }: LoginPayload) => {
+    await onLogin(JWT, user, templatePermissions, orgList)
   }
   const dropdownOptions = orgs.map(({ orgId, orgName }) => ({
     key: orgId,
