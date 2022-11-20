@@ -638,7 +638,10 @@ interface User {
   email: string
   dateOfBirth?: Date | null
   organisation?: Organisation
+  permissionNames: string[]
   sessionId: string
+  isAdmin: boolean
+  isManager: boolean
 }
 
 interface OrganisationSimple {

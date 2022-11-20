@@ -8,7 +8,7 @@ const logo = require('../../../images/logos/logo_512.png').default
 const Footer: React.FC = () => {
   const { latestSnapshot } = usePrefs()
   const {
-    userState: { isAdmin },
+    userState: { currentUser },
   } = useUserState()
 
   return (
@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
           The mSupply Foundation
           <br />
           {`v${config.version}`}
-          {isAdmin && (
+          {currentUser?.isAdmin && (
             <>
               <br />
               {latestSnapshot}
