@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+      <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://openmsupply.github.io/conforma-web-app/main.css">
+      
+        <link rel="icon" href="https://msupply.foundation/themes/open-msupply/img/mFlow_favicon.ico">
+      
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+        <title>  | Uses of mFlow </title> 
+    </head>
+    <body>
+
+      
+    <script>
+         fetch('https://github.com/openmsupply/conforma-web-app/releases/tag/B-1.0.0')
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            let release_name = data.name;
+            let html_url = data.html_url;
+            release.innerHTML = `<a href='${html_url}'>${release_name}</a>`;
+          });
+    </script>
+      
+    <main>
+
+      
+
+        <nav>
+          
+            <a href="https:&#x2F;&#x2F;openmsupply.github.io&#x2F;conforma-web-app&#x2F;">
+            <img src="https://msupply.foundation/themes/open-msupply/img/mFlow.svg" alt="" />
+                </a>
+            
+            
+          
+
+          
+            <div id="release"></div>
+          
+  
+  <a href="javascript:void(0);" onclick="burger()" id="mobile" class="ms-Icon--GlobalNavButton"></a>
+    <div id="trees">
+               
+            
+                 
+            
+ 
+        <input class="tree-toggle" type="checkbox" id="getting-started" 
+        checked />
+        <label class="tree-toggle-label" for="getting-started">Getting started</label>
+                        
+        <ul class="subtree">
+                
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/getting-started/introduction/">Introduction</a>
+                                </li>
+
+
+
+                   
+    
+    
+                                <li class="active">
+                                    <a href="https://openmsupply.github.io/conforma-web-app/getting-started/uses-for-mflow/">Uses of mFlow</a>
+                                </li>
+
+
+    
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/">mFlow demo</a>
+                                </li>
+
+
+
+                   
+    
+    
+    </ul>         
+    
+                 
+            
+ 
+        <input class="tree-toggle" type="checkbox" id="reference" 
+         />
+        <label class="tree-toggle-label" for="reference">Reference</label>
+                        
+        <ul class="subtree">
+                
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/reference/forms/">Forms</a>
+                                </li>
+
+
+
+                   
+    
+    
+    </ul>         
+    
+                 
+            
+ 
+        <input class="tree-toggle" type="checkbox" id="developers" 
+         />
+        <label class="tree-toggle-label" for="developers">Developers</label>
+                        
+        <ul class="subtree">
+                
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/developers/dev-intro/">Environment</a>
+                                </li>
+
+
+
+                   
+    
+    
+    </ul>         
+    
+    </div>    
+  </nav>
+    
+
+<article>
+ 
+  
+  <div id="on_right">
+    <span id="search-ico" class="ms-Icon--Search"></span>
+  </div>
+    <div class="search-container">
+          <input id="search" type="search" placeholder="Search as you type...">
+            <div class="search-results">
+              <div class="search-results__header"></div>
+                <ul class="search-results__items"></ul>
+              </div>
+    </div>
+         
+
+  <div id="wrap">
+    
+        <p>The original inspiration for creating mFlow was to provide a low-cost tool to help manage regulatory workflows in the healthcare industry.</p>
+<p>However, mFlow could be used for almost any process that involves an application and a response from an authority.</p>
+<p>Here at <a rel="noopener" target="_blank" href="https://msupply.foundation/about">The mSupply Foundation</a> we’re using mFlow for users to apply for our mSupply accreditation course. </p>
+<p>You could concievably use mFlow to manage:</p>
+<ul>
+<li>Driver license applications.</li>
+<li>Membership applications for a club.</li>
+<li>Job applications.</li>
+<li>Visa applications.</li>
+</ul>
+<p>We don’t want to repeat the whole user guide for you here - we suggest you read the main user guide which is aimed at use in the healthcare regulatory industry, but look at it through the eyes of your own requirements.</p>
+
+    
+  </div>
+
+</article>
+</main>
+
+  
+  <script type="text/javascript" src="https://openmsupply.github.io/conforma-web-app/elasticlunr.min.js" defer></script>
+  <script type="text/javascript" src="https://openmsupply.github.io/conforma-web-app/search_index.en.js" defer></script>
+  <script type="text/javascript" src="https://openmsupply.github.io/conforma-web-app/js.js" defer></script>
+  
+
+</body>
+</html>

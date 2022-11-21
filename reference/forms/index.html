@@ -1,0 +1,928 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+      <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://openmsupply.github.io/conforma-web-app/main.css">
+      
+        <link rel="icon" href="https://msupply.foundation/themes/open-msupply/img/mFlow_favicon.ico">
+      
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+        <title>  | Forms </title> 
+    </head>
+    <body>
+
+      
+    <script>
+         fetch('https://github.com/openmsupply/conforma-web-app/releases/tag/B-1.0.0')
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            let release_name = data.name;
+            let html_url = data.html_url;
+            release.innerHTML = `<a href='${html_url}'>${release_name}</a>`;
+          });
+    </script>
+      
+    <main>
+
+      
+
+        <nav>
+          
+            <a href="https:&#x2F;&#x2F;openmsupply.github.io&#x2F;conforma-web-app&#x2F;">
+            <img src="https://msupply.foundation/themes/open-msupply/img/mFlow.svg" alt="" />
+                </a>
+            
+            
+          
+
+          
+            <div id="release"></div>
+          
+  
+  <a href="javascript:void(0);" onclick="burger()" id="mobile" class="ms-Icon--GlobalNavButton"></a>
+    <div id="trees">
+               
+            
+                 
+            
+ 
+        <input class="tree-toggle" type="checkbox" id="getting-started" 
+         />
+        <label class="tree-toggle-label" for="getting-started">Getting started</label>
+                        
+        <ul class="subtree">
+                
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/getting-started/introduction/">Introduction</a>
+                                </li>
+
+
+
+                   
+    
+    
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/getting-started/uses-for-mflow/">Uses of mFlow</a>
+                                </li>
+
+
+    
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/">mFlow demo</a>
+                                </li>
+
+
+
+                   
+    
+    
+    </ul>         
+    
+                 
+            
+ 
+        <input class="tree-toggle" type="checkbox" id="reference" 
+        checked />
+        <label class="tree-toggle-label" for="reference">Reference</label>
+                        
+        <ul class="subtree">
+                
+                                <li class="active">
+                                    <a href="https://openmsupply.github.io/conforma-web-app/reference/forms/">Forms</a>
+                                </li>
+
+
+
+ 
+
+  
+  
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+        
+      
+    
+  
+    
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+        
+      
+        
+      
+    
+      
+      
+    
+  
+
+  
+      <ul id="toc">
+        
+          <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#understand">Understand</a>
+          
+          <ul>        
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#sections">Sections</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#pages">Pages</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#elements">Elements</a></li>
+            
+         </ul>
+    
+        </li>
+    
+          <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#element-types">Element types</a>
+          
+          <ul>        
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#short-text-input">Short Text Input</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#long-text-multi-line-input">Long Text (Multi-line) Input</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#password-input">Password Input</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#text-information">Text Information</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#image-display">Image Display</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#drop-down-selector">Drop-down Selector</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#radio-buttons">Radio Buttons</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#checkboxes">Checkboxes</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#file-upload">File Upload</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#list-builder-ingredients-list">List Builder (Ingredients list)</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#search-lookup">Search (Lookup)</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#date-picker">Date Picker</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#number">Number</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#page-break">Page Break</a></li>
+            
+         </ul>
+    
+        </li>
+    
+      </ul>
+    
+
+                       
+    
+    
+    </ul>         
+    
+                 
+            
+ 
+        <input class="tree-toggle" type="checkbox" id="developers" 
+         />
+        <label class="tree-toggle-label" for="developers">Developers</label>
+                        
+        <ul class="subtree">
+                
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/developers/dev-intro/">Environment</a>
+                                </li>
+
+
+
+                   
+    
+    
+    </ul>         
+    
+    </div>    
+  </nav>
+    
+
+<article>
+ 
+  
+  <div id="on_right">
+    <span id="search-ico" class="ms-Icon--Search"></span>
+  </div>
+    <div class="search-container">
+          <input id="search" type="search" placeholder="Search as you type...">
+            <div class="search-results">
+              <div class="search-results__header"></div>
+                <ul class="search-results__items"></ul>
+              </div>
+    </div>
+         
+
+  <div id="wrap">
+    
+        <h2 id="understand">Understand&nbsp;<a class="anchor" href="#understand">&#xE732;</a></h2>
+<p>Forms are 1 of the 4 basic components of the mFlow framework. </p>
+<p>Forms can be further divided into 2 sub-components: </p>
+<ul>
+<li>Form Templates</li>
+<li>Form Applications</li>
+</ul>
+<p><strong>Form Templates</strong> comprise of:</p>
+<ul>
+<li>Sections</li>
+<li>Pages</li>
+<li>Elements</li>
+</ul>
+<p>The number of Sections, Pages and Elements that appear in a Form Template can be configured. </p>
+<p><strong>Form Applications</strong> are instances of Form Templates. </p>
+<h3 id="sections">Sections&nbsp;<a class="anchor" href="#sections">&#xE732;</a></h3>
+<p>TBD</p>
+<h3 id="pages">Pages&nbsp;<a class="anchor" href="#pages">&#xE732;</a></h3>
+<p>TBD</p>
+<h3 id="elements">Elements&nbsp;<a class="anchor" href="#elements">&#xE732;</a></h3>
+<p>Elements consist of fields. Fields fall into 2 categories:</p>
+<ul>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#element-common-fields">Common Element fields</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#element-type-fields">Type-specific Element fields</a></li>
+</ul>
+<a name="element-common-fields"/>
+<h4 id="common-fields">Common fields&nbsp;<a class="anchor" href="#common-fields">&#xE732;</a></h4>
+<p>These fields are common to all element types and have their own field in the <code>template_element</code> table.</p>
+<ul>
+<li><strong>id, section_id</strong> : database references</li>
+<li><strong>code</strong>: <code>string</code> – unique (per template) identifier</li>
+<li><strong>index</strong>: <code>integer</code> – element ordering sequence (starting at <code>0</code>)</li>
+<li><strong>title</strong>: <code>string</code> – describes the element, shown in template builder (probably)</li>
+<li><strong>category</strong>: <code>enum</code> – either “Information” or “Question”</li>
+<li><strong>visibility_condition</strong>: <code>JSON</code> – dynamic query determining whether element appears to the user
+<ul>
+<li>default: <code>{&quot;value&quot;: true}</code> (i.e. it always appears)</li>
+</ul>
+</li>
+<li><strong>element_type_plugin_code</strong>: <code>string</code> – code of the question/element plugin that presents this element to the UI</li>
+<li><strong>is_required</strong>: <code>JSON</code> – dynamic query determining whether question is required to be answered
+<ul>
+<li>default: <code>{&quot;value&quot;: true}</code></li>
+</ul>
+</li>
+<li><strong>is_editable</strong>: <code>JSON</code> – dynamic query determining whether can be edited (Would only be false in rare circumstances)
+<ul>
+<li>default: <code>{&quot;value&quot;: true}</code></li>
+</ul>
+</li>
+<li><strong>defaultValue</strong>: <code>JSON</code> - the default value for the response. Can be a dynamic query. Note: several plugins have their own “default” parameter, which may be easier to use in many situations but doesn’t support dynamic lookups. If you need a dynamic value, use this field. For this field, the returned object must conform to the object shape for the respective question type (i.e. it needs a <code>text</code> field) – see individual element types for response shape</li>
+<li><strong>validation</strong>: <code>JSON</code> – a dynamic expression for checking if the user’s response is a valid input.
+<ul>
+<li>default: <code>{&quot;value&quot;: true}</code> or just <code>true</code></li>
+</ul>
+</li>
+<li><strong>validation_message</strong>: <code>string</code> – the message that shows in the UI when validation fails.<br />
+<em>TO-DO: Handle multiple validation criteria with different messages (eg. “Not a valid email”, “Email is not unique”)</em></li>
+<li><strong>parameters</strong>: <code>JSON</code> – the parameters specific to each question/element type. See individual plugins below for parameter breakdown
+<a name="element-type-fields"/></li>
+</ul>
+<h2 id="element-types">Element types&nbsp;<a class="anchor" href="#element-types">&#xE732;</a></h2>
+<ul>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#short-text">Short Text Input</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#long-text">Long Text (Multi-line) Input</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#password">Password</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#text">Text Information</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#image">Image Display</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#dropdown">Drop-down Selector</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#radio">Radio Buttons</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#checkbox">Checkboxes</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#file">File Upload</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#list-builder">List Builder</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#search">Search</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#date-picker">Date Picker</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#number">Number</a></li>
+<li><a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#page">Page Break</a></li>
+</ul>
+<p><strong>Note</strong>: all parameter fields can also have a dynamic query object instead of a primitive. The <a rel="noopener" target="_blank" href="https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax"><code>evaluateExpression</code></a> function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be <em>returned</em> from a query expression.</p>
+<a name="short-text"/>
+<h3 id="short-text-input">Short Text Input&nbsp;<a class="anchor" href="#short-text-input">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>shortText</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>Free-form, single-line text input element</em></p>
+<h4 id="input-parameters-in-the-parameters-json">Input parameters (in the <code>parameters</code> JSON)&nbsp;<a class="anchor" href="#input-parameters-in-the-parameters-json">&#xE732;</a></h4>
+<ul>
+<li><strong>label</strong>: <code>string</code> – Text that shows in the HTML “label” attribute of the form element (Markdown string, with dynamic expression evaluation)</li>
+<li><strong>description</strong>: <code>string</code> – additional explanatory text (usually not required) [Optional]</li>
+<li><strong>placeholder</strong>: <code>string</code>– text to display before user input (HTML “placeholder” attribute) [Optional]</li>
+<li><strong>maskedInput</strong>: <code>boolean</code> – if <code>true</code>, displays user input as masked (hidden) characters – i.e. for passwords. [Optional]</li>
+<li><strong>maxWidth</strong>: <code>number</code> – the maximum width (in pixels) for the text input box (defaults to fill the width of the container)</li>
+<li><strong>maxLength</strong>: <code>number</code> – response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length.<br />
+<em>Note</em>: if you want to show an error state for trying to exceed the maximum, you’ll need to specify a validation expression with a REGEX operator, and the range will need to be one character less than the <code>maxLength</code>, so the error state is triggered. So to set limit of 100 characters, you’d set <code>maxLength</code> to 101 and use the following expression for “validation”:<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>{
+</span><span>operator: &quot;REGEX&quot;
+</span><span>children: [
+</span><span>  {
+</span><span>    operator: &quot;objectProperties&quot;,
+</span><span>    children: [
+</span><span>      &quot;responses.thisResponse&quot;
+</span><span>    ]
+</span><span>  }
+</span><span>  &quot;^[\\\\s\\\\S]{0,100}$&quot;
+</span><span>]
+</span><span>}
+</span></code></pre>
+</li>
+</ul>
+<h4 id="response-type">Response type&nbsp;<a class="anchor" href="#response-type">&#xE732;</a></h4>
+<p><em>This describes the expected object that will be stored in the <code>application_response</code> table <code>value</code> field from the user’s response</em><br />
+<code>{ text: &lt;string&gt; }</code></p>
+<hr />
+<a name="long-text"/>
+<h3 id="long-text-multi-line-input">Long Text (Multi-line) Input&nbsp;<a class="anchor" href="#long-text-multi-line-input">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>longText</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>Free-form, multi-line text input element</em></p>
+<h4 id="input-parameters-in-the-parameters-json-1">Input parameters (in the <code>parameters</code> JSON)&nbsp;<a class="anchor" href="#input-parameters-in-the-parameters-json-1">&#xE732;</a></h4>
+<ul>
+<li><strong>label</strong>: <code>string</code> – Text that shows in the HTML “label” attribute of the form element (Markdown string, with dynamic expression evaluation)</li>
+<li><strong>description</strong>: <code>string</code> – additional explanatory text (usually not required) [Optional]</li>
+<li><strong>placeholder</strong>: <code>string</code>– text to display before user input (HTML “placeholder” attribute) [Optional]</li>
+<li><strong>lines</strong>: <code>number</code> – height of the TextArea input, in number of lines/rows (default: 5)</li>
+<li><strong>maxLength</strong>: <code>number</code> – response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length. (See Note in ShortText above for how to integrate <code>maxLength</code> with validation.)</li>
+</ul>
+<h4 id="response-type-1">Response type&nbsp;<a class="anchor" href="#response-type-1">&#xE732;</a></h4>
+<p><em>This describes the expected object that will be stored in the <code>application_response</code> table <code>value</code> field from the user’s response</em><br />
+<code>{ text: &lt;string&gt; }</code></p>
+<hr />
+<a name="password"/>
+<h3 id="password-input">Password Input&nbsp;<a class="anchor" href="#password-input">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>password</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>Secure password input field, with enter-twice confirmation</em></p>
+<h4 id="input-parameters-in-the-parameters-json-2">Input parameters (in the <code>parameters</code> JSON)&nbsp;<a class="anchor" href="#input-parameters-in-the-parameters-json-2">&#xE732;</a></h4>
+<ul>
+<li><strong>label</strong>: <code>string</code> – Text that shows in the HTML “label” attribute of the form element (Markdown string, with dynamic expression evaluation)</li>
+<li><strong>description</strong>: <code>string</code> – additional explanatory text (usually not required) [Optional]</li>
+<li><strong>placeholder</strong>: <code>string</code>– text to display before user input (HTML “placeholder” attribute) [Optional]</li>
+<li><strong>requireConfirmation</strong> <code>boolean</code> – if <code>true</code>, display a second input field for user to confirm their password (Default: <code>true</code>). The only time you would normally want to set this to <code>false</code> is when using a Password element to <em>check</em> an existing password (by validating it against a <code>/login</code> endpoint, for example), such as in the UserEdit template.</li>
+<li><strong>confirmPlaceholder</strong>: <code>string</code> – text to display as placeholder in the password confirm input field [Default: <code>&quot;Confirm password&quot;</code>]</li>
+<li><strong>maskedInput</strong>: <code>boolean</code> – if <code>true</code>, displays user input as masked (hidden) characters – i.e. for passwords. [Optional – default <code>true</code>]</li>
+<li><strong>showPasswordToggle</strong>: <code>boolean</code> – if <code>true</code>, displays a checkbox to show the masked input as regular text [Optional – default <code>true</code>]</li>
+<li><strong>validationInternal</strong>: <code>JSON</code> – a dynamic expression for checking if the user’s response is a valid input. The validation method must be internal to the plugin (as opposed to the general “validation” field on all plugins) since the password is never exposed to the Wrapper, only the hash, so any checks on its validity must take place in the plugin’s own validation method.</li>
+<li><strong>validationMessageInternal</strong>: <code>string</code> – the message that shows in the UI when validation fails. (For internal validation, as above)</li>
+</ul>
+<p>Note that, as the password itself is never stored (only the hash), this fields input is reset if the page is reloaded.</p>
+<h4 id="response-type-2">Response type&nbsp;<a class="anchor" href="#response-type-2">&#xE732;</a></h4>
+<p><em>This describes the expected object that will be stored in the <code>application_response</code> table <code>value</code> field from the user’s response</em></p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>{
+</span><span>  text: &lt;string&gt; (Only used to display &#39;•••••••&#39; on the summary page)
+</span><span>  hash: &lt;string&gt;
+</span><span>}
+</span></code></pre>
+<hr />
+<a name="text"/>
+<h3 id="text-information">Text Information&nbsp;<a class="anchor" href="#text-information">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>textInfo</code></li>
+<li><strong>category</strong>: <code>Information</code></li>
+</ul>
+<p><em>For displaying blocks of text in the application</em></p>
+<h4 id="input-parameters">Input parameters&nbsp;<a class="anchor" href="#input-parameters">&#xE732;</a></h4>
+<ul>
+<li><strong>title</strong>: <code>string</code> – Heading text to display [Optional]</li>
+<li><strong>text</strong>: <code>string</code> – body text to display</li>
+<li><strong>style</strong>: <code>string</code> – a range of present visual styles [Optional]. Options are: <code>none</code> (default), <code>basic</code>, <code>info</code>, <code>warning</code>, <code>success</code>, <code>positive</code>, <code>error</code>, <code>negative</code><br />
+(see screenshots below)</li>
+<li><strong>newTabLinks</strong>: <code>boolean</code> – <code>true</code> forces any hyperlinks in the Markdown text to open in a new tab [Optional] (default: <code>true</code>)</li>
+</ul>
+<p><strong>Note</strong>: <code>title</code> and <code>text</code> strings support basic <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/Markdown"><strong>Markdown</strong></a> formatting</p>
+<h4 id="style-options">Style options&nbsp;<a class="anchor" href="#style-options">&#xE732;</a></h4>
+<h4 id="style-none-default"><code>style: none</code> (default)&nbsp;<a class="anchor" href="#style-none-default">&#xE732;</a></h4>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-textInfo-none.png" alt="Text Info Style:none" /></p>
+<h4 id="style-basic"><code>style: basic</code>&nbsp;<a class="anchor" href="#style-basic">&#xE732;</a></h4>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-textInfo-basic.png" alt="Text Info Style:basic" /></p>
+<h4 id="style-info"><code>style: info</code>&nbsp;<a class="anchor" href="#style-info">&#xE732;</a></h4>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-textInfo-info.png" alt="Text Info Style:info" /></p>
+<h4 id="style-warning"><code>style: warning</code>&nbsp;<a class="anchor" href="#style-warning">&#xE732;</a></h4>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-textInfo-warning.png" alt="Text Info Style:warning" /></p>
+<h4 id="style-success"><code>style: success</code>&nbsp;<a class="anchor" href="#style-success">&#xE732;</a></h4>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-textInfo-success.png" alt="Text Info Style:success" /></p>
+<h4 id="style-positive"><code>style: positive</code>&nbsp;<a class="anchor" href="#style-positive">&#xE732;</a></h4>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-textInfo-positive.png" alt="Text Info Style:positive" /></p>
+<h4 id="style-error"><code>style: error</code>&nbsp;<a class="anchor" href="#style-error">&#xE732;</a></h4>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-textInfo-error.png" alt="Text Info Style:error" /></p>
+<h4 id="style-negative"><code>style: negative</code>&nbsp;<a class="anchor" href="#style-negative">&#xE732;</a></h4>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-textInfo-negative.png" alt="Text Info Style:negative" /></p>
+<hr />
+<a name="image"/>
+<h3 id="image-display">Image Display&nbsp;<a class="anchor" href="#image-display">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>imageDisplay</code></li>
+<li><strong>category</strong>: <code>Information</code></li>
+</ul>
+<p><em>For displaying images in applications</em></p>
+<h4 id="input-parameters-1">Input parameters&nbsp;<a class="anchor" href="#input-parameters-1">&#xE732;</a></h4>
+<ul>
+<li><strong>label</strong>: <code>string</code> – Label for image (above) [Optional]</li>
+<li><strong>description</strong>: <code>string</code> – Detailed text [Optional]</li>
+<li><strong>url</strong>: <code>string</code> – URL of the source image file</li>
+<li><strong>size</strong>: <code>string</code> – From SemanticUI “size” parameter, one of the following values: <code>mini</code>, <code>tiny</code>, <code>small</code>, <code>medium</code>, <code>large</code>, <code>big</code>, <code>huge</code>, <code>massive</code> (default <code>medium</code>)</li>
+<li><strong>alignment</strong>: <code>string</code> – one of <code>left</code>, <code>center</code>, <code>right</code> (default <code>left</code>)</li>
+<li><strong>altText</strong>: <code>string</code> – text for the HTML <code>alt</code> and <code>title</code> attributes (will show as tool-tip) [Optional]</li>
+</ul>
+<hr />
+<a name="dropdown"/>
+<h3 id="drop-down-selector">Drop-down Selector&nbsp;<a class="anchor" href="#drop-down-selector">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>dropdownChoice</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>Multi-choice question, with one allowed option, displayed as Drop-down list (Combo-box)</em></p>
+<h4 id="input-parameters-2">Input parameters&nbsp;<a class="anchor" href="#input-parameters-2">&#xE732;</a></h4>
+<ul>
+<li><strong>label</strong>: <code>string</code> – as above</li>
+<li><strong>description</strong>: <code>string</code> – as above [Optional]</li>
+<li><strong>options</strong>: <code>array[string | object]</code> – array of options for the user to select from. If an array of <strong>strings</strong> is provided, these strings will be displayed to the user. However, if an array of <strong>objects</strong> is provided, you will also need to specify an <code>optionsDisplayProperty</code> (see below)</li>
+<li><strong>default</strong>: <code>string</code>/<code>number</code> – if not provided, defaults to index 0.</li>
+<li><strong>search</strong>: <code>boolean</code> (default: <code>false</code>) – if <code>true</code>, the list of options can be searched and filtered by user</li>
+<li><strong>optionsDisplayProperty</strong>: If <code>options</code> (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if <code>options</code> was a list of organisation objects (i.e. <code>{orgId, name, licenceNumber}</code>), you’d probably specify <code>name</code> as the <code>optionsDisplayProperty</code>. Note that even though one field is displayed to the user in the Dropdown list, the <em>entire</em> selected object is saved as the selection. And if <code>optionsDisplayProperty</code> refers to a field that doesn’t exist on the supplied object, the plugin will fail and show in error in the application.</li>
+<li><del><strong>hasOther</strong>: <code>boolean</code> – if <code>true</code>, an additional text-entry field is provided so the user can add their own alternative option <em>(not yet implemented)</em></del></li>
+</ul>
+<h4 id="response-type-3">Response type&nbsp;<a class="anchor" href="#response-type-3">&#xE732;</a></h4>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>{
+</span><span>  optionIndex: &lt;integer&gt; (index from the options array)
+</span><span>  text: &lt;string&gt; (actual text from options array)
+</span><span>  selection: &lt;string | object&gt; (entire object or string from the supplied options list)
+</span><span>}
+</span><span>
+</span></code></pre>
+<hr />
+<a name="radio"/>
+<h3 id="radio-buttons">Radio Buttons&nbsp;<a class="anchor" href="#radio-buttons">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>radioChoice</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>Multi-choice question, with one allowed selection, displayed as labelled radio buttons</em></p>
+<h4 id="input-parameters-3">Input parameters&nbsp;<a class="anchor" href="#input-parameters-3">&#xE732;</a></h4>
+<ul>
+<li>
+<p><strong>label</strong>: <code>string</code> – as above</p>
+</li>
+<li>
+<p><strong>description</strong>: <code>string</code> – as above [Optional]</p>
+</li>
+<li>
+<p><strong>options</strong>: <code>array[string | object]</code> – as above (in <a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#dropdown">Drop-down</a>)</p>
+</li>
+<li>
+<p><strong>default</strong>: <code>string</code>/<code>number</code> – the value initially selected before user input. If <code>number</code>, refers to the index of the options array. If not provided, no options will be pre-selected.</p>
+</li>
+<li>
+<p><strong>optionsDisplayProperty</strong>: – as above (in Drop-down)</p>
+</li>
+<li>
+<p><strong>layout</strong>: <code>string</code> – if “inline”, displays radio buttons horizontally, rather than stacked vertically (default)</p>
+</li>
+<li>
+<p><strong>hasOther</strong>: <code>boolean</code> (default <code>false</code>) – if <code>true</code>, displays an additional “Other” option with a free text field for inputting additional user-defined option.</p>
+</li>
+<li>
+<p><strong>otherPlaceholder</strong>: <code>string</code> – placeholder text to show in the text input if <code>hasOther</code> is enabled.</p>
+<p><strong>Note</strong>: if including an “Other” options, then <code>options</code> should only be an array of strings, or else you’ll be mixing objects with strings, which will cause problems. In other words, you should never have both <code>optionsDisplayProperty</code> and <code>hasOther</code> defined in the same question element.</p>
+</li>
+</ul>
+<h4 id="response-type-4">Response type&nbsp;<a class="anchor" href="#response-type-4">&#xE732;</a></h4>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>{
+</span><span>  optionIndex: &lt;integer&gt; (index from the options array)
+</span><span>  text: &lt;string&gt; (actual text from options array)
+</span><span>  selection: &lt;string | object&gt; (entire object or string from the supplied options list)
+</span><span>  other: &lt;boolean&gt; (`true` if &quot;Other&quot; has been selected)
+</span><span>}
+</span><span>
+</span></code></pre>
+<hr />
+<a name="checkbox"/>
+<h3 id="checkboxes">Checkboxes&nbsp;<a class="anchor" href="#checkboxes">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>checkbox</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>One or more checkboxes, any number of which can be selected/toggled</em></p>
+<h4 id="input-parameters-4">Input parameters&nbsp;<a class="anchor" href="#input-parameters-4">&#xE732;</a></h4>
+<ul>
+<li><strong>label</strong>: <code>string</code> – as above</li>
+<li><strong>description</strong>: <code>string</code> – as above [Optional]</li>
+<li><strong>checkboxes</strong>: <code>array[string | checkbox]</code> – an array of labels, one per checkbox. For more complexity, an array of Checkbox objects can be provided, with the following properties:</li>
+</ul>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>
+</span><span>{
+</span><span>  label: &lt;string&gt; - text to display next to checkbox (Can be empty string but not omitted)
+</span><span>  text: &lt;string&gt; - value to store in Response &quot;text&quot; field and shown in Summary View. Will be same as label if omitted.
+</span><span>  textNegative: &lt;string&gt; - value to store in Response &quot;text&quot; field if checkbox is un-selected. (Optional -- defaults to empty string)
+</span><span>  key: &lt;string | number&gt; - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
+</span><span>  selected: &lt;boolean&gt; - initial state of checkbox
+</span><span>}
+</span><span>
+</span></code></pre>
+<ul>
+<li><strong>type</strong>: <code>string</code> – Can be “toggle” to display as a toggle switch, or “slider” to display as a slider switch (defaults to regular checkbox).</li>
+<li><strong>layout</strong>: <code>string</code> – if “inline”, displays checkboxes horizontally in rows. Useful if there are a lot of checkboxes.</li>
+</ul>
+<h4 id="response-type-5">Response type&nbsp;<a class="anchor" href="#response-type-5">&#xE732;</a></h4>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>
+</span><span>{
+</span><span>    text: &lt;string&gt; -- comma separated list of all selected checkbox &quot;text&quot; values, shown in Summary view (or Review)
+</span><span>    values: {
+</span><span>        &lt;key-name-1&gt; : { text: &lt;text value&gt;, isSelected: &lt;boolean&gt;}
+</span><span>        &lt;key-name-2&gt; : { text: &lt;text value&gt;, isSelected: &lt;boolean&gt;}
+</span><span>        ... for all checkbox keys
+</span><span>        }
+</span><span>    selectedValuesArray: [
+</span><span>      &lt;checkbox elements -- same as the values above but filtered for selected-only&gt;
+</span><span>    ]
+</span><span>}
+</span><span>
+</span></code></pre>
+<hr />
+<a name="file"/>
+<h3 id="file-upload">File Upload&nbsp;<a class="anchor" href="#file-upload">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>fileUpload</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>Interface for uploading documents or other files</em></p>
+<h4 id="input-parameters-5">Input parameters&nbsp;<a class="anchor" href="#input-parameters-5">&#xE732;</a></h4>
+<ul>
+<li><strong>label</strong>: <code>string</code> – as above</li>
+<li><strong>description</strong>: <code>string</code> – as above [Optional]</li>
+<li><strong>fileCountLimit</strong>: <code>number</code> – maximum number of files allowed to upload for this question (default: 1)</li>
+<li><strong>fileExtensions</strong>: <code>array[string]</code> – list of allowed file extensions (default: no restrictions). e.g. <code>[&quot;pdf&quot;, &quot;doc&quot;, &quot;txt&quot;, &quot;jpg&quot;, &quot;png&quot;]</code></li>
+<li><strong>fileSizeLimit</strong>: <code>number</code> – maximum file size in KB (default: no limit)</li>
+</ul>
+<h4 id="response-type-6">Response type&nbsp;<a class="anchor" href="#response-type-6">&#xE732;</a></h4>
+<p>Response object is populated after file upload, based on the server response. Note: only successful uploads are included in the response. Error files or files currently loading are displayed in the UI but filtered out before saving.</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>
+</span><span>{
+</span><span>  text: &lt;string&gt; -- comma separated list of all filenames
+</span><span>  files: [
+</span><span>    {
+</span><span>      filename: &lt;string&gt;
+</span><span>      fileUrl: &lt;string&gt;
+</span><span>      thumbnailUrl: &lt;string&gt;
+</span><span>      mimetype: &lt;string&gt;
+</span><span>    },
+</span><span>    ...
+</span><span>  ]
+</span><span>}
+</span><span>
+</span></code></pre>
+<hr />
+<a name="list-builder"/>
+<h3 id="list-builder-ingredients-list">List Builder (Ingredients list)&nbsp;<a class="anchor" href="#list-builder-ingredients-list">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>listBuilder</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>Allows user to build a list of items, such as an <strong>Ingredients List</strong></em></p>
+<h4 id="input-parameters-6">Input parameters&nbsp;<a class="anchor" href="#input-parameters-6">&#xE732;</a></h4>
+<ul>
+<li>
+<p><strong>label</strong>: <code>string</code> – as above</p>
+</li>
+<li>
+<p><strong>description</strong>: <code>string</code> – as above [Optional]</p>
+</li>
+<li>
+<p><strong>createModalButtonText</strong> <code>string</code> – text to display on the button to launch the new item interface (modal) (default: “Add item”)</p>
+</li>
+<li>
+<p><strong>addButtonText</strong> <code>string</code> – text to display on the button to add a new item from the item editing modal (default: “Add”)</p>
+</li>
+<li>
+<p><strong>updateButtonText</strong> <code>string</code> – text to display on the button to update an existing item from the item editing modal (default: “Update”)</p>
+</li>
+<li>
+<p><strong>deleteItemText</strong> <code>string</code> – text to display on the button to delete an item from the item editing modal (default: “Update”)<br />
+Note: this button only appears when displaying the list in “Table” view (see below). In “Cards” view, there is an icon to delete items directly on each card.</p>
+</li>
+<li>
+<p><strong>modalText</strong> <code>string</code> – additional instructional text to show on the item editing modal (e.g. “Please enter ingredient details”) [Optional]</p>
+</li>
+<li>
+<p><strong>inputFields</strong> <code>array[Elements]</code> – an ordered list of input fields – these are template questions/elements, just like all the ones on this page, but are “children” of the listBuilder element and display in the item editing modal. Not all fields are required or respected:</p>
+<ul>
+<li><code>index</code> – not required, order follows listed order</li>
+<li><code>visibility_condition</code> / <code>is_editable</code> – not required, always <code>true</code> (for now, may be implemented later)</li>
+<li><code>parameters</code>, <code>title</code>, and <code>code</code> are essential</li>
+</ul>
+</li>
+<li>
+<p><strong>displayType</strong> <code>string</code> (must be either <code>table</code> or <code>cards</code> (default)) – how to present the list of items, as shown here:</p>
+<ul>
+<li>
+<p><strong>table</strong> view:</p>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-listBuilder-table-view.png" alt="Table view" /></p>
+<p>For table view, the column headers are taken from the <strong>title</strong> fields of each element</p>
+</li>
+<li>
+<p><strong>card</strong> view:</p>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-listBuilder-card-view.png" alt="Table view" /></p>
+<p>The display string(s) for card view are defined in the <code>displayFormat</code> field (below)</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>displayFormat</strong> <code>object</code> (only relevant for <strong>card</strong> view) – defines how to present the input information on the displayed cards. The object defines three fields, representing the Title/Heading (<code>title</code>), the Subheading (<code>subtitle</code>) and Body (<code>description</code>).<br />
+Each is a <strong>Markdown</strong> formatted string, with the values to be substituted from the input <code>text</code> values represented by their element <code>code</code> wrapped in <code>${...}</code>. An example <code>displayFormat</code> object representing the card layout shown above is:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>{
+</span><span>  title: &quot;\${LB1}&quot;
+</span><span>  subtitle: &quot;\${LB2}&quot;
+</span><span>  description: &quot;**Quantity**: \${LB4} \${LB5}  \\n
+</span><span>      **Substance present?**: \${LB3}  \\n**Type**: \${LB6}&quot;
+</span><span>}
+</span></code></pre>
+<p>where <code>LB1</code>…<code>LB6</code> are the element codes from the template. (Note, also, the additional escape <code>\</code> characters required if used inside a GraphQL query string)</p>
+<p>If a <code>displayFormat</code> parameter is not specified, the card view will just show a simplified list of fields representing <code>title: value</code> for each input.</p>
+</li>
+</ul>
+<h4 id="response-type-7">Response type&nbsp;<a class="anchor" href="#response-type-7">&#xE732;</a></h4>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>
+</span><span>{
+</span><span>  list: [
+</span><span>    {
+</span><span>      &lt;code&gt; : {
+</span><span>                value: &lt;Response object (text, etc, as per other elements)&gt;,
+</span><span>                isValid: &lt;boolean&gt;
+</span><span>                },
+</span><span>                ...
+</span><span>    },
+</span><span>    ...
+</span><span>  ],
+</span><span>  text: &lt;simple text representation of a list of comma-seperated
+</span><span>        &quot;title: value&quot; rows&gt;
+</span><span>}
+</span><span>
+</span></code></pre>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>the <code>text</code> value is never actually presented to the user.</li>
+<li>the <code>isValid</code> field should always be <code>true</code> when the response is saved, since items won’t be permitted to be added to the list if all input fields are not valid. There is currently no additional validity checking of the reponses after they’ve been entered into the list, although this might be improved in future.</li>
+</ul>
+<hr />
+<a name="search"/>
+<h3 id="search-lookup">Search (Lookup)&nbsp;<a class="anchor" href="#search-lookup">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>search</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>Live “search-as-you-type” lookups for user to find and select items</em></p>
+<p>Search results show in pop-up below the search box:</p>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-search-results.png" alt="Search results" /></p>
+<p>Once selected, items are displayed in a “card” view:</p>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-search-selected.png" alt="Search results" /></p>
+<h4 id="input-parameters-7">Input parameters&nbsp;<a class="anchor" href="#input-parameters-7">&#xE732;</a></h4>
+<ul>
+<li>
+<p><strong>label</strong>: <code>string</code> – as above</p>
+</li>
+<li>
+<p><strong>description</strong>: <code>string</code> – as above [Optional]</p>
+</li>
+<li>
+<p><strong>placeholder</strong>: <code>string</code> – text to show in search field before user input (default: “Search…”)</p>
+</li>
+<li>
+<p><strong>source</strong>: <code>EvaluatorExpression</code> – query to retrieve results for user selection. In order to make this dynamic in response to user input, there should be at least one input node that uses an <code>objectProperties</code> operator to fetch user input. In this case, user input is contained within a special object named <code>search</code>, and can be acquired with the following query node:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>{
+</span><span>  operator: &quot;objectProperties&quot;,
+</span><span>  children: [ &quot;search.text&quot; ]
+</span><span>}
+</span></code></pre>
+</li>
+<li>
+<p><strong>icon</strong>: <code>string</code> – the name of the icon shown in the search box, from Semantic-UI icons. (default: “search” : 🔍 )</p>
+</li>
+<li>
+<p><strong>multiSelect</strong>: <code>boolean</code> – whether or not the user can select multiple items for their response (default: <code>false</code>)</p>
+</li>
+<li>
+<p><strong>minCharacters</strong>: <code>number</code> – the minimum number of characters the user must type before the search query executes (default: 1). This is useful in situations where need the user to look up a specific item without being able to freely browse through the entire results list. For example, to look up organisation in our system using “registration” code, we set <code>minCharacters = 6</code>, so the user will need to know an exact code rather than being able to try characters one at a time.</p>
+</li>
+<li>
+<p><strong>displayFormat</strong>: <code>object</code> – defines how to display the search results and the user’s selection cards. See <code>displayFormat</code> for the <a href="https://openmsupply.github.io/conforma-web-app/reference/forms/#list-builder">List Builder</a> (above) for detailed explanation. In this case, however, instead of a <code>code</code> substitution, the display string should contain property names from the result object. For example:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>displayFormat: {
+</span><span>  title: &quot;\${firstName} \${lastName}&quot;
+</span><span>  description: &quot;\${username}&quot;
+</span><span>}
+</span></code></pre>
+<p>If not specified, a generic “default” display will be shown, using the first 1-2 properties on the result object.</p>
+</li>
+<li>
+<p><strong>resultFormat</strong>: <code>object</code> – same as <code>displayFormat</code>, but used when specifying a format for the “result” display that is different to the selection card display. If not specified, <code>resultFormat</code> will just be the same as <code>displayFormat</code>.
+Note that for the “result” display, only the <code>title</code> and <code>description</code> fields are used (<code>subtitle</code> is not shown).</p>
+</li>
+<li>
+<p><strong>textFormat</strong> <code>string</code> – a formatting substitution string like the above, to be generate the “text” value in the response. Note: currently the only place this text value is ever seen by the user is if it’s used inside a listBuilder table (optional)</p>
+</li>
+</ul>
+<h4 id="response-type-8">Response type&nbsp;<a class="anchor" href="#response-type-8">&#xE732;</a></h4>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>
+</span><span>{
+</span><span>  selection: [ { &lt;result object&gt; }, ... ],
+</span><span>  text: &lt;JSON string representation of &quot;selection&quot;&gt;
+</span><span>}
+</span><span>
+</span></code></pre>
+<hr />
+<a name="date-picker"/>
+<h3 id="date-picker">Date Picker&nbsp;<a class="anchor" href="#date-picker">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>datePicker</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>A date picker for entering standardised dates or date ranges</em></p>
+<p><img src="https://openmsupply.github.io/conforma-web-app/reference/forms/Element-Type-Specs-date-picker.png" alt="Date picker" /></p>
+<p>Uses <a rel="noopener" target="_blank" href="https://www.npmjs.com/package/react-semantic-ui-datepickers">React Semantic-UI Datepickers</a></p>
+<h4 id="input-parameters-8">Input parameters&nbsp;<a class="anchor" href="#input-parameters-8">&#xE732;</a></h4>
+<ul>
+<li><strong>label</strong>: <code>string</code> – as above</li>
+<li><strong>description</strong>: <code>string</code> – as above [Optional]</li>
+<li><strong>default</strong>: <code>(ISO) string</code> – a pre-selected date [Optional]</li>
+<li><strong>allowRange</strong>: <code>boolean</code> – if <code>true</code>, input is expected to be a date <em>range</em> (a start and end date). Default: <code>false</code> (i.e. can only enter single date)</li>
+<li><strong>minDate</strong>/<strong>maxDate</strong>: <code>(ISO) string</code> – specifies how far into the future or past the selector can go</li>
+<li><strong>minAge</strong>/<strong>maxAge</strong>: <code>(ISO) string</code> – same as above, but a number (in years) relative to the <em>current</em> date. For example, if an applicant was required to be over 18 years old, you’d set <code>minAge</code> to <code>18</code>.</li>
+<li><strong>locale</strong>: <code>string</code> – specifies the international “locale” code (e.g <code>'ja-JP'</code>) for displaying the calendar in local format. Default is <code>'en-US'</code>.</li>
+<li><strong>displayFormat</strong>: <code>string</code> – how to present the date when written as text (e.g. in Summary view). Uses <a rel="noopener" target="_blank" href="https://moment.github.io/luxon/#/formatting">Luxon</a> shorthand – options are: <code>short</code>, <code>med</code>, <code>medWeekday</code>, <code>full</code>, <code>huge</code>. Will format according to the international stanard specified in <code>locale</code>. Default: <code>short</code></li>
+<li><strong>entryFormat</strong>: <code>string</code> – date format to expect when user enters a date manually (rather then selecting from the picker) in <a rel="noopener" target="_blank" href="https://date-fns.org/v1.29.0/docs/format">date-fns</a> format. Default is <code>YYYY-MM-DD</code></li>
+<li><strong>firstDayOfWeek</strong>: <code>string</code> – self explanatory, default is “Sunday”</li>
+</ul>
+<h4 id="response-type-9">Response type&nbsp;<a class="anchor" href="#response-type-9">&#xE732;</a></h4>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>{
+</span><span>  text: &lt;text format of date (range) as specified in &quot;displayFormat&quot;&gt;
+</span><span>  date: {
+</span><span>     start: &lt;ISO YYYY-MM-DD date&gt;
+</span><span>     end?:  &lt;ISO YYYY-MM-DD date&gt;
+</span><span>  }
+</span></code></pre>
+<p>Note, if response is a single date (i.e. not a range), only <code>start</code> will be specified.</p>
+<hr />
+<a name="number"/>
+<h3 id="number">Number&nbsp;<a class="anchor" href="#number">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>number</code></li>
+<li><strong>category</strong>: <code>Question</code></li>
+</ul>
+<p><em>Input for numeric fields</em></p>
+<h4 id="input-parameters-9">Input parameters&nbsp;<a class="anchor" href="#input-parameters-9">&#xE732;</a></h4>
+<ul>
+<li><strong>label</strong> / <strong>description</strong> / <strong>placeholder</strong> / <strong>maxWidth</strong>: <code>string</code> – as above</li>
+<li><strong>default</strong> – default value (Note: if you require a dynamic value for “default”, please use the “defaultValue” field on <code>template_element</code>)</li>
+<li><strong>type</strong> – <code>enum</code> – either “integer” or “float” (default: “integer”)</li>
+<li><strong>simple</strong> – <code>boolean</code> (default: <code>true</code>) If <code>true</code>, the input field will always show only a non-formatted version of the number (i.e. “1000”, not “1,000”), but it will have a “stepper” which can be clicked to increment the number up and down.</li>
+<li><strong>minValue</strong> – minimum allowed value (default: no limit)</li>
+<li><strong>maxValue</strong> – maximum allowed value (default: no limit)</li>
+<li><strong>step</strong> – <code>number</code> (default: <code>1</code>) If <code>simple == true</code> (above), the <code>step</code> value specifies the amount the number will be incremented or decremented by when using the stepper.
+<strong>NOTE</strong>: The parameters below are only relevant is <code>simple == false</code> (above)</li>
+<li><strong>locale</strong> – <code>string</code> specifies the international “locale” code (e.g <code>'ja-JP'</code>) for displaying the calendar in local format. Default is the local setting.</li>
+<li><strong>currency</strong> – <code>string</code> If specified, number will be formatted as a currency value (e.g. $4.95). Should be specified in ISO4217 country code format (e.g. “USD”, “JPY”) See: <a rel="noopener" target="_blank" href="https://www.iban.com/currency-codes">https://www.iban.com/currency-codes</a></li>
+<li><strong>maxSignificantDigits</strong> – <code>number</code> If specified, number will be rounded to the specified number of significant figures</li>
+<li><strong>prefix</strong> / <strong>suffix</strong> – <code>string</code> If specified, formatted number will include these values in the string. Useful if you want to define units with the input number (e.g. <code>12 km</code>)</li>
+</ul>
+<h4 id="response-type-10">Response type&nbsp;<a class="anchor" href="#response-type-10">&#xE732;</a></h4>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>{
+</span><span>  text: &lt;Formatted version of number (as specifed in parameters)&gt;
+</span><span>  number: &lt;number&gt;
+</span><span>  type: &lt;integer | float&gt;
+</span><span>}
+</span></code></pre>
+<hr />
+<a name="page"/>
+<h3 id="page-break">Page Break&nbsp;<a class="anchor" href="#page-break">&#xE732;</a></h3>
+<ul>
+<li><strong>type/code</strong>: <code>pageBreak</code></li>
+<li><strong>category</strong>: <code>Information</code></li>
+</ul>
+<p><em>For specifying where the list of questions is broken into UI pages/steps. The <strong>previous</strong> question of this element will be the <strong>last</strong> element on a page</em></p>
+
+    
+  </div>
+
+</article>
+</main>
+
+  
+  <script type="text/javascript" src="https://openmsupply.github.io/conforma-web-app/elasticlunr.min.js" defer></script>
+  <script type="text/javascript" src="https://openmsupply.github.io/conforma-web-app/search_index.en.js" defer></script>
+  <script type="text/javascript" src="https://openmsupply.github.io/conforma-web-app/js.js" defer></script>
+  
+
+</body>
+</html>

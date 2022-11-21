@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+      <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://openmsupply.github.io/conforma-web-app/main.css">
+      
+        <link rel="icon" href="https://msupply.foundation/themes/open-msupply/img/mFlow_favicon.ico">
+      
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+        <title>  | mFlow demo </title> 
+    </head>
+    <body>
+
+      
+    <script>
+         fetch('https://github.com/openmsupply/conforma-web-app/releases/tag/B-1.0.0')
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            let release_name = data.name;
+            let html_url = data.html_url;
+            release.innerHTML = `<a href='${html_url}'>${release_name}</a>`;
+          });
+    </script>
+      
+    <main>
+
+      
+
+        <nav>
+          
+            <a href="https:&#x2F;&#x2F;openmsupply.github.io&#x2F;conforma-web-app&#x2F;">
+            <img src="https://msupply.foundation/themes/open-msupply/img/mFlow.svg" alt="" />
+                </a>
+            
+            
+          
+
+          
+            <div id="release"></div>
+          
+  
+  <a href="javascript:void(0);" onclick="burger()" id="mobile" class="ms-Icon--GlobalNavButton"></a>
+    <div id="trees">
+               
+            
+                 
+            
+ 
+        <input class="tree-toggle" type="checkbox" id="getting-started" 
+        checked />
+        <label class="tree-toggle-label" for="getting-started">Getting started</label>
+                        
+        <ul class="subtree">
+                
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/getting-started/introduction/">Introduction</a>
+                                </li>
+
+
+
+                   
+    
+    
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/getting-started/uses-for-mflow/">Uses of mFlow</a>
+                                </li>
+
+
+    
+                                <li class="active">
+                                    <a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/">mFlow demo</a>
+                                </li>
+
+
+
+ 
+
+  
+  
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+  
+    
+    
+  
+    
+    
+      
+      
+    
+      
+      
+    
+  
+
+  
+      <ul id="toc">
+        
+          <li><a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#introduction">Introduction</a>
+          
+          <ul>        
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#1-create-a-user-account">1. Create a user account</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#2-register-a-company">2. Register a company</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#3-apply-for-a-licence-for-your-company-to-register-products">3. Apply for a licence for your company to register products</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#4-apply-to-register-a-product">4. Apply to register a product</a></li>
+            
+         </ul>
+    
+        </li>
+    
+          <li><a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#other-utilities">Other utilities</a>
+          
+        </li>
+    
+          <li><a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#reviewer-experience">Reviewer experience</a>
+          
+          <ul>        
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#reviewer-accounts">Reviewer accounts</a></li>
+            
+            <li><a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#review-stages-for-each-application-type">Review stages for each application type</a></li>
+            
+         </ul>
+    
+        </li>
+    
+      </ul>
+    
+
+                       
+    
+    
+    </ul>         
+    
+                 
+            
+ 
+        <input class="tree-toggle" type="checkbox" id="reference" 
+         />
+        <label class="tree-toggle-label" for="reference">Reference</label>
+                        
+        <ul class="subtree">
+                
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/reference/forms/">Forms</a>
+                                </li>
+
+
+
+                   
+    
+    
+    </ul>         
+    
+                 
+            
+ 
+        <input class="tree-toggle" type="checkbox" id="developers" 
+         />
+        <label class="tree-toggle-label" for="developers">Developers</label>
+                        
+        <ul class="subtree">
+                
+                                <li >
+                                    <a href="https://openmsupply.github.io/conforma-web-app/developers/dev-intro/">Environment</a>
+                                </li>
+
+
+
+                   
+    
+    
+    </ul>         
+    
+    </div>    
+  </nav>
+    
+
+<article>
+ 
+  
+  <div id="on_right">
+    <span id="search-ico" class="ms-Icon--Search"></span>
+  </div>
+    <div class="search-container">
+          <input id="search" type="search" placeholder="Search as you type...">
+            <div class="search-results">
+              <div class="search-results__header"></div>
+                <ul class="search-results__items"></ul>
+              </div>
+    </div>
+         
+
+  <div id="wrap">
+    
+        <h2 id="introduction">Introduction&nbsp;<a class="anchor" href="#introduction">&#xE732;</a></h2>
+<p>Demo can be accessed at: <a rel="noopener" target="_blank" href="https://irims-demo.msupply.org:50000/">https://irims-demo.msupply.org:50000/</a></p>
+<p>This demo allows you to use the <strong>Conforma</strong> system to experience the following workflow:</p>
+<ol>
+<li>
+<p><strong>Create a user account</strong></p>
+<p>This is an automated process that requires email verification.</p>
+</li>
+<li>
+<p><strong>Register a company</strong></p>
+<p>A reviewer will approve this application, which will create your organisation in the system.</p>
+</li>
+<li>
+<p><strong>Apply for a licence for your company to register products</strong></p>
+<p>This will require 2 levels of review – an initial screening, and an an assessment by a more senior reviewer. You will receive a PDF licence and permission to register a product (for 3 days)</p>
+</li>
+<li>
+<p><strong>Register a product</strong></p>
+<p>This requires a full review process:</p>
+</li>
+</ol>
+<ul>
+<li>initial screening</li>
+<li>assessment by senior reviewer</li>
+<li>consolidation of review (this means a more senior staff member comments on and approves the review before it gets sent back to the applicant)</li>
+<li>a final decision by a chief, who can over-rule lower-level review decisions if they see fit</li>
+</ul>
+<p>For the purposes of this demo, you can switch to alternative “reviewer” accounts to review the applications (more on that <a href="https://openmsupply.github.io/conforma-web-app/getting-started/demo/#reviewer-experience">below</a>).</p>
+<h3 id="1-create-a-user-account">1. Create a user account&nbsp;<a class="anchor" href="#1-create-a-user-account">&#xE732;</a></h3>
+<p>At the login screen, click “Create new account”. Fill in the registration form and submit your application. You should receive an email with a link to verify your email address. On verification, your user account will be created and you’ll be able to log in.</p>
+<h3 id="2-register-a-company">2. Register a company&nbsp;<a class="anchor" href="#2-register-a-company">&#xE732;</a></h3>
+<p>After logging in, you’ll arrive at the <strong>Dashboard</strong> screen. The dashboard is essentially a “home” page where you can see a summary of your current applications, things that require action, and links to start new applications. At this point, the only application you have permission to start is “Company Registration”.</p>
+<p>Click “Start a new Company Registration”, fill in the application form, and submit.</p>
+<p>Your application now has to be reviewed. In the meantime, you can see its status on the Dashboard, or from the <strong>Applications List</strong>, which can be accessed from the main menu bar (select “Company Registration” from the Dropdown menu)</p>
+<p>Once it has been reviewed, you’ll receive an email stating your company has been created in the system, and your Dashboard will show you now have permission to apply for a licence.</p>
+<h3 id="3-apply-for-a-licence-for-your-company-to-register-products">3. Apply for a licence for your company to register products&nbsp;<a class="anchor" href="#3-apply-for-a-licence-for-your-company-to-register-products">&#xE732;</a></h3>
+<p>Further applications must be done on behalf of the company you registered, so please make sure you are logged in with your company selected – your company name (and logo) should show in the main header. If it’s not there, try logging out and in again, and be sure to select your company name if asked during the login process.</p>
+<p>Now, from the Dashboard, you should see a link to “Start a new Company Licence – Modern medicines or Medical devices”. Follow this link and complete the application as before.</p>
+<p>Then wait to have your application reviewed. Be aware that you may be required to make amendments to your application if a reviewer requests it.</p>
+<p>Once your application has been approved, you’ll receive a copy of your licence via email (as a PDF document), and your Dashboard will show that you can now apply to register a product.</p>
+<h3 id="4-apply-to-register-a-product">4. Apply to register a product&nbsp;<a class="anchor" href="#4-apply-to-register-a-product">&#xE732;</a></h3>
+<p>From the Dashboard, follow the link to “Register a product” and complete the application form.</p>
+<p>Once your application has been approved (by a senior “chief”), you’ll see your product added to the product database (accessible via “Outcomes -&gt; Products” in the menu bar)</p>
+<p>(Note: Outcome display might be not be configured correctly right now)</p>
+<h2 id="other-utilities">Other utilities&nbsp;<a class="anchor" href="#other-utilities">&#xE732;</a></h2>
+<p>“Log out” and “Edit User Details” can be found in a drop-down menu on the button that shows your name</p>
+<h2 id="reviewer-experience">Reviewer experience&nbsp;<a class="anchor" href="#reviewer-experience">&#xE732;</a></h2>
+<p>There are two ways to act as a reviewer in this demo:</p>
+<ol>
+<li>(Recommended) Log in with the existing reviewer accounts. They all have the password “123456”. See below for a list of reviewer accounts and what they can do.</li>
+<li>(for more advanced users) Create your own new user accounts and assign them appropriate review permissions. To do this log in as Administrator (user: admin, pw: 123456), then:
+<ul>
+<li>from the “Admin” menu, select “Add user to company”. Fill in the form and add a new user to the “Food &amp; Drug Agency” organisation</li>
+<li>from the same menu, select “Grant user permissions”, and assign appropriate permissions to a user (and Food &amp; Drug Agency)</li>
+</ul>
+</li>
+</ol>
+<p>When switching to reviewer accounts, it’s a good idea to you use a different browser, or use private/icognito mode in a different tab in order to easily switch between “reviewer” and “applicant” logins.</p>
+<h3 id="reviewer-accounts">Reviewer accounts&nbsp;<a class="anchor" href="#reviewer-accounts">&#xE732;</a></h3>
+<table><thead><tr><th>Username</th><th>Permissions</th></tr></thead><tbody>
+<tr><td>basic_reviewer</td><td>- can approve company registrations<br>- can perform initial Screening for licence applications and Product registrations</td></tr>
+<tr><td>senior_reviewer</td><td>- can do “Assessment” stage reviews for licence applications and Product registrations</td></tr>
+<tr><td>supervisor</td><td>- can consolidate product registrations<br>- can assign (for review levels that can’t self-assign)</td></tr>
+<tr><td>chief</td><td>- can make final decision for product registrations</td></tr>
+<tr><td>admin</td><td>- can control whole system, including template management, adding users to organisations, granting permissions, etc. (For advanced users only)</td></tr>
+</tbody></table>
+<h3 id="review-stages-for-each-application-type">Review stages for each application type&nbsp;<a class="anchor" href="#review-stages-for-each-application-type">&#xE732;</a></h3>
+<p>See detailed documentation for more on the concept of <strong>stages</strong>, <strong>review levels</strong> and <strong>permissions</strong>.</p>
+<ol>
+<li>
+<p><strong>Create user account</strong></p>
+<p>Automatic – no reviewer involvement</p>
+</li>
+<li>
+<p><strong>Register company</strong></p>
+<p>One stage, one review. Reviewer must have <code>reviewScreening</code> permission. Can be self-assigned.</p>
+</li>
+<li>
+<p><strong>Apply for licence</strong></p>
+<p>2 stages:</p>
+<ol>
+<li><strong>Screening</strong> - single review (requires <code>reviewScreening</code> permission).<br />
+Can be self-assigned.<br />
+<em>Available user</em>: “basic_reviewer”</li>
+<li><strong>Assessment</strong> - single review level (requires <code>reviewLicenceAssessment</code> permission)<br />
+<em>Available user</em>: “senior_reviewer”<br />
+Must be assigned by an assigner (requires <code>canAssign</code> permission)<br />
+<em>Available user</em>: “supervisor”</li>
+</ol>
+</li>
+<li>
+<p><strong>Apply to register product</strong></p>
+<p>3 stages:</p>
+<ol>
+<li>
+<p><strong>Screening</strong> - single review (requires <code>reviewScreening</code> permission)<br />
+Can be self-assigned.<br />
+<em>Available user</em>: “basic_reviewer”</p>
+</li>
+<li>
+<p><strong>Assessment</strong> - 2 review levels:</p>
+<ul>
+<li>review (requires <code>reviewLicenceAssessment</code> permission)<br />
+<em>Available user</em>: “senior_reviewer”<br />
+Must be assigned by an assigner (<code>canAssign</code> permission)<br />
+<em>Available user</em>: “supervisor”</li>
+<li>consolidation (requires <code>consolProduct</code> permission)<br />
+<em>Available user</em>: “supervisor”</li>
+</ul>
+</li>
+<li>
+<p><strong>Final Decision</strong> - single decision (requires <code>makeDecision</code> permission)<br />
+<em>Available user</em>: “chief”</p>
+</li>
+</ol>
+</li>
+</ol>
+
+    
+  </div>
+
+</article>
+</main>
+
+  
+  <script type="text/javascript" src="https://openmsupply.github.io/conforma-web-app/elasticlunr.min.js" defer></script>
+  <script type="text/javascript" src="https://openmsupply.github.io/conforma-web-app/search_index.en.js" defer></script>
+  <script type="text/javascript" src="https://openmsupply.github.io/conforma-web-app/js.js" defer></script>
+  
+
+</body>
+</html>

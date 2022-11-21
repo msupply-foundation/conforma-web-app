@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/</loc>
+    </url>
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/developers/</loc>
+    </url>
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/developers/dev-intro/</loc>
+    </url>
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/getting-started/</loc>
+    </url>
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/getting-started/demo/</loc>
+    </url>
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/getting-started/demo/demo_guide/</loc>
+    </url>
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/getting-started/introduction/</loc>
+    </url>
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/getting-started/uses-for-mflow/</loc>
+    </url>
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/reference/</loc>
+    </url>
+    <url>
+        <loc>https://openmsupply.github.io/conforma-web-app/reference/forms/</loc>
+    </url>
+</urlset>
