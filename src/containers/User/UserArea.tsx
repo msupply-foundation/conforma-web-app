@@ -205,7 +205,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             />
           </List.Item>
         )}
-        {currentUser?.isManager && (
+        {managementOptions.length > 0 && (
           <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
             <Dropdown
               text={strings.MENU_ITEM_MANAGE}
