@@ -55,3 +55,15 @@ export const replaceCommasArray = (values: string[]) => values.map((value) => re
 // If input value is longer than maxLength, returns truncated string with "..."
 export const truncateString = (string: string, length: number = 30) =>
   string.length < length ? string : `${string.slice(0, length - 2).trim()}...`
+
+// Constructs OR filter for an objects-array i.e. [ {fieldName1: value1}, {fieldName1: value2} ]
+// Returns the GraphQL filter i.e: { or: {fieldName1: { equalsTo: value1 }}, {fieldName1: { equalsTo: value2} }}}
+// This is useful to filter same key with many values using OR statement
+export const constructOrObjectFilters = (filters: { [key: string]: string }[]) => ({
+  or: Object.values(filters).map((filter) => {
+    // Each filter is currently limited to a single check!
+    const filterKey = Object.keys(filter)[0]
+    const filterValue = Object.values(filter)[0]
+    return { [filterKey]: { equalTo: filterValue } }
+  }),
+})
