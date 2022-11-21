@@ -149,12 +149,12 @@ interface AssignmentDetails {
   }
   isCurrentUserAssigner: boolean
   isCurrentUserReviewer: boolean
-  isFinalDecision: boolean
+  isMakeDecision: boolean
   isLastLevel: boolean
   isSelfAssignable: boolean
-  isLocked: boolean
   allowedSections: string[]
   assignedSections: string[]
+  availableSections: string[]
 }
 
 interface AssignmentOptions {
@@ -402,10 +402,9 @@ interface ReviewAssignment {
   assignedSections: string[]
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
-  isLocked: boolean
   isSelfAssignable: boolean
-  isFinalDecision: boolean
-  isFinalDecisionOnConsolidation: boolean
+  isMakeDecision: boolean
+  isMakeDecisionOnConsolidation: boolean
 }
 
 type ReviewSectionComponentProps = {
@@ -424,6 +423,7 @@ interface ReviewDetails {
   reviewDecision?: ReviewDecision | null
   reviewer: GraphQLUser
   current: ReviewStageAndStatus
+  isLocked: boolean
 }
 
 interface ReviewQuestion {
@@ -491,7 +491,6 @@ enum ReviewAction {
   canView = 'CAN_VIEW',
   canReReview = 'CAN_RE_REVIEW',
   canSelfAssign = 'CAN_SELF_ASSIGN',
-  canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
   canReStartReview = 'CAN_RE_START_REVIEW', // User for second review (for consolidator)
   canContinueLocked = 'CAN_CONTINUE_LOCKED',

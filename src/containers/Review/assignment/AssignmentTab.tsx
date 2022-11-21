@@ -35,18 +35,12 @@ const AssignmentTab: React.FC<{
   const [filters, setFilters] = useState<Filters | null>(null)
   const [assignmentError, setAssignmentError] = useState<string | null>(null)
 
-  const {
-    error,
-    loading,
-    assignmentsFiltered,
-    assignmentInPreviousStage,
-    assignmentGroupedLevel,
-    isFullyAssigned,
-  } = useLoadAssignments({
-    info: fullStructure.info,
-    sectionCodes,
-    filters,
-  })
+  const { error, loading, assignmentsFiltered, assignmentGroupedLevel, isFullyAssigned } =
+    useLoadAssignments({
+      info: fullStructure.info,
+      sectionCodes,
+      filters,
+    })
 
   if (error) return <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
 
@@ -118,7 +112,6 @@ const AssignmentTab: React.FC<{
                   sectionId={id}
                   fullStructure={fullStructure}
                   reviewAssignment={assignment}
-                  previousAssignment={assignmentInPreviousStage}
                 />
               ) : null
             )}

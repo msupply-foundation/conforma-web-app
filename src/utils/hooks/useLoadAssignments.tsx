@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ALL_LEVELS } from '../../containers/Review/assignment/ReviewLevel'
 import { useUserState } from '../../contexts/UserState'
-import { getPreviousStageAssignment } from '../helpers/assignment/getPreviousStageAssignment'
 import { ApplicationDetails, AssignmentDetails, Filters, LevelAssignments } from '../types'
 import useGetReviewInfo from './useGetReviewInfo'
 
@@ -17,7 +16,6 @@ const useLoadAssignments = ({
   sectionCodes,
 }: UseGetAssignmentProps) => {
   const [assignmentsFiltered, setAssignmentsFiltered] = useState<AssignmentDetails[]>([])
-  const [assignmentInPreviousStage, setAssignmentInPreviousStage] = useState<AssignmentDetails>()
 
   const {
     userState: { currentUser },
@@ -35,14 +33,6 @@ const useLoadAssignments = ({
     if (assignments) {
       const filteredByLevel = getFilteredLevel(assignments)
       setAssignmentsFiltered(filteredByLevel)
-
-      // Get Previous stage (last level reviewer) assignment
-      const assignmentInPreviousStage = getPreviousStageAssignment(
-        serial,
-        assignments,
-        filters?.currentStage
-      )
-      setAssignmentInPreviousStage(assignmentInPreviousStage)
     }
   }, [assignments])
 
@@ -66,31 +56,20 @@ const useLoadAssignments = ({
   const currentReviewLevel = Math.max(Number(Object.keys(assignmentGroupedLevel)))
 
   const isFullyAssigned = currentReviewLevel
-    ? calculateIsFullyAssigned(assignmentGroupedLevel[currentReviewLevel], sectionCodes)
+    ? !assignmentGroupedLevel[currentReviewLevel].some(
+        ({ availableSections }) =>
+          availableSections.length > 0 &&
+          sectionCodes.some((code) => availableSections.includes(code))
+      )
     : true
 
   return {
     error,
     loading,
     assignmentsFiltered,
-    assignmentInPreviousStage,
     assignmentGroupedLevel,
     isFullyAssigned,
   }
 }
 
 export default useLoadAssignments
-
-const calculateIsFullyAssigned = (
-  currentLevelAssignments: AssignmentDetails[],
-  sectionCodes: string[]
-) => {
-  const assignedSections = new Set(
-    currentLevelAssignments
-      // .filter((assignment) => assignment.current.assignmentStatus === ReviewAssignmentStatus.Assigned)
-      .map((assignment) => assignment.assignedSections)
-      .flat()
-  )
-
-  return assignedSections.size >= sectionCodes.length
-}

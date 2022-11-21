@@ -27,14 +27,12 @@ Review assignment can have the following statuses
 
 To also determine if this assignment can be Self-assigned, 3 other fields come on the scene:
 
-- `is_self_assignable` -> Can be self assigned (if not locked - how we prevent other self-assigners after one is already assigned)
-- `is_locked` -> Can be used to either prevent self-assignment or to generate a Review with status = LOCKED & assignment status is ASSIGNED\*
+- `is_self_assignable` -> Can be self assigned (if there is `available_sections` to be selected - how we prevent other self-assigning for sections already assigned)
+- `is_locked` -> Used to prevent a Review from being submitted - in case another reviewer in same stage already send a response to Applicant (decision to "Send back to applicant")
 
 Another possibility for assignment is using the flag:
 
-- `is_final_decision` -> Used to assign reviewers with specific permissions that gets Assignment.status = ASSIGNED automatically.
-
-\* This is specifically used for assignment of partial reviews. For example, 2 reviewers have been assigned to different Sections of the same application. After one submits back to the Applicant the other one needs to be blocked -- this would be flagged in the Review.status = LOCKED. But if there is only Assignment and no review started, we set the Assignment is_locked = true to generate a Review.status LOCKED when started.
+- `is_final_decision` -> Used to assign reviewers to do a single-decision review. In this case the review will be always `is_self_assignable` and `is_last_level
 
 ### Restrictions
 
@@ -51,8 +49,7 @@ Review assignments can be restricted by section/s
 
 #### Difference between self-assignment and assignment
 
-The idea behind self assignment originated with requirement for users (who are not themselves assigners) to be able to 'choose' or pick which application they will be reviewing.
-When the assignment `is_self_assignment` or `is_final_decision` all sections will be assigned to the same user.
+The idea behind self assignment originated with requirement for users (who are not themselves assigners) to be able to 'choose' or pick which application they will be reviewing. When the assignment `is_self_assignment` or `is_final_decision` all sections will be assigned to the same user.
 
 **Note**: Currently self assignment is not restricted by `template_section_restrictions`.
 
@@ -75,81 +72,54 @@ Available for either a Reviewer that can do **self-assignment** or an Assigner w
 
 To **assign** or **self-assignment** the Reviewer of sections of one application there are option available on the Applications list of on the Application home page.
 
-### Web App
+## Web App - usage
+### Assignment
+A GraphQL mutation `updateReviewAssignment` is called in the front-end after the assigner user selects assigners in each section and clicks on the option to **Submit**.
+When reviewer is the current user the dropdown only display the **Self-assign** option to select *Yourself* (which will propagate for all sections). Otherwise - when the Assigner user is commanding there will be a list of possible assignee per section. And if it is a Consolidation or One level stage the same assignee is propagate in all sections. The option to Assign All is also available on the bottom of the Assigment page. 
 
-#### Self-assignment
-
-A GraphQL mutation `updateReviewAssignment` runs in the front-end when the user clicks on the **Self-assign** for each section (self-assignment will propagate for all sections).
-What happens as a result of this mutation is:
-
-1. `review_assignment.trigger` is set to ON_REVIEW_SELF_ASSIGN.
+#### When Assigner clicks to Submit after assigning
+For each different Assignee one mutation for Review_assignment is send with:
+1. Set `review_assignment.trigger` set to ON_REVIEW_ASSIGN.
 2. Changes `review_assignment.status` to **Assigned**.
-3. Sets all `assigned_sections` on record
+3. Sets all `assigned_sections` on record - meaning that all elements of type QUESTION in these sections are also assigned
 
-- it means that all elements of type QUESTION in these sections are also assigned
+#### Other updates done on the server-side:
+- Update other `review_assignment` to have field `available_sections` r. So other self-assignments for same application get locked.
 
-4. Other updates done on the server-side:
+### Re-Assignment
+The same GraphQL mutation `updateReviewAssignment` is called in the front-end after the assigner user clicks on `re-assign` options, selects each new assigner (for each section) and clicks on the **Submit** button.
 
-- Update other `review_assignment` with `is_self_assignment` as **True** to have field `is_locked` to **True**. So other self-assignments for same application get locked.
+- Assigner clicks on **re-assign** option in one of the sections
+- Then add a new reviewer in each drop down (for Consolidation, Final Decision or One level review the assignee is propagate in all sections)
+- User clicks on **Submit** to register the change
 
-#### Assigning (by assigner)
-
-A GraphQL mutation `updateReviewAssignment` is created on the front-end when the user selects a reviewer in drop down for each section (or all sections when rules apply).
-
-1. `review_assignment.trigger` is set to ON_REVIEW_ASSIGN.
-2. Changes status of `review_assignment` to **Assigned**.
-3. Sets assignerId of current user in the new assignment.
-4. Sets all `assigned_sections` on record
-
-- it means that all elements of type QUESTION in these sections are also assigned
-
-5. Other updates done on the server-side:
-   - If an existing `review` was connected to this assignment will change the `review.status` from **Discontinued** to **Draft**.
-   - Update other `review_assignment` with `is_self_assignment` as **True** to have field `is_locked` to **True**. So other self-assignments for same application get locked.
-
-#### Re-Assignment
-
-A GraphQL mutation `reassignReviewAssignment` runs on the front-end when one assigner:
-
-- selects **re-assign** in the drop down
-- selects the new reviewer in drop down for a section (or all sections).
-
+#### After the Assigner clicks to Submit after re-assigning
+For each different Assignee one mutation for Review_assignment is send with:
 1. If all sections were unassigned from previous assignemnt
-
-- Run the unassignment with `review_assignment.trigger` for previous assignment set to ON_REVIEW_UNASSIGN.
-- Set the status of previous `review_assignment` to **Available**.
-- Updates the assignerId?
-
-2. Else if some sections are still assigned to previous assignment
-
+- For previous assignment set `review_assignment.trigger` to ON_REVIEW_UNASSIGN
+- Set the status of previous assignment `review_assignment` to **Available**.
+- And `assigned_sections` are set to empty array in the back-end.
+2. Else for assignment with sections still assigned to previous assignment
+- Set `review_assignment.trigger` to ON_REVIEW_ASSIGN
 - Just update the previous assignment `assigned_sections` but keep status as **Assigned**.
 
-3. Updates the new assignment
-
-- Set the `review_assignment.trigger` to ON_REVIEW_REASSIGN.
-- Changes status of new `review_assignment` to **Assigned**.
-- Sets assignerId of current user in the new assignment.
-- Sets `assigned_sections` on record - it means that all elements of type QUESTION in these sections are also assigned
-
-7. Other updates done on the server-side:
-   - If an existing `review` was connected to previous assignment UNASSIGNED it will change the `review.status` from **Draft** to **Discontinued**.
+#### Other updates done on the server-side after re-assignment
+   - If an existing `review` was connected to previous assignment now UNASSIGNED it will change the `review.status` from **Draft** to **Discontinued**.
    - If an existing `review` was connected to new assignment REASSIGNED it will change the `review.status` from **Discontinued** to **Draft**.
+### Unassignment
+The same GraphQL mutation `updateReviewAssignment` is called in the front-end after the assigner user clicks on `unassign` options (in one of the sections) and confirms the warning modal clicking on the **Confirm** button.
 
-**Note**: No need to change other assignment flag `is_locked` since it has been assigned to reviewers already.
+- Assigner/Current reviewer clicks on **unassign** option in one of the sections
+- A warning modal is presented to confirnm unassignment (from all sections this user is assigned)
+- User clicks on the **Confirm** button to register the change
 
-#### Unassignment
-
-A GraphQL mutation `unassignReviewAssignment` runs on the front-end when one assigner:
-
-- selects **un-assign**
-- confirms unassignment of reviewer for each section (or all sections when rules apply).
-
+#### After the Assigner or Reviewer click on Confirm after unassigning
 1. `review_assignment.trigger` is set to ON_REVIEW_UNASSIGN.
-2. Changes status of `review_assignment` to **Available** and flag `is_locked` to **False**.
-3. Set `assigned_sections` to empty array
-4. Other updates done on the server-side:
+2. Changes status of `review_assignment` to **Available**
+3. Set `assigned_sections` to empty array (done in back-end)
+
+#### Other updates done on the server-side after unassignment
    - If an existing `review` was connected to this assignment will change the `review.status` from **Draft** to **Discontinued**.
-   - Update other `review_assignment` with `is_self_assignment` as **True** to have field `is_locked` to **False**. So other self-assignments for same application are unlocked.
 
 ## Diagram
 

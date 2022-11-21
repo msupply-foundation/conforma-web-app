@@ -53,7 +53,7 @@ const ReviewerActionCell: React.FC<CellProps> = ({
     outcome === ApplicationOutcome.Pending
       ? !!reviewerAction
         ? getReviewActionString(reviewerAction)
-        : !!assignerAction && assignerAction != AssignerAction.AssignLocked
+        : !!assignerAction
         ? getAssignActionString(assignerAction)
         : null
       : null

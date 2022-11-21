@@ -33,7 +33,6 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
         ) : (
           <ReviewSelfAssignmentLabel reviewer={assignment?.assignee} strings={strings} />
         )
-      case ReviewAction.canSelfAssignLocked:
       case ReviewAction.canContinueLocked:
         return isAssignedToCurrentUser ? (
           <ReviewLockedLabel strings={strings} />

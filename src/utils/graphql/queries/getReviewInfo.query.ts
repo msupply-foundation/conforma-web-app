@@ -24,6 +24,7 @@ export default gql`
             status
             timeStatusCreated
             trigger
+            isLocked
             reviewDecisions(orderBy: TIME_UPDATED_DESC) {
               nodes {
                 id

@@ -182,35 +182,35 @@ _For displaying blocks of text in the application_
 
 #### `style: none` (default)
 
-![style:none](./images/Element-Type-Specs-textInfo-none.png)
+![style:none](../images/Element-Type-Specs-textInfo-none.png)
 
 #### `style: basic`
 
-![style:basic](./images/Element-Type-Specs-textInfo-basic.png)
+![style:basic](../images/Element-Type-Specs-textInfo-basic.png)
 
 #### `style: info`
 
-![style:info](./images/Element-Type-Specs-textInfo-info.png)
+![style:info](../images/Element-Type-Specs-textInfo-info.png)
 
 #### `style: warning`
 
-![style:warning](./images/Element-Type-Specs-textInfo-warning.png)
+![style:warning](../images/Element-Type-Specs-textInfo-warning.png)
 
 #### `style: success`
 
-![style:success](./images/Element-Type-Specs-textInfo-success.png)
+![style:success](../images/Element-Type-Specs-textInfo-success.png)
 
 #### `style: positive`
 
-![style:positive](./images/Element-Type-Specs-textInfo-positive.png)
+![style:positive](../images/Element-Type-Specs-textInfo-positive.png)
 
 #### `style: error`
 
-![style:error](./images/Element-Type-Specs-textInfo-error.png)
+![style:error](../images/Element-Type-Specs-textInfo-error.png)
 
 #### `style: negative`
 
-![style:negative](./images/Element-Type-Specs-textInfo-negative.png)
+![style:negative](../images/Element-Type-Specs-textInfo-negative.png)
 
 ---
 

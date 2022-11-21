@@ -111,10 +111,7 @@ const ReviewPage: React.FC<{
   const {
     sections,
     responsesByCode,
-    info: {
-      name,
-      current: { stage },
-    },
+    info: { name },
     thisReview,
     attemptSubmission,
     firstIncompleteReviewPage,
@@ -134,14 +131,11 @@ const ReviewPage: React.FC<{
   const isSubmitted =
     thisReview?.current.reviewStatus === ReviewStatus.Submitted ||
     thisReview?.current.reviewStatus === ReviewStatus.ChangesRequested
-  const isLocked =
-    thisReview?.current.reviewStatus == ReviewStatus.Locked ||
-    thisReview?.current.reviewStatus === ReviewStatus.Discontinued
+  const isLocked = thisReview?.isLocked
 
   const canEdit = (sectionCode: string) =>
     reviewAssignment?.assignedSections.includes(sectionCode) &&
-    (reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft ||
-      reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Locked)
+    reviewAssignment?.review?.current.reviewStatus === ReviewStatus.Draft
 
   const ReviewSubheader: React.FC = () =>
     isLocked ? (
@@ -195,7 +189,6 @@ const ReviewPage: React.FC<{
                 canEdit(section.details.code) && (
                   <ApproveAllButton
                     isConsolidation={!!section.assignment?.isConsolidation}
-                    stageNumber={stage.number}
                     page={page}
                   />
                 )
@@ -216,7 +209,7 @@ const ReviewPage: React.FC<{
             />
           ))}
         <PreviousStageDecision
-          isFinalDecision={reviewAssignment.isFinalDecision}
+          isMakeDecision={reviewAssignment.isMakeDecision}
           review={previousAssignment?.review}
           serial={serial}
         />
@@ -257,15 +250,10 @@ const SectionRowStatus: React.FC<SectionState> = (section) => {
 
 interface ApproveAllButtonProps {
   isConsolidation: boolean
-  stageNumber: number
   page: Page
 }
 
-const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
-  isConsolidation,
-  stageNumber,
-  page,
-}) => {
+const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({ isConsolidation, page }) => {
   const { strings } = useLanguageProvider()
   const updateReviewResponse = useUpdateReviewResponse()
 
@@ -282,15 +270,10 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
   const massApprove = () => {
     responsesToReview.forEach((reviewResponse) => {
       if (reviewResponse)
-        updateReviewResponse(
-          {
-            ...reviewResponse,
-            decision: isConsolidation
-              ? ReviewResponseDecision.Agree
-              : ReviewResponseDecision.Approve,
-          },
-          stageNumber
-        )
+        updateReviewResponse({
+          ...reviewResponse,
+          decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
+        })
     })
   }
 
@@ -314,22 +297,22 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({
 
 interface PreviousStageDecisionProps {
   review: ReviewDetails | null | undefined
-  isFinalDecision: boolean
+  isMakeDecision: boolean
   serial: string
 }
 
 const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
   review,
-  isFinalDecision,
+  isMakeDecision,
   serial,
 }) => {
   const { strings } = useLanguageProvider()
   const { Decision } = useLocalisedEnums()
-  return isFinalDecision && !!review ? (
+  return isMakeDecision && !!review ? (
     <Segment.Group horizontal id="previous-review">
       <Segment>
         <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
-        <ReviewByLabel user={review.reviewer} strings={strings} />
+        <ReviewByLabel user={review.reviewer} isSubmitted={true} strings={strings} />
         <Button
           className="button-med"
           as={Link}

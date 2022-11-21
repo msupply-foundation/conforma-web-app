@@ -18,7 +18,6 @@ const useLocalisedEnums = () => {
 
   const AssignAction: { [key in AssignerAction]: string } = {
     ASSIGN: strings.ACTION_ASSIGN,
-    ASSIGN_LOCKED: strings.ACTION_LOCKED,
     RE_ASSIGN: strings.ACTION_RE_ASSIGN,
   }
 

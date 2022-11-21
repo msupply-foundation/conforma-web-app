@@ -158,7 +158,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   }
 
   const onClick = async () => {
-    const firstIncompleteReviewPage = assignment.isFinalDecision
+    const firstIncompleteReviewPage = assignment.isMakeDecision
       ? null
       : structure.firstIncompleteReviewPage
 
@@ -186,9 +186,9 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       return
     }
 
-    // Check MISMATCH previous (when is Final Decision)
+    // Check MISMATCH previous (when is Make Decision review)
     if (
-      assignment.isFinalDecision &&
+      assignment.isMakeDecision &&
       !!previousAssignment &&
       previousAssignment.review?.reviewDecision?.decision !== getDecision()
     ) {
