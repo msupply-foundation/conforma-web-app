@@ -9,7 +9,7 @@ interface RefDoc {
   isExternalReferenceDoc: boolean
 }
 
-export const useReferenceDocs = (currentUser: User | null, isAdmin: boolean) => {
+export const useReferenceDocs = (currentUser: User | null) => {
   const [intReferenceDocs, setIntReferenceDocs] = useState<RefDoc[]>([])
   const [extReferenceDocs, setExtReferenceDocs] = useState<RefDoc[]>([])
   const { data, loading, error } = useGetRefDocsQuery()
@@ -23,11 +23,11 @@ export const useReferenceDocs = (currentUser: User | null, isAdmin: boolean) => 
     if (!data || error) return
 
     if (data.files?.nodes) {
-      if (shouldSeeInternalDocs(currentUser, isAdmin))
+      if (shouldSeeInternalDocs(currentUser))
         setIntReferenceDocs(
           (data.files?.nodes as RefDoc[]).filter((doc) => doc.isInternalReferenceDoc)
         )
-      if (shouldSeeExternalDocs(currentUser, isAdmin))
+      if (shouldSeeExternalDocs(currentUser))
         setExtReferenceDocs(
           (data.files?.nodes as RefDoc[]).filter((doc) => doc.isExternalReferenceDoc)
         )
@@ -37,14 +37,14 @@ export const useReferenceDocs = (currentUser: User | null, isAdmin: boolean) => 
   return { intReferenceDocs, extReferenceDocs, loading, error }
 }
 
-const shouldSeeInternalDocs = (user: User, isAdmin: boolean): boolean => {
-  if (isAdmin) return true
+const shouldSeeInternalDocs = (user: User): boolean => {
+  if (!user?.isAdmin) return true
   if (!user?.organisation) return false
   return user.organisation.isSystemOrg
 }
 
-const shouldSeeExternalDocs = (user: User, isAdmin: boolean): boolean => {
-  if (isAdmin) return true
+const shouldSeeExternalDocs = (user: User): boolean => {
+  if (!user?.isAdmin) return true
   if (!user?.organisation) return true
   return !user.organisation.isSystemOrg
 }
