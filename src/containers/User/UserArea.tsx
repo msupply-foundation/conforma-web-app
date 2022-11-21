@@ -18,14 +18,14 @@ const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white
 
 const UserArea: React.FC = () => {
   const {
-    userState: { currentUser, orgList, templatePermissions, isAdmin },
+    userState: { currentUser, orgList, templatePermissions },
     onLogin,
   } = useUserState()
   const {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
-  const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser, isAdmin)
+  const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser)
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
@@ -83,7 +83,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   })
   const { push, pathname } = useRouter()
   const {
-    userState: { isAdmin, isManager },
+    userState: { currentUser },
   } = useUserState()
 
   // Ensures the "selected" state of other dropdowns gets disabled
@@ -205,7 +205,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             />
           </List.Item>
         )}
-        {isManager && (
+        {managementOptions.length > 0 && (
           <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
             <Dropdown
               text={strings.MENU_ITEM_MANAGE}
@@ -216,7 +216,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             />
           </List.Item>
         )}
-        {isAdmin && (
+        {currentUser?.isAdmin && (
           <List.Item className={dropdownsState.admin.active ? 'selected-link' : ''}>
             <Dropdown
               text={strings.MENU_ITEM_CONFIG}
@@ -289,15 +289,9 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
     await attemptLoginOrg({ orgId, onLoginOrgSuccess })
   }
-  const onLoginOrgSuccess = async ({
-    user,
-    orgList,
-    templatePermissions,
-    JWT,
-    isAdmin,
-    permissionNames,
-  }: LoginPayload) => {
-    await onLogin(JWT, user, templatePermissions, permissionNames, orgList, isAdmin)
+
+  const onLoginOrgSuccess = async ({ user, orgList, templatePermissions, JWT }: LoginPayload) => {
+    await onLogin(JWT, user, templatePermissions, orgList)
   }
   const dropdownOptions = orgs.map(({ orgId, orgName }) => ({
     key: orgId,

@@ -18,12 +18,12 @@ const Admin: React.FC = () => {
     match: { path },
   } = useRouter()
   const {
-    userState: { isAdmin, isLoading },
+    userState: { currentUser, isLoading },
   } = useUserState()
 
   if (isLoading) return <Loading />
 
-  if (!isAdmin) return <NoMatch />
+  if (!currentUser?.isAdmin) return <NoMatch />
 
   const adminOption = [
     {
