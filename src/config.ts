@@ -51,7 +51,6 @@ const config = {
   localStorageJWTKey: 'persistJWT',
   applicantDeadlineCode: 'applicantDeadline',
   isProductionBuild,
-  defaultSystemManagerPermissionName: 'systemManager',
   debounceTimeout: 350, // milliseconds
 }
 

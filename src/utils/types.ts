@@ -638,7 +638,10 @@ interface User {
   email: string
   dateOfBirth?: Date | null
   organisation?: Organisation
+  permissionNames: string[]
   sessionId: string
+  isAdmin: boolean
+  isManager: boolean
 }
 
 interface OrganisationSimple {
@@ -659,9 +662,7 @@ interface LoginPayload {
   user: User
   JWT: string
   templatePermissions: TemplatePermissions
-  permissionNames: string[]
   orgList?: OrganisationSimple[]
-  isAdmin: boolean
 }
 
 interface UseGetReviewStructureForSectionProps {

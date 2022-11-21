@@ -40,9 +40,9 @@ const UserSelection: React.FC = () => {
     } else localStorage.setItem(config.localStorageJWTKey, loginResult.JWT)
 
     // Organisation login (auto-select first in list)
-    const { JWT, user, templatePermissions, permissionNames, orgList, isAdmin } = loginResult
+    const { JWT, user, templatePermissions, orgList } = loginResult
     if (orgList.length === 0) {
-      await onLogin(JWT, user, templatePermissions, permissionNames, orgList, isAdmin)
+      await onLogin(JWT, user, templatePermissions, orgList)
       return
     }
     const selectedOrg = orgList[0]
@@ -62,9 +62,7 @@ const UserSelection: React.FC = () => {
       verifyOrgResult.JWT,
       verifyOrgResult.user,
       verifyOrgResult.templatePermissions,
-      verifyOrgResult.permissionNames,
-      orgList,
-      verifyOrgResult.isAdmin
+      orgList
     )
   }
 
