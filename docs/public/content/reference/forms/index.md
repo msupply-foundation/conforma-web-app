@@ -1,32 +1,46 @@
-_Ongoing authoritative reference of Template Question/Element types, including input parameters and response type (shape). Please ensure this document matches the current implementation at all times._
++++
+title = "Forms"
+insert_anchor_links = "right"
+weight = 1
++++
 
-## Contents <!-- omit in toc -->
+## Understand
 
-<!-- toc -->
+Forms are 1 of the 4 basic components of the mFlow framework. 
 
-- [Template Element fields](#template-element-fields)
-- [Question/Element types](#questionelement-types)
-  - [Short Text Input](#short-text-input)
-  - [Long Text (Multi-line) Input](#long-text-multi-line-input)
-  - [Password Input](#password-input)
-  - [Text Information](#text-information)
-  - [Image Display](#image-display)
-  - [Drop-down Selector](#drop-down-selector)
-  - [Radio Buttons](#radio-buttons)
-  - [Checkboxes](#checkboxes)
-  - [File Upload](#file-upload)
-  - [List Builder (Ingredients list)](#list-builder-ingredients-list)
-  - [Search (Lookup)](#search-lookup)
-  - [Date Picker](#date-picker)
-  - [Number](#number)
-  - [Page Break](#page-break)
+Forms can be further divided into 2 sub-components: 
 
-<!-- tocstop -->
+- Form Templates
+- Form Applications
 
+**Form Templates** comprise of:
 
-<a name="element-fields"/>
+- Sections
+- Pages
+- Elements
 
-## Template Element fields
+The number of Sections, Pages and Elements that appear in a Form Template can be configured. 
+
+**Form Applications** are instances of Form Templates. 
+
+### Sections
+
+TBD
+
+### Pages
+
+TBD
+
+### Elements
+
+Elements consist of fields. Fields fall into 2 categories:
+
+- [Common Element fields](#element-common-fields)
+- [Type-specific Element fields](#element-type-fields)
+  
+<a name="element-common-fields"/>
+
+#### Common fields
 
 These fields are common to all element types and have their own field in the `template_element` table.
 
@@ -42,20 +56,32 @@ These fields are common to all element types and have their own field in the `te
   - default: `{"value": true}`
 - **is_editable**: `JSON` -- dynamic query determining whether can be edited (Would only be false in rare circumstances)
   - default: `{"value": true}`
-- **defaultValue**: `JSON` - the default value for the response. Note: several plugins have their own "default" parameter, which may be easier to use in many situations. What's the difference? In this one, the default response is generated when the application is first created, and from then on it behaves just like a normal question element. The default parameter for individual elements is calculated when the element is rendered, so it can change in response to other changes. If you need a default value to be made from answers the user provided earlier in the form, that would be the one to use. See individual elements for the respective details.  
-**Important**: When you use this `defaultValue` parameter, it must conform to the shape of the saved response for that question type, since it is saved directly as a response when created, not processed in the form itself -- see individual element types for correct response shape
+- **defaultValue**: `JSON` - the default value for the response. Can be a dynamic query. Note: several plugins have their own "default" parameter, which may be easier to use in many situations but doesn't support dynamic lookups. If you need a dynamic value, use this field. For this field, the returned object must conform to the object shape for the respective question type (i.e. it needs a `text` field) -- see individual element types for response shape
 - **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
   - default: `{"value": true}` or just `true`
 - **validation_message**: `string` -- the message that shows in the UI when validation fails.  
   _TO-DO: Handle multiple validation criteria with different messages (eg. "Not a valid email", "Email is not unique")_
 - **parameters**: `JSON` -- the parameters specific to each question/element type. See individual plugins below for parameter breakdown
-- **is_reviewable**: `enum` -- either "ALWAYS", "NEVER" or `null`. If set to "ALWAYS", a review response will be created (i.e. a reviewer can review the question) even if there is no applicant response. If set to "NEVER", there will no review response created. This is useful (for example) for questions that are just used as logical conditions for other questions (e.g. "Is your postal address different"), and it can save the reviewer a lot of unnecessary clicking on content that is irrelevant to their actual review. The default for this field is `null`, in which case a review response is created whenever an application response is present.
+  <a name="element-type-fields"/>
 
-  <a name="types"/>
+## Element types
 
-## Question/Element types
+- [Short Text Input](#short-text)
+- [Long Text (Multi-line) Input](#long-text)
+- [Password](#password)
+- [Text Information](#text)
+- [Image Display](#image)
+- [Drop-down Selector](#dropdown)
+- [Radio Buttons](#radio)
+- [Checkboxes](#checkbox)
+- [File Upload](#file)
+- [List Builder](#list-builder)
+- [Search](#search)
+- [Date Picker](#date-picker)
+- [Number](#number)
+- [Page Break](#page)
 
-**Note**: all parameter fields can also have a dynamic query object instead of a primitive. The [`evaluateExpression`](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be _returned_ from a query expression.
+**Note**: all parameter fields can also have a dynamic query object instead of a primitive. The [`evaluateExpression`](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax) function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be _returned_ from a query expression.
 
 <a name="short-text"/>
 
@@ -71,7 +97,6 @@ _Free-form, single-line text input element_
 - **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
 - **description**: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
-- **default**: `string` -- default response, will change dynamically in response to form changes until the user has edited it [Optional]
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
 - **maxWidth**: `number` -- the maximum width (in pixels) for the text input box (defaults to fill the width of the container)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length.  
@@ -112,7 +137,6 @@ _Free-form, multi-line text input element_
 - **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
 - **description**: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
-- **default**: `string` -- default response, will change dynamically in response to form changes until the user has edited it [Optional]
 - **lines**: `number` -- height of the TextArea input, in number of lines/rows (default: 5)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length. (See Note in ShortText above for how to integrate `maxLength` with validation.)
 
@@ -182,35 +206,35 @@ _For displaying blocks of text in the application_
 
 #### `style: none` (default)
 
-![style:none](../images/Element-Type-Specs-textInfo-none.png)
+![Text Info Style:none](Element-Type-Specs-textInfo-none.png)
 
 #### `style: basic`
 
-![style:basic](../images/Element-Type-Specs-textInfo-basic.png)
+![Text Info Style:basic](Element-Type-Specs-textInfo-basic.png)
 
 #### `style: info`
 
-![style:info](../images/Element-Type-Specs-textInfo-info.png)
+![Text Info Style:info](Element-Type-Specs-textInfo-info.png)
 
 #### `style: warning`
 
-![style:warning](../images/Element-Type-Specs-textInfo-warning.png)
+![Text Info Style:warning](Element-Type-Specs-textInfo-warning.png)
 
 #### `style: success`
 
-![style:success](../images/Element-Type-Specs-textInfo-success.png)
+![Text Info Style:success](Element-Type-Specs-textInfo-success.png)
 
 #### `style: positive`
 
-![style:positive](../images/Element-Type-Specs-textInfo-positive.png)
+![Text Info Style:positive](Element-Type-Specs-textInfo-positive.png)
 
 #### `style: error`
 
-![style:error](../images/Element-Type-Specs-textInfo-error.png)
+![Text Info Style:error](Element-Type-Specs-textInfo-error.png)
 
 #### `style: negative`
 
-![style:negative](../images/Element-Type-Specs-textInfo-negative.png)
+![Text Info Style:negative](Element-Type-Specs-textInfo-negative.png)
 
 ---
 
@@ -251,7 +275,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 - **default**: `string`/`number` -- if not provided, defaults to index 0.
 - **search**: `boolean` (default: `false`) -- if `true`, the list of options can be searched and filtered by user
 - **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of organisation objects (i.e. `{orgId, name, licenceNumber}`), you'd probably specify `name` as the `optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection. And if `optionsDisplayProperty` refers to a field that doesn't exist on the supplied object, the plugin will fail and show in error in the application.
-- **hasOther**: `boolean` (default `false`) -- if `true`, allows the user to enter a custom "free text" value instead of one of the pre-defined options.
+- ~~**hasOther**: `boolean` -- if `true`, an additional text-entry field is provided so the user can add their own alternative option _(not yet implemented)_~~
 
 #### Response type
 
@@ -260,7 +284,6 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
   optionIndex: <integer> (index from the options array)
   text: <string> (actual text from options array)
   selection: <string | object> (entire object or string from the supplied options list)
-  isCustomOption: <boolean> (if the selection is a custom "hasOther" option)
 }
 
 ```
@@ -319,67 +342,33 @@ _One or more checkboxes, any number of which can be selected/toggled_
 - **checkboxes**: `array[string | checkbox]` -- an array of labels, one per checkbox. For more complexity, an array of Checkbox objects can be provided, with the following properties:
 
 ```
+
 {
   label: <string> - text to display next to checkbox (Can be empty string but not omitted)
   text: <string> - value to store in Response "text" field and shown in Summary View. Will be same as label if omitted.
   textNegative: <string> - value to store in Response "text" field if checkbox is un-selected. (Optional -- defaults to empty string)
   key: <string | number> - unique code used as key/property name for Response object. Defaults to numerical index of array if omitted
   selected: <boolean> - initial state of checkbox
-  ...Other properties
 }
+
 ```
-
-"Other properties" refers to any additional properties included in the object. For example, an API call might return objects with a bunch of additional fields. These are not required for the Checbox display, but will be passed along and stored as part of the response, so any of these properties can be referred to in subsequent elements or actions.
-
-To handle objects returned that don't have the required fields, you can use the `keyMap` parameter (below) to map fields to required key names.
 
 - **type**: `string` -- Can be "toggle" to display as a toggle switch, or "slider" to display as a slider switch (defaults to regular checkbox).
 - **layout**: `string` -- if "inline", displays checkboxes horizontally in rows. Useful if there are a lot of checkboxes.
-- **resetButton**: `boolean` -- if `true`, element will show a "Reset" button, which allows user to reset selections to the initial (loading) state. (Default: `false`)
-- **displayFormat**: (Options: `text`, `list` (default), `checkboxes`, `propertyList`) -- specifies how to show the applicant's response on the Summary page:
-  - `list`: shows the selected checkboxes in a (Markdown) list
-  - `text`: shows the selected values in a comma-seperated text string
-  - `checkboxes`: displays the selected values as checkboxes as per the application view
-  - `propertyList`: displays in a list with properties (the checkbox `label` field) and values (the checkbox `text` or `textNegative` values, depending on selection).  
-  e.g.
-    - Option1: YES
-    - Option 2: NO
-    - \<checkbox `label`\>: \<`text`\/`textNegative` value\>  
-Note: this display option is only suitable if you have separately defined `label`, `text` and `textNegative` fields for each checkbox.
-- **preventNonResponse**: `boolean` (default `false`) -- normally, we want to allow the user to leave checkboxes unchecked and be considered a valid response. However, if we want to force the user to tick a box (e.g. for a declaration, say), then set `preventNonResponse` to `true`.
-- **keyMap**: `object` -- if the input `checkboxes` property (above) has different property names that what is required (for example, if pulling from an API), then this `keyMap` parameter can be used to re-map the input property names to the requried property names. For example, if your input "checkbox" data contained an array of objects of the type `{ name: "Nicole", active: true}`, you would provide a `keyMap` object like this:
-
-```
-{
-  label: "name",
-  selected: "active"
-}
-```
-
-This tells the element to look at the "name" field for the `label`, and the "active" field for the `selected` status. Note that all the "checkbox" fields can be re-mapped, but it is only required that you provide the ones that are different.
 
 #### Response type
 
 ```
 
 {
-    text: <string> -- comma separated list of all selected checkbox "text" 
-    textUnselected: <string> -- comma separated list of all unselected checkbox "text"
-    textMarkdownList: <string> -- selected text values formatted as a Markdown list
-    textUnselectedMarkdownList: <string> -- unselected text values formatted as a Markdown list
-    textMarkdownPropertyList: <string> -- all checboxes displayed as a Markdown <label>: <text/textNegative> list (see "textDisplay -> propertyList" above)
-    values, shown in Summary view (or Review)
+    text: <string> -- comma separated list of all selected checkbox "text" values, shown in Summary view (or Review)
     values: {
         <key-name-1> : { text: <text value>, isSelected: <boolean>}
         <key-name-2> : { text: <text value>, isSelected: <boolean>}
         ... for all checkbox keys
         }
-    ...Other properties
     selectedValuesArray: [
       <checkbox elements -- same as the values above but filtered for selected-only>
-    ],
-    unselectedValuesArray: [
-      <checkbox elements -- same as the values above but filtered for UNselected-only>
     ]
 }
 
@@ -403,8 +392,6 @@ _Interface for uploading documents or other files_
 - **fileCountLimit**: `number` -- maximum number of files allowed to upload for this question (default: 1)
 - **fileExtensions**: `array[string]` -- list of allowed file extensions (default: no restrictions). e.g. `["pdf", "doc", "txt", "jpg", "png"]`
 - **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
-- **subfolder**: `string` -- by default, files are uploaded into a subfolder with the name of the application serial. However, this can be over-ridden by specifying this parameter. This should rarely be required.
-- **showDescription**: `boolean` -- if `true`, an additional text input will be displayed alongside each file to allow the applicant to specify a description for each file. (default `false`)
 
 #### Response type
 
@@ -454,32 +441,19 @@ _Allows user to build a list of items, such as an **Ingredients List**_
   - `visibility_condition` / `is_editable` -- not required, always `true` (for now, may be implemented later)
   - `parameters`, `title`, and `code` are essential
 
-- **displayType** `'table' | 'cards' | 'inline' | 'list'` (default: `cards`) -- how to present the list of items, as shown here:
+- **displayType** `string` (must be either `table` or `cards` (default)) -- how to present the list of items, as shown here:
 
   - **table** view:
 
-    ![Table View](images/Element-Type-Specs-listBuilder-table-view.png)
+    ![Table view](Element-Type-Specs-listBuilder-table-view.png)
 
     For table view, the column headers are taken from the **title** fields of each element
 
   - **card** view:
 
-    ![Card View](images/Element-Type-Specs-listBuilder-card-view.png)
+    ![Table view](Element-Type-Specs-listBuilder-card-view.png)
 
     The display string(s) for card view are defined in the `displayFormat` field (below)
-
-  - **inline** view:
-
-    ![Inline View](images/Element-Type-Specs-listBuilder-inline-view.png)
-
-    The input form is displayed inline (i.e. no modal), and can be collapsed/opened for each item
-
-  - **list** view:
-
-    ![List View](images/Element-Type-Specs-listBuilder-list-view.png)
-
-    A simple view, best for when each item only has one field
-
 
 - **displayFormat** `object` (only relevant for **card** view) -- defines how to present the input information on the displayed cards. The object defines three fields, representing the Title/Heading (`title`), the Subheading (`subtitle`) and Body (`description`).  
   Each is a **Markdown** formatted string, with the values to be substituted from the input `text` values represented by their element `code` wrapped in `${...}`. An example `displayFormat` object representing the card layout shown above is:
@@ -536,11 +510,11 @@ _Live "search-as-you-type" lookups for user to find and select items_
 
 Search results show in pop-up below the search box:
 
-![Search Results](images/Element-Type-Specs-search-results.png)
+![Search results](Element-Type-Specs-search-results.png)
 
 Once selected, items are displayed in a "card" view:
 
-![Search Selected](images/Element-Type-Specs-search-selected.png)
+![Search results](Element-Type-Specs-search-selected.png)
 
 #### Input parameters
 
@@ -567,9 +541,6 @@ Once selected, items are displayed in a "card" view:
   }
   ```
   If not specified, a generic "default" display will be shown, using the first 1-2 properties on the result object.
-- **displayType**: `"card" | "list" | "input"` (default: `card`). "card" view will display each result as a simple Semantic [card](https://react.semantic-ui.com/views/card/), using the fields provided in `displayFormat`.  
-  For "list" view, the results will show as a simple text list, and only one of either `title` or `description` will be used (`title` has priority). This is useful when there is only one field in the results, in which case a "card" view can look inappropriate.  
-  "input" is even simpler than list -- only a single text result can be displayed, but it will show the selected value in the input/search field itself. And like "list", it uses the `displayFormat` to define how to present the selection.
 - **resultFormat**: `object` -- same as `displayFormat`, but used when specifying a format for the "result" display that is different to the selection card display. If not specified, `resultFormat` will just be the same as `displayFormat`.
   Note that for the "result" display, only the `title` and `description` fields are used (`subtitle` is not shown).
 - **textFormat** `string` -- a formatting substitution string like the above, to be generate the "text" value in the response. Note: currently the only place this text value is ever seen by the user is if it's used inside a listBuilder table (optional)
@@ -596,7 +567,7 @@ Once selected, items are displayed in a "card" view:
 
 _A date picker for entering standardised dates or date ranges_
 
-![Date picker](images/Element-Type-Specs-date-picker.png)
+![Date picker](Element-Type-Specs-date-picker.png)
 
 Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semantic-ui-datepickers)
 
@@ -643,16 +614,14 @@ _Input for numeric fields_
 - **default** -- default value (Note: if you require a dynamic value for "default", please use the "defaultValue" field on `template_element`)
 - **type** -- `enum` -- either "integer" or "float" (default: "integer")
 - **simple** -- `boolean` (default: `true`) If `true`, the input field will always show only a non-formatted version of the number (i.e. "1000", not "1,000"), but it will have a "stepper" which can be clicked to increment the number up and down.
-- **minValue** -- minimum allowed value (default: 0)
+- **minValue** -- minimum allowed value (default: no limit)
 - **maxValue** -- maximum allowed value (default: no limit)
 - **step** -- `number` (default: `1`) If `simple == true` (above), the `step` value specifies the amount the number will be incremented or decremented by when using the stepper.
-- **prefix** / **suffix** -- `string` If specified, the number will display these values either side of the number input. They'll also be pre/appended to the "text" representation of the number in the saved response. Useful if you want to define units with the input number (e.g. `12 km`)
-- **suffixPlural** -- `string` (only relevant if `suffix` is specified above) Changes the displayed/stored suffix depending on the value of the number based on pluralisation rules.  
-(e.g. if `suffix = "month"` and `suffixPlural = "months"`, then when number is 1: "1 month", when number is 2:  "2 months")  
-**NOTE**: The parameters below are only relevant if `simple == false` (above)
+  **NOTE**: The parameters below are only relevant is `simple == false` (above)
 - **locale** -- `string` specifies the international "locale" code (e.g `'ja-JP'`) for displaying the calendar in local format. Default is the local setting.
 - **currency** -- `string` If specified, number will be formatted as a currency value (e.g. $4.95). Should be specified in ISO4217 country code format (e.g. "USD", "JPY") See: [https://www.iban.com/currency-codes](https://www.iban.com/currency-codes)
 - **maxSignificantDigits** -- `number` If specified, number will be rounded to the specified number of significant figures
+- **prefix** / **suffix** -- `string` If specified, formatted number will include these values in the string. Useful if you want to define units with the input number (e.g. `12 km`)
 
 #### Response type
 
@@ -661,11 +630,6 @@ _Input for numeric fields_
   text: <Formatted version of number (as specifed in parameters)>
   number: <number>
   type: <integer | float>
-  currency: <string> (from parameters, only stored if defined)
-  locale: <string> (from parameters, only stored if defined)
-  prefix: <string> (from parameters, only stored if defined)
-  suffix: <string> (from parameters, only stored if defined)
-  suffixPlural: <string> (from parameters, only stored if defined)
 }
 ```
 
@@ -679,18 +643,3 @@ _Input for numeric fields_
 - **category**: `Information`
 
 _For specifying where the list of questions is broken into UI pages/steps. The **previous** question of this element will be the **last** element on a page_
-
-#### Input parameters
-
-- ~~**pageBreakValidityCheck**: `boolean` -- If `true`, the user cannot proceed to the next page unless _all_ questions on the current page have passed validation~~
-  - ~~default: `false`~~
-
----
-
-```
-
-```
-
-```
-
-```

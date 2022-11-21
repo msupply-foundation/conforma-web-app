@@ -1,7 +1,7 @@
 +++
 title = "mFlow demo"
 insert_anchor_links = "right"
-weight = 1
+weight = 3
 +++
 
 ## Introduction
@@ -110,9 +110,9 @@ See detailed documentation for more on the concept of **stages**, **review level
       Can be self-assigned.  
       _Available user_: "basic_reviewer"
    2. **Assessment** - single review level (requires `reviewLicenceAssessment` permission)  
-      _Available user_: "senior*reviewer"  
+      _Available user_: "senior_reviewer"  
       Must be assigned by an assigner (requires `canAssign` permission)  
-      \_Available user*: "supervisor"
+      _Available user_: "supervisor"
 
 4. **Apply to register product**
 
@@ -124,9 +124,9 @@ See detailed documentation for more on the concept of **stages**, **review level
    2. **Assessment** - 2 review levels:
 
       - review (requires `reviewLicenceAssessment` permission)  
-        _Available user_: "senior*reviewer"  
+        _Available user_: "senior_reviewer"  
         Must be assigned by an assigner (`canAssign` permission)  
-        \_Available user*: "supervisor"
+        _Available user_: "supervisor"
       - consolidation (requires `consolProduct` permission)  
         _Available user_: "supervisor"
 
