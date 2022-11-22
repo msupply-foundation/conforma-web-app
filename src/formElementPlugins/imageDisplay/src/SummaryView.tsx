@@ -4,7 +4,7 @@ import { allowedSizeValues } from './ApplicationView'
 import { SummaryViewProps } from '../../types'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters }) => {
-  const { url, size, alignment, altText, summarySize = 'small' } = parameters
+  const { url, size, alignment, altText, summarySize = 'small', style = {} } = parameters
 
   // By default, image is displayed "small" in Summary view, but can be
   // over-ridden by specifying "summarySize"
@@ -16,7 +16,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters }) => {
       // Have to do a bit of trickery in terms margin over-rides to get
       // right-alignment working
       centered={alignment === 'center' || alignment === 'right'}
-      style={alignment === 'right' ? { marginRight: 'unset' } : { maxWidth: 100 }}
+      style={alignment === 'right' ? { marginRight: 'unset', ...style } : style}
       alt={altText}
       title={altText}
     />
