@@ -318,6 +318,9 @@ a:hover {
     color: @userAreaText !important;
     margin: 0;
   }
+  img {
+    max-height: @headerHeight;
+  }
 }
 
 #user-area-left {
