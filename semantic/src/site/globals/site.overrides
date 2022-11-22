@@ -310,7 +310,8 @@ a:hover {
 }
 
 #brand-area {
-  width: clamp(100px, 25%, 200px);
+  min-width: 100px;
+  max-width: 200px;
   display: flex;
   align-items: center;
   .brand-area-text {
@@ -379,7 +380,7 @@ a:hover {
 #org-selector .image {
   margin-right: 20px;
   height: 100%;
-  max-width: 100px;
+  max-width: 300px;
 }
 
 #user-menu .button {
