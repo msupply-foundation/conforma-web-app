@@ -125,6 +125,7 @@ type TemplateContextState = {
     applicationCount: number
     namePlural: string
     isLinear: boolean
+    serialPattern: string
     canApplicantMakeChanges: boolean
   }
   refetch: () => void
@@ -149,6 +150,7 @@ const defaultTemplateContextState: TemplateContextState = {
     applicationCount: 0,
     namePlural: '',
     isLinear: false,
+    serialPattern: '',
     canApplicantMakeChanges: true,
   },
   refetch: () => {},
@@ -190,6 +192,7 @@ const TemplateWrapper: React.FC = () => {
           code: template?.code || '',
           namePlural: template?.namePlural || '',
           isLinear: !!template?.isLinear,
+          serialPattern: template?.serialPattern || '',
           canApplicantMakeChanges: !!template?.canApplicantMakeChanges,
           status: template?.status || TemplateStatus.Disabled,
           applicationCount: template?.applications?.totalCount || 0,
