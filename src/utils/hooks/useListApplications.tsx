@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from '../hooks/useRouter'
+import { usePrefs } from '../../contexts/SystemPrefs'
 import buildFilter from '../helpers/list/buildQueryFilters'
 import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQueryVariables'
 import { useGetApplicationListQuery, ApplicationListShape } from '../../utils/generated/graphql'
@@ -20,6 +21,7 @@ const useListApplications = (
   const {
     userState: { currentUser },
   } = useUserState()
+  const { preferences } = usePrefs()
 
   // The "filters" object is either passed in already constructed
   // (graphQLFilterObject), OR we'll need to "buildFilters" from url query key-values.
@@ -29,7 +31,7 @@ const useListApplications = (
   const sortFields = sortBy ? buildSortFields(sortBy) : []
   const { paginationOffset, numberToFetch } = getPaginationVariables(
     page ? Number(page) : 1,
-    perPage ? Number(perPage) : undefined
+    perPage ? Number(perPage) : preferences?.paginationDefault ?? 20
   )
   const {
     data,
