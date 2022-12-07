@@ -173,7 +173,7 @@ export const useGetFilterDefinitions = () => {
     assignerAction: {
       type: 'enumList',
       default: defaultFilters.some((filter) => filter === 'assignerAction'),
-      visibleTo: [],
+      visibleTo: [USER_ROLES.REVIEWER],
       title: strings.FILTER_ASSIGNER_ACTION,
       options: { enumList: Object.values(AssignerAction) },
     },
