@@ -6,11 +6,7 @@ import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FullStructure } from '../../../utils/types'
-import {
-  ActivityLog,
-  ApplicationOutcome,
-  ApplicationStatus,
-} from '../../../utils/generated/graphql'
+import { ActivityLog, ApplicationOutcome } from '../../../utils/generated/graphql'
 import config from '../../../config'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 
