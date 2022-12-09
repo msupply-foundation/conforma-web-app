@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Header } from 'semantic-ui-react'
+import { Header, Icon } from 'semantic-ui-react'
 
 import {
   TemplateStatus,
@@ -19,6 +19,7 @@ import { IconButton } from '../../shared/IconButton'
 import MessagesConfig from './MessagesConfig'
 import CheckboxIO from '../../shared/CheckboxIO'
 import config from '../../../../config'
+import { Link } from 'react-router-dom'
 
 const General: React.FC = () => {
   const { strings } = useLanguageProvider()
@@ -99,6 +100,26 @@ const General: React.FC = () => {
         minLabelWidth={100}
         labelTextAlign="right"
       />
+      <div className="flex-row-start-center">
+        <TextIO
+          text={String(template.serialPattern)}
+          disabled={!template.isDraft}
+          disabledMessage="Can only change serial pattern of draft template"
+          title="Serial Pattern"
+          setText={(text) => updateTemplate(template.id, { serialPattern: text })}
+          minLabelWidth={100}
+          labelTextAlign="right"
+        />
+        <Link
+          to={{
+            pathname:
+              'https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins#generate-text-string',
+          }}
+          target="_blank"
+        >
+          <Icon name="help circle" color="grey" />
+        </Link>
+      </div>
       <CheckboxIO
         title="Linear"
         value={!!template?.isLinear}

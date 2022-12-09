@@ -320,6 +320,8 @@ a:hover {
   }
   img {
     max-height: @headerHeight;
+    padding-top:8px;
+    padding-bottom: 8px;
   }
 }
 

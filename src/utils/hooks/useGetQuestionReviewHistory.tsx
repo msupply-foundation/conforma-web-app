@@ -77,6 +77,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
 
       // Set each entry using HistoryElement values
       if (stageNumber) {
+        if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = []
         allResponsesByStage[stageNumber].push({
           author: reviewer ? reviewer?.firstName || '' + ' ' + reviewer?.lastName || '' : '',
           title:
