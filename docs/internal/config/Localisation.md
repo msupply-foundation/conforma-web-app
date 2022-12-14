@@ -1,5 +1,3 @@
-# Localisation Management
-
 A UI to export/import and enable/disable languages is available at: `/admin/localisations`:
 
 ## Localisation UI (external users)

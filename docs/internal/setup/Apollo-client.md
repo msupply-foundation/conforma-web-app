@@ -1,5 +1,3 @@
-# Apollo client setup
-
 ## References
 
 Apollo-client tutorial: https://www.apollographql.com/docs/tutorial/client/

@@ -1,5 +1,3 @@
-# Level 1 Review and LOQ
-
 The aim of this page is to outline the structure and flow of:
 
 - Reviewer - reviewing an application

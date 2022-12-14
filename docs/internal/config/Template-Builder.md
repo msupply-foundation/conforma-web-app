@@ -1,8 +1,20 @@
-# Template Builder
+## Contents <!-- omit in toc -->
+<!-- toc -->
+- [Overview](#overview)
+- [General tab](#general-tab)
+  - [Displayed options](#displayed-options)
+- [Form tab](#form-tab)
+  - [Sections and pages](#sections-and-pages)
+  - [Fields](#fields)
+- [Permissions tab](#permissions-tab)
+- [Actions tab](#actions-tab)
+  - [Renaming an existing form element](#renaming-an-existing-form-element)
+<!-- tocstop -->
+## Overview
 
 One of the simplest ways to customize the system is to alter what information is presented to an applicant on an application form. 
 Another simple way is to alter what data the applicant must provide when filling out an application form. 
-Methods to do each of these are explained below. 
+Methods to do each of these are explained below.  
 **Note**: in the demo system only the Admin user has the ability to customize the system. 
 
 To find the Template Builder Go to: Configurations > Templates/Procedures
@@ -25,18 +37,18 @@ Click the ‘Make Draft’ button in the config builder
 In this tab is possible to change the status of this Template **version** to Make Available, Make Draft or Disable the application (for all end-users).
 ### Displayed options
 
-| option | template_column | optional | default | description |
-|---|---|---|---|---|
-| Name | name | no | - |  Name of a **single application** displayed to users (in different areas of the App) |
-| Name plural | name_plural | no | - | Name of the **group of applications** displayed to users (in different areas of the App)  |
-| Code | code | no | - | Reference to application type. In case a new code is created this template version will be displayd as a new template type!  |
-| Serial Pattern | serial_patern | yes | **?** | The pattern to be used when generating a new application - used regular expression |
-| Linear | is_linear | yes | **true** | Determine if user is blocked from moving to the next page before filling all required fields |
-| Interactive | can_applicant_make_changes | yes | **true** |  When this option is set to false it means no Reviewer can interact with Applicant, so option for "List of Questions" is hidden |
-| Category | category | no | - | Used to group different template types in a category. The category visibility in areas of Conforma is also configurable |
-| Filters | - | yes | - | Selectable filters to display to users applications grouped by action to take in Dashboard |
-| Start Message | start_message | yes | Don't show | If defined will display the message on a page before creating the application |
-| Submission Message | submission_message | yes | **?** | Show message to user on page after the application is submitted |
+| option             | template_column            | optional | default    | description                                                                                                                    |
+| ------------------ | -------------------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Name               | name                       | no       | -          | Name of a **single application** displayed to users (in different areas of the App)                                            |
+| Name plural        | name_plural                | no       | -          | Name of the **group of applications** displayed to users (in different areas of the App)                                       |
+| Code               | code                       | no       | -          | Reference to application type. In case a new code is created this template version will be displayd as a new template type!    |
+| Serial Pattern     | serial_patern              | yes      | **?**      | The pattern to be used when generating a new application - used regular expression                                             |
+| Linear             | is_linear                  | yes      | **true**   | Determine if user is blocked from moving to the next page before filling all required fields                                   |
+| Interactive        | can_applicant_make_changes | yes      | **true**   | When this option is set to false it means no Reviewer can interact with Applicant, so option for "List of Questions" is hidden |
+| Category           | category                   | no       | -          | Used to group different template types in a category. The category visibility in areas of Conforma is also configurable        |
+| Filters            | -                          | yes      | -          | Selectable filters to display to users applications grouped by action to take in Dashboard                                     |
+| Start Message      | start_message              | yes      | Don't show | If defined will display the message on a page before creating the application                                                  |
+| Submission Message | submission_message         | yes      | **?**      | Show message to user on page after the application is submitted                                                                |
 
 ## Form tab
 

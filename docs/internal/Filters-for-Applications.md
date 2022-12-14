@@ -1,6 +1,21 @@
+## Contents <!-- omit in toc -->
+<!-- toc -->
+- [Overview](#overview)
+- [Examples: UI Design](#examples-ui-design)
+- [Filters](#filters)
+  - [Label filters:](#label-filters)
+  - [applicant action](#applicant-action)
+  - [String filters:](#string-filters)
+  - [Date filters:](#date-filters)
+  - [Number filters:](#number-filters)
+  - [Boolean filters](#boolean-filters)
+- [Formats \& Rules](#formats--rules)
+  - [Pre-defined dates](#pre-defined-dates)
+  - [Strings](#strings)
+  - [Labels](#labels)
+  - [General](#general)
+<!-- tocstop -->
 ## Overview
-
----
 
 The list of applications to display for the current user is based on:
 
@@ -14,24 +29,6 @@ For example to see the list of Applications for "Drug Registration" applied by y
 The `type` is the template code related to the applications type to be listed.
 The `user-role` is used to determine which columns should be displayed.
 In this example the user has **applicant** role. The user-role can only be `applicant` or `reviewer` and is deduced from the permissions that the current user has to view this application type.
-
-**Table of contents**
-
-- [Overview](#overview)
-- [Examples: UI Design](#examples-ui-design)
-- [Filters](#filters)
-- [!Filters-values](#)
-  - [Label filters:](#label-filters)
-  - [applicant action](#applicant-action)
-  - [String filters:](#string-filters)
-  - [Date filters:](#date-filters)
-  - [Number filters:](#number-filters)
-  - [Boolean filters](#boolean-filters)
-- [Formats & Rules](#formats--rules)
-  - [Pre-defined dates](#pre-defined-dates)
-  - [Strings](#strings)
-  - [Labels](#labels)
-  - [General](#general)
 
 ## Examples: UI Design
 
@@ -54,6 +51,7 @@ Each filter type can be selected by the user, it will be displayed on the right 
 The user can select the value to filter by after clicking on one of the filter and check one or more of the options that are displayed:
 
  ![Filters-values](images/Filters-for-Applications-values.png)
+ 
 ---
 
 ### Label filters:

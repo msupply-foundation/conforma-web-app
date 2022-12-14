@@ -1,13 +1,9 @@
-# Lookup tables
-
 ## Viewing lookup tables
 
 Lookup tables contain data which may be referenced by application forms. 
 
 ### To view the list of lookup tables: 
-
-1. Go to Admin Configurations > Lookup Tables
-**Note:** only the Admin user is configured to access lookup tables in this demo
+To find the menu (visible only to Admin users) Go to: Configurations > Lookup Tables
 
 ### To view the contents of a lookup table: 
 1. Click on the eye icon for the lookup table you wish to view. 

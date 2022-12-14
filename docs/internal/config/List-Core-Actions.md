@@ -1,9 +1,15 @@
-# List of Core Actions
-
-The snapshot loaded with the system at the start, called `core_templates`, has a template called `Sample template`, which contains all the core actions listed here.
-
+## Contents <!-- omit in toc -->
+<!-- toc -->
+- [Disclaimer](#disclaimer)
+- [Briefing](#briefing)
+- [Lists](#lists)
+  - [Templates](#templates)
+  - [Core-actions](#core-actions)
+  - [Other actions](#other-actions)
+<!-- tocstop -->
 ## Disclaimer
 
+The snapshot loaded with the system at the start, called `core_templates`, has a template called `Sample template`, which contains all the core actions listed here.  
 The plugin actions that will be listed here are different from actions that users can act in the sytem, this are only meant for admins and configure how the system will work.
 Core-actions aren't meant to be modified, and only someone with expertise should be dealing with these. Otherwise some of the features that rely on certain actions would stop working.
 
