@@ -2,7 +2,7 @@
 
 ## Viewing lookup tables
 
-Lookup tables contain data which may be referenced by the application form. 
+Lookup tables contain data which may be referenced by application forms. 
 
 ### To view the list of lookup tables: 
 
