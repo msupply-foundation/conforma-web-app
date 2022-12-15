@@ -19,6 +19,7 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 - [List of Core Actions](config/List-Core-Actions.md)
 - [List of Element Types](config/Element-Type-Specs.md)
 - [Localisation](config/Localisation.md)
+- [Lookup Tables](config/Lookup-Tables.md)
 
 ### Development
 
