@@ -21,10 +21,10 @@ Methods to do each of these are explained below.
 ### How to edit a template
 
 To find the Template Builder (visible only to Admin users), go to: Configurations > Templates/Procedures
-![Find template builder tool](../images/Template-builder1.png)
+![Find template builder tool](/images/Template-builder1.png)
 
 Select the edit button for the Form Template you wish to edit. The names of the templates are highlighted in pink:
-![Edit template](../images/Template-builder2.png)
+![Edit template](/images/Template-builder2.png)
  
 **Note**: 
 - Form Templates can only be altered if there are no existing applications for this template version. 
@@ -38,7 +38,7 @@ When you open one Template to view and edit the landing page is the General. As 
 
 **Note**: Form Templates must be in ‘DRAFT’ status before they can be edited. 
 Click the ‘Make Draft’ button in the config builder
-![General tab](../images/Template-builder3.png)
+![General tab](/images/Template-builder3.png)
 
 In this tab is possible to change the status of this Template **version** to Make Available, Make Draft or Disable the application (for all end-users).
 ### Displayed options
@@ -64,8 +64,8 @@ Here is where sections and fields are defined. There is specific configuration r
 ### Sections and pages
 For new applications there will be already a section and one field created. It's possible to add new sections, delete or move them up or down on sections list. Sections also have `code` which are referenced, `index` (automatic and sequential) and `title` which is what is displayed to users on the progress side bar.
 
-![Form section - move up](../images/Template-builder4.png)
-![Form section - move down](../images/Template-builder5.png)
+![Form section - move up](/images/Template-builder4.png)
+![Form section - move down](/images/Template-builder5.png)
 
 A section has to have at least one page. 
 Pages are defined inside each section. It's possible to add, remove and move pages within a section and between sections.
@@ -76,16 +76,16 @@ When adding a new field (using the **Add Element** button) it is defined using t
 
 Otherwise to view the configuration and edit an existing field click on the cog on the side of the element:
 
-![Form field - edit](../images/Template-builder6.png)
+![Form field - edit](/images/Template-builder6.png)
 
 Primary defining the plugin type is required for a field. Other imporatant common properties are a `title`, `code`, `category`, `is_reviewable`, `help_tip` and `validation_message`. The description for each of the common fields is described in [Template element fields specs](Element-Type-Specs#template-element-fields.md).
 
-![Form field - common properties](../images/Template-builder7.png)
+![Form field - common properties](/images/Template-builder7.png)
 
 Each plugin will have specific parameters to be passed on. These can be a simple string, number or have more elegant and complex logic, using the [`evaluateExpression`](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) function. To use these a lot of expertise is required, we definitely recommend having TMF support while working on this area of the App.
 
 There are compulsory and optional parameters depending on each Plugin, which are added to this fields in the Parameters area:
-![Form field - parameters](../images/Template-builder8.png)
+![Form field - parameters](/images/Template-builder8.png)
 
 ## Permissions tab
 
@@ -94,20 +94,20 @@ This area is used to define permissions for: **Apply**, **Assign**, **View** and
 Is simple to define permissions to **Apply** or **View** applications. Just select one existing permission from the dropdown to use an existing **permission_name**.  
 An **Apply** permission will allow applicants (that were granted this permission) to create a new applications.  
 And the **View** permission is meant to be for Supervisors of reviewers to view ALL submitted reviews related to applications of this template type. 
-![Permission tab - apply permission](../images/Template-builder-permissions1.png)
+![Permission tab - apply permission](/images/Template-builder-permissions1.png)
 
 The reviews configuration on the other hand, have many options available for procedures. In the example below we can see how it looks having just one review **stage** and a single level - meaning there is no consolidation involved. The user can start editing the current existing stage (or add a new stage) and:  
 - Set the **Assign** permission to assign reviewers in that level/stage
-![Permission tab - assign permission](../images/Template-builder-permissions2.png)
+![Permission tab - assign permission](/images/Template-builder-permissions2.png)
 
 - Clicks on the plus button to add the new Level of review
-![Permission tab - level](../images/Template-builder-permissions3.png)
+![Permission tab - level](/images/Template-builder-permissions3.png)
 
 - Select the **Review** permission to be assigned to this level/stage
-![Permission tab - reviewer](../images/Template-builder-permissions4.png)
+![Permission tab - reviewer](/images/Template-builder-permissions4.png)
 
 - Then by clicking the add button next will add the new Review permission
-![Permission tab - review permission](../images/Template-builder-permissions5.png)
+![Permission tab - review permission](/images/Template-builder-permissions5.png)
 
 ## Actions tab
 
@@ -115,7 +115,7 @@ Some of the [Core-actions](https://github.com/openmsupply/conforma-server/wiki/L
 
 The Actions tab displays (and defines) any action behaviour that is specific to this application type that will run on the specified Trigger events. Please see [Triggers & Actions](https://github.com/openmsupply/conforma-server/wiki/Triggers-and-Actions) for an explanation of how the trigger/action system works. Some common specific actions are: `sendNotification`, `modifyRecord` and `addUserToOrganisation` as showed in the example.
 
-![Actions tab](../images/Template-builder-actions1.png)
+![Actions tab](/images/Template-builder-actions1.png)
 
 ## Examples
 ### Renaming an existing form element

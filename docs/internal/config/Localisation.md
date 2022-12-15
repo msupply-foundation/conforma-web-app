@@ -2,7 +2,7 @@ A UI to export/import and enable/disable languages is available at: `/admin/loca
 
 ## Localisation UI (external users)
 
-![Localisation](images/localisation-ui.png)
+![Localisation](/images/localisation-ui.png)
 
 It is recommended to use a Google sheet (or Excel spreadsheet) to manage the available languages and keep them up-to-date with the current application strings. Currently we have been using this (private) Google spreasheet to keep the localisation used per project: [Localisation Spreadsheet](https://docs.google.com/spreadsheets/d/1RE80Rqm5_TI3k1ibm9C5gEyGjk9l91Od4244D6gZqCw)
 
@@ -81,6 +81,6 @@ The configuration file is easy to follow, and relates to the other language fold
 
 The configuration file specifies which languages are selectable by the user (`enabled` option), along with how it is displayed to a user in the language selection UI.  If only one language is available, the user doesn't see this option. In other cases it will display like this:
 
-![Language selecion dropdown](../images/localisation-selection-dropdown.png)
+![Language selecion dropdown](/images/localisation-selection-dropdown.png)
 
-![Language selecion dialog](../images/localisation-selection-dialog.png)
+![Language selecion dialog](/images/localisation-selection-dialog.png)
