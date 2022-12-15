@@ -1,6 +1,7 @@
 ## Contents <!-- omit in toc -->
 <!-- toc -->
 - [Overview](#overview)
+  - [How to edit a template](#how-to-edit-a-template)
 - [General tab](#general-tab)
   - [Displayed options](#displayed-options)
 - [Form tab](#form-tab)
@@ -8,23 +9,28 @@
   - [Fields](#fields)
 - [Permissions tab](#permissions-tab)
 - [Actions tab](#actions-tab)
+- [Examples](#examples)
   - [Renaming an existing form element](#renaming-an-existing-form-element)
 <!-- tocstop -->
 ## Overview
 
 One of the simplest ways to customize the system is to alter what information is presented to an applicant on an application form. 
 Another simple way is to alter what data the applicant must provide when filling out an application form. 
-Methods to do each of these are explained below.  
-**Note**: in the demo system only the Admin user has the ability to customize the system. 
+Methods to do each of these are explained below.
 
-To find the Template Builder Go to: Configurations > Templates/Procedures
+### How to edit a template
+
+To find the Template Builder (visible only to Admin users), go to: Configurations > Templates/Procedures
 ![Find template builder tool](../images/Template-builder1.png)
 
-Select the edit button for the Form Template you wish to edit. The names of the templates are highlighted in pink: 
-**Note**: Application Form Templates can only be altered if there are no existing applications for this template. If applications exist then the Form Template must be duplicated and this copy of the Form Template can then be altered. 
+Select the edit button for the Form Template you wish to edit. The names of the templates are highlighted in pink:
 ![Edit template](../images/Template-builder2.png)
-
-**Note** If you need to change a copy of the current template, click once on the row to see all versions. Then click on the edit icon on the last one to edit!
+ 
+**Note**: 
+- Form Templates can only be altered if there are no existing applications for this template version. 
+- If applications exist for this version then first you must duplicate and then the copy of this Template can then be altered. 
+   1. To change a copy of the current template, click once on the row to see all versions
+   2. Then click on the edit icon on the last version (In Draft) to edit!
 
 ## General tab
 
@@ -65,7 +71,7 @@ A section has to have at least one page.
 Pages are defined inside each section. It's possible to add, remove and move pages within a section and between sections.
 
 ### Fields
-Each field needs a unique `code` - per template and which is used to referece this element in actions or other elements. 
+Each field needs a unique `code` (per template) and which is used to reference this element in actions or other elements.  
 When adding a new field (using the **Add Element** button) it is defined using the most basic `element type`: Static text. There is a dropdown for selecting other plugins of element types currently available in the App. New plugins can be added for other element types.
 
 Otherwise to view the configuration and edit an existing field click on the cog on the side of the element:
@@ -76,41 +82,42 @@ Primary defining the plugin type is required for a field. Other imporatant commo
 
 ![Form field - common properties](../images/Template-builder7.png)
 
-Each plugin will have specific parameters to be passed on. These can be a simple string, number or have more elegant and complex logic, using the [`evaluateExpression`](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) function. To use these a lot of expertise is required, we definitelly  recommend having TMF support while working on this area of the App.
+Each plugin will have specific parameters to be passed on. These can be a simple string, number or have more elegant and complex logic, using the [`evaluateExpression`](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) function. To use these a lot of expertise is required, we definitely recommend having TMF support while working on this area of the App.
 
-The compulsory and optional parameters are displayed at the top:
+There are compulsory and optional parameters depending on each Plugin, which are added to this fields in the Parameters area:
 ![Form field - parameters](../images/Template-builder8.png)
 
 ## Permissions tab
 
-This area is used to define permissions used to **Apply** and **Review** applications of this type.
+This area is used to define permissions for: **Apply**, **Assign**, **View** and **Review** applications of this type. Each permission is explained below.
 
-Is simple to define permissins to Apply or View the applications. Just select one existing permission from the dropdown to use an existing **permission_name**.
-A apply permission will allow an Applicant with the given permission to create a new application. And the View is meant to be for Supervisors of reviews to View ALL submitted reviews related to applications of this template type. 
+Is simple to define permissions to **Apply** or **View** applications. Just select one existing permission from the dropdown to use an existing **permission_name**.  
+An **Apply** permission will allow applicants (that were granted this permission) to create a new applications.  
+And the **View** permission is meant to be for Supervisors of reviewers to view ALL submitted reviews related to applications of this template type. 
 ![Permission tab - apply permission](../images/Template-builder-permissions1.png)
 
-The reviews configuration on the other hand, have many options available for procedures. In the example below we can see how it looks having just one review **stage** and a single level - meaning there is no consolidation involved. The user can start editing the current existing stage (or add a new stage) and:
-* Set the assigner permission to assign reviewers in that level/stage
+The reviews configuration on the other hand, have many options available for procedures. In the example below we can see how it looks having just one review **stage** and a single level - meaning there is no consolidation involved. The user can start editing the current existing stage (or add a new stage) and:  
+- Set the **Assign** permission to assign reviewers in that level/stage
 ![Permission tab - assign permission](../images/Template-builder-permissions2.png)
 
-* Clicks on the plus button to add the new Level of review
+- Clicks on the plus button to add the new Level of review
 ![Permission tab - level](../images/Template-builder-permissions3.png)
 
-* Select the reviewer permission to be assigned to this level/stage 
+- Select the **Review** permission to be assigned to this level/stage
 ![Permission tab - reviewer](../images/Template-builder-permissions4.png)
 
-* Then by clicking the add button next will add the new Review permission
+- Then by clicking the add button next will add the new Review permission
 ![Permission tab - review permission](../images/Template-builder-permissions5.png)
+
 ## Actions tab
 
-Some of the **Core-actions** will be defined for every reviewable application, and don't show currently in this tab.
+Some of the [Core-actions](https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins#core-actions) will be defined for every reviewable application, and don't show currently in this tab.
 
-What can be definied in the actions tab is anything specific to this application that should happen when the Trigger in list happen.
-Please see [Triggers & Actions](https://github.com/openmsupply/conforma-server/wiki)Triggers-and-Actions.md) for an explanation of how the trigger/action system works. Some common specific actions are: `SendNotification`, `modifyRecord` and `addUserToOrganisation` as showed in the example.
+The Actions tab displays (and defines) any action behaviour that is specific to this application type that will run on the specified Trigger events. Please see [Triggers & Actions](https://github.com/openmsupply/conforma-server/wiki/Triggers-and-Actions) for an explanation of how the trigger/action system works. Some common specific actions are: `sendNotification`, `modifyRecord` and `addUserToOrganisation` as showed in the example.
 
 ![Actions tab](../images/Template-builder-actions1.png)
 
-# Examples
+## Examples
 ### Renaming an existing form element
 **TODO** - Add images
 
