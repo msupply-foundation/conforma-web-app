@@ -48,13 +48,13 @@ In this tab is possible to change the status of this Template **version** to Mak
 | Name               | name                       | no       | -          | Name of a **single application** displayed to users (in different areas of the App)                                            |
 | Name plural        | name_plural                | no       | -          | Name of the **group of applications** displayed to users (in different areas of the App)                                       |
 | Code               | code                       | no       | -          | Reference to application type. In case a new code is created this template version will be displayd as a new template type!    |
-| Serial Pattern     | serial_patern              | yes      | **?**      | The pattern to be used when generating a new application - used regular expression                                             |
+| Serial Pattern     | serial_pattern              | yes      | **?**      | The pattern to be used when generating a new application - uses [Generate Text String](https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins#generate-text-string)                                             |
 | Linear             | is_linear                  | yes      | **true**   | Determine if user is blocked from moving to the next page before filling all required fields                                   |
 | Interactive        | can_applicant_make_changes | yes      | **true**   | When this option is set to false it means no Reviewer can interact with Applicant, so option for "List of Questions" is hidden |
 | Category           | category                   | no       | -          | Used to group different template types in a category. The category visibility in areas of Conforma is also configurable        |
 | Filters            | -                          | yes      | -          | Selectable filters to display to users applications grouped by action to take in Dashboard                                     |
-| Start Message      | start_message              | yes      | Don't show | If defined will display the message on a page before creating the application                                                  |
-| Submission Message | submission_message         | yes      | **?**      | Show message to user on page after the application is submitted                                                                |
+| Start Message      | start_message              | yes      | Don't show | If defined will display the Markdown message on a page before creating the application                                                  |
+| Submission Message | submission_message         | yes      | -      | The submission page always show after the application is submitted. The Markdown message can be displayed there if defined                                                                 |
 
 ## Form tab
 

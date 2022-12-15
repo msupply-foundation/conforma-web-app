@@ -4,7 +4,9 @@
 - [Examples: UI Design](#examples-ui-design)
 - [Filters](#filters)
   - [Label filters:](#label-filters)
-  - [applicant action](#applicant-action)
+  - [Applicant action](#applicant-action)
+  - [Assigner action](#assigner-action)
+  - [Reviewer action](#reviewer-action)
   - [String filters:](#string-filters)
   - [Date filters:](#date-filters)
   - [Number filters:](#number-filters)
@@ -145,7 +147,7 @@ Options: Set of static `outcome` from `ApplicationOutcome` ENUM
 
 <a name="applicant-action"></a>
 
-### applicant action
+### Applicant action
 
 The applicant actions are simpler and deduces in Front-end based
 on current Application status. 
@@ -162,7 +164,7 @@ Options:
 
 <a name="assigner-action"></a>
 
-#### assigner action
+### Assigner action
 
 Check out in schema `AssignerAction` ENUM and Function `assigner_list`
 Included: **Yes**
@@ -176,7 +178,7 @@ Options:
 
 <a name="reviewer-action"></a>
 
-#### reviewer action
+### Reviewer action
 
 Check out in schema `ReviewerAction` ENUM and Function `review_list`
 Included: **Yes**

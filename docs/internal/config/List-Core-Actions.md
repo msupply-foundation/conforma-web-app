@@ -23,6 +23,8 @@ Some of the plugin actions - which aren't core-actions - are also defined per te
 
 This list should reflect the same as we have in `Sample templates` so when changing that we need to also add to this list.
 
+https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins#core-actions 
+
 ### Templates
 
 - Edit User Details (No review)
