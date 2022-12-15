@@ -84,8 +84,11 @@ export const Overview: React.FC<{
               )}
             </div>
             {applicantDeadline &&
-              (outcome === ApplicationOutcome.Expired ||
-                outcome === ApplicationOutcome.Pending) && (
+              // If the deadline is active, then it must be PENDING. If it's
+              // inactive, then we only want to show the button when it's
+              // EXPIRED, so cancelled deadlines don't cause the button to show.
+              ((applicantDeadline.isActive && outcome === ApplicationOutcome.Pending) ||
+                (!applicantDeadline.isActive && outcome === ApplicationOutcome.Expired)) && (
                 <div className="flex-row-start-center" style={{ gap: 10, marginTop: 30 }}>
                   {strings.REVIEW_OVERVIEW_EXTEND_BY}
                   <Form.Input
