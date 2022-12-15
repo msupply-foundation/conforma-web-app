@@ -53,8 +53,8 @@ In this tab is possible to change the status of this Template **version** to Mak
 | Interactive        | can_applicant_make_changes | yes      | **true**   | When this option is set to false it means no Reviewer can interact with Applicant, so option for "List of Questions" is hidden |
 | Category           | category                   | no       | -          | Used to group different template types in a category. The category visibility in areas of Conforma is also configurable        |
 | Filters            | -                          | yes      | -          | Selectable filters to display to users applications grouped by action to take in Dashboard                                     |
-| Start Message      | start_message              | yes      | Don't show | If defined will display the Markdown message on a page before creating the application                                                  |
-| Submission Message | submission_message         | yes      | -      | The submission page always show after the application is submitted. The Markdown message can be displayed there if defined                                                                 |
+| Start Message      | start_message              | yes      | Don't show | The start message display on a Optinal start page before creating the application. A [Evaluator Expression](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) for more complex messages or a simple string message is displayed as defined                                                  |
+| Submission Message | submission_message         | yes      | -      | The submission page always show after the application is submitted. A [Evaluator Expression](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) for more complex messages or a simple string message can be also displayed on the submission page - if defined                                                                 |
 
 ## Form tab
 
@@ -82,7 +82,7 @@ Primary defining the plugin type is required for a field. Other imporatant commo
 
 ![Form field - common properties](/images/Template-builder7.png)
 
-Each plugin will have specific parameters to be passed on. These can be a simple string, number or have more elegant and complex logic, using the [`evaluateExpression`](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) function. To use these a lot of expertise is required, we definitely recommend having TMF support while working on this area of the App.
+Each plugin will have specific parameters to be passed on. These can be a simple string, number or have more elegant and complex logic, using the [Evaluator Expression](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) function. To use these a lot of expertise is required, we definitely recommend having TMF support while working on this area of the App.
 
 There are compulsory and optional parameters depending on each Plugin, which are added to this fields in the Parameters area:
 ![Form field - parameters](/images/Template-builder8.png)
