@@ -38,13 +38,13 @@ export const useReferenceDocs = (currentUser: User | null) => {
 }
 
 const shouldSeeInternalDocs = (user: User): boolean => {
-  if (!user?.isAdmin) return false
+  if (user?.isAdmin) return true
   if (!user?.organisation) return false
   return user.organisation.isSystemOrg
 }
 
 const shouldSeeExternalDocs = (user: User): boolean => {
-  if (!user?.isAdmin) return true
+  if (user?.isAdmin) return true
   if (!user?.organisation) return true
   return !user.organisation.isSystemOrg
 }
