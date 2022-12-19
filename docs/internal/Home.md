@@ -16,9 +16,10 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 ### Administration
 
 - [Template Builder](config/Template-Builder.md)
-- [List of Core Actions](config/List-Core-Actions.md)
+- [List of Core Actions](https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins#core-actions)
 - [List of Element Types](config/Element-Type-Specs.md)
 - [Localisation](config/Localisation.md)
+- [Lookup Tables](config/Lookup-Tables.md)
 
 ### Development
 

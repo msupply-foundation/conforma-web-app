@@ -1,5 +1,3 @@
-# Assignment Process
-
 The logic of assigning a review spans between both web app and server — front end is only concerned with queries and mutations to review_assignment table, whereas back end does most of the grunt work (through actions and triggers) and generates records in those tables based on user permissions and states of application and its review.
 
 ## Schema

@@ -1,5 +1,3 @@
-# Apollo client setup
-
 ## References
 
 Apollo-client tutorial: https://www.apollographql.com/docs/tutorial/client/
@@ -416,7 +414,7 @@ export default hot(module)(App)
 ## VS code extension for typing GraphQL
 
 - Install extension on VS code:
-  ![Apollo-client](../images/Apollo-client-extension.png)
+  ![Apollo-client](/images/Apollo-client-extension.png)
 
 - Create one apollo config file on the root to point to your server:
 

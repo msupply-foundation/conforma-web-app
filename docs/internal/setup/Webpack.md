@@ -1,5 +1,28 @@
-# Webpack setup
-
+## Contents <!-- omit in toc -->
+<!-- toc -->
+- [References](#references)
+- [Init](#init)
+- [Webpack with React and Typescrit](#webpack-with-react-and-typescrit)
+  - [Install dependecies (React)](#install-dependecies-react)
+  - [Install dev dependencies (Typescript + loaders + webpack)](#install-dev-dependencies-typescript--loaders--webpack)
+  - [Configure Typescript](#configure-typescript)
+  - [Add some content to the public folder](#add-some-content-to-the-public-folder)
+  - [Create a very basic App](#create-a-very-basic-app)
+- [Webpack for initial setup](#webpack-for-initial-setup)
+- [Semantic-ui React](#semantic-ui-react)
+  - [Use Semantic-ui LESS locally](#use-semantic-ui-less-locally)
+  - [Add semantic-ui to components in the App](#add-semantic-ui-to-components-in-the-app)
+  - [Webpack composition](#webpack-composition)
+- [Building the app with webpack](#building-the-app-with-webpack)
+- [Basic setup finished](#basic-setup-finished)
+  - [App style](#app-style)
+- [Prettier \& Eslint for code styling](#prettier--eslint-for-code-styling)
+  - [Install dev dependencies](#install-dev-dependencies)
+  - [Configure Prettier and Eslint](#configure-prettier-and-eslint)
+- [Node minimal version](#node-minimal-version)
+  - [Testing](#testing)
+- [Included packages:](#included-packages)
+<!-- tocstop -->
 ## References
 
 Inital setup was done following this tutorial: https://medium.com/free-code-camp/learn-webpack-for-react-a36d4cac5060
@@ -901,12 +924,8 @@ Webpack setp
 - **Semantic-ui-react**
 - **LESS**
 
-### Back
-
+### Back <!-- omit in toc -->
 - [Home](Home.md)
 
-## Next
-
+### Next <!-- omit in toc -->
 - [Apollo client](apollo-client.md)
-- [Auth & App Router]
-- [Themes]
