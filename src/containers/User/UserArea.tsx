@@ -17,6 +17,7 @@ import { UiLocation } from '../../utils/generated/graphql'
 const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
 
 const UserArea: React.FC = () => {
+  const { preferences } = usePrefs()
   const {
     userState: { currentUser, orgList, templatePermissions },
     onLogin,
@@ -30,7 +31,12 @@ const UserArea: React.FC = () => {
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
   return (
-    <Container id="user-area" fluid>
+    <Container
+      id="user-area"
+      fluid
+      // Custom color option (for Angola only currently)
+      style={{ backgroundColor: preferences?.style?.headerBgColor ?? '' }}
+    >
       <BrandArea />
       <div id="user-area-left">
         <MainMenuBar
