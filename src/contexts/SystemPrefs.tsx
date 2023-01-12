@@ -12,6 +12,7 @@ interface PrefsState {
     brandLogoOnDarkFileId?: string
     defaultListFilters?: string[]
     systemManagerPermissionName?: string
+    style?: { headerBgColor?: string }
   }
   languageOptions?: LanguageOption[]
   latestSnapshot?: string
