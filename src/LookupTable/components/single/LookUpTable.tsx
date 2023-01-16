@@ -38,11 +38,22 @@ const LookupTable: React.FC<any> = ({ structure }) => {
             return (
               <Table.Row key={`lookup-table-${structure.tableName}-row-${myDataRow.id}`}>
                 {structure &&
-                  structure.fieldMap.map((field: FieldMapType) => (
-                    <Table.Cell key={`lookup-table-${structure.tableName}-data-${field.fieldname}`}>
-                      {myDataRow[toCamelCase(field.fieldname)]}
-                    </Table.Cell>
-                  ))}
+                  structure.fieldMap.map((field: FieldMapType) => {
+                    const value = myDataRow[toCamelCase(field.fieldname)]
+                    const displayString =
+                      value === null
+                        ? ''
+                        : typeof value === 'object'
+                        ? JSON.stringify(value)
+                        : String(value)
+                    return (
+                      <Table.Cell
+                        key={`lookup-table-${structure.tableName}-data-${field.fieldname}`}
+                      >
+                        {displayString}
+                      </Table.Cell>
+                    )
+                  })}
               </Table.Row>
             )
           })
