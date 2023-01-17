@@ -53,7 +53,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   useEffect(() => {
     // Ensures defaultValue is saved on first load
-    if (!currentResponse?.text && defaultValue !== undefined) {
+    if (
+      !currentResponse?.text &&
+      defaultValue !== undefined &&
+      defaultValue !== null &&
+      defaultValue !== ''
+    ) {
       const { number, formattedNumber, fullText } = parseInput(
         String(defaultValue),
         numberFormatter,
@@ -68,7 +73,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         onSave({ text: fullText, number, type, currency, locale, prefix, suffix, suffixPlural })
       setTextValue(formattedNumber)
     }
-  }, [])
+  }, [defaultValue])
 
   useEffect(() => {
     if (!textValue) return

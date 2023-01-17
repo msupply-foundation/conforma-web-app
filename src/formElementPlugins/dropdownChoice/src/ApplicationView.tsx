@@ -66,7 +66,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       const { optionIndex } = currentResponse
       setSelectedIndex(optionIndex)
     }
-  }, [])
+  }, [defaultOption, options])
 
   const addItemHandler = (text: string) => {
     setAddedOption(text)
@@ -123,6 +123,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         // multiple
         selection
         clearable
+        disabled={!isEditable}
         search={search || hasOther}
         allowAdditions={hasOther}
         additionLabel={strings.ADD_CUSTOM_OPTION_LABEL}
