@@ -4,6 +4,42 @@
 
 import { DateTime, Duration } from 'luxon'
 
+type FilterRule = 'exclude' | 'include'
+interface FilterOptions {
+  key?: string
+  values: string | string[]
+  rule?: FilterRule
+}
+
+const filterArray = (valuesArray: Object[] | string[], options: FilterOptions) => {
+  const { key, rule = 'exclude', values } = options
+  if (
+    (valuesArray.length > 0 && key && typeof valuesArray[0] === 'object') ||
+    (!key && typeof valuesArray[0] === 'string')
+  )
+    return key
+      ? (valuesArray as Object[]).filter(
+          (
+            obj // Array of strings
+          ) =>
+            Object.entries(obj).find(
+              ([keyMap, value]) =>
+                keyMap === key &&
+                (rule === 'include' ? values.includes(value) : !values.includes(value))
+            )
+        )
+      : (valuesArray as string[]).filter(
+          (
+            str // Array of objects
+          ) => (rule === 'include' ? values.includes(str) : !values.includes(str))
+        )
+  else {
+    if (valuesArray.length > 0)
+      console.log('Type of elements in array mismatch filter options', options)
+    return valuesArray
+  }
+}
+
 const generateExpiry = (duration: Duration, startDate?: string | Date) => {
   const date = startDate
     ? typeof startDate === 'string'
@@ -61,6 +97,7 @@ const extractNumber = (input: string) => {
 const removeAccents = (input: string) => input.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
 export default {
+  filterArray,
   generateExpiry,
   getYear,
   getFormattedDate,
