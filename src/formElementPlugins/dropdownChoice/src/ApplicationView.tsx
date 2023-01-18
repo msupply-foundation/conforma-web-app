@@ -46,6 +46,22 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { isEditable } = element
 
   useEffect(() => {
+    if (options[0] === 'Loading...') return
+
+    // For when the "text" value is pre-filled by an external source (i.e.
+    // listBuilder wrapper), we need to re-create the other response components
+    if (currentResponse?.text && currentResponse?.selection === undefined) {
+      const optionIndex = getDefaultIndex(currentResponse.text, options)
+      onSave({
+        text: options[optionIndex],
+        selection: options[optionIndex],
+        optionIndex,
+        isCustomOption: false,
+      })
+      setSelectedIndex(optionIndex)
+      return
+    }
+
     // This ensures that, if a default is specified, it gets saved on first load
     if (!currentResponse?.text && defaultOption !== undefined) {
       const optionIndex = getDefaultIndex(defaultOption, options)
