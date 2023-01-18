@@ -48,6 +48,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     inputFields,
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
+    default: defaultList,
   } = parameters
   const {
     userState: { currentUser },
@@ -82,6 +83,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       setInputState((prevState) => ({ ...prevState, currentElementsState: elements }))
     )
   }, [inputState.currentResponses])
+
+  useEffect(() => {
+    if (!defaultList || defaultList[0] == 'Loading') return
+    if (listItems.length === 0) setListItems(defaultList)
+  }, [defaultList])
 
   useEffect(() => {
     onSave({
