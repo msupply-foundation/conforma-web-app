@@ -42,6 +42,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     resultFormat = displayFormat,
     textFormat,
     displayType = 'card',
+    defaultSelection,
   } = parameters
 
   const {
@@ -60,7 +61,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<any[]>([])
-  const [selection, setSelection] = useState<any[]>(currentResponse?.selection || [])
+  const [selection, setSelection] = useState<any[]>(currentResponse?.selection ?? [])
   const { isEditable } = element
 
   const [debounceOutput, setDebounceInput] = useDebounce<string>('', DEBOUNCE_TIMEOUT)
@@ -68,9 +69,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useEffect(() => {
     onSave({
       text: getTextFormat(textFormat, selection),
-      selection: selection,
+      selection,
     })
   }, [selection])
+
+  useEffect(() => {
+    if (!defaultSelection) return
+    if (selection.length === 0) setSelection([defaultSelection])
+  }, [defaultSelection])
 
   useEffect(() => {
     if (!debounceOutput) return
