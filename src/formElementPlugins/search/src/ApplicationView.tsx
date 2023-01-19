@@ -10,6 +10,7 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import config from '../../../config'
 import useDebounce from './useDebounce'
 import './styles.css'
+import useDefault from '../../useDefault'
 
 interface DisplayFormat {
   title?: string
@@ -42,7 +43,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     resultFormat = displayFormat,
     textFormat,
     displayType = 'card',
-    defaultSelection,
+    default: defaultValue,
+    replaceResponseOnDefaultChange,
   } = parameters
 
   const {
@@ -66,17 +68,26 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const [debounceOutput, setDebounceInput] = useDebounce<string>('', DEBOUNCE_TIMEOUT)
 
+  useDefault({
+    defaultValue,
+    currentResponse,
+    replaceResponseOnDefaultChange,
+    onChange: (defaultSelection) => {
+      setSelection(Array.isArray(defaultSelection) ? defaultSelection : [defaultSelection])
+      setSearchText(
+        displayType === 'input'
+          ? substituteValues(displayFormat.title ?? displayFormat.description, defaultSelection)
+          : ''
+      )
+    },
+  })
+
   useEffect(() => {
     onSave({
       text: getTextFormat(textFormat, selection),
       selection,
     })
   }, [selection])
-
-  useEffect(() => {
-    if (!defaultSelection) return
-    if (selection.length === 0) setSelection([defaultSelection])
-  }, [defaultSelection])
 
   useEffect(() => {
     if (!debounceOutput) return
