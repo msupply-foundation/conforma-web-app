@@ -36,7 +36,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     placeholder?: string
     search?: boolean
     hasOther?: boolean
-    default?: any
+    default?: string | number
     replaceResponseOnDefaultChange?: boolean
   } & (ObjectOptions | StringOptions)
 

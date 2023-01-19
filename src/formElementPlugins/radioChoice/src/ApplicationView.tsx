@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Radio, Form, Input, Label, CheckboxProps } from 'semantic-ui-react'
+import { Radio, Form, Input, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDefault from '../../useDefault'
@@ -56,12 +56,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     additionalDependencies: [options],
   })
 
-  function handleChange(optionIndex: number, additionalText?: string) {
+  function handleChange(optionIndex: number, additionalText: string | undefined = otherText) {
     setSelectedIndex(optionIndex)
     onSave({
       text:
         hasOther && optionIndex === allOptions.length - 1
-          ? additionalText ?? otherText ?? ''
+          ? additionalText ?? ''
           : optionsDisplayProperty
           ? allOptions[optionIndex][optionsDisplayProperty]
           : allOptions[optionIndex],

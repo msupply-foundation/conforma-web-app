@@ -90,9 +90,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     defaultValue,
     currentResponse,
     replaceResponseOnDefaultChange,
-    onChange: (defaultList) => {
-      setListItems(defaultList)
-    },
+    onChange: (defaultList) => setListItems(defaultList),
   })
 
   useEffect(() => {
