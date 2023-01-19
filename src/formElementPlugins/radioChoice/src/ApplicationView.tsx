@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { Radio, Form, Input, Label } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Radio, Form, Input, Label, CheckboxProps } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import useDefault from '../../useDefault'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -19,7 +20,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     label,
     description,
     options,
-    default: defaultOption,
+    default: defaultValue,
+    replaceResponseOnDefaultChange,
     optionsDisplayProperty,
     hasOther,
     otherPlaceholder,
@@ -39,32 +41,27 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       : undefined
   )
 
-  useEffect(() => {
-    // This ensures that, if a default is specified, it gets saved on first load
-    if (!currentResponse?.text && defaultOption !== undefined) {
+  useDefault({
+    defaultValue,
+    currentResponse,
+    replaceResponseOnDefaultChange,
+    onChange: (defaultOption) => {
       const optionIndex = getDefaultIndex(defaultOption, options)
-      onSave({
-        text: optionsDisplayProperty
-          ? allOptions[optionIndex][optionsDisplayProperty]
-          : allOptions[optionIndex],
-        selection: allOptions[optionIndex],
-        optionIndex,
-      })
-      setSelectedIndex(optionIndex)
-    }
-    if (currentResponse?.text) {
-      const { optionIndex } = currentResponse
-      setSelectedIndex(optionIndex)
-    }
-  }, [])
+      if (optionIndex >= 0) handleChange(optionIndex)
+      else {
+        if (!hasOther) return
+        handleChange(allOptions.length - 1, defaultOption)
+      }
+    },
+    additionalDependencies: [options],
+  })
 
-  function handleChange(e: any, data: any) {
-    const { index: optionIndex } = data
+  function handleChange(optionIndex: number, additionalText?: string) {
     setSelectedIndex(optionIndex)
     onSave({
       text:
         hasOther && optionIndex === allOptions.length - 1
-          ? otherText || ''
+          ? additionalText ?? otherText ?? ''
           : optionsDisplayProperty
           ? allOptions[optionIndex][optionsDisplayProperty]
           : allOptions[optionIndex],
@@ -72,13 +69,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       optionIndex,
       other: hasOther && optionIndex === allOptions.length - 1,
     })
+    if (additionalText) setOtherText(additionalText)
   }
 
-  function handleOtherChange(e: any, { value }: any) {
+  function handleOtherChange(value: string) {
     setOtherText(value)
   }
 
-  function handleOtherLoseFocus(e: any) {
+  function handleOtherLoseFocus(_: any) {
     onSave({
       text: otherText,
       selection: allOptions[allOptions.length - 1],
@@ -126,7 +124,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               name={`${code}_radio_${index}`} // This is GROUP name
               value={selectedIndex}
               checked={index === selectedIndex}
-              onChange={handleChange}
+              onChange={(_, { index }) => handleChange(index)}
               index={index}
             />
             {showOther && (
@@ -134,7 +132,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 placeholder={otherPlaceholder}
                 size="small"
                 disabled={selectedIndex !== allOptions.length - 1}
-                onChange={handleOtherChange}
+                onChange={(_, { value }) => handleOtherChange(value)}
                 onBlur={handleOtherLoseFocus}
                 value={otherText}
               />

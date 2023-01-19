@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { ApplicationViewProps } from '../../types'
 import SemanticDatepicker from 'react-semantic-ui-datepickers'
 import { DateTime } from 'luxon'
