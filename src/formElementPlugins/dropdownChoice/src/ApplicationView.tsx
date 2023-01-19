@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
 import { ResponseFull } from '../../../utils/types'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import useDefault from '../../useDefault'
 
 type ObjectOption = { [key: string]: any }
 type ObjectOptions = { options: ObjectOption[]; optionsDisplayProperty: string }
@@ -11,10 +12,7 @@ type StringOptions = { options: string[]; optionsDisplayProperty: never }
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
-  onUpdate,
   currentResponse,
-  // value,
-  // setValue,
   validationState,
   onSave,
   Markdown,
@@ -30,14 +28,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     options,
     optionsDisplayProperty,
     hasOther,
-    default: defaultOption,
+    default: defaultValue,
+    shouldUpdateIfFilled,
   } = parameters as {
     label?: string
     description?: string
     placeholder?: string
     search?: boolean
     hasOther?: boolean
-    default: any
+    default?: any
+    shouldUpdateIfFilled?: boolean
   } & (ObjectOptions | StringOptions)
 
   const [selectedIndex, setSelectedIndex] = useState<number>()
@@ -45,44 +45,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const { isEditable } = element
 
-  useEffect(() => {
-    if (options[0] === 'Loading...') return
-
-    // For when the "text" value is pre-filled by an external source (i.e.
-    // listBuilder wrapper), we need to re-create the other response components
-    if (currentResponse?.text && currentResponse?.selection === undefined) {
-      const optionIndex = getDefaultIndex(currentResponse.text, options)
-      onSave({
-        text: options[optionIndex],
-        selection: options[optionIndex],
-        optionIndex,
-        isCustomOption: false,
-      })
-      setSelectedIndex(optionIndex)
-      return
-    }
-
-    // This ensures that, if a default is specified, it gets saved on first load
-    if (!currentResponse?.text && defaultOption !== undefined) {
+  useDefault({
+    defaultValue,
+    currentResponse,
+    shouldUpdateIfFilled,
+    additionalDependencies: [options],
+    onChange: (defaultOption: any) => {
       const optionIndex = getDefaultIndex(defaultOption, options)
-      onSave({
-        text:
-          optionsDisplayProperty &&
-          options[optionIndex] !== undefined &&
-          typeof options[optionIndex] === 'object'
-            ? (options[optionIndex] as ObjectOption)[optionsDisplayProperty]
-            : options[optionIndex],
-        selection: options[optionIndex],
-        optionIndex,
-        isCustomOption: false,
-      })
-      setSelectedIndex(optionIndex)
-    }
-    if (currentResponse?.text) {
-      const { optionIndex } = currentResponse
-      setSelectedIndex(optionIndex)
-    }
-  }, [defaultOption, options])
+      if (optionIndex === -1 && hasOther) addItemHandler(defaultOption)
+      else handleChange(optionIndex)
+    },
+  })
 
   const addItemHandler = (text: string) => {
     setAddedOption(text)
