@@ -4,8 +4,7 @@
   "displayName": "List Builder",
   "parameterLoadingValues": {
     "label": "Loading...",
-    "description": "",
-    "default": ["Loading"]
+    "description": ""
   },
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"

@@ -24,13 +24,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     maxWidth,
     maxLength = Infinity,
     default: defaultValue,
-    shouldUpdateIfFilled,
+    replaceResponseOnDefaultChange,
   } = parameters
 
   useDefault({
     defaultValue,
     currentResponse,
-    shouldUpdateIfFilled,
+    replaceResponseOnDefaultChange,
     onChange: (defaultText: string) => {
       setValue(defaultText)
       onSave({ text: defaultText })
