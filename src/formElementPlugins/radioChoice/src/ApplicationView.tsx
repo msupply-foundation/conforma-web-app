@@ -30,7 +30,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const { code, isEditable } = element
 
-  const [selectedIndex, setSelectedIndex] = useState<number>()
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+    currentResponse?.optionIndex
+  )
 
   const allOptions = [...options]
   if (hasOther) allOptions.push(strings.OTHER)

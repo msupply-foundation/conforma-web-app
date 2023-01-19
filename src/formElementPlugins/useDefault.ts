@@ -20,7 +20,7 @@ const useDefault = ({
   additionalDependencies = [],
 }: UseDefaultProps) => {
   useEffect(() => {
-    if (defaultValue === loadingValue || !defaultValue) return
+    if (defaultValue === loadingValue || defaultValue === undefined) return
 
     if (replaceResponseOnDefaultChange || !currentResponse?.text) onChange(defaultValue)
   }, [defaultValue, ...additionalDependencies])
