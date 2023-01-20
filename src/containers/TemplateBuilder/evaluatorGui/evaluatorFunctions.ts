@@ -4,40 +4,32 @@
 
 import { DateTime, Duration } from 'luxon'
 
-type FilterRule = 'exclude' | 'include'
 interface FilterOptions {
   key?: string
+  rule?: 'exclude' | 'include'
   values: string | string[]
-  rule?: FilterRule
 }
 
-const filterArray = (valuesArray: Object[] | string[], options: FilterOptions) => {
+const filterArray = (valuesArray: unknown[], options: FilterOptions) => {
   const { key, rule = 'exclude', values } = options
-  if (
-    (valuesArray.length > 0 && key && typeof valuesArray[0] === 'object') ||
-    (!key && typeof valuesArray[0] === 'string')
-  )
-    return key
-      ? (valuesArray as Object[]).filter(
-          (
-            obj // Array of strings
-          ) =>
-            Object.entries(obj).find(
-              ([keyMap, value]) =>
-                keyMap === key &&
-                (rule === 'include' ? values.includes(value) : !values.includes(value))
-            )
-        )
-      : (valuesArray as string[]).filter(
-          (
-            str // Array of objects
-          ) => (rule === 'include' ? values.includes(str) : !values.includes(str))
-        )
-  else {
-    if (valuesArray.length > 0)
-      console.log('Type of elements in array mismatch filter options', options)
-    return valuesArray
-  }
+
+  const compareValues = Array.isArray(values) ? values : [values]
+
+  const isObject = (element: unknown) =>
+    typeof element === 'object' && !Array.isArray(element) && element !== null
+
+  return valuesArray.filter((element) => {
+    if (key && isObject(element))
+      return Object.entries(element as Object).find(
+        ([keyMap, value]) =>
+          keyMap === key &&
+          (rule === 'include' ? compareValues.includes(value) : !compareValues.includes(value))
+      )
+    else
+      return rule === 'include'
+        ? compareValues.includes(element as string)
+        : !compareValues.includes(element as string)
+  })
 }
 
 const generateExpiry = (duration: Duration, startDate?: string | Date) => {
