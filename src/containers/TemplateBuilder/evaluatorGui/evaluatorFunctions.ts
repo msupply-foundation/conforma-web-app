@@ -21,8 +21,8 @@ const filterArray = (valuesArray: unknown[], options: FilterOptions) => {
   return valuesArray.filter((element) => {
     if (key && isObject(element))
       return Object.entries(element as Object).find(
-        ([keyMap, value]) =>
-          keyMap === key &&
+        ([objKey, value]) =>
+          objKey === key &&
           (rule === 'include' ? compareValues.includes(value) : !compareValues.includes(value))
       )
     else
