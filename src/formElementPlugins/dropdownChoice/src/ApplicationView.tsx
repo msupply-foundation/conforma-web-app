@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
 import { ResponseFull } from '../../../utils/types'
 import { ApplicationViewProps } from '../../types'
@@ -40,10 +40,22 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     replaceResponseOnDefaultChange?: boolean
   } & (ObjectOptions | StringOptions)
 
-  const [selectedIndex, setSelectedIndex] = useState<number>()
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+    currentResponse?.optionIndex ?? undefined
+  )
   const [addedOption, setAddedOption] = useState<string | null>(null)
 
   const { isEditable } = element
+
+  useEffect(() => {
+    // This deals with the case when a default response has been externally set
+    // (e.g. by a ListBuilder) and only a selection (with no index) has been
+    // provided.
+    if (options[0] === 'Loading...') return
+    if (currentResponse?.selection || currentResponse?.optionIndex === undefined) {
+      setSelectedIndex(getDefaultIndex(currentResponse?.selection, options))
+    }
+  }, [options])
 
   useDefault({
     defaultValue,
