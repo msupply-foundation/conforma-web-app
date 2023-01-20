@@ -79,6 +79,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
           },
           currentUser,
           applicationData: fullStructure?.info,
+          functions,
         }
       : undefined
 

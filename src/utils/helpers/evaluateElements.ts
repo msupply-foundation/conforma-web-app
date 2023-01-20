@@ -1,4 +1,5 @@
 import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
+import functions from '../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
 import getServerUrl from './endpoints/endpointUrlBuilder'
 import config from '../../config'
 import {
@@ -59,6 +60,7 @@ const evaluateSingleElement: EvaluateElement = async (
       responses: { ...responses, thisResponse: responses?.[element.code]?.text },
       currentUser,
       applicationData,
+      functions,
     },
     APIfetch: fetch,
     graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
