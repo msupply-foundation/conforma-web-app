@@ -91,18 +91,12 @@ const ViewEditButton: React.FC<CellProps> = ({ template: { id } }) => {
 }
 
 const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) => {
-  const downloadLinkRef = useRef<HTMLAnchorElement>(null)
   const { exportTemplate } = useOperationState()
   const snapshotName = `${code}-${version}`
   const JWT = localStorage.getItem(config.localStorageJWTKey)
 
   return (
     <div key="export">
-      <a
-        ref={downloadLinkRef}
-        href={getServerUrl('snapshot', { action: 'download', name: snapshotName })}
-        target="_blank"
-      ></a>
       <div
         className="clickable"
         onClick={async (e) => {
@@ -119,6 +113,12 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
             a.href = window.URL.createObjectURL(data)
             a.download = `${snapshotName}.zip`
             a.click()
+            // Delete the snapshot cos we don't want snapshots page cluttered
+            // with individual templates
+            await fetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${JWT}` },
+            })
           }
         }}
       >
