@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Segment, Icon } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { User } from '../../../utils/types'
-import { DisplayType, InputResponseField, ListItem, ListLayoutProps } from './types'
+import { DisplayType, InputResponseField, ListItem, ListLayoutProps, ListViewParams } from './types'
 import { TemplateElement } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import {
@@ -48,7 +48,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     inputFields,
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
-  } = parameters
+  }: ListViewParams = parameters
   const {
     userState: { currentUser },
   } = useUserState()
@@ -96,14 +96,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     async ({ variables: response }: { variables: InputResponseField }) => {
       // need to get most recent state of inputState, thus using callback
       setInputState((currentInputState) => {
-        const newResponses = { ...currentInputState.currentResponses, [code]: response }
-        const error = !anyErrorItems(newResponses, inputFields) ? false : inputState.error
+        const isRequired = inputFields.find((element) => element.code === code)?.isRequired ?? false
+        const newResponses = {
+          ...currentInputState.currentResponses,
+          [code]: { ...response, isRequired },
+        }
+        const error = !anyErrorItems(newResponses) ? false : inputState.error
         return { ...currentInputState, currentResponses: newResponses, error }
       })
     }
 
   const updateList = async () => {
-    if (anyErrorItems(inputState.currentResponses, inputFields)) {
+    if (anyErrorItems(inputState.currentResponses)) {
       setInputState({ ...inputState, error: true })
       return
     }
@@ -138,7 +142,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     displayFormat,
     editItem: isEditable ? editItem : () => {},
     deleteItem: isEditable ? deleteItem : () => {},
-    fieldTitles: inputFields.map((e: TemplateElement) => e.title),
+    fieldTitles: inputFields.map((e: TemplateElement) => e.title as string),
     codes: inputFields.map((e: TemplateElement) => e.code),
     Markdown,
     isEditable,

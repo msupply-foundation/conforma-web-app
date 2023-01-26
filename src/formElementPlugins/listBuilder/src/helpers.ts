@@ -39,18 +39,19 @@ export const createTextString = (listItems: ListItem[], inputFields: TemplateEle
 
 // Data validation and state reset
 export const resetCurrentResponses = (inputFields: TemplateElement[]) =>
-  inputFields.reduce((acc, { code }) => ({ ...acc, [code]: { value: { text: undefined } } }), {})
+  inputFields.reduce(
+    (acc, { code, isRequired }) => ({ ...acc, [code]: { value: { text: undefined }, isRequired } }),
+    {}
+  )
 
 export const anyInvalidItems = (currentInput: ListItem) =>
   Object.values(currentInput).some((response) => response.isValid === false)
 
-export const anyIncompleteItems = (currentInput: ListItem, inputFields: TemplateElement[]) =>
-  Object.values(currentInput).some(
-    (response, index) => inputFields[index]?.isRequired !== false && !response.value?.text
-  )
+export const anyIncompleteItems = (currentInput: ListItem) =>
+  Object.values(currentInput).some(({ value, isRequired }) => isRequired !== false && !value?.text)
 
-export const anyErrorItems = (currentInput: ListItem, inputFields: TemplateElement[]) =>
-  anyInvalidItems(currentInput) || anyIncompleteItems(currentInput, inputFields)
+export const anyErrorItems = (currentInput: ListItem) =>
+  anyInvalidItems(currentInput) || anyIncompleteItems(currentInput)
 
 // Building elements
 export const combineResponses = (

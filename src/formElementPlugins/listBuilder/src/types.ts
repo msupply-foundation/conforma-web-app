@@ -1,3 +1,4 @@
+import { TemplateElement } from '../../../utils/generated/graphql'
 import { ApplicationDetails, ResponseFull, User } from '../../../utils/types'
 
 export enum DisplayType {
@@ -9,10 +10,24 @@ export enum DisplayType {
 
 export interface InputResponseField {
   isValid?: boolean
+  isRequired?: boolean
   value: ResponseFull
 }
 
 export type ListItem = { [code: string]: InputResponseField }
+
+export interface ListViewParams {
+  label: string
+  description: string
+  createModalButtonText?: string
+  modalText?: string
+  addButtonText?: string
+  updateButtonText?: string
+  deleteItemText?: string
+  inputFields: TemplateElement[]
+  displayFormat: { title: string; subtitle: string; description: string }
+  displayType: DisplayType
+}
 
 export interface ListLayoutProps {
   listItems: ListItem[]
