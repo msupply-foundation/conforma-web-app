@@ -45,9 +45,7 @@ export const anyInvalidItems = (currentInput: ListItem) =>
   Object.values(currentInput).some((response) => response.isValid === false)
 
 export const anyIncompleteItems = (currentInput: ListItem, inputFields: TemplateElement[]) =>
-  Object.values(currentInput).some(
-    (response, index) => inputFields[index]?.isRequired !== false && !response.value?.text
-  )
+  inputFields.some((field) => field?.isRequired !== false && !currentInput[field.code].value?.text)
 
 export const anyErrorItems = (currentInput: ListItem, inputFields: TemplateElement[]) =>
   anyInvalidItems(currentInput) || anyIncompleteItems(currentInput, inputFields)
