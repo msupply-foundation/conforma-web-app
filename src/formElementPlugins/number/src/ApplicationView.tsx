@@ -41,7 +41,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     suffixPlural = suffix,
     maxSignificantDigits,
     default: defaultValue,
-    replaceResponseOnDefaultChange,
+    persistUserInput,
   } = parameters
   const [textValue, setTextValue] = useState<string | null | undefined>(currentResponse?.text)
   const [internalValidation, setInternalValidation] = useState(validationState)
@@ -56,7 +56,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useDefault({
     defaultValue,
     currentResponse,
-    replaceResponseOnDefaultChange,
+    persistUserInput,
     onChange: (defaultNumber) => {
       setTextValue(String(defaultNumber))
       handleLoseFocus(String(defaultNumber))

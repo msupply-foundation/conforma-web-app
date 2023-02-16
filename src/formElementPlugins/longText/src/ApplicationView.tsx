@@ -24,13 +24,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     lines,
     maxLength,
     default: defaultValue,
-    replaceResponseOnDefaultChange,
+    persistUserInput,
   } = parameters
 
   useDefault({
     defaultValue,
     currentResponse,
-    replaceResponseOnDefaultChange,
+    persistUserInput,
     onChange: (defaultText: string) => {
       setValue(defaultText)
       onSave({ text: defaultText })

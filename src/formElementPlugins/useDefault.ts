@@ -6,7 +6,7 @@ interface UseDefaultProps {
   defaultValue: any
   currentResponse: ResponseFull | null
   loadingValue?: string | null
-  replaceResponseOnDefaultChange?: boolean
+  persistUserInput?: boolean
   onChange: (value: any) => void
   additionalDependencies?: any[]
 }
@@ -15,14 +15,14 @@ const useDefault = ({
   defaultValue,
   currentResponse,
   loadingValue = DEFAULT_LOADING_VALUE,
-  replaceResponseOnDefaultChange = true,
+  persistUserInput = false,
   onChange,
   additionalDependencies = [],
 }: UseDefaultProps) => {
   useEffect(() => {
     if (defaultValue === loadingValue || defaultValue === undefined) return
 
-    if (replaceResponseOnDefaultChange || !currentResponse?.text) onChange(defaultValue)
+    if (!persistUserInput || !currentResponse?.text) onChange(defaultValue)
   }, [defaultValue, ...additionalDependencies])
 }
 

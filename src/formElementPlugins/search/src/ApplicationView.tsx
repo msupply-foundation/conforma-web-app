@@ -44,7 +44,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     textFormat,
     displayType = 'card',
     default: defaultValue,
-    replaceResponseOnDefaultChange,
+    persistUserInput,
   } = parameters
 
   const {
@@ -71,7 +71,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useDefault({
     defaultValue,
     currentResponse,
-    replaceResponseOnDefaultChange,
+    persistUserInput,
     onChange: (defaultSelection) => {
       setSelection(Array.isArray(defaultSelection) ? defaultSelection : [defaultSelection])
       setSearchText(
