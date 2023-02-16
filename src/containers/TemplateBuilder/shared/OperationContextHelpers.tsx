@@ -198,10 +198,6 @@ export const exportTemplate: TemplateOperationHelper = async (
     setErrorAndLoadingState
   )
 
-  // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
-  if (result)
-    safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})
-
   return result
 }
 
