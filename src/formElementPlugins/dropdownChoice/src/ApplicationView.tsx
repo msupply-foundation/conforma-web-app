@@ -45,7 +45,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
   const [addedOption, setAddedOption] = useState<string | null>(null)
 
-  const { isEditable } = element
+  const { isEditable, isRequired } = element
 
   useEffect(() => {
     // This deals with the case when a default response has been externally set
@@ -123,7 +123,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         fluid
         // multiple
         selection
-        clearable
+        clearable={isEditable && !isRequired}
         disabled={!isEditable}
         search={search || hasOther}
         allowAdditions={hasOther}
