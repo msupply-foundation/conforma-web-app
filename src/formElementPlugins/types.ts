@@ -32,7 +32,6 @@ type ValidationState = {
 interface ApplicationViewProps extends ApplicationViewWrapperProps {
   onUpdate: Function
   onSave: Function
-  initialValue: any
   setIsActive: () => void
   validationState: ValidationState
   Markdown: any

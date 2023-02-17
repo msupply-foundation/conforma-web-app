@@ -37,7 +37,7 @@ type ElementUpdateState = {
   validationMessage: string | null
   helpText: string | null
   parameters: ParametersType
-  defaultValue: EvaluatorNode
+  initialValue: EvaluatorNode
   reviewability: Reviewability | null
   id: number
 }
@@ -56,7 +56,7 @@ const getState: GetState = (element: TemplateElement) => ({
   helpText: element.helpText || null,
   validationMessage: element.validationMessage || '',
   parameters: element.parameters || {},
-  defaultValue: element.defaultValue || null,
+  initialValue: element.initialValue || null,
   reviewability: element.reviewability || null,
   id: element.id,
 })
@@ -71,7 +71,7 @@ const evaluations: Evaluations = [
   { key: 'isRequired', title: 'Is Required' },
   { key: 'validation', title: 'Is Valid' },
   { key: 'visibilityCondition', title: 'Is Visible' },
-  { key: 'defaultValue', title: 'Default Value' },
+  { key: 'initialValue', title: 'Initial Value' },
 ]
 
 const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {

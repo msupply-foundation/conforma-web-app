@@ -44,14 +44,14 @@ const ApplicationCreate: React.FC = () => {
       setNewApplicationLoading(true)
 
       const { name, elementsIds, elementsDefaults } = template
-      const defaultValues = await getDefaultValues(elementsDefaults || [], currentUser)
+      const initialValues = await getInitialValues(elementsDefaults || [], currentUser)
 
       const mutationResult = await create({
         name,
         templateId: template.id,
         templateResponses: (elementsIds as number[]).map((id, index) => ({
           templateElementId: id,
-          value: defaultValues[index],
+          value: initialValues[index],
         })),
       })
       const applicationId = mutationResult.data?.createApplication?.application?.id
@@ -111,18 +111,18 @@ const ApplicationCreate: React.FC = () => {
   ) : null
 }
 
-export const getDefaultValues = async (
-  defaultValueExpressions: EvaluatorNode[],
+export const getInitialValues = async (
+  initialValueExpressions: EvaluatorNode[],
   currentUser: User | null
 ) => {
-  const evaluationElements: ElementForEvaluation[] = defaultValueExpressions.map(
-    (defaultValueExpression) => ({ defaultValueExpression, code: '' })
+  const evaluationElements: ElementForEvaluation[] = initialValueExpressions.map(
+    (initialValueExpression) => ({ initialValueExpression, code: '' })
   )
 
-  const evaluatedElements = await evaluateElements(evaluationElements, ['defaultValue'], {
+  const evaluatedElements = await evaluateElements(evaluationElements, ['initialValue'], {
     currentUser,
   })
-  return evaluatedElements.map(({ defaultValue }) => defaultValue)
+  return evaluatedElements.map(({ initialValue }) => initialValue)
 }
 
 export default ApplicationCreate

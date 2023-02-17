@@ -11,7 +11,7 @@ type ExistingElement = {
   category: TemplateElementCategory
   helpText: string
   parameters: ParametersType
-  defaultValue: EvaluatorNode
+  initialValue: EvaluatorNode
   visibilityCondition: EvaluatorNode
   validationMessage: string
   isRequired: EvaluatorNode
@@ -72,7 +72,7 @@ const FromExistingElement: React.FC<FromExistingElementProps> = ({
         category: templateElement?.category as TemplateElementCategory,
         helpText: templateElement?.helpText || '',
         parameters: templateElement?.parameters || {},
-        defaultValue: templateElement?.defaultValue || '',
+        initialValue: templateElement?.initialValue || '',
         visibilityCondition: templateElement?.visibilityCondition,
         validationMessage: templateElement?.validationMessage || '',
         isRequired: templateElement?.isRequired,

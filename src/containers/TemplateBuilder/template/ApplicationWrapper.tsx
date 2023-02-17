@@ -4,7 +4,7 @@ import { useUserState } from '../../../contexts/UserState'
 import useGetApplicationStructure from '../../../utils/hooks/useGetApplicationStructure'
 import useLoadApplication from '../../../utils/hooks/useLoadApplication'
 import { FullStructure, User } from '../../../utils/types'
-import { getDefaultValues } from '../../Application/ApplicationCreate'
+import { getInitialValues } from '../../Application/ApplicationCreate'
 import { useOperationState } from '../shared/OperationContext'
 import { useTemplateState } from './TemplateWrapper'
 import { useFormStructureState } from './Form/FormWrapper'
@@ -53,8 +53,8 @@ const CreateApplicationWrapper: React.FC = ({ children }) => {
   const create = async () => {
     const elementsDefaults = allElements
       .filter((element) => element.elementTypePluginCode !== 'pageBreak')
-      .map((element) => element.defaultValue)
-    const defaultValues = await getDefaultValues(elementsDefaults || [], currentUser)
+      .map((element) => element.initialValue)
+    const initialValues = await getInitialValues(elementsDefaults || [], currentUser)
 
     await createApplication({
       name: 'Config Application',
@@ -63,7 +63,7 @@ const CreateApplicationWrapper: React.FC = ({ children }) => {
       templateResponses: allElements
         .filter((element) => element.elementTypePluginCode !== 'pageBreak')
         .map((element, index) => {
-          return { templateElementId: element?.id || 0, value: defaultValues[index] }
+          return { templateElementId: element?.id || 0, value: initialValues[index] }
         }),
     })
     refetchFullTemplate()

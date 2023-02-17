@@ -32,7 +32,7 @@ const evaluationMapping: { [resultKey in keyof EvaluatedElement]: keyof ElementF
   isRequired: 'isRequiredExpression',
   isVisible: 'isVisibleExpression',
   isValid: 'validationExpression',
-  defaultValue: 'defaultValueExpression',
+  initialValue: 'initialValueExpression',
 }
 
 export const evaluateElements: EvaluateElements = async (elements, evaluationOptions, objects) => {

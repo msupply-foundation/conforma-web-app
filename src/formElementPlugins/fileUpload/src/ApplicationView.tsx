@@ -36,7 +36,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onSave,
   Markdown,
-  initialValue,
   currentResponse,
   applicationData,
 }) => {
@@ -58,11 +57,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     userState: { currentUser },
   } = useUserState()
 
-  const application_response_id = initialValue.id
+  const application_response_id = currentResponse?.id
   const serialNumber = applicationData.serial
 
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(
-    generateInitialFileData(initialValue?.files)
+    generateInitialFileData(currentResponse?.files ?? [])
   )
   const fileInputRef = useRef<any>(null)
 
@@ -233,7 +232,7 @@ const uploadFile = async (
   }: {
     userId: number | null
     serialNumber: string
-    applicationResponseId: number
+    applicationResponseId?: number
     fileOptions?: any
   }
 ) => {
