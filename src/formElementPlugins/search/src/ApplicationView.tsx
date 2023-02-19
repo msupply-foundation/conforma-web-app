@@ -119,6 +119,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const handleChange = (e: any) => {
+    // With "Input" style, we clear the selection if the user changes the input
+    // string (otherwise it remains even though it's not displayed anywhere)
+    if (displayType === 'input') setSelection([])
+
     const text = e.target.value
     setSearchText(text)
     if (text.length < minCharacters) return
@@ -136,6 +140,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         ? substituteValues(displayFormat.title ?? displayFormat.description, selectedResult)
         : ''
     )
+  }
+
+  const handleFocus = (e: any) => {
+    // This makes the component perform a new search when re-focusing (if no
+    // selection already), as changes in other elements may have changed some of
+    // the dynamic parameters in this element
+    if (searchText.length > 0 && selection.length === 0) handleChange(e)
   }
 
   const deleteItem = async (index: number) => {
@@ -186,6 +197,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Search
           value={searchText}
           loading={loading}
+          onFocus={handleFocus}
           onSearchChange={handleChange}
           onResultSelect={handleSelect}
           minCharacters={minCharacters}
