@@ -164,7 +164,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
             title: element.title || '',
             reviewability: element.reviewability,
             // reviewRequired: element.reviewRequired,
-            defaultValueExpression: element.defaultValue,
+            initialValueExpression: element.initialValue,
             ...defaultEvaluatedElement,
           })
       })
@@ -255,7 +255,7 @@ export const defaultEvaluatedElement: EvaluatedElement = {
   isRequired: true,
   isVisible: true,
   isValid: undefined,
-  defaultValue: null,
+  initialValue: null,
 }
 
 export default useLoadApplication

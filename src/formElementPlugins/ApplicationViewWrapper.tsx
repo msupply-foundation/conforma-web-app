@@ -190,7 +190,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     <ApplicationView
       onUpdate={onUpdate}
       onSave={onSave}
-      initialValue={currentResponse}
       {...props}
       {...element}
       parameters={{ ...simpleParameters, ...evaluatedParameters }}

@@ -217,7 +217,7 @@ export type ElementForEvaluation = {
   isRequiredExpression?: EvaluatorNode
   isVisibleExpression?: EvaluatorNode
   validationExpression?: EvaluatorNode
-  defaultValueExpression?: EvaluatorNode
+  initialValueExpression?: EvaluatorNode
   code: string
 }
 
@@ -242,7 +242,7 @@ export type EvaluatedElement = {
   isRequired: boolean
   isVisible: boolean
   isValid: boolean | undefined
-  defaultValue: any
+  initialValue: any
 }
 
 export type EvaluationOptions = (keyof EvaluatedElement)[]

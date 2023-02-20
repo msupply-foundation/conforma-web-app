@@ -29,7 +29,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onUpdate,
   Markdown,
   validationState,
-  initialValue,
   currentResponse,
   applicationData,
   allResponses,
@@ -72,7 +71,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const [inputState, setInputState] = useState<InputState>(defaultInputState)
-  const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
+  const [listItems, setListItems] = useState<ListItem[]>(currentResponse?.list ?? [])
 
   useEffect(() => {
     buildElements(

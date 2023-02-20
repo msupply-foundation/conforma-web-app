@@ -55,7 +55,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   onSave,
   Markdown,
-  initialValue,
+  currentResponse,
   validationState,
 }) => {
   const { getPluginStrings } = useLanguageProvider()
@@ -75,14 +75,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [isFirstRender, setIsFirstRender] = useState(true)
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
-    getCheckboxStructure(initialValue, checkboxes, keyMap, isFirstRender)
+    getCheckboxStructure(currentResponse, checkboxes, keyMap, isFirstRender)
   )
 
   // When checkbox array changes after initial load (e.g. when its being dynamically loaded from an API)
   useEffect(() => {
     if (checkboxes[0] !== config.parameterLoadingValues.label && isFirstRender)
       setIsFirstRender(false)
-    setCheckboxElements(getCheckboxStructure(initialValue, checkboxes, keyMap, isFirstRender))
+    setCheckboxElements(getCheckboxStructure(currentResponse, checkboxes, keyMap, isFirstRender))
   }, [checkboxes])
 
   useEffect(() => {
@@ -124,7 +124,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const resetState = () =>
-    setCheckboxElements(getCheckboxStructure(initialValue, checkboxes, keyMap, isFirstRender))
+    setCheckboxElements(getCheckboxStructure(currentResponse, checkboxes, keyMap, isFirstRender))
 
   return (
     <>
@@ -164,13 +164,13 @@ type KeyMap = {
 }
 
 export const getCheckboxStructure = (
-  initialValue: CheckboxSavedState,
+  initialValue: CheckboxSavedState | null,
   checkboxes: Checkbox[],
   keyMap: KeyMap | undefined,
   isFirstRender: boolean
 ) => {
   // Returns a consistent array of Checkbox objects, regardless of input structure
-  const { values: initValues } = initialValue
+  const { values: initValues } = initialValue ?? {}
   const checkboxPropertyNames = {
     label: keyMap?.label ?? 'label',
     text: keyMap?.text ?? 'text',

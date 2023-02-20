@@ -13,7 +13,7 @@ export default gql`
         code
         title
         id
-        defaultValue
+        initialValue
         validationMessage
         visibilityCondition
         templateCode

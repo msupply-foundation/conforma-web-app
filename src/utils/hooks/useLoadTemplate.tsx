@@ -69,10 +69,10 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
       templateElementsBySectionId.nodes.forEach((element) => {
         if (
           element?.id &&
-          (element.category === TemplateElementCategory.Question || element?.defaultValue !== null)
+          (element.category === TemplateElementCategory.Question || element?.initialValue !== null)
         ) {
           elementsIds.push(element.id)
-          elementsDefaults.push(element.defaultValue)
+          elementsDefaults.push(element.initialValue)
         }
       })
     })
