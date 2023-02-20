@@ -6,8 +6,7 @@
     "label": "Loading...",
     "description": "",
     "minAge": -1000,
-    "maxAge": 1000,
-    "default": ""
+    "maxAge": 1000
   },
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"

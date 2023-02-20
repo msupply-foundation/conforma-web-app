@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
 import { ResponseFull } from '../../../utils/types'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import useDefault from '../../useDefault'
 
 type ObjectOption = { [key: string]: any }
 type ObjectOptions = { options: ObjectOption[]; optionsDisplayProperty: string }
@@ -11,10 +12,7 @@ type StringOptions = { options: string[]; optionsDisplayProperty: never }
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
-  onUpdate,
   currentResponse,
-  // value,
-  // setValue,
   validationState,
   onSave,
   Markdown,
@@ -30,43 +28,46 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     options,
     optionsDisplayProperty,
     hasOther,
-    default: defaultOption,
+    default: defaultValue,
+    persistUserInput,
   } = parameters as {
     label?: string
     description?: string
     placeholder?: string
     search?: boolean
     hasOther?: boolean
-    default: any
+    default?: string | number
+    persistUserInput?: boolean
   } & (ObjectOptions | StringOptions)
 
-  const [selectedIndex, setSelectedIndex] = useState<number>()
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+    currentResponse?.optionIndex ?? undefined
+  )
   const [addedOption, setAddedOption] = useState<string | null>(null)
 
-  const { isEditable } = element
+  const { isEditable, isRequired } = element
 
   useEffect(() => {
-    // This ensures that, if a default is specified, it gets saved on first load
-    if (!currentResponse?.text && defaultOption !== undefined) {
+    // This deals with the case when a default response has been externally set
+    // (e.g. by a ListBuilder) and only a selection (with no index) has been
+    // provided.
+    if (options[0] === 'Loading...') return
+    if (currentResponse?.selection || currentResponse?.optionIndex === undefined) {
+      setSelectedIndex(getDefaultIndex(currentResponse?.selection, options))
+    }
+  }, [options])
+
+  useDefault({
+    defaultValue,
+    currentResponse,
+    persistUserInput,
+    additionalDependencies: [options],
+    onChange: (defaultOption: any) => {
       const optionIndex = getDefaultIndex(defaultOption, options)
-      onSave({
-        text:
-          optionsDisplayProperty &&
-          options[optionIndex] !== undefined &&
-          typeof options[optionIndex] === 'object'
-            ? (options[optionIndex] as ObjectOption)[optionsDisplayProperty]
-            : options[optionIndex],
-        selection: options[optionIndex],
-        optionIndex,
-        isCustomOption: false,
-      })
-      setSelectedIndex(optionIndex)
-    }
-    if (currentResponse?.text) {
-      const { optionIndex } = currentResponse
-      setSelectedIndex(optionIndex)
-    }
-  }, [])
+      if (optionIndex === -1 && hasOther) addItemHandler(defaultOption)
+      else handleChange(optionIndex)
+    },
+  })
 
   const addItemHandler = (text: string) => {
     setAddedOption(text)
@@ -122,7 +123,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         fluid
         // multiple
         selection
-        clearable
+        clearable={isEditable && !isRequired}
+        disabled={!isEditable}
         search={search || hasOther}
         allowAdditions={hasOther}
         additionLabel={strings.ADD_CUSTOM_OPTION_LABEL}

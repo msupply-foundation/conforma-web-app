@@ -29,7 +29,8 @@ export const substituteValues = (
   // Custom replacement function for regex replace
   const getObjectProperty = (_: string, __: string, property: string) => {
     if (typeof data !== 'object') return data
-    return extractObjectProperty(data, property, `Can't find property: ${property}`)
+    const value = extractObjectProperty(data, property, `Can't find property: ${property}`)
+    return value ?? ''
   }
 
   // Match ${...} using regex and replace ... with property from object

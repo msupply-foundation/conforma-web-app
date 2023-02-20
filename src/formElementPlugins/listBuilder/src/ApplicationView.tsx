@@ -20,6 +20,7 @@ import {
 } from './displayComponents'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
+import useDefault from '../../useDefault'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -48,6 +49,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     inputFields,
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
+    default: defaultValue,
+    persistUserInput,
   } = parameters
   const {
     userState: { currentUser },
@@ -82,6 +85,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       setInputState((prevState) => ({ ...prevState, currentElementsState: elements }))
     )
   }, [inputState.currentResponses])
+
+  useDefault({
+    defaultValue,
+    currentResponse,
+    persistUserInput,
+    onChange: (defaultList) => setListItems(defaultList ?? []),
+  })
 
   useEffect(() => {
     onSave({

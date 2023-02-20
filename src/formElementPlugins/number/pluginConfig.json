@@ -4,7 +4,6 @@
   "displayName": "Number Input",
   "parameterLoadingValues": {
     "label": "Loading...",
-    "default": "",
     "description": "",
     "maxWidth": null,
     "type": "float",
