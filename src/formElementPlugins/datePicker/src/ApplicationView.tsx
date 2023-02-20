@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { ApplicationViewProps } from '../../types'
 import SemanticDatepicker from 'react-semantic-ui-datepickers'
 import { DateTime } from 'luxon'
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { LocaleOptions } from 'react-semantic-ui-datepickers/dist/types'
+import useDefault from '../../useDefault'
 
 // Stored response date format
 interface DateSaved {
@@ -42,8 +43,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     label,
     description,
-    default: defaultDate,
-    allowRange = Array.isArray(defaultDate),
+    default: defaultValue,
+    persistUserInput,
+    allowRange = Array.isArray(defaultValue),
     locale = selectedLanguage.locale,
     displayFormat = 'short',
     entryFormat = 'YYYY-MM-DD',
@@ -61,24 +63,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     [minDate, maxDate, minAge, maxAge]
   )
 
-  // Set "default" date if present
-  useEffect(() => {
-    if (!selectedDate && defaultDate) {
+  useDefault({
+    defaultValue,
+    currentResponse,
+    persistUserInput,
+    onChange: (defaultDate) => {
       const date = dateFromDefault(defaultDate)
-      onSave({ text: toDisplayString(date, locale, displayFormat), date })
-      setSelectedDate(date)
-    }
-  }, [defaultDate])
+      handleSelect(date)
+    },
+  })
 
-  useEffect(() => {
-    onSave({
-      text: toDisplayString(selectedDate, locale, displayFormat),
-      date: toDateSaved(selectedDate),
-    })
-  }, [selectedDate])
-
-  const handleSelect = (event: any, data: any) => {
-    setSelectedDate(data.value)
+  const handleSelect = (date?: SelectedDateRange) => {
+    if (date === undefined) return
+    setSelectedDate(date)
+    onSave({ text: toDisplayString(date, locale, displayFormat), date: toDateSaved(date) })
   }
 
   return (
@@ -91,7 +89,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <SemanticDatepicker
         locale={locale}
-        onChange={handleSelect}
+        onChange={(_, data) => handleSelect(data.value)}
         type={allowRange ? 'range' : 'basic'}
         value={selectedDate}
         format={entryFormat}

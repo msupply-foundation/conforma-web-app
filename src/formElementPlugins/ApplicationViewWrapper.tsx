@@ -23,6 +23,8 @@ import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 
 const graphQLEndpoint = getServerUrl('graphQL')
 
+export const DEFAULT_LOADING_VALUE = 'Loading...'
+
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const { strings } = useLanguageProvider()
   const calculateValidationState = useCalculateValidationState()
@@ -274,7 +276,7 @@ export const buildParameters = (
     if (internalParameters.includes(key)) simpleParameters[key] = value
     else if (isEvaluationExpression(value)) {
       parameterExpressions[key] = value
-      simpleParameters[key] = parameterLoadingValues?.[key] ?? 'Loading...'
+      simpleParameters[key] = parameterLoadingValues?.[key] ?? DEFAULT_LOADING_VALUE
     } else simpleParameters[key] = value
   }
   return [simpleParameters, parameterExpressions]
