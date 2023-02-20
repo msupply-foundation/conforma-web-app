@@ -42,10 +42,16 @@ These fields are common to all element types and have their own field in the `te
   - default: `{"value": true}`
 - **is_editable**: `JSON` -- dynamic query determining whether can be edited (Would only be false in rare circumstances)
   - default: `{"value": true}`
-- **initialValue**: `JSON` - a dynamic query that will be evaluated to set the initial response value. It's kind of like a "default", but should be thought of as more of a fixed initial response (defaults can change in response to other elements). Most plugins have their own "default" parameter, which is probably better to use in most situations.  
-The key difference is that this "initial value" response is generated *and saved* when the application is first created, and from then on it behaves just like a normal question element. It is evaluated and saved before anything is even exposed to the form element components, and so it must match the shape of the "response" values for the particular element type (see individual elements below).  
-Whereas each element's `default` parameter is evaluated when the element is rendered, so it can change in response to other changes and is only saved after the user loads the relevant page. If you need a default value to be made from answers the user provided earlier in the form, that would be the one to use. See individual elements for further details.  
-Use cases for setting an `initialValue` over a `default` would be if you wanted to ensure that a particular element had a valid response in it before its page was even loaded, or if you want a hidden element to have a response without the user ever interacting with it (or even seeing it).
+- **initialValue**: `JSON` - this "initial value" response is evaluated *and saved* before anything is even exposed to the form element components, and so it must match the shape of the "response" values for the particular element type (see individual elements below). After that it behaves just like a normal question element. Most plugins also have their own **default** parameter which is evaluated when the element is rendered, so it can change in response to other changes and is *only saved after* the user loads the relevant page. Usually used when the default response depends on other elements responses.
+Example for `shortText` plugin element:
+```
+{
+  "text": "Something to be saved by default"
+}
+```
+![style:basic](../images/Element-Type-Specs-initial-value.png)
+
+  Use cases for setting an `initialValue` over a `default` would be if you wanted to ensure that a particular element had a valid response in it before its page was even loaded, or if you want a hidden element to have a response without the user ever interacting with it (or even seeing it).
 - **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
   - default: `{"value": true}` or just `true`
 - **validation_message**: `string` -- the message that shows in the UI when validation fails.  
