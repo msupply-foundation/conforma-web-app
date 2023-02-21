@@ -20,6 +20,7 @@ import { useLanguageProvider } from '../contexts/Localisation'
 import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
+import functions from '../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
 
 const graphQLEndpoint = getServerUrl('graphQL')
 
@@ -73,7 +74,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
       evaluateExpression(expression as EvaluatorNode, {
-        objects: { responses: allResponses, currentUser, applicationData },
+        objects: { responses: allResponses, currentUser, applicationData, functions },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
         headers: { Authorization: 'Bearer ' + JWT },
@@ -102,7 +103,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       isStrictPage,
       responses,
       evaluationParameters: {
-        objects: { responses, currentUser, applicationData },
+        objects: { responses, currentUser, applicationData, functions },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
         headers: { Authorization: 'Bearer ' + JWT },

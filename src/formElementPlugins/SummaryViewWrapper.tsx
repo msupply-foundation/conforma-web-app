@@ -10,6 +10,7 @@ import Markdown from '../utils/helpers/semanticReactMarkdown'
 import globalConfig from '../config'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
+import functions from '../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
 
 const graphQLEndpoint = getServerUrl('graphQL')
 
@@ -45,6 +46,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
           responses: { ...allResponses, thisResponse: response?.text },
           currentUser,
           applicationData,
+          functions,
         },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
