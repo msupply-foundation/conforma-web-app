@@ -11,6 +11,7 @@ import config from '../../../config'
 import useDebounce from './useDebounce'
 import './styles.css'
 import useDefault from '../../useDefault'
+import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
 
 interface DisplayFormat {
   title?: string
@@ -98,7 +99,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const search = { text }
     const JWT = localStorage.getItem(config.localStorageJWTKey)
     evaluateExpression(source, {
-      objects: { search, currentUser, applicationData, responses: allResponses },
+      objects: { search, currentUser, applicationData, responses: allResponses, functions },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
       headers: { Authorization: 'Bearer ' + JWT },
