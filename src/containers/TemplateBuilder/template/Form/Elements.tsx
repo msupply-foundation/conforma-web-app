@@ -247,7 +247,7 @@ const getNewElement = (applicationId: number, index: number) => ({
   validationMessage: 'no validation',
   helpText: '',
   parameters: { label: 'New Element' },
-  defaultValue: null,
+  initialValue: null,
   applicationResponsesUsingId: {
     create: [{ applicationId }],
   },
