@@ -75,6 +75,7 @@ Example for `shortText` plugin element:
 _Free-form, single-line text input element_
 
 <a name="input-params" />
+
 #### Input parameters (in the `parameters` JSON)
 
 - **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
