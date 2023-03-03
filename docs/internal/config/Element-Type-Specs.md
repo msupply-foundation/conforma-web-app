@@ -74,6 +74,7 @@ Example for `shortText` plugin element:
 
 _Free-form, single-line text input element_
 
+<a name="input-params" />
 #### Input parameters (in the `parameters` JSON)
 
 - **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
@@ -81,6 +82,7 @@ _Free-form, single-line text input element_
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **default**: `string` -- default response, will change dynamically in response to form changes until the user has edited it [Optional]
 - **persistUserInput**: `boolean` -- if `false`, when the `default` value changes, the current response will be replaced by the new default. Otherwise (`true`), the default will only be used if there is no response yet. [Optional; default `false`]
+- **ignoreNullDefault**: `boolean` -- if you have a dynamic default value, in some conditions you might want no default at all. In which case, you can configure it so that the default value is `null`. However, the component receiving this value doesn't know whether `null` means "reset the response to empty" or "ignore and leave it alone". By default, it will use the former, but in the cases where you want `null` defaults to be ignored, set this parameter to `true`.
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
 - **maxWidth**: `number` -- the maximum width (in pixels) for the text input box (defaults to fill the width of the container)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length.  
@@ -122,7 +124,7 @@ _Free-form, multi-line text input element_
 - **description**: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **default**: `string` -- default response, will change dynamically in response to form changes until the user has edited it [Optional]
-- **persistUserInput**: `boolean` -- if `false`, when the `default` value changes, the current response will be replaced by the new default. Otherwise (`true`), the default will only be used if there is no response yet. [Optional; default `false`]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **lines**: `number` -- height of the TextArea input, in number of lines/rows (default: 5)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length. (See Note in ShortText above for how to integrate `maxLength` with validation.)
 
@@ -259,7 +261,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 - **description**: `string` -- as above [Optional]
 - **options**: `array[string | object]` -- array of options for the user to select from. If an array of **strings** is provided, these strings will be displayed to the user. However, if an array of **objects** is provided, you will also need to specify an `optionsDisplayProperty` (see below)
 - **default**: `string`/`number` -- can be either a string representing the *value*, or a number representing the index in the `options` array. [Optional]
-- **persistUserInput**: `boolean` -- if `false`, when the `default` value changes, the current response will be replaced by the new default. Otherwise (`true`), the default will only be used if there is no response yet. [Optional; default `false`]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **search**: `boolean` (default: `false`) -- if `true`, the list of options can be searched and filtered by user
 - **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of organisation objects (i.e. `{orgId, name, licenceNumber}`), you'd probably specify `name` as the `optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection. And if `optionsDisplayProperty` refers to a field that doesn't exist on the supplied object, the plugin will fail and show in error in the application.
 - **hasOther**: `boolean` (default `false`) -- if `true`, allows the user to enter a custom "free text" value instead of one of the pre-defined options.
@@ -293,7 +295,7 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 - **description**: `string` -- as above [Optional]
 - **options**: `array[string | object]` -- as above (in [Drop-down](#dropdown))
 - **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
-- **persistUserInput**: `boolean` -- if `false`, when the `default` value changes, the current response will be replaced by the new default. Otherwise (`true`), the default will only be used if there is no response yet. [Optional; default `false`]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **optionsDisplayProperty**: -- as above (in Drop-down)
 - **layout**: `string` -- if "inline", displays radio buttons horizontally, rather than stacked vertically (default)
 - **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
@@ -455,7 +457,7 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 - **label**: `string` -- as above
 - **description**: `string` -- as above [Optional]
 - **default** `ResponseList` -- default value for the list. Must be in the format of the `list` parameter from the Response object (i.e. an array of objects)
-- **persistUserInput**: `boolean` -- if `false`, when the `default` value changes, the current response will be replaced by the new default. Otherwise (`true`), the default will only be used if there is no response yet. [Optional; default `false`]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **createModalButtonText** `string` -- text to display on the button to launch the new item interface (modal) (default: "Add item")
 - **addButtonText** `string` -- text to display on the button to add a new item from the item editing modal (default: "Add")
 - **updateButtonText** `string` -- text to display on the button to update an existing item from the item editing modal (default: "Update")
@@ -570,7 +572,7 @@ Once selected, items are displayed in a "card" view:
   }
   ```
 - **default** `ResponseSelection` / `ResponseSelection[]` -- default value for the selection(s). Must be in the format of the `selection` parameter from the Response object (i.e. an array of objects), or just a single object if not multi-select.
-- **persistUserInput**: `boolean` -- if `false`, when the `default` value changes, the current response will be replaced by the new default. Otherwise (`true`), the default will only be used if there is no response yet. [Optional; default `false`]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **icon**: `string` -- the name of the icon shown in the search box, from Semantic-UI icons. (default: "search" : 🔍 )
 - **multiSelect**: `boolean` -- whether or not the user can select multiple items for their response (default: `false`)
 - **minCharacters**: `number` -- the minimum number of characters the user must type before the search query executes (default: 1). This is useful in situations where need the user to look up a specific item without being able to freely browse through the entire results list. For example, to look up organisation in our system using "registration" code, we set `minCharacters = 6`, so the user will need to know an exact code rather than being able to try characters one at a time.
@@ -620,7 +622,7 @@ Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semanti
 - **label**: `string` -- as above
 - **description**: `string` -- as above [Optional]
 - **default**: `(ISO) string` -- a pre-selected date [Optional]
-- **persistUserInput**: `boolean` -- if `false`, when the `default` value changes, the current response will be replaced by the new default. Otherwise (`true`), the default will only be used if there is no response yet. [Optional; default `false`]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **allowRange**: `boolean` -- if `true`, input is expected to be a date _range_ (a start and end date). Default: `false` (i.e. can only enter single date)
 - **minDate**/**maxDate**: `(ISO) string` -- specifies how far into the future or past the selector can go
 - **minAge**/**maxAge**: `(ISO) string` -- same as above, but a number (in years) relative to the _current_ date. For example, if an applicant was required to be over 18 years old, you'd set `minAge` to `18`.
@@ -657,7 +659,7 @@ _Input for numeric fields_
 
 - **label** / **description** / **placeholder** / **maxWidth**: `string` -- as above
 - **default**: `string`/`number` -- default value 
-- **persistUserInput**: `boolean` -- if `false`, when the `default` value changes, the current response will be replaced by the new default. Otherwise (`true`), the default will only be used if there is no response yet. [Optional; default `false`]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **type** -- `enum` -- either "integer" or "float" (default: "integer")
 - **simple** -- `boolean` (default: `true`) If `true`, the input field will always show only a non-formatted version of the number (i.e. "1000", not "1,000"), but it will have a "stepper" which can be clicked to increment the number up and down.
 - **minValue** -- minimum allowed value (default: 0)

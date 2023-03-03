@@ -49,7 +49,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
     default: defaultValue,
-    persistUserInput,
   } = parameters
   const {
     userState: { currentUser },
@@ -88,7 +87,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useDefault({
     defaultValue,
     currentResponse,
-    persistUserInput,
+    parameters,
     onChange: (defaultList) => setListItems(defaultList ?? []),
   })
 
