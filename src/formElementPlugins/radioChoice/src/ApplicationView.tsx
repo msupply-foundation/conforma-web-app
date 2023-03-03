@@ -21,7 +21,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     description,
     options,
     default: defaultValue,
-    persistUserInput,
     optionsDisplayProperty,
     hasOther,
     otherPlaceholder,
@@ -46,7 +45,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useDefault({
     defaultValue,
     currentResponse,
-    persistUserInput,
+    parameters,
     onChange: (defaultOption) => {
       const optionIndex = getDefaultIndex(defaultOption, options)
       if (optionIndex >= 0) handleChange(optionIndex)

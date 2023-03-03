@@ -44,7 +44,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     label,
     description,
     default: defaultValue,
-    persistUserInput,
     allowRange = Array.isArray(defaultValue),
     locale = selectedLanguage.locale,
     displayFormat = 'short',
@@ -66,7 +65,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useDefault({
     defaultValue,
     currentResponse,
-    persistUserInput,
+    parameters,
     onChange: (defaultDate) => {
       const date = dateFromDefault(defaultDate)
       handleSelect(date)

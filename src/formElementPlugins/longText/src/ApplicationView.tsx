@@ -17,20 +17,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const { isEditable } = element
 
-  const {
-    label,
-    description,
-    placeholder,
-    lines,
-    maxLength,
-    default: defaultValue,
-    persistUserInput,
-  } = parameters
+  const { label, description, placeholder, lines, maxLength, default: defaultValue } = parameters
 
   useDefault({
     defaultValue,
     currentResponse,
-    persistUserInput,
+    parameters,
     onChange: (defaultText: string) => {
       setValue(defaultText)
       onSave({ text: defaultText })

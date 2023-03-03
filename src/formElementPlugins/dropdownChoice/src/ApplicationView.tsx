@@ -29,7 +29,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     optionsDisplayProperty,
     hasOther,
     default: defaultValue,
-    persistUserInput,
   } = parameters as {
     label?: string
     description?: string
@@ -37,7 +36,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     search?: boolean
     hasOther?: boolean
     default?: string | number
-    persistUserInput?: boolean
   } & (ObjectOptions | StringOptions)
 
   const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
@@ -60,7 +58,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useDefault({
     defaultValue,
     currentResponse,
-    persistUserInput,
+    parameters,
     additionalDependencies: [options],
     onChange: (defaultOption: any) => {
       const optionIndex = getDefaultIndex(defaultOption, options)
