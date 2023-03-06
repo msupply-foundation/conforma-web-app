@@ -2431,6 +2431,7 @@ a:hover {
   .toast-message {
     width: fit-content !important;
     max-width: 350px;
+    p { word-wrap: break-word; max-width: 250px;}
   }
   .icon.info {
     color: @information;
