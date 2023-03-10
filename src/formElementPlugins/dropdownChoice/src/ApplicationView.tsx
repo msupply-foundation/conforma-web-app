@@ -28,6 +28,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     options,
     optionsDisplayProperty,
     hasOther,
+    multiSelect = false,
     default: defaultValue,
   } = parameters as {
     label?: string
@@ -35,12 +36,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     placeholder?: string
     search?: boolean
     hasOther?: boolean
+    multiSelect?: boolean
     default?: string | number
   } & (ObjectOptions | StringOptions)
 
-  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined | number[]>(
     currentResponse?.optionIndex ?? undefined
   )
+
   const [addedOption, setAddedOption] = useState<string | null>(null)
 
   const { isEditable, isRequired } = element
@@ -70,12 +73,38 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const addItemHandler = (text: string) => {
     setAddedOption(text)
     const newIndex = options.length
-    setSelectedIndex(newIndex)
-    handleChange(newIndex, text)
+
+    if (Array.isArray(selectedIndex)) {
+      setSelectedIndex([...selectedIndex, newIndex])
+      handleChange([...selectedIndex, newIndex], text)
+    } else {
+      setSelectedIndex(newIndex)
+      handleChange(newIndex, text)
+    }
   }
 
-  const handleChange = (value: number | string, addedText?: string) => {
-    const optionIndex: number | string = value
+  const handleChange = (value: number | string | number[], addedText?: string) => {
+    const optionIndex: number | string | number[] = value
+
+    // For multi-select
+    if (Array.isArray(optionIndex)) {
+      if (optionIndex.length === 0) {
+        setSelectedIndex([])
+        setAddedOption(null)
+        onSave(null)
+        return
+      }
+      setSelectedIndex(optionIndex)
+      onSave({
+        optionIndex: optionIndex,
+        text:
+          optionIndex.map((i) => getTextValue(options, i, optionsDisplayProperty)).join(', ') +
+          (addedText ?? ''),
+        selection: optionIndex.map((i) => (options[i] ? options[i] : addedText)),
+        isCustomOption: !!addedText,
+      })
+      return
+    }
 
     // optionIndex becomes an empty string when selection is cleared
     setSelectedIndex(typeof optionIndex === 'string' ? undefined : optionIndex)
@@ -91,12 +120,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       // Save regular option
       else
         onSave({
-          text:
-            optionsDisplayProperty &&
-            options[optionIndex] !== undefined &&
-            typeof options[optionIndex] === 'object'
-              ? (options[optionIndex] as ObjectOption)[optionsDisplayProperty]
-              : options[optionIndex],
+          text: getTextValue(options, optionIndex, optionsDisplayProperty),
           selection: options[optionIndex],
           optionIndex,
           isCustomOption: false,
@@ -119,7 +143,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <Dropdown
         fluid
-        // multiple
+        multiple={multiSelect}
         selection
         clearable={isEditable && !isRequired}
         disabled={!isEditable}
@@ -155,15 +179,24 @@ const getDropdownOptions = (
   setAddedOption: (value: string) => void,
   displayProperty?: string
 ) => {
+  if (options[0] === 'Loading...') return [{ key: 'loading', text: 'Loading...', value: 0 }]
   // Figure out if the currentResponse contains an added custom response. This
   // is just for initial loading if we've had to wait for the list of options to
   // populate
-  const initialCustomResponse =
-    !addedOption &&
-    currentResponse?.optionIndex === options.length &&
-    typeof currentResponse.selection === 'string'
-      ? currentResponse.selection
-      : null
+  let initialCustomResponse: string | null
+  if (Array.isArray(currentResponse?.optionIndex)) {
+    const highestIndex = Math.max(...(currentResponse?.optionIndex ?? []))
+    initialCustomResponse =
+      !addedOption && highestIndex > options.length - 1
+        ? currentResponse?.selection[currentResponse?.selection.length - 1]
+        : null
+  } else
+    initialCustomResponse =
+      !addedOption &&
+      currentResponse?.optionIndex === options.length &&
+      typeof currentResponse.selection === 'string'
+        ? currentResponse.selection
+        : null
 
   if (initialCustomResponse) setAddedOption(initialCustomResponse)
 
@@ -172,11 +205,28 @@ const getDropdownOptions = (
     text: displayProperty && typeof option !== 'string' ? option[displayProperty] : option,
     value: index,
   }))
+
   if (initialCustomResponse || addedOption)
     dropdownOptions.push({
       key: `${options.length}_${initialCustomResponse || addedOption}`,
       text: initialCustomResponse || addedOption,
       value: options.length,
     })
+
   return dropdownOptions
+}
+
+const getTextValue = (
+  options: (object | string)[],
+  optionIndex: number,
+  optionsDisplayProperty?: string
+): string => {
+  if (typeof options[optionIndex] === 'object') {
+    if (!optionsDisplayProperty) return 'Missing optionsDisplayProperty'
+    return options[optionIndex]
+      ? (options[optionIndex] as ObjectOption)[optionsDisplayProperty]
+      : ''
+  }
+
+  return options[optionIndex] as string
 }
