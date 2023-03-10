@@ -54,6 +54,7 @@ const Snapshots: React.FC = () => {
       if (resultJson.success) {
         await getList()
         setIsLoading(false)
+        location.reload(true)
         return
       }
 
