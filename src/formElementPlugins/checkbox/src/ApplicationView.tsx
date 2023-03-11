@@ -88,9 +88,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useEffect(() => {
     // Don't save response if parameters are still loading
     if (checkboxElements[0]?.text === config.parameterLoadingValues.label) return
-    // Don't save a valid "nonResponse" if not allowed, so validation logic
-    // works as expected
-    if (preventNonResponse && checkboxElements.every((elem) => !elem.selected)) return
+    // Don't save proper response "preventNonResponse" active, but still need to save a `null` response -- this prevents the case where a user checks then unchecks the box and tries to submit: they'd think they hadn't checked the box but it would have sent the checked version through, which could be misleading in cases like declarations.
+    if (preventNonResponse && checkboxElements.every((elem) => !elem.selected)) {
+      onSave(null)
+      return
+    }
 
     const {
       text,

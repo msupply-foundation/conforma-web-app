@@ -376,7 +376,7 @@ To handle objects returned that don't have the required fields, you can use the 
     - Option 2: NO
     - \<checkbox `label`\>: \<`text`\/`textNegative` value\>  
 Note: this display option is only suitable if you have separately defined `label`, `text` and `textNegative` fields for each checkbox.
-- **preventNonResponse**: `boolean` (default `false`) -- normally, we want to allow the user to leave checkboxes unchecked and be considered a valid response. However, if we want to force the user to tick a box (e.g. for a declaration, say), then set `preventNonResponse` to `true`.
+- **preventNonResponse**: `boolean` (default `false`) -- normally, we want to allow the user to leave checkboxes unchecked and be considered a valid response. However, if we want to force the user to tick a box (e.g. for a declaration, say), then set `preventNonResponse` to `true`. Note that `isRequired` must be `true` for this element for this parameter to have an effect.
 - **keyMap**: `object` -- if the input `checkboxes` property (above) has different property names that what is required (for example, if pulling from an API), then this `keyMap` parameter can be used to re-map the input property names to the requried property names. For example, if your input "checkbox" data contained an array of objects of the type `{ name: "Nicole", active: true}`, you would provide a `keyMap` object like this:
 
 ```
