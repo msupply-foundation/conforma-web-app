@@ -78,6 +78,7 @@ const getISODate = (date?: Date) =>
   date ? DateTime.fromJSDate(date).toISO() : DateTime.now().toISO()
 
 // Extracts any numeric content from a string
+// https://regex101.com/r/HG5MFW/1
 const extractNumber = (input: string) => {
   const numberMatch = input.match(/-?\d*\.?\d+/gm)
   if (!numberMatch) return 0
