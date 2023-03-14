@@ -61,7 +61,8 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
           {props.children}
         </Link>
       ) : (
-        <a href={props.href} target={newTabLinks ? '_blank' : undefined}>
+        // All external links should open in new tab regardless
+        <a href={props.href} target="_blank">
           {props.children}
         </a>
       )
