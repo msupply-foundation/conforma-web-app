@@ -687,6 +687,7 @@ export type DataViewsResponse = {
   title: string
   code: string
   urlSlug: string
+  defaultFilter: string | null
 }[]
 
 interface FormatOptions {

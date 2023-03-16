@@ -57,7 +57,13 @@ const UserArea: React.FC = () => {
 }
 interface MainMenuBarProps {
   templates: TemplateInList[]
-  dataViews: { tableName: string; title: string; code: string; urlSlug: string }[]
+  dataViews: {
+    tableName: string
+    title: string
+    code: string
+    urlSlug: string
+    defaultFilter: string | null
+  }[]
   referenceDocs: {
     intReferenceDocs: { uniqueId: string; description: string }[]
     extReferenceDocs: { uniqueId: string; description: string }[]
@@ -98,10 +104,10 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
   }, [pathname])
 
-  const dataViewOptions = dataViews.map(({ code, urlSlug, title }) => ({
+  const dataViewOptions = dataViews.map(({ code, urlSlug, title, defaultFilter }) => ({
     key: code,
     text: title,
-    value: urlSlug,
+    value: urlSlug + (defaultFilter ? `?${defaultFilter}` : ''),
   }))
 
   const templateOptions = templates
