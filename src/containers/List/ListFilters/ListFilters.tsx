@@ -50,7 +50,7 @@ const ListFilters: React.FC<{
   // Add filters from URL to activeFilters, filters may not have criteria/options yet thus we have to use activeFilter state variable
   useEffect(() => {
     // Reset active filters if coming from Database menu selection
-    if (location?.state?.resetFilters) {
+    if (location?.state?.resetFilters && location.search === '') {
       setActiveFilters([])
       return
     }
