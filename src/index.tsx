@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
+import ReactGA from 'react-ga4'
 import '../semantic/src/semantic.less'
 import config from './config'
 import cache from './cache'
@@ -10,7 +11,7 @@ import { LanguageOption, LanguageProvider } from './contexts/Localisation'
 import { ToastProvider } from './contexts/Toast/ToastProvider'
 import { SystemPrefsProvider } from './contexts/SystemPrefs'
 import { usePrefs } from './contexts/SystemPrefs'
-import { persistCache } from 'apollo3-cache-persist'
+// import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
 import getServerUrl from './utils/helpers/endpoints/endpointUrlBuilder'
 
@@ -34,6 +35,14 @@ const httpLink = createHttpLink({
   },
 })
 
+ReactGA.initialize([
+  {
+    trackingId: 'G-8RQHL40GLG',
+    // gaOptions: {...}, // optional
+    // gtagOptions: {...}, // optional
+  },
+])
+
 const App: React.FC = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
   const { preferences, languageOptions, error, loading, refetchPrefs } = usePrefs()
@@ -44,6 +53,8 @@ const App: React.FC = () => {
       cache,
     })
     setClient(client)
+
+    ReactGA.send({ hitType: 'pageview', page: '/my-path', title: 'Custom Title' })
 
     // persistCache({
     //   cache,

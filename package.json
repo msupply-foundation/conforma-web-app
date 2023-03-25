@@ -37,6 +37,7 @@
     "react": "^16.13.1",
     "react-cool-onclickoutside": "^1.7.0",
     "react-dom": "^16.13.1",
+    "react-ga4": "^2.1.0",
     "react-json-view": "^1.21.3",
     "react-markdown": "^5.0.3",
     "react-progress-stepper": "^0.2.2",
