@@ -12,6 +12,8 @@ interface PrefsState {
     brandLogoOnDarkFileId?: string
     defaultListFilters?: string[]
     systemManagerPermissionName?: string
+    googleAnalyticsId?: string
+    siteHost?: string
     style?: { headerBgColor?: string }
   }
   languageOptions?: LanguageOption[]
