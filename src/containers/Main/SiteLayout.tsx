@@ -12,10 +12,13 @@ import DevRoutes from '../Dev/DevRoutes'
 import DataViews from '../DataDisplay/DataViews'
 import config from '../../config'
 const { isProductionBuild } = config
+import { Tracker } from './Tracker'
 
 const SiteLayout: React.FC = () => {
   return (
     <Router>
+      {/* Google Analytics */}
+      <Tracker />
       <Container id="main-container" fluid>
         <UserArea />
         <DevOptions />

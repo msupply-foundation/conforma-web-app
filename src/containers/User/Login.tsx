@@ -13,6 +13,7 @@ import { LoginPayload, OrganisationSimple } from '../../utils/types'
 
 const defaultLogo = require('../../../images/logos/conforma_logo_wide_1024.png').default
 import config from '../../config'
+import { Tracker } from '../Main/Tracker'
 
 const LOGIN_AS_NO_ORG = 0
 const NO_ORG_SELECTED = -1
@@ -109,6 +110,8 @@ const Login: React.FC = () => {
 
   return (
     <Container id="login-container">
+      {/* Tracker required here as its outside the Authenticated Wrapper */}
+      <Tracker />
       {languageOptions.length > 1 && <LanguageSelector />}
       <div id="login-box">
         <div className="flex-column-center">
