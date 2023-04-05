@@ -739,6 +739,7 @@ export interface DataViewsTableResponse {
   tableRows: TableRow[]
   searchFields: string[]
   filterDefinitions: DataViewFilterDefinition[]
+  defaultFilterString: string | null
   totalCount: number
   message?: string
 }
