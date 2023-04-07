@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Dropdown, Icon } from 'semantic-ui-react'
+import { Dropdown, Icon, Label } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { FilterDefinitions } from '../../../utils/types'
@@ -38,7 +38,8 @@ const ListFilters: React.FC<{
   filterDefinitions: FilterDefinitions
   filterListParameters: any
   defaultFilterString?: string | null
-}> = ({ filterDefinitions, filterListParameters, defaultFilterString }) => {
+  totalCount: number | null
+}> = ({ filterDefinitions, filterListParameters, defaultFilterString, totalCount = null }) => {
   const { strings } = useLanguageProvider()
   const { query, updateQuery, location } = useRouter()
 
@@ -271,6 +272,12 @@ const ListFilters: React.FC<{
             return null
         }
       })}
+      {totalCount && (
+        <Label size="big">
+          <Icon name="folder open" />
+          {totalCount}
+        </Label>
+      )}
     </div>
   )
 }
