@@ -37,7 +37,9 @@ const getDefaultDisplayFilters = (filterDefinitions: FilterDefinitions) =>
 const ListFilters: React.FC<{
   filterDefinitions: FilterDefinitions
   filterListParameters: any
-}> = ({ filterDefinitions, filterListParameters }) => {
+  defaultFilterString?: string | null
+  totalCount: number | null
+}> = ({ filterDefinitions, filterListParameters, defaultFilterString, totalCount = null }) => {
   const { strings } = useLanguageProvider()
   const { query, updateQuery, location } = useRouter()
 
@@ -89,6 +91,7 @@ const ListFilters: React.FC<{
   const resetFilters = () => {
     updateQuery(Object.fromEntries(activeFilters.map((filterName) => [filterName, undefined])))
     setActiveFilters(defaultDisplayFilters)
+    updateQuery(defaultFilterString)
   }
 
   const availableFilterNames = filterNames.filter(
@@ -269,6 +272,13 @@ const ListFilters: React.FC<{
             return null
         }
       })}
+      {totalCount ? (
+        <p className="result-count">
+          {totalCount === 1
+            ? strings.APPLICATIONS_LIST_TOTAL_RESULTS_SINGLE
+            : strings.APPLICATIONS_LIST_TOTAL_RESULTS.replace('%1', String(totalCount))}
+        </p>
+      ) : null}
     </div>
   )
 }

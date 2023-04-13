@@ -139,6 +139,7 @@ const ListWrapper: React.FC = () => {
       <ListFilters
         filterDefinitions={visibleFilters}
         filterListParameters={{ userId: currentUser?.userId || 0, templateCode: type }}
+        totalCount={applicationCount}
       />
       {columns && (
         <ApplicationsList
