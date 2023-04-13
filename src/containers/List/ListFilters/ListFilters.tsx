@@ -41,7 +41,7 @@ const ListFilters: React.FC<{
   totalCount: number | null
 }> = ({ filterDefinitions, filterListParameters, defaultFilterString, totalCount = null }) => {
   const { strings } = useLanguageProvider()
-  const { query, updateQuery, location } = useRouter()
+  const { query, updateQuery, location, setQuery } = useRouter()
 
   const displayableFilters = getDisplayableFilters(filterDefinitions)
   const defaultDisplayFilters = getDefaultDisplayFilters(filterDefinitions)
@@ -89,9 +89,8 @@ const ListFilters: React.FC<{
   }
 
   const resetFilters = () => {
-    updateQuery(Object.fromEntries(activeFilters.map((filterName) => [filterName, undefined])))
     setActiveFilters(defaultDisplayFilters)
-    updateQuery(defaultFilterString)
+    setQuery(defaultFilterString)
   }
 
   const availableFilterNames = filterNames.filter(
