@@ -1872,9 +1872,10 @@ a:hover {
     }
   }
 
-  .ui.label {
+  .result-count {
     flex-grow: 1;
     text-align: right;
+    font-size: @fontSmall;
   }
 
   // multiple is used to make sure filter menu stays open, but it adds extra
