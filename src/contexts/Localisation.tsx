@@ -61,7 +61,6 @@ const initialContext: {
   loading: boolean
   error: any
   setLanguage: Function
-  getPluginStrings: Function
   refetchLanguages: Function
   translate: TranslateMethod
   t: TranslateMethod
@@ -74,7 +73,6 @@ const initialContext: {
   loading: true,
   error: null,
   setLanguage: () => {},
-  getPluginStrings: () => {},
   refetchLanguages: () => {},
   translate: () => '',
   t: () => '',
@@ -199,7 +197,6 @@ export function LanguageProvider({
         loading: languageState.loading,
         error: languageState.error,
         setLanguage: setSelectedLanguageCode,
-        getPluginStrings,
         refetchLanguages,
         translate,
         t: translate,

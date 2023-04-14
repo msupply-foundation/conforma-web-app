@@ -29,7 +29,7 @@ export default {
   APPLICATION_DELETION_CONFIRM_MESSAGE:
     'Please confirm you would like to delete a draft application',
   APPLICATIONS_LIST_EMPTY: 'No applications found',
-  APPLICATION_MISSING_TEMPLATE: "The applicantion's template was not found",
+  APPLICATION_MISSING_TEMPLATE: "The application's template was not found",
   APPLICATION_OTHER_CHANGES_MADE: 'This is a new submission and will require a review.',
   ASSIGNED: 'assigned',
   ASSIGNED_TO: 'assigned to',

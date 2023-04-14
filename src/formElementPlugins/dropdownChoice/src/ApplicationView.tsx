@@ -18,8 +18,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   getDefaultIndex,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('dropdownChoice')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('dropdownChoice')
   const {
     label,
     description,
@@ -149,7 +149,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         disabled={!isEditable}
         search={search || hasOther}
         allowAdditions={hasOther}
-        additionLabel={strings.ADD_CUSTOM_OPTION_LABEL}
+        additionLabel={t('ADD_CUSTOM_OPTION_LABEL')}
         onAddItem={(e, data) => addItemHandler(data.value as string)}
         placeholder={placeholder}
         options={getDropdownOptions(
