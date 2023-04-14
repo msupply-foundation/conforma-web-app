@@ -4,7 +4,6 @@ import strings from '../utils/defaultLanguageStrings'
 import { getRequest } from '../utils/helpers/fetchMethods'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 import { mapValues } from 'lodash'
-import { type } from 'os'
 
 const { pluginsFolder } = config
 
@@ -48,12 +47,11 @@ interface LanguageState {
   error: any
 }
 
-type TranslateMethod = (
-  key: keyof typeof strings,
-  substitutions?: Record<string, unknown> | string | number
-) => string
+type Substitutions = Record<string, unknown> | string | number
 
-type TranslatePluginMethod = (key: string, substitutions?: Record<string, unknown>) => string
+type TranslateMethod = (key: keyof typeof strings, substitutions?: Substitutions) => string
+
+type TranslatePluginMethod = (key: string, substitutions?: Substitutions) => string
 
 const initialContext: {
   strings: LanguageStrings
@@ -167,39 +165,12 @@ export function LanguageProvider({
     refetchPrefs()
   }
 
-  const translate: TranslateMethod = (key, substitutions = {}) => {
-    let localisedString = languageState.strings[key]
+  const translate: TranslateMethod = (key, substitutions = {}) =>
+    getTranslation(languageState.strings, key, substitutions)
 
-    if (typeof substitutions === 'string' || typeof substitutions === 'number') {
-      const match = localisedString.match(/{{([A-z0-9]+)}}/m)
-      if (match) {
-        substitutions = { [match[1]]: substitutions }
-      } else substitutions = {}
-    }
-
-    if ('count' in substitutions) {
-      const altKey = `${key}_${substitutions.count}` as keyof typeof strings
-      if (languageState.strings[altKey]) localisedString = languageState.strings[altKey]
-    }
-
-    return localisedString.replace(stringReplacementRegex, (match, sub) => {
-      return typeof substitutions === 'string' || typeof substitutions === 'number'
-        ? String(substitutions)
-        : String(substitutions[sub]) ?? match
-    })
-  }
-
-  const translatePlugin = (
-    pluginCode: string,
-    key: string,
-    substitutions: Record<string, unknown> = {}
-  ) => {
+  const translatePlugin = (pluginCode: string, key: string, substitutions: Substitutions = {}) => {
     const pluginStrings = getPluginStrings(pluginCode)
-    const localisedString = String(pluginStrings[key]) ?? key
-    return localisedString.replace(
-      stringReplacementRegex,
-      (match, sub) => String(substitutions[sub]) ?? match
-    )
+    return getTranslation(pluginStrings, key, substitutions)
   }
 
   // Fetch new language when language code changes
@@ -262,3 +233,30 @@ const consolidateStrings = (refStrings: LanguageStrings, remoteStrings: Language
   mapValues(refStrings, (englishString, key: keyof LanguageStrings) =>
     remoteStrings?.[key] ? remoteStrings?.[key] : englishString
   )
+
+// Returns translated string with substitutions
+const getTranslation = (
+  strings: Record<string, string>,
+  key: string,
+  substitutions: Substitutions
+) => {
+  let localisedString = strings[key]
+
+  if (typeof substitutions === 'string' || typeof substitutions === 'number') {
+    const match = localisedString.match(/{{([A-z0-9]+)}}/m)
+    if (match) {
+      substitutions = { [match[1]]: substitutions }
+    } else substitutions = {}
+  }
+
+  // "{{count}}" is a special replacement, where an alternative string can be
+  // provided for certain numbers, usually a single value (1).
+  if ('count' in substitutions) {
+    const altKey = `${key}_${substitutions.count}` as keyof typeof strings
+    if (strings[altKey]) localisedString = strings[altKey]
+  }
+
+  return localisedString.replace(stringReplacementRegex, (match, sub) =>
+    String((substitutions as Record<string, unknown>)[sub] ?? match)
+  )
+}

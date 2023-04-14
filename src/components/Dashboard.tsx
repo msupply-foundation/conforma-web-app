@@ -30,7 +30,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div id="dashboard">
-      <p>Test: {t('AA_TEST', 23)}</p>
+      <p>Test: {t('AA_TEST')}</p>
       <Header as="h2" content={t('MENU_ITEM_DASHBOARD')} />
       {templatesByCategory
         .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Dashboard))

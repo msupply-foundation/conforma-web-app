@@ -179,6 +179,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           <Markdown text={label} semanticComponent="noParagraph" />
         </label>
       )}
+      <p>{t('TEST')}</p>
       <Markdown text={description} />
       <Segment.Group>
         {/* Dummy input button required, as Semantic Button can't
