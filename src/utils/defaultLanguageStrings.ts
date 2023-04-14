@@ -1,8 +1,6 @@
 export default {
   _APP_NAME: 'conforma',
   _APP_NAME_SUBHEADER: 'Application Manager',
-  AA_TEST: 'There are {{count}} {{name}} items',
-  AA_TEST_1: 'There is {{count}} item',
   ACTION_AWAITING_RESPONSE: 'Awaiting response',
   ACTION_ASSIGN: 'Assign',
   ACTION_CONTINUE: 'Continue',

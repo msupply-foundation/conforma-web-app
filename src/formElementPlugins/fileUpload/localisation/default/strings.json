@@ -6,7 +6,5 @@
   "ERROR_UPLOAD_PROBLEM": "Problem uploading file",
   "BUTTON_CLICK_TO_UPLOAD": "Click to upload",
   "BUTTON_UPLOAD_ANOTHER": "Upload another",
-  "ADD_DESCRIPTION": "Add description",
-  "TEST": "There are {{count}} things here",
-  "TEST_1": "There is 1 thing"
+  "ADD_DESCRIPTION": "Add description"
 }
