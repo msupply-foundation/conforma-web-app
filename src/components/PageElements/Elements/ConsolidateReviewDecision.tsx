@@ -64,7 +64,6 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
             setIsActiveEdit={setIsActiveEdit}
             reviewResponse={reviewResponse as ReviewResponse}
             isConsolidation={isConsolidation}
-            stageNumber={stageNumber}
           />
         </div>
       ) : (

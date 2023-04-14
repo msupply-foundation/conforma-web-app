@@ -47,7 +47,7 @@ const ReviewPage: React.FC<{
   previousAssignment: AssignmentDetails
   fullApplicationStructure: FullStructure
 }> = ({ reviewAssignment, previousAssignment, fullApplicationStructure }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { serial } = fullApplicationStructure.info
   const {
     userState: { currentUser },
@@ -78,17 +78,17 @@ const ReviewPage: React.FC<{
   useEffect(() => {
     if (reviewStatus === ReviewStatus.Pending)
       showWarningModal({
-        title: strings.REVIEW_STATUS_PENDING_TITLE,
-        message: strings.REVIEW_STATUS_PENDING_MESSAGE,
+        title: t('REVIEW_STATUS_PENDING_TITLE'),
+        message: t('REVIEW_STATUS_PENDING_MESSAGE'),
       })
     else if (reviewStatus === ReviewStatus.Discontinued)
       showWarningModal({
-        title: strings.REVIEW_STATUS_DISCONTINUED_TITLE,
-        message: strings.REVIEW_STATUS_DISCONTINUED_MESSAGE,
+        title: t('REVIEW_STATUS_DISCONTINUED_TITLE'),
+        message: t('REVIEW_STATUS_DISCONTINUED_MESSAGE'),
       })
   }, [reviewStructure])
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (error) return <Message error title={t('ERROR_GENERIC')} list={[error]} />
   if (!reviewStructure) return <Loading />
 
   if (
@@ -103,7 +103,7 @@ const ReviewPage: React.FC<{
     return (
       <>
         <ReviewHeader applicationName={name} stage={reviewAssignment.current.stage} />
-        <Label className="simple-label" content={strings.LABEL_REVIEW_IN_PROGRESS} />
+        <Label className="simple-label" content={t('LABEL_REVIEW_IN_PROGRESS')} />
       </>
     )
   }
@@ -141,24 +141,24 @@ const ReviewPage: React.FC<{
     isLocked ? (
       <ReviewLockedLabel
         reviewer={isAssignedToCurrentUser ? undefined : thisReview?.reviewer}
-        strings={strings}
+        t={t}
       />
     ) : isConsolidation ? (
       <ConsolidationByLabel
         isSubmitted={isSubmitted}
         user={isAssignedToCurrentUser ? undefined : thisReview?.reviewer}
-        strings={strings}
+        t={t}
       />
     ) : (
       <ReviewByLabel
         isSubmitted={isSubmitted}
         user={isAssignedToCurrentUser ? undefined : thisReview?.reviewer}
-        strings={strings}
+        t={t}
       />
     )
 
   return error ? (
-    <Message error title={strings.ERROR_GENERIC} list={[error]} />
+    <Message error title={t('ERROR_GENERIC')} list={[error]} />
   ) : (
     <>
       <ReviewHeader applicationName={name} stage={reviewAssignment.current.stage} />
@@ -179,7 +179,7 @@ const ReviewPage: React.FC<{
                     <Label
                       icon={<Icon name="exclamation circle" color="pink" />}
                       className="simple-label alert-text"
-                      content={strings.LABEL_REVIEW_SECTION}
+                      content={t('LABEL_REVIEW_SECTION')}
                     />
                   )}
                   <SectionRowStatus {...section} />
@@ -226,13 +226,13 @@ const ReviewPage: React.FC<{
 }
 
 const SectionRowStatus: React.FC<SectionState> = (section) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { assignment, reviewProgress, consolidationProgress } = section
   const { isConsolidation, isReviewable, isAssignedToCurrentUser } = assignment as SectionAssignment
 
   if (isReviewable) {
     if (!isAssignedToCurrentUser)
-      return <Label className="simple-label" content={strings.LABEL_ASSIGNED_TO_OTHER} />
+      return <Label className="simple-label" content={t('LABEL_ASSIGNED_TO_OTHER')} />
     if (isConsolidation) {
       const totalDone =
         (consolidationProgress?.totalConform || 0) + (consolidationProgress?.totalNonConform || 0)
@@ -242,7 +242,7 @@ const SectionRowStatus: React.FC<SectionState> = (section) => {
       const totalDone = (reviewProgress?.doneConform || 0) + (reviewProgress?.doneNonConform || 0)
       if (totalDone > 0) return <ReviewSectionProgressBar reviewProgress={reviewProgress} />
     }
-    return <ReviewInProgressLabel strings={strings} />
+    return <ReviewInProgressLabel t={t} />
   }
   // else: not reviewable
   return null
@@ -254,7 +254,7 @@ interface ApproveAllButtonProps {
 }
 
 const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({ isConsolidation, page }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const updateReviewResponse = useUpdateReviewResponse()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
@@ -288,7 +288,7 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({ isConsolidation, pa
         inverted
         onClick={massApprove}
         content={`${
-          isConsolidation ? strings.BUTTON_REVIEW_AGREE_ALL : strings.BUTTON_REVIEW_APPROVE_ALL
+          isConsolidation ? t('BUTTON_REVIEW_AGREE_ALL') : t('BUTTON_REVIEW_APPROVE_ALL')
         } (${responsesToReview.length})`}
       />
     </div>
@@ -306,25 +306,25 @@ const PreviousStageDecision: React.FC<PreviousStageDecisionProps> = ({
   isMakeDecision,
   serial,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { Decision } = useLocalisedEnums()
   return isMakeDecision && !!review ? (
     <Segment.Group horizontal id="previous-review">
       <Segment>
-        <Header as="h3">{strings.LABEL_PREVIOUS_REVIEW}:</Header>
-        <ReviewByLabel user={review.reviewer} isSubmitted={true} strings={strings} />
+        <Header as="h3">{t('LABEL_PREVIOUS_REVIEW')}:</Header>
+        <ReviewByLabel user={review.reviewer} isSubmitted={true} t={t} />
         <Button
           className="button-med"
           as={Link}
           to={`/application/${serial}/review/${review.id}`}
           target="_blank"
-          content={strings.ACTION_VIEW}
+          content={t('ACTION_VIEW')}
         />
       </Segment>
       {!!review.reviewDecision?.decision && (
         <Segment>
           <p style={{ width: '150px' }}>
-            <strong>{strings.LABEL_REVIEW_SUBMITTED_AS}:</strong>
+            <strong>{t('LABEL_REVIEW_SUBMITTED_AS')}:</strong>
           </p>
           {Decision[review.reviewDecision.decision]}
         </Segment>

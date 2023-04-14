@@ -16,53 +16,53 @@ const ReviewSectionRowAssigned: React.FC<ReviewSectionComponentProps> = ({
   isAssignedToCurrentUser,
   action,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const getLabel = () => {
     switch (action) {
       case ReviewAction.unknown:
         return null
       case ReviewAction.canMakeDecision:
         return isAssignedToCurrentUser ? (
-          <ReviewCanMakeDecisionLabel strings={strings} />
+          <ReviewCanMakeDecisionLabel t={t} />
         ) : (
-          <ReviewCanMakeDecisionLabel reviewer={assignment?.assignee} strings={strings} />
+          <ReviewCanMakeDecisionLabel reviewer={assignment?.assignee} t={t} />
         )
       case ReviewAction.canSelfAssign:
         return !isAssignedToCurrentUser ? (
-          <ReviewSelfAssignmentLabel strings={strings} />
+          <ReviewSelfAssignmentLabel t={t} />
         ) : (
-          <ReviewSelfAssignmentLabel reviewer={assignment?.assignee} strings={strings} />
+          <ReviewSelfAssignmentLabel reviewer={assignment?.assignee} t={t} />
         )
       case ReviewAction.canContinueLocked:
         return isAssignedToCurrentUser ? (
-          <ReviewLockedLabel strings={strings} />
+          <ReviewLockedLabel t={t} />
         ) : (
-          <ReviewLockedLabel reviewer={assignment?.assignee} strings={strings} />
+          <ReviewLockedLabel reviewer={assignment?.assignee} t={t} />
         )
       case ReviewAction.canView:
         return isAssignedToCurrentUser ? (
           thisReview?.current.reviewStatus === ReviewStatus.Submitted ? (
             <ReviewLabel
-              message={`${strings.REVIEW_SUBMITTED_BY} ${strings.ASSIGNMENT_YOURSELF}`}
-              strings={strings}
+              message={`${t('REVIEW_SUBMITTED_BY')} ${t('ASSIGNMENT_YOURSELF')}`}
+              t={t}
             />
           ) : (
-            <ReviewLabel message={strings.REVIEW_NOT_READY} strings={strings} />
+            <ReviewLabel message={t('REVIEW_NOT_READY')} t={t} />
           )
         ) : thisReview?.current.reviewStatus === ReviewStatus.Submitted ? (
           <ReviewLabel
-            message={`${strings.REVIEW_SUBMITTED_BY} `}
+            message={`${t('REVIEW_SUBMITTED_BY')} `}
             reviewer={assignment?.assignee}
-            strings={strings}
+            t={t}
           />
         ) : (
-          <ReviewInProgressLabel reviewer={assignment?.assignee} strings={strings} />
+          <ReviewInProgressLabel reviewer={assignment?.assignee} t={t} />
         )
       default:
         return isAssignedToCurrentUser ? (
-          <ReviewInProgressLabel strings={strings} />
+          <ReviewInProgressLabel t={t} />
         ) : (
-          <ReviewInProgressLabel reviewer={assignment?.assignee} strings={strings} />
+          <ReviewInProgressLabel reviewer={assignment?.assignee} t={t} />
         )
     }
   }

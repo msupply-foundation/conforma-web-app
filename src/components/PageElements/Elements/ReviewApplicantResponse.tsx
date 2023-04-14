@@ -101,7 +101,6 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                 setIsActiveEdit={setIsActiveEdit}
                 reviewResponse={reviewResponse as ReviewResponse}
                 isConsolidation={false}
-                stageNumber={stageNumber}
               />
             </div>
           ) : (
@@ -166,7 +165,6 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
                   setIsActiveEdit={setIsActiveEdit}
                   reviewResponse={reviewResponse as ReviewResponse}
                   isConsolidation={false}
-                  stageNumber={stageNumber}
                 />
               )}
             </div>

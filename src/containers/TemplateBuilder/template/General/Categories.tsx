@@ -11,10 +11,10 @@ import { useTemplateState } from '../TemplateWrapper'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 
 const useCategoryInfo = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const noCategory = {
-    title: strings.TEMPLATE_NO_CATEGORY,
+    title: t('TEMPLATE_NO_CATEGORY'),
     id: -1,
     code: '',
     icon: '',
@@ -22,18 +22,18 @@ const useCategoryInfo = () => {
   }
 
   const newCategory = {
-    code: strings.TEMPLATE_NEW_CODE,
-    icon: strings.DEFAULT_TEMPLATE_CATEGORY_ICON,
-    title: strings.TEMPLATE_NEW_TITLE,
+    code: t('TEMPLATE_NEW_CODE'),
+    icon: t('DEFAULT_TEMPLATE_CATEGORY_ICON'),
+    title: t('TEMPLATE_NEW_TITLE'),
     uiLocation: [UiLocation.List],
   }
 
   const uiLocationOptions: { key: UiLocation; locationName: string }[] = [
-    { key: UiLocation.List, locationName: strings.TEMPLATE_UI_MENU },
-    { key: UiLocation.Dashboard, locationName: strings.TEMPLATE_UI_DASHBOARD },
-    { key: UiLocation.User, locationName: strings.TEMPLATE_UI_USER },
-    { key: UiLocation.Management, locationName: strings.TEMPLATE_UI_MANAGE },
-    { key: UiLocation.Admin, locationName: strings.TEMPLATE_UI_ADMIN },
+    { key: UiLocation.List, locationName: t('TEMPLATE_UI_MENU') },
+    { key: UiLocation.Dashboard, locationName: t('TEMPLATE_UI_DASHBOARD') },
+    { key: UiLocation.User, locationName: t('TEMPLATE_UI_USER') },
+    { key: UiLocation.Management, locationName: t('TEMPLATE_UI_MANAGE') },
+    { key: UiLocation.Admin, locationName: t('TEMPLATE_UI_ADMIN') },
   ]
 
   return { noCategory, newCategory, uiLocationOptions }
@@ -48,7 +48,7 @@ type CategoryUpdate = {
 }
 
 const Category: React.FC<{}> = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { noCategory, newCategory, uiLocationOptions } = useCategoryInfo()
   const { category, template } = useTemplateState()
   const { updateTemplate } = useOperationState()
@@ -127,7 +127,7 @@ const Category: React.FC<{}> = () => {
       <div className="flex-row-start-center">
         <DropdownIO
           value={selectedCategory.id}
-          title={strings.TEMPLATE_CATEGORIES}
+          title={t('TEMPLATE_CATEGORIES')}
           options={categoryOptions}
           disabled={!!updateState}
           getKey={'id'}
@@ -146,23 +146,21 @@ const Category: React.FC<{}> = () => {
       {updateState && (
         <div className="template-buider-category-input">
           <Header as="h5">{`${
-            updateState.id
-              ? strings.TEMPLATE_BUTTON_EDIT_CATEGORY
-              : strings.TEMPLATE_BUTTON_ADD_CATEGORY
+            updateState.id ? t('TEMPLATE_BUTTON_EDIT_CATEGORY') : t('TEMPLATE_BUTTON_ADD_CATEGORY')
           }`}</Header>
           <TextIO
             text={updateState.code}
-            title={strings.TEMPLATE_CODE}
+            title={t('TEMPLATE_CODE')}
             setText={(text) => setUpdateState({ ...updateState, code: text ?? '' })}
           />
           <TextIO
             text={updateState?.title || ''}
-            title={strings.TEMPLATE_TITLE}
+            title={t('TEMPLATE_TITLE')}
             setText={(value: string | null) => setUpdateState({ ...updateState, title: value })}
           />
           <TextIO
             text={updateState?.icon || ''}
-            title={strings.TEMPLATE_ICON}
+            title={t('TEMPLATE_ICON')}
             link={iconLink}
             icon={updateState.icon ?? undefined}
             setText={(value: string | null) =>
@@ -170,7 +168,7 @@ const Category: React.FC<{}> = () => {
             }
           />
           <div>
-            <p>{strings.TEMPLATE_APPEARS_IN}:</p>
+            <p>{t('TEMPLATE_APPEARS_IN')}:</p>
             {uiLocationOptions.map(({ key, locationName }) => (
               <CheckboxIO
                 key={key}
@@ -188,13 +186,10 @@ const Category: React.FC<{}> = () => {
           <div className="spacer-20" />
           <div className="flex-row">
             <ButtonWithFallback
-              title={updateState.id ? strings.BUTTON_SAVE : strings.TEMPLATE_BUTTON_ADD}
+              title={updateState.id ? t('BUTTON_SAVE') : t('TEMPLATE_BUTTON_ADD')}
               onClick={updateState.id ? editCategory : addCategory}
             />
-            <ButtonWithFallback
-              title={strings.OPTION_CANCEL}
-              onClick={() => setUpdateState(null)}
-            />
+            <ButtonWithFallback title={t('OPTION_CANCEL')} onClick={() => setUpdateState(null)} />
           </div>
         </div>
       )}

@@ -8,12 +8,12 @@ import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 
 const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplication }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { Status } = useLocalisedEnums()
   const { ConfirmModal, showModal } = useConfirmationModal({
-    title: strings.APPLICATION_DELETION_CONFIRM_TITLE,
-    message: strings.APPLICATION_DELETION_CONFIRM_MESSAGE,
-    confirmText: strings.OPTION_OK,
+    title: t('APPLICATION_DELETION_CONFIRM_TITLE'),
+    message: t('APPLICATION_DELETION_CONFIRM_MESSAGE'),
+    confirmText: t('OPTION_OK'),
     onConfirm: () => deleteApplication(),
   })
 
@@ -23,7 +23,7 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
       return (
         <Link to={`/application/${serial}`} className="user-action">
           <Icon name="exclamation circle" className="alert" />
-          {strings.ACTION_MAKE_CHANGES}
+          {t('ACTION_MAKE_CHANGES')}
         </Link>
       )
     case ApplicationStatus.Draft:
@@ -31,7 +31,7 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
         <>
           <Progress size="tiny" />
           <Link to={`/application/${serial}`} className="user-action">
-            {strings.ACTION_EDIT_DRAFT}
+            {t('ACTION_EDIT_DRAFT')}
           </Link>
           <Icon
             className="delete-icon"
@@ -45,13 +45,13 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
     case ApplicationStatus.Completed:
       return (
         <Link to={`/application/${serial}`} className="user-action">
-          {strings.ACTION_VIEW}
+          {t('ACTION_VIEW')}
         </Link>
       )
     case ApplicationStatus.ChangesRequired:
       return (
         <Link to={`/application/${serial}`} className="user-action">
-          {strings.ACTION_MAKE_CHANGES}
+          {t('ACTION_MAKE_CHANGES')}
         </Link>
       ) // TODO: Show number of responses to make changes
     case undefined:
