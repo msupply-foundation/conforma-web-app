@@ -37,12 +37,8 @@ const ApplicationProgressBar: React.FC<ApplicationProgress> = (applicationProgre
 
 const ConsolidationSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
   const { getConsolidationProgressDefaults, getConsolidationProgressTitle } = useHelpers()
-  const {
-    doneAgreeNonConform,
-    doneAgreeConform,
-    doneDisagree,
-    totalActive
-  } = getConsolidationProgressDefaults(props)
+  const { doneAgreeNonConform, doneAgreeConform, doneDisagree, totalActive } =
+    getConsolidationProgressDefaults(props)
   const progressLabel = getConsolidationProgressTitle(props)
   return (
     <div className="progress-box">
@@ -93,11 +89,11 @@ const ReviewSectionProgressBar: React.FC<SectionProgressBarProps> = (props) => {
 
 // Hook to provide helper methods to the above components
 const useHelpers = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const getApplicationProgressTitle = ({ completed, valid }: ApplicationProgress) => {
-    if (!valid) return strings.LABEL_SECTION_PROBLEM
-    else if (completed) return strings.LABEL_SECTION_COMPLETED
+    if (!valid) return t('LABEL_SECTION_PROBLEM')
+    else if (completed) return t('LABEL_SECTION_COMPLETED')
     return null
   }
 
@@ -117,14 +113,16 @@ const useHelpers = () => {
       getConsolidationProgressDefaults(props)
     const totalAgree = doneAgreeConform + doneAgreeNonConform
     if (doneDisagree > 0) {
-      let disagreementLabel = `(${doneDisagree}) ${strings.LABEL_CONSOLIDATION_DISAGREEMENT}`
+      let disagreementLabel = `(${doneDisagree}) ${t('LABEL_CONSOLIDATION_DISAGREEMENT')}`
       if (totalAgree > 0)
-        disagreementLabel += ` (${totalAgree}) ${strings.LABEL_CONSOLIDATION_AGREEMENT}`
+        disagreementLabel += ` (${totalAgree}) ${t('LABEL_CONSOLIDATION_AGREEMENT')}`
       return disagreementLabel
     }
 
     if (totalAgree > 0)
-      return `(${doneAgreeConform}) ${strings.LABEL_REVIEW_APPROVED} (${doneAgreeNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
+      return `(${doneAgreeConform}) ${t('LABEL_REVIEW_APPROVED')} (${doneAgreeNonConform}) ${t(
+        'LABEL_REVIEW_DECLINED'
+      )}`
     return null
   }
 
@@ -136,8 +134,8 @@ const useHelpers = () => {
 
   const getReviewProgressTitle = (props: SectionProgressBarProps) => {
     const { doneNonConform, doneConform, totalReviewable } = getReviewProgressDefaults(props)
-    if (doneNonConform > 0) return `(${doneNonConform}) ${strings.LABEL_REVIEW_DECLINED}`
-    else if (doneConform === totalReviewable) return strings.LABEL_SECTION_COMPLETED
+    if (doneNonConform > 0) return `(${doneNonConform}) ${t('LABEL_REVIEW_DECLINED')}`
+    else if (doneConform === totalReviewable) return t('LABEL_SECTION_COMPLETED')
     return null
   }
   return {

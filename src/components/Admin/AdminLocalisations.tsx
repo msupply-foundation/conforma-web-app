@@ -99,7 +99,7 @@ export const AdminLocalisations: React.FC = () => {
         })
         return
       }
-      importLanguages(event.target.result as string, importDisabled, strings).then(
+      importLanguages(event.target.result as string, importDisabled, t).then(
         ({ success, message }) => {
           if (success) {
             showToast({

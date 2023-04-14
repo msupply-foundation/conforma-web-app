@@ -25,7 +25,7 @@ export const DataViewSearchableList: React.FC<SearchableListProps> = ({
   title,
   onRemove,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [searchText, setSearchText] = useState<string>()
   const [filterList, setFilterList] = useState<string[]>()
   const [error, setError] = useState<string>()
@@ -63,7 +63,7 @@ export const DataViewSearchableList: React.FC<SearchableListProps> = ({
         <>
           <Input
             icon="search"
-            placeholder={strings.FILTER_SEARCH_LIST}
+            placeholder={t('FILTER_SEARCH_LIST')}
             iconPosition="left"
             className="search"
             onChange={(_, { value }) => {
@@ -78,11 +78,11 @@ export const DataViewSearchableList: React.FC<SearchableListProps> = ({
             activeOptions={activeOptions}
             optionList={filterList || []}
           />
-          {moreResults && <FilterListInfo message={strings.DATA_VIEW_FILTER_MORE_RESULTS} />}
+          {moreResults && <FilterListInfo message={t('DATA_VIEW_FILTER_MORE_RESULTS')} />}
         </>
       ) : (
         <FilterListInfo
-          message={error ? error : strings.DATA_VIEW_FILTER_LIST_LOADING}
+          message={error ? error : t('DATA_VIEW_FILTER_LIST_LOADING')}
           error={!!error}
         />
       )}

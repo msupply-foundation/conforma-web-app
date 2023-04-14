@@ -238,6 +238,7 @@ const getTranslation = (
   substitutions: Substitutions
 ) => {
   let localisedString = strings[key]
+  if (!localisedString) return key
 
   if (typeof substitutions === 'string' || typeof substitutions === 'number') {
     const match = localisedString.match(/{{([A-z0-9]+)}}/m)

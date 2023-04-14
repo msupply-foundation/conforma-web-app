@@ -12,7 +12,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { ReviewWrapper } from '../Review'
 
 const ApplicationWrapper: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     match: { path },
     query: { serialNumber },
@@ -28,7 +28,7 @@ const ApplicationWrapper: React.FC = () => {
   })
 
   return error ? (
-    <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
+    <Message error header={t('ERROR_APPLICATION_PAGE')} list={[error]} />
   ) : isLoading ? (
     <Loading />
   ) : structure ? (

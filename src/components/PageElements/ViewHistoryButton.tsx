@@ -4,7 +4,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { useRouter } from '../../utils/hooks/useRouter'
 
 const ViewHistoryButton: React.FC<{ elementCode: string }> = ({ elementCode }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { updateQuery } = useRouter()
   return (
     <div className="history-container">
@@ -12,7 +12,7 @@ const ViewHistoryButton: React.FC<{ elementCode: string }> = ({ elementCode }) =
         className="link-label clickable"
         icon="history"
         size="large"
-        content={strings.BUTTON_VIEW_HISTORY}
+        content={t('BUTTON_VIEW_HISTORY')}
         onClick={() => updateQuery({ showHistory: elementCode })}
       />
     </div>

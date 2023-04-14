@@ -19,7 +19,7 @@ interface UseGetReviewInfoProps {
 }
 
 const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewInfoProps) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [assignments, setAssignments] = useState<AssignmentDetails[]>()
   const [isFetching, setIsFetching] = useState(true)
   const [fetchingError, setFetchingError] = useState('')
@@ -48,7 +48,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
 
   useEffect(() => {
     if (triggersError) {
-      setFetchingError(strings.ERROR_TRIGGER)
+      setFetchingError(t('ERROR_TRIGGER'))
       console.error('Trigger error:', triggersError)
       return
     }

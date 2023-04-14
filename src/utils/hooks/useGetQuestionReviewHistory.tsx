@@ -31,7 +31,7 @@ interface ResponsesByStage {
 }
 
 const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuestionHistoryProps) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { ReviewResponse } = useLocalisedEnums()
   const [historyList, setHistoryList] = useState<HistoryElementsByStage>([])
   const { data, error, loading } = isApplicant
@@ -57,7 +57,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
 
         allResponsesByStage[stageNumber].push({
           author: firstName || '' + ' ' + lastName || '',
-          title: strings.TITLE_HISTORY_SUBMITTED_BY_APPLICANT,
+          title: t('TITLE_HISTORY_SUBMITTED_BY_APPLICANT'),
           // TODO translated message, that nothing is entered
           message: value?.text,
           response: { ...value, evaluatedParameters },
@@ -81,9 +81,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
         allResponsesByStage[stageNumber].push({
           author: reviewer ? reviewer?.firstName || '' + ' ' + reviewer?.lastName || '' : '',
           title:
-            (levelNumber || 1) > 1
-              ? strings.TITLE_HISTORY_CONSOLIDATION
-              : strings.TITLE_HISTORY_REVIEW,
+            (levelNumber || 1) > 1 ? t('TITLE_HISTORY_CONSOLIDATION') : t('TITLE_HISTORY_REVIEW'),
           message: !!decision ? ReviewResponse[decision] : 'Undefined',
           timeUpdated,
           reviewerComment: comment || '',

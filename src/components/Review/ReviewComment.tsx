@@ -14,7 +14,7 @@ type ReviewCommentProps = {
 }
 
 const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEditable }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [updateComment] = useUpdateReviewDecisionCommentMutation()
   const { data, error } = useGetReviewDecisionCommentQuery({
     variables: { reviewDecisionId: reviewDecisionId as number },
@@ -25,7 +25,7 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
 
   if (!reviewDecisionId) return null
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (error) return <Message error title={t('ERROR_GENERIC')} list={[error]} />
 
   if (!data) return <Loading />
 
@@ -35,7 +35,7 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
         compact
         attached="bottom"
         icon="comment outline"
-        header={strings.TITLE_REVIEW_COMMENT}
+        header={t('TITLE_REVIEW_COMMENT')}
         content={data?.reviewDecision?.comment}
       />
     ) : null
@@ -44,8 +44,8 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
   return (
     <div>
       <p>
-        <strong>{strings.LABEL_REVIEW_OVERALL_COMMENT}:</strong>
-        <Tooltip message={strings.LABEL_REVIEW_OVERALL_COMMENT_TOOLTIP} />
+        <strong>{t('LABEL_REVIEW_OVERALL_COMMENT')}:</strong>
+        <Tooltip message={t('LABEL_REVIEW_OVERALL_COMMENT_TOOLTIP')} />
       </p>
       <Form.Field id="review-commment-content">
         <TextArea

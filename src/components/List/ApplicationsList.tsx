@@ -22,7 +22,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   loading,
   refetch,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <>
       <Table sortable stackable selectable>
@@ -63,7 +63,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
       </Table>
       {loading && <Loading />}
       {applications && applications.length === 0 && !loading && (
-        <Message floating color="yellow" header={strings.APPLICATIONS_LIST_EMPTY} />
+        <Message floating color="yellow" header={t('APPLICATIONS_LIST_EMPTY')} />
       )}
     </>
   )
@@ -76,7 +76,7 @@ interface ApplicationRowProps {
 }
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, application }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [deleteApplication, { loading, error }] = useDeleteApplicationMutation({
     variables: { id: application.id || 0 },
     onCompleted: () => refetch(),
@@ -87,7 +87,7 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
     deleteApplication,
   }
 
-  if (error) return <Message error header={strings.ERROR_APPLICATION_DELETE} list={[error]} />
+  if (error) return <Message error header={t('ERROR_APPLICATION_DELETE')} list={[error]} />
 
   return (
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">

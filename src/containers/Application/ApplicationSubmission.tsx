@@ -16,7 +16,7 @@ import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   const [submissionMessageEvaluated, setSubmissionMessageEvaluated] = useState<string>()
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     userState: { isNonRegistered, currentUser },
     logout,
@@ -68,7 +68,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
       <Segment basic textAlign="center" id="submission-header">
         <Header as="h4" icon>
           <Icon name="clock outline" className="information-colour" size="huge" />
-          {strings.LABEL_PROCESSING}
+          {t('LABEL_PROCESSING')}
         </Header>
         {submissionMessageEvaluated ? (
           <Markdown text={submissionMessageEvaluated || ''} />
@@ -79,7 +79,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
       {!isNonRegistered && (
         <>
           <Segment basic textAlign="left" id="submission-content">
-            <p className="dark-grey">{strings.SUBTITLE_SUBMISSION_STEPS}</p>
+            <p className="dark-grey">{t('SUBTITLE_SUBMISSION_STEPS')}</p>
             <List>
               {stages.map(({ stage: { name, description, colour } }) =>
                 name ? (
@@ -100,11 +100,11 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
               color="blue"
               as={Link}
               to={`/application/${serialNumber}/summary`}
-              content={strings.BUTTON_VIEW_APPLICATION}
+              content={t('BUTTON_VIEW_APPLICATION')}
             />
             <p>
               <Link to={'/'}>
-                <strong>{strings.BUTTON_BACK_DASHBOARD}</strong>
+                <strong>{t('BUTTON_BACK_DASHBOARD')}</strong>
               </Link>
             </p>
           </Segment>
@@ -113,7 +113,7 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
       {isNonRegistered && (
         <Segment basic textAlign="center" id="submission-nav">
           <Button primary onClick={() => logout()}>
-            {strings.ACTION_CONTINUE}
+            {t('ACTION_CONTINUE')}
           </Button>
         </Segment>
       )}

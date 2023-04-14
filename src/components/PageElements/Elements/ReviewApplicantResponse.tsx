@@ -48,12 +48,12 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
   isChanged,
   reviewInfo,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [isActiveEdit, setIsActiveEdit] = useState(false)
   const decisionExists = !!reviewResponse?.decision
   const triggerTitle = isNewApplicationResponse
-    ? strings.BUTTON_RE_REVIEW_RESPONSE
-    : strings.BUTTON_REVIEW_RESPONSE
+    ? t('BUTTON_RE_REVIEW_RESPONSE')
+    : t('BUTTON_REVIEW_RESPONSE')
 
   const consolidationReviewResponse = previousReviewResponse?.reviewResponsesByReviewResponseLinkId
     .nodes[0] as ReviewResponse // There is only one reviewResponse associated per review cycle
@@ -72,7 +72,7 @@ const ReviewApplicantResponse: React.FC<ReviewApplicantResponseProps> = ({
     if (canEdit && isActiveReviewResponse && isChangeRequest && !isChanged)
       return (
         <ReviewElementTrigger
-          title={strings.LABEL_RESPONSE_UPDATE}
+          title={t('LABEL_RESPONSE_UPDATE')}
           onClick={() => setIsActiveEdit(true)}
         />
       )

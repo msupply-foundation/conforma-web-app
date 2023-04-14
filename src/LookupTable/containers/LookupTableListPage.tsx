@@ -13,10 +13,10 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 
 const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { pathname } = useRouter()
   const history = useHistory()
-  usePageTitle(strings.LOOKUP_TABLES_TITLE)
+  usePageTitle(t('LOOKUP_TABLES_TITLE'))
 
   const {
     allTableStructures,
@@ -28,8 +28,8 @@ const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) 
   return (
     <Container style={{ padding: '2em 0em' }}>
       <LookUpTableListMainMenu
-        headerText={strings.LOOKUP_TABLES_TITLE}
-        subHeaderText={strings.LOOKUP_TABLE_SUBTITLE}
+        headerText={t('LOOKUP_TABLES_TITLE')}
+        subHeaderText={t('LOOKUP_TABLE_SUBTITLE')}
       />
       <Divider />
       <LookUpTableListTable

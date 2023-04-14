@@ -154,13 +154,13 @@ const TemplatesWrapper: React.FC = () => (
 )
 
 const Templates: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [selectedRow, setSelectedRow] = useState(-1)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
   const { importTemplate } = useOperationState()
 
-  usePageTitle(strings.PAGE_TITLE_TEMPLATES)
+  usePageTitle(t('PAGE_TITLE_TEMPLATES'))
 
   const renderHeader = () => (
     <Table.Header key="header">

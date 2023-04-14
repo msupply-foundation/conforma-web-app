@@ -8,32 +8,32 @@ import { formatCellText } from './helpers'
 // These can be modified if we want more/different columns in linked application
 // list
 const useDisplayFields = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const displayFields: ApplicationDisplayField[] = [
     {
       field: 'name',
-      displayName: strings.APP_LINK_NAME,
+      displayName: t('APP_LINK_NAME'),
       dataType: 'string',
       link: '/application/',
       linkVar: 'serial',
     },
     {
       field: 'serial',
-      displayName: strings.APP_LINK_SERIAL,
+      displayName: t('APP_LINK_SERIAL'),
       dataType: 'string',
       link: '/application/',
       linkVar: 'serial',
     },
     {
       field: 'templateName',
-      displayName: strings.APP_LINK_TYPE,
+      displayName: t('APP_LINK_TYPE'),
       dataType: 'string',
       link: '/applications?type=',
       linkVar: 'templateCode',
     },
     {
       field: 'dateCompleted',
-      displayName: strings.APP_LINK_COMPLETED,
+      displayName: t('APP_LINK_COMPLETED'),
       dataType: 'Date',
       link: null,
     },
@@ -44,11 +44,11 @@ const useDisplayFields = () => {
 const ApplicationLinks: React.FC<{ linkedApplications: LinkedApplication[] }> = ({
   linkedApplications,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const displayFields = useDisplayFields()
   return (
     <div id="linked-applications-container">
-      <Header as="h4">{strings.APP_LINK_LINKED_APPLICATIONS}</Header>
+      <Header as="h4">{t('APP_LINK_LINKED_APPLICATIONS')}</Header>
       <Table stackable selectable>
         <Table.Header>
           <Table.Row>

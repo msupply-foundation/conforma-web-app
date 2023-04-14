@@ -13,7 +13,7 @@ import { useUserState } from '../../contexts/UserState'
 const ReviewPageWrapper: React.FC<{
   structure: FullStructure
 }> = ({ structure: fullStructure }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     query: { reviewId },
     match: { path },
@@ -32,7 +32,7 @@ const ReviewPageWrapper: React.FC<{
     userId: currentUser?.userId as number,
   })
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (error) return <Message error title={t('ERROR_GENERIC')} list={[error]} />
   if (loading || !fullStructure) return <Loading />
 
   if (!reviewAssignments) return <NoMatch />
