@@ -54,7 +54,6 @@ export type TranslateMethod = (key: keyof typeof strings, substitutions?: Substi
 type TranslatePluginMethod = (key: string, substitutions?: Substitutions) => string
 
 const initialContext: {
-  strings: LanguageStrings
   selectedLanguage: LanguageOption
   languageOptions: LanguageOption[]
   languageOptionsFull: LanguageOption[]
@@ -66,7 +65,6 @@ const initialContext: {
   t: TranslateMethod
   getPluginTranslator: (pluginCode: string) => TranslatePluginMethod
 } = {
-  strings: {} as LanguageStrings,
   selectedLanguage: initSelectedLanguage,
   languageOptions: [],
   languageOptionsFull: [],
@@ -188,7 +186,6 @@ export function LanguageProvider({
   return (
     <LanguageProviderContext.Provider
       value={{
-        strings: languageState.strings,
         selectedLanguage: languageState.selectedLanguage,
         languageOptions: languageState.languageOptions.filter(
           (lang: LanguageOption) => lang?.enabled

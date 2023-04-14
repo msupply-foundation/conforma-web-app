@@ -10,12 +10,7 @@ import { importLanguages } from '../../utils/localisation/importLanguages'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 export const AdminLocalisations: React.FC = () => {
-  const {
-    strings,
-    refetchLanguages,
-    languageOptionsFull: languageOptions,
-    t,
-  } = useLanguageProvider()
+  const { refetchLanguages, languageOptionsFull: languageOptions, t } = useLanguageProvider()
   usePageTitle(t('PAGE_TITLE_LOCALISATION'))
   const fileInputRef = useRef<any>(null)
   const [exportDisabled, setExportDisabled] = useState(true)
