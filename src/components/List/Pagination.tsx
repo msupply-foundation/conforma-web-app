@@ -1,19 +1,19 @@
 import React from 'react'
 import { Pagination, Dropdown, Grid } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { LanguageStrings } from '../../contexts/Localisation'
+import { TranslateMethod } from '../../contexts/Localisation'
 import { usePrefs } from '../../contexts/SystemPrefs'
 
 interface PaginationProps {
   totalCount: number
   perPageText?: string
-  strings: LanguageStrings
+  translate: TranslateMethod
 }
 
 const PaginationBar: React.FC<PaginationProps> = ({
   totalCount,
-  strings,
-  perPageText = strings.LABEL_LIST_PER_PAGE,
+  translate,
+  perPageText = translate('LABEL_LIST_PER_PAGE'),
 }) => {
   const { preferences } = usePrefs()
   const { query, updateQuery } = useRouter()

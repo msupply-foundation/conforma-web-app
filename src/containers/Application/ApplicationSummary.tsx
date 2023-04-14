@@ -17,7 +17,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   structure: fullStructure,
   requestRevalidation,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { replace, push, query } = useRouter()
   const [error, setError] = useState(false)
 
@@ -25,7 +25,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
     userState: { currentUser },
   } = useUserState()
 
-  usePageTitle(strings.PAGE_TITLE_APPLICATION.replace('%1', fullStructure.info.serial))
+  usePageTitle(t('PAGE_TITLE_APPLICATION', fullStructure.info.serial))
 
   const { submit } = useSubmitApplication({
     serialNumber: fullStructure?.info.serial as string,
@@ -79,7 +79,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
       )
   }
 
-  if (error) return <Message error header={strings.ERROR_APPLICATION_SUBMIT} list={[error]} />
+  if (error) return <Message error header={t('ERROR_APPLICATION_SUBMIT')} list={[error]} />
   if (!fullStructure) return <Loading />
   const {
     sections,
@@ -101,13 +101,11 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
         <Header
           as="h2"
           textAlign="center"
-          content={
-            isSubmitted ? strings.TITLE_APPLICATION_SUBMITTED : strings.TITLE_APPLICATION_SUMMARY
-          }
+          content={isSubmitted ? t('TITLE_APPLICATION_SUBMITTED') : t('TITLE_APPLICATION_SUMMARY')}
           subheader={
             <Header.Subheader
               className="center-text"
-              content={isSubmitted ? name : strings.SUBTITLE_APPLICATION_SUMMARY}
+              content={isSubmitted ? name : t('SUBTITLE_APPLICATION_SUMMARY')}
             />
           }
         />
@@ -138,11 +136,11 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
               primary
               className="button-wide"
               onClick={handleSubmit}
-              content={strings.BUTTON_SUBMIT_APPLICATION}
+              content={t('BUTTON_SUBMIT_APPLICATION')}
             />
             <p>
               <Link to={`/application/${fullStructure.info.serial}`}>
-                <strong>{strings.LABEL_APPLICATION_BACK}</strong>
+                <strong>{t('LABEL_APPLICATION_BACK')}</strong>
               </Link>
             </p>
           </div>

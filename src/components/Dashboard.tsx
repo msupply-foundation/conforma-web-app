@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
 }
 
 const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { name, code, hasApplyPermission, filters, permissions, totalApplications } = template
 
   const userRole =
@@ -65,7 +65,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
         <div className="filters">
           <Label className="strong-label clickable">
             <a href={`/applications?type=${code}&user-role=${userRole}`}>
-              {template?.namePlural || strings.LABEL_APPLICATIONS.replace('%1', template.name)}
+              {template?.namePlural || t('LABEL_APPLICATIONS', name)}
             </a>
             <Icon name="chevron right" />
           </Label>
@@ -77,7 +77,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
         {totalApplications > 0 && hasApplyPermission && (
           <Button as={Link} to={`/application/new?type=${code}`} inverted color="blue">
             <Icon name="plus" size="tiny" color="blue" />
-            {strings.BUTTON_DASHBOARD_NEW}
+            {t('BUTTON_DASHBOARD_NEW')}
           </Button>
         )}
       </div>
@@ -166,13 +166,11 @@ const PanelComponent: React.FC<{
 }
 
 const StartNewTemplate: React.FC<{ template: TemplateInList }> = ({ template: { name, code } }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <div className="no-applications">
-      <Label className="simple-label" content={strings.LABEL_DASHBOARD_NO_APPLICATIONS} />
-      <Link to={`/application/new?type=${code}`}>
-        {strings.LABEL_DASHBOARD_START_NEW.replace('%1', name)}
-      </Link>
+      <Label className="simple-label" content={t('LABEL_DASHBOARD_NO_APPLICATIONS')} />
+      <Link to={`/application/new?type=${code}`}>{t('LABEL_DASHBOARD_START_NEW', name)}</Link>
     </div>
   )
 }

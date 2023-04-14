@@ -1,4 +1,4 @@
-import { LanguageStrings, TranslateMethod } from '../../../contexts/Localisation'
+import { TranslateMethod } from '../../../contexts/Localisation'
 import { ActivityLog, Decision } from '../../generated/graphql'
 import { FullStructure, SectionsStructure } from '../../types'
 import { Section } from './types'
