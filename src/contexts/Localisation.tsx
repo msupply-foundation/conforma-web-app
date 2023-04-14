@@ -4,10 +4,14 @@ import strings from '../utils/defaultLanguageStrings'
 import { getRequest } from '../utils/helpers/fetchMethods'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 import { mapValues } from 'lodash'
+import { type } from 'os'
 
 const { pluginsFolder } = config
 
 const savedLanguageCode = localStorage.getItem('language')
+
+// For matching {{replacementKey}} in localised strings
+const stringReplacementRegex = /{{([A-z0-9]+)}}/gm
 
 const initSelectedLanguage: LanguageOption = {
   code: savedLanguageCode ?? '',
@@ -44,6 +48,13 @@ interface LanguageState {
   error: any
 }
 
+type TranslateMethod = (
+  key: keyof typeof strings,
+  substitutions?: Record<string, unknown> | string | number
+) => string
+
+type TranslatePluginMethod = (key: string, substitutions?: Record<string, unknown>) => string
+
 const initialContext: {
   strings: LanguageStrings
   selectedLanguage: LanguageOption
@@ -54,6 +65,9 @@ const initialContext: {
   setLanguage: Function
   getPluginStrings: Function
   refetchLanguages: Function
+  translate: TranslateMethod
+  t: TranslateMethod
+  getPluginTranslator: (pluginCode: string) => TranslatePluginMethod
 } = {
   strings: {} as LanguageStrings,
   selectedLanguage: initSelectedLanguage,
@@ -64,6 +78,9 @@ const initialContext: {
   setLanguage: () => {},
   getPluginStrings: () => {},
   refetchLanguages: () => {},
+  translate: () => '',
+  t: () => '',
+  getPluginTranslator: () => () => '',
 }
 
 const LanguageProviderContext = createContext(initialContext)
@@ -150,6 +167,41 @@ export function LanguageProvider({
     refetchPrefs()
   }
 
+  const translate: TranslateMethod = (key, substitutions = {}) => {
+    let localisedString = languageState.strings[key]
+
+    if (typeof substitutions === 'string' || typeof substitutions === 'number') {
+      const match = localisedString.match(/{{([A-z0-9]+)}}/m)
+      if (match) {
+        substitutions = { [match[1]]: substitutions }
+      } else substitutions = {}
+    }
+
+    if ('count' in substitutions) {
+      const altKey = `${key}_${substitutions.count}` as keyof typeof strings
+      if (languageState.strings[altKey]) localisedString = languageState.strings[altKey]
+    }
+
+    return localisedString.replace(stringReplacementRegex, (match, sub) => {
+      return typeof substitutions === 'string' || typeof substitutions === 'number'
+        ? String(substitutions)
+        : String(substitutions[sub]) ?? match
+    })
+  }
+
+  const translatePlugin = (
+    pluginCode: string,
+    key: string,
+    substitutions: Record<string, unknown> = {}
+  ) => {
+    const pluginStrings = getPluginStrings(pluginCode)
+    const localisedString = String(pluginStrings[key]) ?? key
+    return localisedString.replace(
+      stringReplacementRegex,
+      (match, sub) => String(substitutions[sub]) ?? match
+    )
+  }
+
   // Fetch new language when language code changes
   useEffect(() => {
     updateLanguageState(selectedLanguageCode)
@@ -178,6 +230,10 @@ export function LanguageProvider({
         setLanguage: setSelectedLanguageCode,
         getPluginStrings,
         refetchLanguages,
+        translate,
+        t: translate,
+        getPluginTranslator: (pluginCode) => (key, substitutions) =>
+          translatePlugin(pluginCode, key, substitutions),
       }}
     >
       {children}

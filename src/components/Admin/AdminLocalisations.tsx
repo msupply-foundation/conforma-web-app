@@ -10,7 +10,12 @@ import { importLanguages } from '../../utils/localisation/importLanguages'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 export const AdminLocalisations: React.FC = () => {
-  const { strings, refetchLanguages, languageOptionsFull: languageOptions } = useLanguageProvider()
+  const {
+    strings,
+    refetchLanguages,
+    languageOptionsFull: languageOptions,
+    t,
+  } = useLanguageProvider()
   usePageTitle(strings.PAGE_TITLE_LOCALISATION)
   const fileInputRef = useRef<any>(null)
   const [exportDisabled, setExportDisabled] = useState(true)
@@ -136,7 +141,11 @@ export const AdminLocalisations: React.FC = () => {
               style={{ position: 'absolute', right: 4, top: -4, color: 'grey' }}
               onClick={() =>
                 showWarningModal({
-                  message: strings.LOCALISATION_DELETE_WARNING_MESSAGE.replace(
+                  message: t('LOCALISATION_DELETE_WARNING_MESSAGE', {
+                    language: language.languageName,
+                    code: language.code,
+                  }),
+                  message2: strings.LOCALISATION_DELETE_WARNING_MESSAGE.replace(
                     '%1',
                     language.languageName
                   ).replace('%2', language.code),

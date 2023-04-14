@@ -14,7 +14,7 @@ const ListTable: React.FC<any> = ({
   allTableStructuresLoadState,
   setAllTableStructures,
 }: any) => {
-  const { strings } = useLanguageProvider()
+  const { strings, t } = useLanguageProvider()
   const { loading, error } = allTableStructuresLoadState
   const {
     match: { path },
@@ -80,10 +80,7 @@ const ListTable: React.FC<any> = ({
                       }
                     />
                     <DownloadButton
-                      popUpContent={strings.LOOKUP_TABLE_DOWNLOAD.replace(
-                        '%1',
-                        lookupTable.displayName
-                      )}
+                      popUpContent={t('LOOKUP_TABLE_DOWNLOAD', lookupTable.displayName)}
                       id={lookupTable.id}
                       name={lookupTable.displayName}
                     />

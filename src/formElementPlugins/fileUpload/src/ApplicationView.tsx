@@ -39,8 +39,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   applicationData,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
+  const { getPluginStrings, getPluginTranslator } = useLanguageProvider()
   const strings = getPluginStrings('fileUpload')
+  const t = getPluginTranslator('fileUpload')
   const { isEditable } = element
   const {
     label,
@@ -196,7 +197,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             <Button primary disabled={!isEditable} onClick={() => fileInputRef?.current?.click()}>
               <Icon name="upload" />
               {uploadedFiles.length === 0
-                ? strings.BUTTON_CLICK_TO_UPLOAD
+                ? t('BUTTON_CLICK_TO_UPLOAD')
                 : strings.BUTTON_UPLOAD_ANOTHER}
             </Button>
           )}

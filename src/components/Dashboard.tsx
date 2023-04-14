@@ -13,7 +13,7 @@ import LoadingSmall from './LoadingSmall'
 import { constructOrObjectFilters } from '../utils/helpers/utilityFunctions'
 
 const Dashboard: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     userState: { templatePermissions, isNonRegistered },
     logout,
@@ -26,11 +26,12 @@ const Dashboard: React.FC = () => {
     return null
   }
 
-  usePageTitle(strings.PAGE_TITLE_HOME)
+  usePageTitle(t('PAGE_TITLE_HOME'))
 
   return (
     <div id="dashboard">
-      <Header as="h2" content={strings.MENU_ITEM_DASHBOARD} />
+      <p>Test: {t('AA_TEST', 23)}</p>
+      <Header as="h2" content={t('MENU_ITEM_DASHBOARD')} />
       {templatesByCategory
         .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Dashboard))
         .map(({ templates, templateCategory: { icon: categoryIcon, title: categoryTitle } }) => (

@@ -1,6 +1,8 @@
 export default {
   _APP_NAME: 'conforma',
   _APP_NAME_SUBHEADER: 'Application Manager',
+  AA_TEST: 'There are {{count}} items',
+  AA_TEST_1: 'There is {{count}} item',
   ACTION_AWAITING_RESPONSE: 'Awaiting response',
   ACTION_ASSIGN: 'Assign',
   ACTION_CONTINUE: 'Continue',
@@ -226,7 +228,8 @@ export default {
   LOCALISATION_HEADER: 'Localisation',
   LOCALISATION_CURRENTLY_INSTALLED: 'Currently installed languages',
   LOCALISATION_DELETE_WARNING_TITLE: 'Are you sure?',
-  LOCALISATION_DELETE_WARNING_MESSAGE: 'This will uninstall language %1 (%2) from your system',
+  LOCALISATION_DELETE_WARNING_MESSAGE:
+    'This will uninstall language {{language}} ({{code}}) from your system',
   LOCALISATION_REMOVE_SUCCESS: '%1 (%2) successfully removed',
   LOCALISATION_REMOVE_ERROR: 'Error',
   LOCALISATION_REMOVE_PROBLEM: 'Problem removing language',
@@ -252,7 +255,7 @@ export default {
   LOOKUP_TABLE_IMPORT: 'Import lookup table',
   LOOKUP_TABLE_IMPORT_INTO: 'Import into Lookup-table:',
   LOOKUP_TABLE_IMPORT_OTHER: 'Import another CSV',
-  LOOKUP_TABLE_DOWNLOAD: "Download '%1' table",
+  LOOKUP_TABLE_DOWNLOAD: "Download '{{table}}' table",
   LOOKUP_TABLE_FIELD_NAME: 'Database Field-name',
   LOOKUP_TABLE_LABEL: 'Lookup-table Label',
   LOOKUP_TABLE_NAME: 'Table name',
@@ -462,7 +465,7 @@ export default {
   TIMELINE_UNASSIGNED: 'Reviewer %1 was unassigned from %2 by %3',
   TIMELINE_CONSOLIDATION_ASSIGNED: '%1 was assigned to consolidate %2 by %3',
   TIMELINE_CONSOLIDATION_SELF_ASSIGNED: '%1 was assigned to consolidate %2 by self-assignment',
-  // Used for matching in subesquent URL replacements
+  // Used for matching in subsequent URL replacements
   TIMELINE_REVIEW: 'review',
   TIMELINE_CONSOLIDATION: 'consolidation',
   TIMELINE_REVIEW_DISCONTINUED: "%1's review was discontinued",
