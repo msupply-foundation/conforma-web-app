@@ -49,7 +49,7 @@ interface LanguageState {
 
 type Substitutions = Record<string, unknown> | string | number
 
-type TranslateMethod = (key: keyof typeof strings, substitutions?: Substitutions) => string
+export type TranslateMethod = (key: keyof typeof strings, substitutions?: Substitutions) => string
 
 type TranslatePluginMethod = (key: string, substitutions?: Substitutions) => string
 
