@@ -228,7 +228,7 @@ export default {
   LOCALISATION_DELETE_WARNING_TITLE: 'Are you sure?',
   LOCALISATION_DELETE_WARNING_MESSAGE:
     'This will uninstall language {{language}} ({{code}}) from your system',
-  LOCALISATION_REMOVE_SUCCESS: '%1 (%2) successfully removed',
+  LOCALISATION_REMOVE_SUCCESS: '{{language}} ({{code}}) successfully removed',
   LOCALISATION_REMOVE_ERROR: 'Error',
   LOCALISATION_REMOVE_PROBLEM: 'Problem removing language',
   LOCALISATION_FILE_PROBLEM: 'Problem processing file',

@@ -16,15 +16,15 @@ export const AdminLocalisations: React.FC = () => {
     languageOptionsFull: languageOptions,
     t,
   } = useLanguageProvider()
-  usePageTitle(strings.PAGE_TITLE_LOCALISATION)
+  usePageTitle(t('PAGE_TITLE_LOCALISATION'))
   const fileInputRef = useRef<any>(null)
   const [exportDisabled, setExportDisabled] = useState(true)
   const [importDisabled, setImportDisabled] = useState(true)
   const showToast = useToast({ position: topLeft })
   const { ConfirmModal: WarningModal, showModal: showWarningModal } = useConfirmationModal({
     type: 'warning',
-    title: strings.LOCALISATION_DELETE_WARNING_TITLE,
-    confirmText: strings.BUTTON_CONFIRM,
+    title: t('LOCALISATION_DELETE_WARNING_TITLE'),
+    confirmText: t('BUTTON_CONFIRM'),
   })
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
@@ -37,7 +37,7 @@ export const AdminLocalisations: React.FC = () => {
       console.log(`Language updated: ${language.code}`)
       refetchLanguages()
     } else {
-      showToast({ title: strings.LOCALISATION_REMOVE_ERROR, text: result.message, style: 'error' })
+      showToast({ title: t('LOCALISATION_REMOVE_ERROR'), text: result.message, style: 'error' })
       console.error(result.message)
     }
   }
@@ -49,17 +49,17 @@ export const AdminLocalisations: React.FC = () => {
     if (result.success) {
       console.log(`Language removed: ${language.code}`)
       showToast({
-        title: strings.LOCALISATION_REMOVE_SUCCESS.replace('%1', language.languageName).replace(
-          '%2',
-          language.code
-        ),
+        title: t('LOCALISATION_REMOVE_SUCCESS', {
+          language: language.languageName,
+          code: language.code,
+        }),
         text: '',
         style: 'success',
       })
     } else {
       showToast({
-        title: strings.LOCALISATION_REMOVE_ERROR,
-        text: result?.message ?? strings.LOCALISATION_REMOVE_PROBLEM,
+        title: t('LOCALISATION_REMOVE_ERROR'),
+        text: result?.message ?? t('LOCALISATION_REMOVE_PROBLEM'),
         style: 'error',
       })
       console.error(result.message)
@@ -73,14 +73,14 @@ export const AdminLocalisations: React.FC = () => {
     )
     if (result.success)
       showToast({
-        title: strings.LOCALISATION_EXPORT_SUCCESS,
-        text: strings.LOCALISATION_EXPORT_SUCCESS_MESSAGE,
+        title: t('LOCALISATION_EXPORT_SUCCESS'),
+        text: t('LOCALISATION_EXPORT_SUCCESS_MESSAGE'),
         style: 'success',
       })
     else {
       showToast({
-        title: strings.LOCALISATION_REMOVE_ERROR,
-        text: `${strings.LOCALISATION_EXPORT_PROBLEM}: ${result?.message}`,
+        title: t('LOCALISATION_REMOVE_ERROR'),
+        text: `${t('LOCALISATION_EXPORT_PROBLEM')}: ${result?.message}`,
         style: 'error',
       })
       console.error(result.message)
@@ -93,8 +93,8 @@ export const AdminLocalisations: React.FC = () => {
     reader.onload = (event) => {
       if (!event.target?.result) {
         showToast({
-          title: strings.LOCALISATION_REMOVE_ERROR,
-          text: strings.LOCALISATION_FILE_PROBLEM,
+          title: t('LOCALISATION_REMOVE_ERROR'),
+          text: t('LOCALISATION_FILE_PROBLEM'),
           style: 'error',
         })
         return
@@ -103,12 +103,12 @@ export const AdminLocalisations: React.FC = () => {
         ({ success, message }) => {
           if (success) {
             showToast({
-              title: strings.LOCALISATION_INSTALL_SUCCESS,
+              title: t('LOCALISATION_INSTALL_SUCCESS'),
               text: message,
               style: 'success',
             })
           } else {
-            showToast({ title: strings.LOCALISATION_REMOVE_ERROR, text: message, style: 'error' })
+            showToast({ title: t('LOCALISATION_REMOVE_ERROR'), text: message, style: 'error' })
           }
           refetchLanguages(true)
         }
@@ -120,8 +120,8 @@ export const AdminLocalisations: React.FC = () => {
   return (
     <div id="localisation-panel">
       <WarningModal />
-      <Header as="h1">{strings.LOCALISATION_HEADER}</Header>
-      <Header as="h4">{strings.LOCALISATION_CURRENTLY_INSTALLED}</Header>
+      <Header as="h1">{t('LOCALISATION_HEADER')}</Header>
+      <Header as="h4">{t('LOCALISATION_CURRENTLY_INSTALLED')}</Header>
       <div className="flex-row">
         <p className="smaller-text">Enabled</p>
       </div>
@@ -145,10 +145,6 @@ export const AdminLocalisations: React.FC = () => {
                     language: language.languageName,
                     code: language.code,
                   }),
-                  message2: strings.LOCALISATION_DELETE_WARNING_MESSAGE.replace(
-                    '%1',
-                    language.languageName
-                  ).replace('%2', language.code),
                   onConfirm: () => handleRemove(language),
                 })
               }
@@ -156,16 +152,16 @@ export const AdminLocalisations: React.FC = () => {
           )}
         </div>
       ))}
-      <Header as="h5">{strings.LOCALISATION_EXPORT_MESSAGE + ':'}</Header>
+      <Header as="h5">{t('LOCALISATION_EXPORT_MESSAGE') + ':'}</Header>
       <div className="flex-row-start-center" style={{ gap: 20 }}>
-        <Button primary content={strings.LABEL_EXPORT} onClick={handleExport} />
+        <Button primary content={t('LABEL_EXPORT')} onClick={handleExport} />
         <Checkbox
           checked={exportDisabled}
           onChange={() => setExportDisabled(!exportDisabled)}
-          label={strings.LOCALISATION_INCLUDE_DISABLED}
+          label={t('LOCALISATION_INCLUDE_DISABLED')}
         />
       </div>
-      <Header as="h5">{strings.LOCALISATION_IMPORT_MESSAGE}</Header>
+      <Header as="h5">{t('LOCALISATION_IMPORT_MESSAGE')}</Header>
       <div className="flex-row-start-center" style={{ gap: 20 }}>
         <input
           type="file"
@@ -178,13 +174,13 @@ export const AdminLocalisations: React.FC = () => {
         />
         <Button
           primary
-          content={strings.LABEL_IMPORT}
+          content={t('LABEL_IMPORT')}
           onClick={() => fileInputRef?.current?.click()}
         />
         <Checkbox
           checked={importDisabled}
           onChange={() => setImportDisabled(!importDisabled)}
-          label={strings.LOCALISATION_INCLUDE_DISABLED}
+          label={t('LOCALISATION_INCLUDE_DISABLED')}
         />
       </div>
     </div>
