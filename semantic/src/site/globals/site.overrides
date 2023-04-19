@@ -320,7 +320,7 @@ a:hover {
   }
   img {
     max-height: @headerHeight;
-    padding-top:8px;
+    padding-top: 8px;
     padding-bottom: 8px;
   }
 }
@@ -551,7 +551,7 @@ a:hover {
     bottom: 0;
     width: 100%;
   }
-  #preview-items{
+  #preview-items {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -562,17 +562,19 @@ a:hover {
       background-color: @surfacesLight;
       width: 90%;
       border-radius: @borderRadius;
-      padding: 10px
+      padding: 10px;
     }
     .notification-preview {
       padding-top: 5px;
       padding-bottom: 5px;
-      h1, h2 {
+      h1,
+      h2 {
         font-size: 1.1em;
         font-weight: bold;
       }
-      h3, h4 {
-        font-size: 1.0em;
+      h3,
+      h4 {
+        font-size: 1em;
       }
       p {
         font-size: 0.95em;
@@ -587,7 +589,8 @@ a:hover {
       padding-left: 6px;
       gap: 10px;
     }
-    .error-item, .fallback-preview{
+    .error-item,
+    .fallback-preview {
       p {
         font-size: 1em;
       }
@@ -1803,11 +1806,12 @@ a:hover {
 
 #localisation-panel {
   .row-format {
-      gap: 20px;
-      width: 90%;
-      background-color: white;
-      margin-bottom: 5px;
-      padding: 10px; border-radius: 8px;    
+    gap: 20px;
+    width: 90%;
+    background-color: white;
+    margin-bottom: 5px;
+    padding: 10px;
+    border-radius: 8px;
   }
 }
 
@@ -1849,6 +1853,7 @@ a:hover {
 
   align-items: center;
   flex-wrap: wrap;
+  width: 100%;
 
   .list-filter-title {
     .flex-row-center-center();
@@ -1867,10 +1872,16 @@ a:hover {
     }
   }
 
+  .result-count {
+    flex-grow: 1;
+    text-align: right;
+    font-size: @fontSmall;
+  }
+
   // multiple is used to make sure filter menu stays open, but it adds extra
   // margin on text
   .ui.multiple.dropdown > .text {
-    margin: 0px ;    
+    margin: 0px;
   }
   .ui.multiple.dropdown {
     padding: 5px 10px 5px 10px;
@@ -2386,7 +2397,7 @@ a:hover {
     gap: 10px;
     flex-wrap: wrap;
   }
-  .bottom-left {  
+  .bottom-left {
     bottom: @toastBottomMargin;
     left: @toastHorizontalMargin;
     max-height: calc(100vh - @toastBottomMargin);
@@ -2401,7 +2412,7 @@ a:hover {
     bottom: @toastBottomMargin;
     right: @toastHorizontalMargin;
     max-height: calc(100vh - @toastBottomMargin);
-    flex-wrap: wrap-reverse
+    flex-wrap: wrap-reverse;
   }
   .top-left {
     top: @toastTopMargin;
@@ -2409,16 +2420,16 @@ a:hover {
     max-height: calc(100vh - @toastTopMargin);
   }
   .top-middle {
-    top:  @toastTopMargin;
+    top: @toastTopMargin;
     left: 50%;
     transform: translateX(-50%);
     max-height: calc(100vh - @toastTopMargin);
   }
   .top-right {
-    top:  @toastTopMargin;
+    top: @toastTopMargin;
     right: @toastHorizontalMargin;
     max-height: calc(100vh - @toastTopMargin);
-    flex-wrap: wrap-reverse
+    flex-wrap: wrap-reverse;
   }
 }
 
@@ -2431,7 +2442,10 @@ a:hover {
   .toast-message {
     width: fit-content !important;
     max-width: 350px;
-    p { word-wrap: break-word; max-width: 250px;}
+    p {
+      word-wrap: break-word;
+      max-width: 250px;
+    }
   }
   .icon.info {
     color: @information;
@@ -2486,7 +2500,7 @@ a:hover {
     margin-bottom: 0.5em;
   }
   ul {
-    margin:0;
+    margin: 0;
   }
   li {
     margin-bottom: 0.5em;
