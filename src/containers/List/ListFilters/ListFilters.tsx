@@ -272,11 +272,7 @@ const ListFilters: React.FC<{
         }
       })}
       {totalCount ? (
-        <p className="result-count">
-          {totalCount === 1
-            ? strings.APPLICATIONS_LIST_TOTAL_RESULTS_SINGLE
-            : strings.APPLICATIONS_LIST_TOTAL_RESULTS.replace('%1', String(totalCount))}
-        </p>
+        <p className="result-count">{t('APPLICATIONS_LIST_TOTAL_RESULTS', totalCount)}</p>
       ) : null}
     </div>
   )
