@@ -93,7 +93,12 @@ const DataViewTable: React.FC<{ codeFromLookupTable?: string }> = ({ codeFromLoo
         )}
         <div className="flex-row-space-between-center" style={{ width: '100%' }}>
           {filterDefinitions && (
-            <ListFilters filterDefinitions={filterDefinitions} filterListParameters={{}} />
+            <ListFilters
+              filterDefinitions={filterDefinitions}
+              filterListParameters={{}}
+              defaultFilterString={dataViewTable?.defaultFilterString ?? null}
+              totalCount={dataViewTable?.totalCount ?? null}
+            />
           )}
           {codeFromLookupTable && searchComponent}
         </div>
