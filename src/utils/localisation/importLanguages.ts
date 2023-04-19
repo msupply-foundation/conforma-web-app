@@ -1,5 +1,5 @@
 import { postRequest } from '../helpers/fetchMethods'
-import { LanguageStrings } from '../../contexts/Localisation'
+import { LanguageStrings, TranslateMethod } from '../../contexts/Localisation'
 import Papa from 'papaparse'
 import { LanguageObject } from './exportLanguages'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
@@ -11,7 +11,7 @@ interface ImportReturn {
 export const importLanguages = async (
   data: string,
   importDisabled: boolean,
-  strings: LanguageStrings
+  t: TranslateMethod
 ): Promise<ImportReturn> => {
   // Parse csv data
   const rows = Papa.parse(data).data as string[][]
@@ -72,7 +72,7 @@ export const importLanguages = async (
     }))
 
   if (uploadObjects.length === 0)
-    return { success: false, message: strings.LOCALISATION_NO_LANG_FOUND }
+    return { success: false, message: t('LOCALISATION_NO_LANG_FOUND') }
 
   // Upload one by one
   const results = []
@@ -87,7 +87,7 @@ export const importLanguages = async (
       )
     }
   } catch {
-    return { success: false, message: strings.LOCALISATION_INSTALL_PROBLEM }
+    return { success: false, message: t('LOCALISATION_INSTALL_PROBLEM') }
   }
 
   if (results.every((res) => res.success)) {
@@ -100,6 +100,6 @@ export const importLanguages = async (
       message: installedLanguageCodes,
     }
   } else {
-    return { success: false, message: strings.LOCALISATION_INSTALL_PROBLEM }
+    return { success: false, message: t('LOCALISATION_INSTALL_PROBLEM') }
   }
 }

@@ -14,7 +14,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
     },
   },
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const getContent = () => {
     switch (action) {
       case ReviewAction.unknown:
@@ -22,7 +22,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
       case ReviewAction.canContinue: {
         return (
           <LastDate
-            title={strings.ACTION_DATE_REVIEW_STARTED}
+            title={t('ACTION_DATE_REVIEW_STARTED')}
             indicator={getSimplifiedTimeDifference(thisReview?.current.timeStatusCreated)}
           />
         )
@@ -30,7 +30,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
       case ReviewAction.canStartReview: {
         return (
           <LastDate
-            title={strings.ACTION_DATE_ASSIGNED}
+            title={t('ACTION_DATE_ASSIGNED')}
             indicator={getSimplifiedTimeDifference(assignment?.assignmentDate)}
           />
         )
@@ -38,7 +38,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
       default:
         return (
           <LastDate
-            title={strings.LABEL_APPLICATION_SUBMITTED}
+            title={t('LABEL_APPLICATION_SUBMITTED')}
             indicator={getSimplifiedTimeDifference(timeStatusCreated)}
           />
         )

@@ -40,7 +40,7 @@ const ListFilters: React.FC<{
   defaultFilterString?: string | null
   totalCount: number | null
 }> = ({ filterDefinitions, filterListParameters, defaultFilterString, totalCount = null }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { query, updateQuery, location, setQuery } = useRouter()
 
   const displayableFilters = getDisplayableFilters(filterDefinitions)
@@ -100,7 +100,7 @@ const ListFilters: React.FC<{
   const renderTitle = () => (
     <div className="list-filter-title">
       <Icon name="plus" size="tiny" color="blue" />
-      {strings.FILTER_ADD_FILTER}
+      {t('FILTER_ADD_FILTER')}
     </div>
   )
 
@@ -121,13 +121,13 @@ const ListFilters: React.FC<{
           {!!activeFilters.length && (
             <Dropdown.Item key="clear-filters" onClick={resetFilters}>
               <Icon size="small" color="grey" name="delete" />
-              {strings.FILTER_RESET_ALL}
+              {t('FILTER_RESET_ALL')}
             </Dropdown.Item>
           )}
           {query.sortBy && (
             <Dropdown.Item key="clear-sort" onClick={() => updateQuery({ sortBy: null })}>
               <Icon size="small" color="grey" name="delete" />
-              {strings.FILTER_RESET_SORT}
+              {t('FILTER_RESET_SORT')}
             </Dropdown.Item>
           )}
           {(query.page || query.perPage) && (
@@ -136,7 +136,7 @@ const ListFilters: React.FC<{
               onClick={() => updateQuery({ page: null, perPage: null })}
             >
               <Icon size="small" color="grey" name="delete" />
-              {strings.FILTER_RESET_PAGINATION}
+              {t('FILTER_RESET_PAGINATION')}
             </Dropdown.Item>
           )}
         </Dropdown.Menu>
@@ -237,8 +237,8 @@ const ListFilters: React.FC<{
                 activeOptions={getArrayFromString(query[filterName])}
                 booleanMapping={
                   filter?.options?.booleanMapping ?? {
-                    true: strings.DATA_VIEW_FILTER_TRUE,
-                    false: strings.DATA_VIEW_FILTER_FALSE,
+                    true: t('DATA_VIEW_FILTER_TRUE'),
+                    false: t('DATA_VIEW_FILTER_FALSE'),
                   }
                 }
                 toggleFilter={(value: boolean) =>
@@ -272,11 +272,7 @@ const ListFilters: React.FC<{
         }
       })}
       {totalCount ? (
-        <p className="result-count">
-          {totalCount === 1
-            ? strings.APPLICATIONS_LIST_TOTAL_RESULTS_SINGLE
-            : strings.APPLICATIONS_LIST_TOTAL_RESULTS.replace('%1', String(totalCount))}
-        </p>
+        <p className="result-count">{t('APPLICATIONS_LIST_TOTAL_RESULTS', totalCount)}</p>
       ) : null}
     </div>
   )

@@ -22,7 +22,7 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
   numberRangeString,
   onRemove,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [numberRange, setNumberRange] = useState<NumberRange>(getCurrentValue(numberRangeString))
   const [lowerInput, setLowerInput] = useState(numberRange.lowerBound ?? '')
   const [upperInput, setUpperInput] = useState(numberRange.upperBound ?? '')
@@ -49,8 +49,8 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
     const lower = !isUndefined(lowerBound)
     const upper = !isUndefined(upperBound)
     if (lower && upper) return `${lowerBound} – ${upperBound}`
-    if (lower) return `${strings.DATA_VIEW_FILTER_HIGHER.replace(':', '')} ${lowerBound}`
-    if (upper) return `${strings.DATA_VIEW_FILTER_LOWER.replace(':', '')} ${upperBound}`
+    if (lower) return `${t('DATA_VIEW_FILTER_HIGHER').replace(':', '')} ${lowerBound}`
+    if (upper) return `${t('DATA_VIEW_FILTER_LOWER').replace(':', '')} ${upperBound}`
     return ''
   }
 
@@ -96,7 +96,7 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
     >
       <Form>
         <Segment basic className="flex-row-space-between-center" style={segmentStyle}>
-          <p className="no-margin-no-padding">{strings.DATA_VIEW_FILTER_HIGHER}</p>
+          <p className="no-margin-no-padding">{t('DATA_VIEW_FILTER_HIGHER')}</p>
           <Input
             ref={inputRef}
             size="small"
@@ -108,7 +108,7 @@ export const DataViewNumberFilter: React.FC<NumberFilterProps> = ({
           />
         </Segment>
         <Segment basic className="flex-row-space-between-center" style={segmentStyle}>
-          <p className="no-margin-no-padding">{strings.DATA_VIEW_FILTER_LOWER}</p>
+          <p className="no-margin-no-padding">{t('DATA_VIEW_FILTER_LOWER')}</p>
           <Input
             size="small"
             className="search"

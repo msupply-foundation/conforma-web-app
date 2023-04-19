@@ -32,13 +32,13 @@ export type ActionResultPreviewData =
   | GenericPreviewData
 
 const NotificationPreview = ({ item }: { item: NotificationPreviewData }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [open, setOpen] = useState(false)
   return (
     <Accordion className="item notification-preview" style={{}}>
       <Accordion.Title active={open} onClick={() => setOpen(!open)}>
         <Icon name="dropdown" />
-        {strings.REVIEW_PREVIEW_NOTIFICATION} <strong>{item.displayString}</strong>
+        {t('REVIEW_PREVIEW_NOTIFICATION')} <strong>{item.displayString}</strong>
       </Accordion.Title>
       <Accordion.Content active={open}>
         <MarkdownBlock text={item.text} />
@@ -76,12 +76,11 @@ const FallbackPreview = ({ item }: { item: GenericPreviewData }) => {
 }
 
 const ErrorPreview = ({ item }: { item: ActionResultPreviewData }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <div className="item error-item">
       <p>
-        <span style={{ color: 'red' }}>{strings.REVIEW_PREVIEW_ERROR}</span>{' '}
-        <em>{item.errorLog}</em>
+        <span style={{ color: 'red' }}>{t('REVIEW_PREVIEW_ERROR')}</span> <em>{item.errorLog}</em>
       </p>
     </div>
   )

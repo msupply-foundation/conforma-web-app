@@ -34,7 +34,7 @@ const graphQLEndpoint = getServerUrl('graphQL')
 const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [isLoading, setIsLoading] = useState(true)
   const [structureError, setStructureError] = useState('')
   const [structure, setStructure] = useState<FullStructure>()
@@ -60,7 +60,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
 
   useEffect(() => {
     if (triggersError) {
-      setStructureError(strings.ERROR_TRIGGER)
+      setStructureError(t('ERROR_TRIGGER'))
       console.error('Trigger error:', triggersError)
       return
     }
@@ -81,7 +81,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
     }
 
     if (!application.template) {
-      setStructureError(strings.APPLICATION_MISSING_TEMPLATE)
+      setStructureError(t('APPLICATION_MISSING_TEMPLATE'))
       return
     }
 
@@ -223,7 +223,7 @@ const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationPro
           startMessage: startMessage as string,
         },
         stages: templateStages.map((stage) => getStageAndLevels(stage)),
-        sections: buildSectionsStructure({ sectionDetails, baseElements, page: strings.PAGE }),
+        sections: buildSectionsStructure({ sectionDetails, baseElements, page: t('PAGE') }),
         applicantDeadline: applicantDeadline
           ? { deadline: applicantDeadline.timeScheduled, isActive: applicantDeadline.isActive }
           : { deadline: null, isActive: false },

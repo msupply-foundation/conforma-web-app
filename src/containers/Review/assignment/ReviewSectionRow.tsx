@@ -30,7 +30,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   fullStructure,
   reviewAssignment,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { reviewStructuresState, setReviewStructureState } = useReviewStructureState()
 
   const shouldUpdate = Object.entries(reviewStructuresState).find(
@@ -53,7 +53,7 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
     }
   }, [reviewStructureForSections])
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (error) return <Message error title={t('ERROR_GENERIC')} list={[error]} />
   if (reviewStructuresState[reviewAssignment.id]?.loading) return <LoadingSmall />
 
   const reviewStructure = reviewStructuresState[reviewAssignment.id].review as FullStructure

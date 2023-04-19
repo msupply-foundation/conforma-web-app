@@ -19,16 +19,16 @@ const ApplicationHomeWrapper: React.FC<ApplicationHomeWrapperProps> = ({
   ButtonSegment,
   children,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <>
       <Container id="application-home-content">
         <Header as="h2" textAlign="center">
-          {`${name} ${strings.TITLE_APPLICATION_FORM}`}
+          {`${name} ${t('TITLE_APPLICATION_FORM')}`}
           <Header.Subheader content={title} />
         </Header>
         {subtitle && <p>{subtitle}</p>}
-        <Header as="h4" className="steps-header" content={strings.TITLE_STEPS} />
+        <Header as="h4" className="steps-header" content={t('TITLE_STEPS')} />
         {children}
         {startMessage && <Markdown text={startMessage || ''} semanticComponent="Message" info />}
         {ButtonSegment && <ButtonSegment />}

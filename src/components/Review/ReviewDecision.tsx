@@ -17,7 +17,7 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
   isDecisionError,
   isEditable,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   if (isEditable) {
     const onChangeDecision = (_: any, { value: code }: any) => setDecision(code)
     const visibleOptions = decisionOptions.filter((option) => option.isVisible)
@@ -25,7 +25,7 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
       <div>
         {visibleOptions.length > 0 && (
           <p>
-            <strong>{strings.LABEL_REVIEW_SUBMIT_AS}:</strong>
+            <strong>{t('LABEL_REVIEW_SUBMIT_AS')}:</strong>
           </p>
         )}
         {visibleOptions.map(({ code, title, value }) => (
@@ -51,7 +51,7 @@ const ReviewDecision: React.FC<ReviewDecisionProps> = ({
       compact
       attached="top"
       icon="calendar check outline"
-      header={strings.TITLE_REVIEW_DECISION}
+      header={t('TITLE_REVIEW_DECISION')}
       content={visibleOption.title}
     />
   )

@@ -14,8 +14,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   getDefaultIndex,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('radioChoice')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('radioChoice')
   const {
     label,
     description,
@@ -34,7 +34,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
 
   const allOptions = [...options]
-  if (hasOther) allOptions.push(strings.OTHER)
+  if (hasOther) allOptions.push(t('OTHER'))
 
   const [otherText, setOtherText] = useState<string | undefined>(
     hasOther && currentResponse?.optionIndex === allOptions.length - 1

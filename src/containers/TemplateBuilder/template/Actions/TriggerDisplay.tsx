@@ -44,7 +44,7 @@ type SwapSequences = (fromAction: TemplateAction, toAction: TemplateAction) => v
 type RemoveAction = (id: number) => void
 
 const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateActions }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { updateTemplate } = useOperationState()
   const {
     template: { id: templateId, isDraft },
@@ -55,9 +55,9 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
 
   const newAction = {
     actionCode: 'cLog',
-    description: strings.TEMPLATE_LABEL_ACTION_DESCRIPTION,
+    description: t('TEMPLATE_LABEL_ACTION_DESCRIPTION'),
     parameterQueries: {
-      message: strings.TEMPLATE_LABEL_ACTION_MESSAGE,
+      message: t('TEMPLATE_LABEL_ACTION_MESSAGE'),
     },
   }
 
@@ -154,13 +154,13 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                 <div className="flex-row-space-between" style={{ width: '100%' }}>
                   <div className="flex-row-start-center-wrap">
                     <TextIO
-                      title={strings.TEMPLATE_LABEL_ACTION}
+                      title={t('TEMPLATE_LABEL_ACTION')}
                       text={allActionsByCode[String(templateAction?.actionCode)]?.name || ''}
                       minLabelWidth={90}
                       labelTextAlign="right"
                     />
                     <TextIO
-                      title={strings.TEMPLATE_LABEL_DESCRIPTION}
+                      title={t('TEMPLATE_LABEL_DESCRIPTION')}
                       text={templateAction?.description || ''}
                       isTextArea={true}
                       minLabelWidth={90}
@@ -171,7 +171,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                         <Header
                           as="h6"
                           className="no-margin-no-padding right-margin-space-10"
-                          content={strings.TEMPLATE_LABEL_CONDITION}
+                          content={t('TEMPLATE_LABEL_CONDITION')}
                         />
                         <EvaluationHeader evaluation={templateAction?.condition} />
                       </div>
@@ -182,7 +182,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                       <CheckboxIO
                         disabled={!isDraft}
                         disabledMessage={disabledMessage}
-                        title={strings.TEMPLATE_LABEL_SEQUENTIAL}
+                        title={t('TEMPLATE_LABEL_SEQUENTIAL')}
                         value={!isAsynchronous(templateAction)}
                         setValue={(isSequential) =>
                           setIsSequential(templateAction?.id || 0, isSequential)
@@ -222,11 +222,11 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
           {isDraft && (
             <>
               <Button primary inverted onClick={addAction}>
-                {strings.TEMPLATE_BUTTON_ADD_ACTION}
+                {t('TEMPLATE_BUTTON_ADD_ACTION')}
               </Button>
               <Checkbox
                 toggle
-                label={strings.TEMPLATE_LABEL_ACTION_ON_TOP}
+                label={t('TEMPLATE_LABEL_ACTION_ON_TOP')}
                 onChange={() => setAddActionAtBottom(!addActionAtBottom)}
                 checked={!addActionAtBottom}
               />

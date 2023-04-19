@@ -21,8 +21,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   currentResponse,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('number')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('number')
   const { isEditable } = element
   const {
     placeholder,
@@ -116,21 +116,21 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     maxValue: number = Infinity
   ): { isValid: boolean; validationMessage?: string } => {
     if (Number.isNaN(number) || number === null)
-      return { isValid: false, validationMessage: strings.ERROR_NOT_NUMBER }
+      return { isValid: false, validationMessage: t('ERROR_NOT_NUMBER') }
     if (type === NumberType.INTEGER && !Number.isInteger(number))
       return {
         isValid: false,
-        validationMessage: strings.ERROR_NOT_INTEGER,
+        validationMessage: t('ERROR_NOT_INTEGER'),
       }
     if ((number as number) < minValue)
       return {
         isValid: false,
-        validationMessage: strings.ERROR_TOO_SMALL,
+        validationMessage: t('ERROR_TOO_SMALL'),
       }
     if ((number as number) > maxValue)
       return {
         isValid: false,
-        validationMessage: strings.ERROR_TOO_BIG,
+        validationMessage: t('ERROR_TOO_BIG'),
       }
     return { isValid: true }
   }

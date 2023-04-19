@@ -287,12 +287,12 @@ export const AddIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
 )
 
 export const UpdatedLabel: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <div className="updated-label">
       <Icon name="circle" size="tiny" color="blue" />
       <Label className="simple-label">
-        <strong>{strings.LABEL_RESPONSE_UPDATED}</strong>
+        <strong>{t('LABEL_RESPONSE_UPDATED')}</strong>
       </Label>
     </div>
   )

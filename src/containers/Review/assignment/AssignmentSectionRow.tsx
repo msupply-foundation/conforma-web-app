@@ -30,11 +30,11 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   setEnableSubmit,
   setAssignmentError,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { ConfirmModal, showModal } = useConfirmationModal({
-    title: strings.UNASSIGN_TITLE,
-    message: strings.UNASSIGN_MESSAGE,
-    confirmText: strings.BUTTON_SUBMIT,
+    title: t('UNASSIGN_TITLE'),
+    message: t('UNASSIGN_MESSAGE'),
+    confirmText: t('BUTTON_SUBMIT'),
   })
 
   const { submitAssignments } = useUpdateAssignment({
@@ -103,25 +103,25 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
       await submitAssignments(Number(reviewLevel), sectionToUnassign, [unassignment])
     } catch (e) {
       console.log(e)
-      setAssignmentError(strings.ASSIGNMENT_ERROR_UNASSIGN)
+      setAssignmentError(t('ASSIGNMENT_ERROR_UNASSIGN'))
     }
   }
 
   const isSelfAssignment = !assignmentOptions.options.some(
-    ({ text }) => text != strings.ASSIGNMENT_YOURSELF
+    ({ text }) => text != t('ASSIGNMENT_YOURSELF')
   )
 
   const levelName =
     structure.stages
       .find(({ stage: { number } }) => number === structure.info.current.stage.number)
-      ?.levels.find(({ number }) => reviewLevel === number)?.name || strings.ERROR_LEVEL_NOT_FOUND
+      ?.levels.find(({ number }) => reviewLevel === number)?.name || t('ERROR_LEVEL_NOT_FOUND')
 
   return (
     <Grid columns={2} className="section-single-row-box-container">
       <Grid.Row className="assigning-row">
         <Grid.Column className="review-level" width={7}>
           <Label className="simple-label">
-            {strings.REVIEW_FILTER_LEVEL}: <strong>{levelName}</strong>
+            {t('REVIEW_FILTER_LEVEL')}: <strong>{levelName}</strong>
           </Label>
         </Grid.Column>
         <Grid.Column className="centered-flex-box-row" width={9}>
@@ -135,10 +135,10 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
               setIsUnassignment={() => showModal({ onConfirm: () => unassignAssignee() })}
             />
           ) : assignmentOptions.options.length === 0 ? (
-            <Label className="simple-label" content={strings.ASSIGNMENT_NOT_AVAILABLE} />
+            <Label className="simple-label" content={t('ASSIGNMENT_NOT_AVAILABLE')} />
           ) : (
             <>
-              <Label className="simple-label" content={strings.LABEL_REVIEWER} />
+              <Label className="simple-label" content={t('LABEL_REVIEWER')} />
               <AssigneeDropdown
                 assignmentOptions={assignmentOptions}
                 sectionCode={sectionCode}

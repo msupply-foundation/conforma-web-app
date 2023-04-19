@@ -18,7 +18,7 @@ import { useGetFilterDefinitions } from '../../utils/helpers/list/useGetFilterDe
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
 
 const ListWrapper: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const FILTER_DEFINITIONS = useGetFilterDefinitions()
   const mapColumnsByRole = useMapColumnsByRole()
   const { query, updateQuery } = useRouter()
@@ -33,7 +33,7 @@ const ListWrapper: React.FC = () => {
 
   const [sortQuery, setSortQuery] = useState<SortQuery>(getInitialSortQuery(query?.sortBy))
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>([])
-  usePageTitle(strings.PAGE_TITLE_LIST as string)
+  usePageTitle(t('PAGE_TITLE_LIST') as string)
 
   if (isNonRegistered) {
     logout()
@@ -115,15 +115,15 @@ const ListWrapper: React.FC = () => {
   )
 
   return error ? (
-    <Label content={strings.ERROR_APPLICATIONS_LIST} error={error} />
+    <Label content={t('ERROR_APPLICATIONS_LIST')} error={error} />
   ) : (
     <div id="list-container">
       <div id="list-top">
-        <Header as="h2">{templateType?.name ?? strings.PAGE_TITLE_LIST}</Header>
+        <Header as="h2">{templateType?.name ?? t('PAGE_TITLE_LIST')}</Header>
         <Search
           className="flex-grow-1"
           // size="large"
-          placeholder={strings.PLACEHOLDER_SEARCH}
+          placeholder={t('PLACEHOLDER_SEARCH')}
           onSearchChange={handleSearchChange}
           input={{ icon: 'search', iconPosition: 'left' }}
           open={false}
@@ -132,7 +132,7 @@ const ListWrapper: React.FC = () => {
         {query.userRole === 'applicant' ? (
           <Button as={Link} to={`/application/new?type=${type}`} inverted color="blue">
             <Icon name="plus" size="tiny" color="blue" />
-            {strings.BUTTON_APPLICATION_NEW}
+            {t('BUTTON_APPLICATION_NEW')}
           </Button>
         ) : null}
       </div>
@@ -151,7 +151,7 @@ const ListWrapper: React.FC = () => {
           refetch={refetch}
         />
       )}
-      <PaginationBar totalCount={applicationCount} strings={strings} />
+      <PaginationBar totalCount={applicationCount} translate={t} />
     </div>
   )
 }

@@ -30,72 +30,72 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
  */
 
 export const useMapColumnsByRole = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const allColumns: { [key in LIST_COLUMNS]: ColumnDetails } = {
     SERIAL_NUMBER: {
-      headerName: strings.COLUMN_SERIAL,
+      headerName: t('COLUMN_SERIAL'),
       sortName: 'serial',
       ColumnComponent: SerialNumberCell,
     },
     LAST_ACTIVE_DATE: {
-      headerName: strings.COLUMN_LAST_ACTIVE_DATE,
-      headerDetail: strings.COLUMN_LAST_ACTIVE_DATE_TOOLTIP,
+      headerName: t('COLUMN_LAST_ACTIVE_DATE'),
+      headerDetail: t('COLUMN_LAST_ACTIVE_DATE_TOOLTIP'),
       sortName: 'last-active-date',
       ColumnComponent: LastActiveDateCell,
     },
     DEADLINE_DATE: {
-      headerName: strings.COLUMN_DEADLINE_DATE,
-      headerDetail: strings.COLUMN_DEADLINE_DATE_TOOLTIP,
+      headerName: t('COLUMN_DEADLINE_DATE'),
+      headerDetail: t('COLUMN_DEADLINE_DATE_TOOLTIP'),
       sortName: 'applicant-deadline',
       ColumnComponent: DeadlineCell,
     },
     APPLICATION_NAME: {
-      headerName: strings.COLUMN_APPLICATION,
+      headerName: t('COLUMN_APPLICATION'),
       sortName: 'name',
       ColumnComponent: ApplicationNameCell,
     },
     APPLICATION_NAME_REVIEW_LINK: {
-      headerName: strings.COLUMN_APPLICATION_REVIEW,
+      headerName: t('COLUMN_APPLICATION_REVIEW'),
       sortName: 'name',
       ColumnComponent: ApplicationNameReviewLinkCell,
     },
     APPLICANT: {
-      headerName: strings.COLUMN_APPLICANT,
+      headerName: t('COLUMN_APPLICANT'),
       sortName: 'applicant',
       ColumnComponent: ApplicantCell,
     },
     ORGANISATION: {
-      headerName: strings.COLUMN_ORGANISATION,
+      headerName: t('COLUMN_ORGANISATION'),
       sortName: 'org',
       ColumnComponent: OrganisationCell,
     },
     CONSOLIDATOR: {
-      headerName: strings.COLUMN_CONSOLIDATOR,
+      headerName: t('COLUMN_CONSOLIDATOR'),
       sortName: 'consolidator', // Not implemented in query
       ColumnComponent: ConsolidatorCell,
     },
     STAGE: {
-      headerName: strings.COLUMN_STAGE,
+      headerName: t('COLUMN_STAGE'),
       sortName: 'stage',
       ColumnComponent: StageCell,
     },
     STATUS: {
-      headerName: strings.COLUMN_STATUS,
+      headerName: t('COLUMN_STATUS'),
       sortName: 'status',
       ColumnComponent: StatusCell,
     },
     OUTCOME: {
-      headerName: strings.COLUMN_OUTCOME,
+      headerName: t('COLUMN_OUTCOME'),
       sortName: 'outcome',
       ColumnComponent: OutcomeCell,
     },
     REVIEWER_ACTION: {
-      headerName: strings.COLUMN_REVIEWER_ACTION,
+      headerName: t('COLUMN_REVIEWER_ACTION'),
       sortName: 'outcome',
       ColumnComponent: ReviewerActionCell,
     },
     APPLICANT_ACTION: {
-      headerName: strings.COLUMN_APPLICANT_ACTION,
+      headerName: t('COLUMN_APPLICANT_ACTION'),
       sortName: 'outcome',
       ColumnComponent: ApplicantActionCell,
     },

@@ -75,12 +75,12 @@ const evaluations: Evaluations = [
 ]
 
 const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } =
     useConfirmationModal({
-      title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
-      message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
-      confirmText: strings.BUTTON_CONFIRM,
+      title: t('TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE'),
+      message: t('TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT'),
+      confirmText: t('BUTTON_CONFIRM'),
     })
 
   const { structure } = useFullApplicationState()
@@ -334,38 +334,38 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
-              title={strings.BUTTON_SAVE}
+              title={t('BUTTON_SAVE')}
               disabled={!isDraft || !shouldUpdate}
-              disabledMessage={!isDraft ? disabledMessage : strings.TEMPLATE_MESSAGE_SAVE_DISABLED}
+              disabledMessage={!isDraft ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
               onClick={updateElement}
             />
             <ButtonWithFallback
               disabled={!isDraft}
               disabledMessage={disabledMessage}
-              title={strings.BUTTON_REMOVE}
+              title={t('BUTTON_REMOVE')}
               onClick={() => showRemoveElementModal({ onConfirm: () => removeElement() })}
             />
             <ButtonWithFallback
-              title={strings.BUTTON_CLOSE}
+              title={t('BUTTON_CLOSE')}
               onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
             />
             <Modal
               basic
               size="small"
               icon="save"
-              header={strings.TEMPLATE_MESSAGE_SAVE_AND_CLOSE}
+              header={t('TEMPLATE_MESSAGE_SAVE_AND_CLOSE')}
               open={open}
               onClose={() => setOpen(false)}
               actions={[
                 {
                   key: 'save',
-                  content: strings.BUTTON_SAVE,
+                  content: t('BUTTON_SAVE'),
                   positive: true,
                   onClick: saveAndClose,
                 },
                 {
                   key: 'close',
-                  content: strings.BUTTON_CLOSE,
+                  content: t('BUTTON_CLOSE'),
                   positive: false,
                   onClick: onClose,
                 },
@@ -379,7 +379,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         className="alert-success"
         success
         icon={<Icon name="check circle outline" />}
-        header={strings.TEMPLATE_MESSAGE_SAVE_SUCCESS}
+        header={t('TEMPLATE_MESSAGE_SAVE_SUCCESS')}
         hidden={!showSaveAlert}
         onClick={() => setShowSaveAlert(false)}
       />

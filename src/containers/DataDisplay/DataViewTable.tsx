@@ -27,7 +27,7 @@ export type SortColumn = {
 } | null
 
 const DataViewTable: React.FC<{ codeFromLookupTable?: string }> = ({ codeFromLookupTable }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { preferences } = usePrefs()
   const {
     query,
@@ -65,13 +65,13 @@ const DataViewTable: React.FC<{ codeFromLookupTable?: string }> = ({ codeFromLoo
   }, [debounceOutput])
 
   if (error) {
-    return <Message error header={strings.ERROR_GENERIC} content={error.message} />
+    return <Message error header={t('ERROR_GENERIC')} content={error.message} />
   }
 
   const searchComponent =
     dataViewTable && dataViewTable?.searchFields?.length > 0 ? (
       <Search
-        placeholder={strings.DATA_VIEW_SEARCH_PLACEHOLDER}
+        placeholder={t('DATA_VIEW_SEARCH_PLACEHOLDER')}
         onSearchChange={(e: any) => {
           setSearchText(e.target.value)
           setDebounceInput(e.target.value)
@@ -122,7 +122,7 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
   dataViewTable,
   apiQueries,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     push,
     updateQuery,
@@ -142,7 +142,7 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
     ascending: 'true' | 'false'
   ) => {
     if (!sortColumn) {
-      showToast({ text: strings.DATA_VIEW_COLUMN_NOT_SORTABLE.replace('%1', columnTitle) })
+      showToast({ text: t('DATA_VIEW_COLUMN_NOT_SORTABLE', columnTitle) })
       return
     }
 
@@ -187,12 +187,12 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
         </Table.Body>
       </Table>
       {tableRows.length === 0 && (
-        <Message warning header={strings.DATA_VIEW_NO_ITEMS_FOUND} style={{ width: '80%' }} />
+        <Message warning header={t('DATA_VIEW_NO_ITEMS_FOUND')} style={{ width: '80%' }} />
       )}
       <PaginationBar
         totalCount={totalCount}
-        perPageText={strings.OUTCOMES_TABLE_PAGINATION_TEXT}
-        strings={strings}
+        perPageText={t('OUTCOMES_TABLE_PAGINATION_TEXT')}
+        translate={t}
       />
     </>
   )

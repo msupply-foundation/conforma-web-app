@@ -45,7 +45,7 @@ const NotesTab: React.FC<{
   setState: (state: NotesState) => void
 }> = ({ structure: fullStructure, state, setState }) => {
   const {
-    strings,
+    t,
     selectedLanguage: { locale },
   } = useLanguageProvider()
   const {
@@ -53,9 +53,9 @@ const NotesTab: React.FC<{
   } = useUserState()
   const { ConfirmModal, showModal } = useConfirmationModal({
     type: 'warning',
-    title: strings.REVIEW_NOTES_DELETE_TITLE,
-    message: strings.REVIEW_NOTES_DELETE_MESSAGE,
-    confirmText: strings.BUTTON_CONFIRM,
+    title: t('REVIEW_NOTES_DELETE_TITLE'),
+    message: t('REVIEW_NOTES_DELETE_MESSAGE'),
+    confirmText: t('BUTTON_CONFIRM'),
   })
 
   const { data, loading, error, refetch } = useGetApplicationNotesQuery({
@@ -84,17 +84,17 @@ const NotesTab: React.FC<{
     <Container id="notes-tab">
       <ConfirmModal />
       <div className="options-row">
-        <p>{strings.REVIEW_NOTES_SORT_ORDER}</p>
+        <p>{t('REVIEW_NOTES_SORT_ORDER')}</p>
         <Dropdown
           selection
           options={[
-            { key: 'newest', text: strings.REVIEW_NOTES_NEWEST_FIRST, value: true },
-            { key: 'oldest', text: strings.REVIEW_NOTES_OLDEST_FIRST, value: false },
+            { key: 'newest', text: t('REVIEW_NOTES_NEWEST_FIRST'), value: true },
+            { key: 'oldest', text: t('REVIEW_NOTES_OLDEST_FIRST'), value: false },
           ]}
           value={sortDesc}
           onChange={(_, { value }) => setState({ ...state, sortDesc: value as boolean })}
         />
-        <p>{strings.REVIEW_NOTES_FILES_ONLY}</p>
+        <p>{t('REVIEW_NOTES_FILES_ONLY')}</p>
         <Checkbox
           toggle
           checked={filesOnlyFilter}
@@ -143,7 +143,7 @@ const NotesTab: React.FC<{
             )
           })
         ) : (
-          <Message header={strings.REVIEW_NOTES_NO_NOTES} />
+          <Message header={t('REVIEW_NOTES_NO_NOTES')} />
         )}
         {!showForm && (
           <div className="item-container">
@@ -155,7 +155,7 @@ const NotesTab: React.FC<{
                 onClick={() => setState({ ...state, showForm: true })}
               >
                 <Icon name="plus" size="tiny" color="blue" />
-                {strings.REVIEW_NOTES_NEW_NOTE}
+                {t('REVIEW_NOTES_NEW_NOTE')}
               </Button>
             </Form.Field>
           </div>

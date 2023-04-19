@@ -1,4 +1,4 @@
-import { LanguageStrings } from '../../../contexts/Localisation'
+import { TranslateMethod } from '../../../contexts/Localisation'
 import { ActivityLog, Decision } from '../../generated/graphql'
 import { FullStructure } from '../../types'
 import { TimelineEventType, EventOutput } from './types'
@@ -14,7 +14,7 @@ import config from '../../../config'
 const getStatusEvent = (
   { value, timestamp, details: { prevStatus } }: ActivityLog,
   fullLog: ActivityLog[],
-  strings: LanguageStrings
+  t: TranslateMethod
 ): EventOutput => {
   const changesRequiredEvent = fullLog.find(
     (e) => e.type === 'STATUS' && e.value === 'CHANGES_REQUIRED'
@@ -24,12 +24,12 @@ const getStatusEvent = (
     case value === 'DRAFT' && !prevStatus:
       return {
         eventType: TimelineEventType.ApplicationStarted,
-        displayString: strings.TIMELINE_APPLICATION_STARTED,
+        displayString: t('TIMELINE_APPLICATION_STARTED'),
       }
     case value === 'DRAFT' && prevStatus === 'CHANGES_REQUIRED':
       return {
         eventType: TimelineEventType.Ignore,
-        displayString: strings.TIMELINE_APPLICATION_RESTARTED,
+        displayString: t('TIMELINE_APPLICATION_RESTARTED'),
       }
     case value === 'SUBMITTED' && prevStatus === 'COMPLETED':
       // New stage, no need to display
@@ -42,12 +42,12 @@ const getStatusEvent = (
       changesRequiredEvent.timestamp < timestamp:
       return {
         eventType: TimelineEventType.ApplicationResubmitted,
-        displayString: strings.TIMELINE_APPLICATION_RESUBMITTED,
+        displayString: t('TIMELINE_APPLICATION_RESUBMITTED'),
       }
     case value === 'SUBMITTED':
       return {
         eventType: TimelineEventType.ApplicationSubmitted,
-        displayString: strings.TIMELINE_APPLICATION_SUBMITTED,
+        displayString: t('TIMELINE_APPLICATION_SUBMITTED'),
       }
     case value === 'COMPLETED':
       // Outcome change will be used instead
@@ -59,17 +59,17 @@ const getStatusEvent = (
       // Mostly ignored, only shows when event reflects the *current* state
       return {
         eventType: TimelineEventType.ApplicationChangesRequired,
-        displayString: `*> ${strings.TIMELINE_WAITING_FOR_APPLICANT}*`,
+        displayString: `*> ${t('TIMELINE_WAITING_FOR_APPLICANT')}*`,
       }
     default:
       return {
         eventType: TimelineEventType.Error,
-        displayString: strings.TIMELINE_ERROR_MESSAGE,
+        displayString: t('TIMELINE_ERROR_MESSAGE'),
       }
   }
 }
 
-const getOutcomeEvent = ({ value }: ActivityLog, strings: LanguageStrings): EventOutput => {
+const getOutcomeEvent = ({ value }: ActivityLog, t: TranslateMethod): EventOutput => {
   switch (value) {
     case 'PENDING':
       // Don't display PENDING as its covered by other types of events
@@ -80,34 +80,34 @@ const getOutcomeEvent = ({ value }: ActivityLog, strings: LanguageStrings): Even
     case 'EXPIRED':
       return {
         eventType: TimelineEventType.ApplicationExpired,
-        displayString: strings.TIMELINE_APPLICATION_EXPIRED,
+        displayString: t('TIMELINE_APPLICATION_EXPIRED'),
       }
     case 'WITHDRAWN':
       return {
         eventType: TimelineEventType.ApplicationWithdrawn,
-        displayString: strings.TIMELINE_APPLICATION_WITHDRAWN,
+        displayString: t('TIMELINE_APPLICATION_WITHDRAWN'),
       }
     case 'APPROVED':
       return {
         eventType: TimelineEventType.ApplicationApproved,
-        displayString: strings.TIMELINE_APPLICATION_APPROVED,
+        displayString: t('TIMELINE_APPLICATION_APPROVED'),
       }
     case 'REJECTED':
       return {
         eventType: TimelineEventType.ApplicationRejected,
-        displayString: strings.TIMELINE_APPLICATION_REJECTED,
+        displayString: t('TIMELINE_APPLICATION_REJECTED'),
       }
     default:
       return {
         eventType: TimelineEventType.Error,
-        displayString: strings.TIMELINE_ERROR_MESSAGE,
+        displayString: t('TIMELINE_ERROR_MESSAGE'),
       }
   }
 }
 
 const getExtensionEvent = (
   { value, details }: ActivityLog,
-  strings: LanguageStrings,
+  t: TranslateMethod,
   locale: string
 ): EventOutput => {
   if (value !== config.applicantDeadlineCode)
@@ -121,56 +121,63 @@ const getExtensionEvent = (
   } = details
   return {
     eventType: TimelineEventType.ApplicantDeadlineExtended,
-    displayString: `${strings.TIMELINE_DEADLINE_EXTENDED.replace(
-      '%1',
-      `**${name}**`
-    )} ${DateTime.fromISO(newDeadline).setLocale(locale).toLocaleString(DateTime.DATETIME_SHORT)}`,
+    displayString: `${t('TIMELINE_DEADLINE_EXTENDED', `**${name}**`)} ${DateTime.fromISO(
+      newDeadline
+    )
+      .setLocale(locale)
+      .toLocaleString(DateTime.DATETIME_SHORT)}`,
   }
 }
 
 const getAssignmentEvent = (
   { value, details: { reviewer, assigner, sections, reviewLevel } }: ActivityLog,
   structure: FullStructure,
-  strings: LanguageStrings
+  t: TranslateMethod
 ): EventOutput => {
   const isConsolidation = reviewLevel > 1
   switch (value) {
-    case 'Assigned':
+    case 'Assigned': {
+      const stringValues = {
+        reviewer: `**${reviewer?.name}**`,
+        sections: stringifySections(sections, structure.sections, t),
+        assigner: `**${assigner?.name}**`,
+      }
       return {
         eventType: !isConsolidation
           ? TimelineEventType.AssignedReviewByAnother
           : TimelineEventType.AssignedConsolidationByAnother,
-        displayString: (!isConsolidation
-          ? strings.TIMELINE_REVIEW_ASSIGNED
-          : strings.TIMELINE_CONSOLIDATION_ASSIGNED
-        )
-          .replace('%1', `**${reviewer?.name}**`)
-          .replace('%2', stringifySections(sections, structure.sections, strings))
-          .replace('%3', `**${assigner?.name}**`),
+        displayString: !isConsolidation
+          ? t('TIMELINE_REVIEW_ASSIGNED', stringValues)
+          : t('TIMELINE_CONSOLIDATION_ASSIGNED', stringValues),
       }
-    case 'Self-Assigned':
+    }
+    case 'Self-Assigned': {
+      const stringValues = {
+        reviewer: `**${reviewer?.name}**`,
+        sections: stringifySections(sections, structure.sections, t),
+      }
       return {
         eventType: !isConsolidation
           ? TimelineEventType.SelfAssignedReview
           : TimelineEventType.SelfAssignedConsolidation,
-        displayString: (!isConsolidation
-          ? strings.TIMELINE_REVIEW_SELF_ASSIGNED
-          : strings.TIMELINE_CONSOLIDATION_SELF_ASSIGNED
-        )
-          .replace('%1', `**${reviewer?.name}**`)
-          .replace('%2', stringifySections(sections, structure.sections, strings)),
+        displayString: !isConsolidation
+          ? t('TIMELINE_REVIEW_SELF_ASSIGNED', stringValues)
+          : t('TIMELINE_CONSOLIDATION_SELF_ASSIGNED', stringValues),
       }
+    }
     case 'Unassigned':
       return {
         eventType: TimelineEventType.Unassigned,
-        displayString: strings.TIMELINE_UNASSIGNED.replace('%1', `**${reviewer?.name}**`)
-          .replace('%2', stringifySections(sections, structure.sections, strings))
-          .replace('%3', `**${assigner?.name}**`),
+        displayString: t('TIMELINE_UNASSIGNED', {
+          reviewer: `**${reviewer?.name}**`,
+          sections: stringifySections(sections, structure.sections, t),
+          assigner: `**${assigner?.name}**`,
+        }),
       }
     default:
       return {
         eventType: TimelineEventType.Error,
-        displayString: strings.TIMELINE_ERROR_MESSAGE,
+        displayString: t('TIMELINE_ERROR_MESSAGE'),
       }
   }
 }
@@ -180,7 +187,7 @@ const getReviewEvent = (
   fullLog: ActivityLog[],
   structure: FullStructure,
   index: number,
-  strings: LanguageStrings,
+  t: TranslateMethod,
   decisionStrings: { [key in Decision]: string }
 ): EventOutput => {
   const {
@@ -192,18 +199,15 @@ const getReviewEvent = (
   const reviewDecision = value === 'SUBMITTED' ? getAssociatedReviewDecision(event, fullLog) : null
   const isResubmission = value === 'SUBMITTED' ? checkResubmission(event, fullLog) : false
   const hyperlinkReplaceString = isConsolidation
-    ? strings.TIMELINE_CONSOLIDATION
-    : strings.TIMELINE_REVIEW
+    ? t('TIMELINE_CONSOLIDATION')
+    : t('TIMELINE_REVIEW')
 
   switch (true) {
     case value === 'CHANGES_REQUESTED':
       // Mostly ignored, only shows when event reflects the *current* state
       return {
         eventType: TimelineEventType.ReviewChangesRequested,
-        displayString: `*> ${strings.TIMELINE_WAITING_FOR_REVIEWER}*`.replace(
-          '%1',
-          `**${reviewer?.name}**`
-        ),
+        displayString: `*> ${t('TIMELINE_WAITING_FOR_REVIEWER', `**${reviewer?.name}**`)}*`,
       }
     case value === 'PENDING' || value === 'LOCKED':
       return {
@@ -213,27 +217,25 @@ const getReviewEvent = (
     case value === 'DISCONTINUED':
       return {
         eventType: TimelineEventType.ReviewDiscontinued,
-        displayString: strings.TIMELINE_REVIEW_DISCONTINUED.replace('%1', `**${reviewer?.name}**`),
+        displayString: t('TIMELINE_REVIEW_DISCONTINUED', `**${reviewer?.name}**`),
       }
     case value === 'DRAFT' && !prevStatus:
       return {
         eventType: !isConsolidation
           ? TimelineEventType.ReviewStarted
           : TimelineEventType.ConsolidationStarted,
-        displayString: (!isConsolidation
-          ? strings.TIMELINE_REVIEW_STARTED
-          : strings.TIMELINE_CONSOLIDATION_STARTED
-        ).replace('%1', `**${reviewer?.name}**`),
+        displayString: !isConsolidation
+          ? t('TIMELINE_REVIEW_STARTED', `**${reviewer?.name}**`)
+          : t('TIMELINE_CONSOLIDATION_STARTED', `**${reviewer?.name}**`),
       }
     case value === 'DRAFT' && (prevStatus === 'CHANGES_REQUESTED' || prevStatus === 'PENDING'):
       return {
         eventType: !isConsolidation
           ? TimelineEventType.ReviewRestarted
           : TimelineEventType.ConsolidationRestarted,
-        displayString: (!isConsolidation
-          ? strings.TIMELINE_REVIEW_RESTARTED
-          : strings.TIMELINE_CONSOLIDATION_RESTARTED
-        ).replace('%1', `**${reviewer?.name}**`),
+        displayString: !isConsolidation
+          ? t('TIMELINE_REVIEW_RESTARTED', `**${reviewer?.name}**`)
+          : t('TIMELINE_CONSOLIDATION_RESTARTED', `**${reviewer?.name}**`),
       }
     case value === 'SUBMITTED' && !reviewDecision && !isResubmission:
       return {
@@ -241,77 +243,68 @@ const getReviewEvent = (
           ? TimelineEventType.ReviewSubmitted
           : TimelineEventType.ConsolidationSubmitted,
         displayString: (!isConsolidation
-          ? strings.TIMELINE_REVIEW_SUBMITTED
-          : strings.TIMELINE_CONSOLIDATION_SUBMITTED
-        )
-          .replace('%1', `**${reviewer?.name}**`)
-          .replace(
-            hyperlinkReplaceString,
-            getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
-          ),
+          ? t('TIMELINE_REVIEW_SUBMITTED', `**${reviewer?.name}**`)
+          : t('TIMELINE_CONSOLIDATION_SUBMITTED', `**${reviewer?.name}**`)
+        ).replace(
+          hyperlinkReplaceString,
+          getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
+        ),
       }
-    case value === 'SUBMITTED' && reviewDecision && !isResubmission:
+    case value === 'SUBMITTED' && reviewDecision && !isResubmission: {
+      const stringValues = {
+        name: `**${reviewer?.name}**`,
+        decision: `**${decisionStrings[reviewDecision.decision as Decision]}**${
+          reviewDecision?.comment ? ` (${t('TIMELINE_COMMENT')} *${reviewDecision?.comment}*)` : ''
+        }`,
+      }
       return {
         extras: { reviewDecision },
         eventType: !isConsolidation
           ? TimelineEventType.ReviewSubmittedWithDecision
           : TimelineEventType.ConsolidationSubmittedWithDecision,
         displayString: (!isConsolidation
-          ? strings.TIMELINE_REVIEW_SUBMITTED_DECISION
-          : strings.TIMELINE_CONSOLIDATION_SUBMITTED_DECISION
-        )
-          .replace('%1', `**${reviewer?.name}**`)
-          .replace(
-            '%2',
-            `**${decisionStrings[reviewDecision.decision as Decision]}**${
-              reviewDecision?.comment
-                ? ` (${strings.TIMELINE_COMMENT} *${reviewDecision?.comment}*)`
-                : ''
-            }`
-          )
-          .replace(
-            hyperlinkReplaceString,
-            getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
-          ),
+          ? t('TIMELINE_REVIEW_SUBMITTED_DECISION', stringValues)
+          : t('TIMELINE_CONSOLIDATION_SUBMITTED_DECISION', stringValues)
+        ).replace(
+          hyperlinkReplaceString,
+          getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
+        ),
       }
+    }
     case value === 'SUBMITTED' && !reviewDecision && isResubmission:
       return {
         eventType: !isConsolidation
           ? TimelineEventType.ReviewSubmitted
           : TimelineEventType.ConsolidationSubmitted,
-        displayString: (!isConsolidation
-          ? strings.TIMELINE_REVIEW_RESUBMITTED
-          : strings.TIMELINE_CONSOLIDATION_RESUBMITTED
-        ).replace('%1', `**${reviewer?.name}**`),
+        displayString: !isConsolidation
+          ? t('TIMELINE_REVIEW_RESUBMITTED', `**${reviewer?.name}**`)
+          : t('TIMELINE_CONSOLIDATION_RESUBMITTED', `**${reviewer?.name}**`),
       }
-    case value === 'SUBMITTED' && reviewDecision && isResubmission:
+    case value === 'SUBMITTED' && reviewDecision && isResubmission: {
+      const stringValues = {
+        name: `**${reviewer?.name}**`,
+        decision: `**${decisionStrings[reviewDecision.decision as Decision]}**${
+          reviewDecision?.comment ? ` (${t('TIMELINE_COMMENT')} *${reviewDecision?.comment}*)` : ''
+        }`,
+      }
       return {
         extras: { reviewDecision },
         eventType: !isConsolidation
           ? TimelineEventType.ReviewResubmittedWithDecision
           : TimelineEventType.ConsolidationResubmittedWithDecision,
         displayString: (!isConsolidation
-          ? strings.TIMELINE_REVIEW_RESUBMITTED_DECISION
-          : strings.TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION
-        )
-          .replace('%1', `**${reviewer?.name}**`)
-          .replace(
-            '%2',
-            `**${decisionStrings[reviewDecision.decision as Decision]}**${
-              reviewDecision?.comment
-                ? ` (${strings.TIMELINE_COMMENT} *${reviewDecision?.comment}*)`
-                : ''
-            }`
-          )
-          .replace(
-            hyperlinkReplaceString,
-            getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
-          ),
+          ? t('TIMELINE_REVIEW_RESUBMITTED_DECISION', stringValues)
+          : t('TIMELINE_CONSOLIDATION_RESUBMITTED_DECISION', stringValues)
+        ).replace(
+          hyperlinkReplaceString,
+          getReviewLinkString(hyperlinkReplaceString, structure, event, fullLog)
+        ),
       }
+    }
     default:
       return {
         eventType: TimelineEventType.Error,
-        displayString: strings.TIMELINE_ERROR_MESSAGE,
+        displayString: t('TIMELINE_ERROR_MESSAGE'),
       }
   }
 }

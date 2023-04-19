@@ -43,7 +43,7 @@ const getState: GetState = (action: TemplateAction) => ({
 })
 
 const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     template: { id: templateId, isDraft },
   } = useTemplateState()
@@ -53,7 +53,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
   const showToast = useToast({
-    title: strings.TEMPLATE_MESSAGE_SAVE_SUCCESS,
+    title: t('TEMPLATE_MESSAGE_SAVE_SUCCESS'),
     style: 'success',
   })
 
@@ -198,32 +198,32 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
-              title={strings.BUTTON_SAVE}
+              title={t('BUTTON_SAVE')}
               disabled={!isDraft || !shouldUpdate}
-              disabledMessage={!isDraft ? disabledMessage : strings.TEMPLATE_MESSAGE_SAVE_DISABLED}
+              disabledMessage={!isDraft ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
               onClick={updateAction}
             />
             <ButtonWithFallback
-              title={strings.BUTTON_CLOSE}
+              title={t('BUTTON_CLOSE')}
               onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
             />
             <Modal
               basic
               size="small"
               icon="save"
-              header={strings.TEMPLATE_MESSAGE_SAVE_AND_CLOSE}
+              header={t('TEMPLATE_MESSAGE_SAVE_AND_CLOSE')}
               open={open}
               onClose={() => setOpen(false)}
               actions={[
                 {
                   key: 'save',
-                  content: strings.BUTTON_SAVE,
+                  content: t('BUTTON_SAVE'),
                   positive: true,
                   onClick: saveAndClose,
                 },
                 {
                   key: 'close',
-                  content: strings.BUTTON_CLOSE,
+                  content: t('BUTTON_CLOSE'),
                   positive: false,
                   onClick: onClose,
                 },

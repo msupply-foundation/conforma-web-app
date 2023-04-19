@@ -9,13 +9,13 @@ interface AssigneeProps {
 }
 
 const AssigneeDropdown: React.FC<AssigneeProps> = ({ assignmentOptions, onChangeMethod }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { isCompleted, options, selected } = assignmentOptions
 
   return (
     <Dropdown
       className="reviewer-dropdown"
-      placeholder={strings.ASSIGNMENT_NOT_ASSIGNED}
+      placeholder={t('ASSIGNMENT_NOT_ASSIGNED')}
       options={options}
       value={selected}
       disabled={isCompleted}

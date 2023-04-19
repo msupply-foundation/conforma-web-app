@@ -14,7 +14,7 @@ import { evaluateElements } from '../../utils/helpers/evaluateElements'
 import useGetApplicationSerial from '../../utils/hooks/useGetApplicationSerial'
 
 const ApplicationCreate: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     push,
     query: { type },
@@ -28,7 +28,7 @@ const ApplicationCreate: React.FC = () => {
   const { getSerialAsync } = useGetApplicationSerial()
   const [newApplicationError, setNewApplicationError] = useState<Error | null>(null)
   const [newApplicationLoading, setNewApplicationLoading] = useState<boolean>(false)
-  usePageTitle(strings.PAGE_TITLE_CREATE)
+  usePageTitle(t('PAGE_TITLE_CREATE'))
 
   const { error: creationError, create } = useCreateApplication()
 
@@ -71,7 +71,7 @@ const ApplicationCreate: React.FC = () => {
     return (
       <Message
         error
-        title={strings.ERROR_APPLICATION_CREATE}
+        title={t('ERROR_APPLICATION_CREATE')}
         list={[error, creationError?.message || '', newApplicationError?.message || '']}
       />
     )
@@ -90,7 +90,7 @@ const ApplicationCreate: React.FC = () => {
           loading={newApplicationLoading}
           onClick={handleCreate}
         >
-          {strings.BUTTON_APPLICATION_START}
+          {t('BUTTON_APPLICATION_START')}
         </Button>
       </Segment>
     )
@@ -101,8 +101,8 @@ const ApplicationCreate: React.FC = () => {
       <ApplicationHomeWrapper
         startMessage={template.startMessage}
         name={template.name}
-        title={strings.TITLE_INTRODUCTION}
-        subtitle={strings.SUBTITLE_APPLICATION_STEPS}
+        title={t('TITLE_INTRODUCTION')}
+        subtitle={t('SUBTITLE_APPLICATION_STEPS')}
         ButtonSegment={StartButtonSegment}
       >
         <SectionsList sections={template.sections} />

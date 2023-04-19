@@ -11,7 +11,7 @@ const OverviewTab: React.FC<{
   structure: FullStructure
   isActive: boolean
 }> = ({ structure: fullStructure, isActive }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { timeline, loading, error, refreshTimeline } = useTimeline(fullStructure)
 
   const currentStageNum = fullStructure.info.current.stage.number
@@ -26,7 +26,7 @@ const OverviewTab: React.FC<{
       {timeline && <Overview structure={fullStructure} activityLog={timeline.rawLog} />}
       <div id="timeline">
         <Header as="h2" textAlign="center">
-          {strings.REVIEW_OVERVIEW_ACTIVITY}
+          {t('REVIEW_OVERVIEW_ACTIVITY')}
         </Header>
         {timeline &&
           timeline.stages.map((stage) => (

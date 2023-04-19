@@ -9,7 +9,7 @@ export interface ApplicationContainerProps {
 }
 
 const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, children }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { replace } = useRouter()
   const {
     userState: { currentUser, isNonRegistered },
@@ -32,7 +32,7 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, c
           onClick={() => replace(`/applications?type=${code}`)}
         >
           <Icon name="chevron left" className="dark-grey" />
-          {strings.LABEL_APPLICATIONS.replace('%1', name)}
+          {t('LABEL_APPLICATIONS', name)}
         </Label>
       </div>
       {children}

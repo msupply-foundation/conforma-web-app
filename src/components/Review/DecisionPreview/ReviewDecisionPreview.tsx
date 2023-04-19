@@ -19,7 +19,7 @@ export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
   },
   decision,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { Decision: LocalisedDecision } = useLocalisedEnums()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const toast = useToast()
@@ -42,13 +42,13 @@ export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
             onClick={() => {
               if (decision === Decision.NoDecision)
                 toast({
-                  title: strings.REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE,
-                  text: strings.REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE,
+                  title: t('REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE'),
+                  text: t('REVIEW_DECISION_PREVIEW_NOTHING_SELECTED_TITLE'),
                   style: 'error',
                 })
               else setIsModalOpen(true)
             }}
-            content={strings.BUTTON_PREVIEW_DECISION}
+            content={t('BUTTON_PREVIEW_DECISION')}
           />
         </Form.Field>
       )}

@@ -6,11 +6,11 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Icon } from 'semantic-ui-react'
 
 const ApplicantActionCell: React.FC<CellProps> = ({ application: { status, serial } }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   let action = ''
 
-  if (status === ApplicationStatus.ChangesRequired) action = strings.ACTION_UPDATE
-  if (status === ApplicationStatus.Draft) action = strings.ACTION_CONTINUE
+  if (status === ApplicationStatus.ChangesRequired) action = t('ACTION_UPDATE')
+  if (status === ApplicationStatus.Draft) action = t('ACTION_CONTINUE')
 
   if (!action)
     return (
