@@ -131,6 +131,7 @@ export default {
   ERROR_LEVEL_NOT_FOUND: 'Level not found',
   ERROR_TRIGGER:
     'Problem waiting for triggers to finish. Please check console for detailed error info.',
+  ERROR_LOADING_FILTER: 'Error loading filter!',
   FILTER_ADD_FILTER: 'Filter',
   FILTER_REMOVE: 'Remove filter',
   FILTER_START_TYPING: 'Start typing...',
