@@ -40,9 +40,11 @@ const Dashboard: React.FC = () => {
               <Header as="h4">{categoryTitle}</Header>
             </div>
             <div className="templates">
-              {templates.map((template) => (
-                <TemplateComponent key={template.code} template={template} />
-              ))}
+              {templates
+                .filter(({ code }) => code === 'PR2')
+                .map((template) => (
+                  <TemplateComponent key={template.code} template={template} />
+                ))}
             </div>
           </div>
         ))}
@@ -156,7 +158,7 @@ const PanelComponent: React.FC<{
     <>
       {filters.map((filter) =>
         totalMatchFilter[filter.id] > 0 ? (
-          <Link to={constructLink(filter)}>{`${filter.title} (${
+          <Link key={filter.id} to={constructLink(filter)}>{`${filter.title} (${
             totalMatchFilter[filter.id]
           })`}</Link>
         ) : null
