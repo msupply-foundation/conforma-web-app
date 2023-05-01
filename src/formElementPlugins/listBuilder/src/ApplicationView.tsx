@@ -11,6 +11,7 @@ import {
   resetCurrentResponses,
   anyErrorItems,
   createTextString,
+  combineResponses,
 } from './helpers'
 import {
   ListCardLayout,
@@ -185,7 +186,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               key={`list-${element.code}`}
               element={element}
               isStrictPage={inputState.error}
-              allResponses={allResponses}
+              allResponses={combineResponses(allResponses, inputState.currentResponses)}
               currentResponse={inputState.currentResponses[element.code].value}
               onSaveUpdateMethod={innerElementUpdate(element.code)}
               applicationData={applicationData}
