@@ -20,7 +20,6 @@ const useDefault = ({
   additionalDependencies = [],
 }: UseDefaultProps) => {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
-  const [prevDefaultValue, setPrevDefaultValue] = useState(defaultValue)
 
   const { persistUserInput = false, ignoreNullDefault = false } = parameters
 
