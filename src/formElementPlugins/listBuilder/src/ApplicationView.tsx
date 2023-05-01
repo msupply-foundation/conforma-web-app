@@ -82,7 +82,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     ).then((elements) =>
       setInputState((prevState) => ({ ...prevState, currentElementsState: elements }))
     )
-  }, [inputState.currentResponses])
+  }, [inputState.currentResponses, allResponses])
 
   useDefault({
     defaultValue,
