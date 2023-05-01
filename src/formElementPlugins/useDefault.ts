@@ -25,7 +25,10 @@ const useDefault = ({
 
   useEffect(() => {
     let initial = isInitialLoad
-    console.log('defaultValue', defaultValue, initial)
+    if (parameters.label === 'Total price (FJ$)') {
+      console.log('defaultValue', defaultValue, initial)
+      console.log('parameters', parameters)
+    }
     if (defaultValue === loadingValue || defaultValue === undefined) return
     if (ignoreNullDefault && defaultValue === null) return
 
@@ -39,7 +42,9 @@ const useDefault = ({
     // changes
     setIsInitialLoad(false)
 
-    if ((!persistUserInput || !currentResponse?.text) && !isInitialLoad && !initial) {
+    if (!persistUserInput) return
+
+    if (!currentResponse?.text && !isInitialLoad && !initial) {
       onChange(defaultValue)
     }
   }, [defaultValue, ...additionalDependencies])
