@@ -76,7 +76,7 @@ _Free-form, single-line text input element_
 
 <a name="input-params" />
 
-#### Input parameters (in the `parameters` JSON)
+#### Input parameters (in the "parameters" JSON)
 
 - **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
 - **description**: `string` -- additional explanatory text (usually not required) [Optional]
@@ -490,25 +490,25 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 
   - **table** view:
 
-    ![Table View](images/Element-Type-Specs-listBuilder-table-view.png)
+    ![Table View](/images/Element-Type-Specs-listBuilder-table-view.png)
 
     For table view, the column headers are taken from the **title** fields of each element
 
   - **card** view:
 
-    ![Card View](images/Element-Type-Specs-listBuilder-card-view.png)
+    ![Card View](/images/Element-Type-Specs-listBuilder-card-view.png)
 
     The display string(s) for card view are defined in the `displayFormat` field (below)
 
   - **inline** view:
 
-    ![Inline View](images/Element-Type-Specs-listBuilder-inline-view.png)
+    ![Inline View](/images/Element-Type-Specs-listBuilder-inline-view.png)
 
     The input form is displayed inline (i.e. no modal), and can be collapsed/opened for each item
 
   - **list** view:
 
-    ![List View](images/Element-Type-Specs-listBuilder-list-view.png)
+    ![List View](/images/Element-Type-Specs-listBuilder-list-view.png)
 
     A simple view, best for when each item only has one field
 
@@ -568,11 +568,11 @@ _Live "search-as-you-type" lookups for user to find and select items_
 
 Search results show in pop-up below the search box:
 
-![Search Results](images/Element-Type-Specs-search-results.png)
+![Search Results](/images/Element-Type-Specs-search-results.png)
 
 Once selected, items are displayed in a "card" view:
 
-![Search Selected](images/Element-Type-Specs-search-selected.png)
+![Search Selected](/images/Element-Type-Specs-search-selected.png)
 
 #### Input parameters
 
@@ -629,7 +629,7 @@ Once selected, items are displayed in a "card" view:
 
 _A date picker for entering standardised dates or date ranges_
 
-![Date picker](images/Element-Type-Specs-date-picker.png)
+![Date picker](/images/Element-Type-Specs-date-picker.png)
 
 Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semantic-ui-datepickers)
 
@@ -651,11 +651,11 @@ Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semanti
 
 ```
 {
-  text: <text format of date (range) as specified in "displayFormat">
-  date: {
-     start: <ISO YYYY-MM-DD date>
-     end?:  <ISO YYYY-MM-DD date>
-  }
+text: <text format of date (range) as specified in "displayFormat">
+date: {
+  start: <ISO YYYY-MM-DD date>
+  end?:  <ISO YYYY-MM-DD date>
+}
 ```
 
 Note, if response is a single date (i.e. not a range), only `start` will be specified.
@@ -684,10 +684,11 @@ _Input for numeric fields_
 - **prefix** / **suffix** -- `string` If specified, the number will display these values either side of the number input. They'll also be pre/appended to the "text" representation of the number in the saved response. Useful if you want to define units with the input number (e.g. `12 km`)
 - **suffixPlural** -- `string` (only relevant if `suffix` is specified above) Changes the displayed/stored suffix depending on the value of the number based on pluralisation rules.  
 (e.g. if `suffix = "month"` and `suffixPlural = "months"`, then when number is 1: "1 month", when number is 2:  "2 months")  
-**NOTE**: The parameters below are only relevant if `simple == false` (above)
-- **locale** -- `string` specifies the international "locale" code (e.g `'ja-JP'`) for displaying the calendar in local format. Default is the local setting.
+**NOTE**: The parameters below are only relevant if `simple == false` (above). They also only apply to the *formatting* of the number, not the number value itself.
+- **locale** -- `string` specifies the international "locale" code (e.g `'ja-JP'`) for displaying the number in local format. Default is the local setting.
 - **currency** -- `string` If specified, number will be formatted as a currency value (e.g. $4.95). Should be specified in ISO4217 country code format (e.g. "USD", "JPY") See: [https://www.iban.com/currency-codes](https://www.iban.com/currency-codes)
 - **maxSignificantDigits** -- `number` If specified, number will be rounded to the specified number of significant figures
+- **decimals** -- `number` If specified, number will be displayed with exactly this many decimal places.
 
 #### Response type
 

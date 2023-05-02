@@ -30,11 +30,22 @@ const useDefault = ({
     // This prevents an existing response from being wiped out by a default on
     // first load, but allows it to still be replaced on subsequent default
     // changes
-    setIsInitialLoad(false)
-
-    if ((!persistUserInput || !currentResponse?.text) && !isInitialLoad) {
-      onChange(defaultValue)
+    if (isInitialLoad) {
+      if (!currentResponse?.text) {
+        onChange(defaultValue)
+      }
+      setIsInitialLoad(false)
+      return
     }
+
+    if (!currentResponse?.text) {
+      onChange(defaultValue)
+      return
+    }
+
+    if (persistUserInput) return
+
+    onChange(defaultValue)
   }, [defaultValue, ...additionalDependencies])
 }
 

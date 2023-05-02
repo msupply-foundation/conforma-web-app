@@ -89,6 +89,15 @@ const extractNumber = (input: string) => {
 // See https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
 const removeAccents = (input: string) => input.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
+// Arithmetic
+const multiply = (num1: number, num2: number, decimals: number) => num1 * num2
+
+// Array
+const split = (text: string, delimiter: string = ',') => {
+  const values = text.split(delimiter)
+  return values.map((v) => v.trim())
+}
+
 export default {
   filterArray,
   generateExpiry,
@@ -98,4 +107,6 @@ export default {
   getISODate,
   extractNumber,
   removeAccents,
+  multiply,
+  split,
 }
