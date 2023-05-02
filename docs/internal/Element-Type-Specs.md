@@ -688,7 +688,7 @@ _Input for numeric fields_
 - **locale** -- `string` specifies the international "locale" code (e.g `'ja-JP'`) for displaying the number in local format. Default is the local setting.
 - **currency** -- `string` If specified, number will be formatted as a currency value (e.g. $4.95). Should be specified in ISO4217 country code format (e.g. "USD", "JPY") See: [https://www.iban.com/currency-codes](https://www.iban.com/currency-codes)
 - **maxSignificantDigits** -- `number` If specified, number will be rounded to the specified number of significant figures
-- **decimalPlaces** -- `number` If specified, number will be displayed with exactly this many decimal places.
+- **decimals** -- `number` If specified, number will be displayed with exactly this many decimal places.
 
 #### Response type
 
