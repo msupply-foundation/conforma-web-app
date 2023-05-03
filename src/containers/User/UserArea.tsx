@@ -138,6 +138,11 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       text: t('MENU_ITEM_ADMIN_LOCALISATION'),
       value: '/admin/localisations',
     },
+    {
+      key: 'prefs',
+      text: t('MENU_ITEM_ADMIN_PREFS'),
+      value: '/admin/preferences',
+    },
   ]
   // Only include Snapshots menu item in Dev mode
   if (process.env.NODE_ENV === 'development')
