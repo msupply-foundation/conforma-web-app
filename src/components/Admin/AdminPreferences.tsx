@@ -7,6 +7,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useToast, topLeft } from '../../contexts/Toast'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
+import Loading from '../Loading'
 
 export const AdminPreferences: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -20,7 +21,7 @@ export const AdminPreferences: React.FC = () => {
     confirmText: t('BUTTON_CONFIRM'),
   })
 
-  const [prefs, setPrefs] = useState({})
+  const [prefs, setPrefs] = useState<object>()
   const [hasChanged, setHasChanged] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [undoQueue, setUndoQueue] = useState<object[]>([])
@@ -67,7 +68,7 @@ export const AdminPreferences: React.FC = () => {
   const handleUndo = () => {
     const queue = [...undoQueue]
     const prev = queue.pop()
-    if (prev) {
+    if (prev && prefs) {
       setHasChanged(true)
       setRedoQueue([...redoQueue, prefs])
       setPrefs(prev)
@@ -78,7 +79,7 @@ export const AdminPreferences: React.FC = () => {
   const handleRedo = () => {
     const queue = [...redoQueue]
     const next = queue.pop()
-    if (next) {
+    if (next && prefs) {
       setUndoQueue([...undoQueue, prefs])
       setPrefs(next)
       setRedoQueue(queue)
@@ -89,18 +90,22 @@ export const AdminPreferences: React.FC = () => {
     <div id="preferences-panel">
       <WarningModal />
       <Header>{t('PREFERENCES_HEADER')}</Header>
-      <ReactJson
-        src={prefs}
-        name="preferences"
-        collapsed={2}
-        enableClipboard={false}
-        quotesOnKeys={false}
-        displayDataTypes={false}
-        onEdit={handleChange}
-        onDelete={handleChange}
-        onAdd={handleChange}
-        style={{ padding: '10px' }}
-      />
+      {prefs ? (
+        <ReactJson
+          src={prefs}
+          name="preferences"
+          collapsed={2}
+          enableClipboard={false}
+          quotesOnKeys={false}
+          displayDataTypes={false}
+          onEdit={handleChange}
+          onDelete={handleChange}
+          onAdd={handleChange}
+          style={{ padding: '10px' }}
+        />
+      ) : (
+        <Loading />
+      )}
       <div className="flex-row-space-between" style={{ maxWidth: 500 }}>
         <p className={`clickable nav-button ${undoQueue.length === 0 ? 'invisible' : ''}`}>
           <a onClick={handleUndo}>
