@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Header, Button } from 'semantic-ui-react'
+import { Header, Button, Icon } from 'semantic-ui-react'
 import ReactJson, { InteractionProps } from 'react-json-view'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -109,16 +109,18 @@ export const AdminPreferences: React.FC = () => {
       <div className="flex-row-space-between" style={{ maxWidth: 500 }}>
         <p className={`clickable nav-button ${undoQueue.length === 0 ? 'invisible' : ''}`}>
           <a onClick={handleUndo}>
+            <Icon name="arrow alternate circle left" />
             <strong>{t('BUTTON_UNDO')}</strong>
           </a>
         </p>
         <p className={`clickable nav-button ${redoQueue.length === 0 ? 'invisible' : ''}`}>
           <a onClick={handleRedo}>
             <strong>{t('BUTTON_REDO')}</strong>
+            <Icon name="arrow alternate circle right" />
           </a>
         </p>
       </div>
-      <div className="flex-row-end">
+      <div className="flex-row-end" style={{ maxWidth: 500 }}>
         <Button
           primary
           disabled={!hasChanged}

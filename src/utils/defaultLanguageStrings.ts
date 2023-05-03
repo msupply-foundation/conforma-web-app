@@ -319,7 +319,7 @@ export default {
   PREFERENCES_HEADER: 'System Preferences',
   PREFERENCES_SAVE_WARNING: 'Save system preferences?',
   PREFERENCES_SAVE_MESSAGE:
-    'Are you sure? This will over-write core settings and can break the system if misconfigured',
+    'Are you sure?  This will overwrite core settings and can break the system if misconfigured',
   PREFERENCES_SAVED: 'Preferences saved',
   PREFERENCES_SAVE_PROBLEM: 'Problem saving preferences!',
   REVIEW_OVERVIEW_ACTIVITY: 'Activity',
