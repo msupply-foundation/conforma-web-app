@@ -10,7 +10,7 @@ import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import Loading from '../Loading'
 
 export const AdminPreferences: React.FC = () => {
-  const { t } = useLanguageProvider()
+  const { t, tFormat } = useLanguageProvider()
   usePageTitle(t('PAGE_TITLE_PREFS'))
 
   const showToast = useToast({ position: topLeft })
@@ -102,14 +102,7 @@ export const AdminPreferences: React.FC = () => {
     <div id="preferences-panel">
       <WarningModal />
       <Header>{t('PREFERENCES_HEADER')}</Header>
-      <p>
-        {/* TO-DO Localise this, need to find a way to include links in string */}
-        See the{' '}
-        <a href="https://github.com/openmsupply/conforma-server/wiki/Preferences" target="_blank">
-          server documentation
-        </a>{' '}
-        for an explanation of available preferences
-      </p>
+      <p>{tFormat('PREFERENCES_SEE_DOCS')}</p>
       {prefs ? (
         <ReactJson
           src={prefs}

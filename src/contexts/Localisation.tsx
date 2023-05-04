@@ -4,6 +4,7 @@ import strings from '../utils/defaultLanguageStrings'
 import { getRequest } from '../utils/helpers/fetchMethods'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 import { mapValues } from 'lodash'
+import Markdown from '../utils/helpers/semanticReactMarkdown'
 
 const { pluginsFolder } = config
 
@@ -51,6 +52,11 @@ type Substitutions = Record<string, unknown> | string | number
 
 export type TranslateMethod = (key: keyof typeof strings, substitutions?: Substitutions) => string
 
+type TranslateMarkdownMethod = (
+  key: keyof typeof strings,
+  substitutions?: Substitutions
+) => JSX.Element
+
 type TranslatePluginMethod = (key: string, substitutions?: Substitutions) => string
 
 const initialContext: {
@@ -63,6 +69,8 @@ const initialContext: {
   refetchLanguages: Function
   translate: TranslateMethod
   t: TranslateMethod
+  translateMarkdown: TranslateMarkdownMethod
+  tFormat: TranslateMarkdownMethod
   getPluginTranslator: (pluginCode: string) => TranslatePluginMethod
 } = {
   selectedLanguage: initSelectedLanguage,
@@ -74,6 +82,8 @@ const initialContext: {
   refetchLanguages: () => {},
   translate: () => '',
   t: () => '',
+  translateMarkdown: () => <></>,
+  tFormat: () => <></>,
   getPluginTranslator: () => () => '',
 }
 
@@ -164,6 +174,15 @@ export function LanguageProvider({
   const translate: TranslateMethod = (key, substitutions = {}) =>
     getTranslation(languageState.strings, key, substitutions)
 
+  const translateMarkdown: TranslateMarkdownMethod = (key, substitutions = {}) => {
+    return (
+      <Markdown
+        text={getTranslation(languageState.strings, key, substitutions)}
+        semanticComponent="noParagraph"
+      />
+    )
+  }
+
   const translatePlugin = (pluginCode: string, key: string, substitutions: Substitutions = {}) => {
     const pluginStrings = getPluginStrings(pluginCode)
     return getTranslation(pluginStrings, key, substitutions)
@@ -197,6 +216,8 @@ export function LanguageProvider({
         refetchLanguages,
         translate,
         t: translate,
+        translateMarkdown: translateMarkdown,
+        tFormat: translateMarkdown,
         getPluginTranslator: (pluginCode) => (key, substitutions) =>
           translatePlugin(pluginCode, key, substitutions),
       }}
