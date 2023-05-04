@@ -115,6 +115,8 @@ export const AdminPreferences: React.FC = () => {
           src={prefs}
           name="preferences"
           collapsed={2}
+          // @ts-ignore -- prop not recognised, but still works 🤷‍♂️
+          displayArrayKey={false}
           enableClipboard={handleCopy}
           quotesOnKeys={false}
           displayDataTypes={false}
