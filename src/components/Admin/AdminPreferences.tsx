@@ -90,6 +90,14 @@ export const AdminPreferences: React.FC = () => {
     <div id="preferences-panel">
       <WarningModal />
       <Header>{t('PREFERENCES_HEADER')}</Header>
+      <p>
+        {/* TO-DO Localise this, need to find a way to include links in string */}
+        See the{' '}
+        <a href="https://github.com/openmsupply/conforma-server/wiki/Preferences" target="_blank">
+          server documentation
+        </a>{' '}
+        for an explanation of available preferences
+      </p>
       {prefs ? (
         <ReactJson
           src={prefs}
