@@ -318,11 +318,17 @@ export default {
   PAGE_TITLE_PERMISSIONS: 'Permissions',
   PLACEHOLDER_SEARCH: 'Search Applications...',
   PREFERENCES_HEADER: 'System Preferences',
+  PREFERENCES_SEE_DOCS:
+    'See the [server documentation](https://github.com/openmsupply/conforma-server/wiki/Preferences) for an explanation of available preferences',
   PREFERENCES_SAVE_WARNING: 'Save system preferences?',
   PREFERENCES_SAVE_MESSAGE:
     'Are you sure?  This will overwrite core settings and can break the system if misconfigured',
   PREFERENCES_SAVED: 'Preferences saved',
   PREFERENCES_SAVE_PROBLEM: 'Problem saving preferences!',
+  PREFERENCES_COPIED: 'Copied to clipboard',
+  PREFERENCES_COPIED_ITEMS: '{{name}} ({{count}} items)',
+  PREFERENCES_COPIED_ITEMS_1: '{{name}} ({{count}} item)',
+  PREFERENCES_COPIED_ITEMS_0: '{{name}}: {{value}}',
   REVIEW_OVERVIEW_ACTIVITY: 'Activity',
   REVIEW_OVERVIEW_APPLICANT: 'Applicant',
   REVIEW_OVERVIEW_ORG: 'Organisation',

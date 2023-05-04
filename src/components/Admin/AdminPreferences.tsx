@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { Header, Button, Icon } from 'semantic-ui-react'
-import ReactJson, { InteractionProps } from 'react-json-view'
+import ReactJson, { InteractionProps, OnCopyProps } from 'react-json-view'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
-import { useToast, topLeft } from '../../contexts/Toast'
+import { useToast, topLeft, Position } from '../../contexts/Toast'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import Loading from '../Loading'
 
 export const AdminPreferences: React.FC = () => {
-  const { t } = useLanguageProvider()
+  const { t, tFormat } = useLanguageProvider()
   usePageTitle(t('PAGE_TITLE_PREFS'))
 
   const showToast = useToast({ position: topLeft })
@@ -86,24 +86,31 @@ export const AdminPreferences: React.FC = () => {
     }
   }
 
+  const handleCopy = ({ name, src }: OnCopyProps) =>
+    showToast({
+      title: t('PREFERENCES_COPIED'),
+      text: t('PREFERENCES_COPIED_ITEMS', {
+        name,
+        count: typeof src === 'object' && src !== null ? Object.keys(src).length : 0,
+        value: src,
+      }),
+      style: 'info',
+      position: Position.bottomLeft,
+    })
+
   return (
     <div id="preferences-panel">
       <WarningModal />
       <Header>{t('PREFERENCES_HEADER')}</Header>
-      <p>
-        {/* TO-DO Localise this, need to find a way to include links in string */}
-        See the{' '}
-        <a href="https://github.com/openmsupply/conforma-server/wiki/Preferences" target="_blank">
-          server documentation
-        </a>{' '}
-        for an explanation of available preferences
-      </p>
+      <p>{tFormat('PREFERENCES_SEE_DOCS')}</p>
       {prefs ? (
         <ReactJson
           src={prefs}
           name="preferences"
           collapsed={2}
-          enableClipboard={false}
+          // @ts-ignore -- prop not recognised, but still works 🤷‍♂️
+          displayArrayKey={false}
+          enableClipboard={handleCopy}
           quotesOnKeys={false}
           displayDataTypes={false}
           onEdit={handleChange}
