@@ -1805,6 +1805,7 @@ a:hover {
 ---------------------------------*/
 
 #localisation-panel {
+  padding-top: 20px;
   .row-format {
     gap: 20px;
     width: 90%;
@@ -1813,6 +1814,16 @@ a:hover {
     padding: 10px;
     border-radius: 8px;
   }
+}
+
+/*--------------------------------
+      Preferences (Admin) Page
+---------------------------------*/
+
+#preferences-panel {
+  padding-top: 20px;
+  width: 50%;
+  max-width: 600px;
 }
 
 /*--------------------------------

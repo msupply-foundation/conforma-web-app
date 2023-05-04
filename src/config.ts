@@ -44,6 +44,8 @@ const config = {
     snapshot: '/admin/snapshot',
     lookupTable: '/admin/lookup-table',
     getApplicationData: '/admin/get-application-data',
+    getAllPrefs: '/admin/get-all-prefs',
+    setPrefs: '/admin/set-prefs',
   },
   version,
   pluginsFolder: 'formElementPlugins',
