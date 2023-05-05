@@ -118,6 +118,7 @@ export default {
   DATA_VIEW_FILTER_HIGHER: 'Higher than:',
   DATA_VIEW_FILTER_LOWER: 'Lower than:',
   DATA_VIEW_NULL_VALUE: '(Blank)',
+  DATA_VIEW_CONFIG_HEADER: 'Data View configuration',
   DEFAULT_TEMPLATE_CATEGORY_TITLE: 'General',
   DEFAULT_TEMPLATE_CATEGORY_ICON: 'globe',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',

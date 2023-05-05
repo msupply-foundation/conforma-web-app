@@ -126,11 +126,11 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       text: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
       value: '/admin/lookup-tables',
     },
-    // {
-    //   key: 'dataViews',
-    //   text: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
-    //   value: '/admin/data',
-    // },
+    {
+      key: 'dataViews',
+      text: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
+      value: '/admin/data-views',
+    },
     // { key: 'permissions', text: t('MENU_ITEM_ADMIN_PERMISSIONS'), value: '/admin/permissions' },
     // { key: 'plugins', text: t('MENU_ITEM_ADMIN_PLUGINS'), value: '/admin/plugins' },
     {
