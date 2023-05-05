@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 export default gql`
   fragment dataViewFragment on DataView {
     id
+    identifier
     tableName
     title
     code

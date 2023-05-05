@@ -220,6 +220,7 @@ export type Query = Node & {
   dataTableStorageCondition?: Maybe<DataTableStorageCondition>;
   dataTableUnitsOfProportion?: Maybe<DataTableUnitsOfProportion>;
   dataView?: Maybe<DataView>;
+  dataViewByIdentifier?: Maybe<DataView>;
   dataViewColumnDefinition?: Maybe<DataViewColumnDefinition>;
   dataViewColumnDefinitionByTableNameAndColumnName?: Maybe<DataViewColumnDefinition>;
   elementTypePlugin?: Maybe<ElementTypePlugin>;
@@ -1631,6 +1632,12 @@ export type QueryDataTableUnitsOfProportionArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryDataViewArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataViewByIdentifierArgs = {
+  identifier: Scalars['String'];
 };
 
 
@@ -12904,6 +12911,8 @@ export enum DataViewsOrderBy {
   DefaultSortColumnDesc = 'DEFAULT_SORT_COLUMN_DESC',
   DefaultFilterStringAsc = 'DEFAULT_FILTER_STRING_ASC',
   DefaultFilterStringDesc = 'DEFAULT_FILTER_STRING_DESC',
+  IdentifierAsc = 'IDENTIFIER_ASC',
+  IdentifierDesc = 'IDENTIFIER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -12946,6 +12955,8 @@ export type DataViewCondition = {
   defaultSortColumn?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `defaultFilterString` field. */
   defaultFilterString?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `identifier` field. */
+  identifier?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -12986,6 +12997,8 @@ export type DataViewFilter = {
   defaultSortColumn?: Maybe<StringFilter>;
   /** Filter by the object’s `defaultFilterString` field. */
   defaultFilterString?: Maybe<StringFilter>;
+  /** Filter by the object’s `identifier` field. */
+  identifier?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -13029,6 +13042,7 @@ export type DataView = Node & {
   priority?: Maybe<Scalars['Int']>;
   defaultSortColumn?: Maybe<Scalars['String']>;
   defaultFilterString?: Maybe<Scalars['String']>;
+  identifier: Scalars['String'];
 };
 
 /** A `DataView` edge in the connection. */
@@ -15111,6 +15125,8 @@ export type Mutation = {
   updateDataViewByNodeId?: Maybe<UpdateDataViewPayload>;
   /** Updates a single `DataView` using a unique key and a patch. */
   updateDataView?: Maybe<UpdateDataViewPayload>;
+  /** Updates a single `DataView` using a unique key and a patch. */
+  updateDataViewByIdentifier?: Maybe<UpdateDataViewPayload>;
   /** Updates a single `DataViewColumnDefinition` using its globally unique id and a patch. */
   updateDataViewColumnDefinitionByNodeId?: Maybe<UpdateDataViewColumnDefinitionPayload>;
   /** Updates a single `DataViewColumnDefinition` using a unique key and a patch. */
@@ -15407,6 +15423,8 @@ export type Mutation = {
   deleteDataViewByNodeId?: Maybe<DeleteDataViewPayload>;
   /** Deletes a single `DataView` using a unique key. */
   deleteDataView?: Maybe<DeleteDataViewPayload>;
+  /** Deletes a single `DataView` using a unique key. */
+  deleteDataViewByIdentifier?: Maybe<DeleteDataViewPayload>;
   /** Deletes a single `DataViewColumnDefinition` using its globally unique id. */
   deleteDataViewColumnDefinitionByNodeId?: Maybe<DeleteDataViewColumnDefinitionPayload>;
   /** Deletes a single `DataViewColumnDefinition` using a unique key. */
@@ -16380,6 +16398,12 @@ export type MutationUpdateDataViewArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataViewByIdentifierArgs = {
+  input: UpdateDataViewByIdentifierInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataViewColumnDefinitionByNodeIdArgs = {
   input: UpdateDataViewColumnDefinitionByNodeIdInput;
 };
@@ -17264,6 +17288,12 @@ export type MutationDeleteDataViewByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataViewArgs = {
   input: DeleteDataViewInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataViewByIdentifierArgs = {
+  input: DeleteDataViewByIdentifierInput;
 };
 
 
@@ -33191,6 +33221,7 @@ export type DataViewInput = {
   priority?: Maybe<Scalars['Int']>;
   defaultSortColumn?: Maybe<Scalars['String']>;
   defaultFilterString?: Maybe<Scalars['String']>;
+  identifier: Scalars['String'];
 };
 
 /** The output of our create `DataView` mutation. */
@@ -36221,6 +36252,7 @@ export type DataViewPatch = {
   priority?: Maybe<Scalars['Int']>;
   defaultSortColumn?: Maybe<Scalars['String']>;
   defaultFilterString?: Maybe<Scalars['String']>;
+  identifier?: Maybe<Scalars['String']>;
 };
 
 /** The output of our update `DataView` mutation. */
@@ -36249,6 +36281,15 @@ export type UpdateDataViewInput = {
   /** An object where the defined keys will be set on the `DataView` being updated. */
   patch: DataViewPatch;
   id: Scalars['Int'];
+};
+
+/** All input for the `updateDataViewByIdentifier` mutation. */
+export type UpdateDataViewByIdentifierInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataView` being updated. */
+  patch: DataViewPatch;
+  identifier: Scalars['String'];
 };
 
 /** All input for the `updateDataViewColumnDefinitionByNodeId` mutation. */
@@ -38973,6 +39014,13 @@ export type DeleteDataViewInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `deleteDataViewByIdentifier` mutation. */
+export type DeleteDataViewByIdentifierInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  identifier: Scalars['String'];
+};
+
 /** All input for the `deleteDataViewColumnDefinitionByNodeId` mutation. */
 export type DeleteDataViewColumnDefinitionByNodeIdInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
@@ -40374,7 +40422,7 @@ export type ConsolidatorResponseFragmentFragment = (
 
 export type DataViewFragmentFragment = (
   { __typename?: 'DataView' }
-  & Pick<DataView, 'id' | 'tableName' | 'title' | 'code' | 'permissionNames' | 'rowRestrictions' | 'tableViewIncludeColumns' | 'tableViewExcludeColumns' | 'tableSearchColumns' | 'detailViewIncludeColumns' | 'detailViewExcludeColumns' | 'detailViewHeaderColumn' | 'filterIncludeColumns' | 'filterExcludeColumns' | 'showLinkedApplications' | 'priority' | 'defaultSortColumn' | 'defaultFilterString'>
+  & Pick<DataView, 'id' | 'identifier' | 'tableName' | 'title' | 'code' | 'permissionNames' | 'rowRestrictions' | 'tableViewIncludeColumns' | 'tableViewExcludeColumns' | 'tableSearchColumns' | 'detailViewIncludeColumns' | 'detailViewExcludeColumns' | 'detailViewHeaderColumn' | 'filterIncludeColumns' | 'filterExcludeColumns' | 'showLinkedApplications' | 'priority' | 'defaultSortColumn' | 'defaultFilterString'>
 );
 
 export type DataViewColumnDefinitionFragmentFragment = (
@@ -40633,6 +40681,7 @@ export type CreateReviewResponseMutation = (
 );
 
 export type CreateDataViewMutationVariables = Exact<{
+  identifier: Scalars['String'];
   tableName: Scalars['String'];
   code: Scalars['String'];
   detailViewHeaderColumn: Scalars['String'];
@@ -41116,6 +41165,20 @@ export type GetStageFilterListQuery = (
   )> }
 );
 
+export type GetDataTablesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetDataTablesQuery = (
+  { __typename?: 'Query' }
+  & { dataTables?: Maybe<(
+    { __typename?: 'DataTablesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'DataTable' }
+      & Pick<DataTable, 'tableName' | 'id' | 'isLookupTable' | 'displayName'>
+    )>> }
+  )> }
+);
+
 export type GetColumnDefinitionsQueryVariables = Exact<{
   tableName: Scalars['String'];
 }>;
@@ -41132,12 +41195,12 @@ export type GetColumnDefinitionsQuery = (
   )> }
 );
 
-export type GetDataViewQueryVariables = Exact<{
+export type GetDataViewsQueryVariables = Exact<{
   tableName: Scalars['String'];
 }>;
 
 
-export type GetDataViewQuery = (
+export type GetDataViewsQuery = (
   { __typename?: 'Query' }
   & { dataViews?: Maybe<(
     { __typename?: 'DataViewsConnection' }
@@ -41961,6 +42024,7 @@ export const ConsolidatorResponseFragmentFragmentDoc = gql`
 export const DataViewFragmentFragmentDoc = gql`
     fragment dataViewFragment on DataView {
   id
+  identifier
   tableName
   title
   code
@@ -42376,8 +42440,8 @@ export type CreateReviewResponseMutationHookResult = ReturnType<typeof useCreate
 export type CreateReviewResponseMutationResult = Apollo.MutationResult<CreateReviewResponseMutation>;
 export type CreateReviewResponseMutationOptions = Apollo.BaseMutationOptions<CreateReviewResponseMutation, CreateReviewResponseMutationVariables>;
 export const CreateDataViewDocument = gql`
-    mutation createDataView($tableName: String!, $code: String!, $detailViewHeaderColumn: String!) {
-  createDataView(input: {dataView: {tableName: $tableName, code: $code, detailViewHeaderColumn: $detailViewHeaderColumn}}) {
+    mutation createDataView($identifier: String!, $tableName: String!, $code: String!, $detailViewHeaderColumn: String!) {
+  createDataView(input: {dataView: {identifier: $identifier, tableName: $tableName, code: $code, detailViewHeaderColumn: $detailViewHeaderColumn}}) {
     dataView {
       ...dataViewFragment
     }
@@ -42399,6 +42463,7 @@ export type CreateDataViewMutationFn = Apollo.MutationFunction<CreateDataViewMut
  * @example
  * const [createDataViewMutation, { data, loading, error }] = useCreateDataViewMutation({
  *   variables: {
+ *      identifier: // value for 'identifier'
  *      tableName: // value for 'tableName'
  *      code: // value for 'code'
  *      detailViewHeaderColumn: // value for 'detailViewHeaderColumn'
@@ -43358,6 +43423,43 @@ export function useGetStageFilterListLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetStageFilterListQueryHookResult = ReturnType<typeof useGetStageFilterListQuery>;
 export type GetStageFilterListLazyQueryHookResult = ReturnType<typeof useGetStageFilterListLazyQuery>;
 export type GetStageFilterListQueryResult = Apollo.QueryResult<GetStageFilterListQuery, GetStageFilterListQueryVariables>;
+export const GetDataTablesDocument = gql`
+    query getDataTables {
+  dataTables {
+    nodes {
+      tableName
+      id
+      isLookupTable
+      displayName
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetDataTablesQuery__
+ *
+ * To run a query within a React component, call `useGetDataTablesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDataTablesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDataTablesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetDataTablesQuery(baseOptions?: Apollo.QueryHookOptions<GetDataTablesQuery, GetDataTablesQueryVariables>) {
+        return Apollo.useQuery<GetDataTablesQuery, GetDataTablesQueryVariables>(GetDataTablesDocument, baseOptions);
+      }
+export function useGetDataTablesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDataTablesQuery, GetDataTablesQueryVariables>) {
+          return Apollo.useLazyQuery<GetDataTablesQuery, GetDataTablesQueryVariables>(GetDataTablesDocument, baseOptions);
+        }
+export type GetDataTablesQueryHookResult = ReturnType<typeof useGetDataTablesQuery>;
+export type GetDataTablesLazyQueryHookResult = ReturnType<typeof useGetDataTablesLazyQuery>;
+export type GetDataTablesQueryResult = Apollo.QueryResult<GetDataTablesQuery, GetDataTablesQueryVariables>;
 export const GetColumnDefinitionsDocument = gql`
     query getColumnDefinitions($tableName: String!) {
   dataViewColumnDefinitions(condition: {tableName: $tableName}, orderBy: COLUMN_NAME_ASC) {
@@ -43393,8 +43495,8 @@ export function useGetColumnDefinitionsLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetColumnDefinitionsQueryHookResult = ReturnType<typeof useGetColumnDefinitionsQuery>;
 export type GetColumnDefinitionsLazyQueryHookResult = ReturnType<typeof useGetColumnDefinitionsLazyQuery>;
 export type GetColumnDefinitionsQueryResult = Apollo.QueryResult<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>;
-export const GetDataViewDocument = gql`
-    query getDataView($tableName: String!) {
+export const GetDataViewsDocument = gql`
+    query getDataViews($tableName: String!) {
   dataViews(condition: {tableName: $tableName}, orderBy: TABLE_NAME_ASC) {
     nodes {
       ...dataViewFragment
@@ -43404,30 +43506,30 @@ export const GetDataViewDocument = gql`
     ${DataViewFragmentFragmentDoc}`;
 
 /**
- * __useGetDataViewQuery__
+ * __useGetDataViewsQuery__
  *
- * To run a query within a React component, call `useGetDataViewQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetDataViewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetDataViewsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDataViewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetDataViewQuery({
+ * const { data, loading, error } = useGetDataViewsQuery({
  *   variables: {
  *      tableName: // value for 'tableName'
  *   },
  * });
  */
-export function useGetDataViewQuery(baseOptions?: Apollo.QueryHookOptions<GetDataViewQuery, GetDataViewQueryVariables>) {
-        return Apollo.useQuery<GetDataViewQuery, GetDataViewQueryVariables>(GetDataViewDocument, baseOptions);
+export function useGetDataViewsQuery(baseOptions?: Apollo.QueryHookOptions<GetDataViewsQuery, GetDataViewsQueryVariables>) {
+        return Apollo.useQuery<GetDataViewsQuery, GetDataViewsQueryVariables>(GetDataViewsDocument, baseOptions);
       }
-export function useGetDataViewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDataViewQuery, GetDataViewQueryVariables>) {
-          return Apollo.useLazyQuery<GetDataViewQuery, GetDataViewQueryVariables>(GetDataViewDocument, baseOptions);
+export function useGetDataViewsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDataViewsQuery, GetDataViewsQueryVariables>) {
+          return Apollo.useLazyQuery<GetDataViewsQuery, GetDataViewsQueryVariables>(GetDataViewsDocument, baseOptions);
         }
-export type GetDataViewQueryHookResult = ReturnType<typeof useGetDataViewQuery>;
-export type GetDataViewLazyQueryHookResult = ReturnType<typeof useGetDataViewLazyQuery>;
-export type GetDataViewQueryResult = Apollo.QueryResult<GetDataViewQuery, GetDataViewQueryVariables>;
+export type GetDataViewsQueryHookResult = ReturnType<typeof useGetDataViewsQuery>;
+export type GetDataViewsLazyQueryHookResult = ReturnType<typeof useGetDataViewsLazyQuery>;
+export type GetDataViewsQueryResult = Apollo.QueryResult<GetDataViewsQuery, GetDataViewsQueryVariables>;
 export const GetActivityLogDocument = gql`
     query getActivityLog($applicationId: Int!) {
   activityLogs(condition: {applicationId: $applicationId}, orderBy: TIMESTAMP_ASC) {
