@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { Header, Button, Dropdown, Checkbox } from 'semantic-ui-react'
+import { Header, Button, Dropdown, Checkbox, Icon } from 'semantic-ui-react'
 import { TranslateMethod, useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useToast, Position } from '../../contexts/Toast'
@@ -23,19 +23,18 @@ import { nanoid } from 'nanoid'
 export const AdminDataViews: React.FC = () => {
   const { t } = useLanguageProvider()
   usePageTitle(t('PAGE_TITLE_DATA_VIEW'))
+  const [includeLookupTables, setIncludeLookupTables] = useState(false)
 
   const { query, updateQuery, setQuery } = useRouter()
 
   const { data, loading } = useGetDataTablesQuery()
 
-  const [includeLookupTables, setIncludeLookupTables] = useState(false)
-
   const selectedTable = query.selectedTable
 
   return (
-    <div id="data-view-config-panel">
+    <div id="data-view-config-panel" className="flex-column" style={{ gap: 15 }}>
       <Header>{t('DATA_VIEW_CONFIG_HEADER')}</Header>
-      <div>
+      <div className="flex-row-space-between-center">
         <Dropdown
           selection
           clearable
@@ -47,6 +46,7 @@ export const AdminDataViews: React.FC = () => {
             if (!value) setQuery({})
             else updateQuery({ selectedTable: value })
           }}
+          style={{ minWidth: 300 }}
         />
         <Checkbox
           checked={includeLookupTables}
@@ -120,45 +120,55 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
   return (
     <div>
       <ConfirmModal />
-      <Dropdown
-        selection
-        clearable
-        placeholder={t('DATA_VIEW_CONFIG_SELECT_VIEW')}
-        loading={loading}
-        value={selectedDataView}
-        options={getDataViewOptions(dataViews)}
-        onChange={(_, { value }) => {
-          if (dataViews) updateQuery({ dataView: value })
-        }}
-      />
-      <Button
-        primary
-        disabled={!dataViewObject}
-        loading={isDeleting}
-        content={t('DATA_VIEW_CONFIG_DELETE_BUTTON')}
-        onClick={() =>
-          showConfirmation({
-            title: t('DATA_VIEW_CONFIG_DELETE_WARNING'),
-            message: t('DATA_VIEW_CONFIG_DELETE_MESSAGE'),
-            onConfirm: () => deleteDataView({ variables: { id: dataViewObject?.id as number } }),
-          })
-        }
-      />
-      <Button
-        primary
-        loading={isAdding}
-        content={t('DATA_VIEW_CONFIG_ADD_BUTTON')}
-        onClick={() => {
-          addDataView({
-            variables: {
-              identifier: `${tableName}_${nanoid(8)}`,
-              tableName,
-              code: '__CODE__',
-              detailViewHeaderColumn: '__HEADER_COL__',
-            },
-          })
-        }}
-      />
+      <div className="flex-row-space-between">
+        <Dropdown
+          selection
+          clearable
+          placeholder={t('DATA_VIEW_CONFIG_SELECT_VIEW')}
+          loading={loading}
+          value={selectedDataView}
+          options={getDataViewOptions(dataViews)}
+          onChange={(_, { value }) => {
+            if (dataViews) updateQuery({ dataView: value })
+          }}
+          style={{ minWidth: 300 }}
+        />
+        <div>
+          <Button
+            primary
+            inverted
+            disabled={!dataViewObject}
+            loading={isDeleting}
+            icon={<Icon name="trash alternate outline" size="small" />}
+            content={t('DATA_VIEW_CONFIG_DELETE_BUTTON')}
+            onClick={() =>
+              showConfirmation({
+                title: t('DATA_VIEW_CONFIG_DELETE_WARNING'),
+                message: t('DATA_VIEW_CONFIG_DELETE_MESSAGE'),
+                onConfirm: () =>
+                  deleteDataView({ variables: { id: dataViewObject?.id as number } }),
+              })
+            }
+          />
+          <Button
+            primary
+            inverted
+            loading={isAdding}
+            icon={<Icon name="plus" size="tiny" color="blue" />}
+            content={t('DATA_VIEW_CONFIG_ADD_BUTTON')}
+            onClick={() => {
+              addDataView({
+                variables: {
+                  identifier: `${tableName}_${nanoid(8)}`,
+                  tableName,
+                  code: '__CODE__',
+                  detailViewHeaderColumn: '__HEADER_COL__',
+                },
+              })
+            }}
+          />
+        </div>
+      </div>
       {dataViewObject && (
         <JsonEditor
           data={
