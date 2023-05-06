@@ -22,7 +22,7 @@ export const JsonEditor: React.FC<JsonEditorProps> = ({
 }) => {
   const { t } = useLanguageProvider()
   const { currentValue, setValue, undo, redo, hasChanged, setSaved, canUndo, canRedo } =
-    useUndoQueue<object>(data)
+    useUndoQueue<object>()
   const showToast = useToast({ position: topLeft })
 
   useEffect(() => {

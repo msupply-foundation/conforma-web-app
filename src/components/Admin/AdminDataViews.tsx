@@ -93,7 +93,10 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
   const [updateDataView, { loading: isSaving }] = useUpdateDataViewMutation({
     onError: (e) =>
       showToast({ title: t('PREFERENCES_SAVE_PROBLEM'), text: e.message, style: 'error' }),
-    onCompleted: () => showToast({ title: 'Data view saved', style: 'success' }),
+    onCompleted: (d) => {
+      showToast({ title: 'Data view saved', style: 'success' })
+      updateQuery({ dataView: d.updateDataView?.dataView?.identifier })
+    },
   })
 
   const selectedDataView = query.dataView
@@ -101,13 +104,6 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
   const dataViews = data?.dataViews?.nodes as DataView[] | undefined
 
   const dataViewObject = dataViews && dataViews.find((dv) => dv.identifier === selectedDataView)
-
-  const handleSave = async (data: object) => {
-    const result = dataViewObject
-      ? await updateDataView({ variables: { id: dataViewObject?.id, patch: data } })
-      : 'No data'
-    console.log('Result', result)
-  }
 
   return (
     <div>
@@ -122,17 +118,28 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
           if (dataViews) updateQuery({ dataView: value })
         }}
       />
-      <JsonEditor
-        data={pickBy(dataViewObject, (_, key) => !['__typename', 'id'].includes(key))}
-        onSave={(data) => showConfirmation({ onConfirm: () => handleSave(data) })}
-        isSaving={isSaving}
-        name={dataViewObject?.identifier}
-        collapsed={1}
-        displayArrayKey={false}
-        quotesOnKeys={false}
-        displayDataTypes={true}
-        style={{ padding: '10px' }}
-      />
+      {dataViewObject && (
+        <JsonEditor
+          data={
+            dataViewObject
+              ? pickBy(dataViewObject, (_, key) => !['__typename', 'id'].includes(key))
+              : undefined
+          }
+          onSave={(data) =>
+            showConfirmation({
+              onConfirm: () =>
+                updateDataView({ variables: { id: dataViewObject?.id as number, patch: data } }),
+            })
+          }
+          isSaving={isSaving}
+          name={dataViewObject?.identifier}
+          collapsed={1}
+          displayArrayKey={false}
+          quotesOnKeys={false}
+          displayDataTypes={true}
+          style={{ padding: '10px' }}
+        />
+      )}
     </div>
   )
 }
