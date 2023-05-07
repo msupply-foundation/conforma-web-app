@@ -1828,7 +1828,7 @@ a:hover {
 
   h2.ui.header {
     padding: 0;
-    margin: 0;
+    margin: 5px;
   }
 }
 

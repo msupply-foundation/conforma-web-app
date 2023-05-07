@@ -81,8 +81,6 @@ export const JsonEditor: React.FC<JsonEditorProps> = ({
             <Icon name="arrow alternate circle right" />
           </a>
         </p>
-      </div>
-      <div className="flex-row-end" style={{ maxWidth: 500 }}>
         <Button
           primary
           disabled={!hasChanged}

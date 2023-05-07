@@ -13166,7 +13166,7 @@ export type DataViewColumnDefinition = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   tableName?: Maybe<Scalars['String']>;
-  columnName?: Maybe<Scalars['String']>;
+  columnName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
   elementParameters?: Maybe<Scalars['JSON']>;
@@ -33255,7 +33255,7 @@ export type CreateDataViewColumnDefinitionInput = {
 export type DataViewColumnDefinitionInput = {
   id?: Maybe<Scalars['Int']>;
   tableName?: Maybe<Scalars['String']>;
-  columnName?: Maybe<Scalars['String']>;
+  columnName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
   elementParameters?: Maybe<Scalars['JSON']>;

@@ -15,6 +15,7 @@ import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import {
   DataTable,
   DataView,
+  DataViewColumnDefinition,
   GetDataTablesQuery,
   useGetDataTablesQuery,
 } from '../../../utils/generated/graphql'
@@ -58,8 +59,12 @@ export const AdminDataViews: React.FC = () => {
           label={t('DATA_VIEW_CONFIG_INCLUDE_LOOKUP')}
         />
       </div>
-      {selectedTable && <DataViewEditor tableName={selectedTable} />}
-      {/* <ColumnDefinitionEditor /> */}
+      {selectedTable && (
+        <>
+          <DataViewEditor tableName={selectedTable} />
+          <ColumnDefinitionEditor tableName={selectedTable} />
+        </>
+      )}
     </div>
   )
 }
@@ -93,7 +98,7 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
     <>
       <ConfirmModal />
       <DataViewDisplay
-        title="Data Views"
+        title={t('PAGE_TITLE_DATA_VIEW')}
         placeholder={t('DATA_VIEW_CONFIG_SELECT_VIEW')}
         loading={loading}
         dropdownValue={selectedDataView}
@@ -142,6 +147,86 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
           })
         }}
         isAdding={isAdding}
+      />
+    </>
+  )
+}
+
+const ColumnDefinitionEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
+  const { t } = useLanguageProvider()
+  const { updateQuery } = useRouter()
+  const { ConfirmModal, showModal: showConfirmation } = useConfirmationModal({
+    type: 'warning',
+    confirmText: t('BUTTON_CONFIRM'),
+  })
+
+  const {
+    selectedColumn,
+    columnDefinitions,
+    columnDefinitionObject,
+    columnsLoading,
+    updateColumnDefinition,
+    deleteColumnDefinition,
+    addColumnDefinition,
+    isSavingColumn,
+    isDeletingColumn,
+    isAddingColumn,
+  } = useAdminDataViewConfig(tableName)
+
+  return (
+    <>
+      <ConfirmModal />
+      <DataViewDisplay
+        title={t('DATA_VIEW_COLUMN_DEFINITIONS')}
+        placeholder={t('DATA_VIEW_CONFIG_SELECT_COLUMN')}
+        loading={columnsLoading}
+        dropdownValue={selectedColumn}
+        options={getColumnDefinitionOptions(columnDefinitions)}
+        onChange={(_, { value }) => {
+          if (columnDefinitions) updateQuery({ columnDefinition: value })
+        }}
+        data={
+          columnDefinitionObject
+            ? pickBy(
+                columnDefinitionObject,
+                (_, key) =>
+                  !['__typename', 'id']
+                    // These two properties shouldn't show up in the editor,
+                    // as we don't want them being touched
+                    .includes(key)
+              )
+            : undefined
+        }
+        dataName={columnDefinitionObject?.columnName as string}
+        onSave={(data) => {
+          showConfirmation({
+            title: t('DATA_VIEW_CONFIG_SAVE_COL_WARNING'),
+            message: t('DATA_VIEW_CONFIG_SAVE_COL_MESSAGE'),
+            onConfirm: () =>
+              updateColumnDefinition({
+                variables: { id: columnDefinitionObject?.id as number, patch: data },
+              }),
+          })
+        }}
+        isSaving={isSavingColumn}
+        onDelete={() =>
+          showConfirmation({
+            title: t('DATA_VIEW_CONFIG_DELETE_COL_WARNING'),
+            message: t('DATA_VIEW_CONFIG_DELETE_COL_MESSAGE'),
+            onConfirm: () =>
+              deleteColumnDefinition({ variables: { id: columnDefinitionObject?.id as number } }),
+          })
+        }
+        isDeleting={isDeletingColumn}
+        onAdd={() => {
+          addColumnDefinition({
+            variables: {
+              columnName: `${tableName}_column_${nanoid(8)}`,
+              tableName,
+            },
+          })
+        }}
+        isAdding={isAddingColumn}
       />
     </>
   )
@@ -267,6 +352,20 @@ const getDataViewOptions = (dataViews: DataView[] | undefined) => {
       text: identifier,
       value: identifier,
       data: dataView,
+    }
+  })
+}
+
+const getColumnDefinitionOptions = (columnDefinitions: DataViewColumnDefinition[] | undefined) => {
+  if (!columnDefinitions) return []
+
+  return columnDefinitions.map((colDef) => {
+    const { id, columnName, title } = colDef
+    return {
+      key: `${columnName}_${id}`,
+      text: title ? `${title} (${columnName})` : columnName,
+      value: columnName,
+      data: colDef,
     }
   })
 }
