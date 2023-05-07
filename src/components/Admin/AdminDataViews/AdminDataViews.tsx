@@ -125,6 +125,7 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
             message: t('DATA_VIEW_CONFIG_SAVE_MESSAGE'),
             onConfirm: () =>
               updateDataView({ variables: { id: dataViewObject?.id as number, patch: data } }),
+            awaitAction: false,
           })
         }}
         isSaving={isSaving}
@@ -133,6 +134,7 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
             title: t('DATA_VIEW_CONFIG_DELETE_WARNING'),
             message: t('DATA_VIEW_CONFIG_DELETE_MESSAGE'),
             onConfirm: () => deleteDataView({ variables: { id: dataViewObject?.id as number } }),
+            awaitAction: false,
           })
         }
         isDeleting={isDeleting}
