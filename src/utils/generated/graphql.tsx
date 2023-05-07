@@ -40680,6 +40680,23 @@ export type CreateReviewResponseMutation = (
   )> }
 );
 
+export type CreateColumnDefinitionMutationVariables = Exact<{
+  tableName: Scalars['String'];
+  columnName: Scalars['String'];
+}>;
+
+
+export type CreateColumnDefinitionMutation = (
+  { __typename?: 'Mutation' }
+  & { createDataViewColumnDefinition?: Maybe<(
+    { __typename?: 'CreateDataViewColumnDefinitionPayload' }
+    & { dataViewColumnDefinition?: Maybe<(
+      { __typename?: 'DataViewColumnDefinition' }
+      & DataViewColumnDefinitionFragmentFragment
+    )> }
+  )> }
+);
+
 export type CreateDataViewMutationVariables = Exact<{
   identifier: Scalars['String'];
   tableName: Scalars['String'];
@@ -40699,19 +40716,18 @@ export type CreateDataViewMutation = (
   )> }
 );
 
-export type CreateDataViewColumnDefinitionMutationVariables = Exact<{
-  tableName: Scalars['String'];
-  columnName: Scalars['String'];
+export type DeleteColumnDefinitionMutationVariables = Exact<{
+  id: Scalars['Int'];
 }>;
 
 
-export type CreateDataViewColumnDefinitionMutation = (
+export type DeleteColumnDefinitionMutation = (
   { __typename?: 'Mutation' }
-  & { createDataViewColumnDefinition?: Maybe<(
-    { __typename?: 'CreateDataViewColumnDefinitionPayload' }
+  & { deleteDataViewColumnDefinition?: Maybe<(
+    { __typename?: 'DeleteDataViewColumnDefinitionPayload' }
     & { dataViewColumnDefinition?: Maybe<(
       { __typename?: 'DataViewColumnDefinition' }
-      & DataViewColumnDefinitionFragmentFragment
+      & Pick<DataViewColumnDefinition, 'id'>
     )> }
   )> }
 );
@@ -40732,18 +40748,19 @@ export type DeleteDataViewMutation = (
   )> }
 );
 
-export type DeleteDataViewColumnDefinitionMutationVariables = Exact<{
+export type UpdateColumnDefinitionMutationVariables = Exact<{
   id: Scalars['Int'];
+  patch: DataViewColumnDefinitionPatch;
 }>;
 
 
-export type DeleteDataViewColumnDefinitionMutation = (
+export type UpdateColumnDefinitionMutation = (
   { __typename?: 'Mutation' }
-  & { deleteDataViewColumnDefinition?: Maybe<(
-    { __typename?: 'DeleteDataViewColumnDefinitionPayload' }
+  & { updateDataViewColumnDefinition?: Maybe<(
+    { __typename?: 'UpdateDataViewColumnDefinitionPayload' }
     & { dataViewColumnDefinition?: Maybe<(
       { __typename?: 'DataViewColumnDefinition' }
-      & Pick<DataViewColumnDefinition, 'id'>
+      & DataViewColumnDefinitionFragmentFragment
     )> }
   )> }
 );
@@ -40761,23 +40778,6 @@ export type UpdateDataViewMutation = (
     & { dataView?: Maybe<(
       { __typename?: 'DataView' }
       & DataViewFragmentFragment
-    )> }
-  )> }
-);
-
-export type UpdateDataViewColumnDefinitionMutationVariables = Exact<{
-  id: Scalars['Int'];
-  patch: DataViewColumnDefinitionPatch;
-}>;
-
-
-export type UpdateDataViewColumnDefinitionMutation = (
-  { __typename?: 'Mutation' }
-  & { updateDataViewColumnDefinition?: Maybe<(
-    { __typename?: 'UpdateDataViewColumnDefinitionPayload' }
-    & { dataViewColumnDefinition?: Maybe<(
-      { __typename?: 'DataViewColumnDefinition' }
-      & DataViewColumnDefinitionFragmentFragment
     )> }
   )> }
 );
@@ -41165,20 +41165,6 @@ export type GetStageFilterListQuery = (
   )> }
 );
 
-export type GetDataTablesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetDataTablesQuery = (
-  { __typename?: 'Query' }
-  & { dataTables?: Maybe<(
-    { __typename?: 'DataTablesConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'DataTable' }
-      & Pick<DataTable, 'tableName' | 'id' | 'isLookupTable' | 'displayName'>
-    )>> }
-  )> }
-);
-
 export type GetColumnDefinitionsQueryVariables = Exact<{
   tableName: Scalars['String'];
 }>;
@@ -41191,6 +41177,20 @@ export type GetColumnDefinitionsQuery = (
     & { nodes: Array<Maybe<(
       { __typename?: 'DataViewColumnDefinition' }
       & DataViewColumnDefinitionFragmentFragment
+    )>> }
+  )> }
+);
+
+export type GetDataTablesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetDataTablesQuery = (
+  { __typename?: 'Query' }
+  & { dataTables?: Maybe<(
+    { __typename?: 'DataTablesConnection' }
+    & { nodes: Array<Maybe<(
+      { __typename?: 'DataTable' }
+      & Pick<DataTable, 'tableName' | 'id' | 'isLookupTable' | 'displayName'>
     )>> }
   )> }
 );
@@ -42439,6 +42439,41 @@ export function useCreateReviewResponseMutation(baseOptions?: Apollo.MutationHoo
 export type CreateReviewResponseMutationHookResult = ReturnType<typeof useCreateReviewResponseMutation>;
 export type CreateReviewResponseMutationResult = Apollo.MutationResult<CreateReviewResponseMutation>;
 export type CreateReviewResponseMutationOptions = Apollo.BaseMutationOptions<CreateReviewResponseMutation, CreateReviewResponseMutationVariables>;
+export const CreateColumnDefinitionDocument = gql`
+    mutation createColumnDefinition($tableName: String!, $columnName: String!) {
+  createDataViewColumnDefinition(input: {dataViewColumnDefinition: {tableName: $tableName, columnName: $columnName}}) {
+    dataViewColumnDefinition {
+      ...dataViewColumnDefinitionFragment
+    }
+  }
+}
+    ${DataViewColumnDefinitionFragmentFragmentDoc}`;
+export type CreateColumnDefinitionMutationFn = Apollo.MutationFunction<CreateColumnDefinitionMutation, CreateColumnDefinitionMutationVariables>;
+
+/**
+ * __useCreateColumnDefinitionMutation__
+ *
+ * To run a mutation, you first call `useCreateColumnDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateColumnDefinitionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createColumnDefinitionMutation, { data, loading, error }] = useCreateColumnDefinitionMutation({
+ *   variables: {
+ *      tableName: // value for 'tableName'
+ *      columnName: // value for 'columnName'
+ *   },
+ * });
+ */
+export function useCreateColumnDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<CreateColumnDefinitionMutation, CreateColumnDefinitionMutationVariables>) {
+        return Apollo.useMutation<CreateColumnDefinitionMutation, CreateColumnDefinitionMutationVariables>(CreateColumnDefinitionDocument, baseOptions);
+      }
+export type CreateColumnDefinitionMutationHookResult = ReturnType<typeof useCreateColumnDefinitionMutation>;
+export type CreateColumnDefinitionMutationResult = Apollo.MutationResult<CreateColumnDefinitionMutation>;
+export type CreateColumnDefinitionMutationOptions = Apollo.BaseMutationOptions<CreateColumnDefinitionMutation, CreateColumnDefinitionMutationVariables>;
 export const CreateDataViewDocument = gql`
     mutation createDataView($identifier: String!, $tableName: String!, $code: String!, $detailViewHeaderColumn: String!) {
   createDataView(input: {dataView: {identifier: $identifier, tableName: $tableName, code: $code, detailViewHeaderColumn: $detailViewHeaderColumn}}) {
@@ -42476,41 +42511,40 @@ export function useCreateDataViewMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateDataViewMutationHookResult = ReturnType<typeof useCreateDataViewMutation>;
 export type CreateDataViewMutationResult = Apollo.MutationResult<CreateDataViewMutation>;
 export type CreateDataViewMutationOptions = Apollo.BaseMutationOptions<CreateDataViewMutation, CreateDataViewMutationVariables>;
-export const CreateDataViewColumnDefinitionDocument = gql`
-    mutation createDataViewColumnDefinition($tableName: String!, $columnName: String!) {
-  createDataViewColumnDefinition(input: {dataViewColumnDefinition: {tableName: $tableName, columnName: $columnName}}) {
+export const DeleteColumnDefinitionDocument = gql`
+    mutation deleteColumnDefinition($id: Int!) {
+  deleteDataViewColumnDefinition(input: {id: $id}) {
     dataViewColumnDefinition {
-      ...dataViewColumnDefinitionFragment
+      id
     }
   }
 }
-    ${DataViewColumnDefinitionFragmentFragmentDoc}`;
-export type CreateDataViewColumnDefinitionMutationFn = Apollo.MutationFunction<CreateDataViewColumnDefinitionMutation, CreateDataViewColumnDefinitionMutationVariables>;
+    `;
+export type DeleteColumnDefinitionMutationFn = Apollo.MutationFunction<DeleteColumnDefinitionMutation, DeleteColumnDefinitionMutationVariables>;
 
 /**
- * __useCreateDataViewColumnDefinitionMutation__
+ * __useDeleteColumnDefinitionMutation__
  *
- * To run a mutation, you first call `useCreateDataViewColumnDefinitionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateDataViewColumnDefinitionMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useDeleteColumnDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteColumnDefinitionMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createDataViewColumnDefinitionMutation, { data, loading, error }] = useCreateDataViewColumnDefinitionMutation({
+ * const [deleteColumnDefinitionMutation, { data, loading, error }] = useDeleteColumnDefinitionMutation({
  *   variables: {
- *      tableName: // value for 'tableName'
- *      columnName: // value for 'columnName'
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useCreateDataViewColumnDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<CreateDataViewColumnDefinitionMutation, CreateDataViewColumnDefinitionMutationVariables>) {
-        return Apollo.useMutation<CreateDataViewColumnDefinitionMutation, CreateDataViewColumnDefinitionMutationVariables>(CreateDataViewColumnDefinitionDocument, baseOptions);
+export function useDeleteColumnDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteColumnDefinitionMutation, DeleteColumnDefinitionMutationVariables>) {
+        return Apollo.useMutation<DeleteColumnDefinitionMutation, DeleteColumnDefinitionMutationVariables>(DeleteColumnDefinitionDocument, baseOptions);
       }
-export type CreateDataViewColumnDefinitionMutationHookResult = ReturnType<typeof useCreateDataViewColumnDefinitionMutation>;
-export type CreateDataViewColumnDefinitionMutationResult = Apollo.MutationResult<CreateDataViewColumnDefinitionMutation>;
-export type CreateDataViewColumnDefinitionMutationOptions = Apollo.BaseMutationOptions<CreateDataViewColumnDefinitionMutation, CreateDataViewColumnDefinitionMutationVariables>;
+export type DeleteColumnDefinitionMutationHookResult = ReturnType<typeof useDeleteColumnDefinitionMutation>;
+export type DeleteColumnDefinitionMutationResult = Apollo.MutationResult<DeleteColumnDefinitionMutation>;
+export type DeleteColumnDefinitionMutationOptions = Apollo.BaseMutationOptions<DeleteColumnDefinitionMutation, DeleteColumnDefinitionMutationVariables>;
 export const DeleteDataViewDocument = gql`
     mutation deleteDataView($id: Int!) {
   deleteDataView(input: {id: $id}) {
@@ -42545,40 +42579,41 @@ export function useDeleteDataViewMutation(baseOptions?: Apollo.MutationHookOptio
 export type DeleteDataViewMutationHookResult = ReturnType<typeof useDeleteDataViewMutation>;
 export type DeleteDataViewMutationResult = Apollo.MutationResult<DeleteDataViewMutation>;
 export type DeleteDataViewMutationOptions = Apollo.BaseMutationOptions<DeleteDataViewMutation, DeleteDataViewMutationVariables>;
-export const DeleteDataViewColumnDefinitionDocument = gql`
-    mutation deleteDataViewColumnDefinition($id: Int!) {
-  deleteDataViewColumnDefinition(input: {id: $id}) {
+export const UpdateColumnDefinitionDocument = gql`
+    mutation updateColumnDefinition($id: Int!, $patch: DataViewColumnDefinitionPatch!) {
+  updateDataViewColumnDefinition(input: {patch: $patch, id: $id}) {
     dataViewColumnDefinition {
-      id
+      ...dataViewColumnDefinitionFragment
     }
   }
 }
-    `;
-export type DeleteDataViewColumnDefinitionMutationFn = Apollo.MutationFunction<DeleteDataViewColumnDefinitionMutation, DeleteDataViewColumnDefinitionMutationVariables>;
+    ${DataViewColumnDefinitionFragmentFragmentDoc}`;
+export type UpdateColumnDefinitionMutationFn = Apollo.MutationFunction<UpdateColumnDefinitionMutation, UpdateColumnDefinitionMutationVariables>;
 
 /**
- * __useDeleteDataViewColumnDefinitionMutation__
+ * __useUpdateColumnDefinitionMutation__
  *
- * To run a mutation, you first call `useDeleteDataViewColumnDefinitionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteDataViewColumnDefinitionMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateColumnDefinitionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateColumnDefinitionMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [deleteDataViewColumnDefinitionMutation, { data, loading, error }] = useDeleteDataViewColumnDefinitionMutation({
+ * const [updateColumnDefinitionMutation, { data, loading, error }] = useUpdateColumnDefinitionMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      patch: // value for 'patch'
  *   },
  * });
  */
-export function useDeleteDataViewColumnDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<DeleteDataViewColumnDefinitionMutation, DeleteDataViewColumnDefinitionMutationVariables>) {
-        return Apollo.useMutation<DeleteDataViewColumnDefinitionMutation, DeleteDataViewColumnDefinitionMutationVariables>(DeleteDataViewColumnDefinitionDocument, baseOptions);
+export function useUpdateColumnDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateColumnDefinitionMutation, UpdateColumnDefinitionMutationVariables>) {
+        return Apollo.useMutation<UpdateColumnDefinitionMutation, UpdateColumnDefinitionMutationVariables>(UpdateColumnDefinitionDocument, baseOptions);
       }
-export type DeleteDataViewColumnDefinitionMutationHookResult = ReturnType<typeof useDeleteDataViewColumnDefinitionMutation>;
-export type DeleteDataViewColumnDefinitionMutationResult = Apollo.MutationResult<DeleteDataViewColumnDefinitionMutation>;
-export type DeleteDataViewColumnDefinitionMutationOptions = Apollo.BaseMutationOptions<DeleteDataViewColumnDefinitionMutation, DeleteDataViewColumnDefinitionMutationVariables>;
+export type UpdateColumnDefinitionMutationHookResult = ReturnType<typeof useUpdateColumnDefinitionMutation>;
+export type UpdateColumnDefinitionMutationResult = Apollo.MutationResult<UpdateColumnDefinitionMutation>;
+export type UpdateColumnDefinitionMutationOptions = Apollo.BaseMutationOptions<UpdateColumnDefinitionMutation, UpdateColumnDefinitionMutationVariables>;
 export const UpdateDataViewDocument = gql`
     mutation updateDataView($id: Int!, $patch: DataViewPatch!) {
   updateDataView(input: {patch: $patch, id: $id}) {
@@ -42614,41 +42649,6 @@ export function useUpdateDataViewMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateDataViewMutationHookResult = ReturnType<typeof useUpdateDataViewMutation>;
 export type UpdateDataViewMutationResult = Apollo.MutationResult<UpdateDataViewMutation>;
 export type UpdateDataViewMutationOptions = Apollo.BaseMutationOptions<UpdateDataViewMutation, UpdateDataViewMutationVariables>;
-export const UpdateDataViewColumnDefinitionDocument = gql`
-    mutation updateDataViewColumnDefinition($id: Int!, $patch: DataViewColumnDefinitionPatch!) {
-  updateDataViewColumnDefinition(input: {patch: $patch, id: $id}) {
-    dataViewColumnDefinition {
-      ...dataViewColumnDefinitionFragment
-    }
-  }
-}
-    ${DataViewColumnDefinitionFragmentFragmentDoc}`;
-export type UpdateDataViewColumnDefinitionMutationFn = Apollo.MutationFunction<UpdateDataViewColumnDefinitionMutation, UpdateDataViewColumnDefinitionMutationVariables>;
-
-/**
- * __useUpdateDataViewColumnDefinitionMutation__
- *
- * To run a mutation, you first call `useUpdateDataViewColumnDefinitionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateDataViewColumnDefinitionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateDataViewColumnDefinitionMutation, { data, loading, error }] = useUpdateDataViewColumnDefinitionMutation({
- *   variables: {
- *      id: // value for 'id'
- *      patch: // value for 'patch'
- *   },
- * });
- */
-export function useUpdateDataViewColumnDefinitionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDataViewColumnDefinitionMutation, UpdateDataViewColumnDefinitionMutationVariables>) {
-        return Apollo.useMutation<UpdateDataViewColumnDefinitionMutation, UpdateDataViewColumnDefinitionMutationVariables>(UpdateDataViewColumnDefinitionDocument, baseOptions);
-      }
-export type UpdateDataViewColumnDefinitionMutationHookResult = ReturnType<typeof useUpdateDataViewColumnDefinitionMutation>;
-export type UpdateDataViewColumnDefinitionMutationResult = Apollo.MutationResult<UpdateDataViewColumnDefinitionMutation>;
-export type UpdateDataViewColumnDefinitionMutationOptions = Apollo.BaseMutationOptions<UpdateDataViewColumnDefinitionMutation, UpdateDataViewColumnDefinitionMutationVariables>;
 export const DeleteApplicationDocument = gql`
     mutation deleteApplication($id: Int!) {
   deleteApplication(input: {id: $id}) {
@@ -43423,6 +43423,41 @@ export function useGetStageFilterListLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetStageFilterListQueryHookResult = ReturnType<typeof useGetStageFilterListQuery>;
 export type GetStageFilterListLazyQueryHookResult = ReturnType<typeof useGetStageFilterListLazyQuery>;
 export type GetStageFilterListQueryResult = Apollo.QueryResult<GetStageFilterListQuery, GetStageFilterListQueryVariables>;
+export const GetColumnDefinitionsDocument = gql`
+    query getColumnDefinitions($tableName: String!) {
+  dataViewColumnDefinitions(condition: {tableName: $tableName}, orderBy: COLUMN_NAME_ASC) {
+    nodes {
+      ...dataViewColumnDefinitionFragment
+    }
+  }
+}
+    ${DataViewColumnDefinitionFragmentFragmentDoc}`;
+
+/**
+ * __useGetColumnDefinitionsQuery__
+ *
+ * To run a query within a React component, call `useGetColumnDefinitionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetColumnDefinitionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetColumnDefinitionsQuery({
+ *   variables: {
+ *      tableName: // value for 'tableName'
+ *   },
+ * });
+ */
+export function useGetColumnDefinitionsQuery(baseOptions?: Apollo.QueryHookOptions<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>) {
+        return Apollo.useQuery<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>(GetColumnDefinitionsDocument, baseOptions);
+      }
+export function useGetColumnDefinitionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>) {
+          return Apollo.useLazyQuery<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>(GetColumnDefinitionsDocument, baseOptions);
+        }
+export type GetColumnDefinitionsQueryHookResult = ReturnType<typeof useGetColumnDefinitionsQuery>;
+export type GetColumnDefinitionsLazyQueryHookResult = ReturnType<typeof useGetColumnDefinitionsLazyQuery>;
+export type GetColumnDefinitionsQueryResult = Apollo.QueryResult<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>;
 export const GetDataTablesDocument = gql`
     query getDataTables {
   dataTables {
@@ -43460,41 +43495,6 @@ export function useGetDataTablesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetDataTablesQueryHookResult = ReturnType<typeof useGetDataTablesQuery>;
 export type GetDataTablesLazyQueryHookResult = ReturnType<typeof useGetDataTablesLazyQuery>;
 export type GetDataTablesQueryResult = Apollo.QueryResult<GetDataTablesQuery, GetDataTablesQueryVariables>;
-export const GetColumnDefinitionsDocument = gql`
-    query getColumnDefinitions($tableName: String!) {
-  dataViewColumnDefinitions(condition: {tableName: $tableName}, orderBy: COLUMN_NAME_ASC) {
-    nodes {
-      ...dataViewColumnDefinitionFragment
-    }
-  }
-}
-    ${DataViewColumnDefinitionFragmentFragmentDoc}`;
-
-/**
- * __useGetColumnDefinitionsQuery__
- *
- * To run a query within a React component, call `useGetColumnDefinitionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetColumnDefinitionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetColumnDefinitionsQuery({
- *   variables: {
- *      tableName: // value for 'tableName'
- *   },
- * });
- */
-export function useGetColumnDefinitionsQuery(baseOptions?: Apollo.QueryHookOptions<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>) {
-        return Apollo.useQuery<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>(GetColumnDefinitionsDocument, baseOptions);
-      }
-export function useGetColumnDefinitionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>) {
-          return Apollo.useLazyQuery<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>(GetColumnDefinitionsDocument, baseOptions);
-        }
-export type GetColumnDefinitionsQueryHookResult = ReturnType<typeof useGetColumnDefinitionsQuery>;
-export type GetColumnDefinitionsLazyQueryHookResult = ReturnType<typeof useGetColumnDefinitionsLazyQuery>;
-export type GetColumnDefinitionsQueryResult = Apollo.QueryResult<GetColumnDefinitionsQuery, GetColumnDefinitionsQueryVariables>;
 export const GetDataViewsDocument = gql`
     query getDataViews($tableName: String!) {
   dataViews(condition: {tableName: $tableName}, orderBy: TABLE_NAME_ASC) {

@@ -1825,6 +1825,11 @@ a:hover {
   padding-top: 20px;
   width: 50%;
   max-width: 600px;
+
+  h2.ui.header {
+    padding: 0;
+    margin: 0;
+  }
 }
 
 /*--------------------------------

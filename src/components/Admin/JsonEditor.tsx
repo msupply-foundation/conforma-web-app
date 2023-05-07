@@ -5,6 +5,7 @@ import { useToast, topLeft, Position } from '../../contexts/Toast'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import Loading from '../Loading'
 import { useUndoQueue } from '../../utils/hooks/useUndoQueue'
+import { isEqual } from 'lodash'
 
 interface JsonEditorProps extends Omit<ReactJsonViewProps, 'src'> {
   onSave: (data: object) => void
@@ -26,7 +27,7 @@ export const JsonEditor: React.FC<JsonEditorProps> = ({
   const showToast = useToast({ position: topLeft })
 
   useEffect(() => {
-    if (data !== undefined) setValue(data)
+    if (data !== undefined && !isEqual(data, currentValue)) setValue(data)
   }, [data])
 
   const handleChange = ({ updated_src, existing_value, new_value }: InteractionProps) => {

@@ -11,7 +11,7 @@ import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { AdminLocalisations } from './AdminLocalisations'
 import { AdminPreferences } from './AdminPreferences'
-import { AdminDataViews } from './AdminDataViews'
+import { AdminDataViews } from './AdminDataViews/AdminDataViews'
 // import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Admin: React.FC = () => {
