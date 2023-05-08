@@ -11,6 +11,7 @@ import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { AdminLocalisations } from './AdminLocalisations'
 import { AdminPreferences } from './AdminPreferences'
+import { AdminDataViews } from './AdminDataViews/AdminDataViews'
 // import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Admin: React.FC = () => {
@@ -37,11 +38,11 @@ const Admin: React.FC = () => {
       header: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
       Element: <LookupTableRoutes />,
     },
-    // {
-    //   route: 'data',
-    //   header: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
-    //   Element: <AdminDataViews />,
-    // },
+    {
+      route: 'data-views',
+      header: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
+      Element: <AdminDataViews />,
+    },
     // {
     //   route: 'permissions',
     //   header: t('MENU_ITEM_ADMIN_PERMISSIONS'),
