@@ -310,7 +310,7 @@ export default {
   MENU_ITEM_REF_DOCS: 'Reference',
   MENU_ITEM_ADMIN_TEMPLATES: 'Templates/Procedures',
   MENU_ITEM_ADMIN_LOOKUP_TABLES: 'Lookup Tables',
-  MENU_ITEM_ADMIN_DATA_VIEW_CONFIG: 'Data View Configurations',
+  MENU_ITEM_ADMIN_DATA_VIEW_CONFIG: 'Data Views',
   MENU_ITEM_ADMIN_PERMISSIONS: 'Permission Policy & Names',
   MENU_ITEM_ADMIN_PLUGINS: 'Plugins',
   MENU_ITEM_ADMIN_LOCALISATION: 'Localisations',
