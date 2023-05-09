@@ -24,6 +24,7 @@ import { JsonEditor } from '../JsonEditor'
 import { pickBy } from 'lodash'
 import { nanoid } from 'nanoid'
 import { useAdminDataViewConfig } from './DatabaseHooks'
+import config from '../../../config'
 
 export const AdminDataViews: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -332,7 +333,7 @@ const getDataTableOptions = (
 ) => {
   if (!data) return []
 
-  return (data.dataTables?.nodes as DataTable[])
+  const options = (data.dataTables?.nodes as DataTable[])
     .filter(({ isLookupTable }) => (includeLookupTables ? true : !isLookupTable))
     .map(({ id, tableName, isLookupTable }) => {
       const table = toCamelCase(tableName)
@@ -342,6 +343,18 @@ const getDataTableOptions = (
         value: table,
       }
     })
+
+  options.push(
+    ...config.dataViewAllowedTableNames.map((table) => ({
+      key: `${table}`,
+      text: table,
+      value: table,
+    }))
+  )
+
+  console.log('options', options)
+
+  return options
 }
 
 const getDataViewOptions = (dataViews: DataView[] | undefined) => {
