@@ -53,7 +53,11 @@ const config = {
   localStorageJWTKey: 'persistJWT',
   applicantDeadlineCode: 'applicantDeadline',
   isProductionBuild,
-  debounceTimeout: 350, // milliseconds
+  debounceTimeout: 350, // milliseconds,
+  // These are the only default tables in the system that we allow to be mutated
+  // directly by modifyRecord or display as data views. All other names must
+  // have "data_table_" prepended.
+  dataViewAllowedTableNames: ['user', 'organisation', 'file'],
 }
 
 export default config
