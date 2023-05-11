@@ -34,6 +34,7 @@ const config = {
     dataViews: '/data-views',
     previewActions: '/preview-actions',
     extendApplication: '/extend-application',
+    lookupTable: '/lookup-table',
     // Admin
     admin: '/admin',
     // updateRowPolicies: '/admin/updateRowPolicies', //-- not currently called by front-end
@@ -42,7 +43,6 @@ const config = {
     allLanguages: '/admin/all-languages',
     removeLanguage: '/admin/remove-language',
     snapshot: '/admin/snapshot',
-    lookupTable: '/admin/lookup-table',
     getApplicationData: '/admin/get-application-data',
   },
   version,
