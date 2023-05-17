@@ -1,6 +1,6 @@
 import { useParams, useLocation, useHistory, useRouteMatch, match } from 'react-router-dom'
-import queryString, { StringifiableRecord } from 'query-string'
-import { useMemo, useState } from 'react'
+import queryString from 'query-string'
+import { useMemo } from 'react'
 import { BasicStringObject } from '../types'
 import { isEqual } from 'lodash'
 

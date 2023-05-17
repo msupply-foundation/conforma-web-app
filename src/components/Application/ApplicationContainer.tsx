@@ -14,6 +14,8 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, c
   const {
     userState: { currentUser, isNonRegistered },
   } = useUserState()
+  // Need to store in useState, else location.state is lost on subsequent
+  // re-renders
   const [prevQueryString] = useState(location?.state?.prevQuery)
   const { code, name } = template
 
