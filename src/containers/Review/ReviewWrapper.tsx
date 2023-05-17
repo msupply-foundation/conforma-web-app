@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router'
 import { Container, Message, Tab, Label, Icon, Header, StrictTabProps } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import { useRouter } from '../../utils/hooks/useRouter'
+import { useRouter, usePreviousQuery } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -141,17 +141,23 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
     push,
     query: { tab },
     updateQuery,
+    location,
   } = useRouter()
+  const { prevQueryString } = usePreviousQuery(location)
 
   if (!tab) {
     updateQuery({ tab: tabIdentifiers[0] })
   }
 
+  const linkBack = prevQueryString
+    ? `/applications?${prevQueryString}`
+    : `/applications?type=${templateCode}`
+
   return (
     <div id="review-home-header">
       <Label
         className="simple-label clickable"
-        onClick={() => push(`/applications?type=${templateCode}`)}
+        onClick={() => push(linkBack)}
         icon={<Icon name="chevron left" className="dark-grey" />}
       />
       <Header as="h3" content={applicationName} subheader={orgName} />

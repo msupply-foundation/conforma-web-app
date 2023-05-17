@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Header, Icon, Label } from 'semantic-ui-react'
-import { useRouter } from '../../utils/hooks/useRouter'
+import { useRouter, usePreviousQuery } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { TemplateDetails, User } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -10,11 +10,16 @@ export interface ApplicationContainerProps {
 
 const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, children }) => {
   const { t } = useLanguageProvider()
-  const { replace } = useRouter()
+  const { push, location } = useRouter()
+  const { prevQueryString } = usePreviousQuery(location)
   const {
     userState: { currentUser, isNonRegistered },
   } = useUserState()
   const { code, name } = template
+
+  const linkBack = prevQueryString
+    ? `/applications?${prevQueryString}`
+    : `/applications?type=${code}`
 
   return (
     <Container id="application-area" className={isNonRegistered ? 'non-registered' : ''}>
@@ -27,10 +32,7 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, c
             content={currentUser?.organisation?.orgName}
           />
         )}
-        <Label
-          className="back-label clickable"
-          onClick={() => replace(`/applications?type=${code}`)}
-        >
+        <Label className="back-label clickable" onClick={() => push(linkBack)}>
           <Icon name="chevron left" className="dark-grey" />
           {t('LABEL_APPLICATIONS', name)}
         </Label>
