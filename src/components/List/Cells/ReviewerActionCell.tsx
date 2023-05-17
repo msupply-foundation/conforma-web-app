@@ -8,11 +8,13 @@ import {
   ReviewerAction,
 } from '../../../utils/generated/graphql'
 import { Icon } from 'semantic-ui-react'
+import { useRouter } from '../../../utils/hooks/useRouter'
 
 const ReviewerActionCell: React.FC<CellProps> = ({
   application: { serial, reviewerAction, assignerAction, outcome },
 }) => {
   const { t } = useLanguageProvider()
+  const { location } = useRouter()
 
   const getReviewActionString = (reviewerAction: ReviewerAction) => {
     switch (reviewerAction) {
@@ -60,7 +62,10 @@ const ReviewerActionCell: React.FC<CellProps> = ({
 
   if (!action)
     return (
-      <Link className="user-action" to={`/application/${serial}/review`}>
+      <Link
+        className="user-action"
+        to={{ pathname: `/application/${serial}/review`, state: { prevQuery: location?.search } }}
+      >
         <Icon name="chevron right" />
       </Link>
     )
