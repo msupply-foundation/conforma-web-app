@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Header, Icon, Label } from 'semantic-ui-react'
-import { useRouter, usePreviousQuery } from '../../utils/hooks/useRouter'
+import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { TemplateDetails, User } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -11,14 +11,14 @@ export interface ApplicationContainerProps {
 const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, children }) => {
   const { t } = useLanguageProvider()
   const { push, location } = useRouter()
-  const { prevQueryString } = usePreviousQuery(location)
   const {
     userState: { currentUser, isNonRegistered },
   } = useUserState()
+  const [prevQueryString] = useState(location?.state?.prevQuery)
   const { code, name } = template
 
   const linkBack = prevQueryString
-    ? `/applications?${prevQueryString}`
+    ? `/applications${prevQueryString}`
     : `/applications?type=${code}`
 
   return (

@@ -122,12 +122,3 @@ export function useRouter(): RouterResult {
     }
   }, [location])
 }
-
-// This hook can be used to store the state of a previous URL Query if it was
-// passed from the previous page in the `location.state` object. The query can
-// then be added to any URL when following a "back to.." link
-export const usePreviousQuery = (location: { state?: { prevQuery?: StringifiableRecord } }) => {
-  const [prevQuery] = useState(location?.state?.prevQuery)
-
-  return { prevQuery, prevQueryString: prevQuery ? queryString.stringify(prevQuery) : undefined }
-}

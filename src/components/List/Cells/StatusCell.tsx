@@ -11,7 +11,7 @@ import { useRouter } from '../../../utils/hooks/useRouter'
 const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplication }) => {
   const { t } = useLanguageProvider()
   const { Status } = useLocalisedEnums()
-  const { query } = useRouter()
+  const { location } = useRouter()
   const { ConfirmModal, showModal } = useConfirmationModal({
     title: t('APPLICATION_DELETION_CONFIRM_TITLE'),
     message: t('APPLICATION_DELETION_CONFIRM_MESSAGE'),
@@ -20,7 +20,7 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
   })
 
   const { serial, status } = application
-  const linkTo = { pathname: `/application/${serial}`, state: { prevQuery: query } }
+  const linkTo = { pathname: `/application/${serial}`, state: { prevQuery: location.search } }
 
   switch (status) {
     case ApplicationStatus.ChangesRequired:

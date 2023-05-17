@@ -8,7 +8,7 @@ import { useRouter } from '../../../utils/hooks/useRouter'
 
 const ApplicantActionCell: React.FC<CellProps> = ({ application: { status, serial } }) => {
   const { t } = useLanguageProvider()
-  const { query } = useRouter()
+  const { location } = useRouter()
   let action = ''
 
   if (status === ApplicationStatus.ChangesRequired) action = t('ACTION_UPDATE')
@@ -18,7 +18,7 @@ const ApplicantActionCell: React.FC<CellProps> = ({ application: { status, seria
     return (
       <Link
         className="user-action"
-        to={{ pathname: `/application/${serial}`, state: { prevQuery: query } }}
+        to={{ pathname: `/application/${serial}`, state: { prevQuery: location.search } }}
       >
         <Icon name="chevron right" />
       </Link>

@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router'
 import { Container, Message, Tab, Label, Icon, Header, StrictTabProps } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import { useRouter, usePreviousQuery } from '../../utils/hooks/useRouter'
+import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { FullStructure } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -143,14 +143,17 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
     updateQuery,
     location,
   } = useRouter()
-  const { prevQueryString } = usePreviousQuery(location)
+
+  // Need to store in useState, else location.state is lost on subsequent
+  // re-renders
+  const [prevQueryString] = useState(location?.state?.prevQuery)
 
   if (!tab) {
     updateQuery({ tab: tabIdentifiers[0] })
   }
 
   const linkBack = prevQueryString
-    ? `/applications?${prevQueryString}`
+    ? `/applications${prevQueryString}`
     : `/applications?type=${templateCode}`
 
   return (
