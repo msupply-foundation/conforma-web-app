@@ -2,7 +2,7 @@ import React from 'react'
 import { Header, Message, Label, Icon, Table } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../components'
 import usePageTitle from '../../utils/hooks/usePageTitle'
-import { useRouter } from '../../utils/hooks/useRouter'
+import { useRouter, usePreviousQuery } from '../../utils/hooks/useRouter'
 import { ErrorResponse, useDataViewsDetail } from '../../utils/hooks/useDataViews'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
@@ -17,6 +17,7 @@ const DataViewDetail: React.FC = () => {
     location,
     params: { dataViewCode, id, lookupTableID },
   } = useRouter()
+  const { prevQueryString } = usePreviousQuery(location)
   const { dataViewDetail, loading, error } = useDataViewsDetail({ dataViewCode, recordId: id })
   usePageTitle(dataViewDetail?.header?.value || '')
 
