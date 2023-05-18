@@ -46,7 +46,6 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
   currentUser,
   applicationData,
   Markdown,
-  codes = [],
   editItem = (index: number, value: boolean) => {},
   deleteItem = (index: number) => {},
   editItemText,
@@ -101,7 +100,7 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
         <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
       </Accordion.Title>
       <Accordion.Content active={open}>
-        {codes.map((code: string, cellIndex: number) =>
+        {inputFields.map(({ code }, cellIndex: number) =>
           isEditing ? (
             <ApplicationViewWrapper
               key={`list-${cellIndex}`}

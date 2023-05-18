@@ -146,11 +146,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const listDisplayProps: ListLayoutProps = {
     listItems,
+    inputFields,
     displayFormat,
     editItem: isEditable ? editItem : () => {},
     deleteItem: isEditable ? deleteItem : () => {},
-    fieldTitles: inputFields.map((e: TemplateElement) => e.title),
-    codes: inputFields.map((e: TemplateElement) => e.code),
     Markdown,
     isEditable,
   }
@@ -161,7 +160,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     ) : displayType === DisplayType.INLINE ? (
       <ListInlineLayout
         {...listDisplayProps}
-        inputFields={inputFields}
         responses={allResponses}
         currentUser={currentUser as User}
         applicationData={applicationData}
