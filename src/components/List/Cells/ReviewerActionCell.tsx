@@ -60,12 +60,14 @@ const ReviewerActionCell: React.FC<CellProps> = ({
         : null
       : null
 
+  const actionLink = {
+    pathname: `/application/${serial}/review`,
+    state: { prevQuery: location?.search },
+  }
+
   if (!action)
     return (
-      <Link
-        className="user-action"
-        to={{ pathname: `/application/${serial}/review`, state: { prevQuery: location?.search } }}
-      >
+      <Link className="user-action" to={actionLink}>
         <Icon name="chevron right" />
       </Link>
     )
@@ -74,11 +76,7 @@ const ReviewerActionCell: React.FC<CellProps> = ({
     <div>
       <Link
         className="user-action"
-        to={
-          action === t('ACTION_VIEW')
-            ? `/application/${serial}/review`
-            : `/application/${serial}/review?tab=assignment`
-        }
+        to={action === t('ACTION_VIEW') ? actionLink : { ...actionLink, search: '?tab=assignment' }}
       >
         {action}
       </Link>
