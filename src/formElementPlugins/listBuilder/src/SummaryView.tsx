@@ -17,6 +17,8 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
     inputFields,
     label,
     displayFormat = getDefaultDisplayFormat(inputFields),
+    inlineOpen = false,
+    tableExcludeColumns = [],
   } = parameters
 
   const listDisplayProps: ListLayoutProps = {
@@ -30,9 +32,9 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
 
   const DisplayComponent =
     displayType === DisplayType.TABLE ? (
-      <ListTableLayout {...listDisplayProps} />
+      <ListTableLayout {...listDisplayProps} excludeColumns={tableExcludeColumns} />
     ) : displayType === DisplayType.INLINE ? (
-      <ListInlineLayout {...listDisplayProps} inputFields={inputFields} />
+      <ListInlineLayout {...listDisplayProps} inputFields={inputFields} initialOpen={inlineOpen} />
     ) : displayType === DisplayType.LIST ? (
       <ListListLayout {...listDisplayProps} />
     ) : (

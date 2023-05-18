@@ -50,6 +50,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
     default: defaultValue,
+    inlineOpen = false,
+    tableExcludeColumns = [],
   } = parameters
   const {
     userState: { currentUser },
@@ -155,7 +157,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const DisplayComponent =
     displayType === DisplayType.TABLE ? (
-      <ListTableLayout {...listDisplayProps} />
+      <ListTableLayout {...listDisplayProps} excludeColumns={tableExcludeColumns} />
     ) : displayType === DisplayType.INLINE ? (
       <ListInlineLayout
         {...listDisplayProps}
@@ -168,6 +170,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         updateButtonText={updateButtonText}
         innerElementUpdate={innerElementUpdate}
         updateList={updateList}
+        initialOpen={inlineOpen}
       />
     ) : displayType === DisplayType.LIST ? (
       <ListListLayout {...listDisplayProps} />

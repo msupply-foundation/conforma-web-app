@@ -2,7 +2,7 @@ import React from 'react'
 import { Table, TableHeaderCell, TableCell } from 'semantic-ui-react'
 import { ListLayoutProps } from '../types'
 
-const ListTableLayout: React.FC<ListLayoutProps> = ({
+const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> = ({
   listItems,
   fieldTitles = [],
   codes = [],
