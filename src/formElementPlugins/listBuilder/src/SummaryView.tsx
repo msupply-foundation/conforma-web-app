@@ -1,5 +1,4 @@
 import React from 'react'
-import { TemplateElement } from '../../../utils/generated/graphql'
 import { SummaryViewProps } from '../../types'
 import { Form } from 'semantic-ui-react'
 import {
@@ -17,22 +16,23 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
     inputFields,
     label,
     displayFormat = getDefaultDisplayFormat(inputFields),
+    inlineOpen = false,
+    tableExcludeColumns = [],
   } = parameters
 
   const listDisplayProps: ListLayoutProps = {
     listItems: response?.list ?? [],
+    inputFields,
     displayFormat,
-    fieldTitles: inputFields.map((e: TemplateElement) => e.title),
-    codes: inputFields.map((e: TemplateElement) => e.code),
     Markdown,
     isEditable: false,
   }
 
   const DisplayComponent =
     displayType === DisplayType.TABLE ? (
-      <ListTableLayout {...listDisplayProps} />
+      <ListTableLayout {...listDisplayProps} excludeColumns={tableExcludeColumns} />
     ) : displayType === DisplayType.INLINE ? (
-      <ListInlineLayout {...listDisplayProps} inputFields={inputFields} />
+      <ListInlineLayout {...listDisplayProps} initialOpen={inlineOpen} />
     ) : displayType === DisplayType.LIST ? (
       <ListListLayout {...listDisplayProps} />
     ) : (
