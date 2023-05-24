@@ -228,7 +228,7 @@ const getReviewEvent = (
           ? t('TIMELINE_REVIEW_STARTED', `**${reviewer?.name}**`)
           : t('TIMELINE_CONSOLIDATION_STARTED', `**${reviewer?.name}**`),
       }
-    case value === 'DRAFT' && (prevStatus === 'CHANGES_REQUESTED' || prevStatus === 'PENDING'):
+    case value === 'DRAFT' && ['CHANGES_REQUESTED', 'PENDING', 'DISCONTINUED'].includes(prevStatus):
       return {
         eventType: !isConsolidation
           ? TimelineEventType.ReviewRestarted

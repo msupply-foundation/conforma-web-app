@@ -141,17 +141,26 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
     push,
     query: { tab },
     updateQuery,
+    location,
   } = useRouter()
+
+  // Need to store in useState, else location.state is lost on subsequent
+  // re-renders
+  const [prevQueryString] = useState(location?.state?.prevQuery)
 
   if (!tab) {
     updateQuery({ tab: tabIdentifiers[0] })
   }
 
+  const linkBack = prevQueryString
+    ? `/applications${prevQueryString}`
+    : `/applications?type=${templateCode}`
+
   return (
     <div id="review-home-header">
       <Label
         className="simple-label clickable"
-        onClick={() => push(`/applications?type=${templateCode}`)}
+        onClick={() => push(linkBack)}
         icon={<Icon name="chevron left" className="dark-grey" />}
       />
       <Header as="h3" content={applicationName} subheader={orgName} />

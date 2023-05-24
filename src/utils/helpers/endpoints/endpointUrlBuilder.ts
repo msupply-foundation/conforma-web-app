@@ -52,6 +52,8 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'allLanguages':
     case 'previewActions':
     case 'extendApplication':
+    case 'getAllPrefs':
+    case 'setPrefs':
       return serverREST + endpointPath
 
     case 'userPermissions':
