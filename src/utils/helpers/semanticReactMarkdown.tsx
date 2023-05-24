@@ -57,7 +57,11 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
   const linkRenderer = {
     link: (props: any) => {
       return !props.href.startsWith('http') ? (
-        <Link to={{ pathname: props.href }} target={newTabLinks ? '_blank' : undefined}>
+        <Link
+          to={{ pathname: props.href }}
+          target={newTabLinks ? '_blank' : undefined}
+          onClick={(e) => e.stopPropagation()}
+        >
           {props.children}
         </Link>
       ) : (

@@ -1555,6 +1555,10 @@ a:hover {
   margin-bottom: 20px;
 }
 
+.stage-label {
+  white-space: nowrap;
+}
+
 .stage-label-spacing {
   margin-bottom: 10px;
 }
@@ -1805,6 +1809,7 @@ a:hover {
 ---------------------------------*/
 
 #localisation-panel {
+  padding-top: 20px;
   .row-format {
     gap: 20px;
     width: 90%;
@@ -1813,6 +1818,16 @@ a:hover {
     padding: 10px;
     border-radius: 8px;
   }
+}
+
+/*--------------------------------
+      Preferences (Admin) Page
+---------------------------------*/
+
+#preferences-panel {
+  padding-top: 20px;
+  width: 50%;
+  max-width: 600px;
 }
 
 /*--------------------------------

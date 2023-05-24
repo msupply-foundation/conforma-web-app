@@ -23,7 +23,7 @@ export const AdminLocalisations: React.FC = () => {
   })
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
-  const handleSelect = async (language: LanguageOption, index: number) => {
+  const handleSelect = async (language: LanguageOption) => {
     const enabled = !language.enabled
     const result = await postRequest({
       url: getServerUrl('enableLanguage', { code: language.code, enabled }),
@@ -115,7 +115,7 @@ export const AdminLocalisations: React.FC = () => {
   return (
     <div id="localisation-panel">
       <WarningModal />
-      <Header as="h1">{t('LOCALISATION_HEADER')}</Header>
+      <Header>{t('LOCALISATION_HEADER')}</Header>
       <Header as="h4">{t('LOCALISATION_CURRENTLY_INSTALLED')}</Header>
       <div className="flex-row">
         <p className="smaller-text">Enabled</p>

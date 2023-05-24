@@ -10,6 +10,7 @@ import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { AdminLocalisations } from './AdminLocalisations'
+import { AdminPreferences } from './AdminPreferences'
 // import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Admin: React.FC = () => {
@@ -55,6 +56,11 @@ const Admin: React.FC = () => {
       route: 'localisations',
       header: t('MENU_ITEM_ADMIN_LOCALISATION'),
       Element: <AdminLocalisations />,
+    },
+    {
+      route: 'preferences',
+      header: t('MENU_ITEM_ADMIN_PREFS'),
+      Element: <AdminPreferences />,
     },
     {
       route: 'snapshots',

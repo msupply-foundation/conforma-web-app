@@ -4,7 +4,7 @@ A UI to export/import and enable/disable languages is available at: `/admin/loca
 
 ![Localisation](/images/localisation-ui.png)
 
-It is recommended to use a Google sheet (or Excel spreadsheet) to manage the available languages and keep them up-to-date with the current application strings. Currently we have been using this (private) Google spreasheet to keep the localisation used per project: [Localisation Spreadsheet](https://docs.google.com/spreadsheets/d/1RE80Rqm5_TI3k1ibm9C5gEyGjk9l91Od4244D6gZqCw)
+It is recommended to use a Google sheet (or Excel spreadsheet) to manage the available languages and keep them up-to-date with the current application strings. Currently we have been using this (private) Google spreadsheet to keep the localisation used per project: [Localisation Spreadsheet](https://docs.google.com/spreadsheets/d/1RE80Rqm5_TI3k1ibm9C5gEyGjk9l91Od4244D6gZqCw)
 
 Workflow for exporting and importing could be as follows:
 
@@ -63,8 +63,8 @@ The configuration file is easy to follow, and relates to the other language fold
     "enabled": true
   },
   {
-    "languageName": "Portugese",
-    "description": "Portugese translations",
+    "languageName": "Portuguese",
+    "description": "Portuguese translations",
     "code": "pt_br",
     "flag": "🇧🇷",
     "enabled": false

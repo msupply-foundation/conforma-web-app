@@ -156,7 +156,7 @@ const PanelComponent: React.FC<{
     <>
       {filters.map((filter) =>
         totalMatchFilter[filter.id] > 0 ? (
-          <Link to={constructLink(filter)}>{`${filter.title} (${
+          <Link key={filter.id} to={constructLink(filter)}>{`${filter.title} (${
             totalMatchFilter[filter.id]
           })`}</Link>
         ) : null

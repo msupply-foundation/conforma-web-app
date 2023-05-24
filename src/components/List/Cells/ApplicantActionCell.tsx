@@ -4,9 +4,11 @@ import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Icon } from 'semantic-ui-react'
+import { useRouter } from '../../../utils/hooks/useRouter'
 
 const ApplicantActionCell: React.FC<CellProps> = ({ application: { status, serial } }) => {
   const { t } = useLanguageProvider()
+  const { location } = useRouter()
   let action = ''
 
   if (status === ApplicationStatus.ChangesRequired) action = t('ACTION_UPDATE')
@@ -14,7 +16,10 @@ const ApplicantActionCell: React.FC<CellProps> = ({ application: { status, seria
 
   if (!action)
     return (
-      <Link className="user-action" to={`/application/${serial}`}>
+      <Link
+        className="user-action"
+        to={{ pathname: `/application/${serial}`, state: { prevQuery: location.search } }}
+      >
         <Icon name="chevron right" />
       </Link>
     )
