@@ -44,6 +44,8 @@ const config = {
     removeLanguage: '/admin/remove-language',
     snapshot: '/admin/snapshot',
     getApplicationData: '/admin/get-application-data',
+    getAllPrefs: '/admin/get-all-prefs',
+    setPrefs: '/admin/set-prefs',
   },
   version,
   pluginsFolder: 'formElementPlugins',
