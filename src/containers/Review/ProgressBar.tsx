@@ -9,7 +9,7 @@ import { ApplicationOutcome, ApplicationStatus } from '../../utils/generated/gra
 const ReviewProgress: React.FC<{
   structure: FullStructure
 }> = ({ structure: fullStructure }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     stages,
     info: {
@@ -29,7 +29,7 @@ const ReviewProgress: React.FC<{
 
   const steps = [
     <Step key="first">
-      <StepTitle>{strings.REVIEW_PROGRESS_BAR_SUBMITTED}</StepTitle>
+      <StepTitle>{t('REVIEW_PROGRESS_BAR_SUBMITTED')}</StepTitle>
     </Step>,
     ...stages.map(({ stage }) =>
       stage.number === currentStage.number && !isApproved ? (

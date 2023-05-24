@@ -18,7 +18,7 @@ interface ReviewWrapperProps {
 const tabIdentifiers = ['overview', 'assignment', 'notes', 'documents']
 
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     match: { path },
     query: { tab },
@@ -41,9 +41,9 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     comment: '',
   })
 
-  usePageTitle(strings.PAGE_TITLE_REVIEW.replace('%1', structure.info.serial))
+  usePageTitle(t('PAGE_TITLE_REVIEW', structure.info.serial))
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (error) return <Message error title={t('ERROR_GENERIC')} list={[error]} />
 
   if (!fullStructure) return <Loading />
 
@@ -62,7 +62,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
 
   const tabPanes = [
     {
-      menuItem: strings.REVIEW_TAB_OVERVIEW,
+      menuItem: t('REVIEW_TAB_OVERVIEW'),
       render: () => (
         <Tab.Pane>
           <OverviewTab structure={fullStructure} isActive={getTabFromQuery(tab) === 0} />
@@ -70,7 +70,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       ),
     },
     {
-      menuItem: strings.REVIEW_TAB_ASSIGNMENT,
+      menuItem: t('REVIEW_TAB_ASSIGNMENT'),
       render: () => (
         <Tab.Pane>
           <AssignmentTab fullApplicationStructure={fullStructure} />
@@ -78,7 +78,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       ),
     },
     {
-      menuItem: strings.REVIEW_TAB_NOTES,
+      menuItem: t('REVIEW_TAB_NOTES'),
       render: () => (
         <Tab.Pane>
           <NotesTab structure={fullStructure} state={notesState} setState={setNotesState} />
@@ -86,7 +86,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
       ),
     },
     {
-      menuItem: strings.REVIEW_TAB_DOCUMENTS,
+      menuItem: t('REVIEW_TAB_DOCUMENTS'),
       render: () => (
         <Tab.Pane>
           <DocumentsTab structure={fullStructure} />
@@ -141,17 +141,26 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
     push,
     query: { tab },
     updateQuery,
+    location,
   } = useRouter()
+
+  // Need to store in useState, else location.state is lost on subsequent
+  // re-renders
+  const [prevQueryString] = useState(location?.state?.prevQuery)
 
   if (!tab) {
     updateQuery({ tab: tabIdentifiers[0] })
   }
 
+  const linkBack = prevQueryString
+    ? `/applications${prevQueryString}`
+    : `/applications?type=${templateCode}`
+
   return (
     <div id="review-home-header">
       <Label
         className="simple-label clickable"
-        onClick={() => push(`/applications?type=${templateCode}`)}
+        onClick={() => push(linkBack)}
         icon={<Icon name="chevron left" className="dark-grey" />}
       />
       <Header as="h3" content={applicationName} subheader={orgName} />

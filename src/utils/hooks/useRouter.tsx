@@ -10,6 +10,7 @@ interface RouterResult {
   push: (path: string, state?: any) => void
   query: BasicStringObject
   updateQuery: Function
+  setQuery: Function
   replace: (path: string) => void
   match: match
   history: any
@@ -58,9 +59,11 @@ export function useRouter(): RouterResult {
     const queryFilters = replaceKebabCaseKeys(queryString.parse(location.search, { sort: false }))
 
     // Add new key-value pairs to existing query string and update URL
-    const updateQuery = (newQueries: { [key: string]: string }, replace = false) => {
+    const updateQuery = (queryInput: { [key: string]: string }, replace = false) => {
+      const inputQueryObject =
+        typeof queryInput === 'string' ? queryString.parse(queryInput) : queryInput
       const newQueryObject = { ...queryFilters }
-      Object.entries(newQueries).forEach(([key, value]) => {
+      Object.entries(inputQueryObject).forEach(([key, value]) => {
         if (!value) {
           delete newQueryObject[key]
         } else newQueryObject[key] = value
@@ -79,6 +82,20 @@ export function useRouter(): RouterResult {
         })
     }
 
+    const setQuery = (queryInput: { [key: string]: string }, replace = false) => {
+      const queryObject =
+        typeof queryInput === 'string' ? queryString.parse(queryInput) : queryInput
+
+      if (replace)
+        history.replace({
+          search: queryString.stringify(restoreKebabCaseKeys(queryObject), { sort: false }),
+        })
+      else
+        history.push({
+          search: queryString.stringify(restoreKebabCaseKeys(queryObject), { sort: false }),
+        })
+    }
+
     return {
       // For convenience add push(), replace(), pathname at top level
       push: history.push,
@@ -94,6 +111,7 @@ export function useRouter(): RouterResult {
         ...params,
       },
       updateQuery,
+      setQuery,
 
       // Include match, location, history objects so we have
       // access to extra React Router functionality if needed.

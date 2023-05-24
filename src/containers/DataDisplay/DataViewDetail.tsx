@@ -12,7 +12,7 @@ import ApplicationLinks from './ApplicationLinks'
 import { Link } from 'react-router-dom'
 
 const DataViewDetail: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     location,
     params: { dataViewCode, id, lookupTableID },
@@ -74,7 +74,7 @@ const DataViewDetail: React.FC = () => {
         </div>
       </div>
       {linkedApplicationsError && (
-        <Message error header={strings.ERROR_GENERIC} content={linkedApplicationsError.message} />
+        <Message error header={t('ERROR_GENERIC')} content={linkedApplicationsError.message} />
       )}
       {!linkedApplicationsError && linkedApplications && (
         <ApplicationLinks linkedApplications={linkedApplications as LinkedApplication[]} />

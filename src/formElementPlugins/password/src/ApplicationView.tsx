@@ -20,8 +20,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   allResponses,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('password')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('password')
   const { isEditable } = element
   const {
     placeholder,
@@ -108,7 +108,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Form.Input
         name="password"
         fluid
-        placeholder={placeholder ? placeholder : strings.PLACEHOLDER_DEFAULT}
+        placeholder={placeholder ? placeholder : t('PLACEHOLDER_DEFAULT')}
         onChange={handleChange}
         onBlur={handleLoseFocus}
         onFocus={setIsActive}
@@ -128,9 +128,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Form.Input
           name="passwordConfirm"
           fluid
-          placeholder={
-            confirmPlaceholder ? confirmPlaceholder : strings.PLACEHOLDER_CONFIRM_DEFAULT
-          }
+          placeholder={confirmPlaceholder ? confirmPlaceholder : t('PLACEHOLDER_CONFIRM_DEFAULT')}
           onChange={handleChange}
           onBlur={handleLoseFocus}
           onFocus={setIsActive}
@@ -140,7 +138,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           error={
             passwordConfirm !== password && passwordConfirm !== '' && !confirmationIsActive
               ? {
-                  content: strings.ALERT_PASSWORDS_DONT_MATCH,
+                  content: t('ALERT_PASSWORDS_DONT_MATCH'),
                   pointing: 'above',
                 }
               : null
@@ -150,7 +148,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Form.Field required={false}>
         {(showPasswordToggle === undefined ? true : showPasswordToggle) && (
           <Checkbox
-            label={strings.LABEL_SHOW_PASSWORD}
+            label={t('LABEL_SHOW_PASSWORD')}
             checked={!masked}
             onClick={() => setMasked(!masked)}
           />

@@ -30,12 +30,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   applicationData,
   allResponses,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('search')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('search')
   const {
     label,
     description,
-    placeholder = strings.DEFAULT_PLACEHOLDER,
+    placeholder = t('DEFAULT_PLACEHOLDER'),
     source,
     icon = 'search',
     multiSelect = false,
@@ -158,12 +158,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const noFormatProvided = !title && !description
     return results.map((result: any, index: number) => {
       const titleString = noFormatProvided
-        ? getDefaultString(result, strings.MESSAGE_NO_RESULTS)
+        ? getDefaultString(result, t('MESSAGE_NO_RESULTS'))
         : title
         ? substituteValues(title, result)
         : ''
       const descriptionString = noFormatProvided
-        ? getDefaultString(result, strings.MESSAGE_NO_RESULTS, 'description')
+        ? getDefaultString(result, t('MESSAGE_NO_RESULTS'), 'description')
         : description
         ? substituteValues(description, result)
         : ''
@@ -203,13 +203,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           minCharacters={minCharacters}
           placeholder={placeholder}
           results={
-            loading
-              ? [{ title: strings.MESSAGE_LOADING }]
-              : createResultsArray(results, resultFormat)
+            loading ? [{ title: t('MESSAGE_LOADING') }] : createResultsArray(results, resultFormat)
           }
           disabled={!isEditable}
           input={{ icon, iconPosition: 'left' }}
-          noResultsMessage={strings.MESSAGE_NO_RESULTS}
+          noResultsMessage={t('MESSAGE_NO_RESULTS')}
         />
         {validationState.isValid ? null : (
           <Label pointing prompt content={validationState?.validationMessage} />
@@ -253,8 +251,8 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
   Markdown,
   isEditable = true,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('search')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('search')
   const { title, subtitle, description } = displayFormat
   const showFallbackString = !title && !subtitle && !description
   return displayType === 'list' || displayType === 'input' ? (
@@ -270,7 +268,7 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
                 semanticComponent="noParagraph"
               />
             ) : (
-              getDefaultString(item, strings.MESSAGE_NO_RESULTS, 'description')
+              getDefaultString(item, t('MESSAGE_NO_RESULTS'), 'description')
             )}{' '}
             {isEditable && (
               <Icon

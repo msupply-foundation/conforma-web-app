@@ -20,7 +20,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
   reviewId,
   applicationDataOverride,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [data, setData] = useState<ActionResultPreviewData[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -43,20 +43,20 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
     // closeOnDimmerClick makes it harder to accidentally close Modal, as it
     // generates new Previews every time it's opened
     <Modal id="preview-modal" open={open} closeOnDimmerClick={false}>
-      <Modal.Header>{strings.REVIEW_DECISION_PREVIEW_HEADER}</Modal.Header>
+      <Modal.Header>{t('REVIEW_DECISION_PREVIEW_HEADER')}</Modal.Header>
       <Modal.Content scrolling>
-        {strings.REVIEW_DECISION_PREVIEW_TEXT} <strong>{decision}</strong>
+        {t('REVIEW_DECISION_PREVIEW_TEXT')} <strong>{decision}</strong>
         {loading && (
           <Loader active size="huge">
-            {strings.REVIEW_DECISION_PREVIEW_FETCHING}
+            {t('REVIEW_DECISION_PREVIEW_FETCHING')}
           </Loader>
         )}
         {error && (
           <Message
             error
             icon="warning sign"
-            header={strings.REVIEW_DECISION_PREVIEW_ERROR_HEADER}
-            content={strings.REVIEW_DECISION_PREVIEW_ERROR_TEXT}
+            header={t('REVIEW_DECISION_PREVIEW_ERROR_HEADER')}
+            content={t('REVIEW_DECISION_PREVIEW_ERROR_TEXT')}
           />
         )}
         <div id="preview-items">
@@ -64,13 +64,13 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
             (data.length > 0 ? (
               data.map((item, index) => getItemDisplayComponent(item, index))
             ) : (
-              <Message info header={strings.REVIEW_DECISION_NO_PREVIEWS_AVAILABLE} />
+              <Message info header={t('REVIEW_DECISION_NO_PREVIEWS_AVAILABLE')} />
             ))}
         </div>
       </Modal.Content>
       <Modal.Actions>
         <Button primary onClick={() => setOpen(false)}>
-          {strings.BUTTON_CLOSE}
+          {t('BUTTON_CLOSE')}
         </Button>
       </Modal.Actions>
     </Modal>

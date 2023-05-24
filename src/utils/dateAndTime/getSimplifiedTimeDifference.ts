@@ -7,44 +7,44 @@ type DisplayOptions = {
 }
 
 const useDisplayOptions = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const displayOptions: DisplayOptions[] = [
     {
       condition: (duration) => duration.as('day') <= 1,
-      display: () => strings.DATE_TODAY,
+      display: () => t('DATE_TODAY'),
     },
     {
       condition: (duration) => duration.as('day') <= 2,
-      display: () => strings.DATE_YESTERDAY,
+      display: () => t('DATE_YESTERDAY'),
     },
     {
       condition: (duration) => duration.as('day') <= 8,
-      display: (duration) => `${Math.floor(duration.as('days'))} ${strings.DATE_DAYS_AGO}`,
+      display: (duration) => `${Math.floor(duration.as('days'))} ${t('DATE_DAYS_AGO')}`,
     },
     {
       condition: (duration) => duration.as('week') < 2,
-      display: () => strings.DATE_LAST_WEEK,
+      display: () => t('DATE_LAST_WEEK'),
     },
     {
       condition: (duration) => duration.as('week') <= 4,
-      display: (duration) => `${Math.floor(duration.as('week'))} ${strings.DATE_WEEKS_AGO}`,
+      display: (duration) => `${Math.floor(duration.as('week'))} ${t('DATE_WEEKS_AGO')}`,
     },
     {
       condition: (duration) => duration.as('month') < 2,
-      display: () => strings.DATE_LAST_MONTH,
+      display: () => t('DATE_LAST_MONTH'),
     },
     {
       condition: (duration) => duration.as('month') <= 12,
-      display: (duration) => `${Math.floor(duration.as('month'))} ${strings.DATE_MONTHS_AGO}`,
+      display: (duration) => `${Math.floor(duration.as('month'))} ${t('DATE_MONTHS_AGO')}`,
     },
     {
       condition: (duration) => duration.as('year') <= 2,
-      display: () => strings.DATE_LAST_YEAR,
+      display: () => t('DATE_LAST_YEAR'),
     },
     {
       condition: (duration) => duration.as('year') > 2,
-      display: (duration) => `${Math.floor(duration.as('year'))} ${strings.DATE_YEARS_AGO}`,
+      display: (duration) => `${Math.floor(duration.as('year'))} ${t('DATE_YEARS_AGO')}`,
     },
   ]
 

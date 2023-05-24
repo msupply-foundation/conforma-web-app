@@ -16,7 +16,7 @@ const HistoryResponseElement: React.FC<HistoryElement> = ({
   elementTypePluginCode,
   parameters,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <div className="response-element-content">
       <p className="secondary author-name">{author}</p>
@@ -58,7 +58,7 @@ const HistoryResponseElement: React.FC<HistoryElement> = ({
           </>
         ) : (
           <p>
-            <em>{strings.REVIEW_HISTORY_NO_RESPONSE}</em>
+            <em>{t('REVIEW_HISTORY_NO_RESPONSE')}</em>
           </p>
         )}
       </div>

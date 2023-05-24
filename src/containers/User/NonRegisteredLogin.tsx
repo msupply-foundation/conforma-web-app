@@ -13,7 +13,7 @@ interface NonRegisteredLoginProps {
 }
 
 const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirect }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const [networkError, setNetworkError] = useState('')
   const { push, query } = useRouter()
@@ -50,7 +50,7 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   }
 
   if (networkError) return <p>{networkError}</p>
-  else return <p>{strings.LOGIN_REDIRECT_TO_REGISTRATION}</p>
+  else return <p>{t('LOGIN_REDIRECT_TO_REGISTRATION')}</p>
 }
 
 export default NonRegisteredLogin

@@ -27,7 +27,7 @@ const Navigation: React.FC<NavigationProps> = ({
   requestRevalidation,
   isValidating,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { push } = useRouter()
 
   const currentSectionDetails = sections[current.sectionCode].details
@@ -116,12 +116,12 @@ const Navigation: React.FC<NavigationProps> = ({
         <div className="prev-next-links">
           <p className={`clickable nav-button ${isFirstPage ? 'invisible' : ''}`}>
             <a onClick={previousButtonHandler}>
-              <strong>{strings.BUTTON_PREVIOUS}</strong>
+              <strong>{t('BUTTON_PREVIOUS')}</strong>
             </a>
           </p>
           <p className={`clickable nav-button ${isLastPage ? 'invisible' : ''}`}>
             <a onClick={nextPageButtonHandler}>
-              <strong>{strings.BUTTON_NEXT}</strong>
+              <strong>{t('BUTTON_NEXT')}</strong>
             </a>
           </p>
         </div>
@@ -132,7 +132,7 @@ const Navigation: React.FC<NavigationProps> = ({
             disabled={isValidating}
             onClick={summaryButtonHandler}
           >
-            {isValidating ? strings.BUTTON_VALIDATING : strings.BUTTON_SUMMARY}
+            {isValidating ? t('BUTTON_VALIDATING') : t('BUTTON_SUMMARY')}
             {isValidating && <Loader active inline size="tiny" />}
           </Button>
         </div>

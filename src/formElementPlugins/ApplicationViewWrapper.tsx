@@ -27,7 +27,7 @@ const graphQLEndpoint = getServerUrl('graphQL')
 export const DEFAULT_LOADING_VALUE = 'Loading...'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const calculateValidationState = useCalculateValidationState()
   const [responseMutation] = useUpdateResponseMutation()
   const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
@@ -205,7 +205,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const {
     isChangeRequest = false,
     isChanged = false,
-    reviewerComment = strings.APPLICATION_OTHER_CHANGES_MADE,
+    reviewerComment = t('APPLICATION_OTHER_CHANGES_MADE'),
   } = changesRequired || {}
 
   const getChangeRequestClassesAndIcon = () => {
@@ -284,7 +284,7 @@ export const buildParameters = (
 }
 
 const useCalculateValidationState = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const calculateValidationState = async ({
     validationExpression,
@@ -312,7 +312,7 @@ const useCalculateValidationState = () => {
     if (isRequired && isStrictPage && !responses?.thisResponse)
       return {
         isValid: false,
-        validationMessage: validationMessage || strings.VALIDATION_REQUIRED_ERROR,
+        validationMessage: validationMessage || t('VALIDATION_REQUIRED_ERROR'),
       }
     return { isValid: true }
   }

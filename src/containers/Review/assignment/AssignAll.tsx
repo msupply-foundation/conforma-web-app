@@ -14,13 +14,9 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll })
   const {
     userState: { currentUser },
   } = useUserState()
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [selected, setSelected] = useState<number | string>('')
-  const options = getReviewerList(
-    assignments,
-    currentUser?.userId ?? 0,
-    strings.ASSIGNMENT_YOURSELF
-  )
+  const options = getReviewerList(assignments, currentUser?.userId ?? 0, t('ASSIGNMENT_YOURSELF'))
 
   // We only want to show when we're not in last level, as that auto-assigns
   // already
@@ -30,10 +26,10 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll })
 
   return (
     <div className="flex-row-start-center" id="review-assign-all">
-      <Label className="uppercase-label" content={strings.ASSIGN_ALL_TO} />
+      <Label className="uppercase-label" content={t('ASSIGN_ALL_TO')} />
       <Dropdown
         className="reviewer-dropdown"
-        placeholder={strings.ASSIGNMENT_NOT_ASSIGNED}
+        placeholder={t('ASSIGNMENT_NOT_ASSIGNED')}
         options={options}
         value={selected}
         scrolling
@@ -44,7 +40,7 @@ const AssignAll: React.FC<AssignAllProps> = ({ assignments, setReviewerForAll })
         }}
       />
       <Tooltip
-        message={strings.ASSIGN_ALL_TOOLTIP}
+        message={t('ASSIGN_ALL_TOOLTIP')}
         maxWidth={400}
         iconStyle={{ height: '1.4em' }}
         triggerEvent="hover"

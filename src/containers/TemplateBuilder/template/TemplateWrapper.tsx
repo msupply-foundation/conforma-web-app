@@ -165,7 +165,7 @@ const defaultTemplateContextState: TemplateContextState = {
 const Context = createContext<TemplateContextState>(defaultTemplateContextState)
 
 const TemplateWrapper: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     query: { templateId },
   } = useRouter()
@@ -212,7 +212,7 @@ const TemplateWrapper: React.FC = () => {
     }
   }, [data])
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (error) return <Message error title={t('ERROR_GENERIC')} list={[error]} />
 
   if (!firstLoaded) return <Loading />
   return (

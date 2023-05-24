@@ -3,11 +3,11 @@ import { Loader, Segment } from 'semantic-ui-react'
 import { useLanguageProvider } from '../contexts/Localisation'
 
 const Loading: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <Segment basic style={{ height: '50vh' }}>
       <Loader active size="massive">
-        {strings.LABEL_LOADING}
+        {t('LABEL_LOADING')}
       </Loader>
     </Segment>
   )

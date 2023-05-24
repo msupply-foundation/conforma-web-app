@@ -83,7 +83,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   dataViews,
   referenceDocs: { intReferenceDocs, extReferenceDocs },
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     templates: { active: false, selection: '' },
@@ -120,23 +120,23 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     }))
 
   const configOptions = [
-    { key: 'templates', text: strings.MENU_ITEM_ADMIN_TEMPLATES, value: '/admin/templates' },
-    {
-      key: 'lookup_tables',
-      text: strings.MENU_ITEM_ADMIN_LOOKUP_TABLES,
-      value: '/admin/lookup-tables',
-    },
+    { key: 'templates', text: t('MENU_ITEM_ADMIN_TEMPLATES'), value: '/admin/templates' },
     // {
     //   key: 'dataViews',
-    //   text: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
+    //   text: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
     //   value: '/admin/data',
     // },
-    // { key: 'permissions', text: strings.MENU_ITEM_ADMIN_PERMISSIONS, value: '/admin/permissions' },
-    // { key: 'plugins', text: strings.MENU_ITEM_ADMIN_PLUGINS, value: '/admin/plugins' },
+    // { key: 'permissions', text: t('MENU_ITEM_ADMIN_PERMISSIONS'), value: '/admin/permissions' },
+    // { key: 'plugins', text: t('MENU_ITEM_ADMIN_PLUGINS'), value: '/admin/plugins' },
     {
       key: 'localisations',
-      text: strings.MENU_ITEM_ADMIN_LOCALISATION,
+      text: t('MENU_ITEM_ADMIN_LOCALISATION'),
       value: '/admin/localisations',
+    },
+    {
+      key: 'prefs',
+      text: t('MENU_ITEM_ADMIN_PREFS'),
+      value: '/admin/preferences',
     },
   ]
   // Only include Snapshots menu item in Dev mode
@@ -158,13 +158,30 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       }))
   )
 
-  const managementOptions = templates
-    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Management))
-    .map((template) => ({
-      key: template.code,
-      text: template.name,
-      value: `/application/new?type=${template.code}`,
-    }))
+  const managementOptions = currentUser?.isManager
+    ? templates
+        .filter(({ templateCategory: { uiLocation } }) =>
+          uiLocation.includes(UiLocation.Management)
+        )
+        .map((template) => ({
+          key: template.code,
+          text: template.name,
+          value: `/application/new?type=${template.code}`,
+        }))
+    : []
+
+  // Lookup table menu item goes in "Manage" menu, unless the user is Admin and
+  // NOT Manager, in which case it goes in "Admin" menu
+  const lookUpTableOption = {
+    key: 'lookup_tables',
+    text: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
+    value: '/admin/lookup-tables',
+  }
+  if (currentUser?.isManager) {
+    managementOptions.push(lookUpTableOption)
+  } else if (currentUser?.isAdmin) {
+    configOptions.push(lookUpTableOption)
+  }
 
   const handleDataViewChange = (e: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
@@ -193,12 +210,12 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     <div id="menu-bar">
       <List horizontal>
         <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
-          <Link to="/">{strings.MENU_ITEM_DASHBOARD}</Link>
+          <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
         </List.Item>
         {templateOptions.length > 0 && (
           <List.Item className={dropdownsState.templates.active ? 'selected-link' : ''}>
             <Dropdown
-              text={strings.MENU_ITEM_APPLICATION_LIST}
+              text={t('MENU_ITEM_APPLICATION_LIST')}
               options={templateOptions}
               onChange={handleTemplateChange}
               value={dropdownsState.templates.selection}
@@ -209,7 +226,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         {dataViewOptions.length > 1 && (
           <List.Item className={dropdownsState.dataViews.active ? 'selected-link' : ''}>
             <Dropdown
-              text={strings.MENU_ITEM_DATA}
+              text={t('MENU_ITEM_DATA')}
               options={dataViewOptions}
               onChange={handleDataViewChange}
               value={dropdownsState.dataViews.selection}
@@ -220,7 +237,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         {managementOptions.length > 0 && (
           <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
             <Dropdown
-              text={strings.MENU_ITEM_MANAGE}
+              text={t('MENU_ITEM_MANAGE')}
               options={managementOptions}
               onChange={handleManagementChange}
               value={dropdownsState.manage.selection}
@@ -231,7 +248,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         {currentUser?.isAdmin && (
           <List.Item className={dropdownsState.admin.active ? 'selected-link' : ''}>
             <Dropdown
-              text={strings.MENU_ITEM_CONFIG}
+              text={t('MENU_ITEM_CONFIG')}
               options={configOptions}
               onChange={handleAdminChange}
               value={dropdownsState.admin.selection}
@@ -241,7 +258,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         )}
         {extReferenceDocs.length && (
           <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
-            <Dropdown text={strings.MENU_ITEM_HELP}>
+            <Dropdown text={t('MENU_ITEM_HELP')}>
               <Dropdown.Menu>
                 {extReferenceDocs.map((doc) => (
                   <Dropdown.Item
@@ -256,7 +273,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         )}
         {intReferenceDocs.length && (
           <List.Item className={dropdownsState.intRefDocs.active ? 'selected-link' : ''}>
-            <Dropdown text={strings.MENU_ITEM_REF_DOCS}>
+            <Dropdown text={t('MENU_ITEM_REF_DOCS')}>
               <Dropdown.Menu>
                 {intReferenceDocs.map((doc) => (
                   <Dropdown.Item
@@ -295,7 +312,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   orgs,
   onLogin,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
 
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
@@ -314,7 +331,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   if (!orgs.some(({ isSystemOrg }) => isSystemOrg))
     dropdownOptions.push({
       key: LOGIN_AS_NO_ORG,
-      text: `> ${strings.LABEL_NO_ORG_SELECT}`,
+      text: `> ${t('LABEL_NO_ORG_SELECT')}`,
       value: LOGIN_AS_NO_ORG,
     })
   return (
@@ -324,10 +341,10 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
       )}
       <div>
         {dropdownOptions.length === 1 ? (
-          user?.organisation?.orgName || strings.LABEL_NO_ORG
+          user?.organisation?.orgName || t('LABEL_NO_ORG')
         ) : (
           <Dropdown
-            text={user?.organisation?.orgName || strings.LABEL_NO_ORG}
+            text={user?.organisation?.orgName || t('LABEL_NO_ORG')}
             options={dropdownOptions}
             onChange={handleChange}
           ></Dropdown>
@@ -338,7 +355,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
 }
 
 const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user, templates }) => {
-  const { strings, selectedLanguage, languageOptions } = useLanguageProvider()
+  const { t, selectedLanguage, languageOptions } = useLanguageProvider()
   const { logout } = useUserState()
   const { push } = useRouter()
   const [isOpen, setIsOpen] = useState(false)
@@ -366,11 +383,11 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
                   onClick={() => push(`/application/new?type=${code}`)}
                 />
               ))}
-              <Dropdown.Item icon="log out" text={strings.MENU_LOGOUT} onClick={() => logout()} />
+              <Dropdown.Item icon="log out" text={t('MENU_LOGOUT')} onClick={() => logout()} />
               {languageOptions.length > 1 && (
                 <Dropdown.Item
                   icon="globe"
-                  text={strings.MENU_CHANGE_LANGUAGE}
+                  text={t('MENU_CHANGE_LANGUAGE')}
                   onClick={() => setIsOpen(true)}
                 />
               )}
@@ -383,11 +400,11 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
 }
 
 const LanguageSelector: React.FC = () => {
-  const { strings, selectedLanguage, languageOptions, setLanguage } = useLanguageProvider()
+  const { t, selectedLanguage, languageOptions, setLanguage } = useLanguageProvider()
   return (
     <Container>
       <div className="flex-centered">
-        <Header as="h3">{strings.MENU_LANGUAGE_SELECT}</Header>
+        <Header as="h3">{t('MENU_LANGUAGE_SELECT')}</Header>
       </div>
       <Form>
         <List celled relaxed="very" className="no-bottom-border">
@@ -400,7 +417,7 @@ const LanguageSelector: React.FC = () => {
                 <List.Header as="a">
                   {selectedLanguage?.code === code ? (
                     <>
-                      <strong>{languageName}</strong> ({strings.MENU_LANGUAGE_CURRENT})
+                      <strong>{languageName}</strong> ({t('MENU_LANGUAGE_CURRENT')})
                     </>
                   ) : (
                     languageName

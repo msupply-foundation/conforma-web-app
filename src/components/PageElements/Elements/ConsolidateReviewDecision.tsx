@@ -36,14 +36,14 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   previousReviewResponse,
   originalReviewResponse,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [isActiveEdit, setIsActiveEdit] = useState(false)
   const isConsolidation = true
   const decisionExists = !!reviewResponse?.decision
 
   const triggerTitle = isNewReviewResponse
-    ? strings.BUTTON_RE_REVIEW_RESPONSE
-    : strings.BUTTON_REVIEW_RESPONSE
+    ? t('BUTTON_RE_REVIEW_RESPONSE')
+    : t('BUTTON_REVIEW_RESPONSE')
 
   return (
     <>
@@ -64,7 +64,6 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
             setIsActiveEdit={setIsActiveEdit}
             reviewResponse={reviewResponse as ReviewResponse}
             isConsolidation={isConsolidation}
-            stageNumber={stageNumber}
           />
         </div>
       ) : (

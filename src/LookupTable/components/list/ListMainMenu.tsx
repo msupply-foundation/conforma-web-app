@@ -10,7 +10,7 @@ const ListMainMenu: React.FC<LookUpTableListMainMenuType> = ({
   headerText,
   subHeaderText = '',
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     match: { path },
   } = useRouter()
@@ -23,7 +23,7 @@ const ListMainMenu: React.FC<LookUpTableListMainMenuType> = ({
         </Header>
       }
       actions={
-        <Button primary as={NavLink} to={`${path}/import`} content={strings.LOOKUP_TABLE_ADD} />
+        <Button primary as={NavLink} to={`${path}/import`} content={t('LOOKUP_TABLE_ADD')} />
       }
     />
   )

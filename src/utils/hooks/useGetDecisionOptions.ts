@@ -1,28 +1,28 @@
 import { useState, useEffect } from 'react'
 import { Decision, ReviewStatus } from '../generated/graphql'
-import { LanguageStrings, useLanguageProvider } from '../../contexts/Localisation'
+import { TranslateMethod, useLanguageProvider } from '../../contexts/Localisation'
 import { DecisionOption, ReviewAssignment, ReviewDetails } from '../types'
 
 const getInitialDecisionOptions = (
-  strings: LanguageStrings,
+  t: TranslateMethod,
   canApplicantMakeChanges: boolean
 ): DecisionOption[] => {
   let availableOptions = [
     {
       code: Decision.NonConform,
-      title: strings.DECISION_NON_CONFORM,
+      title: t('DECISION_NON_CONFORM'),
       isVisible: false,
       value: false,
     },
     {
       code: Decision.Conform,
-      title: strings.DECISION_CONFORM,
+      title: t('DECISION_CONFORM'),
       isVisible: false,
       value: false,
     },
     {
       code: Decision.ChangesRequested,
-      title: strings.DECISION_CHANGES_REQUESTED,
+      title: t('DECISION_CHANGES_REQUESTED'),
       isVisible: false,
       value: false,
     },
@@ -32,7 +32,7 @@ const getInitialDecisionOptions = (
   if (canApplicantMakeChanges)
     availableOptions.push({
       code: Decision.ListOfQuestions,
-      title: strings.DECISION_LIST_OF_QUESTIONS,
+      title: t('DECISION_LIST_OF_QUESTIONS'),
       isVisible: false,
       value: false,
     })
@@ -58,10 +58,10 @@ const useGetDecisionOptions: UseGetDecisionOptions = (
   assignment,
   thisReview
 ) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { isLastLevel, isMakeDecision, canSubmitReviewAs } = assignment as ReviewAssignment
   const [decisionOptions, setDecisionOptions] = useState<DecisionOption[]>(
-    getInitialDecisionOptions(strings, canApplicantMakeChanges)
+    getInitialDecisionOptions(t, canApplicantMakeChanges)
   )
   const [isDecisionError, setIsDecisionError] = useState(false)
 

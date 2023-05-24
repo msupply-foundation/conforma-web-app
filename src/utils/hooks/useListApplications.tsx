@@ -3,7 +3,11 @@ import { useRouter } from '../hooks/useRouter'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import buildFilter from '../helpers/list/buildQueryFilters'
 import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQueryVariables'
-import { useGetApplicationListQuery, ApplicationListShape } from '../../utils/generated/graphql'
+import {
+  useGetApplicationListQuery,
+  ApplicationListShape,
+  ApplicationListShapesOrderBy,
+} from '../../utils/generated/graphql'
 import { BasicStringObject, TemplateType } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useGetFilterDefinitions } from '../helpers/list/useGetFilterDefinitions'
@@ -28,7 +32,9 @@ const useListApplications = (
   const filters = graphQLFilterObject
     ? graphQLFilterObject
     : buildFilter({ type, ...queryFilters }, FILTER_DEFINITIONS)
-  const sortFields = sortBy ? buildSortFields(sortBy) : []
+  const sortFields = sortBy
+    ? buildSortFields(sortBy)
+    : [ApplicationListShapesOrderBy.LastActiveDateDesc]
   const { paginationOffset, numberToFetch } = getPaginationVariables(
     page ? Number(page) : 1,
     perPage ? Number(perPage) : preferences?.paginationDefault ?? 20

@@ -15,6 +15,8 @@ export type BasicEndpoint = [
     | 'admin'
     | 'installLanguage'
     | 'allLanguages'
+    | 'getAllPrefs'
+    | 'setPrefs'
 ]
 
 export type LanguageEndpoint = [endpoint: 'language', options: { code: string }]

@@ -14,7 +14,7 @@ const ListTable: React.FC<any> = ({
   allTableStructuresLoadState,
   setAllTableStructures,
 }: any) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { loading, error } = allTableStructuresLoadState
   const {
     match: { path },
@@ -27,7 +27,7 @@ const ListTable: React.FC<any> = ({
   }
 
   return error ? (
-    <Message error header={strings.LOOKUP_ERROR_TITLE} list={[error.message]} />
+    <Message error header={t('LOOKUP_ERROR_TITLE')} list={[error.message]} />
   ) : loading || !allTableStructures ? (
     <Loading />
   ) : (
@@ -37,17 +37,17 @@ const ListTable: React.FC<any> = ({
           <Table.HeaderCell
             key={`lookup-table-header-title`}
             colSpan={1}
-            content={strings.LOOKUP_TABLE_HEADER_NAME}
+            content={t('LOOKUP_TABLE_HEADER_NAME')}
           ></Table.HeaderCell>
           <Table.HeaderCell
             key={`lookup-table-header-table-name`}
             colSpan={1}
-            content={strings.LOOKUP_TABLE_HEADER_TABLE_NAME}
+            content={t('LOOKUP_TABLE_HEADER_TABLE_NAME')}
           ></Table.HeaderCell>
           <Table.HeaderCell
             key={`lookup-table-header-actions`}
             colSpan={2}
-            content={strings.LOOKUP_TABLE_HEADER_ACTIONS}
+            content={t('LOOKUP_TABLE_HEADER_ACTIONS')}
           ></Table.HeaderCell>
         </Table.Row>
       </Table.Header>
@@ -64,7 +64,7 @@ const ListTable: React.FC<any> = ({
                 <Table.Cell collapsing>
                   <Button.Group>
                     <Popup
-                      content={strings.LOOKUP_TABLE_VIEW}
+                      content={t('LOOKUP_TABLE_VIEW')}
                       trigger={
                         <Button icon as={NavLink} to={`${path}/${lookupTable.id}`}>
                           <Icon name="eye" />
@@ -72,7 +72,7 @@ const ListTable: React.FC<any> = ({
                       }
                     />
                     <Popup
-                      content={strings.LOOKUP_TABLE_IMPORT}
+                      content={t('LOOKUP_TABLE_IMPORT')}
                       trigger={
                         <Button icon as={NavLink} to={`${path}/${lookupTable.id}/import`}>
                           <Icon name="upload" />
@@ -80,10 +80,7 @@ const ListTable: React.FC<any> = ({
                       }
                     />
                     <DownloadButton
-                      popUpContent={strings.LOOKUP_TABLE_DOWNLOAD.replace(
-                        '%1',
-                        lookupTable.displayName
-                      )}
+                      popUpContent={t('LOOKUP_TABLE_DOWNLOAD', lookupTable.displayName)}
                       id={lookupTable.id}
                       name={lookupTable.displayName}
                     />
@@ -97,8 +94,8 @@ const ListTable: React.FC<any> = ({
                     <Table>
                       <Table.Header>
                         <Table.Row>
-                          <Table.HeaderCell content={strings.LOOKUP_TABLE_FIELD_NAME} />
-                          <Table.HeaderCell content={strings.LOOKUP_TABLE_LABEL} />
+                          <Table.HeaderCell content={t('LOOKUP_TABLE_FIELD_NAME')} />
+                          <Table.HeaderCell content={t('LOOKUP_TABLE_LABEL')} />
                         </Table.Row>
                       </Table.Header>
                       <Table.Body>
@@ -120,7 +117,7 @@ const ListTable: React.FC<any> = ({
         ) : (
           <Table.Row>
             <Table.Cell colSpan="4">
-              <Header as="h5" icon="exclamation circle" content={strings.LOOKUP_ERROR_NOT_FOUND} />
+              <Header as="h5" icon="exclamation circle" content={t('LOOKUP_ERROR_NOT_FOUND')} />
             </Table.Cell>
           </Table.Row>
         )}

@@ -27,7 +27,7 @@ const AssignmentTab: React.FC<{
   fullApplicationStructure: FullStructure
 }> = ({ fullApplicationStructure: fullStructure }) => {
   const sectionCodes = Object.keys(fullStructure.sections)
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [enableSubmit, setEnableSubmit] = useState<boolean>(false)
   const [assignedSectionsByLevel, setAssignedSectionsByLevel] = useState<AssignedSectionsByLevel>(
     {}
@@ -42,7 +42,7 @@ const AssignmentTab: React.FC<{
       filters,
     })
 
-  if (error) return <Message error header={strings.ERROR_REVIEW_PAGE} list={[error]} />
+  if (error) return <Message error header={t('ERROR_REVIEW_PAGE')} list={[error]} />
 
   const {
     info: {
@@ -128,14 +128,14 @@ const AssignmentTab: React.FC<{
           icon="warning"
           size="small"
           error
-          header={strings.ASSIGNMENT_ERROR_TITLE}
+          header={t('ASSIGNMENT_ERROR_TITLE')}
           content={assignmentError}
         />
       )}
       <div className="flex-row-space-between-center" id="review-filters-container">
         <ReviewLevel filters={filters} setFilters={setFilters} structure={fullStructure} />
         <div className="centered-flex-box-row">
-          <Label className="uppercase-label" content={strings.REVIEW_OVERVIEW_STAGE} />
+          <Label className="uppercase-label" content={t('REVIEW_OVERVIEW_STAGE')} />
           <Stage name={stageName} colour={stageColour || ''} />
         </div>
       </div>

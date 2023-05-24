@@ -89,7 +89,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   assignment,
   previousAssignment,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     location: { pathname },
     replace,
@@ -98,26 +98,26 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
 
   const messages = {
     REVIEW_SUBMISSION_CONFIRM: {
-      title: strings.REVIEW_SUBMISSION_CONFIRM_TITLE,
-      message: strings.REVIEW_SUBMISSION_CONFIRM_MESSAGE,
-      confirmText: strings.BUTTON_SUBMIT,
+      title: t('REVIEW_SUBMISSION_CONFIRM_TITLE'),
+      message: t('REVIEW_SUBMISSION_CONFIRM_MESSAGE'),
+      confirmText: t('BUTTON_SUBMIT'),
     },
     REVIEW_SUBMISSION_INCOMPLETE: {
-      title: strings.REVIEW_SUBMISSION_CONFIRM_TITLE,
-      message: strings.REVIEW_SUBMISSION_INCOMPLETE_MESSAGE,
-      confirmText: strings.BUTTON_SUBMIT,
+      title: t('REVIEW_SUBMISSION_CONFIRM_TITLE'),
+      message: t('REVIEW_SUBMISSION_INCOMPLETE_MESSAGE'),
+      confirmText: t('BUTTON_SUBMIT'),
     },
     REVIEW_DECISION_SET_FAIL: {
-      title: strings.REVIEW_DECISION_SET_FAIL_TITLE,
-      message: strings.REVIEW_DECISION_SET_FAIL_MESSAGE,
+      title: t('REVIEW_DECISION_SET_FAIL_TITLE'),
+      message: t('REVIEW_DECISION_SET_FAIL_MESSAGE'),
     },
     REVIEW_DECISION_MISMATCH: {
-      title: strings.REVIEW_DECISION_MISMATCH_TITLE,
-      message: strings.REVIEW_DECISION_MISMATCH_MESSAGE,
+      title: t('REVIEW_DECISION_MISMATCH_TITLE'),
+      message: t('REVIEW_DECISION_MISMATCH_MESSAGE'),
     },
     REVIEW_STATUS_PENDING: {
-      title: strings.REVIEW_STATUS_PENDING_TITLE,
-      message: strings.REVIEW_STATUS_PENDING_MESSAGE,
+      title: t('REVIEW_STATUS_PENDING_TITLE'),
+      message: t('REVIEW_STATUS_PENDING_MESSAGE'),
     },
   }
 
@@ -224,10 +224,10 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
         primary
         className={attemptSubmissionFailed ? 'alert wide-button' : 'wide-button'}
         onClick={() => onClick()}
-        content={strings.BUTTON_REVIEW_SUBMIT}
+        content={t('BUTTON_REVIEW_SUBMIT')}
       />
       {attemptSubmissionFailed && (
-        <Label className="simple-label alert-text" content={strings.REVIEW_SUBMISSION_FAIL} />
+        <Label className="simple-label alert-text" content={t('REVIEW_SUBMISSION_FAIL')} />
       )}
       <WarningModal />
       <ConfirmModal />

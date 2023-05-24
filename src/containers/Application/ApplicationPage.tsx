@@ -20,7 +20,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   strictSectionPage,
   isValidating,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     query: { serialNumber, sectionCode, page },
     push,
@@ -28,7 +28,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   } = useRouter()
 
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
-  usePageTitle(strings.PAGE_TITLE_APPLICATION.replace('%1', serialNumber))
+  usePageTitle(t('PAGE_TITLE_APPLICATION', serialNumber))
 
   const contextRef = useRef<HTMLDivElement>(null)
 

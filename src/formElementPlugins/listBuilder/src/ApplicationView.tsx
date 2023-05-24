@@ -33,18 +33,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   applicationData,
   allResponses,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('listBuilder')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('listBuilder')
 
   const { isEditable } = element
   const {
     label,
     description,
-    createModalButtonText = strings.BUTTON_LAUNCH_MODAL,
+    createModalButtonText = t('BUTTON_LAUNCH_MODAL'),
     modalText,
-    addButtonText = strings.BUTTON_ADD,
-    updateButtonText = strings.BUTTON_UPDATE,
-    deleteItemText = strings.BUTTON_DELETE,
+    addButtonText = t('BUTTON_ADD'),
+    updateButtonText = t('BUTTON_UPDATE'),
+    deleteItemText = t('BUTTON_DELETE'),
     inputFields,
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
@@ -162,7 +162,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         responses={allResponses}
         currentUser={currentUser as User}
         applicationData={applicationData}
-        editItemText={strings.BUTTON_EDIT}
+        editItemText={t('BUTTON_EDIT')}
         deleteItemText={deleteItemText}
         updateButtonText={updateButtonText}
         innerElementUpdate={innerElementUpdate}
@@ -207,14 +207,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {displayType === DisplayType.INLINE && (
         <Button
           secondary
-          content={strings.BUTTON_CANCEL}
+          content={t('BUTTON_CANCEL')}
           onClick={() => setInputState({ ...inputState, isOpen: false })}
         />
       )}
       {inputState.error && (
         <p className="alert">
           <Icon name="attention" />
-          {strings.ERROR_LIST_ITEMS_NOT_VALID}
+          {t('ERROR_LIST_ITEMS_NOT_VALID')}
         </p>
       )}
     </>
@@ -239,7 +239,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {!validationState.isValid && (
         <p className="alert">
           <Icon name="attention" />
-          {validationState.validationMessage || strings.VALIDATION_MESSAGE_DEFAULT}
+          {validationState.validationMessage || t('VALIDATION_MESSAGE_DEFAULT')}
         </p>
       )}
       {displayType !== DisplayType.INLINE && (

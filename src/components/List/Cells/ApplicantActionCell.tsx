@@ -4,17 +4,22 @@ import { ApplicationStatus } from '../../../utils/generated/graphql'
 import { CellProps } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Icon } from 'semantic-ui-react'
+import { useRouter } from '../../../utils/hooks/useRouter'
 
 const ApplicantActionCell: React.FC<CellProps> = ({ application: { status, serial } }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
+  const { location } = useRouter()
   let action = ''
 
-  if (status === ApplicationStatus.ChangesRequired) action = strings.ACTION_UPDATE
-  if (status === ApplicationStatus.Draft) action = strings.ACTION_CONTINUE
+  if (status === ApplicationStatus.ChangesRequired) action = t('ACTION_UPDATE')
+  if (status === ApplicationStatus.Draft) action = t('ACTION_CONTINUE')
 
   if (!action)
     return (
-      <Link className="user-action" to={`/application/${serial}`}>
+      <Link
+        className="user-action"
+        to={{ pathname: `/application/${serial}`, state: { prevQuery: location.search } }}
+      >
         <Icon name="chevron right" />
       </Link>
     )

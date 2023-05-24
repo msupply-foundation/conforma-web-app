@@ -17,7 +17,7 @@ interface ApplicationSectionsProps {
 }
 
 const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { push } = useRouter()
 
   const {
@@ -137,7 +137,7 @@ type ActionisChangesRequestProps = ActionProps & {
 }
 
 const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     sectionCode,
     generalProgress,
@@ -153,7 +153,7 @@ const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => 
     return (
       <Button
         color="blue"
-        content={`${strings.LABEL_RESPONSE_UPDATE} (${totalRemainingUpdate})`}
+        content={`${t('LABEL_RESPONSE_UPDATE')} (${totalRemainingUpdate})`}
         onClick={() =>
           isDraftStatus
             ? resumeApplication({
@@ -179,14 +179,14 @@ type ActionGeneralProps = ActionProps & {
 
 // General is for Draft application - without changes requested (so not submitted yet)
 const ActionGeneral: React.FC<ActionGeneralProps> = (props) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { sectionCode, generalProgress, isStrictSection, isBeforeStrict, resumeApplication } = props
   if (isStrictSection)
     return (
       <Button
         inverted
         color="blue"
-        content={strings.BUTTON_APPLICATION_RESUME}
+        content={t('BUTTON_APPLICATION_RESUME')}
         onClick={() =>
           resumeApplication({
             sectionCode,

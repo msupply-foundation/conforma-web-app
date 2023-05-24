@@ -6,7 +6,7 @@ import { useUserState } from '../../../contexts/UserState'
 export const NOT_ASSIGNED = -1
 
 const useGetAssignmentOptions = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -20,7 +20,7 @@ const useGetAssignmentOptions = () => {
       key: reviewer.id,
       value: reviewer.id,
       text: isCurrentUserReviewer
-        ? strings.ASSIGNMENT_YOURSELF
+        ? t('ASSIGNMENT_YOURSELF')
         : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
       disabled: review?.current.reviewStatus === ReviewStatus.Submitted,
     }

@@ -11,7 +11,7 @@ import { useGetLookupTableStructureByIdQuery } from '../../utils/generated/graph
 import { LookUpTableType } from '../types'
 
 const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const { pathname, params, history } = useRouter()
   const [structure, setStructure] = useState<LookUpTableType>()
@@ -41,7 +41,7 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   return (
     <React.Fragment>
       {error ? (
-        <Message error header={strings.LOOKUP_ERROR_TITLE} list={[error.message]} />
+        <Message error header={t('LOOKUP_ERROR_TITLE')} list={[error.message]} />
       ) : loading ? (
         <Loading />
       ) : structure ? (
@@ -53,7 +53,7 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
           {!structure.dataViewCode && <LookUpTable structure={structure} />}
         </Container>
       ) : (
-        <Message error header={strings.LOOKUP_ERROR_NOT_FOUND} />
+        <Message error header={t('LOOKUP_ERROR_NOT_FOUND')} />
       )}
       <ImportCsvModal
         tableLabel={structure?.displayName}

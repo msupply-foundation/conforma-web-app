@@ -16,7 +16,7 @@ interface ApplicationProps {
 }
 
 const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     query: { serialNumber },
     replace,
@@ -27,7 +27,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     structure,
   })
 
-  usePageTitle(strings.PAGE_TITLE_APPLICATION.replace('%1', serialNumber))
+  usePageTitle(t('PAGE_TITLE_APPLICATION', serialNumber))
 
   useEffect(() => {
     if (!fullStructure) return
@@ -40,7 +40,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     push(`/application/${serialNumber}/summary`)
   }
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (error) return <Message error title={t('ERROR_GENERIC')} list={[error]} />
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 
   const {
@@ -54,7 +54,7 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
     return status === ApplicationStatus.Draft && !firstStrictInvalidPage ? (
       <Segment basic className="padding-zero" textAlign="right">
         <Button as={Link} color="blue" onClick={handleSummaryClicked}>
-          {strings.BUTTON_SUMMARY}
+          {t('BUTTON_SUMMARY')}
         </Button>
       </Segment>
     ) : null
@@ -65,8 +65,8 @@ const ApplicationHome: React.FC<ApplicationProps> = ({ structure, template }) =>
       <ApplicationHomeWrapper
         startMessage={structure.info.startMessage}
         name={template.name}
-        title={strings.TITLE_OVERVIEW}
-        subtitle={strings.SUBTITLE_APPLICATION_CHANGES_REQUIRED}
+        title={t('TITLE_OVERVIEW')}
+        subtitle={t('SUBTITLE_APPLICATION_CHANGES_REQUIRED')}
         ButtonSegment={SummaryButtonSegment}
       >
         <ApplicationSections fullStructure={fullStructure} />

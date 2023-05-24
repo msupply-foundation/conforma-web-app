@@ -22,7 +22,7 @@ import config from '../../../../config'
 import { Link } from 'react-router-dom'
 
 const General: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { updateTemplate } = useOperationState()
   const { structure } = useApplicationState()
   const { template } = useTemplateState()
@@ -45,16 +45,16 @@ const General: React.FC = () => {
     <div className="flex-column-center-start">
       <div className="flex-row flex-gap-10">
         <ButtonWithFallback
-          title={strings.TEMPLATE_GEN_BUTTON_AVAILABLE}
-          disabledMessage={strings.TEMPLATE_GEN_BUTTON_AVAILABLE_DISABLED}
+          title={t('TEMPLATE_GEN_BUTTON_AVAILABLE')}
+          disabledMessage={t('TEMPLATE_GEN_BUTTON_AVAILABLE_DISABLED')}
           disabled={!canSetAvailable}
           onClick={() => {
             updateTemplate(template.id, { status: TemplateStatus.Available })
           }}
         />
         <ButtonWithFallback
-          title={strings.TEMPLATE_GEN_BUTTON_DRAFT}
-          disabledMessage={strings.TEMPLATE_GEN_BUTTON_DRAFT_DISABLED}
+          title={t('TEMPLATE_GEN_BUTTON_DRAFT')}
+          disabledMessage={t('TEMPLATE_GEN_BUTTON_DRAFT_DISABLED')}
           disabled={!canSetDraft}
           onClick={async () => {
             if (await updateTemplate(template.id, { status: TemplateStatus.Draft }))

@@ -5,15 +5,15 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import { ApplicationOutcome } from '../../../utils/generated/graphql'
 
 const useOutcomeDisplayMap = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const outcomeDisplayMap: {
     [key in ApplicationOutcome]: { icon: SemanticICONS; color: SemanticCOLORS; text: string }
   } = {
     PENDING: { icon: 'hourglass half', color: 'grey', text: '' }, // Not used
-    APPROVED: { icon: 'check circle', color: 'green', text: strings.OUTCOME_APPROVED },
-    REJECTED: { icon: 'cancel', color: 'pink', text: strings.OUTCOME_REJECTED },
-    EXPIRED: { icon: 'time', color: 'orange', text: strings.OUTCOME_EXPIRED },
-    WITHDRAWN: { icon: 'user cancel', color: 'yellow', text: strings.OUTCOME_WITHDRAWN },
+    APPROVED: { icon: 'check circle', color: 'green', text: t('OUTCOME_APPROVED') },
+    REJECTED: { icon: 'cancel', color: 'pink', text: t('OUTCOME_REJECTED') },
+    EXPIRED: { icon: 'time', color: 'orange', text: t('OUTCOME_EXPIRED') },
+    WITHDRAWN: { icon: 'user cancel', color: 'yellow', text: t('OUTCOME_WITHDRAWN') },
   }
   return outcomeDisplayMap
 }

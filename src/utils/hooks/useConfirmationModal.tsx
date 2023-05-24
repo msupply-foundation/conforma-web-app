@@ -26,15 +26,15 @@ const useConfirmationModal = ({
   awaitAction = true,
   ...modalProps
 }: Partial<ConfirmModalState> = {}) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [open, setOpen] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
   const [modalState, setModalState] = useState<ConfirmModalState>({
     type: type ?? 'confirmation',
-    title: title ?? strings.MODAL_CONFIRM_TITLE,
+    title: title ?? t('MODAL_CONFIRM_TITLE'),
     message,
-    confirmText: confirmText ?? strings.OPTION_OK,
-    cancelText: cancelText ?? strings.OPTION_CANCEL,
+    confirmText: confirmText ?? t('OPTION_OK'),
+    cancelText: cancelText ?? t('OPTION_CANCEL'),
     onConfirm: onConfirm ? onConfirm : () => console.log('Clicked OK'),
     onCancel: onCancel ? onCancel : () => {},
     showCancel,

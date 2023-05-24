@@ -39,8 +39,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   applicationData,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('fileUpload')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('fileUpload')
   const { isEditable } = element
   const {
     label,
@@ -84,20 +84,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const errors = [
     {
       condition: (file: any) => uploadedFiles.map((f) => f.filename).includes(file.name),
-      errorMessage: strings.ERROR_FILE_ALREADY_UPLOADED,
+      errorMessage: t('ERROR_FILE_ALREADY_UPLOADED'),
     },
     {
       condition: (file: any) =>
         fileExtensions && !fileExtensions.includes(file.name.split('.').pop().toLowerCase()),
-      errorMessage: strings.ERROR_FILE_TYPE_NOT_PERMITTED,
+      errorMessage: t('ERROR_FILE_TYPE_NOT_PERMITTED'),
     },
     {
       condition: (file: any) => file.size > fileSizeLimit * 1000,
-      errorMessage: strings.ERROR_FILE_TOO_BIG,
+      errorMessage: t('ERROR_FILE_TOO_BIG'),
     },
     {
       condition: (file: any, newFileData: FileInfo[]) => newFileData.length >= fileCountLimit,
-      errorMessage: strings.ERROR_TOO_MANY_FILES,
+      errorMessage: t('ERROR_TOO_MANY_FILES'),
     },
   ]
 
@@ -143,7 +143,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           ...newFileData[index],
           loading: false,
           error: true,
-          errorMessage: strings.ERROR_UPLOAD_PROBLEM,
+          errorMessage: t('ERROR_UPLOAD_PROBLEM'),
         }
       }
       setUploadedFiles([...newFileData])
@@ -196,8 +196,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             <Button primary disabled={!isEditable} onClick={() => fileInputRef?.current?.click()}>
               <Icon name="upload" />
               {uploadedFiles.length === 0
-                ? strings.BUTTON_CLICK_TO_UPLOAD
-                : strings.BUTTON_UPLOAD_ANOTHER}
+                ? t('BUTTON_CLICK_TO_UPLOAD')
+                : t('BUTTON_UPLOAD_ANOTHER')}
             </Button>
           )}
         </Segment>

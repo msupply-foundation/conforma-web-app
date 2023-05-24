@@ -58,8 +58,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   validationState,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('checkbox')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('checkbox')
   const { isEditable } = element
   const {
     label,
@@ -100,7 +100,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       textMarkdownList,
       textUnselectedMarkdownList,
       textMarkdownPropertyList,
-    } = createTextStrings(checkboxElements, strings.LABEL_SUMMMARY_NOTHING_SELECTED)
+    } = createTextStrings(checkboxElements, t('LABEL_SUMMMARY_NOTHING_SELECTED'))
     onSave({
       text,
       textUnselected,
@@ -145,7 +145,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       />
       {resetButton && (
         <div style={{ marginTop: 10 }}>
-          <Button primary content={strings.BUTTON_RESET_SELECTION} compact onClick={resetState} />
+          <Button primary content={t('BUTTON_RESET_SELECTION')} compact onClick={resetState} />
         </div>
       )}
       {validationState.isValid ? null : (

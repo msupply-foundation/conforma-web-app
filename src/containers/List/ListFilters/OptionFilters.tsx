@@ -74,7 +74,7 @@ const SearchableListFilter: React.FC<SearchableListFilterProps> = ({
   title,
   onRemove,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [searchValue, setSearchValue] = useState('')
 
   const { query, resultExtractor, variables } = getFilterListQuery({
@@ -100,7 +100,7 @@ const SearchableListFilter: React.FC<SearchableListFilterProps> = ({
     >
       <Input
         icon="search"
-        placeholder={strings.FILTER_SEARCH_LIST}
+        placeholder={t('FILTER_SEARCH_LIST')}
         iconPosition="left"
         className="search"
         onChange={(_, { value }) => {

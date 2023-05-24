@@ -21,7 +21,7 @@ export const Overview: React.FC<{
   },
   activityLog,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { Outcome } = useLocalisedEnums()
   const [deadlineDays, setDeadlineDays] = useState(5)
   const { ConfirmModal, showModal } = useConfirmationModal()
@@ -43,42 +43,42 @@ export const Overview: React.FC<{
             </div>
             <div className="flex-row wrap">
               <p className="left-item">
-                <strong>{strings.REVIEW_OVERVIEW_APPLICANT}: </strong>
+                <strong>{t('REVIEW_OVERVIEW_APPLICANT')}: </strong>
                 {applicant}
               </p>
               <p className="right-item">
-                <strong>{strings.REVIEW_OVERVIEW_ORG}: </strong>
-                {organisation || <em>{strings.LABEL_NO_ORG}</em>}
+                <strong>{t('REVIEW_OVERVIEW_ORG')}: </strong>
+                {organisation || <em>{t('LABEL_NO_ORG')}</em>}
               </p>
             </div>
             <div className="flex-row wrap">
               <p className="left-item">
-                <strong>{strings.REVIEW_OVERVIEW_STARTED}: </strong>
+                <strong>{t('REVIEW_OVERVIEW_STARTED')}: </strong>
                 {DateTime.fromISO(started).toLocaleString()}
               </p>
               <p className="right-item">
-                <strong>{strings.REVIEW_OVERVIEW_COMPLETED}: </strong>
+                <strong>{t('REVIEW_OVERVIEW_COMPLETED')}: </strong>
                 {(completed && DateTime.fromISO(completed).toLocaleString()) || '...'}
               </p>
             </div>
             <div className="flex-row wrap">
               <p className="left-item">
-                <strong>{strings.REVIEW_OVERVIEW_STAGE}: </strong>
+                <strong>{t('REVIEW_OVERVIEW_STAGE')}: </strong>
                 {stage}
               </p>
               <p className="right-item">
-                <strong>{strings.REVIEW_OVERVIEW_OUTCOME}: </strong>
+                <strong>{t('REVIEW_OVERVIEW_OUTCOME')}: </strong>
                 {Outcome[outcome as ApplicationOutcome]}
               </p>
             </div>
             <div className="flex-row wrap">
               <p className="left-item">
-                <strong>{strings.REVIEW_OVERVIEW_SERIAL}: </strong>
+                <strong>{t('REVIEW_OVERVIEW_SERIAL')}: </strong>
                 {serial}
               </p>
               {applicantDeadline.deadline && applicantDeadline.isActive && (
                 <p className="right-item">
-                  <strong>{strings.REVIEW_OVERVIEW_DEADLINE}: </strong>
+                  <strong>{t('REVIEW_OVERVIEW_DEADLINE')}: </strong>
                   {DateTime.fromJSDate(applicantDeadline.deadline).toLocaleString()}
                 </p>
               )}
@@ -90,7 +90,7 @@ export const Overview: React.FC<{
               ((applicantDeadline.isActive && outcome === ApplicationOutcome.Pending) ||
                 (!applicantDeadline.isActive && outcome === ApplicationOutcome.Expired)) && (
                 <div className="flex-row-start-center" style={{ gap: 10, marginTop: 30 }}>
-                  {strings.REVIEW_OVERVIEW_EXTEND_BY}
+                  {t('REVIEW_OVERVIEW_EXTEND_BY')}
                   <Form.Input
                     size="mini"
                     type="number"
@@ -99,23 +99,13 @@ export const Overview: React.FC<{
                     onChange={(e) => setDeadlineDays(Number(e.target.value))}
                     style={{ maxWidth: 65 }}
                   />
-                  <span style={{ marginRight: 20 }}>
-                    {deadlineDays > 1
-                      ? strings.REVIEW_OVERVIEW_DAYS
-                      : strings.REVIEW_OVERVIEW_DAYS_SINGULAR}
-                  </span>
+                  <span style={{ marginRight: 20 }}>{t('REVIEW_OVERVIEW_DAYS', deadlineDays)}</span>
                   <Button
                     primary
                     inverted
                     onClick={() =>
                       showModal({
-                        message:
-                          deadlineDays === 1
-                            ? strings.REVIEW_OVERVIEW_MODAL_MESSAGE_SINGULAR
-                            : strings.REVIEW_OVERVIEW_MODAL_MESSAGE.replace(
-                                '%1',
-                                String(deadlineDays)
-                              ),
+                        message: t('REVIEW_OVERVIEW_MODAL_MESSAGE', deadlineDays),
                         onConfirm: async () => {
                           await extendDeadline(id, deadlineDays)
                           reload()
@@ -123,7 +113,7 @@ export const Overview: React.FC<{
                       })
                     }
                   >
-                    {strings.REVIEW_OVERVIEW_BUTTON_EXTEND}
+                    {t('REVIEW_OVERVIEW_BUTTON_EXTEND')}
                   </Button>
                 </div>
               )}

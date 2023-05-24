@@ -9,7 +9,7 @@ export interface ReviewContainerProps {
 }
 
 const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { push } = useRouter()
   const { serial, org } = application
   return (
@@ -21,7 +21,7 @@ const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children
           content={
             <>
               <Icon name="chevron left" className="dark-grey" />
-              {strings.BUTTON_BACK}
+              {t('BUTTON_BACK')}
             </>
           }
         />

@@ -17,9 +17,9 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
   assignedSectionsByLevel,
   assignmentsFiltered,
   enableSubmit,
-  setAssignmentError
+  setAssignmentError,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { submitAssignments } = useUpdateAssignment({
     fullStructure,
   })
@@ -32,7 +32,7 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
       }
     } catch (err) {
       console.log(err)
-      setAssignmentError(strings.ASSIGNMENT_ERROR_GENERAL)
+      setAssignmentError(t('ASSIGNMENT_ERROR_GENERAL'))
     }
   }
 
@@ -40,7 +40,7 @@ const AssignmentSubmit: React.FC<AssignmentSubmitProps> = ({
     <div style={{ marginTop: 10 }}>
       <Button
         primary
-        content={strings.BUTTON_SUBMIT}
+        content={t('BUTTON_SUBMIT')}
         compact
         onClick={handleSubmit}
         disabled={!enableSubmit}
