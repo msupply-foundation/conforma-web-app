@@ -1555,6 +1555,10 @@ a:hover {
   margin-bottom: 20px;
 }
 
+.stage-label {
+  white-space: nowrap;
+}
+
 .stage-label-spacing {
   margin-bottom: 10px;
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Header, Icon, Label } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
@@ -10,11 +10,18 @@ export interface ApplicationContainerProps {
 
 const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, children }) => {
   const { t } = useLanguageProvider()
-  const { replace } = useRouter()
+  const { push, location } = useRouter()
   const {
     userState: { currentUser, isNonRegistered },
   } = useUserState()
+  // Need to store in useState, else location.state is lost on subsequent
+  // re-renders
+  const [prevQueryString] = useState(location?.state?.prevQuery)
   const { code, name } = template
+
+  const linkBack = prevQueryString
+    ? `/applications${prevQueryString}`
+    : `/applications?type=${code}`
 
   return (
     <Container id="application-area" className={isNonRegistered ? 'non-registered' : ''}>
@@ -27,10 +34,7 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, c
             content={currentUser?.organisation?.orgName}
           />
         )}
-        <Label
-          className="back-label clickable"
-          onClick={() => replace(`/applications?type=${code}`)}
-        >
+        <Label className="back-label clickable" onClick={() => push(linkBack)}>
           <Icon name="chevron left" className="dark-grey" />
           {t('LABEL_APPLICATIONS', name)}
         </Label>
