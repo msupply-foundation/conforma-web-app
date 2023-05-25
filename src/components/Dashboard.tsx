@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react'
 import { Link } from 'react-router-dom'
 import { Header, Button, Icon, Label } from 'semantic-ui-react'
 import { useUserState } from '../contexts/UserState'
 import { useLanguageProvider } from '../contexts/Localisation'
 import { USER_ROLES } from '../utils/data'
-import { PermissionPolicyType, Filter, UiLocation } from '../utils/generated/graphql'
-import useListApplications from '../utils/hooks/useListApplications'
+import {
+  PermissionPolicyType,
+  Filter,
+  UiLocation,
+  useGetFilteredApplicationCountQuery,
+  ApplicationListShapeFilter,
+} from '../utils/generated/graphql'
 import useListTemplates from '../utils/hooks/useListTemplates'
 import usePageTitle from '../utils/hooks/usePageTitle'
-import { TemplateDetails, TemplateInList } from '../utils/types'
+import { TemplateInList } from '../utils/types'
 import LoadingSmall from './LoadingSmall'
 import { constructOrObjectFilters } from '../utils/helpers/utilityFunctions'
 
@@ -52,6 +57,11 @@ const Dashboard: React.FC = () => {
 
 const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template }) => {
   const { t } = useLanguageProvider()
+  const {
+    userState: { currentUser },
+  } = useUserState()
+  const [loadedFiltersCount, setLoadedFiltersCount] = useState(0)
+
   const { name, code, hasApplyPermission, filters, permissions, totalApplications } = template
 
   const userRole =
@@ -69,7 +79,15 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
             </a>
             <Icon name="chevron right" />
           </Label>
-          <PanelComponent key={`${template?.id}_filters`} template={template} filters={filters} />
+          {filters.map((filter) => (
+            <FilterComponent
+              template={template}
+              filter={filter}
+              userId={currentUser?.userId ?? 0}
+              setLoaded={setLoadedFiltersCount}
+            />
+          ))}
+          {loadedFiltersCount !== filters.length && <LoadingSmall />}
         </div>
         {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
       </div>
@@ -85,83 +103,41 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
   )
 }
 
-const PanelComponent: React.FC<{
-  template: TemplateDetails
-  filters: Filter[]
-}> = ({ template, filters }) => {
-  const templateType = template.code
-  const [totalMatchFilter, setTotalMatchFilter] = useState<{ [key: number]: number }>(
-    filters.reduce((totalPerFilter, filter) => ({ ...totalPerFilter, [filter.id]: 0 }), {})
-  )
+const FilterComponent: React.FC<{
+  template: TemplateInList
+  filter: Filter
+  userId: number
+  setLoaded: Dispatch<SetStateAction<number>>
+}> = ({ template, filter, userId, setLoaded }) => {
+  const { t } = useLanguageProvider()
 
-  const filterObjectArray = filters.reduce((arrayFilters: { [key: string]: string }[], element) => {
-    if (element.query !== null) {
-      const queryObj = element.query
-      arrayFilters.push(queryObj)
-    }
-    return arrayFilters
-  }, [])
-
-  const graphQLFilterObject = {
-    templateCode: { equalToInsensitive: templateType },
-    ...constructOrObjectFilters(filterObjectArray),
+  const gqlFilter: ApplicationListShapeFilter = {
+    templateCode: { equalTo: template.code },
+    ...constructOrObjectFilters([filter.query]),
   }
 
-  const { loading, applications } = useListApplications(
-    {}, // Passing empty as graphQLFilterObject is already constructed
-    graphQLFilterObject
-  )
+  const { error, loading, data } = useGetFilteredApplicationCountQuery({
+    variables: {
+      filter: gqlFilter,
+      userId,
+    },
+  })
+
+  const appCount = data?.applicationList?.totalCount
 
   useEffect(() => {
-    if (applications) {
-      const resultMatchingFilters = filters.reduce((matchingFilters, { id, query }) => {
-        if (query === null) return matchingFilters
+    if (!loading) setLoaded((prev) => prev + 1)
+  }, [loading])
 
-        const queryObj = query
-        const filteredApplications = Object.entries(applications).filter(([_, application]) => {
-          // Each filter is currently limited to a single check!
-          const key = Object.keys(queryObj)[0]
-          const value = Object.values(queryObj)[0]
-          switch (key) {
-            case 'outcome':
-              return application.outcome === value
-            case 'status':
-              return application.status === value
-            case 'reviewerAction':
-              return application.reviewerAction === value
-            case 'assignerAction':
-              return application.assignerAction === value
-            default:
-              return false
-          }
-        })
-        return { ...matchingFilters, [id]: filteredApplications.length }
-      }, {})
-      setTotalMatchFilter(resultMatchingFilters)
-    }
-  }, [applications])
+  if (error) return <span className="error-colour">{t('ERROR_LOADING_FILTER')}</span>
 
-  const userRole = (filter: Filter) =>
-    filter.userRole === PermissionPolicyType.Apply ? USER_ROLES.APPLICANT : USER_ROLES.REVIEWER
-
-  const constructLink = (filter: Filter) =>
-    `/applications?type=${templateType}&user-role=${userRole(filter)}&${Object.entries(filter.query)
-      .map(([key, value]) => `${key}=${value}`)
-      .join('&')}`
-
-  if (loading) return <LoadingSmall />
-  if (applications.length === 0) return null
+  if (loading || !appCount) return null
 
   return (
-    <>
-      {filters.map((filter) =>
-        totalMatchFilter[filter.id] > 0 ? (
-          <Link to={constructLink(filter)}>{`${filter.title} (${
-            totalMatchFilter[filter.id]
-          })`}</Link>
-        ) : null
-      )}
-    </>
+    <Link
+      key={filter.id}
+      to={constructLink(filter, template.code)}
+    >{`${filter.title} (${appCount})`}</Link>
   )
 }
 
@@ -174,5 +150,13 @@ const StartNewTemplate: React.FC<{ template: TemplateInList }> = ({ template: { 
     </div>
   )
 }
+
+const userRole = (filter: Filter) =>
+  filter.userRole === PermissionPolicyType.Apply ? USER_ROLES.APPLICANT : USER_ROLES.REVIEWER
+
+const constructLink = (filter: Filter, templateType: string) =>
+  `/applications?type=${templateType}&user-role=${userRole(filter)}&${Object.entries(filter.query)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')}`
 
 export default Dashboard

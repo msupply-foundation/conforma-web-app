@@ -40,6 +40,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     suffix,
     suffixPlural = suffix,
     maxSignificantDigits,
+    decimals,
     default: defaultValue,
   } = parameters
   const [textValue, setTextValue] = useState<string | null | undefined>(currentResponse?.text)
@@ -49,6 +50,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     style: currency ? 'currency' : undefined,
     currency: currency !== '' ? currency : undefined,
     maximumSignificantDigits: maxSignificantDigits,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   }
   const numberFormatter = new Intl.NumberFormat(locale, formatOptions)
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { hot } from 'react-hot-loader'
+import ReactGA from 'react-ga4'
 import Login from '../User/Login'
 import Verify from '../User/Verification'
 import { UserProvider, useUserState } from '../../contexts/UserState'
@@ -8,9 +9,12 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import NonRegisteredLogin from '../User/NonRegisteredLogin'
 import AuthenticatedContent from './AuthenticatedWrapper'
 import { Loading } from '../../components'
+import { usePrefs } from '../../contexts/SystemPrefs'
+import { trackerTestMode } from './Tracker'
 
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()
+  const { preferences } = usePrefs()
 
   if (error) {
     console.error(error)
@@ -19,6 +23,17 @@ const AppWrapper: React.FC = () => {
 
   if (loading) {
     return <Loading />
+  }
+
+  // Register Google Analytics tracker if a tracking ID and host are specified
+  // in prefs.
+  const hostMatch = trackerTestMode || window.location.hostname === preferences?.siteHost
+  if (preferences?.googleAnalyticsId && hostMatch) {
+    ReactGA.initialize([
+      {
+        trackingId: preferences.googleAnalyticsId,
+      },
+    ])
   }
 
   return (

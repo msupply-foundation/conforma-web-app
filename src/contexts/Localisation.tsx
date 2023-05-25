@@ -98,7 +98,7 @@ export function LanguageProvider({
   const [languageState, setLanguageState] = useState<LanguageState>({
     languageOptions,
     selectedLanguage: initSelectedLanguage,
-    strings: {} as LanguageStrings,
+    strings,
     loading: true,
     error: null,
   })
@@ -256,7 +256,7 @@ const getTranslation = (
   substitutions: Substitutions
 ) => {
   let localisedString = strings[key]
-  if (!localisedString) return key
+  if (localisedString === undefined) return key
 
   if (typeof substitutions === 'string' || typeof substitutions === 'number') {
     const match = localisedString.match(/{{([A-z0-9]+)}}/m)

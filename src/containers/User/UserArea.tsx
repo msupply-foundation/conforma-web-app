@@ -131,6 +131,11 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       text: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
       value: '/admin/data-views',
     },
+    // {
+    //   key: 'dataViews',
+    //   text: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
+    //   value: '/admin/data',
+    // },
     // { key: 'permissions', text: t('MENU_ITEM_ADMIN_PERMISSIONS'), value: '/admin/permissions' },
     // { key: 'plugins', text: t('MENU_ITEM_ADMIN_PLUGINS'), value: '/admin/plugins' },
     {
@@ -163,13 +168,30 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       }))
   )
 
-  const managementOptions = templates
-    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Management))
-    .map((template) => ({
-      key: template.code,
-      text: template.name,
-      value: `/application/new?type=${template.code}`,
-    }))
+  const managementOptions = currentUser?.isManager
+    ? templates
+        .filter(({ templateCategory: { uiLocation } }) =>
+          uiLocation.includes(UiLocation.Management)
+        )
+        .map((template) => ({
+          key: template.code,
+          text: template.name,
+          value: `/application/new?type=${template.code}`,
+        }))
+    : []
+
+  // Lookup table menu item goes in "Manage" menu, unless the user is Admin and
+  // NOT Manager, in which case it goes in "Admin" menu
+  const lookUpTableOption = {
+    key: 'lookup_tables',
+    text: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
+    value: '/admin/lookup-tables',
+  }
+  if (currentUser?.isManager) {
+    managementOptions.push(lookUpTableOption)
+  } else if (currentUser?.isAdmin) {
+    configOptions.push(lookUpTableOption)
+  }
 
   const handleDataViewChange = (e: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
