@@ -44,8 +44,8 @@ export const JsonEditor: React.FC<JsonEditorProps> = ({
 
   const handleCopy = ({ name, src }: OnCopyProps) =>
     showToast({
-      title: t('PREFERENCES_COPIED'),
-      text: t('PREFERENCES_COPIED_ITEMS', {
+      title: t('CLIPBOARD_COPIED'),
+      text: t('CLIPBOARD_COPIED_ITEMS', {
         name,
         count: typeof src === 'object' && src !== null ? Object.keys(src).length : 0,
         value: src,
