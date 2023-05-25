@@ -23,7 +23,7 @@ import { toCamelCase } from '../../../LookupTable/utils'
 import { JsonEditor } from '../JsonEditor'
 import { pickBy } from 'lodash'
 import { nanoid } from 'nanoid'
-import { useAdminDataViewConfig } from './DatabaseHooks'
+import { useAdminDataViewConfig } from './useAdminDataViewConfig'
 import config from '../../../config'
 
 export const AdminDataViews: React.FC = () => {
