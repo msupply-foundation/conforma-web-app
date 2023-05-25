@@ -54,9 +54,7 @@ const config = {
   applicantDeadlineCode: 'applicantDeadline',
   isProductionBuild,
   debounceTimeout: 350, // milliseconds,
-  // These are the only default tables in the system that we allow to be mutated
-  // directly by modifyRecord or display as data views. All other names must
-  // have "data_table_" prepended.
+  // These are the only system tables that we allow to have Data View configuration, plus any "data_table" tables.
   dataViewAllowedTableNames: ['user', 'organisation', 'file'],
 }
 
