@@ -98,7 +98,7 @@ export function LanguageProvider({
   const [languageState, setLanguageState] = useState<LanguageState>({
     languageOptions,
     selectedLanguage: initSelectedLanguage,
-    strings: {} as LanguageStrings,
+    strings,
     loading: true,
     error: null,
   })
