@@ -90,7 +90,13 @@ const extractNumber = (input: string) => {
 const removeAccents = (input: string) => input.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
 // Arithmetic
-const multiply = (num1: number, num2: number, decimals: number) => num1 * num2
+const multiply = (num1: number, num2: number, decimals: number) => {
+  const product = num1 * num2
+  const roundingMultiplier = 10 ** decimals
+  return isNaN(roundingMultiplier)
+    ? product
+    : Math.round(product * roundingMultiplier) / roundingMultiplier
+}
 
 // Array
 const split = (text: string, delimiter: string = ',') => {

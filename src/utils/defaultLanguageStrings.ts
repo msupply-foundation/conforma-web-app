@@ -133,6 +133,7 @@ export default {
   ERROR_LEVEL_NOT_FOUND: 'Level not found',
   ERROR_TRIGGER:
     'Problem waiting for triggers to finish. Please check console for detailed error info.',
+  ERROR_LOADING_FILTER: 'Error loading filter!',
   FILTER_ADD_FILTER: 'Filter',
   FILTER_REMOVE: 'Remove filter',
   FILTER_START_TYPING: 'Start typing...',
@@ -317,6 +318,8 @@ export default {
   PAGE_TITLE_PERMISSIONS: 'Permissions',
   PLACEHOLDER_SEARCH: 'Search Applications...',
   PREFERENCES_HEADER: 'System Preferences',
+  PREFERENCES_SEE_DOCS:
+    'See the [server documentation](https://github.com/openmsupply/conforma-server/wiki/Preferences) for an explanation of available preferences',
   PREFERENCES_SAVE_WARNING: 'Save system preferences?',
   PREFERENCES_SAVE_MESSAGE:
     'Are you sure?  This will overwrite core settings and can break the system if misconfigured',
