@@ -2,6 +2,7 @@ import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { truncate } from 'lodash'
 import React, { useState } from 'react'
 import ReactJson from 'react-json-view'
+import { JsonEditor } from 'json-edit-react'
 import { Accordion, Icon, Label } from 'semantic-ui-react'
 import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
@@ -155,6 +156,14 @@ const Evaluation: React.FC<EvaluationProps> = ({
                 <Label>Object Properties</Label>
                 <div className="spacer-20" />
                 <ReactJson src={objects} collapsed={1} />
+                {/* <JsonEditor
+                  data={objects}
+                  collapse={1}
+                  maxWidth={300}
+                  restrictEdit={true}
+                  restrictDelete={true}
+                  restrictAdd={true}
+                /> */}
               </div>
             )}
           </>

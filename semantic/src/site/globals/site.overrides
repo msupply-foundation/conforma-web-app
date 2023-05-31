@@ -1828,7 +1828,6 @@ a:hover {
 #data-view-config-panel {
   padding-top: 20px;
   width: 50%;
-  max-width: 600px;
 
   h2.ui.header {
     padding: 0;

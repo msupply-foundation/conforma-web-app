@@ -314,12 +314,9 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
           data={data}
           onSave={onSave}
           isSaving={isSaving}
-          name={dataName}
-          collapsed={1}
-          displayArrayKey={false}
-          quotesOnKeys={false}
-          displayDataTypes={true}
-          style={{ padding: '10px' }}
+          rootName={dataName}
+          collapse={1}
+          showArrayIndices={false}
         />
       )}
     </div>

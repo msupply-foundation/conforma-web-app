@@ -6,8 +6,8 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useToast, topLeft } from '../../contexts/Toast'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
-// import { JsonEditor } from './JsonEditor'
-import { JsonEditor } from 'json-edit-react'
+import { JsonEditor } from './JsonEditor'
+import Loading from '../Loading'
 
 export const AdminPreferences: React.FC = () => {
   const { t, tFormat } = useLanguageProvider()
@@ -55,17 +55,19 @@ export const AdminPreferences: React.FC = () => {
       <WarningModal />
       <Header>{t('PREFERENCES_HEADER')}</Header>
       <p>{tFormat('PREFERENCES_SEE_DOCS')}</p>
-      <JsonEditor
-        data={prefs ?? {}}
-        // onSave={(data) => showWarningModal({ onConfirm: () => handleSave(data) })}
-        // isSaving={isSaving}
-        // name="preferences"
-        // collapsed={2}
-        // displayArrayKey={false}
-        // quotesOnKeys={false}
-        // displayDataTypes={false}
-        // style={{ padding: '10px' }}
-      />
+      {prefs ? (
+        <JsonEditor
+          data={prefs}
+          onSave={(data) => showWarningModal({ onConfirm: () => handleSave(data) })}
+          isSaving={isSaving}
+          rootName="preferences"
+          collapse={2}
+          showArrayIndices={false}
+          maxWidth={650}
+        />
+      ) : (
+        <Loading />
+      )}
     </div>
   )
 }
