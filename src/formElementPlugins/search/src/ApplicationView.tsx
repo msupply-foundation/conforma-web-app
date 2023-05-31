@@ -63,7 +63,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<any[]>([])
-  const [selection, setSelection] = useState<any[]>(currentResponse?.selection ?? [])
+  const [selection, setSelection] = useState<any[]>(
+    currentResponse?.selection
+      ? Array.isArray(currentResponse.selection)
+        ? currentResponse.selection
+        : [currentResponse.selection]
+      : []
+  )
   const { isEditable } = element
 
   const [debounceOutput, setDebounceInput] = useDebounce<string>('', DEBOUNCE_TIMEOUT)
