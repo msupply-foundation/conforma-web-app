@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+// @ts-ignore
+import { createRoot } from 'react-dom/client'
 import ReactDOM from 'react-dom'
 import '../semantic/src/semantic.less'
 import config from './config'
@@ -91,9 +93,18 @@ const App: React.FC = () => {
   )
 }
 
-ReactDOM.render(
+const container = document.getElementById('root')
+const root = createRoot(container!)
+
+root.render(
   <SystemPrefsProvider>
     <App />
-  </SystemPrefsProvider>,
-  document.getElementById('root')
+  </SystemPrefsProvider>
 )
+
+// ReactDOM.render(
+//   <SystemPrefsProvider>
+//     <App />
+//   </SystemPrefsProvider>,
+//   document.getElementById('root')
+// )
