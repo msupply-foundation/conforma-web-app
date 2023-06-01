@@ -2477,7 +2477,7 @@ a:hover {
 
 .object-properties-container {
   .flex-column-start-center();
-  margin-left: 30px;
+  margin-left: 10px;
   max-width: 500px;
 }
 .evaluator-operator-container {

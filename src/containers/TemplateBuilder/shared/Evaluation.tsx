@@ -1,8 +1,8 @@
 import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { truncate } from 'lodash'
 import React, { useState } from 'react'
-import ReactJson from 'react-json-view'
-import { JsonEditor } from 'json-edit-react'
+import ReactJson from 'json-edit-react'
+// import ReactJson from '../../../json-edit-react/src'
 import { Accordion, Icon, Label } from 'semantic-ui-react'
 import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
@@ -154,16 +154,18 @@ const Evaluation: React.FC<EvaluationProps> = ({
             {objects && (
               <div className="object-properties-container">
                 <Label>Object Properties</Label>
-                <div className="spacer-20" />
-                <ReactJson src={objects} collapsed={1} />
-                {/* <JsonEditor
+                {/* <div className="spacer-20" /> */}
+                <ReactJson
                   data={objects}
+                  rootName="objects"
                   collapse={1}
-                  maxWidth={300}
+                  indent={1}
+                  maxWidth={450}
                   restrictEdit={true}
                   restrictDelete={true}
                   restrictAdd={true}
-                /> */}
+                  theme={{ container: ['transparent', { fontSize: '13px', padding: 0 }] }}
+                />
               </div>
             )}
           </>
