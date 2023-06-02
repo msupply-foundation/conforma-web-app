@@ -318,7 +318,8 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
           collapse={1}
           showArrayIndices={false}
           maxWidth={650}
-          theme={{ container: '#f9f9f9' }}
+          restrictAdd={({ level }) => level === 0}
+          restrictDelete={({ level }) => level === 1}
         />
       )}
     </div>

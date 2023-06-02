@@ -62,6 +62,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
           setIsDirty(true)
         }}
         enableClipboard={handleCopy}
+        theme={{ input: { fontFamily: 'monospace' }, container: '#f9f9f9' }}
         {...jsonViewProps}
       />
       <div className="flex-row-space-between" style={{ maxWidth: 500 }}>
