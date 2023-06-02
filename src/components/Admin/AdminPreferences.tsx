@@ -64,6 +64,8 @@ export const AdminPreferences: React.FC = () => {
           collapse={2}
           showArrayIndices={false}
           maxWidth={650}
+          restrictDelete={({ level }) => level === 1}
+          restrictAdd={({ level }) => level === 0}
         />
       ) : (
         <Loading />
