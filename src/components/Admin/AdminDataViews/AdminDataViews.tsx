@@ -317,6 +317,8 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
           rootName={dataName}
           collapse={1}
           showArrayIndices={false}
+          maxWidth={650}
+          theme={{ container: '#f9f9f9' }}
         />
       )}
     </div>
@@ -348,8 +350,6 @@ const getDataTableOptions = (
       value: table,
     }))
   )
-
-  console.log('options', options)
 
   return options
 }

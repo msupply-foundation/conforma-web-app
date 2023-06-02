@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Icon } from 'semantic-ui-react'
 import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction } from 'json-edit-react'
 import { useToast, topLeft, Position } from '../../contexts/Toast'
@@ -25,6 +25,11 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     useUndo(data)
   const showToast = useToast({ position: topLeft })
 
+  useEffect(() => {
+    reset(data)
+    setIsDirty(false)
+  }, [data])
+
   const handleSave = async () => {
     if (currentData !== undefined) {
       await onSave(currentData)
@@ -33,13 +38,18 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     }
   }
 
-  const handleCopy: CopyFunction = ({ value, type }) =>
+  const handleCopy: CopyFunction = ({ key, value, type, stringValue }) => {
+    const text =
+      typeof value === 'object' && value !== null
+        ? t('CLIPBOARD_COPIED_ITEMS', { name: key, count: Object.keys(value).length })
+        : truncateString(stringValue)
     showToast({
       title: t(type === 'value' ? 'CLIPBOARD_COPIED_VALUE' : 'CLIPBOARD_COPIED_PATH'),
-      text: truncateString(String(value)),
+      text,
       style: 'info',
       position: Position.bottomLeft,
     })
+  }
 
   if (currentData === undefined) return <Loading />
 

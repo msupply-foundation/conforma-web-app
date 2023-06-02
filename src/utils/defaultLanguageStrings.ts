@@ -81,6 +81,8 @@ export default {
   MODAL_CONFIRM_TITLE: 'Are you sure?',
   CLIPBOARD_COPIED_VALUE: 'Value copied to clipboard',
   CLIPBOARD_COPIED_PATH: 'Path copied to clipboard',
+  CLIPBOARD_COPIED_ITEMS: '{{name}} ({{count}} items)',
+  CLIPBOARD_COPIED_ITEMS_1: '{{name}} ({{count}} item)',
   COLUMN_SERIAL: 'Serial',
   COLUMN_LAST_ACTIVE_DATE: 'Last Active',
   COLUMN_LAST_ACTIVE_DATE_TOOLTIP: 'Date applicant last submitted changes',
