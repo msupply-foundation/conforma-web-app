@@ -7,6 +7,7 @@ import { useUserState } from '../../../contexts/UserState'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FileDisplay, FileDisplayWithDescription } from './components'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import useDefault from '../../useDefault'
 
 export interface FileResponseData {
   uniqueId: string
@@ -48,6 +49,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     fileCountLimit,
     fileExtensions,
     fileSizeLimit,
+    default: defaultValue,
     showDescription = false,
     ...fileOptions
   } = parameters
@@ -80,6 +82,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       files: fileDataToSave,
     })
   }, [uploadedFiles])
+
+  useDefault({
+    defaultValue,
+    currentResponse,
+    parameters,
+    onChange: (defaultFiles) => {
+      setUploadedFiles(generateInitialFileData(defaultFiles?.files ?? []))
+    },
+  })
 
   const errors = [
     {
