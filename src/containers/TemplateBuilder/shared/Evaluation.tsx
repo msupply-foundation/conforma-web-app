@@ -153,7 +153,6 @@ const Evaluation: React.FC<EvaluationProps> = ({
             {objects && (
               <div className="object-properties-container">
                 <Label>Object Properties</Label>
-                {/* <div className="spacer-20" /> */}
                 <ReactJson
                   data={objects}
                   rootName="objects"
