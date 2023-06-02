@@ -73,6 +73,10 @@ export type Query = Node & {
   dataTableAnnex2s?: Maybe<DataTableAnnex2sConnection>;
   /** Reads and enables pagination through a set of `DataTableAtcCode`. */
   dataTableAtcCodes?: Maybe<DataTableAtcCodesConnection>;
+  /** Reads and enables pagination through a set of `DataTableChangeRequest`. */
+  dataTableChangeRequests?: Maybe<DataTableChangeRequestsConnection>;
+  /** Reads and enables pagination through a set of `DataTableChangeRequestApplicationJoin`. */
+  dataTableChangeRequestApplicationJoins?: Maybe<DataTableChangeRequestApplicationJoinsConnection>;
   /** Reads and enables pagination through a set of `DataTableContainer`. */
   dataTableContainers?: Maybe<DataTableContainersConnection>;
   /** Reads and enables pagination through a set of `DataTableCountry`. */
@@ -207,6 +211,8 @@ export type Query = Node & {
   dataTableAnnex?: Maybe<DataTableAnnex>;
   dataTableAnnex2?: Maybe<DataTableAnnex2>;
   dataTableAtcCode?: Maybe<DataTableAtcCode>;
+  dataTableChangeRequest?: Maybe<DataTableChangeRequest>;
+  dataTableChangeRequestApplicationJoin?: Maybe<DataTableChangeRequestApplicationJoin>;
   dataTableContainer?: Maybe<DataTableContainer>;
   dataTableCountry?: Maybe<DataTableCountry>;
   dataTableDosageForm?: Maybe<DataTableDosageForm>;
@@ -335,6 +341,10 @@ export type Query = Node & {
   dataTableAnnex2ByNodeId?: Maybe<DataTableAnnex2>;
   /** Reads a single `DataTableAtcCode` using its globally unique `ID`. */
   dataTableAtcCodeByNodeId?: Maybe<DataTableAtcCode>;
+  /** Reads a single `DataTableChangeRequest` using its globally unique `ID`. */
+  dataTableChangeRequestByNodeId?: Maybe<DataTableChangeRequest>;
+  /** Reads a single `DataTableChangeRequestApplicationJoin` using its globally unique `ID`. */
+  dataTableChangeRequestApplicationJoinByNodeId?: Maybe<DataTableChangeRequestApplicationJoin>;
   /** Reads a single `DataTableContainer` using its globally unique `ID`. */
   dataTableContainerByNodeId?: Maybe<DataTableContainer>;
   /** Reads a single `DataTableCountry` using its globally unique `ID`. */
@@ -705,6 +715,32 @@ export type QueryDataTableAtcCodesArgs = {
   orderBy?: Maybe<Array<DataTableAtcCodesOrderBy>>;
   condition?: Maybe<DataTableAtcCodeCondition>;
   filter?: Maybe<DataTableAtcCodeFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableChangeRequestsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataTableChangeRequestsOrderBy>>;
+  condition?: Maybe<DataTableChangeRequestCondition>;
+  filter?: Maybe<DataTableChangeRequestFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableChangeRequestApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataTableChangeRequestApplicationJoinsOrderBy>>;
+  condition?: Maybe<DataTableChangeRequestApplicationJoinCondition>;
+  filter?: Maybe<DataTableChangeRequestApplicationJoinFilter>;
 };
 
 
@@ -1570,6 +1606,18 @@ export type QueryDataTableAtcCodeArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryDataTableChangeRequestArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableChangeRequestApplicationJoinArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryDataTableContainerArgs = {
   id: Scalars['Int'];
 };
@@ -2322,6 +2370,18 @@ export type QueryDataTableAnnex2ByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryDataTableAtcCodeByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableChangeRequestByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableChangeRequestApplicationJoinByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -3359,6 +3419,10 @@ export type ApplicationFilter = {
   verifications?: Maybe<ApplicationToManyVerificationFilter>;
   /** Some related `verifications` exist. */
   verificationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `dataTableChangeRequestApplicationJoins` relation. */
+  dataTableChangeRequestApplicationJoins?: Maybe<ApplicationToManyDataTableChangeRequestApplicationJoinFilter>;
+  /** Some related `dataTableChangeRequestApplicationJoins` exist. */
+  dataTableChangeRequestApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** Filter by the object’s `user` relation. */
@@ -6161,6 +6225,34 @@ export type VerificationFilter = {
   not?: Maybe<VerificationFilter>;
 };
 
+/** A filter to be used against many `DataTableChangeRequestApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyDataTableChangeRequestApplicationJoinFilter = {
+  /** Every related `DataTableChangeRequestApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<DataTableChangeRequestApplicationJoinFilter>;
+  /** Some related `DataTableChangeRequestApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<DataTableChangeRequestApplicationJoinFilter>;
+  /** No related `DataTableChangeRequestApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<DataTableChangeRequestApplicationJoinFilter>;
+};
+
+/** A filter to be used against `DataTableChangeRequestApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableChangeRequestApplicationJoinFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `dataTableChangeRequestId` field. */
+  dataTableChangeRequestId?: Maybe<IntFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<DataTableChangeRequestApplicationJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<DataTableChangeRequestApplicationJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<DataTableChangeRequestApplicationJoinFilter>;
+};
+
 /** A connection to a list of `ActionQueue` values. */
 export type ActionQueuesConnection = {
   __typename?: 'ActionQueuesConnection';
@@ -6291,6 +6383,8 @@ export type Application = Node & {
   userApplicationJoins: UserApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `Verification`. */
   verifications: VerificationsConnection;
+  /** Reads and enables pagination through a set of `DataTableChangeRequestApplicationJoin`. */
+  dataTableChangeRequestApplicationJoins: DataTableChangeRequestApplicationJoinsConnection;
   stage?: Maybe<Scalars['String']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
@@ -6510,6 +6604,18 @@ export type ApplicationVerificationsArgs = {
   orderBy?: Maybe<Array<VerificationsOrderBy>>;
   condition?: Maybe<VerificationCondition>;
   filter?: Maybe<VerificationFilter>;
+};
+
+
+export type ApplicationDataTableChangeRequestApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<DataTableChangeRequestApplicationJoinsOrderBy>>;
+  condition?: Maybe<DataTableChangeRequestApplicationJoinCondition>;
+  filter?: Maybe<DataTableChangeRequestApplicationJoinFilter>;
 };
 
 export type Template = Node & {
@@ -10231,6 +10337,62 @@ export type VerificationsEdge = {
   node?: Maybe<Verification>;
 };
 
+/** Methods to use when ordering `DataTableChangeRequestApplicationJoin`. */
+export enum DataTableChangeRequestApplicationJoinsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  DataTableChangeRequestIdAsc = 'DATA_TABLE_CHANGE_REQUEST_ID_ASC',
+  DataTableChangeRequestIdDesc = 'DATA_TABLE_CHANGE_REQUEST_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `DataTableChangeRequestApplicationJoin` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type DataTableChangeRequestApplicationJoinCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `dataTableChangeRequestId` field. */
+  dataTableChangeRequestId?: Maybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `DataTableChangeRequestApplicationJoin` values. */
+export type DataTableChangeRequestApplicationJoinsConnection = {
+  __typename?: 'DataTableChangeRequestApplicationJoinsConnection';
+  /** A list of `DataTableChangeRequestApplicationJoin` objects. */
+  nodes: Array<Maybe<DataTableChangeRequestApplicationJoin>>;
+  /** A list of edges which contains the `DataTableChangeRequestApplicationJoin` and cursor to aid in pagination. */
+  edges: Array<DataTableChangeRequestApplicationJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableChangeRequestApplicationJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type DataTableChangeRequestApplicationJoin = Node & {
+  __typename?: 'DataTableChangeRequestApplicationJoin';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  applicationId: Scalars['Int'];
+  dataTableChangeRequestId: Scalars['Int'];
+  /** Reads a single `Application` that is related to this `DataTableChangeRequestApplicationJoin`. */
+  application?: Maybe<Application>;
+};
+
+/** A `DataTableChangeRequestApplicationJoin` edge in the connection. */
+export type DataTableChangeRequestApplicationJoinsEdge = {
+  __typename?: 'DataTableChangeRequestApplicationJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `DataTableChangeRequestApplicationJoin` at the end of the edge. */
+  node?: Maybe<DataTableChangeRequestApplicationJoin>;
+};
+
 /** A `ActionQueue` edge in the connection. */
 export type ActionQueuesEdge = {
   __typename?: 'ActionQueuesEdge';
@@ -11738,6 +11900,139 @@ export type DataTableAtcCodesEdge = {
   cursor?: Maybe<Scalars['Cursor']>;
   /** The `DataTableAtcCode` at the end of the edge. */
   node?: Maybe<DataTableAtcCode>;
+};
+
+/** Methods to use when ordering `DataTableChangeRequest`. */
+export enum DataTableChangeRequestsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC',
+  ApplicantAsc = 'APPLICANT_ASC',
+  ApplicantDesc = 'APPLICANT_DESC',
+  DataTableAsc = 'DATA_TABLE_ASC',
+  DataTableDesc = 'DATA_TABLE_DESC',
+  DateCreatedAsc = 'DATE_CREATED_ASC',
+  DateCreatedDesc = 'DATE_CREATED_DESC',
+  OrganisationAsc = 'ORGANISATION_ASC',
+  OrganisationDesc = 'ORGANISATION_DESC',
+  DataAsc = 'DATA_ASC',
+  DataDesc = 'DATA_DESC',
+  OrgIdAsc = 'ORG_ID_ASC',
+  OrgIdDesc = 'ORG_ID_DESC',
+  ReasonAsc = 'REASON_ASC',
+  ReasonDesc = 'REASON_DESC',
+  RecordIdAsc = 'RECORD_ID_ASC',
+  RecordIdDesc = 'RECORD_ID_DESC',
+  ApplicantIdAsc = 'APPLICANT_ID_ASC',
+  ApplicantIdDesc = 'APPLICANT_ID_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `DataTableChangeRequest` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type DataTableChangeRequestCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isActive` field. */
+  isActive?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `applicant` field. */
+  applicant?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dataTable` field. */
+  dataTable?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dateCreated` field. */
+  dateCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `organisation` field. */
+  organisation?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `data` field. */
+  data?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `orgId` field. */
+  orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reason` field. */
+  reason?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `recordId` field. */
+  recordId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicantId` field. */
+  applicantId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `DataTableChangeRequest` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableChangeRequestFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `isActive` field. */
+  isActive?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `applicant` field. */
+  applicant?: Maybe<StringFilter>;
+  /** Filter by the object’s `dataTable` field. */
+  dataTable?: Maybe<StringFilter>;
+  /** Filter by the object’s `dateCreated` field. */
+  dateCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `organisation` field. */
+  organisation?: Maybe<StringFilter>;
+  /** Filter by the object’s `data` field. */
+  data?: Maybe<JsonFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reason` field. */
+  reason?: Maybe<StringFilter>;
+  /** Filter by the object’s `recordId` field. */
+  recordId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicantId` field. */
+  applicantId?: Maybe<IntFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<DataTableChangeRequestFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<DataTableChangeRequestFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<DataTableChangeRequestFilter>;
+};
+
+/** A connection to a list of `DataTableChangeRequest` values. */
+export type DataTableChangeRequestsConnection = {
+  __typename?: 'DataTableChangeRequestsConnection';
+  /** A list of `DataTableChangeRequest` objects. */
+  nodes: Array<Maybe<DataTableChangeRequest>>;
+  /** A list of edges which contains the `DataTableChangeRequest` and cursor to aid in pagination. */
+  edges: Array<DataTableChangeRequestsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableChangeRequest` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type DataTableChangeRequest = Node & {
+  __typename?: 'DataTableChangeRequest';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  isActive?: Maybe<Scalars['Boolean']>;
+  applicant?: Maybe<Scalars['String']>;
+  dataTable?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['Datetime']>;
+  organisation?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  orgId?: Maybe<Scalars['Int']>;
+  reason?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  applicantId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+};
+
+/** A `DataTableChangeRequest` edge in the connection. */
+export type DataTableChangeRequestsEdge = {
+  __typename?: 'DataTableChangeRequestsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `DataTableChangeRequest` at the end of the edge. */
+  node?: Maybe<DataTableChangeRequest>;
 };
 
 /** Methods to use when ordering `DataTableContainer`. */
@@ -15200,6 +15495,10 @@ export type Mutation = {
   createDataTableAnnex2?: Maybe<CreateDataTableAnnex2Payload>;
   /** Creates a single `DataTableAtcCode`. */
   createDataTableAtcCode?: Maybe<CreateDataTableAtcCodePayload>;
+  /** Creates a single `DataTableChangeRequest`. */
+  createDataTableChangeRequest?: Maybe<CreateDataTableChangeRequestPayload>;
+  /** Creates a single `DataTableChangeRequestApplicationJoin`. */
+  createDataTableChangeRequestApplicationJoin?: Maybe<CreateDataTableChangeRequestApplicationJoinPayload>;
   /** Creates a single `DataTableContainer`. */
   createDataTableContainer?: Maybe<CreateDataTableContainerPayload>;
   /** Creates a single `DataTableCountry`. */
@@ -15374,6 +15673,14 @@ export type Mutation = {
   updateDataTableAtcCodeByNodeId?: Maybe<UpdateDataTableAtcCodePayload>;
   /** Updates a single `DataTableAtcCode` using a unique key and a patch. */
   updateDataTableAtcCode?: Maybe<UpdateDataTableAtcCodePayload>;
+  /** Updates a single `DataTableChangeRequest` using its globally unique id and a patch. */
+  updateDataTableChangeRequestByNodeId?: Maybe<UpdateDataTableChangeRequestPayload>;
+  /** Updates a single `DataTableChangeRequest` using a unique key and a patch. */
+  updateDataTableChangeRequest?: Maybe<UpdateDataTableChangeRequestPayload>;
+  /** Updates a single `DataTableChangeRequestApplicationJoin` using its globally unique id and a patch. */
+  updateDataTableChangeRequestApplicationJoinByNodeId?: Maybe<UpdateDataTableChangeRequestApplicationJoinPayload>;
+  /** Updates a single `DataTableChangeRequestApplicationJoin` using a unique key and a patch. */
+  updateDataTableChangeRequestApplicationJoin?: Maybe<UpdateDataTableChangeRequestApplicationJoinPayload>;
   /** Updates a single `DataTableContainer` using its globally unique id and a patch. */
   updateDataTableContainerByNodeId?: Maybe<UpdateDataTableContainerPayload>;
   /** Updates a single `DataTableContainer` using a unique key and a patch. */
@@ -15680,6 +15987,14 @@ export type Mutation = {
   deleteDataTableAtcCodeByNodeId?: Maybe<DeleteDataTableAtcCodePayload>;
   /** Deletes a single `DataTableAtcCode` using a unique key. */
   deleteDataTableAtcCode?: Maybe<DeleteDataTableAtcCodePayload>;
+  /** Deletes a single `DataTableChangeRequest` using its globally unique id. */
+  deleteDataTableChangeRequestByNodeId?: Maybe<DeleteDataTableChangeRequestPayload>;
+  /** Deletes a single `DataTableChangeRequest` using a unique key. */
+  deleteDataTableChangeRequest?: Maybe<DeleteDataTableChangeRequestPayload>;
+  /** Deletes a single `DataTableChangeRequestApplicationJoin` using its globally unique id. */
+  deleteDataTableChangeRequestApplicationJoinByNodeId?: Maybe<DeleteDataTableChangeRequestApplicationJoinPayload>;
+  /** Deletes a single `DataTableChangeRequestApplicationJoin` using a unique key. */
+  deleteDataTableChangeRequestApplicationJoin?: Maybe<DeleteDataTableChangeRequestApplicationJoinPayload>;
   /** Deletes a single `DataTableContainer` using its globally unique id. */
   deleteDataTableContainerByNodeId?: Maybe<DeleteDataTableContainerPayload>;
   /** Deletes a single `DataTableContainer` using a unique key. */
@@ -16013,6 +16328,18 @@ export type MutationCreateDataTableAnnex2Args = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDataTableAtcCodeArgs = {
   input: CreateDataTableAtcCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableChangeRequestArgs = {
+  input: CreateDataTableChangeRequestInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableChangeRequestApplicationJoinArgs = {
+  input: CreateDataTableChangeRequestApplicationJoinInput;
 };
 
 
@@ -16535,6 +16862,30 @@ export type MutationUpdateDataTableAtcCodeByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableAtcCodeArgs = {
   input: UpdateDataTableAtcCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableChangeRequestByNodeIdArgs = {
+  input: UpdateDataTableChangeRequestByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableChangeRequestArgs = {
+  input: UpdateDataTableChangeRequestInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableChangeRequestApplicationJoinByNodeIdArgs = {
+  input: UpdateDataTableChangeRequestApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableChangeRequestApplicationJoinArgs = {
+  input: UpdateDataTableChangeRequestApplicationJoinInput;
 };
 
 
@@ -17453,6 +17804,30 @@ export type MutationDeleteDataTableAtcCodeByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableAtcCodeArgs = {
   input: DeleteDataTableAtcCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableChangeRequestByNodeIdArgs = {
+  input: DeleteDataTableChangeRequestByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableChangeRequestArgs = {
+  input: DeleteDataTableChangeRequestInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableChangeRequestApplicationJoinByNodeIdArgs = {
+  input: DeleteDataTableChangeRequestApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableChangeRequestApplicationJoinArgs = {
+  input: DeleteDataTableChangeRequestApplicationJoinInput;
 };
 
 
@@ -18415,6 +18790,7 @@ export type UpdateApplicationOnTriggerQueueForTriggerQueueApplicationIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `template` in the `ApplicationInput` mutation. */
@@ -18694,6 +19070,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationInput` mutation. */
@@ -18857,6 +19234,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationInput` mutation. */
@@ -19042,6 +19420,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `ApplicationInput` mutation. */
@@ -19728,6 +20107,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `review` in the `ApplicationInput` mutation. */
@@ -20497,6 +20877,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `actionQueue` in the `ApplicationInput` mutation. */
@@ -20619,6 +21000,7 @@ export type UpdateApplicationOnActionQueueForActionQueueApplicationIdFkeyPatch =
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `activityLog` in the `ApplicationInput` mutation. */
@@ -20754,6 +21136,7 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationNote` in the `ApplicationInput` mutation. */
@@ -20890,6 +21273,7 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationResponse` in the `ApplicationInput` mutation. */
@@ -21454,6 +21838,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationStageHistory` in the `ApplicationInput` mutation. */
@@ -23007,6 +23392,7 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTablePermitChemicalApplicationJoin` in the `ApplicationInput` mutation. */
@@ -23138,6 +23524,7 @@ export type UpdateApplicationOnDataTablePermitChemicalApplicationJoinForDataTabl
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTablePermitMedicalApplicationJoin` in the `ApplicationInput` mutation. */
@@ -23269,6 +23656,7 @@ export type UpdateApplicationOnDataTablePermitMedicalApplicationJoinForDataTable
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableProductApplicationJoin` in the `ApplicationInput` mutation. */
@@ -23399,6 +23787,7 @@ export type UpdateApplicationOnDataTableProductApplicationJoinForDataTableProduc
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableProvisionalProductApplicationJoin` in the `ApplicationInput` mutation. */
@@ -23530,6 +23919,7 @@ export type UpdateApplicationOnDataTableProvisionalProductApplicationJoinForData
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `file` in the `ApplicationInput` mutation. */
@@ -23663,6 +24053,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `notification` in the `ApplicationInput` mutation. */
@@ -23782,6 +24173,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisationApplicationJoin` in the `ApplicationInput` mutation. */
@@ -24391,6 +24783,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `triggerQueue` in the `ApplicationInput` mutation. */
@@ -24709,6 +25102,7 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `userApplicationJoin` in the `ApplicationInput` mutation. */
@@ -24840,6 +25234,7 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `verification` in the `ApplicationInput` mutation. */
@@ -24993,24 +25388,156 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `dataTableChangeRequestApplicationJoin` in the `ApplicationInput` mutation. */
+export type DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `dataTableChangeRequestApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `dataTableChangeRequestApplicationJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<DataTableChangeRequestApplicationJoinDataTableChangeRequestApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `dataTableChangeRequestApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<DataTableChangeRequestApplicationJoinNodeIdConnect>>;
+  /** The primary key(s) for `dataTableChangeRequestApplicationJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<DataTableChangeRequestApplicationJoinDataTableChangeRequestApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `dataTableChangeRequestApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<DataTableChangeRequestApplicationJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `dataTableChangeRequestApplicationJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<DataTableChangeRequestApplicationJoinOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyUsingDataTableChangeRequestApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataTableChangeRequestApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+  /** A `DataTableChangeRequestApplicationJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<DataTableChangeRequestApplicationJoinApplicationIdFkeyDataTableChangeRequestApplicationJoinCreateInput>>;
+};
+
+/** The fields on `dataTableChangeRequestApplicationJoin` to look up the row to connect. */
+export type DataTableChangeRequestApplicationJoinDataTableChangeRequestApplicationJoinPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type DataTableChangeRequestApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `dataTableChangeRequestApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `dataTableChangeRequestApplicationJoin` to look up the row to delete. */
+export type DataTableChangeRequestApplicationJoinDataTableChangeRequestApplicationJoinPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type DataTableChangeRequestApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `dataTableChangeRequestApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `dataTableChangeRequestApplicationJoin` to look up the row to update. */
+export type DataTableChangeRequestApplicationJoinOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyUsingDataTableChangeRequestApplicationJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `dataTableChangeRequestApplicationJoin` being updated. */
+  patch: UpdateDataTableChangeRequestApplicationJoinOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `dataTableChangeRequestApplicationJoin` being updated. */
+export type UpdateDataTableChangeRequestApplicationJoinOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  dataTableChangeRequestId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `application` in the `DataTableChangeRequestApplicationJoinInput` mutation. */
+export type DataTableChangeRequestApplicationJoinApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByOutcomeRegistration?: Maybe<ApplicationApplicationOutcomeRegistrationKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByOutcomeRegistration?: Maybe<ApplicationApplicationOutcomeRegistrationKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByOutcomeRegistration?: Maybe<ApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<DataTableChangeRequestApplicationJoinOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyApplicationCreateInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+export type ApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  outcomeRegistration?: Maybe<Scalars['String']>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: Maybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: Maybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyPatch;
   serial: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
+export type ApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyPatch;
   outcomeRegistration: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate = {
+export type DataTableChangeRequestApplicationJoinOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
@@ -25052,6 +25579,90 @@ export type ApplicationPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** The `application` to be created by this mutation. */
+export type DataTableChangeRequestApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  outcomeRegistration?: Maybe<Scalars['String']>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: Maybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: Maybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnDataTableChangeRequestApplicationJoinForDataTableChangeRequestApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTableChangeRequestApplicationJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `dataTableChangeRequestApplicationJoin` being updated. */
+  patch: DataTableChangeRequestApplicationJoinPatch;
+};
+
+/** Represents an update to a `DataTableChangeRequestApplicationJoin`. Fields that are set will be updated. */
+export type DataTableChangeRequestApplicationJoinPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  dataTableChangeRequestId?: Maybe<Scalars['Int']>;
+  applicationToApplicationId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInput>;
+};
+
+/** The `dataTableChangeRequestApplicationJoin` to be created by this mutation. */
+export type DataTableChangeRequestApplicationJoinApplicationIdFkeyDataTableChangeRequestApplicationJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  dataTableChangeRequestId: Scalars['Int'];
+  applicationToApplicationId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  outcomeRegistration: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
 };
 
 /** The `application` to be created by this mutation. */
@@ -25089,6 +25700,7 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `verification` to look up the row to update. */
@@ -25192,6 +25804,7 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `UserApplicationJoinInput` mutation. */
@@ -26196,6 +26809,7 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -26278,6 +26892,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `file` in the `ApplicationResponseInput` mutation. */
@@ -28581,6 +29196,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -28666,6 +29282,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `file` to look up the row to update. */
@@ -28766,6 +29383,7 @@ export type DataTableProvisionalProductApplicationApplicationIdFkeyApplicationCr
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableProvisionalProduct` in the `DataTableProvisionalProductApplicationJoinInput` mutation. */
@@ -29058,6 +29676,7 @@ export type DataTableProductApplicationJoinApplicationIdFkeyApplicationCreateInp
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -29140,6 +29759,7 @@ export type DataTablePermitMedicalApplicationJoinApplicationIdFkeyApplicationCre
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTablePermitMedical` in the `DataTablePermitMedicalApplicationJoinInput` mutation. */
@@ -29375,6 +29995,7 @@ export type DataTablePermitChemicalApplicationJoinApplicationIdFkeyApplicationCr
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTablePermitChemical` in the `DataTablePermitChemicalApplicationJoinInput` mutation. */
@@ -29601,6 +30222,7 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -30884,6 +31506,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `review` to look up the row to update. */
@@ -31192,6 +31815,7 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -31272,6 +31896,7 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -31364,6 +31989,7 @@ export type ActionQueueApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -31452,6 +32078,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -31886,6 +32513,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -32336,6 +32964,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `organisation` to look up the row to update. */
@@ -32447,6 +33076,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `user` to look up the row to update. */
@@ -32545,6 +33175,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -32712,6 +33343,7 @@ export type TriggerQueueApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -32848,6 +33480,7 @@ export type ApplicationInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  dataTableChangeRequestApplicationJoinsUsingId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The output of our create `Application` mutation. */
@@ -33345,6 +33978,86 @@ export type CreateDataTableAtcCodePayload = {
 /** The output of our create `DataTableAtcCode` mutation. */
 export type CreateDataTableAtcCodePayloadDataTableAtcCodeEdgeArgs = {
   orderBy?: Maybe<Array<DataTableAtcCodesOrderBy>>;
+};
+
+/** All input for the create `DataTableChangeRequest` mutation. */
+export type CreateDataTableChangeRequestInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableChangeRequest` to be created by this mutation. */
+  dataTableChangeRequest: DataTableChangeRequestInput;
+};
+
+/** An input for mutations affecting `DataTableChangeRequest` */
+export type DataTableChangeRequestInput = {
+  id?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  applicant?: Maybe<Scalars['String']>;
+  dataTable?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['Datetime']>;
+  organisation?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  orgId?: Maybe<Scalars['Int']>;
+  reason?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  applicantId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+};
+
+/** The output of our create `DataTableChangeRequest` mutation. */
+export type CreateDataTableChangeRequestPayload = {
+  __typename?: 'CreateDataTableChangeRequestPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableChangeRequest` that was created by this mutation. */
+  dataTableChangeRequest?: Maybe<DataTableChangeRequest>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableChangeRequest`. May be used by Relay 1. */
+  dataTableChangeRequestEdge?: Maybe<DataTableChangeRequestsEdge>;
+};
+
+
+/** The output of our create `DataTableChangeRequest` mutation. */
+export type CreateDataTableChangeRequestPayloadDataTableChangeRequestEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableChangeRequestsOrderBy>>;
+};
+
+/** All input for the create `DataTableChangeRequestApplicationJoin` mutation. */
+export type CreateDataTableChangeRequestApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableChangeRequestApplicationJoin` to be created by this mutation. */
+  dataTableChangeRequestApplicationJoin: DataTableChangeRequestApplicationJoinInput;
+};
+
+/** An input for mutations affecting `DataTableChangeRequestApplicationJoin` */
+export type DataTableChangeRequestApplicationJoinInput = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  dataTableChangeRequestId: Scalars['Int'];
+  applicationToApplicationId?: Maybe<DataTableChangeRequestApplicationJoinApplicationIdFkeyInput>;
+};
+
+/** The output of our create `DataTableChangeRequestApplicationJoin` mutation. */
+export type CreateDataTableChangeRequestApplicationJoinPayload = {
+  __typename?: 'CreateDataTableChangeRequestApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableChangeRequestApplicationJoin` that was created by this mutation. */
+  dataTableChangeRequestApplicationJoin?: Maybe<DataTableChangeRequestApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `DataTableChangeRequestApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** An edge for our `DataTableChangeRequestApplicationJoin`. May be used by Relay 1. */
+  dataTableChangeRequestApplicationJoinEdge?: Maybe<DataTableChangeRequestApplicationJoinsEdge>;
+};
+
+
+/** The output of our create `DataTableChangeRequestApplicationJoin` mutation. */
+export type CreateDataTableChangeRequestApplicationJoinPayloadDataTableChangeRequestApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableChangeRequestApplicationJoinsOrderBy>>;
 };
 
 /** All input for the create `DataTableContainer` mutation. */
@@ -36351,6 +37064,100 @@ export type UpdateDataTableAtcCodeInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** An object where the defined keys will be set on the `DataTableAtcCode` being updated. */
   patch: DataTableAtcCodePatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateDataTableChangeRequestByNodeId` mutation. */
+export type UpdateDataTableChangeRequestByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableChangeRequest` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `DataTableChangeRequest` being updated. */
+  patch: DataTableChangeRequestPatch;
+};
+
+/** Represents an update to a `DataTableChangeRequest`. Fields that are set will be updated. */
+export type DataTableChangeRequestPatch = {
+  id?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  applicant?: Maybe<Scalars['String']>;
+  dataTable?: Maybe<Scalars['String']>;
+  dateCreated?: Maybe<Scalars['Datetime']>;
+  organisation?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  orgId?: Maybe<Scalars['Int']>;
+  reason?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  applicantId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+};
+
+/** The output of our update `DataTableChangeRequest` mutation. */
+export type UpdateDataTableChangeRequestPayload = {
+  __typename?: 'UpdateDataTableChangeRequestPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableChangeRequest` that was updated by this mutation. */
+  dataTableChangeRequest?: Maybe<DataTableChangeRequest>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableChangeRequest`. May be used by Relay 1. */
+  dataTableChangeRequestEdge?: Maybe<DataTableChangeRequestsEdge>;
+};
+
+
+/** The output of our update `DataTableChangeRequest` mutation. */
+export type UpdateDataTableChangeRequestPayloadDataTableChangeRequestEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableChangeRequestsOrderBy>>;
+};
+
+/** All input for the `updateDataTableChangeRequest` mutation. */
+export type UpdateDataTableChangeRequestInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataTableChangeRequest` being updated. */
+  patch: DataTableChangeRequestPatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateDataTableChangeRequestApplicationJoinByNodeId` mutation. */
+export type UpdateDataTableChangeRequestApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableChangeRequestApplicationJoin` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `DataTableChangeRequestApplicationJoin` being updated. */
+  patch: DataTableChangeRequestApplicationJoinPatch;
+};
+
+/** The output of our update `DataTableChangeRequestApplicationJoin` mutation. */
+export type UpdateDataTableChangeRequestApplicationJoinPayload = {
+  __typename?: 'UpdateDataTableChangeRequestApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableChangeRequestApplicationJoin` that was updated by this mutation. */
+  dataTableChangeRequestApplicationJoin?: Maybe<DataTableChangeRequestApplicationJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `DataTableChangeRequestApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** An edge for our `DataTableChangeRequestApplicationJoin`. May be used by Relay 1. */
+  dataTableChangeRequestApplicationJoinEdge?: Maybe<DataTableChangeRequestApplicationJoinsEdge>;
+};
+
+
+/** The output of our update `DataTableChangeRequestApplicationJoin` mutation. */
+export type UpdateDataTableChangeRequestApplicationJoinPayloadDataTableChangeRequestApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableChangeRequestApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `updateDataTableChangeRequestApplicationJoin` mutation. */
+export type UpdateDataTableChangeRequestApplicationJoinInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `DataTableChangeRequestApplicationJoin` being updated. */
+  patch: DataTableChangeRequestApplicationJoinPatch;
   id: Scalars['Int'];
 };
 
@@ -39367,6 +40174,78 @@ export type DeleteDataTableAtcCodePayloadDataTableAtcCodeEdgeArgs = {
 
 /** All input for the `deleteDataTableAtcCode` mutation. */
 export type DeleteDataTableAtcCodeInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteDataTableChangeRequestByNodeId` mutation. */
+export type DeleteDataTableChangeRequestByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableChangeRequest` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `DataTableChangeRequest` mutation. */
+export type DeleteDataTableChangeRequestPayload = {
+  __typename?: 'DeleteDataTableChangeRequestPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableChangeRequest` that was deleted by this mutation. */
+  dataTableChangeRequest?: Maybe<DataTableChangeRequest>;
+  deletedDataTableChangeRequestNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `DataTableChangeRequest`. May be used by Relay 1. */
+  dataTableChangeRequestEdge?: Maybe<DataTableChangeRequestsEdge>;
+};
+
+
+/** The output of our delete `DataTableChangeRequest` mutation. */
+export type DeleteDataTableChangeRequestPayloadDataTableChangeRequestEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableChangeRequestsOrderBy>>;
+};
+
+/** All input for the `deleteDataTableChangeRequest` mutation. */
+export type DeleteDataTableChangeRequestInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteDataTableChangeRequestApplicationJoinByNodeId` mutation. */
+export type DeleteDataTableChangeRequestApplicationJoinByNodeIdInput = {
+  /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `DataTableChangeRequestApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `DataTableChangeRequestApplicationJoin` mutation. */
+export type DeleteDataTableChangeRequestApplicationJoinPayload = {
+  __typename?: 'DeleteDataTableChangeRequestApplicationJoinPayload';
+  /** The exact same `clientMutationId` that was provided in the mutation input, unchanged and unused. May be used by a client to track mutations. */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `DataTableChangeRequestApplicationJoin` that was deleted by this mutation. */
+  dataTableChangeRequestApplicationJoin?: Maybe<DataTableChangeRequestApplicationJoin>;
+  deletedDataTableChangeRequestApplicationJoinNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `DataTableChangeRequestApplicationJoin`. */
+  application?: Maybe<Application>;
+  /** An edge for our `DataTableChangeRequestApplicationJoin`. May be used by Relay 1. */
+  dataTableChangeRequestApplicationJoinEdge?: Maybe<DataTableChangeRequestApplicationJoinsEdge>;
+};
+
+
+/** The output of our delete `DataTableChangeRequestApplicationJoin` mutation. */
+export type DeleteDataTableChangeRequestApplicationJoinPayloadDataTableChangeRequestApplicationJoinEdgeArgs = {
+  orderBy?: Maybe<Array<DataTableChangeRequestApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `deleteDataTableChangeRequestApplicationJoin` mutation. */
+export type DeleteDataTableChangeRequestApplicationJoinInput = {
   /** An arbitrary string value with no semantic meaning. Will be included in the payload verbatim. May be used to track mutations by the client. */
   clientMutationId?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
