@@ -64,7 +64,6 @@ export const AdminPreferences: React.FC = () => {
           collapse={2}
           showArrayIndices={false}
           maxWidth={650}
-          theme={{ container: '#f9f9f9' }}
         />
       ) : (
         <Loading />
