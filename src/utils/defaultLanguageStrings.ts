@@ -152,7 +152,7 @@ export default {
   DATA_VIEW_CONFIG_COL_DELETED: 'Column definition deleted',
   DATA_VIEW_CONFIG_ADD_COL_PROBLEM: 'Problem creating column definition!',
   DATA_VIEW_CONFIG_COL_ADDED: 'Column definition created',
-  DATA_VIEW_CONFIG_ADD_COL_MESSAGE: 'UPDATE THIS MESSAGE',
+  DATA_VIEW_CONFIG_ADD_COL_MESSAGE: 'Please name the columnName field immediately',
   DEFAULT_TEMPLATE_CATEGORY_TITLE: 'General',
   DEFAULT_TEMPLATE_CATEGORY_ICON: 'globe',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
