@@ -352,8 +352,6 @@ const getDataTableOptions = (
     }))
   )
 
-  console.log('options', options)
-
   return options
 }
 
