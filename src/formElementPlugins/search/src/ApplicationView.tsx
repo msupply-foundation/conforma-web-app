@@ -79,6 +79,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     currentResponse,
     parameters,
     onChange: (defaultSelection) => {
+      if (!defaultSelection) {
+        setSelection([])
+        return
+      }
       setSelection(Array.isArray(defaultSelection) ? defaultSelection : [defaultSelection])
       setSearchText(
         displayType === 'input'
