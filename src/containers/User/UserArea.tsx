@@ -117,7 +117,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         key: dataView.submenu,
         text: dataView.submenu,
         content: (
-          <Dropdown item simple text={dataView.submenu}>
+          <Dropdown item text={dataView.submenu}>
             <Dropdown.Menu style={{ transform: 'translateY(-25px)' }}>
               {dataView.items.map((item) => {
                 const { code, urlSlug, title, defaultFilter } = item
