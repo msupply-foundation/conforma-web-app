@@ -121,6 +121,16 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
 
   const configOptions = [
     { key: 'templates', text: t('MENU_ITEM_ADMIN_TEMPLATES'), value: '/admin/templates' },
+    {
+      key: 'lookup_tables',
+      text: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
+      value: '/admin/lookup-tables',
+    },
+    {
+      key: 'dataViews',
+      text: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
+      value: '/admin/data-views',
+    },
     // {
     //   key: 'dataViews',
     //   text: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
