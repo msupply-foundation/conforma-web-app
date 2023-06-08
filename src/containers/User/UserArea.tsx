@@ -4,7 +4,13 @@ import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
-import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
+import {
+  OrganisationSimple,
+  User,
+  LoginPayload,
+  TemplateInList,
+  DataViewsResponse,
+} from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useDataViewsList } from '../../utils/hooks/useDataViews'
 import { useReferenceDocs } from '../../utils/hooks/useReferenceDocs'
@@ -57,13 +63,7 @@ const UserArea: React.FC = () => {
 }
 interface MainMenuBarProps {
   templates: TemplateInList[]
-  dataViews: {
-    tableName: string
-    title: string
-    code: string
-    urlSlug: string
-    defaultFilter: string | null
-  }[]
+  dataViews: DataViewsResponse
   referenceDocs: {
     intReferenceDocs: { uniqueId: string; description: string }[]
     extReferenceDocs: { uniqueId: string; description: string }[]
@@ -104,11 +104,37 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
   }, [pathname])
 
-  const dataViewOptions = dataViews.map(({ code, urlSlug, title, defaultFilter }) => ({
-    key: code,
-    text: title,
-    value: urlSlug + (defaultFilter ? `?${defaultFilter}` : ''),
-  }))
+  const dataViewOptions = dataViews.map((dataView) => {
+    if (dataView.submenu === null) {
+      const { code, urlSlug, title, defaultFilter } = dataView
+      return {
+        key: code,
+        text: title,
+        value: urlSlug + (defaultFilter ? `?${defaultFilter}` : ''),
+      }
+    } else
+      return {
+        key: dataView.submenu,
+        text: dataView.submenu,
+        content: (
+          <Dropdown item text={dataView.submenu}>
+            <Dropdown.Menu style={{ transform: 'translateY(-25px)' }}>
+              {dataView.items.map((item) => {
+                const { code, urlSlug, title, defaultFilter } = item
+                return (
+                  <Dropdown.Item
+                    key={code}
+                    text={title}
+                    value={urlSlug + (defaultFilter ? `?${defaultFilter}` : '')}
+                    onClick={(e, data) => handleDataViewChange(e, data)}
+                  />
+                )
+              })}
+            </Dropdown.Menu>
+          </Dropdown>
+        ),
+      }
+  })
 
   const templateOptions = templates
     .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List))

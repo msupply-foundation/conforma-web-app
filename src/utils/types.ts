@@ -682,13 +682,25 @@ interface SortQuery {
 // *****************
 
 // Response value of /data-views endpoint
-export type DataViewsResponse = {
+export interface DataViewDetail {
   tableName: string
   title: string
   code: string
   urlSlug: string
+  submenu: null
   defaultFilter: string | null
-}[]
+}
+
+type SubmenuDetail = {
+  submenu: string
+} & Omit<DataViewDetail, 'submenu'>
+
+interface SubmenuItem {
+  submenu: string
+  items: SubmenuDetail[]
+}
+
+export type DataViewsResponse = (DataViewDetail | SubmenuItem)[]
 
 interface FormatOptions {
   elementTypePluginCode?: string
