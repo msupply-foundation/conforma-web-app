@@ -30,6 +30,7 @@ export const AdminDataViews: React.FC = () => {
   const { t } = useLanguageProvider()
   usePageTitle(t('PAGE_TITLE_DATA_VIEW'))
   const [includeLookupTables, setIncludeLookupTables] = useState(false)
+  const [additional, setAdditional] = useState<string | undefined>()
 
   const { query, updateQuery, setQuery } = useRouter()
 
@@ -44,10 +45,13 @@ export const AdminDataViews: React.FC = () => {
         <Dropdown
           selection
           clearable
+          search
+          allowAdditions
           placeholder={t('DATA_VIEW_CONFIG_SELECT_TABLE')}
           loading={loading}
           value={selectedTable}
-          options={getDataTableOptions(data, includeLookupTables, t)}
+          options={getDataTableOptions(data, includeLookupTables, additional, t)}
+          onAddItem={(_, { value }) => setAdditional(value as string)}
           onChange={(_, { value }) => {
             if (!value) setQuery({})
             else updateQuery({ selectedTable: value })
@@ -329,6 +333,7 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
 const getDataTableOptions = (
   data: GetDataTablesQuery | undefined,
   includeLookupTables: boolean,
+  additional: string | undefined,
   t: TranslateMethod
 ) => {
   if (!data) return []
@@ -344,6 +349,7 @@ const getDataTableOptions = (
       }
     })
 
+  // Include the "core" system tables that can be accessed
   options.push(
     ...config.dataViewAllowedTableNames.map((table) => ({
       key: `${table}`,
@@ -351,6 +357,22 @@ const getDataTableOptions = (
       value: table,
     }))
   )
+
+  // We also want to include dataViews that have been created, but don't have an
+  // actual table in the system yet
+  const optionTableNames = options.map(({ value }) => value)
+  const additionalDataViews = new Set(
+    (data.dataViews?.nodes as { tableName: string }[])
+      .map(({ tableName }) => toCamelCase(tableName))
+      .filter((table) => !optionTableNames.includes(table))
+  )
+
+  options.push(
+    ...Array.from(additionalDataViews).map((table) => ({ key: table, text: table, value: table }))
+  )
+
+  // Include custom-added option
+  if (additional) options.push({ key: additional, text: additional, value: additional })
 
   return options
 }
