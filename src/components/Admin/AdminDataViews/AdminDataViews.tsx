@@ -349,6 +349,7 @@ const getDataTableOptions = (
       }
     })
 
+  // Include the "core" system tables that can be accessed
   options.push(
     ...config.dataViewAllowedTableNames.map((table) => ({
       key: `${table}`,
@@ -357,6 +358,20 @@ const getDataTableOptions = (
     }))
   )
 
+  // We also want to include dataViews that have been created, but don't have an
+  // actual table in the system yet
+  const optionTableNames = options.map(({ value }) => value)
+  const additionalDataViews = new Set(
+    (data.dataViews?.nodes as { tableName: string }[])
+      .map(({ tableName }) => toCamelCase(tableName))
+      .filter((table) => !optionTableNames.includes(table))
+  )
+
+  options.push(
+    ...Array.from(additionalDataViews).map((table) => ({ key: table, text: table, value: table }))
+  )
+
+  // Include custom-added option
   if (additional) options.push({ key: additional, text: additional, value: additional })
 
   return options
