@@ -1,5 +1,15 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Button, Container, Image, List, Dropdown, Modal, Header, Form } from 'semantic-ui-react'
+import {
+  Button,
+  Container,
+  Image,
+  List,
+  Dropdown,
+  Modal,
+  Header,
+  Form,
+  DropdownItemProps,
+} from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
@@ -104,36 +114,18 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
   }, [pathname])
 
-  const dataViewOptions = dataViews.map((dataView) => {
-    if (dataView.submenu === null) {
+  const dataViewOptions = constructNestedMenuOptions(dataViews, {
+    filterMethod: () => true,
+    mapMethod: (dataView) => {
       const { code, urlSlug, title, defaultFilter } = dataView
       return {
         key: code,
         text: title,
         value: urlSlug + (defaultFilter ? `?${defaultFilter}` : ''),
       }
-    } else
-      return {
-        key: dataView.submenu,
-        text: dataView.submenu,
-        content: (
-          <Dropdown item text={dataView.submenu}>
-            <Dropdown.Menu style={{ transform: 'translateY(-25px)' }}>
-              {dataView.items.map((item) => {
-                const { code, urlSlug, title, defaultFilter } = item
-                return (
-                  <Dropdown.Item
-                    key={code}
-                    text={title}
-                    value={urlSlug + (defaultFilter ? `?${defaultFilter}` : '')}
-                    onClick={(e, data) => handleDataViewChange(e, data)}
-                  />
-                )
-              })}
-            </Dropdown.Menu>
-          </Dropdown>
-        ),
-      }
+    },
+    getSubmenuMethod: (dataView) => dataView.submenu,
+    onClick: (e, data) => handleDataViewChange(e, data),
   })
 
   const templateOptions = templates
@@ -218,7 +210,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   const handleDataViewChange = (e: SyntheticEvent, { value }: any) => {
     setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
     push(`/data/${value}`, {
-      title: dataViewOptions.find((option) => option.value === value)?.text,
+      title: dataViewOptions.find((option) => (option as StandardMenuOption)?.value === value)
+        ?.text,
       resetFilters: true,
     })
   }
@@ -531,4 +524,70 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
         extRefDocs: { active: false },
       }
   }
+}
+
+interface MenuInput {
+  filterMethod: (e: any) => boolean
+  mapMethod: (e: any) => any
+  getSubmenuMethod: (e: any) => string | null
+  onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, data: DropdownItemProps) => void
+}
+
+interface StandardMenuOption {
+  key: string
+  text: string
+  value: string
+}
+
+interface NestedMenuOption {
+  key: string
+  text: string
+  content: JSX.Element
+}
+
+interface Menu {
+  [key: string]: StandardMenuOption[]
+}
+
+const constructNestedMenuOptions = (
+  items: any[],
+  { filterMethod, mapMethod, getSubmenuMethod, onClick }: MenuInput
+): (StandardMenuOption | NestedMenuOption)[] => {
+  const filteredItems = items.filter(filterMethod)
+  const menus: (StandardMenuOption | NestedMenuOption)[] = []
+  const subMenus: Menu = {}
+  filteredItems.forEach((item) => {
+    const submenu = getSubmenuMethod(item)
+    if (!submenu) menus.push(mapMethod(item))
+    else {
+      if (submenu in subMenus) subMenus[submenu].push(mapMethod(item))
+      else subMenus[submenu] = [mapMethod(item)]
+    }
+  })
+
+  Object.entries(subMenus).forEach(([submenu, items]) => {
+    menus.push({
+      key: submenu,
+      text: submenu,
+      content: (
+        <Dropdown item simple text={submenu}>
+          <Dropdown.Menu style={{ transform: 'translateY(-25px)' }}>
+            {items.map((item) => {
+              const { key, text, value } = item
+              return (
+                <Dropdown.Item
+                  key={key}
+                  text={text}
+                  value={value}
+                  onClick={(e, data) => onClick(e, data)}
+                />
+              )
+            })}
+          </Dropdown.Menu>
+        </Dropdown>
+      ),
+    })
+  })
+
+  return menus
 }

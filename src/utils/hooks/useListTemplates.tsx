@@ -97,6 +97,7 @@ const convertFromTemplateToTemplateDetails = (
     (template?.templateCategory?.icon as SemanticICONS) || undefined
   const categoryUILocation: UiLocation[] =
     (template?.templateCategory?.uiLocation as UiLocation[]) || []
+  const categoryIsSubmenu = template?.templateCategory?.isSubmenu || false
 
   const hasApplyPermission = permissions.includes(PermissionPolicyType.Apply)
   // This is already checked (permission.length > 0), but added to avoid confusion
@@ -119,6 +120,7 @@ const convertFromTemplateToTemplateDetails = (
       icon: categoryIcon,
       title: categoryTitle,
       uiLocation: categoryUILocation,
+      isSubmenu: categoryIsSubmenu,
     },
     totalApplications,
   }

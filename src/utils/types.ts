@@ -575,6 +575,7 @@ interface TemplateCategoryDetails {
   title: string
   icon: SemanticICONS | undefined
   uiLocation: UiLocation[]
+  isSubmenu: boolean
 }
 
 interface TemplateInList {
