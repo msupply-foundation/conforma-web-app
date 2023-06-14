@@ -683,16 +683,14 @@ interface SortQuery {
 // *****************
 
 // Response value of /data-views endpoint
-export interface DataViewDetail {
+export type DataViewsResponse = {
   tableName: string
   title: string
   code: string
   urlSlug: string
-  submenu: null
+  submenu: string | null
   defaultFilter: string | null
-}
-
-export type DataViewsResponse = DataViewDetail[]
+}[]
 
 interface FormatOptions {
   elementTypePluginCode?: string
