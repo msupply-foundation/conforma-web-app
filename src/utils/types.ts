@@ -692,15 +692,6 @@ export interface DataViewDetail {
   defaultFilter: string | null
 }
 
-type SubmenuDetail = {
-  submenu: string
-} & Omit<DataViewDetail, 'submenu'>
-
-interface SubmenuItem {
-  submenu: string
-  items: SubmenuDetail[]
-}
-
 export type DataViewsResponse = DataViewDetail[]
 
 interface FormatOptions {
