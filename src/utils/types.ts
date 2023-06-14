@@ -701,7 +701,7 @@ interface SubmenuItem {
   items: SubmenuDetail[]
 }
 
-export type DataViewsResponse = (DataViewDetail | SubmenuItem)[]
+export type DataViewsResponse = DataViewDetail[]
 
 interface FormatOptions {
   elementTypePluginCode?: string
