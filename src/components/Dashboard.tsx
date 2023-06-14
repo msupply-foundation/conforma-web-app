@@ -81,6 +81,7 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
           </Label>
           {filters.map((filter) => (
             <FilterComponent
+              key={filter.code}
               template={template}
               filter={filter}
               userId={currentUser?.userId ?? 0}
