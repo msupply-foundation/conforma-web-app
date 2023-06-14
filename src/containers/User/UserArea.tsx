@@ -118,6 +118,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     onClick: (value) => handleMenuSelect(value, 'DataView'),
   })
 
+  const getTemplateSubmenu = (template: TemplateInList) =>
+    template.templateCategory.isSubmenu ? template.templateCategory.title : null
+
   const applicationListOptions = constructNestedMenuOptions(templates, {
     filterMethod: ({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List),
     mapMethod: (template) => ({
@@ -125,8 +128,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       text: template.name,
       value: `/applications?type=${template.code}`,
     }),
-    getSubmenuMethod: (template) =>
-      template.templateCategory.isSubmenu ? template.templateCategory.title : null,
+    getSubmenuMethod: getTemplateSubmenu,
     onClick: (value) => handleMenuSelect(value, 'List'),
   })
 
@@ -167,8 +169,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         text: template.name,
         value: `/application/new?type=${template.code}`,
       }),
-      getSubmenuMethod: (template) =>
-        template.templateCategory.isSubmenu ? template.templateCategory.title : null,
+      getSubmenuMethod: getTemplateSubmenu,
       onClick: (value) => handleMenuSelect(value, 'Config'),
     })
   )
@@ -181,8 +182,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       text: template.name,
       value: `/application/new?type=${template.code}`,
     }),
-    getSubmenuMethod: (template) =>
-      template.templateCategory.isSubmenu ? template.templateCategory.title : null,
+    getSubmenuMethod: getTemplateSubmenu,
     onClick: (value) => handleMenuSelect(value, 'Manage'),
   })
 
