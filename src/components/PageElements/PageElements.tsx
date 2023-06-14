@@ -102,7 +102,7 @@ const PageElements: React.FC<PageElementProps> = ({
               {renderConfigElement(element)}
               <div className="form-element">
                 {element.category === TemplateElementCategory.Information ? (
-                  <RenderElementWrapper key={element.code}>
+                  <RenderElementWrapper key={element.code} isVisible={element.isVisible}>
                     <SummaryViewWrapper {...getSummaryViewProps(element)} />
                   </RenderElementWrapper>
                 ) : (
@@ -272,8 +272,12 @@ const PageElements: React.FC<PageElementProps> = ({
   return null
 }
 
-const RenderElementWrapper: React.FC<{ extraSpacing?: boolean }> = ({ children, extraSpacing }) => (
-  <Segment basic className="summary-page-element-container">
+const RenderElementWrapper: React.FC<{ extraSpacing?: boolean; isVisible?: boolean }> = ({
+  children,
+  extraSpacing,
+  isVisible,
+}) => (
+  <Segment basic className={`summary-page-element-container${isVisible ? '' : ' hidden-element'}`}>
     {children}
   </Segment>
 )
