@@ -46517,7 +46517,7 @@ export type GetTemplateCategoriesQuery = (
     { __typename?: 'TemplateCategoriesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'TemplateCategory' }
-      & Pick<TemplateCategory, 'code' | 'icon' | 'id' | 'title' | 'uiLocation'>
+      & Pick<TemplateCategory, 'code' | 'icon' | 'id' | 'title' | 'uiLocation' | 'isSubmenu'>
     )>> }
   )> }
 );
@@ -49444,6 +49444,7 @@ export const GetTemplateCategoriesDocument = gql`
       id
       title
       uiLocation
+      isSubmenu
     }
   }
 }
