@@ -543,10 +543,10 @@ function constructNestedMenuOptions<T>(
   items: T[],
   { filterMethod, mapMethod, getSubmenuMethod, onClick }: MenuInput<T>
 ): (StandardMenuOption | NestedMenuOption)[] {
-  const filteredItems = items.filter(filterMethod)
   const menus: (StandardMenuOption | NestedMenuOption)[] = []
   const subMenus: Record<string, StandardMenuOption[]> = {}
-  filteredItems.forEach((item) => {
+
+  items.filter(filterMethod).forEach((item) => {
     const submenu = getSubmenuMethod(item)
     if (!submenu) menus.push(mapMethod(item))
     else {
