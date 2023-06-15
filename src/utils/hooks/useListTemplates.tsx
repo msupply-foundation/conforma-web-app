@@ -104,6 +104,7 @@ const convertFromTemplateToTemplateDetails = (
   const hasNonApplyPermissions = !hasApplyPermission && permissions.length > 0
 
   const filters = extractFilters(template, permissions)
+  const dashboardRestrictions = template.dashboardRestrictions as string[] | null
 
   const result: TemplateInList = {
     id,
@@ -114,6 +115,7 @@ const convertFromTemplateToTemplateDetails = (
     icon,
     permissions,
     filters,
+    dashboardRestrictions,
     hasApplyPermission,
     hasNonApplyPermissions,
     templateCategory: {

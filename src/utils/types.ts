@@ -590,6 +590,7 @@ interface TemplateInList {
   hasApplyPermission: boolean
   hasNonApplyPermissions: boolean
   filters: Filter[]
+  dashboardRestrictions: string[] | null
   totalApplications: number
 }
 

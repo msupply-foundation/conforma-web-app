@@ -62,15 +62,27 @@ const TemplateComponent: React.FC<{ template: TemplateInList }> = ({ template })
   } = useUserState()
   const [loadedFiltersCount, setLoadedFiltersCount] = useState(0)
 
-  const { name, code, hasApplyPermission, filters, permissions, totalApplications } = template
+  const {
+    name,
+    code,
+    hasApplyPermission,
+    filters,
+    permissions,
+    totalApplications,
+    dashboardRestrictions,
+  } = template
 
   const userRole =
     permissions.filter((type) => type === PermissionPolicyType.Apply).length > 0
       ? USER_ROLES.APPLICANT
       : USER_ROLES.REVIEWER
 
+  const shouldHide = dashboardRestrictions
+    ? considerRestrictions(dashboardRestrictions, filters, loadedFiltersCount)
+    : false
+
   return (
-    <div className="template">
+    <div className="template" style={shouldHide ? { visibility: 'hidden' } : {}}>
       <div className="content">
         <div className="filters">
           <Label className="strong-label clickable">
@@ -159,5 +171,16 @@ const constructLink = (filter: Filter, templateType: string) =>
   `/applications?type=${templateType}&user-role=${userRole(filter)}&${Object.entries(filter.query)
     .map(([key, value]) => `${key}=${value}`)
     .join('&')}`
+
+const considerRestrictions = (
+  restrictions: string[],
+  filters: Filter[],
+  loadedFiltersCount: number
+) => {
+  if (loadedFiltersCount < filters.length) return true
+
+  // return restrictions.some((filterCode) => )
+  return false
+}
 
 export default Dashboard
