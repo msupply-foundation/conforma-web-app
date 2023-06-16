@@ -4381,6 +4381,8 @@ export type TemplateFilter = {
   version?: Maybe<IntFilter>;
   /** Filter by the object’s `serialPattern` field. */
   serialPattern?: Maybe<StringFilter>;
+  /** Filter by the object’s `dashboardRestrictions` field. */
+  dashboardRestrictions?: Maybe<StringListFilter>;
   /** Filter by the object’s `applications` relation. */
   applications?: Maybe<TemplateToManyApplicationFilter>;
   /** Some related `applications` exist. */
@@ -6487,6 +6489,8 @@ export type DataTableProvisionalProductFilter = {
   prequalified?: Maybe<BooleanFilter>;
   /** Filter by the object’s `manufacturerPrequalified` field. */
   manufacturerPrequalified?: Maybe<JsonFilter>;
+  /** Filter by the object’s `manufacturerPrequalifiedFilterData` field. */
+  manufacturerPrequalifiedFilterData?: Maybe<StringFilter>;
   /** Filter by the object’s `dataTableProvisionalProductApplicationJoins` relation. */
   dataTableProvisionalProductApplicationJoins?: Maybe<DataTableProvisionalProductToManyDataTableProvisionalProductApplicationJoinFilter>;
   /** Some related `dataTableProvisionalProductApplicationJoins` exist. */
@@ -7022,6 +7026,7 @@ export type Template = Node & {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Reads a single `TemplateCategory` that is related to this `Template`. */
   templateCategory?: Maybe<TemplateCategory>;
   /** Reads and enables pagination through a set of `Application`. */
@@ -7223,6 +7228,8 @@ export enum TemplatesOrderBy {
   VersionDesc = 'VERSION_DESC',
   SerialPatternAsc = 'SERIAL_PATTERN_ASC',
   SerialPatternDesc = 'SERIAL_PATTERN_DESC',
+  DashboardRestrictionsAsc = 'DASHBOARD_RESTRICTIONS_ASC',
+  DashboardRestrictionsDesc = 'DASHBOARD_RESTRICTIONS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -7257,6 +7264,8 @@ export type TemplateCondition = {
   version?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `serialPattern` field. */
   serialPattern?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dashboardRestrictions` field. */
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A connection to a list of `Template` values. */
@@ -10777,6 +10786,7 @@ export type DataTableProvisionalProduct = Node & {
   prodRegCertificate?: Maybe<Scalars['JSON']>;
   prequalified?: Maybe<Scalars['Boolean']>;
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
+  manufacturerPrequalifiedFilterData?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `DataTableProvisionalProductApplicationJoin`. */
   dataTableProvisionalProductApplicationJoins: DataTableProvisionalProductApplicationJoinsConnection;
 };
@@ -14077,6 +14087,8 @@ export enum DataTableProvisionalProductsOrderBy {
   PrequalifiedDesc = 'PREQUALIFIED_DESC',
   ManufacturerPrequalifiedAsc = 'MANUFACTURER_PREQUALIFIED_ASC',
   ManufacturerPrequalifiedDesc = 'MANUFACTURER_PREQUALIFIED_DESC',
+  ManufacturerPrequalifiedFilterDataAsc = 'MANUFACTURER_PREQUALIFIED_FILTER_DATA_ASC',
+  ManufacturerPrequalifiedFilterDataDesc = 'MANUFACTURER_PREQUALIFIED_FILTER_DATA_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -14145,6 +14157,8 @@ export type DataTableProvisionalProductCondition = {
   prequalified?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `manufacturerPrequalified` field. */
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `manufacturerPrequalifiedFilterData` field. */
+  manufacturerPrequalifiedFilterData?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `DataTableProvisionalProduct` values. */
@@ -20022,6 +20036,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -20151,6 +20166,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -21136,6 +21152,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -21470,6 +21487,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -21587,6 +21605,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -21711,6 +21730,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -22735,6 +22755,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -23620,6 +23641,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -26042,6 +26064,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -26153,6 +26176,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -27346,6 +27370,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -28031,6 +28056,7 @@ export type TemplatePatch = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -28060,6 +28086,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -30124,6 +30151,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -30345,6 +30373,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -30876,6 +30905,7 @@ export type UpdateDataTableProvisionalProductOnDataTableProvisionalProductApplic
   prodRegCertificate?: Maybe<Scalars['JSON']>;
   prequalified?: Maybe<Scalars['Boolean']>;
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
+  manufacturerPrequalifiedFilterData?: Maybe<Scalars['String']>;
   dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProducDataTableProvisionalProduFkeyInverseInput>;
 };
 
@@ -30980,6 +31010,7 @@ export type DataTableProvisionalProductPatch = {
   prodRegCertificate?: Maybe<Scalars['JSON']>;
   prequalified?: Maybe<Scalars['Boolean']>;
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
+  manufacturerPrequalifiedFilterData?: Maybe<Scalars['String']>;
   dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProducDataTableProvisionalProduFkeyInverseInput>;
 };
 
@@ -31016,6 +31047,7 @@ export type DataTableProvisionalProducDataTableProvisionalProduFkeyDataTableProv
   prodRegCertificate?: Maybe<Scalars['JSON']>;
   prequalified?: Maybe<Scalars['Boolean']>;
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
+  manufacturerPrequalifiedFilterData?: Maybe<Scalars['String']>;
   dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProducDataTableProvisionalProduFkeyInverseInput>;
 };
 
@@ -32928,6 +32960,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -33661,6 +33694,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -34245,6 +34279,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -34311,6 +34346,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -34385,6 +34421,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -34601,6 +34638,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -35228,6 +35266,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -35302,6 +35341,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -36900,6 +36940,7 @@ export type DataTableProvisionalProductInput = {
   prodRegCertificate?: Maybe<Scalars['JSON']>;
   prequalified?: Maybe<Scalars['Boolean']>;
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
+  manufacturerPrequalifiedFilterData?: Maybe<Scalars['String']>;
   dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProducDataTableProvisionalProduFkeyInverseInput>;
 };
 
@@ -37984,6 +38025,7 @@ export type TemplateInput = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
+  dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -45198,7 +45240,7 @@ export type StageFragment = (
 
 export type TemplateFragmentFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'canApplicantMakeChanges' | 'startMessage' | 'submissionMessage' | 'version' | 'serialPattern' | 'icon'>
+  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'canApplicantMakeChanges' | 'startMessage' | 'submissionMessage' | 'version' | 'serialPattern' | 'icon' | 'dashboardRestrictions'>
   & { templateCategory?: Maybe<(
     { __typename?: 'TemplateCategory' }
     & Pick<TemplateCategory, 'id' | 'code' | 'title' | 'icon' | 'uiLocation' | 'isSubmenu'>
@@ -46760,6 +46802,7 @@ export const TemplateFragmentFragmentDoc = gql`
   version
   serialPattern
   icon
+  dashboardRestrictions
   templateCategory {
     id
     code

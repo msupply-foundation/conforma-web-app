@@ -572,6 +572,7 @@ interface LevelAssignments {
 }
 
 interface TemplateCategoryDetails {
+  code: string
   title: string
   icon: SemanticICONS | undefined
   uiLocation: UiLocation[]
@@ -590,6 +591,7 @@ interface TemplateInList {
   hasApplyPermission: boolean
   hasNonApplyPermissions: boolean
   filters: Filter[]
+  dashboardRestrictions: string[] | null
   totalApplications: number
 }
 

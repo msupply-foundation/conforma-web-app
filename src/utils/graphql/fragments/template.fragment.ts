@@ -14,6 +14,7 @@ export default gql`
     version
     serialPattern
     icon
+    dashboardRestrictions
     templateCategory {
       id
       code
