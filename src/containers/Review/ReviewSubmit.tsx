@@ -51,15 +51,17 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
 
   return (
     <Form id="review-submit-area">
-      <div className="flex-row-space-between-flex-end">
-        <ReviewDecision
-          decisionOptions={decisionOptions}
-          setDecision={setDecision}
-          isDecisionError={isDecisionError}
-          isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
-        />
-        <ReviewDecisionPreview structure={props.structure} decision={getDecision()} />
-      </div>
+      {decisionOptions.some((e) => e.isVisible) && (
+        <div className="flex-row-space-between-flex-end">
+          <ReviewDecision
+            decisionOptions={decisionOptions}
+            setDecision={setDecision}
+            isDecisionError={isDecisionError}
+            isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
+          />
+          <ReviewDecisionPreview structure={props.structure} decision={getDecision()} />
+        </div>
+      )}
       <ReviewComment
         isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
         reviewDecisionId={reviewDecision?.id}
