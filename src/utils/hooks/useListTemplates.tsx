@@ -92,6 +92,7 @@ const convertFromTemplateToTemplateDetails = (
 
   const totalApplications = template?.applications.totalCount || 0
 
+  const categoryCode = template.templateCategory?.code || ''
   const categoryTitle: string = template?.templateCategory?.title || ''
   const categoryIcon: SemanticICONS =
     (template?.templateCategory?.icon as SemanticICONS) || undefined
@@ -119,6 +120,7 @@ const convertFromTemplateToTemplateDetails = (
     hasApplyPermission,
     hasNonApplyPermissions,
     templateCategory: {
+      code: categoryCode,
       icon: categoryIcon,
       title: categoryTitle,
       uiLocation: categoryUILocation,

@@ -572,6 +572,7 @@ interface LevelAssignments {
 }
 
 interface TemplateCategoryDetails {
+  code: string
   title: string
   icon: SemanticICONS | undefined
   uiLocation: UiLocation[]
