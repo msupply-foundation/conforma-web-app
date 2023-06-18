@@ -127,6 +127,7 @@ type TemplateContextState = {
     isLinear: boolean
     serialPattern: string
     canApplicantMakeChanges: boolean
+    dashboardRestrictions: string[] | null
   }
   refetch: () => void
   category?: TemplateCategory
@@ -152,6 +153,7 @@ const defaultTemplateContextState: TemplateContextState = {
     isLinear: false,
     serialPattern: '',
     canApplicantMakeChanges: true,
+    dashboardRestrictions: null,
   },
   refetch: () => {},
   sections: [],
@@ -197,6 +199,7 @@ const TemplateWrapper: React.FC = () => {
           status: template?.status || TemplateStatus.Disabled,
           applicationCount: template?.applications?.totalCount || 0,
           isDraft: template.status === TemplateStatus.Draft,
+          dashboardRestrictions: template?.dashboardRestrictions as string[] | null,
         },
         category: (template?.templateCategory as TemplateCategory) || undefined,
         fromQuery: template,
