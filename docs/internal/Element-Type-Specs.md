@@ -357,9 +357,8 @@ _One or more checkboxes, any number of which can be selected/toggled_
   selected: <boolean> - initial state of checkbox
   ...Other properties
 }
-```
-
-"Other properties" refers to any additional properties included in the object. For example, an API call might return objects with a bunch of additional fields. These are not required for the Checbox display, but will be passed along and stored as part of the response, so any of these properties can be referred to in subsequent elements or actions.
+```  
+"Other properties" refers to any additional properties included in the object. For example, an API call might return objects with a bunch of additional fields. These are not required for the Checkbox display, but will be passed along and stored as part of the response, so any of these properties can be referred to in subsequent elements or actions.
 
 To handle objects returned that don't have the required fields, you can use the `keyMap` parameter (below) to map fields to required key names.
 
@@ -368,7 +367,7 @@ To handle objects returned that don't have the required fields, you can use the 
 - **resetButton**: `boolean` -- if `true`, element will show a "Reset" button, which allows user to reset selections to the initial (loading) state. (Default: `false`)
 - **displayFormat**: (Options: `text`, `list` (default), `checkboxes`, `propertyList`) -- specifies how to show the applicant's response on the Summary page:
   - `list`: shows the selected checkboxes in a (Markdown) list
-  - `text`: shows the selected values in a comma-seperated text string
+  - `text`: shows the selected values in a comma-separated text string
   - `checkboxes`: displays the selected values as checkboxes as per the application view
   - `propertyList`: displays in a list with properties (the checkbox `label` field) and values (the checkbox `text` or `textNegative` values, depending on selection).  
   e.g.
@@ -377,16 +376,17 @@ To handle objects returned that don't have the required fields, you can use the 
     - \<checkbox `label`\>: \<`text`\/`textNegative` value\>  
 Note: this display option is only suitable if you have separately defined `label`, `text` and `textNegative` fields for each checkbox.
 - **preventNonResponse**: `boolean` (default `false`) -- normally, we want to allow the user to leave checkboxes unchecked and be considered a valid response. However, if we want to force the user to tick a box (e.g. for a declaration, say), then set `preventNonResponse` to `true`. Note that `isRequired` must be `true` for this element for this parameter to have an effect.
-- **keyMap**: `object` -- if the input `checkboxes` property (above) has different property names that what is required (for example, if pulling from an API), then this `keyMap` parameter can be used to re-map the input property names to the requried property names. For example, if your input "checkbox" data contained an array of objects of the type `{ name: "Nicole", active: true}`, you would provide a `keyMap` object like this:
+- **keyMap**: `object` -- if the input `checkboxes` property (above) has different property names that what is required (for example, if pulling from an API), then this `keyMap` parameter can be used to re-map the input property names to the required property names. For example, if your input "checkbox" data contained an array of objects of the type `{ name: "Nicole", active: true}`, you would provide a `keyMap` object like this:
 
 ```
 {
   label: "name",
   selected: "active"
 }
-```
-
+```  
 This tells the element to look at the "name" field for the `label`, and the "active" field for the `selected` status. Note that all the "checkbox" fields can be re-mapped, but it is only required that you provide the ones that are different.
+- **default**: `string | Checkbox[] | {key: Checkbox...}`  -- the "default" value works a bit differently to most of the other elements, as checkbox values can already be dynamically controlled by updating the `checkboxes` parameter and changing the `selected` value within each. However, this `default` value is more flexible in what it can take as input. In particular, it can take a comma-delimited string, which will be converted to checkboxes whose `selected` values are set to `true` if the Checkbox `text` (or `label` if `text` not specified) value is included in the string.  
+e.g. If the default value is = `"Medicine, Chemical"`, and the `checkboxes` are: `["Chemical", "Poisons", "Medicine"]`, then the element will be instantiated with two of the three checkboxes already checked. There are some subtle differences in how the `default` value responds to dynamic changes (e.g. as a result of other elements) as compared to `checkboxes`, but this should be apparent when configuring/testing the template.
 
 #### Response type
 
