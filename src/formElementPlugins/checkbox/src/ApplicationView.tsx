@@ -220,7 +220,7 @@ type KeyMap = {
 
 export const getCheckboxStructure = (
   initialValue: CheckboxSavedState | null,
-  defaultValue: { [key: string]: Checkbox } | string | undefined,
+  defaultValue: { [key: string]: Checkbox } | Checkbox[] | string | undefined,
   checkboxes: Checkbox[],
   keyMap: KeyMap | undefined,
   isFirstRender: boolean,
