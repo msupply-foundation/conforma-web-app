@@ -45,6 +45,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
               text: '',
               values: {},
             },
+            undefined,
             checkboxes,
             keyMap,
             true,
