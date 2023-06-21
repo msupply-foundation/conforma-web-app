@@ -161,8 +161,11 @@ const Templates: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
   const { importTemplate } = useOperationState()
-  const [hideInactive, setHideInactive] = useState(false)
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const { query, updateQuery } = useRouter()
+  const [hideInactive, setHideInactive] = useState(query.hideInactive === 'true')
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    query.categories ? query.categories.split(',').map((cat) => (cat === 'none' ? '' : cat)) : []
+  )
   const [sortColumn, setSortColumn] = useState<SortColumn>()
   const [sortAsc, setSortAsc] = useState<1 | -1>(1)
 
@@ -175,10 +178,12 @@ const Templates: React.FC = () => {
   const changeSort = (column: SortColumn) => {
     if (column === sortColumn) {
       setSortAsc(-sortAsc as 1 | -1)
+      updateQuery({ desc: !query.desc })
       return
     }
     setSortColumn(column)
     setSortAsc(1)
+    updateQuery({ sort: column, desc: false })
   }
 
   const renderHeader = () => (
@@ -286,15 +291,27 @@ const Templates: React.FC = () => {
           <div className="flex-row-end" style={{ alignItems: 'center', gap: 20 }}>
             <Checkbox
               label="Hide Inactive"
+              checked={hideInactive}
               toggle
-              onChange={() => setHideInactive(!hideInactive)}
+              onChange={() => {
+                updateQuery({ hideInactive: !hideInactive })
+                setHideInactive(!hideInactive)
+              }}
             />
             <Dropdown
               placeholder="Filter by category"
               selection
               multiple
+              value={selectedCategories}
               options={categoryOptions}
-              onChange={(_, { value }) => setSelectedCategories(value as string[])}
+              onChange={(_, { value }) => {
+                updateQuery({
+                  categories: (value as string[])
+                    .map((cat) => (cat === '' ? 'none' : cat))
+                    .join(','),
+                })
+                setSelectedCategories(value as string[])
+              }}
               style={{ maxWidth: 350 }}
             />
           </div>
