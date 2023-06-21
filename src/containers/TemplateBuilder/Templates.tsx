@@ -1,10 +1,10 @@
 import React, { ReactNode, useRef } from 'react'
 import { useState } from 'react'
-import { Button, Header, Icon, Table, Label } from 'semantic-ui-react'
+import { Button, Header, Icon, Table, Label, Dropdown, Checkbox } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { useOperationState } from './shared/OperationContext'
 import TextIO from './shared/TextIO'
-import useGetTemplates, { Template } from './useGetTemplates'
+import useGetTemplates, { Template, Templates } from './useGetTemplates'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import config from '../../config'
@@ -159,6 +159,12 @@ const Templates: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
   const { importTemplate } = useOperationState()
+  const [hideDisabled, setHideDisabled] = useState(false)
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+
+  const categoryOptions = Array.from(new Set(templates.map((template) => template.main.category)))
+    .sort()
+    .map((cat) => ({ key: cat, text: cat === '' ? '<No Category>' : cat, value: cat }))
 
   usePageTitle(t('PAGE_TITLE_TEMPLATES'))
 
@@ -259,19 +265,36 @@ const Templates: React.FC = () => {
       </div>
       <div className="flex-column-center">
         <div key="listContainer" id="list-container" className="outcome-table-container">
+          <div className="flex-row-end" style={{ alignItems: 'center', gap: 20 }}>
+            <Checkbox
+              label="Hide disabled"
+              toggle
+              onChange={() => setHideDisabled(!hideDisabled)}
+            />
+            <Dropdown
+              placeholder="Filter by category"
+              selection
+              multiple
+              options={categoryOptions}
+              onChange={(_, { value }) => setSelectedCategories(value as string[])}
+              style={{ maxWidth: 350 }}
+            />
+          </div>
           <Table sortable stackable selectable>
             {renderHeader()}
             <Table.Body key="body">
-              {templates.map(({ all, main, applicationCount, numberOfTemplates }, rowIndex) => (
-                <React.Fragment key={`fragment_${rowIndex}`}>
-                  {renderTemplate(
-                    { ...main, applicationCount, numberOfTemplates },
-                    refetch,
-                    rowIndex
-                  )}
-                  {renderInnerTemplates(all, refetch, rowIndex)}
-                </React.Fragment>
-              ))}
+              {filterTemplates(templates, selectedCategories, hideDisabled).map(
+                ({ all, main, applicationCount, numberOfTemplates }, rowIndex) => (
+                  <React.Fragment key={`fragment_${rowIndex}`}>
+                    {renderTemplate(
+                      { ...main, applicationCount, numberOfTemplates },
+                      refetch,
+                      rowIndex
+                    )}
+                    {renderInnerTemplates(all, refetch, rowIndex)}
+                  </React.Fragment>
+                )
+              )}
             </Table.Body>
           </Table>
         </div>
@@ -281,3 +304,13 @@ const Templates: React.FC = () => {
 }
 
 export default TemplatesWrapper
+
+const filterTemplates = (templates: Templates, categories: string[], hideDisabled: boolean) => {
+  const categoryFiltered =
+    categories.length === 0
+      ? templates
+      : templates.filter(({ main }) => categories.includes(main.category))
+  return hideDisabled
+    ? categoryFiltered.filter((template) => template.main.status === 'AVAILABLE')
+    : categoryFiltered
+}
