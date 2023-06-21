@@ -20,7 +20,7 @@ type Columns = {
 
 const columns: Columns = [
   {
-    title: '',
+    title: 'code',
     render: ({ template: { code } }) => code,
   },
   {
@@ -153,14 +153,18 @@ const TemplatesWrapper: React.FC = () => (
   </OperationContext>
 )
 
+type SortColumn = 'name' | 'code' | 'category' | 'status'
+
 const Templates: React.FC = () => {
   const { t } = useLanguageProvider()
   const [selectedRow, setSelectedRow] = useState(-1)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
   const { importTemplate } = useOperationState()
-  const [hideDisabled, setHideDisabled] = useState(false)
+  const [hideInactive, setHideInactive] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [sortColumn, setSortColumn] = useState<SortColumn>()
+  const [sortAsc, setSortAsc] = useState<1 | -1>(1)
 
   const categoryOptions = Array.from(new Set(templates.map((template) => template.main.category)))
     .sort()
@@ -168,11 +172,25 @@ const Templates: React.FC = () => {
 
   usePageTitle(t('PAGE_TITLE_TEMPLATES'))
 
+  const changeSort = (column: SortColumn) => {
+    if (column === sortColumn) {
+      setSortAsc(-sortAsc as 1 | -1)
+      return
+    }
+    setSortColumn(column)
+    setSortAsc(1)
+  }
+
   const renderHeader = () => (
     <Table.Header key="header">
       <Table.Row>
         {columns.map(({ title }, index) => (
-          <Table.HeaderCell key={index} colSpan={1}>
+          <Table.HeaderCell
+            key={index}
+            colSpan={1}
+            onClick={() => changeSort(title as SortColumn)}
+            sorted={title === sortColumn ? (sortAsc === 1 ? 'ascending' : 'descending') : undefined}
+          >
             {title}
           </Table.HeaderCell>
         ))}
@@ -267,9 +285,9 @@ const Templates: React.FC = () => {
         <div key="listContainer" id="list-container" className="outcome-table-container">
           <div className="flex-row-end" style={{ alignItems: 'center', gap: 20 }}>
             <Checkbox
-              label="Hide disabled"
+              label="Hide Inactive"
               toggle
-              onChange={() => setHideDisabled(!hideDisabled)}
+              onChange={() => setHideInactive(!hideInactive)}
             />
             <Dropdown
               placeholder="Filter by category"
@@ -283,18 +301,20 @@ const Templates: React.FC = () => {
           <Table sortable stackable selectable>
             {renderHeader()}
             <Table.Body key="body">
-              {filterTemplates(templates, selectedCategories, hideDisabled).map(
-                ({ all, main, applicationCount, numberOfTemplates }, rowIndex) => (
-                  <React.Fragment key={`fragment_${rowIndex}`}>
-                    {renderTemplate(
-                      { ...main, applicationCount, numberOfTemplates },
-                      refetch,
-                      rowIndex
-                    )}
-                    {renderInnerTemplates(all, refetch, rowIndex)}
-                  </React.Fragment>
-                )
-              )}
+              {sortTemplates(
+                filterTemplates(templates, selectedCategories, hideInactive),
+                sortColumn,
+                sortAsc
+              ).map(({ all, main, applicationCount, numberOfTemplates }, rowIndex) => (
+                <React.Fragment key={`fragment_${rowIndex}`}>
+                  {renderTemplate(
+                    { ...main, applicationCount, numberOfTemplates },
+                    refetch,
+                    rowIndex
+                  )}
+                  {renderInnerTemplates(all, refetch, rowIndex)}
+                </React.Fragment>
+              ))}
             </Table.Body>
           </Table>
         </div>
@@ -305,12 +325,26 @@ const Templates: React.FC = () => {
 
 export default TemplatesWrapper
 
-const filterTemplates = (templates: Templates, categories: string[], hideDisabled: boolean) => {
+const filterTemplates = (templates: Templates, categories: string[], hideInactive: boolean) => {
   const categoryFiltered =
     categories.length === 0
       ? templates
       : templates.filter(({ main }) => categories.includes(main.category))
-  return hideDisabled
+  return hideInactive
     ? categoryFiltered.filter((template) => template.main.status === 'AVAILABLE')
     : categoryFiltered
+}
+
+const sortTemplates = (
+  templates: Templates,
+  sortColumn: SortColumn | undefined,
+  sortAsc: 1 | -1
+) => {
+  if (!sortColumn) return templates
+  return templates.sort((a, b) => {
+    const aVal = a.main[sortColumn]
+    const bVal = b.main[sortColumn]
+    if (aVal === bVal) return 0
+    return sortAsc * (aVal > bVal ? 1 : -1)
+  })
 }
