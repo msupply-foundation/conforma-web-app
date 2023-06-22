@@ -247,16 +247,15 @@ const getDropdownOptions = (
 const getTextValue = (
   options: (object | string)[],
   optionIndex: number,
-  optionsDisplayProperty?: string,
-  optionsDisplayExpression?: string
+  displayProperty?: string,
+  displayExpression?: string
 ): string => {
   if (typeof options[optionIndex] === 'object') {
-    if (!optionsDisplayProperty && !optionsDisplayExpression)
-      return 'Missing display property or expression'
+    if (!displayProperty && !displayExpression) return 'Missing display property or expression'
     return options[optionIndex]
-      ? optionsDisplayExpression
-        ? substituteValues(optionsDisplayExpression, options[optionIndex] as ObjectOption)
-        : (options[optionIndex] as ObjectOption)[optionsDisplayProperty as string]
+      ? displayExpression
+        ? substituteValues(displayExpression, options[optionIndex] as ObjectOption)
+        : (options[optionIndex] as ObjectOption)[displayProperty as string]
       : ''
   }
 
