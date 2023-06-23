@@ -82,7 +82,7 @@ const ViewEditButton: React.FC<CellProps> = ({ template: { id } }) => {
       className="clickable"
       onClick={(e) => {
         e.stopPropagation()
-        push(`/admin/template/${id}/general`)
+        push(`/admin/template/${id}/general`, { queryString: location.search })
       }}
     >
       <Icon name="edit outline" />

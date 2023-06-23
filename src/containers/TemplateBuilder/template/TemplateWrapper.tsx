@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { matchPath } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Header, Icon, Message, Label } from 'semantic-ui-react'
@@ -70,6 +70,7 @@ const TemplateContainer: React.FC = () => {
   const {
     template: { version, name, code, status, applicationCount, id },
   } = useTemplateState()
+  const prevQuery = useRef(location?.state?.queryString ?? '')
 
   const selected = tabs.find(({ route }) =>
     matchPath(location.pathname, { path: `${path}/${route}`, exact: true, strict: false })
@@ -81,7 +82,7 @@ const TemplateContainer: React.FC = () => {
     <div className="template-builder-wrapper">
       <Label
         className="back-label clickable"
-        onClick={() => push(`/admin/templates`)}
+        onClick={() => push(`/admin/templates${prevQuery.current}`)}
         content={
           <>
             <Icon name="chevron left" className="dark-grey" />
