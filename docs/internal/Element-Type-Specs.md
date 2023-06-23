@@ -436,6 +436,7 @@ _Interface for uploading documents or other files_
 - **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
 - **subfolder**: `string` -- by default, files are uploaded into a subfolder with the name of the application serial. However, this can be over-ridden by specifying this parameter. This should rarely be required.
 - **showDescription**: `boolean` -- if `true`, an additional text input will be displayed alongside each file to allow the applicant to specify a description for each file. (default `false`)
+- **showFileRestrictions**: `boolean` -- will display the allowed file extensions and maximum size below the upload box (default: `true`)
 
 #### Response type
 
