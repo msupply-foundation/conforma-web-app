@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Button, Icon, List, Segment } from 'semantic-ui-react'
 import { nanoid } from 'nanoid'
 import { ApplicationViewProps } from '../../types'
-import { useLanguageProvider } from '../../../contexts/Localisation'
+import { TranslatePluginMethod, useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FileDisplay, FileDisplayWithDescription } from './components'
@@ -49,6 +49,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     fileExtensions,
     fileSizeLimit,
     showDescription = false,
+    showFileRestrictions = true,
     ...fileOptions
   } = parameters
 
@@ -216,7 +217,28 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           )}
         </List>
       </Segment.Group>
+      {showFileRestrictions && (
+        <FileRestrictions fileExtensions={fileExtensions} maxSize={fileSizeLimit} t={t} />
+      )}
     </>
+  )
+}
+
+const FileRestrictions: React.FC<{
+  fileExtensions?: string[]
+  maxSize?: number
+  t: TranslatePluginMethod
+}> = ({ fileExtensions, maxSize, t }) => {
+  return (
+    <p className="smaller-text" style={{ padding: 5, marginTop: -10 }}>
+      {fileExtensions && (
+        <>
+          {`${t('ALLOWED_FORMATS')} ${fileExtensions.map((f) => '.' + f).join(', ')}`}
+          <br />
+        </>
+      )}
+      {maxSize && `${t('MAX_SIZE')} ${fileSizeWithUnits(maxSize)}`}
+    </p>
   )
 }
 
@@ -272,4 +294,11 @@ const generateInitialFileData = (files: FileResponseData[]): FileInfo[] => {
     errorMessage: null,
     fileData: file,
   }))
+}
+
+const fileSizeWithUnits = (size: number): string => {
+  if (size < 1000) return `${size} kB`
+  const sizeInMB = size / 1000
+  if (size < 100_000) return `${parseInt(String(sizeInMB * 10)) / 10} MB`
+  return `${parseInt(String(size / 1000))} MB`
 }
