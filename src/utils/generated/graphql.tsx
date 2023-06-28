@@ -41169,7 +41169,7 @@ export type StageFragment = (
 
 export type TemplateFragmentFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'canApplicantMakeChanges' | 'startMessage' | 'submissionMessage' | 'version' | 'serialPattern' | 'icon'>
+  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'canApplicantMakeChanges' | 'startMessage' | 'submissionMessage' | 'version' | 'serialPattern' | 'icon' | 'dashboardRestrictions'>
   & { templateCategory?: Maybe<(
     { __typename?: 'TemplateCategory' }
     & Pick<TemplateCategory, 'id' | 'code' | 'title' | 'icon' | 'uiLocation' | 'isSubmenu'>
@@ -42733,6 +42733,7 @@ export const TemplateFragmentFragmentDoc = gql`
   version
   serialPattern
   icon
+  dashboardRestrictions
   templateCategory {
     id
     code
