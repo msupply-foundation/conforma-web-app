@@ -110,7 +110,7 @@ export function LanguageProvider({
   // Helper function provided to plugins to determine where to read their
   // language strings from
   const getPluginStrings = (plugin: string) => {
-    const defaultPluginStrings = require(`../${pluginsFolder}/${plugin}/localisation/default/strings.json`)
+    const defaultPluginStrings = require(`../${pluginsFolder}/${plugin}/localisation.json`)
     if (selectedLanguageCode === 'default') return defaultPluginStrings
     try {
       const localisedPluginStrings = require(`../${pluginsFolder}/${plugin}/localisation/${selectedLanguageCode}/strings.json`)
