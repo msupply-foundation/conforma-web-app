@@ -1,10 +1,10 @@
 import React, { ReactNode, useRef } from 'react'
 import { useState } from 'react'
-import { Button, Header, Icon, Table, Label } from 'semantic-ui-react'
+import { Button, Header, Icon, Table, Label, Dropdown, Checkbox } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { useOperationState } from './shared/OperationContext'
 import TextIO from './shared/TextIO'
-import useGetTemplates, { Template } from './useGetTemplates'
+import useGetTemplates, { Template, Templates } from './useGetTemplates'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import config from '../../config'
@@ -20,7 +20,7 @@ type Columns = {
 
 const columns: Columns = [
   {
-    title: '',
+    title: 'code',
     render: ({ template: { code } }) => code,
   },
   {
@@ -82,7 +82,7 @@ const ViewEditButton: React.FC<CellProps> = ({ template: { id } }) => {
       className="clickable"
       onClick={(e) => {
         e.stopPropagation()
-        push(`/admin/template/${id}/general`)
+        push(`/admin/template/${id}/general`, { queryString: location.search })
       }}
     >
       <Icon name="edit outline" />
@@ -153,20 +153,49 @@ const TemplatesWrapper: React.FC = () => (
   </OperationContext>
 )
 
+type SortColumn = 'name' | 'code' | 'category' | 'status'
+
 const Templates: React.FC = () => {
   const { t } = useLanguageProvider()
   const [selectedRow, setSelectedRow] = useState(-1)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
   const { importTemplate } = useOperationState()
+  const { query, updateQuery } = useRouter()
+  const [hideInactive, setHideInactive] = useState(query.hideInactive === 'true')
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    query.categories ? query.categories.split(',').map((cat) => (cat === 'none' ? '' : cat)) : []
+  )
+  const [sortColumn, setSortColumn] = useState<SortColumn>()
+  const [sortAsc, setSortAsc] = useState<1 | -1>(1)
+
+  const categoryOptions = Array.from(new Set(templates.map((template) => template.main.category)))
+    .sort()
+    .map((cat) => ({ key: cat, text: cat === '' ? '<No Category>' : cat, value: cat }))
 
   usePageTitle(t('PAGE_TITLE_TEMPLATES'))
+
+  const changeSort = (column: SortColumn) => {
+    if (column === sortColumn) {
+      setSortAsc(-sortAsc as 1 | -1)
+      updateQuery({ desc: !query.desc })
+      return
+    }
+    setSortColumn(column)
+    setSortAsc(1)
+    updateQuery({ sort: column, desc: false })
+  }
 
   const renderHeader = () => (
     <Table.Header key="header">
       <Table.Row>
         {columns.map(({ title }, index) => (
-          <Table.HeaderCell key={index} colSpan={1}>
+          <Table.HeaderCell
+            key={index}
+            colSpan={1}
+            onClick={() => changeSort(title as SortColumn)}
+            sorted={title === sortColumn ? (sortAsc === 1 ? 'ascending' : 'descending') : undefined}
+          >
             {title}
           </Table.HeaderCell>
         ))}
@@ -259,10 +288,41 @@ const Templates: React.FC = () => {
       </div>
       <div className="flex-column-center">
         <div key="listContainer" id="list-container" className="outcome-table-container">
+          <div className="flex-row-end" style={{ alignItems: 'center', gap: 20 }}>
+            <Checkbox
+              label="Hide Inactive"
+              checked={hideInactive}
+              toggle
+              onChange={() => {
+                updateQuery({ hideInactive: !hideInactive })
+                setHideInactive(!hideInactive)
+              }}
+            />
+            <Dropdown
+              placeholder="Filter by category"
+              selection
+              multiple
+              value={selectedCategories}
+              options={categoryOptions}
+              onChange={(_, { value }) => {
+                updateQuery({
+                  categories: (value as string[])
+                    .map((cat) => (cat === '' ? 'none' : cat))
+                    .join(','),
+                })
+                setSelectedCategories(value as string[])
+              }}
+              style={{ maxWidth: 350 }}
+            />
+          </div>
           <Table sortable stackable selectable>
             {renderHeader()}
             <Table.Body key="body">
-              {templates.map(({ all, main, applicationCount, numberOfTemplates }, rowIndex) => (
+              {sortTemplates(
+                filterTemplates(templates, selectedCategories, hideInactive),
+                sortColumn,
+                sortAsc
+              ).map(({ all, main, applicationCount, numberOfTemplates }, rowIndex) => (
                 <React.Fragment key={`fragment_${rowIndex}`}>
                   {renderTemplate(
                     { ...main, applicationCount, numberOfTemplates },
@@ -281,3 +341,27 @@ const Templates: React.FC = () => {
 }
 
 export default TemplatesWrapper
+
+const filterTemplates = (templates: Templates, categories: string[], hideInactive: boolean) => {
+  const categoryFiltered =
+    categories.length === 0
+      ? templates
+      : templates.filter(({ main }) => categories.includes(main.category))
+  return hideInactive
+    ? categoryFiltered.filter((template) => template.main.status === 'AVAILABLE')
+    : categoryFiltered
+}
+
+const sortTemplates = (
+  templates: Templates,
+  sortColumn: SortColumn | undefined,
+  sortAsc: 1 | -1
+) => {
+  if (!sortColumn) return templates
+  return templates.sort((a, b) => {
+    const aVal = a.main[sortColumn]
+    const bVal = b.main[sortColumn]
+    if (aVal === bVal) return 0
+    return sortAsc * (aVal > bVal ? 1 : -1)
+  })
+}
