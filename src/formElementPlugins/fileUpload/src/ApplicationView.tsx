@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Button, Icon, List, Segment } from 'semantic-ui-react'
+import { Button, Icon, List, Segment, Transition } from 'semantic-ui-react'
 import { nanoid } from 'nanoid'
 import { ApplicationViewProps } from '../../types'
-import { useLanguageProvider } from '../../../contexts/Localisation'
+import { TranslatePluginMethod, useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FileDisplay, FileDisplayWithDescription } from './components'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import useDefault from '../../useDefault'
 
 export interface FileResponseData {
   uniqueId: string
@@ -48,7 +49,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     fileCountLimit,
     fileExtensions,
     fileSizeLimit,
+    default: defaultValue,
     showDescription = false,
+    showFileRestrictions = true,
     ...fileOptions
   } = parameters
 
@@ -63,6 +66,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [uploadedFiles, setUploadedFiles] = useState<FileInfo[]>(
     generateInitialFileData(currentResponse?.files ?? [])
   )
+  const [error, setError] = useState<string>()
+  const [errorVisible, setErrorVisible] = useState(false)
   const fileInputRef = useRef<any>(null)
 
   useEffect(() => {
@@ -80,6 +85,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       files: fileDataToSave,
     })
   }, [uploadedFiles])
+
+  useDefault({
+    defaultValue,
+    currentResponse,
+    parameters,
+    onChange: (defaultFiles) => {
+      setUploadedFiles(generateInitialFileData(defaultFiles?.files ?? []))
+    },
+  })
 
   const errors = [
     {
@@ -101,22 +115,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     },
   ]
 
+  const showError = (error: string) => {
+    setError(error)
+    setErrorVisible(true)
+    setTimeout(() => setErrorVisible(false), 3000)
+  }
+
   const handleFiles = async (e: any) => {
     const newFileData: FileInfo[] = [...uploadedFiles]
     const files: any[] = Array.from(e.target.files)
 
     for (const file of files) {
       const error = errors.find((error) => error.condition(file, newFileData))
-      if (error) {
-        newFileData.unshift({
-          key: nanoid(10),
-          filename: file.name,
-          loading: false,
-          error: true,
-          errorMessage: error.errorMessage,
-        })
-        file.error = true
-      } else {
+      if (error) showError(error.errorMessage)
+      else {
         const key = nanoid(10)
         newFileData.unshift({ key, filename: file.name, loading: true, error: false })
         file.key = key
@@ -138,14 +150,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           loading: false,
           fileData: result?.fileData?.[0],
         }
-      } else {
-        newFileData[index] = {
-          ...newFileData[index],
-          loading: false,
-          error: true,
-          errorMessage: t('ERROR_UPLOAD_PROBLEM'),
-        }
-      }
+      } else showError(t('ERROR_UPLOAD_PROBLEM'))
+
       setUploadedFiles([...newFileData])
     })
   }
@@ -215,8 +221,38 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             )
           )}
         </List>
+
+        <Transition visible={errorVisible} duration={{ hide: 500, show: 200 }}>
+          <p
+            className="error-colour"
+            style={{ position: 'absolute', bottom: 3, width: '100%', textAlign: 'center' }}
+          >
+            {error}
+          </p>
+        </Transition>
       </Segment.Group>
+      {showFileRestrictions && (
+        <FileRestrictions fileExtensions={fileExtensions} maxSize={fileSizeLimit} t={t} />
+      )}
     </>
+  )
+}
+
+const FileRestrictions: React.FC<{
+  fileExtensions?: string[]
+  maxSize?: number
+  t: TranslatePluginMethod
+}> = ({ fileExtensions, maxSize, t }) => {
+  return (
+    <p className="smaller-text" style={{ padding: 5, marginTop: -10 }}>
+      {fileExtensions && (
+        <>
+          {`${t('ALLOWED_FORMATS')} ${fileExtensions.map((f) => '.' + f).join(', ')}`}
+          <br />
+        </>
+      )}
+      {maxSize && `${t('MAX_SIZE')} ${fileSizeWithUnits(maxSize)}`}
+    </p>
   )
 }
 
@@ -272,4 +308,11 @@ const generateInitialFileData = (files: FileResponseData[]): FileInfo[] => {
     errorMessage: null,
     fileData: file,
   }))
+}
+
+const fileSizeWithUnits = (size: number): string => {
+  if (size < 1000) return `${size} kB`
+  const sizeInMB = size / 1000
+  if (size < 100_000) return `${parseInt(String(sizeInMB * 10)) / 10} MB`
+  return `${parseInt(String(size / 1000))} MB`
 }

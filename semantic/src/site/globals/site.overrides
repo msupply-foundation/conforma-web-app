@@ -1828,7 +1828,6 @@ a:hover {
 #data-view-config-panel {
   padding-top: 20px;
   width: 50%;
-  max-width: 600px;
 
   h2.ui.header {
     padding: 0;
@@ -2479,7 +2478,7 @@ a:hover {
 
 .object-properties-container {
   .flex-column-start-center();
-  margin-left: 30px;
+  margin-left: 10px;
   max-width: 500px;
 }
 .evaluator-operator-container {
