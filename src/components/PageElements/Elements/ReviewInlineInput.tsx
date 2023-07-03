@@ -49,7 +49,8 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
   const optionsMap = useOptionsMap()
   const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
 
-  const submit = async () => {
+  const submit = async (e: any) => {
+    e.preventDefault()
     // TODO do we need to handle update error ?
     await updateResponse(reviewResponse)
     setIsActiveEdit(false)
