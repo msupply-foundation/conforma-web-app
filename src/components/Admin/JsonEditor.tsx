@@ -1,72 +1,69 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Icon } from 'semantic-ui-react'
-import ReactJson, { InteractionProps, OnCopyProps, ReactJsonViewProps } from 'react-json-view'
+import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction } from 'json-edit-react'
 import { useToast, topLeft, Position } from '../../contexts/Toast'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import Loading from '../Loading'
-import { useUndoQueue } from '../../utils/hooks/useUndoQueue'
-import { isEqual } from 'lodash'
+import useUndo from 'use-undo'
+import { truncateString } from '../../utils/helpers/utilityFunctions'
 
-interface JsonEditorProps extends Omit<ReactJsonViewProps, 'src'> {
+interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   onSave: (data: object) => void
   isSaving?: boolean
-  data: object | undefined
-  displayArrayKey?: boolean
+  data: object
 }
 
-export const JsonEditor: React.FC<JsonEditorProps> = ({
+export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   onSave,
   isSaving = false,
   data,
-  displayArrayKey,
   ...jsonViewProps
 }) => {
   const { t } = useLanguageProvider()
-  const { currentValue, setValue, undo, redo, hasChanged, setSaved, canUndo, canRedo } =
-    useUndoQueue<object>()
+  const [isDirty, setIsDirty] = useState(false)
+  const [{ present: currentData }, { set: setData, reset, undo, redo, canUndo, canRedo }] =
+    useUndo(data)
   const showToast = useToast({ position: topLeft })
 
   useEffect(() => {
-    if (data !== undefined && !isEqual(data, currentValue)) setValue(data)
+    reset(data)
+    setIsDirty(false)
   }, [data])
 
-  const handleChange = ({ updated_src, existing_value, new_value }: InteractionProps) => {
-    if (existing_value === new_value) return
-    setValue(updated_src)
-  }
-
   const handleSave = async () => {
-    if (currentValue !== undefined) {
-      await onSave(currentValue)
-      setSaved()
+    if (currentData !== undefined) {
+      await onSave(currentData)
+      reset(currentData)
+      setIsDirty(false)
     }
   }
 
-  const handleCopy = ({ name, src }: OnCopyProps) =>
+  const handleCopy: CopyFunction = ({ key, value, type, stringValue }) => {
+    const text =
+      typeof value === 'object' && value !== null
+        ? t('CLIPBOARD_COPIED_ITEMS', { name: key, count: Object.keys(value).length })
+        : truncateString(stringValue)
     showToast({
-      title: t('CLIPBOARD_COPIED'),
-      text: t('CLIPBOARD_COPIED_ITEMS', {
-        name,
-        count: typeof src === 'object' && src !== null ? Object.keys(src).length : 0,
-        value: src,
-      }),
+      title: t(type === 'value' ? 'CLIPBOARD_COPIED_VALUE' : 'CLIPBOARD_COPIED_PATH'),
+      text,
       style: 'info',
       position: Position.bottomLeft,
     })
+  }
 
-  if (currentValue === undefined) return <Loading />
+  if (currentData === undefined) return <Loading />
 
   return (
     <div className="json-editor">
       <ReactJson
-        {...jsonViewProps}
-        src={currentValue}
-        // @ts-ignore -- prop not recognised, but still works 🤷‍♂️
-        displayArrayKey={displayArrayKey}
-        onEdit={handleChange}
-        onDelete={handleChange}
-        onAdd={handleChange}
+        data={currentData}
+        onUpdate={({ newData }) => {
+          setData(newData)
+          setIsDirty(true)
+        }}
         enableClipboard={handleCopy}
+        theme={{ input: { fontFamily: 'monospace' }, container: '#f9f9f9' }}
+        {...jsonViewProps}
       />
       <div className="flex-row-space-between" style={{ maxWidth: 500 }}>
         <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
@@ -83,7 +80,7 @@ export const JsonEditor: React.FC<JsonEditorProps> = ({
         </p>
         <Button
           primary
-          disabled={!hasChanged}
+          disabled={!isDirty}
           loading={isSaving}
           content={t('BUTTON_SAVE')}
           onClick={handleSave}
