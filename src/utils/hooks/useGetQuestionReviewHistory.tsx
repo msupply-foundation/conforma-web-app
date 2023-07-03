@@ -82,7 +82,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
           author: reviewer ? reviewer?.firstName || '' + ' ' + reviewer?.lastName || '' : '',
           title:
             (levelNumber || 1) > 1 ? t('TITLE_HISTORY_CONSOLIDATION') : t('TITLE_HISTORY_REVIEW'),
-          message: !!decision ? ReviewResponse[decision] : 'Undefined',
+          message: !!decision ? ReviewResponse[decision] : '',
           timeUpdated,
           reviewerComment: comment || '',
         })
