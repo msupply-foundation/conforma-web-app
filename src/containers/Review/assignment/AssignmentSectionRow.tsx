@@ -119,12 +119,12 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   return (
     <Grid columns={2} className="section-single-row-box-container">
       <Grid.Row className="assigning-row">
-        <Grid.Column className="review-level" width={7}>
+        <Grid.Column className="review-level" width={5}>
           <Label className="simple-label">
             {t('REVIEW_FILTER_LEVEL')}: <strong>{levelName}</strong>
           </Label>
         </Grid.Column>
-        <Grid.Column className="centered-flex-box-row" width={9}>
+        <Grid.Column className="centered-flex-box-row" width={8}>
           {originalAssignee && assignmentOptions.isSubmitted ? (
             <AssigneeLabel
               assignee={originalAssignee}
@@ -145,6 +145,17 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
                 onChangeMethod={(selected: number) => onAssigneeSelection(selected)}
               />
             </>
+          )}
+        </Grid.Column>
+        <Grid.Column className="centered-flex-box-row" width={3}>
+          {!assignmentOptions.isSubmitted && (
+            <a
+              className="user-action clickable"
+              style={{ textAlign: 'center' }}
+              onClick={() => window.open(`/application/${structure.info.serial}`)}
+            >
+              {t('ACTION_PREVIEW_APPLICATION')}
+            </a>
           )}
         </Grid.Column>
       </Grid.Row>

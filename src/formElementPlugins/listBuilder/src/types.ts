@@ -1,3 +1,4 @@
+import { TemplateElement } from '../../../utils/generated/graphql'
 import { ApplicationDetails, ResponseFull, User } from '../../../utils/types'
 
 export enum DisplayType {
@@ -18,13 +19,11 @@ export interface ListLayoutProps {
   listItems: ListItem[]
   displayFormat: { title?: string; subtitle?: string; description: string }
   Markdown: any
-  fieldTitles?: string[]
-  codes?: string[]
   editItem?: (index: number) => void
   deleteItem?: (index: number) => void
   isEditable?: boolean
   // These properties required for Inline layout
-  inputFields?: any
+  inputFields: TemplateElement[]
   responses?: any
   currentUser?: User
   applicationData?: ApplicationDetails

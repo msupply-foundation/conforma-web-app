@@ -5,5 +5,7 @@
   "ERROR_TOO_MANY_FILES": "Não é permitido carregar mais arquivos",
   "ERROR_UPLOAD_PROBLEM": "Problema ao carregar arquivo",
   "BUTTON_CLICK_TO_UPLOAD": "Carregar arquivo",
-  "BUTTON_UPLOAD_ANOTHER": "Carregar outro arquivo"
+  "BUTTON_UPLOAD_ANOTHER": "Carregar outro arquivo",
+  "ALLOWED_FORMATS": "Arquivos permitidos no formato:",
+  "MAX_SIZE": "Tamanho Máximo:"
 }

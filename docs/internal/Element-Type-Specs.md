@@ -49,7 +49,7 @@ Example for `shortText` plugin element:
   "text": "Something to be saved by default"
 }
 ```
-![style:basic](../images/Element-Type-Specs-initial-value.png)
+![style:basic](images/Element-Type-Specs-initial-value.png)
 
   Use cases for setting an `initialValue` over a `default` would be if you wanted to ensure that a particular element had a valid response in it before its page was even loaded, or if you want a hidden element to have a response without the user ever interacting with it (or even seeing it).
 - **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
@@ -195,35 +195,35 @@ _For displaying blocks of text in the application_
 
 #### `style: none` (default)
 
-![style:none](/images/Element-Type-Specs-textInfo-none.png)
+![style:none](images/Element-Type-Specs-textInfo-none.png)
 
 #### `style: basic`
 
-![style:basic](/images/Element-Type-Specs-textInfo-basic.png)
+![style:basic](images/Element-Type-Specs-textInfo-basic.png)
 
 #### `style: info`
 
-![style:info](/images/Element-Type-Specs-textInfo-info.png)
+![style:info](images/Element-Type-Specs-textInfo-info.png)
 
 #### `style: warning`
 
-![style:warning](/images/Element-Type-Specs-textInfo-warning.png)
+![style:warning](images/Element-Type-Specs-textInfo-warning.png)
 
 #### `style: success`
 
-![style:success](/images/Element-Type-Specs-textInfo-success.png)
+![style:success](images/Element-Type-Specs-textInfo-success.png)
 
 #### `style: positive`
 
-![style:positive](/images/Element-Type-Specs-textInfo-positive.png)
+![style:positive](images/Element-Type-Specs-textInfo-positive.png)
 
 #### `style: error`
 
-![style:error](/images/Element-Type-Specs-textInfo-error.png)
+![style:error](images/Element-Type-Specs-textInfo-error.png)
 
 #### `style: negative`
 
-![style:negative](/images/Element-Type-Specs-textInfo-negative.png)
+![style:negative](images/Element-Type-Specs-textInfo-negative.png)
 
 ---
 
@@ -435,6 +435,7 @@ _Interface for uploading documents or other files_
 - **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
 - **subfolder**: `string` -- by default, files are uploaded into a subfolder with the name of the application serial. However, this can be over-ridden by specifying this parameter. This should rarely be required.
 - **showDescription**: `boolean` -- if `true`, an additional text input will be displayed alongside each file to allow the applicant to specify a description for each file. (default `false`)
+- **showFileRestrictions**: `boolean` -- will display the allowed file extensions and maximum size below the upload box (default: `true`)
 
 #### Response type
 
@@ -490,25 +491,25 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 
   - **table** view:
 
-    ![Table View](/images/Element-Type-Specs-listBuilder-table-view.png)
+    ![Table View](images/Element-Type-Specs-listBuilder-table-view.png)
 
     For table view, the column headers are taken from the **title** fields of each element
 
   - **card** view:
 
-    ![Card View](/images/Element-Type-Specs-listBuilder-card-view.png)
+    ![Card View](images/Element-Type-Specs-listBuilder-card-view.png)
 
     The display string(s) for card view are defined in the `displayFormat` field (below)
 
   - **inline** view:
 
-    ![Inline View](/images/Element-Type-Specs-listBuilder-inline-view.png)
+    ![Inline View](images/Element-Type-Specs-listBuilder-inline-view.png)
 
     The input form is displayed inline (i.e. no modal), and can be collapsed/opened for each item
 
   - **list** view:
 
-    ![List View](/images/Element-Type-Specs-listBuilder-list-view.png)
+    ![List View](images/Element-Type-Specs-listBuilder-list-view.png)
 
     A simple view, best for when each item only has one field
 
@@ -528,6 +529,8 @@ _Allows user to build a list of items, such as an **Ingredients List**_
   where `LB1`...`LB6` are the element codes from the template. (Note, also, the additional escape `\` characters required if used inside a GraphQL query string)
 
   If a `displayFormat` parameter is not specified, the card view will just show a simplified list of fields representing `title: value` for each input.
+- **inlineOpen** `boolean` (only relevant for **inline** view) -- if `true`, all elements will be displayed "open" (i.e. not collapsed) on initial load (default `false`)
+- **tableExcludeColumns** `string[]` (only relevant for **table** view) -- an array of fields to exclude from the table view, which can be useful when there are a lot of fields being collected which can make the table overly cluttered. The values correspond to *either* the **title** or the **code** fields of the individual elements.
 
 #### Response type
 
@@ -568,11 +571,11 @@ _Live "search-as-you-type" lookups for user to find and select items_
 
 Search results show in pop-up below the search box:
 
-![Search Results](/images/Element-Type-Specs-search-results.png)
+![Search Results](images/Element-Type-Specs-search-results.png)
 
 Once selected, items are displayed in a "card" view:
 
-![Search Selected](/images/Element-Type-Specs-search-selected.png)
+![Search Selected](images/Element-Type-Specs-search-selected.png)
 
 #### Input parameters
 
@@ -629,7 +632,7 @@ Once selected, items are displayed in a "card" view:
 
 _A date picker for entering standardised dates or date ranges_
 
-![Date picker](/images/Element-Type-Specs-date-picker.png)
+![Date picker](images/Element-Type-Specs-date-picker.png)
 
 Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semantic-ui-datepickers)
 
