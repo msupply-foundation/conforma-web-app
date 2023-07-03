@@ -16,6 +16,7 @@ export default {
   ACTION_RE_ASSIGN: 'Re-Assign',
   ACTION_SELF_ASSIGN: 'Self-Assign',
   ACTION_UNASSIGN: 'Un-assign',
+  ACTION_PREVIEW_APPLICATION: 'Preview application',
   ACTION_UPDATE: 'Update',
   ACTION_VIEW: 'View',
   ACTION_MAKE_CHANGES: 'Make changes',
@@ -344,6 +345,7 @@ export default {
   REVIEW_OVERVIEW_MODAL_MESSAGE: "This will extend the applicant's deadline by {{count}} days",
   REVIEW_OVERVIEW_MODAL_MESSAGE_1: "This will extend the applicant's deadline by one day",
   REVIEW_OVERVIEW_BUTTON_EXTEND: 'Extend',
+  REVIEW_OVERVIEW_VIEW_APPLICATION: 'View application',
   REVIEW_PROGRESS_BAR_SUBMITTED: 'Submitted',
   REVIEW_SUBMISSION_CONFIRM_TITLE: 'Submitting Review',
   REVIEW_SUBMISSION_CONFIRM_MESSAGE:

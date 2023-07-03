@@ -8,7 +8,11 @@ import { buildElements } from '../helpers'
 import { substituteValues } from '../helpers'
 import '../styles.less'
 
-const ListInlineLayout: React.FC<ListLayoutProps> = (props) => {
+interface ListInlineProps extends ListLayoutProps {
+  initialOpen: boolean
+}
+
+const ListInlineLayout: React.FC<ListInlineProps> = (props) => {
   const { listItems, displayFormat } = props
   return (
     <>
@@ -26,7 +30,7 @@ const ListInlineLayout: React.FC<ListLayoutProps> = (props) => {
 }
 export default ListInlineLayout
 
-interface ItemAccordionProps extends ListLayoutProps {
+interface ItemAccordionProps extends ListInlineProps {
   item: ListItem
   header: string | undefined
   index: number
@@ -42,7 +46,6 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
   currentUser,
   applicationData,
   Markdown,
-  codes = [],
   editItem = (index: number, value: boolean) => {},
   deleteItem = (index: number) => {},
   editItemText,
@@ -50,8 +53,9 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
   deleteItemText,
   innerElementUpdate = () => {},
   updateList = () => {},
+  initialOpen,
 }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(initialOpen)
   const [isEditing, setIsEditing] = useState(false)
   const [currentItemElementsState, setItemResponseElementsState] = useState<{
     [key: string]: ElementState
@@ -96,7 +100,7 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
         <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
       </Accordion.Title>
       <Accordion.Content active={open}>
-        {codes.map((code: string, cellIndex: number) =>
+        {inputFields.map(({ code }, cellIndex: number) =>
           isEditing ? (
             <ApplicationViewWrapper
               key={`list-${cellIndex}`}

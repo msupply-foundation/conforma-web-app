@@ -3,7 +3,7 @@ import { Icon, List, ListItem } from 'semantic-ui-react'
 import { ListLayoutProps } from '../types'
 import { substituteValues } from '../helpers'
 
-const ListCardLayout: React.FC<ListLayoutProps> = ({
+const ListListLayout: React.FC<ListLayoutProps> = ({
   listItems,
   displayFormat,
   // editItem = () => {},
@@ -48,4 +48,4 @@ const ListCardLayout: React.FC<ListLayoutProps> = ({
   )
 }
 
-export default ListCardLayout
+export default ListListLayout
