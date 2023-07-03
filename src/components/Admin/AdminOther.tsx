@@ -23,14 +23,3 @@ export const AdminPermissions: React.FC = () => {
     </div>
   )
 }
-
-export const AdminDataViews: React.FC = () => {
-  const { t } = useLanguageProvider()
-  usePageTitle(t('PAGE_TITLE_DATA_VIEW'))
-  return (
-    <div>
-      <h1>Data View Configuration Page</h1>
-      not implemented
-    </div>
-  )
-}
