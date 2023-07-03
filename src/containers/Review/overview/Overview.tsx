@@ -83,40 +83,54 @@ export const Overview: React.FC<{
                 </p>
               )}
             </div>
-            {applicantDeadline &&
-              // If the deadline is active, then it must be PENDING. If it's
-              // inactive, then we only want to show the button when it's
-              // EXPIRED, so cancelled deadlines don't cause the button to show.
-              ((applicantDeadline.isActive && outcome === ApplicationOutcome.Pending) ||
-                (!applicantDeadline.isActive && outcome === ApplicationOutcome.Expired)) && (
-                <div className="flex-row-start-center" style={{ gap: 10, marginTop: 30 }}>
-                  {t('REVIEW_OVERVIEW_EXTEND_BY')}
-                  <Form.Input
-                    size="mini"
-                    type="number"
-                    min={1}
-                    value={deadlineDays}
-                    onChange={(e) => setDeadlineDays(Number(e.target.value))}
-                    style={{ maxWidth: 65 }}
-                  />
-                  <span style={{ marginRight: 20 }}>{t('REVIEW_OVERVIEW_DAYS', deadlineDays)}</span>
-                  <Button
-                    primary
-                    inverted
-                    onClick={() =>
-                      showModal({
-                        message: t('REVIEW_OVERVIEW_MODAL_MESSAGE', deadlineDays),
-                        onConfirm: async () => {
-                          await extendDeadline(id, deadlineDays)
-                          reload()
-                        },
-                      })
-                    }
-                  >
-                    {t('REVIEW_OVERVIEW_BUTTON_EXTEND')}
-                  </Button>
-                </div>
-              )}
+            <div className="flex-row-space-between wrap">
+              {applicantDeadline &&
+                // If the deadline is active, then it must be PENDING. If it's
+                // inactive, then we only want to show the button when it's
+                // EXPIRED, so cancelled deadlines don't cause the button to show.
+                ((applicantDeadline.isActive && outcome === ApplicationOutcome.Pending) ||
+                  (!applicantDeadline.isActive && outcome === ApplicationOutcome.Expired)) && (
+                  <div className="flex-row-start-center" style={{ gap: 10, marginTop: 30 }}>
+                    {t('REVIEW_OVERVIEW_EXTEND_BY')}
+                    <Form.Input
+                      size="mini"
+                      type="number"
+                      min={1}
+                      value={deadlineDays}
+                      onChange={(e) => setDeadlineDays(Number(e.target.value))}
+                      style={{ maxWidth: 65 }}
+                    />
+                    <span style={{ marginRight: 20 }}>
+                      {t('REVIEW_OVERVIEW_DAYS', deadlineDays)}
+                    </span>
+                    <Button
+                      primary
+                      inverted
+                      onClick={() =>
+                        showModal({
+                          message: t('REVIEW_OVERVIEW_MODAL_MESSAGE', deadlineDays),
+                          onConfirm: async () => {
+                            await extendDeadline(id, deadlineDays)
+                            reload()
+                          },
+                        })
+                      }
+                    >
+                      {t('REVIEW_OVERVIEW_BUTTON_EXTEND')}
+                    </Button>
+                  </div>
+                )}
+              <div style={{ alignSelf: 'flex-end', marginTop: 20 }}>
+                <Button
+                  primary
+                  onClick={() => {
+                    window.open(`/application/${serial}`)
+                  }}
+                >
+                  {t('REVIEW_OVERVIEW_VIEW_APPLICATION')}
+                </Button>
+              </div>
+            </div>
           </Message.Content>
         </Message>
         <ConfirmModal />

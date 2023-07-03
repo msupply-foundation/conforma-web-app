@@ -57,7 +57,7 @@ type TranslateMarkdownMethod = (
   substitutions?: Substitutions
 ) => JSX.Element
 
-type TranslatePluginMethod = (key: string, substitutions?: Substitutions) => string
+export type TranslatePluginMethod = (key: string, substitutions?: Substitutions) => string
 
 const initialContext: {
   selectedLanguage: LanguageOption
