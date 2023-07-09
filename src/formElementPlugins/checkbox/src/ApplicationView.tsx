@@ -220,7 +220,7 @@ type KeyMap = {
 
 export const getCheckboxStructure = (
   initialValue: CheckboxSavedState | null,
-  defaultValue: { [key: string]: Checkbox } | Checkbox[] | string | undefined,
+  defaultValue: { [key: string]: Checkbox } | Checkbox[] | string | string[] | undefined,
   checkboxes: Checkbox[],
   keyMap: KeyMap | undefined,
   isFirstRender: boolean,
@@ -280,13 +280,20 @@ export const getCheckboxStructure = (
 }
 
 const standardiseDefault = (
-  defaultValue: string | { [key: string]: Checkbox } | Checkbox[],
+  defaultValue: string | string[] | { [key: string]: Checkbox } | Checkbox[],
   checkboxElements: Checkbox[],
   hasOther: boolean
 ): Checkbox[] => {
-  if (typeof defaultValue === 'string') {
+  if (
+    typeof defaultValue === 'string' ||
+    (Array.isArray(defaultValue) &&
+      (defaultValue as string[]).every((val) => typeof val === 'string'))
+  ) {
     // Convert delimited text string to selection values
-    let textValues = defaultValue.split(',').map((e) => e.trim())
+    let textValues =
+      typeof defaultValue === 'string'
+        ? defaultValue.split(',').map((e) => e.trim())
+        : (defaultValue as string[])
     const newCheckboxes = checkboxElements.map((cb) => {
       const newCheckbox = textValues.includes(cb.text)
         ? { ...cb, selected: true }
@@ -303,7 +310,7 @@ const standardiseDefault = (
   }
 
   if (!Array.isArray(defaultValue)) return Object.values(defaultValue)
-  return defaultValue
+  return defaultValue as Checkbox[]
 }
 
 const createTextStrings = (checkboxes: Checkbox[], nothingSelectedText: string) => {
