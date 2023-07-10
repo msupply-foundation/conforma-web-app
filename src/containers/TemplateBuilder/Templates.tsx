@@ -51,11 +51,13 @@ const columns: Columns = [
   },
   {
     title: '',
-    render: ({ template: { applicationCount, numberOfTemplates } }) => (
+    render: ({ template: { applicationCount, numberOfTemplates, parentVersionId } }) => (
       <React.Fragment key="counts">
         <TextIO text={String(applicationCount)} title="Applications" minLabelWidth={90} />
-        {numberOfTemplates && (
+        {numberOfTemplates ? (
           <TextIO text={String(numberOfTemplates)} title="Templates" minLabelWidth={90} />
+        ) : (
+          <TextIO text={parentVersionId ?? ''} title="Parent" minLabelWidth={90} />
         )}
       </React.Fragment>
     ),
