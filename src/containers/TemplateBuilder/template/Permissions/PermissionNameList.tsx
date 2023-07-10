@@ -24,7 +24,7 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
   const { template, templatePermissions } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [permissionNameInfo, setPermissionNameInfo] = useState<PermissionName | null>(null)
-  const { isDraft } = template
+  const { canEdit } = template
 
   const removeTemplatePermission = (id: number) => {
     updateTemplate(template, { templatePermissionsUsingId: { deleteById: [{ id }] } })
@@ -50,7 +50,7 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
               />
               <IconButton
                 name="window close"
-                disabled={!isDraft}
+                disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 onClick={() => removeTemplatePermission(templatePermission?.id || 0)}
               />

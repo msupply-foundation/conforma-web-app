@@ -47,7 +47,7 @@ const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
   const { template, templatePermissions } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const { permissionNames } = usePermissionNameState()
-  const { isDraft } = template
+  const { canEdit } = template
 
   const matchingTemplatePermissions = getMatchingTemplatePermission({
     type,
@@ -91,7 +91,7 @@ const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
         getKey={'id'}
         getValue={'id'}
         getText={'name'}
-        disabled={!isDraft}
+        disabled={!canEdit}
         labelNegative={labelNegative}
         placeholder={
           availablePermissionNames.length === 0
@@ -108,7 +108,7 @@ const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
         <IconButton
           name="add square"
           onClick={addPermission}
-          disabled={!isDraft}
+          disabled={!canEdit}
           disabledMessage={disabledMessage}
         />
       )}
