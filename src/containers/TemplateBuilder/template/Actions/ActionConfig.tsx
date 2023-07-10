@@ -44,9 +44,7 @@ const getState: GetState = (action: TemplateAction) => ({
 
 const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) => {
   const { t } = useLanguageProvider()
-  const {
-    template: { id: templateId, isDraft },
-  } = useTemplateState()
+  const { template } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [state, setState] = useState<ActionUpdateState | null>(null)
   const { allActionsByCode, applicationData } = useActionState()
@@ -57,6 +55,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
     style: 'success',
   })
 
+  const { isDraft } = template
+
   useEffect(() => {
     if (!templateAction) return setState(null)
     setState(getState(templateAction))
@@ -65,7 +65,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   if (!state || !templateAction) return null
 
   const updateAction = async () => {
-    const result = await updateTemplate(templateId, {
+    const result = await updateTemplate(template, {
       templateActionsUsingId: {
         updateById: [{ id: state.id, patch: state }],
       },

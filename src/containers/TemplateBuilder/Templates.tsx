@@ -4,11 +4,12 @@ import { Button, Header, Icon, Table, Label, Dropdown, Checkbox } from 'semantic
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { useOperationState } from './shared/OperationContext'
 import TextIO from './shared/TextIO'
-import useGetTemplates, { Template, Templates } from './useGetTemplates'
+import useGetTemplates, { Template, Templates, VersionObject } from './useGetTemplates'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
+import { DateTime } from 'luxon'
 
 type CellPropsTemplate = Template & { numberOfTemplates?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void }
@@ -30,11 +31,11 @@ const columns: Columns = [
 
   {
     title: '',
-    render: ({ template: { version, versionTimestamp } }) => (
+    render: ({ template }) => (
       <React.Fragment key="version">
-        <TextIO text={String(version)} title="version" maxLabelWidth={70} />
+        <TextIO text={getVersionString(template)} title="version" maxLabelWidth={70} />
         <TextIO
-          text={String(versionTimestamp.toFormat('dd MMM yy'))}
+          text={String(template.versionTimestamp.toLocaleString(DateTime.DATETIME_SHORT))}
           title="date"
           minLabelWidth={70}
         />
@@ -366,4 +367,9 @@ const sortTemplates = (
     if (aVal === bVal) return 0
     return sortAsc * (aVal > bVal ? 1 : -1)
   })
+}
+
+const getVersionString = (template: Template) => {
+  const { versionId, parentVersionId, versionHistory } = template
+  return `${versionId === '*' ? parentVersionId + '*' : versionId} (v${versionHistory.length + 1})`
 }

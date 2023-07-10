@@ -29,6 +29,7 @@ import {
   updateApplication,
   updateTemplateStage,
 } from './OperationContextHelpers'
+import { VersionObject } from '../useGetTemplates'
 
 type Error = { message: string; error: string }
 export type ErrorAndLoadingState = {
@@ -39,7 +40,24 @@ export type ErrorAndLoadingState = {
 export type TemplatesOperationProps = { id: number; snapshotName: string }
 export type TemplatesOperation = (props: TemplatesOperationProps) => Promise<boolean>
 export type ImportTemplate = (e: any) => Promise<boolean>
-export type UpdateTemplate = (id: number, patch: TemplatePatch) => Promise<boolean>
+export type UpdateTemplate = (
+  template: {
+    id: number
+    isDraft: boolean
+    version: number
+    versionId: string
+    versionHistory: VersionObject[]
+    name: string
+    code: string
+    status: string
+    applicationCount: number
+    namePlural: string
+    isLinear: boolean
+    serialPattern: string
+    canApplicantMakeChanges: boolean
+  },
+  patch: TemplatePatch
+) => Promise<boolean>
 export type UpdateTemplateFilterJoin = (
   id: number,
   patch: TemplateFilterJoinPatch

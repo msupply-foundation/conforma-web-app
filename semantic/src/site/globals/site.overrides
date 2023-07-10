@@ -2286,7 +2286,7 @@ a:hover {
   }
 }
 
-.template-buider-category-input {
+.template-builder-category-input {
   .flex-column-center-start();
   margin: 3px;
   padding: 20px;
@@ -2299,8 +2299,8 @@ a:hover {
   }
 }
 
-.template-bulder-filter-input {
-  .template-buider-category-input();
+.template-builder-filter-input {
+  .template-builder-category-input();
 }
 
 .builder-selected {

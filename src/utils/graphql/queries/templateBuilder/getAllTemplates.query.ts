@@ -8,7 +8,11 @@ export default gql`
         status
         id
         version
+        versionId
         versionTimestamp
+        parentVersionId
+        versionExportComment
+        versionHistory
         name
         status
         templateCategory {

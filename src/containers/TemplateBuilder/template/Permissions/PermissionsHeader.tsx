@@ -44,12 +44,10 @@ const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
   labelNegative,
 }) => {
   const [selectedPermissionNameId, setSelectedPermissionNameId] = useState(-1)
-  const {
-    template: { id: templateId, isDraft },
-    templatePermissions,
-  } = useTemplateState()
+  const { template, templatePermissions } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const { permissionNames } = usePermissionNameState()
+  const { isDraft } = template
 
   const matchingTemplatePermissions = getMatchingTemplatePermission({
     type,
@@ -66,7 +64,7 @@ const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
   )
 
   const addPermission = async () => {
-    await updateTemplate(templateId, {
+    await updateTemplate(template, {
       templatePermissionsUsingId: {
         create: [
           {

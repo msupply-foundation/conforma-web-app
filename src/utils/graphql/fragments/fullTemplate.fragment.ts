@@ -11,7 +11,11 @@ export default gql`
       }
     }
     version
+    versionId
     versionTimestamp
+    parentVersionId
+    versionExportComment
+    versionHistory
     templateSections(orderBy: INDEX_ASC) {
       nodes {
         ...Section

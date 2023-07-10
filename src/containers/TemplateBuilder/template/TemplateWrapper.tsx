@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { matchPath } from 'react-router'
-import { Link } from 'react-router-dom'
 import { Header, Icon, Message, Label } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../../components'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -33,6 +32,7 @@ import Form from './Form/Form'
 import FormWrapper from './Form/FormWrapper'
 import General from './General/General'
 import Permissions from './Permissions/Permissions'
+import { VersionObject } from '../useGetTemplates'
 
 export type TemplateInfo = GetFullTemplateInfoQuery['template']
 
@@ -68,7 +68,7 @@ const TemplateContainer: React.FC = () => {
     location,
   } = useRouter()
   const {
-    template: { version, name, code, status, applicationCount, id },
+    template: { version, name, code, status, applicationCount, id, canEdit },
   } = useTemplateState()
   const prevQuery = useRef(location?.state?.queryString ?? '')
 
@@ -110,6 +110,12 @@ const TemplateContainer: React.FC = () => {
           </div>
         ))}
       </div>
+      {!canEdit && (
+        <Message warning size="tiny">
+          This template version has previously been exported or committed, so can no longer be
+          edited. Create a new version by clicking the "Duplicate" icon in the Templates list.
+        </Message>
+      )}
       <div className="template-builder-content">{selected.render()}</div>
     </div>
   )
@@ -120,6 +126,8 @@ type TemplateContextState = {
     id: number
     isDraft: boolean
     version: number
+    versionId: string
+    versionHistory: VersionObject[]
     name: string
     code: string
     status: string
@@ -128,6 +136,7 @@ type TemplateContextState = {
     isLinear: boolean
     serialPattern: string
     canApplicantMakeChanges: boolean
+    canEdit: boolean
   }
   refetch: () => void
   category?: TemplateCategory
@@ -145,6 +154,8 @@ const defaultTemplateContextState: TemplateContextState = {
     id: 0,
     isDraft: false,
     version: 0,
+    versionId: '*',
+    versionHistory: [],
     name: '',
     code: '',
     status: '',
@@ -153,6 +164,7 @@ const defaultTemplateContextState: TemplateContextState = {
     isLinear: false,
     serialPattern: '',
     canApplicantMakeChanges: true,
+    canEdit: true,
   },
   refetch: () => {},
   sections: [],
@@ -189,6 +201,8 @@ const TemplateWrapper: React.FC = () => {
         template: {
           id: template.id || 0,
           version: template?.version || 0,
+          versionId: template?.versionId,
+          versionHistory: template?.versionHistory || [],
           name: template?.name || '',
           code: template?.code || '',
           namePlural: template?.namePlural || '',
@@ -198,6 +212,7 @@ const TemplateWrapper: React.FC = () => {
           status: template?.status || TemplateStatus.Disabled,
           applicationCount: template?.applications?.totalCount || 0,
           isDraft: template.status === TemplateStatus.Draft,
+          canEdit: template.versionId === '*' && template.status === TemplateStatus.Draft,
         },
         category: (template?.templateCategory as TemplateCategory) || undefined,
         fromQuery: template,

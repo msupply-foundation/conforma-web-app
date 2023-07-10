@@ -4,7 +4,6 @@ import { Label, Modal } from 'semantic-ui-react'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import Evaluation from '../../shared/Evaluation'
 import { useOperationState } from '../../shared/OperationContext'
-import { useApplicationState } from '../ApplicationWrapper'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 
 type MessagesConfigProps = {
@@ -22,11 +21,8 @@ const evaluations: Evaluations = [
 ]
 
 const MessagesConfig: React.FC<MessagesConfigProps> = ({ isOpen, onClose }) => {
-  const { structure } = useApplicationState()
-  const {
-    template: { isDraft, id: templateId },
-    fromQuery,
-  } = useTemplateState()
+  const { template, fromQuery } = useTemplateState()
+  const { isDraft } = template
   const { updateTemplate } = useOperationState()
 
   const [state, setState] = useState({
@@ -47,7 +43,7 @@ const MessagesConfig: React.FC<MessagesConfigProps> = ({ isOpen, onClose }) => {
 
   const updateMessage = async () => {
     const { startMessage, submissionMessage } = state
-    const result = await updateTemplate(templateId, {
+    const result = await updateTemplate(template, {
       startMessage: startMessage ? startMessage : null,
       submissionMessage,
     })

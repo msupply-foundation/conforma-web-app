@@ -88,9 +88,15 @@ const checkMutationResult = async (
 
 export const updateTemplate: UpdateTemplateHelper =
   (setErrorAndLoadingState: SetErrorAndLoadingState, updateTemplateMutation) =>
-  async (id, patch) => {
+  async (template, patch) => {
+    // if (template.versionId !== '*') {
+    //   console.log('Nope')
+    //   return false
+    // }
     try {
-      const result = await updateTemplateMutation({ variables: { id, templatePatch: patch } })
+      const result = await updateTemplateMutation({
+        variables: { id: template.id, templatePatch: patch },
+      })
       return checkMutationResult(result, setErrorAndLoadingState)
     } catch (e) {
       setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })

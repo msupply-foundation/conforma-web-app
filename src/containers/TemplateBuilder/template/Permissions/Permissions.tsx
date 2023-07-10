@@ -35,12 +35,10 @@ type CanRemoveStage = (stage: TemplateStage) => boolean
 type RemoveStage = (id: number) => void
 
 const Permissions: React.FC = () => {
-  const {
-    templateStages,
-    template: { isDraft, id: templateId },
-    templatePermissions,
-  } = useTemplateState()
+  const { templateStages, template, templatePermissions } = useTemplateState()
   const { updateTemplate } = useOperationState()
+
+  const { isDraft } = template
 
   const latestStageNumber = templateStages.reduce(
     (max, current) => (max > (current?.number || 0) ? max : current?.number || 0),
@@ -57,18 +55,18 @@ const Permissions: React.FC = () => {
     (stage?.templateStageReviewLevelsByStageId?.nodes || []).length == 0
 
   const removeStage: RemoveStage = (id) => {
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateStagesUsingId: { deleteById: [{ id }] },
     })
   }
 
   const addStage = () =>
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateStagesUsingId: { create: [{ number: latestStageNumber + 1, ...newStage }] },
     })
 
   const updateStage: UpdateStage = (id, patch) => {
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateStagesUsingId: { updateById: [{ id, patch }] },
     })
   }

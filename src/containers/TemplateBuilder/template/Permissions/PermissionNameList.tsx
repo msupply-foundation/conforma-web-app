@@ -21,15 +21,13 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
   stageNumber,
   levelNumber,
 }) => {
-  const {
-    template: { id: templateId, isDraft },
-    templatePermissions,
-  } = useTemplateState()
+  const { template, templatePermissions } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [permissionNameInfo, setPermissionNameInfo] = useState<PermissionName | null>(null)
+  const { isDraft } = template
 
   const removeTemplatePermission = (id: number) => {
-    updateTemplate(templateId, { templatePermissionsUsingId: { deleteById: [{ id }] } })
+    updateTemplate(template, { templatePermissionsUsingId: { deleteById: [{ id }] } })
   }
   return (
     <div className="flex-column-start-stretch">

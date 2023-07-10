@@ -12,6 +12,7 @@ export default gql`
     startMessage
     submissionMessage
     version
+    versionId
     serialPattern
     icon
     templateCategory {

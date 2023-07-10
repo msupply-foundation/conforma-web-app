@@ -26,6 +26,7 @@ const General: React.FC = () => {
   const { updateTemplate } = useOperationState()
   const { structure } = useApplicationState()
   const { template } = useTemplateState()
+  const { canEdit } = template
   const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
     variables: { code: template.code },
   })
@@ -34,7 +35,7 @@ const General: React.FC = () => {
   const canSetAvailable = template.status !== TemplateStatus.Available
 
   const canSetDraft =
-    template.status !== TemplateStatus.Draft &&
+    canEdit &&
     (template.applicationCount === 0 ||
       // Let us make changes to active templates while in "dev" mode
       !config.isProductionBuild)
@@ -49,7 +50,7 @@ const General: React.FC = () => {
           disabledMessage={t('TEMPLATE_GEN_BUTTON_AVAILABLE_DISABLED')}
           disabled={!canSetAvailable}
           onClick={() => {
-            updateTemplate(template.id, { status: TemplateStatus.Available })
+            updateTemplate(template, { status: TemplateStatus.Available })
           }}
         />
         <ButtonWithFallback
@@ -57,8 +58,7 @@ const General: React.FC = () => {
           disabledMessage={t('TEMPLATE_GEN_BUTTON_DRAFT_DISABLED')}
           disabled={!canSetDraft}
           onClick={async () => {
-            if (await updateTemplate(template.id, { status: TemplateStatus.Draft }))
-              refetchAvailable()
+            if (await updateTemplate(template, { status: TemplateStatus.Draft })) refetchAvailable()
           }}
         />
         <ButtonWithFallback
@@ -66,7 +66,7 @@ const General: React.FC = () => {
           disabledMessage="Already disabled"
           disabled={!canSetDisabled}
           onClick={async () => {
-            if (await updateTemplate(template.id, { status: TemplateStatus.Disabled }))
+            if (await updateTemplate(template, { status: TemplateStatus.Disabled }))
               refetchAvailable()
           }}
         />
@@ -75,8 +75,10 @@ const General: React.FC = () => {
       <div className="longer">
         <TextIO
           text={String(template.name)}
+          disabled={!canEdit}
+          disabledMessage="Can only change name of draft template"
           title="Name"
-          setText={(text) => updateTemplate(template.id, { name: text })}
+          setText={(text) => updateTemplate(template, { name: text })}
           minLabelWidth={100}
           labelTextAlign="right"
         />
@@ -84,29 +86,30 @@ const General: React.FC = () => {
       <div className="longer">
         <TextIO
           text={String(template.namePlural)}
-          disabledMessage="Can only change code of draft template"
+          disabled={!canEdit}
+          disabledMessage="Can only change name of draft template"
           title="Name Plural"
-          setText={(text) => updateTemplate(template.id, { namePlural: text })}
+          setText={(text) => updateTemplate(template, { namePlural: text })}
           minLabelWidth={100}
           labelTextAlign="right"
         />
       </div>
       <TextIO
         text={String(template.code)}
-        disabled={!template.isDraft}
+        disabled={!canEdit}
         disabledMessage="Can only change code of draft template"
         title="Code"
-        setText={(text) => updateTemplate(template.id, { code: text })}
+        setText={(text) => updateTemplate(template, { code: text })}
         minLabelWidth={100}
         labelTextAlign="right"
       />
       <div className="flex-row-start-center">
         <TextIO
           text={String(template.serialPattern)}
-          disabled={!template.isDraft}
+          disabled={!canEdit}
           disabledMessage="Can only change serial pattern of draft template"
           title="Serial Pattern"
-          setText={(text) => updateTemplate(template.id, { serialPattern: text })}
+          setText={(text) => updateTemplate(template, { serialPattern: text })}
           minLabelWidth={100}
           labelTextAlign="right"
         />
@@ -124,9 +127,9 @@ const General: React.FC = () => {
         title="Linear"
         value={!!template?.isLinear}
         setValue={(checked) => {
-          updateTemplate(template.id, { isLinear: checked })
+          updateTemplate(template, { isLinear: checked })
         }}
-        disabled={!template.isDraft}
+        disabled={!canEdit}
         disabledMessage="Can only change isLinear of draft template"
         minLabelWidth={100}
         labelTextAlign="right"
@@ -136,9 +139,9 @@ const General: React.FC = () => {
         title="Interactive"
         value={!!template?.canApplicantMakeChanges}
         setValue={(checked) => {
-          updateTemplate(template.id, { canApplicantMakeChanges: checked })
+          updateTemplate(template, { canApplicantMakeChanges: checked })
         }}
-        disabled={!template.isDraft}
+        disabled={!canEdit}
         disabledMessage="Can only change canApplicantMakeChanges of draft template"
         minLabelWidth={100}
         labelTextAlign="right"
@@ -152,7 +155,7 @@ const General: React.FC = () => {
         <Header className="no-margin-no-padding" as="h3">
           Messages
         </Header>
-        <IconButton name="setting" onClick={() => setIsMessageConfigOpen(true)} />
+        {canEdit && <IconButton name="setting" onClick={() => setIsMessageConfigOpen(true)} />}
       </div>
       <div className="flex-column-center full-width-container">
         <div className="spacer-20" />
