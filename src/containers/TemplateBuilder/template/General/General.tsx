@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Header, Icon } from 'semantic-ui-react'
+import { Button, Header, Icon, Table } from 'semantic-ui-react'
 
 import {
   TemplateStatus,
@@ -20,6 +20,9 @@ import MessagesConfig from './MessagesConfig'
 import CheckboxIO from '../../shared/CheckboxIO'
 import config from '../../../../config'
 import { Link } from 'react-router-dom'
+import { DateTime } from 'luxon'
+import { getVersionString } from '../../Templates'
+import { Template } from '../../useGetTemplates'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -150,6 +153,8 @@ const General: React.FC = () => {
       <Category />
 
       <Filters />
+
+      {/* MESSAGES */}
       <div className="spacer-20" />
       <div className="flex-row-start-center">
         <Header className="no-margin-no-padding" as="h3">
@@ -176,6 +181,58 @@ const General: React.FC = () => {
         </div>
       </div>
       <MessagesConfig isOpen={isMessageConfigOpen} onClose={() => setIsMessageConfigOpen(false)} />
+
+      {/* VERSION HISTORY */}
+      <div className="spacer-20" />
+      <div className="spacer-20" />
+      <Header className="no-margin-no-padding" as="h3">
+        Version History
+      </Header>
+      <Table stackable>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell key="num" width={1}>
+              No.
+            </Table.HeaderCell>
+            <Table.HeaderCell key="timestamp" width={4}>
+              Timestamp
+            </Table.HeaderCell>
+            <Table.HeaderCell key="versionId" width={3}>
+              Version ID
+            </Table.HeaderCell>
+            <Table.HeaderCell key="comment">Comment</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {template.canEdit && (
+            <Table.Row>
+              <Table.Cell>{template.versionHistory.length + 1}</Table.Cell>
+              <Table.Cell>
+                {template.versionTimestamp.toLocaleString(DateTime.DATETIME_MED)}
+              </Table.Cell>
+              <Table.Cell>
+                <em>{getVersionString(template, false)}</em>
+              </Table.Cell>
+              <Table.Cell>
+                <div className="flex-row-space-between-center">
+                  <em>Not yet committed or exported</em>
+                  <Button primary>Commit now</Button>
+                </div>
+              </Table.Cell>
+            </Table.Row>
+          )}
+          {template.versionHistory.map((version) => (
+            <Table.Row key={version.versionId}>
+              <Table.Cell>{version.number}</Table.Cell>
+              <Table.Cell>
+                {DateTime.fromISO(version.timestamp).toLocaleString(DateTime.DATETIME_MED)}
+              </Table.Cell>
+              <Table.Cell>{version.versionId}</Table.Cell>
+              <Table.Cell>{version.comment}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
     </div>
   )
 }

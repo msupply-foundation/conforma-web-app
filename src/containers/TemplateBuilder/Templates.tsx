@@ -1,6 +1,18 @@
 import React, { ReactNode, useRef } from 'react'
 import { useState } from 'react'
-import { Button, Header, Icon, Table, Label, Dropdown, Checkbox } from 'semantic-ui-react'
+import {
+  Button,
+  Header,
+  Icon,
+  Table,
+  Label,
+  Dropdown,
+  Checkbox,
+  Confirm,
+  Container,
+  Input,
+  FormInput,
+} from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { useOperationState } from './shared/OperationContext'
 import TextIO from './shared/TextIO'
@@ -134,6 +146,10 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
 const DuplicateButton: React.FC<CellProps> = ({ template: { code, version, id }, refetch }) => {
   const snapshotName = `${code}-${version}`
   const { duplicateTemplate } = useOperationState()
+  const [open, setOpen] = useState(false)
+  const [selectedType, setSelectedType] = useState<'version' | 'template'>('version')
+  const [newCode, setNewCode] = useState('')
+  const [codeError, setCodeError] = useState(false)
 
   return (
     <div key="duplicate">
@@ -141,11 +157,56 @@ const DuplicateButton: React.FC<CellProps> = ({ template: { code, version, id },
         className="clickable"
         onClick={async (e) => {
           e.stopPropagation()
-          if (await duplicateTemplate({ id, snapshotName })) refetch()
+          setOpen(true)
         }}
       >
         <Icon className="clickable" key="export" name="copy" />
       </div>
+      <Confirm
+        open={open}
+        closeOnTriggerBlur={false}
+        content={
+          <div style={{ padding: 10, gap: 10 }} className="flex-column">
+            <p>
+              Do you want to create a new template version or a whole new template type based on
+              this template?
+              <br />
+              (New template will start with an empty version history)
+            </p>
+            <Dropdown
+              selection
+              options={[
+                { key: 'version', value: 'version', text: 'Version' },
+                { key: 'template', value: 'template', text: 'Template' },
+              ]}
+              value={selectedType}
+              onChange={(_, { value }) => setSelectedType(value as 'version' | 'template')}
+            />
+            {selectedType === 'template' && (
+              <div className="flex-row-start-center" style={{ gap: 10 }}>
+                <label>New template code:</label>
+                <Input
+                  value={newCode}
+                  onChange={(e) => {
+                    setCodeError(false)
+                    setNewCode(e.target.value)
+                  }}
+                  error={codeError}
+                />
+              </div>
+            )}
+          </div>
+        }
+        onCancel={() => setOpen(false)}
+        onConfirm={async () => {
+          if (selectedType === 'template' && newCode === '') {
+            setCodeError(true)
+            return
+          }
+          if (await duplicateTemplate({ id, snapshotName })) refetch()
+          setOpen(false)
+        }}
+      />
     </div>
   )
 }
@@ -369,7 +430,16 @@ const sortTemplates = (
   })
 }
 
-const getVersionString = (template: Template) => {
+export const getVersionString = (
+  template: {
+    versionId: string
+    parentVersionId: string | null
+    versionHistory: VersionObject[]
+  },
+  showNumber = true
+) => {
   const { versionId, parentVersionId, versionHistory } = template
-  return `${versionId === '*' ? parentVersionId + '*' : versionId} (v${versionHistory.length + 1})`
+  return `${versionId === '*' ? parentVersionId + '*' : versionId}${
+    showNumber ? ` (v${versionHistory.length + 1})` : ''
+  }`
 }

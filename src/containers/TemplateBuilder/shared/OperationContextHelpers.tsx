@@ -89,10 +89,6 @@ const checkMutationResult = async (
 export const updateTemplate: UpdateTemplateHelper =
   (setErrorAndLoadingState: SetErrorAndLoadingState, updateTemplateMutation) =>
   async (template, patch) => {
-    // if (template.versionId !== '*') {
-    //   console.log('Nope')
-    //   return false
-    // }
     try {
       const result = await updateTemplateMutation({
         variables: { id: template.id, templatePatch: patch },
@@ -234,6 +230,8 @@ export const duplicateTemplate: TemplateOperationHelper = async (
     body,
     setErrorAndLoadingState
   )
+
+  console.log('snapshotResult', snapshotResult)
 
   // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
   safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})

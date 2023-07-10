@@ -33,6 +33,7 @@ import FormWrapper from './Form/FormWrapper'
 import General from './General/General'
 import Permissions from './Permissions/Permissions'
 import { VersionObject } from '../useGetTemplates'
+import { DateTime } from 'luxon'
 
 export type TemplateInfo = GetFullTemplateInfoQuery['template']
 
@@ -127,6 +128,8 @@ type TemplateContextState = {
     isDraft: boolean
     version: number
     versionId: string
+    versionTimestamp: DateTime
+    parentVersionId: string | null
     versionHistory: VersionObject[]
     name: string
     code: string
@@ -155,6 +158,8 @@ const defaultTemplateContextState: TemplateContextState = {
     isDraft: false,
     version: 0,
     versionId: '*',
+    versionTimestamp: DateTime.now(),
+    parentVersionId: null,
     versionHistory: [],
     name: '',
     code: '',
@@ -202,7 +207,15 @@ const TemplateWrapper: React.FC = () => {
           id: template.id || 0,
           version: template?.version || 0,
           versionId: template?.versionId,
-          versionHistory: template?.versionHistory || [],
+          versionTimestamp: DateTime.fromISO(template?.versionTimestamp) || DateTime.now(),
+          parentVersionId: template?.parentVersionId || null,
+          versionHistory:
+            [...template?.versionHistory]
+              .map((version, index) => ({
+                ...version,
+                number: index + 1,
+              }))
+              .reverse() || [],
           name: template?.name || '',
           code: template?.code || '',
           namePlural: template?.namePlural || '',

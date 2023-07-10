@@ -5,6 +5,7 @@ import { TemplateStatus, useGetAllTemplatesQuery } from '../../utils/generated/g
 export interface VersionObject {
   versionId: string
   timestamp: string
+  number: number
   parentVersionId: string | null
   comment: string | null
 }
