@@ -12,7 +12,7 @@ import {
   Input,
 } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import OperationContext, { useOperationState } from './shared/OperationContext'
+import OperationContext, { TemplateOptions, useOperationState } from './shared/OperationContext'
 import TextIO from './shared/TextIO'
 import useGetTemplates, { Template, Templates, VersionObject } from './useGetTemplates'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -274,11 +274,15 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
               versionExportComment: commitMessage,
             })
           setOpen(false)
+          const templateOptions: TemplateOptions = {
+            resetVersion: commitCurrent || template.versionId !== '*',
+          }
+          if (selectedType === 'template') templateOptions.newCode = newCode
           if (
             await duplicateTemplate({
               id: template.id,
               snapshotName,
-              resetVersion: commitCurrent || template.versionId !== '*',
+              templates: templateOptions,
             })
           ) {
             await refetch()
@@ -517,7 +521,7 @@ export const getVersionString = (
   showNumber = true
 ) => {
   const { versionId, parentVersionId, versionHistory } = template
-  return `${versionId === '*' ? parentVersionId + '*' : versionId}${
+  return `${versionId === '*' ? parentVersionId ?? 'NEW' + '*' : versionId}${
     showNumber ? ` (v${versionHistory.length + 1})` : ''
   }`
 }

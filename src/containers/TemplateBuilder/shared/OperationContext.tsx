@@ -37,7 +37,13 @@ export type ErrorAndLoadingState = {
   isLoading: boolean
 }
 
-export type TemplatesOperationProps = { id: number; snapshotName: string; resetVersion?: boolean }
+export type TemplateOptions = { resetVersion?: boolean; newCode?: string }
+
+export type TemplatesOperationProps = {
+  id: number
+  snapshotName: string
+  templates?: TemplateOptions
+}
 export type TemplatesOperation = (props: TemplatesOperationProps) => Promise<boolean>
 export type ImportTemplate = (e: any) => Promise<boolean>
 export type UpdateTemplate = (

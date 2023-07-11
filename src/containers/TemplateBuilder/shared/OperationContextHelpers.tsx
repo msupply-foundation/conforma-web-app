@@ -207,10 +207,10 @@ export const exportTemplate: TemplateOperationHelper = async (
 }
 
 export const duplicateTemplate: TemplateOperationHelper = async (
-  { id, snapshotName, resetVersion = false },
+  { id, snapshotName, templates = {} },
   setErrorAndLoadingState
 ) => {
-  const body = JSON.stringify({ ...getFilterBody(id), resetTemplate: resetVersion })
+  const body = JSON.stringify({ ...getFilterBody(id), templates })
 
   const result = await safeFetch(
     getServerUrl('snapshot', {
