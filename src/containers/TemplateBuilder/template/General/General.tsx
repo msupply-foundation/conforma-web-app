@@ -21,10 +21,10 @@ import CheckboxIO from '../../shared/CheckboxIO'
 import config from '../../../../config'
 import { Link } from 'react-router-dom'
 import { DateTime } from 'luxon'
-import { getVersionString } from '../../Templates'
 import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
+import { getVersionString } from '../helpers'
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
 
@@ -116,15 +116,6 @@ const General: React.FC = () => {
         disabledMessage="Can only change code of draft template"
         title="Code"
         setText={(text) => updateTemplate(template, { code: text })}
-        minLabelWidth={100}
-        labelTextAlign="right"
-      />
-      <TextIO
-        text={getVersionString(template)}
-        disabled={true}
-        disabledMessage="Version is not editable"
-        title="Version"
-        setText={() => {}}
         minLabelWidth={100}
         labelTextAlign="right"
       />

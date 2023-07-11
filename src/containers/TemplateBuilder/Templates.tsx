@@ -20,11 +20,8 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { DateTime } from 'luxon'
-import { customAlphabet } from 'nanoid'
 import { useToast } from '../../contexts/Toast'
-import { isTemplateUnlocked } from './template/TemplateWrapper'
-
-const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
+import { isTemplateUnlocked, getTemplateVersionId, getVersionString } from './template/helpers'
 
 type CellPropsTemplate = Template & { numberOfTemplates?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void }
@@ -169,7 +166,7 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
         }
         onCancel={() => setOpen(false)}
         onConfirm={async () => {
-          const versionId = nanoid()
+          const versionId = getTemplateVersionId()
           await updateTemplate(template as any, {
             versionId,
             versionComment: commitMessage,
@@ -278,7 +275,7 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
           }
           if (commitCurrent)
             await updateTemplate(template as any, {
-              versionId: nanoid(),
+              versionId: getTemplateVersionId(),
               versionComment: commitMessage,
               versionTimestamp: DateTime.now().toISO(),
             })
@@ -526,18 +523,4 @@ const sortTemplates = (
     if (aVal === bVal) return 0
     return sortAsc * (aVal > bVal ? 1 : -1)
   })
-}
-
-export const getVersionString = (
-  template: {
-    versionId: string
-    parentVersionId: string | null
-    versionHistory: VersionObject[]
-  },
-  showNumber = true
-) => {
-  const { versionId, parentVersionId, versionHistory } = template
-  return `${versionId.startsWith('*') ? (parentVersionId || 'NEW') + '*' : versionId}${
-    showNumber ? ` (v${versionHistory.length + 1})` : ''
-  }`
 }

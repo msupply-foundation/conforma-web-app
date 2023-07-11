@@ -32,7 +32,7 @@ import {
   deleteTemplate,
 } from './OperationContextHelpers'
 import { VersionObject } from '../useGetTemplates'
-import deleteTemplateMutation from '../../../utils/graphql/mutations/templateBuilder/deleteTemplate.mutation'
+import { TemplateState } from '../template/TemplateWrapper'
 
 type Error = { message: string; error: string }
 export type ErrorAndLoadingState = {
@@ -49,23 +49,7 @@ export type TemplatesOperationProps = {
 }
 export type TemplatesOperation = (props: TemplatesOperationProps) => Promise<boolean>
 export type ImportTemplate = (e: any) => Promise<boolean>
-export type UpdateTemplate = (
-  template: {
-    id: number
-    isDraft: boolean
-    versionId: string
-    versionHistory: VersionObject[]
-    name: string
-    code: string
-    status: string
-    applicationCount: number
-    namePlural: string
-    isLinear: boolean
-    serialPattern: string
-    canApplicantMakeChanges: boolean
-  },
-  patch: TemplatePatch
-) => Promise<boolean>
+export type UpdateTemplate = (template: TemplateState, patch: TemplatePatch) => Promise<boolean>
 export type DeleteTemplate = (id: number) => Promise<boolean>
 export type UpdateTemplateFilterJoin = (
   id: number,

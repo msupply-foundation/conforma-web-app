@@ -25,7 +25,7 @@ import Actions from './Actions/Actions'
 import {
   CreateApplicationWrapper,
   ApplicationWrapper,
-  FullAppllicationWrapper,
+  FullApplicationWrapper,
 } from './ApplicationWrapper'
 
 import Form from './Form/Form'
@@ -34,6 +34,8 @@ import General from './General/General'
 import Permissions from './Permissions/Permissions'
 import { VersionObject } from '../useGetTemplates'
 import { DateTime } from 'luxon'
+import { isTemplateUnlocked } from './helpers'
+import { getVersionString } from './helpers'
 
 export type TemplateInfo = GetFullTemplateInfoQuery['template']
 
@@ -62,20 +64,14 @@ const tabs = [
 
 export const disabledMessage = 'Can only edit draft procedure, please make it draft or duplicate'
 
-// Checks if template version starts with "*" character (i.e. template can be
-// modified)
-export const isTemplateUnlocked = (template: { versionId: string }) =>
-  template.versionId.startsWith('*')
-
 const TemplateContainer: React.FC = () => {
   const {
     match: { path },
     push,
     location,
   } = useRouter()
-  const {
-    template: { name, code, status, applicationCount, id, canEdit },
-  } = useTemplateState()
+  const { template } = useTemplateState()
+  const { name, code, status, applicationCount, id, canEdit } = template
   const prevQuery = useRef(location?.state?.queryString ?? '')
 
   const selected = tabs.find(({ route }) =>
@@ -98,7 +94,7 @@ const TemplateContainer: React.FC = () => {
       />
       <div className="flex-row-space-between-center-wrap">
         <div className="template-builder-info-bar">
-          <TextIO title="version" text={'VERSION WAS HERE'} labelNegative />
+          <TextIO title="version" text={getVersionString(template)} labelNegative />
           <TextIO title="name" text={name} labelNegative />
           <TextIO title="code" text={code} labelNegative />
           <TextIO title="status" text={status} labelNegative />
@@ -127,25 +123,27 @@ const TemplateContainer: React.FC = () => {
   )
 }
 
+export interface TemplateState {
+  id: number
+  isDraft: boolean
+  versionId: string
+  versionTimestamp: DateTime
+  parentVersionId: string | null
+  versionHistory: VersionObject[]
+  versionComment: string | null
+  name: string
+  code: string
+  status: string
+  applicationCount: number
+  namePlural: string
+  isLinear: boolean
+  serialPattern: string
+  canApplicantMakeChanges: boolean
+  canEdit: boolean
+}
+
 type TemplateContextState = {
-  template: {
-    id: number
-    isDraft: boolean
-    versionId: string
-    versionTimestamp: DateTime
-    parentVersionId: string | null
-    versionHistory: VersionObject[]
-    versionComment: string | null
-    name: string
-    code: string
-    status: string
-    applicationCount: number
-    namePlural: string
-    isLinear: boolean
-    serialPattern: string
-    canApplicantMakeChanges: boolean
-    canEdit: boolean
-  }
+  template: TemplateState
   refetch: () => void
   category?: TemplateCategory
   sections: TemplateSection[]
@@ -256,9 +254,9 @@ const TemplateWrapper: React.FC = () => {
           <FormWrapper>
             <CreateApplicationWrapper>
               <ApplicationWrapper>
-                <FullAppllicationWrapper>
+                <FullApplicationWrapper>
                   <TemplateContainer />
-                </FullAppllicationWrapper>
+                </FullApplicationWrapper>
               </ApplicationWrapper>
             </CreateApplicationWrapper>
           </FormWrapper>
