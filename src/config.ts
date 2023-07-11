@@ -53,7 +53,9 @@ const config = {
   localStorageJWTKey: 'persistJWT',
   applicantDeadlineCode: 'applicantDeadline',
   isProductionBuild,
-  debounceTimeout: 350, // milliseconds
+  debounceTimeout: 350, // milliseconds,
+  // These are the only system tables that we allow to have Data View configuration, plus any "data_table" tables.
+  dataViewAllowedTableNames: ['user', 'organisation', 'file'],
 }
 
 export default config

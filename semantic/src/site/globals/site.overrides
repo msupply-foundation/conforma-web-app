@@ -1821,13 +1821,18 @@ a:hover {
 }
 
 /*--------------------------------
-      Preferences (Admin) Page
+      (Admin) Preferences / Data View Pages
 ---------------------------------*/
 
-#preferences-panel {
+#preferences-panel,
+#data-view-config-panel {
   padding-top: 20px;
   width: 50%;
-  max-width: 600px;
+
+  h2.ui.header {
+    padding: 0;
+    margin: 5px;
+  }
 }
 
 /*--------------------------------
@@ -2281,12 +2286,13 @@ a:hover {
   }
 }
 
-.template-buider-category-input {
+.template-builder-category-input {
   .flex-column-center-start();
-  margin: 3px;
-  padding: 20px;
+  margin-top: 20px;
+  padding: 15px;
   border-radius: @borderRadius;
-  background: @surfacesLight;
+  border: 1px solid @surfacesMed;
+
   p {
     font-size: @slightlySmallerText;
     margin-top: 10px;
@@ -2295,7 +2301,7 @@ a:hover {
 }
 
 .template-bulder-filter-input {
-  .template-buider-category-input();
+  .template-builder-category-input();
 }
 
 .builder-selected {
@@ -2472,7 +2478,7 @@ a:hover {
 
 .object-properties-container {
   .flex-column-start-center();
-  margin-left: 30px;
+  margin-left: 10px;
   max-width: 500px;
 }
 .evaluator-operator-container {

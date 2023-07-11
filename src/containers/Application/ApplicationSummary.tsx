@@ -68,7 +68,6 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
           } else {
             try {
               await submit(fullStructure)
-              fullStructure.reload()
               push(`/application/${fullStructure?.info.serial}/submission`)
             } catch (e) {
               console.log(e)
