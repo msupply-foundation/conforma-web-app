@@ -534,7 +534,7 @@ export const getVersionString = (
   showNumber = true
 ) => {
   const { versionId, parentVersionId, versionHistory } = template
-  return `${versionId === '*' ? parentVersionId ?? 'NEW' + '*' : versionId}${
+  return `${versionId === '*' ? (parentVersionId || 'NEW') + '*' : versionId}${
     showNumber ? ` (v${versionHistory.length + 1})` : ''
   }`
 }

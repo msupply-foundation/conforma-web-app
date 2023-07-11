@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import { Button, Header, Icon, Table } from 'semantic-ui-react'
+import { Button, Confirm, Header, Icon, Input, Table } from 'semantic-ui-react'
 
 import {
   TemplateStatus,
   useGetTemplatesAvailableForCodeQuery,
 } from '../../../../utils/generated/graphql'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
-
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import Markdown from '../../../../utils/helpers/semanticReactMarkdown'
+import { customAlphabet } from 'nanoid'
 import { useOperationState } from '../../shared/OperationContext'
 import TextIO from '../../shared/TextIO'
 import { useApplicationState } from '../ApplicationWrapper'
@@ -26,6 +26,8 @@ import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
 
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
+
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
   const { replace } = useRouter()
@@ -38,6 +40,8 @@ const General: React.FC = () => {
   })
   const showToast = useToast({ style: 'success' })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
+  const [commitConfirmOpen, setCommitConfirmOpen] = useState(false)
+  const [commitMessage, setCommitMessage] = useState('')
 
   const { ConfirmModal: DeleteConfirm, showModal: confirmDelete } = useConfirmationModal({
     type: 'warning',
@@ -110,6 +114,13 @@ const General: React.FC = () => {
         disabled={!canEdit}
         disabledMessage="Can only change code of draft template"
         title="Code"
+        minLabelWidth={100}
+        labelTextAlign="right"
+      />
+      <TextIO
+        text={getVersionString(template)}
+        disabled
+        title="Version"
         setText={(text) => updateTemplate(template, { code: text })}
         minLabelWidth={100}
         labelTextAlign="right"
@@ -193,6 +204,37 @@ const General: React.FC = () => {
       {/* VERSION HISTORY */}
       <div className="spacer-20" />
       <div className="spacer-20" />
+      <Confirm
+        open={commitConfirmOpen}
+        // Prevent click in Input from closing modal
+        onClick={(e: any) => e.stopPropagation()}
+        content={
+          <div style={{ padding: 10, gap: 10 }} className="flex-column">
+            <p>Commit version?</p>
+            <p>
+              This will create a permanent template version that can no longer be modified. To make
+              any further changes, you will need to duplicate it and create a new version.
+            </p>
+            <div className="flex-row-start-center" style={{ gap: 10 }}>
+              <label>Please provide a commit message:</label>
+              <Input
+                value={commitMessage}
+                onChange={(e) => setCommitMessage(e.target.value)}
+                style={{ width: '60%' }}
+              />
+            </div>
+          </div>
+        }
+        onCancel={() => setCommitConfirmOpen(false)}
+        onConfirm={async () => {
+          const versionId = nanoid()
+          await updateTemplate(template as any, {
+            versionId,
+            versionExportComment: commitMessage,
+          })
+          setCommitConfirmOpen(false)
+        }}
+      />
       <Header className="no-margin-no-padding" as="h3">
         Version History
       </Header>
@@ -212,23 +254,34 @@ const General: React.FC = () => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {template.canEdit && (
-            <Table.Row>
-              <Table.Cell>{template.versionHistory.length + 1}</Table.Cell>
-              <Table.Cell>
-                {template.versionTimestamp.toLocaleString(DateTime.DATETIME_MED)}
-              </Table.Cell>
-              <Table.Cell>
-                <em>{getVersionString(template, false)}</em>
-              </Table.Cell>
-              <Table.Cell>
-                <div className="flex-row-space-between-center">
-                  <em>Not yet committed or exported</em>
-                  <Button primary>Commit now</Button>
-                </div>
-              </Table.Cell>
-            </Table.Row>
-          )}
+          <Table.Row>
+            <Table.Cell>{template.versionHistory.length + 1}</Table.Cell>
+            <Table.Cell>
+              {template.versionTimestamp.toLocaleString(DateTime.DATETIME_MED)}
+            </Table.Cell>
+            <Table.Cell style={{ fontStyle: canEdit ? 'italic' : 'normal' }}>
+              {getVersionString(template, false)}
+            </Table.Cell>
+            <Table.Cell>
+              <div className="flex-row-space-between-center">
+                {canEdit ? (
+                  <>
+                    <em>Not yet committed or exported</em>
+                    <Button
+                      primary
+                      inverted
+                      size="small"
+                      onClick={() => setCommitConfirmOpen(true)}
+                    >
+                      Commit now
+                    </Button>
+                  </>
+                ) : (
+                  template.versionExportComment
+                )}
+              </div>
+            </Table.Cell>
+          </Table.Row>
           {template.versionHistory.map((version) => (
             <Table.Row key={version.versionId}>
               <Table.Cell>{version.number}</Table.Cell>

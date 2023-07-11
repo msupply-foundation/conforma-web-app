@@ -131,6 +131,7 @@ type TemplateContextState = {
     versionTimestamp: DateTime
     parentVersionId: string | null
     versionHistory: VersionObject[]
+    versionExportComment: string | null
     name: string
     code: string
     status: string
@@ -161,6 +162,7 @@ const defaultTemplateContextState: TemplateContextState = {
     versionTimestamp: DateTime.now(),
     parentVersionId: null,
     versionHistory: [],
+    versionExportComment: null,
     name: '',
     code: '',
     status: '',
@@ -216,6 +218,7 @@ const TemplateWrapper: React.FC = () => {
                 number: index + 1,
               }))
               .reverse() || [],
+          versionExportComment: template.versionExportComment ?? null,
           name: template?.name || '',
           code: template?.code || '',
           namePlural: template?.namePlural || '',
