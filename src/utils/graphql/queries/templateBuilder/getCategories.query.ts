@@ -9,6 +9,7 @@ export default gql`
         id
         title
         uiLocation
+        isSubmenu
       }
     }
   }

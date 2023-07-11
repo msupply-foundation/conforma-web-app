@@ -112,12 +112,11 @@ const TextIO: React.FC<TextIOprops> = ({
   }
 
   const renderIcon = () => {
-    const color = iconColor
     const className = !!onIconClick ? 'clickable' : ''
     return (
       <Icon
-        style={style}
-        color={color}
+        color={iconColor}
+        style={{ marginLeft: 5 }}
         className={className}
         onClick={onIconClick}
         name={icon as SemanticICONS}
