@@ -21,7 +21,7 @@ import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { DateTime } from 'luxon'
 import { customAlphabet } from 'nanoid'
-import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
+import { useToast } from '../../contexts/Toast'
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
 
@@ -109,6 +109,11 @@ const ViewEditButton: React.FC<CellProps> = ({ template: { id } }) => {
 
 const ExportButton: React.FC<CellProps> = ({ template }) => {
   const { exportTemplate, updateTemplate } = useOperationState()
+  const showToast = useToast({
+    style: 'success',
+    title: 'Template exported',
+    text: `${template.code} - ${getVersionString(template)}`,
+  })
   const JWT = localStorage.getItem(config.localStorageJWTKey)
   const [open, setOpen] = useState(false)
   const [commitMessage, setCommitMessage] = useState('')
@@ -134,7 +139,8 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
         method: 'POST',
         headers: { Authorization: `Bearer ${JWT}` },
       })
-    }
+      showToast()
+    } else showToast({ style: 'error', title: 'Problem exporting template' })
   }
 
   return (
@@ -187,7 +193,7 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
 
 const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
   const { updateTemplate } = useOperationState()
-
+  const showToast = useToast({ style: 'success' })
   const { code, versionId } = template
   const snapshotName = `${code}-${versionId}`
   const { duplicateTemplate } = useOperationState()
@@ -285,6 +291,13 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
               templates: templateOptions,
             })
           ) {
+            showToast({
+              title:
+                selectedType === 'template'
+                  ? 'New template created'
+                  : 'New template version created',
+              text: `${selectedType === 'template' ? newCode : template.code}`,
+            })
             await refetch()
           }
         }}

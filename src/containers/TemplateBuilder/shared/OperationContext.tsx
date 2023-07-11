@@ -6,6 +6,7 @@ import {
   TemplatePatch,
   TemplateSectionPatch,
   TemplateStagePatch,
+  useDeleteTemplateMutation,
   useDeleteWholeApplicationMutation,
   useRestartApplicationMutation,
   useUpdateTemplateFilterJoinMutation,
@@ -28,8 +29,10 @@ import {
   createApplication,
   updateApplication,
   updateTemplateStage,
+  deleteTemplate,
 } from './OperationContextHelpers'
 import { VersionObject } from '../useGetTemplates'
+import deleteTemplateMutation from '../../../utils/graphql/mutations/templateBuilder/deleteTemplate.mutation'
 
 type Error = { message: string; error: string }
 export type ErrorAndLoadingState = {
@@ -82,6 +85,7 @@ type OperationContextState = {
   duplicateTemplate: TemplatesOperation
   importTemplate: ImportTemplate
   updateTemplate: UpdateTemplate
+  deleteTemplate: DeleteTemplate
   updateTemplateFilterJoin: UpdateTemplateFilterJoin
   updateTemplateSection: UpdateTemplateSection
   deleteApplication: DeleteApplication
@@ -100,6 +104,7 @@ const defaultOperationContext: OperationContextState = {
   duplicateTemplate: contextNotPresentError,
   importTemplate: contextNotPresentError,
   updateTemplate: contextNotPresentError,
+  deleteTemplate: contextNotPresentError,
   updateTemplateFilterJoin: contextNotPresentError,
   updateTemplateSection: contextNotPresentError,
   deleteApplication: contextNotPresentError,
@@ -114,6 +119,7 @@ const OperationContext: React.FC = ({ children }) => {
   const [updateTemplateMutation] = useUpdateTemplateMutation()
   const [updateTemplateFilterJoinMutation] = useUpdateTemplateFilterJoinMutation()
   const [updateTemplateSectionMutation] = useUpdateTemplateSectionMutation()
+  const [deleteTemplateMutation] = useDeleteTemplateMutation()
   const [deleteApplicationMutation] = useDeleteWholeApplicationMutation()
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
@@ -130,6 +136,7 @@ const OperationContext: React.FC = ({ children }) => {
       setInnerState,
       updateTemplateFilterJoinMutation
     ),
+    deleteTemplate: deleteTemplate(setInnerState, deleteTemplateMutation),
     updateTemplateSection: updateTemplateSection(setInnerState, updateTemplateSectionMutation),
     deleteApplication: deleteApplication(setInnerState, deleteApplicationMutation),
     createApplication: createApplication(setInnerState, create, getSerialAsync),

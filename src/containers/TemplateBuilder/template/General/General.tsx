@@ -22,17 +22,21 @@ import config from '../../../../config'
 import { Link } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import { getVersionString } from '../../Templates'
+import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
+import { useToast } from '../../../../contexts/Toast'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
-  const { updateTemplate } = useOperationState()
+  const { replace } = useRouter()
+  const { updateTemplate, deleteTemplate } = useOperationState()
   const { structure } = useApplicationState()
   const { template } = useTemplateState()
   const { canEdit } = template
   const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
     variables: { code: template.code },
   })
+  const showToast = useToast({ style: 'success' })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
 
   const { ConfirmModal: DeleteConfirm, showModal: confirmDelete } = useConfirmationModal({
@@ -244,8 +248,16 @@ const General: React.FC = () => {
           onClick={() =>
             confirmDelete({
               title: 'Delete template?',
-              message: 'This will permanently delete this version of the template',
-              onConfirm: () => {},
+              message: 'This will permanently remove this version of the template from the system',
+              onConfirm: async () => {
+                await deleteTemplate(template.id)
+                replace('/admin/templates')
+                showToast({
+                  title: 'Template deleted',
+                  text: `${template.code} - ${getVersionString(template)}`,
+                })
+              },
+              awaitAction: true,
             })
           }
         >
