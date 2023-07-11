@@ -17,7 +17,7 @@ export type Template = {
   code: string
   category: string
   versionId: string
-  versionExportComment: string | null
+  versionComment: string | null
   versionTimestamp: DateTime
   parentVersionId: string | null
   versionHistory: VersionObject[]
@@ -60,7 +60,7 @@ const useGetTemplates = () => {
           versionId,
           parentVersionId = null,
           versionTimestamp,
-          versionExportComment = null,
+          versionComment = null,
           versionHistory = [],
           templateCategory,
           applications,
@@ -75,7 +75,7 @@ const useGetTemplates = () => {
           category: templateCategory?.title || '',
           versionId,
           parentVersionId,
-          versionExportComment,
+          versionComment,
           versionHistory,
           versionTimestamp: DateTime.fromISO(versionTimestamp),
           applicationCount: applications.totalCount || 0,

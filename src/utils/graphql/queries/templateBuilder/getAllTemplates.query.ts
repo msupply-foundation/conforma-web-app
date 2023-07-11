@@ -10,7 +10,7 @@ export default gql`
         versionId
         versionTimestamp
         parentVersionId
-        versionExportComment
+        versionComment
         versionHistory
         name
         status

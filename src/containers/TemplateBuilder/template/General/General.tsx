@@ -234,7 +234,7 @@ const General: React.FC = () => {
           if (
             await updateTemplate(template as any, {
               versionId,
-              versionExportComment: commitMessage,
+              versionComment: commitMessage,
               versionTimestamp: DateTime.now().toISO(),
             })
           )
@@ -284,7 +284,7 @@ const General: React.FC = () => {
                     </Button>
                   </>
                 ) : (
-                  template.versionExportComment
+                  template.versionComment
                 )}
               </div>
             </Table.Cell>

@@ -172,7 +172,7 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
           const versionId = nanoid()
           await updateTemplate(template as any, {
             versionId,
-            versionExportComment: commitMessage,
+            versionComment: commitMessage,
             versionTimestamp: DateTime.now().toISO(),
           })
           setOpen(false)
@@ -279,7 +279,7 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
           if (commitCurrent)
             await updateTemplate(template as any, {
               versionId: nanoid(),
-              versionExportComment: commitMessage,
+              versionComment: commitMessage,
               versionTimestamp: DateTime.now().toISO(),
             })
           setOpen(false)
