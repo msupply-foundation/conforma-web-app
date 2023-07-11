@@ -14,12 +14,14 @@ export default gql`
     versionId
     serialPattern
     icon
+    dashboardRestrictions
     templateCategory {
       id
       code
       title
       icon
       uiLocation
+      isSubmenu
     }
     templateFilterJoins {
       nodes {

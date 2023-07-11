@@ -19,6 +19,7 @@ const useCategoryInfo = () => {
     code: '',
     icon: '',
     uiLocation: [],
+    isSubmenu: false,
   }
 
   const newCategory = {
@@ -26,10 +27,11 @@ const useCategoryInfo = () => {
     icon: t('DEFAULT_TEMPLATE_CATEGORY_ICON'),
     title: t('TEMPLATE_NEW_TITLE'),
     uiLocation: [UiLocation.List],
+    isSubmenu: false,
   }
 
   const uiLocationOptions: { key: UiLocation; locationName: string }[] = [
-    { key: UiLocation.List, locationName: t('TEMPLATE_UI_MENU') },
+    { key: UiLocation.List, locationName: t('TEMPLATE_UI_APP_LIST') },
     { key: UiLocation.Dashboard, locationName: t('TEMPLATE_UI_DASHBOARD') },
     { key: UiLocation.User, locationName: t('TEMPLATE_UI_USER') },
     { key: UiLocation.Management, locationName: t('TEMPLATE_UI_MANAGE') },
@@ -45,6 +47,7 @@ type CategoryUpdate = {
   icon: string | null
   title: string | null
   uiLocation: UiLocation[]
+  isSubmenu: boolean
 }
 
 const Category: React.FC<{}> = () => {
@@ -82,6 +85,7 @@ const Category: React.FC<{}> = () => {
                 id: selectedCategory?.id,
                 title: selectedCategory?.title || '',
                 uiLocation: (selectedCategory?.uiLocation || []) as UiLocation[],
+                isSubmenu: selectedCategory?.isSubmenu || false,
               })
             }}
           />
@@ -153,11 +157,15 @@ const Category: React.FC<{}> = () => {
             text={updateState.code}
             title={t('TEMPLATE_CODE')}
             setText={(text) => setUpdateState({ ...updateState, code: text ?? '' })}
+            minLabelWidth={80}
+            labelTextAlign="right"
           />
           <TextIO
             text={updateState?.title || ''}
             title={t('TEMPLATE_TITLE')}
             setText={(value: string | null) => setUpdateState({ ...updateState, title: value })}
+            minLabelWidth={80}
+            labelTextAlign="right"
           />
           <TextIO
             text={updateState?.icon || ''}
@@ -167,9 +175,25 @@ const Category: React.FC<{}> = () => {
             setText={(value: string | null) =>
               setUpdateState({ ...updateState, icon: value || null })
             }
+            minLabelWidth={80}
+            labelTextAlign="right"
+          />
+          <CheckboxIO
+            value={updateState.isSubmenu}
+            title={t('TEMPLATE_SUB_MENU')}
+            setValue={(value: boolean) =>
+              setUpdateState({
+                ...updateState,
+                isSubmenu: value,
+              })
+            }
+            minLabelWidth={80}
+            labelTextAlign="right"
           />
           <div>
-            <p>{t('TEMPLATE_APPEARS_IN')}:</p>
+            <p>
+              <strong>{t('TEMPLATE_APPEARS_IN')}:</strong>
+            </p>
             {uiLocationOptions.map(({ key, locationName }) => (
               <CheckboxIO
                 key={key}
@@ -181,6 +205,8 @@ const Category: React.FC<{}> = () => {
                     uiLocation: updateUiLocationArray(key, value),
                   })
                 }
+                minLabelWidth={120}
+                labelTextAlign="right"
               />
             ))}
           </div>

@@ -572,9 +572,11 @@ interface LevelAssignments {
 }
 
 interface TemplateCategoryDetails {
+  code: string
   title: string
   icon: SemanticICONS | undefined
   uiLocation: UiLocation[]
+  isSubmenu: boolean
 }
 
 interface TemplateInList {
@@ -589,6 +591,7 @@ interface TemplateInList {
   hasApplyPermission: boolean
   hasNonApplyPermissions: boolean
   filters: Filter[]
+  dashboardRestrictions: string[] | null
   totalApplications: number
 }
 
@@ -687,6 +690,7 @@ export type DataViewsResponse = {
   title: string
   code: string
   urlSlug: string
+  submenu: string | null
   defaultFilter: string | null
 }[]
 

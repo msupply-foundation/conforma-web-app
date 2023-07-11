@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Form, Label } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Input, Label } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import config from '../pluginConfig.json'
@@ -23,7 +23,10 @@ export const CheckboxDisplay: React.FC<{
   type: string
   layout: string
   onChange: (e: any, data: any) => void
-}> = ({ checkboxes, disabled, type, layout, onChange }) => {
+  onOtherChange: (value: string) => void
+  otherPlaceholder?: string
+}> = ({ checkboxes, disabled, type, layout, onChange, onOtherChange }) => {
+  const [otherText, setOtherText] = useState(checkboxes[checkboxes.length - 1].text)
   const styles =
     layout === 'inline'
       ? {
@@ -44,6 +47,16 @@ export const CheckboxDisplay: React.FC<{
             toggle={type === 'toggle'}
             slider={type === 'slider'}
           />
+          {cb.key === 'other' && (
+            <Input
+              placeholder="Enter other value"
+              disabled={!cb.selected}
+              onBlur={(e: any) => onOtherChange(e.target.value)}
+              onChange={(e) => setOtherText(e.target.value)}
+              value={otherText}
+              style={{ width: 'auto', marginLeft: 10 }}
+            />
+          )}
         </Form.Field>
       ))}
     </>
@@ -70,20 +83,42 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     resetButton = false,
     keyMap,
     preventNonResponse = false,
+    hasOther = false,
+    default: defaultValue,
+    otherLabel = t('LABEL_OTHER'),
+    otherPlaceholder = t('PLACEHOLDER_OTHER'),
   } = parameters
 
   const [isFirstRender, setIsFirstRender] = useState(true)
 
   const [checkboxElements, setCheckboxElements] = useState<Checkbox[]>(
-    getCheckboxStructure(currentResponse, checkboxes, keyMap, isFirstRender)
+    getCheckboxStructure(
+      currentResponse,
+      defaultValue,
+      checkboxes,
+      keyMap,
+      isFirstRender,
+      hasOther,
+      otherLabel
+    )
   )
 
   // When checkbox array changes after initial load (e.g. when its being dynamically loaded from an API)
   useEffect(() => {
     if (checkboxes[0] !== config.parameterLoadingValues.label && isFirstRender)
       setIsFirstRender(false)
-    setCheckboxElements(getCheckboxStructure(currentResponse, checkboxes, keyMap, isFirstRender))
-  }, [checkboxes])
+    setCheckboxElements(
+      getCheckboxStructure(
+        currentResponse,
+        defaultValue,
+        checkboxes,
+        keyMap,
+        isFirstRender,
+        hasOther,
+        otherLabel
+      )
+    )
+  }, [checkboxes, defaultValue])
 
   useEffect(() => {
     // Don't save response if parameters are still loading
@@ -125,8 +160,24 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setCheckboxElements(checkboxElements.map((cb, i) => (i === index ? changedCheckbox : cb)))
   }
 
+  const handleOtherChange = (value: string) => {
+    const checkboxes = [...checkboxElements]
+    checkboxes[checkboxes.length - 1].text = value
+    setCheckboxElements([...checkboxes])
+  }
+
   const resetState = () =>
-    setCheckboxElements(getCheckboxStructure(currentResponse, checkboxes, keyMap, isFirstRender))
+    setCheckboxElements(
+      getCheckboxStructure(
+        currentResponse,
+        defaultValue,
+        checkboxes,
+        keyMap,
+        isFirstRender,
+        hasOther,
+        otherLabel
+      )
+    )
 
   return (
     <>
@@ -142,6 +193,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         type={type}
         layout={layout}
         onChange={toggle}
+        onOtherChange={handleOtherChange}
+        otherPlaceholder={otherPlaceholder}
       />
       {resetButton && (
         <div style={{ marginTop: 10 }}>
@@ -167,12 +220,16 @@ type KeyMap = {
 
 export const getCheckboxStructure = (
   initialValue: CheckboxSavedState | null,
+  defaultValue: { [key: string]: Checkbox } | Checkbox[] | string | undefined,
   checkboxes: Checkbox[],
   keyMap: KeyMap | undefined,
-  isFirstRender: boolean
+  isFirstRender: boolean,
+  hasOther: boolean,
+  otherLabel?: string
 ) => {
   // Returns a consistent array of Checkbox objects, regardless of input structure
   const { values: initValues } = initialValue ?? {}
+
   const checkboxPropertyNames = {
     label: keyMap?.label ?? 'label',
     text: keyMap?.text ?? 'text',
@@ -199,14 +256,54 @@ export const getCheckboxStructure = (
         selected: cb?.[checkboxPropertyNames.selected] || false,
       }
   })
+
+  if (hasOther)
+    checkboxElements.push({
+      label: otherLabel,
+      text: initValues ? initValues.other?.text ?? '' : '',
+      textNegative: '',
+      key: 'other',
+      selected: false,
+    })
+
   // On first render, we set elements to the *saved* state, but after that we
-  // replace them with the new, changed checkbox values
-  return isFirstRender
-    ? checkboxElements.map((cb) => ({
-        ...cb,
-        selected: initValues?.[cb.key] ? initValues[cb.key].selected : cb.selected,
-      }))
-    : checkboxElements
+  // replace them with the new, changed checkbox values, or default values
+  if (isFirstRender && initValues)
+    return checkboxElements.map((cb) => ({
+      ...cb,
+      selected: initValues?.[cb.key] ? initValues[cb.key].selected : cb.selected,
+    }))
+
+  if (defaultValue) return standardiseDefault(defaultValue, checkboxElements, hasOther)
+
+  return checkboxElements
+}
+
+const standardiseDefault = (
+  defaultValue: string | { [key: string]: Checkbox } | Checkbox[],
+  checkboxElements: Checkbox[],
+  hasOther: boolean
+): Checkbox[] => {
+  if (typeof defaultValue === 'string') {
+    // Convert delimited text string to selection values
+    let textValues = defaultValue.split(',').map((e) => e.trim())
+    const newCheckboxes = checkboxElements.map((cb) => {
+      const newCheckbox = textValues.includes(cb.text)
+        ? { ...cb, selected: true }
+        : { ...cb, selected: false }
+      textValues = textValues.filter((e) => e !== cb.text)
+      return newCheckbox
+    })
+    if (hasOther && textValues.length > 0) {
+      // Leftover textValues must be for the "Other" value
+      newCheckboxes[newCheckboxes.length - 1].text = textValues[0]
+      newCheckboxes[newCheckboxes.length - 1].selected = true
+    }
+    return newCheckboxes
+  }
+
+  if (!Array.isArray(defaultValue)) return Object.values(defaultValue)
+  return defaultValue
 }
 
 const createTextStrings = (checkboxes: Checkbox[], nothingSelectedText: string) => {

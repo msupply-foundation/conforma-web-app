@@ -2288,10 +2288,11 @@ a:hover {
 
 .template-builder-category-input {
   .flex-column-center-start();
-  margin: 3px;
-  padding: 20px;
+  margin-top: 20px;
+  padding: 15px;
   border-radius: @borderRadius;
-  background: @surfacesLight;
+  border: 1px solid @surfacesMed;
+
   p {
     font-size: @slightlySmallerText;
     margin-top: 10px;
