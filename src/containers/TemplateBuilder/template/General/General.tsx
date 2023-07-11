@@ -34,7 +34,7 @@ const General: React.FC = () => {
   const { updateTemplate, deleteTemplate } = useOperationState()
   const { structure } = useApplicationState()
   const { template } = useTemplateState()
-  const { canEdit } = template
+  const { canEdit, isDraft } = template
   const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
     variables: { code: template.code },
   })
@@ -51,6 +51,7 @@ const General: React.FC = () => {
 
   const canSetDraft =
     canEdit &&
+    !isDraft &&
     (template.applicationCount === 0 ||
       // Let us make changes to active templates while in "dev" mode
       !config.isProductionBuild)
@@ -114,14 +115,16 @@ const General: React.FC = () => {
         disabled={!canEdit}
         disabledMessage="Can only change code of draft template"
         title="Code"
+        setText={(text) => updateTemplate(template, { code: text })}
         minLabelWidth={100}
         labelTextAlign="right"
       />
       <TextIO
         text={getVersionString(template)}
-        disabled
+        disabled={true}
+        disabledMessage="Version is not editable"
         title="Version"
-        setText={(text) => updateTemplate(template, { code: text })}
+        setText={() => {}}
         minLabelWidth={100}
         labelTextAlign="right"
       />
@@ -228,10 +231,14 @@ const General: React.FC = () => {
         onCancel={() => setCommitConfirmOpen(false)}
         onConfirm={async () => {
           const versionId = nanoid()
-          await updateTemplate(template as any, {
-            versionId,
-            versionExportComment: commitMessage,
-          })
+          if (
+            await updateTemplate(template as any, {
+              versionId,
+              versionExportComment: commitMessage,
+              versionTimestamp: DateTime.now().toISO(),
+            })
+          )
+            await refetchAvailable()
           setCommitConfirmOpen(false)
         }}
       />

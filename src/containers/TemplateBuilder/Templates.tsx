@@ -70,7 +70,7 @@ const columns: Columns = [
       <React.Fragment key="counts">
         <TextIO text={String(applicationCount)} title="Applications" minLabelWidth={90} />
         {numberOfTemplates ? (
-          <TextIO text={String(numberOfTemplates)} title="Templates" minLabelWidth={90} />
+          <TextIO text={String(numberOfTemplates)} title="Versions" minLabelWidth={90} />
         ) : (
           <TextIO text={parentVersionId ?? ''} title="Parent" minLabelWidth={90} />
         )}
@@ -172,6 +172,7 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
           await updateTemplate(template as any, {
             versionId,
             versionExportComment: commitMessage,
+            versionTimestamp: DateTime.now().toISO(),
           })
           setOpen(false)
           await doExport(versionId)
@@ -278,6 +279,7 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
             await updateTemplate(template as any, {
               versionId: nanoid(),
               versionExportComment: commitMessage,
+              versionTimestamp: DateTime.now().toISO(),
             })
           setOpen(false)
           const templateOptions: TemplateOptions = {
@@ -319,7 +321,7 @@ const Templates: React.FC = () => {
   const [selectedRow, setSelectedRow] = useState(-1)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
-  const { importTemplate, updateTemplate } = useOperationState()
+  const { importTemplate } = useOperationState()
   const { query, updateQuery } = useRouter()
   const [hideInactive, setHideInactive] = useState(query.hideInactive === 'true')
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
