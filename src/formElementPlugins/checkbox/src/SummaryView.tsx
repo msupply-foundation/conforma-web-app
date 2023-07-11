@@ -19,6 +19,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
     layout,
     type,
     keyMap,
+    hasOther = false,
   } = parameters
   let displayComponent
   switch (displayFormat) {
@@ -44,14 +45,17 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
               text: '',
               values: {},
             },
+            undefined,
             checkboxes,
             keyMap,
-            true
+            true,
+            hasOther
           )}
           disabled
           type={type}
           layout={layout}
           onChange={() => {}}
+          onOtherChange={() => {}}
         />
       )
       break
