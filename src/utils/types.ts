@@ -575,6 +575,7 @@ interface TemplateCategoryDetails {
   title: string
   icon: SemanticICONS | undefined
   uiLocation: UiLocation[]
+  isSubmenu: boolean
 }
 
 interface TemplateInList {
@@ -687,6 +688,7 @@ export type DataViewsResponse = {
   title: string
   code: string
   urlSlug: string
+  submenu: string | null
   defaultFilter: string | null
 }[]
 

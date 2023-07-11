@@ -4,7 +4,13 @@ import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import { Link } from 'react-router-dom'
-import { OrganisationSimple, User, LoginPayload, TemplateInList } from '../../utils/types'
+import {
+  OrganisationSimple,
+  User,
+  LoginPayload,
+  TemplateInList,
+  DataViewsResponse,
+} from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useDataViewsList } from '../../utils/hooks/useDataViews'
 import { useReferenceDocs } from '../../utils/hooks/useReferenceDocs'
@@ -57,13 +63,7 @@ const UserArea: React.FC = () => {
 }
 interface MainMenuBarProps {
   templates: TemplateInList[]
-  dataViews: {
-    tableName: string
-    title: string
-    code: string
-    urlSlug: string
-    defaultFilter: string | null
-  }[]
+  dataViews: DataViewsResponse
   referenceDocs: {
     intReferenceDocs: { uniqueId: string; description: string }[]
     extReferenceDocs: { uniqueId: string; description: string }[]
@@ -71,9 +71,9 @@ interface MainMenuBarProps {
 }
 interface DropdownsState {
   dashboard: { active: boolean }
-  templates: { active: boolean; selection: string }
+  applicationList: { active: boolean; selection: string }
   dataViews: { active: boolean; selection: string }
-  admin: { active: boolean; selection: string }
+  config: { active: boolean; selection: string }
   manage: { active: boolean; selection: string }
   intRefDocs: { active: boolean }
   extRefDocs: { active: boolean }
@@ -86,9 +86,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   const { t } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
-    templates: { active: false, selection: '' },
+    applicationList: { active: false, selection: '' },
     dataViews: { active: false, selection: '' },
-    admin: { active: false, selection: '' },
+    config: { active: false, selection: '' },
     manage: { active: false, selection: '' },
     intRefDocs: { active: false },
     extRefDocs: { active: false },
@@ -104,38 +104,41 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
   }, [pathname])
 
-  const dataViewOptions = dataViews.map(({ code, urlSlug, title, defaultFilter }) => ({
-    key: code,
-    text: title,
-    value: urlSlug + (defaultFilter ? `?${defaultFilter}` : ''),
-  }))
+  const dataViewOptions = constructNestedMenuOptions(dataViews, {
+    filterMethod: () => true,
+    mapMethod: (dataView) => {
+      const { code, urlSlug, title, defaultFilter } = dataView
+      return {
+        key: code,
+        text: title,
+        value: '/data/' + urlSlug + (defaultFilter ? `?${defaultFilter}` : ''),
+      }
+    },
+    getSubmenuMethod: (dataView) => dataView.submenu,
+    onClick: (value) => handleMenuSelect(value, 'DataView'),
+  })
 
-  const templateOptions = templates
-    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List))
-    .sort((t1, t2) => (t1.templateCategory.title > t2.templateCategory.title ? 1 : -1))
-    .map((template) => ({
+  const getTemplateSubmenu = (template: TemplateInList) =>
+    template.templateCategory.isSubmenu ? template.templateCategory.title : null
+
+  const applicationListOptions = constructNestedMenuOptions(templates, {
+    filterMethod: ({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List),
+    mapMethod: (template) => ({
       key: template.code,
       text: template.name,
-      value: template.code,
-    }))
+      value: `/applications?type=${template.code}`,
+    }),
+    getSubmenuMethod: getTemplateSubmenu,
+    onClick: (value) => handleMenuSelect(value, 'List'),
+  })
 
-  const configOptions = [
+  const configOptions: (StandardMenuOption | NestedMenuOption)[] = [
     { key: 'templates', text: t('MENU_ITEM_ADMIN_TEMPLATES'), value: '/admin/templates' },
-    {
-      key: 'lookup_tables',
-      text: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
-      value: '/admin/lookup-tables',
-    },
     {
       key: 'dataViews',
       text: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
       value: '/admin/data-views',
     },
-    // {
-    //   key: 'dataViews',
-    //   text: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
-    //   value: '/admin/data',
-    // },
     // { key: 'permissions', text: t('MENU_ITEM_ADMIN_PERMISSIONS'), value: '/admin/permissions' },
     // { key: 'plugins', text: t('MENU_ITEM_ADMIN_PLUGINS'), value: '/admin/plugins' },
     {
@@ -159,25 +162,32 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
 
   // Add Config/Admin templates to Config menu (requires Admin permission)
   configOptions.push(
-    ...templates
-      .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin))
-      .map((template) => ({
+    ...constructNestedMenuOptions(templates, {
+      filterMethod: ({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin),
+      mapMethod: (template) => ({
         key: template.code,
         text: template.name,
         value: `/application/new?type=${template.code}`,
-      }))
+      }),
+      getSubmenuMethod: getTemplateSubmenu,
+      onClick: (value) => handleMenuSelect(value, 'Config'),
+    })
   )
 
-  const managementOptions = templates
-    .filter(({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Management))
-    .map((template) => ({
+  const managementOptions = constructNestedMenuOptions(templates, {
+    filterMethod: ({ templateCategory: { uiLocation } }) =>
+      uiLocation.includes(UiLocation.Management),
+    mapMethod: (template) => ({
       key: template.code,
       text: template.name,
       value: `/application/new?type=${template.code}`,
-    }))
+    }),
+    getSubmenuMethod: getTemplateSubmenu,
+    onClick: (value) => handleMenuSelect(value, 'Manage'),
+  })
 
   // Lookup table menu item goes in "Manage" menu, unless the user is Admin and
-  // NOT Manager, in which case it goes in "Admin" menu
+  // NOT Manager, in which case it goes in "Config" menu
   const lookUpTableOption = {
     key: 'lookup_tables',
     text: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
@@ -189,27 +199,30 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     configOptions.push(lookUpTableOption)
   }
 
-  const handleDataViewChange = (e: SyntheticEvent, { value }: any) => {
-    setDropDownsState({ ...dropdownsState, dataViews: { active: true, selection: value } })
-    push(`/data/${value}`, {
-      title: dataViewOptions.find((option) => option.value === value)?.text,
-      resetFilters: true,
-    })
-  }
-
-  const handleTemplateChange = (_: SyntheticEvent, { value }: any) => {
-    setDropDownsState({ ...dropdownsState, templates: { active: true, selection: value } })
-    push(`/applications?type=${value}`)
-  }
-
-  const handleAdminChange = (_: SyntheticEvent, { value }: any) => {
-    setDropDownsState({ ...dropdownsState, admin: { active: true, selection: value } })
-    push(value)
-  }
-
-  const handleManagementChange = (_: SyntheticEvent, { value }: any) => {
-    setDropDownsState({ ...dropdownsState, manage: { active: true, selection: value } })
-    push(value)
+  const handleMenuSelect = (value: string, menu: 'List' | 'DataView' | 'Manage' | 'Config') => {
+    let changedDropDown
+    let linkStateData
+    switch (menu) {
+      case 'List':
+        changedDropDown = { templates: { active: true, selection: value } }
+        break
+      case 'DataView':
+        changedDropDown = { dataViews: { active: true, selection: value } }
+        linkStateData = {
+          title: dataViewOptions.find((option) => (option as StandardMenuOption)?.value === value)
+            ?.text,
+          resetFilters: true,
+        }
+        break
+      case 'Manage':
+        changedDropDown = { manage: { active: true, selection: value } }
+        break
+      case 'Config':
+        changedDropDown = { config: { active: true, selection: value } }
+        break
+    }
+    setDropDownsState({ ...dropdownsState, ...changedDropDown } as DropdownsState)
+    push(value, linkStateData)
   }
 
   return (
@@ -218,13 +231,13 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
           <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
         </List.Item>
-        {templateOptions.length > 0 && (
-          <List.Item className={dropdownsState.templates.active ? 'selected-link' : ''}>
+        {applicationListOptions.length > 0 && (
+          <List.Item className={dropdownsState.applicationList.active ? 'selected-link' : ''}>
             <Dropdown
               text={t('MENU_ITEM_APPLICATION_LIST')}
-              options={templateOptions}
-              onChange={handleTemplateChange}
-              value={dropdownsState.templates.selection}
+              options={applicationListOptions}
+              onChange={(_, { value }) => handleMenuSelect(value as string, 'List')}
+              value={dropdownsState.applicationList.selection}
               selectOnBlur={false}
             />
           </List.Item>
@@ -234,7 +247,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             <Dropdown
               text={t('MENU_ITEM_DATA')}
               options={dataViewOptions}
-              onChange={handleDataViewChange}
+              onChange={(_, { value }) => handleMenuSelect(value as string, 'DataView')}
               value={dropdownsState.dataViews.selection}
               selectOnBlur={false}
             />
@@ -245,19 +258,19 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             <Dropdown
               text={t('MENU_ITEM_MANAGE')}
               options={managementOptions}
-              onChange={handleManagementChange}
+              onChange={(_, { value }) => handleMenuSelect(value as string, 'Manage')}
               value={dropdownsState.manage.selection}
               selectOnBlur={false}
             />
           </List.Item>
         )}
         {currentUser?.isAdmin && (
-          <List.Item className={dropdownsState.admin.active ? 'selected-link' : ''}>
+          <List.Item className={dropdownsState.config.active ? 'selected-link' : ''}>
             <Dropdown
               text={t('MENU_ITEM_CONFIG')}
               options={configOptions}
-              onChange={handleAdminChange}
-              value={dropdownsState.admin.selection}
+              onChange={(_, { value }) => handleMenuSelect(value as string, 'Config')}
+              value={dropdownsState.config.selection}
               selectOnBlur={false}
             />
           </List.Item>
@@ -446,50 +459,50 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
     case '':
       return {
         dashboard: { active: true },
-        templates: { active: false, selection: '' },
+        applicationList: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         manage: { active: false, selection: '' },
-        admin: { active: false, selection: '' },
+        config: { active: false, selection: '' },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
       }
     case 'applications':
       return {
         dashboard: { active: false },
-        templates: { active: true, selection: dropdownsState.templates.selection },
+        applicationList: { active: true, selection: dropdownsState.applicationList.selection },
         dataViews: { active: false, selection: '' },
         manage: { active: false, selection: '' },
-        admin: { active: false, selection: '' },
+        config: { active: false, selection: '' },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
       }
     case 'data':
       return {
         dashboard: { active: false },
-        templates: { active: false, selection: '' },
+        applicationList: { active: false, selection: '' },
         dataViews: { active: true, selection: dropdownsState.dataViews.selection },
         manage: { active: false, selection: '' },
-        admin: { active: false, selection: '' },
+        config: { active: false, selection: '' },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
       }
     case 'manage':
       return {
         dashboard: { active: false },
-        templates: { active: false, selection: '' },
+        applicationList: { active: false, selection: '' },
         dataViews: { active: true, selection: dropdownsState.dataViews.selection },
         manage: { active: true, selection: dropdownsState.manage.selection },
-        admin: { active: false, selection: '' },
+        config: { active: false, selection: '' },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
       }
     case 'admin':
       return {
         dashboard: { active: false },
-        templates: { active: false, selection: '' },
+        applicationList: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         manage: { active: false, selection: '' },
-        admin: { active: true, selection: dropdownsState.admin.selection },
+        config: { active: true, selection: dropdownsState.config.selection },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
       }
@@ -497,12 +510,74 @@ const getNewDropdownsState = (basepath: string, dropdownsState: DropdownsState):
     default:
       return {
         dashboard: { active: false },
-        templates: { active: false, selection: '' },
+        applicationList: { active: false, selection: '' },
         dataViews: { active: false, selection: '' },
         manage: { active: false, selection: '' },
-        admin: { active: false, selection: '' },
+        config: { active: false, selection: '' },
         intRefDocs: { active: false },
         extRefDocs: { active: false },
       }
   }
+}
+
+interface StandardMenuOption {
+  key: string
+  text: string
+  value: string
+}
+
+interface NestedMenuOption {
+  key: string
+  text: string
+  content: JSX.Element
+}
+
+interface MenuInput<T> {
+  filterMethod: (e: T) => boolean
+  mapMethod: (e: T) => StandardMenuOption
+  getSubmenuMethod: (e: T) => string | null
+  onClick: (value: string) => void
+}
+
+function constructNestedMenuOptions<T>(
+  items: T[],
+  { filterMethod, mapMethod, getSubmenuMethod, onClick }: MenuInput<T>
+): (StandardMenuOption | NestedMenuOption)[] {
+  const menus: (StandardMenuOption | NestedMenuOption)[] = []
+  const subMenus: Record<string, StandardMenuOption[]> = {}
+
+  items.filter(filterMethod).forEach((item) => {
+    const submenu = getSubmenuMethod(item)
+    if (!submenu) menus.push(mapMethod(item))
+    else {
+      if (submenu in subMenus) subMenus[submenu].push(mapMethod(item))
+      else subMenus[submenu] = [mapMethod(item)]
+    }
+  })
+
+  Object.entries(subMenus).forEach(([submenu, items]) => {
+    menus.push({
+      key: submenu,
+      text: submenu,
+      content: (
+        <Dropdown item text={submenu}>
+          <Dropdown.Menu style={{ transform: 'translateY(-25px)' }}>
+            {items.map((item) => {
+              const { key, text, value } = item
+              return (
+                <Dropdown.Item
+                  key={key}
+                  text={text}
+                  value={value}
+                  onClick={(_, data) => onClick(data.value as string)}
+                />
+              )
+            })}
+          </Dropdown.Menu>
+        </Dropdown>
+      ),
+    })
+  })
+
+  return menus
 }

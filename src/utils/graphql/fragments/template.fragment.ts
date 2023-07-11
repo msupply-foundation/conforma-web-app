@@ -20,6 +20,7 @@ export default gql`
       title
       icon
       uiLocation
+      isSubmenu
     }
     templateFilterJoins {
       nodes {
