@@ -149,7 +149,7 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
         onClick={(e: any) => e.stopPropagation()}
         content={
           <div style={{ padding: 10, gap: 10 }} className="flex-column">
-            <p>Commit and export template?</p>
+            <h2>Commit and export template?</h2>
             <p>
               By exporting this template now, you will be committing the current version. To make
               any further changes, you will need to duplicate it and start a new template version.
@@ -191,17 +191,17 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
 }
 
 const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
-  const { updateTemplate } = useOperationState()
-  const showToast = useToast({ style: 'success' })
-  const { code, versionId } = template
-  const snapshotName = `${code}-${versionId}`
-  const { duplicateTemplate } = useOperationState()
+  const { updateTemplate, duplicateTemplate } = useOperationState()
   const [open, setOpen] = useState(false)
   const [selectedType, setSelectedType] = useState<'version' | 'template'>('version')
   const [newCode, setNewCode] = useState('')
   const [codeError, setCodeError] = useState(false)
   const [commitCurrent, setCommitCurrent] = useState(isTemplateUnlocked(template))
   const [commitMessage, setCommitMessage] = useState('')
+  const showToast = useToast({ style: 'success' })
+
+  const { code, versionId } = template
+  const snapshotName = `${code}-${versionId}`
 
   return (
     <div key="duplicate">
@@ -220,12 +220,12 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
         onClick={(e: any) => e.stopPropagation()}
         content={
           <div style={{ padding: 10, gap: 10 }} className="flex-column">
+            <h2>Duplicate template</h2>
             <p>
               Do you want to create a new template version or a whole new template type based on
               this template?
-              <br />
-              (New template will start with an empty version history)
             </p>
+            <p>(New template will start with an empty version history)</p>
             <Dropdown
               selection
               options={[

@@ -8,7 +8,6 @@ import {
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import Markdown from '../../../../utils/helpers/semanticReactMarkdown'
-import { customAlphabet } from 'nanoid'
 import { useOperationState } from '../../shared/OperationContext'
 import TextIO from '../../shared/TextIO'
 import { useApplicationState } from '../ApplicationWrapper'
@@ -24,9 +23,7 @@ import { DateTime } from 'luxon'
 import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
-import { getVersionString } from '../helpers'
-
-const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
+import { getVersionString, getTemplateVersionId } from '../helpers'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -204,7 +201,7 @@ const General: React.FC = () => {
         onClick={(e: any) => e.stopPropagation()}
         content={
           <div style={{ padding: 10, gap: 10 }} className="flex-column">
-            <p>Commit version?</p>
+            <h2>Commit version?</h2>
             <p>
               This will create a permanent template version that can no longer be modified. To make
               any further changes, you will need to duplicate it and create a new version.
@@ -221,7 +218,7 @@ const General: React.FC = () => {
         }
         onCancel={() => setCommitConfirmOpen(false)}
         onConfirm={async () => {
-          const versionId = nanoid()
+          const versionId = getTemplateVersionId()
           if (
             await updateTemplate(template as any, {
               versionId,

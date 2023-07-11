@@ -60,7 +60,6 @@ export type DeleteApplication = (id: number) => Promise<boolean>
 export type CreateApplication = (props: CreateApplicationProps) => Promise<boolean>
 export type UpdateApplication = (serial: string, patch: ApplicationPatch) => Promise<boolean>
 export type UpdateTemplateStage = (id: number, patch: TemplateStagePatch) => Promise<boolean>
-export type UpdateNewTemplate = (origId: number, patch: TemplatePatch) => Promise<boolean>
 
 type OperationContextState = {
   fetch: (something: any) => any
