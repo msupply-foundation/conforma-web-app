@@ -1,4 +1,4 @@
-import { customAlphabet } from 'nanoid'
+import { customAlphabet } from 'nanoid/non-secure'
 import { VersionObject } from '../useGetTemplates'
 
 // Use nanoid to generate unique template version IDs
