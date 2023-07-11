@@ -93,7 +93,11 @@ const useConfirmationModal = ({
           inverted
           icon="checkmark"
           content={modalState.confirmText}
-          onClick={() => handleConfirm(modalState.onConfirm)}
+          // This ensures that the "Confirm" action can only be triggered once.
+          // By default it can still be clicked while "loading". We can achieve
+          // this fix by adding `disabled={buttonLoading}`, but it doesn't look
+          // as nice :)
+          onClick={!buttonLoading ? () => handleConfirm(modalState.onConfirm) : () => {}}
         />
       </Modal.Actions>
     </Modal>
