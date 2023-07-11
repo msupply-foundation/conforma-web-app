@@ -5,13 +5,12 @@ import {
   useDeleteWholeApplicationMutation,
   useRestartApplicationMutation,
   useUpdateTemplateStageMutation,
-  useGetFullTemplateInfoQuery,
+  useDeleteTemplateMutation,
 } from '../../../utils/generated/graphql'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import useCreateApplication from '../../../utils/hooks/useCreateApplication'
 import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
-import useGetTemplates from '../useGetTemplates'
 import {
   ImportTemplate,
   UpdateTemplate,
@@ -22,6 +21,7 @@ import {
   ErrorAndLoadingState,
   UpdateApplication,
   UpdateTemplateStage,
+  DeleteTemplate,
 } from './OperationContext'
 
 const templateExportOptionName = 'templateExport'
@@ -39,6 +39,11 @@ type UpdateTemplateHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
   updateTemplateMutation: ReturnType<typeof useUpdateTemplateMutation>[0]
 ) => UpdateTemplate
+
+type DeleteTemplateHelper = (
+  setErrorAndLoadingState: SetErrorAndLoadingState,
+  updateTemplateSectionMutation: ReturnType<typeof useDeleteTemplateMutation>[0]
+) => DeleteTemplate
 
 type UpdateTemplateFilterJoinHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
@@ -239,6 +244,19 @@ export const duplicateTemplate: TemplateOperationHelper = async (
 
   return snapshotResult
 }
+
+export const deleteTemplate: DeleteTemplateHelper =
+  (setErrorAndLoadingState: SetErrorAndLoadingState, deleteTemplateMutation) => async (id) => {
+    try {
+      const result = await deleteTemplateMutation({
+        variables: { id },
+      })
+      return checkMutationResult(result, setErrorAndLoadingState)
+    } catch (e) {
+      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      return false
+    }
+  }
 
 export const importTemplate: ImportTemplateHelper =
   (setErrorAndLoadingState: SetErrorAndLoadingState) => async (e) => {

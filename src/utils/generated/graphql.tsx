@@ -45671,6 +45671,19 @@ export type SubmitReviewMutation = (
   )> }
 );
 
+export type DeleteTemplateMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteTemplateMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteTemplate?: Maybe<(
+    { __typename?: 'DeleteTemplatePayload' }
+    & Pick<DeleteTemplatePayload, 'clientMutationId'>
+  )> }
+);
+
 export type DeleteWholeApplicationMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -47636,6 +47649,38 @@ export function useSubmitReviewMutation(baseOptions?: Apollo.MutationHookOptions
 export type SubmitReviewMutationHookResult = ReturnType<typeof useSubmitReviewMutation>;
 export type SubmitReviewMutationResult = Apollo.MutationResult<SubmitReviewMutation>;
 export type SubmitReviewMutationOptions = Apollo.BaseMutationOptions<SubmitReviewMutation, SubmitReviewMutationVariables>;
+export const DeleteTemplateDocument = gql`
+    mutation deleteTemplate($id: Int!) {
+  deleteTemplate(input: {id: $id}) {
+    clientMutationId
+  }
+}
+    `;
+export type DeleteTemplateMutationFn = Apollo.MutationFunction<DeleteTemplateMutation, DeleteTemplateMutationVariables>;
+
+/**
+ * __useDeleteTemplateMutation__
+ *
+ * To run a mutation, you first call `useDeleteTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTemplateMutation, { data, loading, error }] = useDeleteTemplateMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTemplateMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTemplateMutation, DeleteTemplateMutationVariables>) {
+        return Apollo.useMutation<DeleteTemplateMutation, DeleteTemplateMutationVariables>(DeleteTemplateDocument, baseOptions);
+      }
+export type DeleteTemplateMutationHookResult = ReturnType<typeof useDeleteTemplateMutation>;
+export type DeleteTemplateMutationResult = Apollo.MutationResult<DeleteTemplateMutation>;
+export type DeleteTemplateMutationOptions = Apollo.BaseMutationOptions<DeleteTemplateMutation, DeleteTemplateMutationVariables>;
 export const DeleteWholeApplicationDocument = gql`
     mutation deleteWholeApplication($id: Int!) {
   deleteWholeApplication(input: {applicationId: $id}) {

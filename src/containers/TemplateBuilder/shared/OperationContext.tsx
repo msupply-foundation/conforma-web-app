@@ -64,6 +64,7 @@ export type UpdateTemplate = (
   },
   patch: TemplatePatch
 ) => Promise<boolean>
+export type DeleteTemplate = (id: number) => Promise<boolean>
 export type UpdateTemplateFilterJoin = (
   id: number,
   patch: TemplateFilterJoinPatch

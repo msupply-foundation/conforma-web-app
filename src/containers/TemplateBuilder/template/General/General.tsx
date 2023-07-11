@@ -22,6 +22,7 @@ import config from '../../../../config'
 import { Link } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import { getVersionString } from '../../Templates'
+import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -33,6 +34,10 @@ const General: React.FC = () => {
     variables: { code: template.code },
   })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
+
+  const { ConfirmModal: DeleteConfirm, showModal: confirmDelete } = useConfirmationModal({
+    type: 'warning',
+  })
 
   const canSetAvailable = template.status !== TemplateStatus.Available
 
@@ -193,7 +198,7 @@ const General: React.FC = () => {
             <Table.HeaderCell key="num" width={1}>
               No.
             </Table.HeaderCell>
-            <Table.HeaderCell key="timestamp" width={4}>
+            <Table.HeaderCell key="timestamp" width={5}>
               Timestamp
             </Table.HeaderCell>
             <Table.HeaderCell key="versionId" width={3}>
@@ -232,6 +237,21 @@ const General: React.FC = () => {
           ))}
         </Table.Body>
       </Table>
+      <DeleteConfirm />
+      {template.applicationCount === 0 && (
+        <Button
+          primary
+          onClick={() =>
+            confirmDelete({
+              title: 'Delete template?',
+              message: 'This will permanently delete this version of the template',
+              onConfirm: () => {},
+            })
+          }
+        >
+          Delete this version
+        </Button>
+      )}
     </div>
   )
 }
