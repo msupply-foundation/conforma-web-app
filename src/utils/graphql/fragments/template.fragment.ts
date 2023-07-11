@@ -11,7 +11,6 @@ export default gql`
     canApplicantMakeChanges
     startMessage
     submissionMessage
-    version
     versionId
     serialPattern
     icon

@@ -33,7 +33,7 @@ export default gql`
             id
             name
             code
-            version
+            versionId
             status
           }
         }
@@ -49,7 +49,7 @@ export default gql`
         template {
           code
           name
-          version
+          versionId
           status
         }
       }
@@ -65,7 +65,7 @@ export default gql`
             code
             name
             status
-            version
+            versionId
           }
         }
       }

@@ -22,6 +22,7 @@ import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { DateTime } from 'luxon'
 import { customAlphabet } from 'nanoid'
 import { useToast } from '../../contexts/Toast'
+import { isTemplateUnlocked } from './template/TemplateWrapper'
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
 
@@ -182,7 +183,7 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
         className="clickable"
         onClick={async (e) => {
           e.stopPropagation()
-          if (template.versionId === '*') setOpen(true)
+          if (isTemplateUnlocked(template)) setOpen(true)
           else doExport()
         }}
       >
@@ -202,7 +203,7 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
   const [selectedType, setSelectedType] = useState<'version' | 'template'>('version')
   const [newCode, setNewCode] = useState('')
   const [codeError, setCodeError] = useState(false)
-  const [commitCurrent, setCommitCurrent] = useState(template.versionId === '*')
+  const [commitCurrent, setCommitCurrent] = useState(isTemplateUnlocked(template))
   const [commitMessage, setCommitMessage] = useState('')
 
   return (
@@ -250,7 +251,7 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
                 />
               </div>
             )}
-            {template.versionId === '*' && (
+            {isTemplateUnlocked(template) && (
               <Checkbox
                 label="Commit current version?"
                 checked={commitCurrent}
@@ -283,7 +284,7 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
             })
           setOpen(false)
           const templateOptions: TemplateOptions = {
-            resetVersion: commitCurrent || template.versionId !== '*',
+            resetVersion: commitCurrent || !isTemplateUnlocked(template),
           }
           if (selectedType === 'template') templateOptions.newCode = newCode
           if (
@@ -536,7 +537,7 @@ export const getVersionString = (
   showNumber = true
 ) => {
   const { versionId, parentVersionId, versionHistory } = template
-  return `${versionId === '*' ? (parentVersionId || 'NEW') + '*' : versionId}${
+  return `${versionId.startsWith('*') ? (parentVersionId || 'NEW') + '*' : versionId}${
     showNumber ? ` (v${versionHistory.length + 1})` : ''
   }`
 }

@@ -62,6 +62,11 @@ const tabs = [
 
 export const disabledMessage = 'Can only edit draft procedure, please make it draft or duplicate'
 
+// Checks if template version starts with "*" character (i.e. template can be
+// modified)
+export const isTemplateUnlocked = (template: { versionId: string }) =>
+  template.versionId.startsWith('*')
+
 const TemplateContainer: React.FC = () => {
   const {
     match: { path },
@@ -69,7 +74,7 @@ const TemplateContainer: React.FC = () => {
     location,
   } = useRouter()
   const {
-    template: { version, name, code, status, applicationCount, id, canEdit },
+    template: { name, code, status, applicationCount, id, canEdit },
   } = useTemplateState()
   const prevQuery = useRef(location?.state?.queryString ?? '')
 
@@ -93,7 +98,7 @@ const TemplateContainer: React.FC = () => {
       />
       <div className="flex-row-space-between-center-wrap">
         <div className="template-builder-info-bar">
-          <TextIO title="version" text={String(version)} labelNegative />
+          <TextIO title="version" text={'VERSION WAS HERE'} labelNegative />
           <TextIO title="name" text={name} labelNegative />
           <TextIO title="code" text={code} labelNegative />
           <TextIO title="status" text={status} labelNegative />
@@ -126,7 +131,6 @@ type TemplateContextState = {
   template: {
     id: number
     isDraft: boolean
-    version: number
     versionId: string
     versionTimestamp: DateTime
     parentVersionId: string | null
@@ -157,7 +161,6 @@ const defaultTemplateContextState: TemplateContextState = {
   template: {
     id: 0,
     isDraft: false,
-    version: 0,
     versionId: '*',
     versionTimestamp: DateTime.now(),
     parentVersionId: null,
@@ -207,7 +210,6 @@ const TemplateWrapper: React.FC = () => {
       setState({
         template: {
           id: template.id || 0,
-          version: template?.version || 0,
           versionId: template?.versionId,
           versionTimestamp: DateTime.fromISO(template?.versionTimestamp) || DateTime.now(),
           parentVersionId: template?.parentVersionId || null,
@@ -228,7 +230,7 @@ const TemplateWrapper: React.FC = () => {
           status: template?.status || TemplateStatus.Disabled,
           applicationCount: template?.applications?.totalCount || 0,
           isDraft: template.status === TemplateStatus.Draft,
-          canEdit: template.versionId === '*' && template.status === TemplateStatus.Draft,
+          canEdit: isTemplateUnlocked(template) && template.status === TemplateStatus.Draft,
         },
         category: (template?.templateCategory as TemplateCategory) || undefined,
         fromQuery: template,

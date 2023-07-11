@@ -7,7 +7,6 @@ export default gql`
         code
         status
         id
-        version
         versionId
         versionTimestamp
         parentVersionId

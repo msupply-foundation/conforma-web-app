@@ -311,7 +311,7 @@ export type Query = Node & {
   assignerList?: Maybe<AssignerListConnection>;
   assignmentList?: Maybe<AssignmentListConnection>;
   getTemplateCode?: Maybe<Scalars['String']>;
-  getTemplateVersion?: Maybe<Scalars['Int']>;
+  getTemplateVersion?: Maybe<Scalars['String']>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
   jwtGetText?: Maybe<Scalars['String']>;
@@ -2073,7 +2073,7 @@ export type QueryTemplateElementArgs = {
 export type QueryTemplateElementByTemplateCodeAndCodeAndTemplateVersionArgs = {
   templateCode: Scalars['String'];
   code: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersion: Scalars['String'];
 };
 
 
@@ -4377,8 +4377,6 @@ export type TemplateFilter = {
   templateCategoryId?: Maybe<IntFilter>;
   /** Filter by the object’s `versionTimestamp` field. */
   versionTimestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `version` field. */
-  version?: Maybe<IntFilter>;
   /** Filter by the object’s `serialPattern` field. */
   serialPattern?: Maybe<StringFilter>;
   /** Filter by the object’s `dashboardRestrictions` field. */
@@ -5293,7 +5291,7 @@ export type TemplateElementFilter = {
   /** Filter by the object’s `templateCode` field. */
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateVersion` field. */
-  templateVersion?: Maybe<IntFilter>;
+  templateVersion?: Maybe<StringFilter>;
   /** Filter by the object’s `parametersString` field. */
   parametersString?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
@@ -7030,7 +7028,6 @@ export type Template = Node & {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -7234,8 +7231,6 @@ export enum TemplatesOrderBy {
   TemplateCategoryIdDesc = 'TEMPLATE_CATEGORY_ID_DESC',
   VersionTimestampAsc = 'VERSION_TIMESTAMP_ASC',
   VersionTimestampDesc = 'VERSION_TIMESTAMP_DESC',
-  VersionAsc = 'VERSION_ASC',
-  VersionDesc = 'VERSION_DESC',
   SerialPatternAsc = 'SERIAL_PATTERN_ASC',
   SerialPatternDesc = 'SERIAL_PATTERN_DESC',
   DashboardRestrictionsAsc = 'DASHBOARD_RESTRICTIONS_ASC',
@@ -7278,8 +7273,6 @@ export type TemplateCondition = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `versionTimestamp` field. */
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `version` field. */
-  version?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `serialPattern` field. */
   serialPattern?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `dashboardRestrictions` field. */
@@ -8369,7 +8362,7 @@ export type TemplateElement = Node & {
   parameters?: Maybe<Scalars['JSON']>;
   reviewability: Reviewability;
   templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -8510,7 +8503,7 @@ export type TemplateElementCondition = {
   /** Checks for equality with the object’s `templateCode` field. */
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateVersion` field. */
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `TemplateElement` values. */
@@ -20062,7 +20055,6 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -20196,7 +20188,6 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   submissionMessage?: Maybe<Scalars['JSON']>;
   icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -21184,7 +21175,6 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -21523,7 +21513,6 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -21645,7 +21634,6 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -21774,7 +21762,6 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -22629,7 +22616,7 @@ export type TemplateElementTemplateElementPkeyConnect = {
 export type TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyConnect = {
   templateCode: Scalars['String'];
   code: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersion: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -22647,7 +22634,7 @@ export type TemplateElementTemplateElementPkeyDelete = {
 export type TemplateElementTemplateElementTemplateCodeCodeTemplateVersionKeyDelete = {
   templateCode: Scalars['String'];
   code: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersion: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to delete. */
@@ -22682,7 +22669,7 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -22803,7 +22790,6 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -23693,7 +23679,6 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -26116,7 +26101,6 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -26232,7 +26216,6 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -26346,7 +26329,7 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -27430,7 +27413,6 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -28117,7 +28099,6 @@ export type TemplatePatch = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId?: Maybe<Scalars['String']>;
@@ -28151,7 +28132,6 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -29239,7 +29219,7 @@ export type UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElemen
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -29362,7 +29342,7 @@ export type TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFke
   patch: UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
   templateCode: Scalars['String'];
   code: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersion: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -29392,7 +29372,7 @@ export type TemplateElementPatch = {
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -29417,7 +29397,7 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -30126,7 +30106,7 @@ export type TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsing
   patch: UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch;
   templateCode: Scalars['String'];
   code: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersion: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -30155,7 +30135,7 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -30220,7 +30200,6 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -30446,7 +30425,6 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -33033,7 +33011,6 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -33771,7 +33748,6 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -33824,7 +33800,7 @@ export type TemplateElementOnApplicationResponseForApplicationResponseTemplateEl
   patch: UpdateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch;
   templateCode: Scalars['String'];
   code: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersion: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -33854,7 +33830,7 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -34360,7 +34336,6 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -34431,7 +34406,6 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -34510,7 +34484,6 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -34731,7 +34704,6 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -35361,7 +35333,6 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   submissionMessage?: Maybe<Scalars['JSON']>;
   icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -35440,7 +35411,6 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -38128,7 +38098,6 @@ export type TemplateInput = {
   icon?: Maybe<Scalars['String']>;
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
   serialPattern?: Maybe<Scalars['String']>;
   dashboardRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   versionId: Scalars['String'];
@@ -38278,7 +38247,7 @@ export type TemplateElementInput = {
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
   templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['Int']>;
+  templateVersion?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -41792,7 +41761,7 @@ export type UpdateTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput = 
   patch: TemplateElementPatch;
   templateCode: Scalars['String'];
   code: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersion: Scalars['String'];
 };
 
 /** All input for the `updateTemplateFilterJoinByNodeId` mutation. */
@@ -44754,7 +44723,7 @@ export type DeleteTemplateElementByTemplateCodeAndCodeAndTemplateVersionInput = 
   clientMutationId?: Maybe<Scalars['String']>;
   templateCode: Scalars['String'];
   code: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersion: Scalars['String'];
 };
 
 /** All input for the `deleteTemplateFilterJoinByNodeId` mutation. */
@@ -45255,7 +45224,7 @@ export type ElementFragmentFragment = (
 
 export type FullTemplateFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'nodeId' | 'version' | 'versionId' | 'versionTimestamp' | 'parentVersionId' | 'versionExportComment' | 'versionHistory'>
+  & Pick<Template, 'nodeId' | 'versionId' | 'versionTimestamp' | 'parentVersionId' | 'versionExportComment' | 'versionHistory'>
   & { configApplications: (
     { __typename?: 'ApplicationsConnection' }
     & { nodes: Array<Maybe<(
@@ -45350,7 +45319,7 @@ export type StageFragment = (
 
 export type TemplateFragmentFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'canApplicantMakeChanges' | 'startMessage' | 'submissionMessage' | 'version' | 'versionId' | 'serialPattern' | 'icon'>
+  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'canApplicantMakeChanges' | 'startMessage' | 'submissionMessage' | 'versionId' | 'serialPattern' | 'icon'>
   & { templateCategory?: Maybe<(
     { __typename?: 'TemplateCategory' }
     & Pick<TemplateCategory, 'id' | 'code' | 'title' | 'icon' | 'uiLocation'>
@@ -46242,7 +46211,7 @@ export type GetHistoryForApplicantQueryVariables = Exact<{
   serial: Scalars['String'];
   questionCode: Scalars['String'];
   templateCode: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersionId: Scalars['String'];
 }>;
 
 
@@ -46284,7 +46253,7 @@ export type GetHistoryForReviewerQueryVariables = Exact<{
   serial: Scalars['String'];
   questionCode: Scalars['String'];
   templateCode: Scalars['String'];
-  templateVersion: Scalars['Int'];
+  templateVersionId: Scalars['String'];
   userId: Scalars['Int'];
 }>;
 
@@ -46661,7 +46630,7 @@ export type GetAllTemplatesQuery = (
     { __typename?: 'TemplatesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'Template' }
-      & Pick<Template, 'code' | 'status' | 'id' | 'version' | 'versionId' | 'versionTimestamp' | 'parentVersionId' | 'versionExportComment' | 'versionHistory' | 'name'>
+      & Pick<Template, 'code' | 'status' | 'id' | 'versionId' | 'versionTimestamp' | 'parentVersionId' | 'versionExportComment' | 'versionHistory' | 'name'>
       & { templateCategory?: Maybe<(
         { __typename?: 'TemplateCategory' }
         & Pick<TemplateCategory, 'title'>
@@ -46735,7 +46704,7 @@ export type GetPermissionStatisticsQuery = (
         & Pick<TemplatePermission, 'id' | 'stageNumber' | 'levelNumber'>
         & { template?: Maybe<(
           { __typename?: 'Template' }
-          & Pick<Template, 'id' | 'name' | 'code' | 'version' | 'status'>
+          & Pick<Template, 'id' | 'name' | 'code' | 'versionId' | 'status'>
         )> }
       )>> }
     ) }
@@ -46746,7 +46715,7 @@ export type GetPermissionStatisticsQuery = (
       & Pick<TemplateAction, 'id' | 'actionCode' | 'condition' | 'parameterQueries' | 'trigger'>
       & { template?: Maybe<(
         { __typename?: 'Template' }
-        & Pick<Template, 'code' | 'name' | 'version' | 'status'>
+        & Pick<Template, 'code' | 'name' | 'versionId' | 'status'>
       )> }
     )>> }
   )>, templateElements?: Maybe<(
@@ -46758,7 +46727,7 @@ export type GetPermissionStatisticsQuery = (
         { __typename?: 'TemplateSection' }
         & { template?: Maybe<(
           { __typename?: 'Template' }
-          & Pick<Template, 'code' | 'name' | 'status' | 'version'>
+          & Pick<Template, 'code' | 'name' | 'status' | 'versionId'>
         )> }
       )> }
     )>> }
@@ -46922,7 +46891,6 @@ export const TemplateFragmentFragmentDoc = gql`
   canApplicantMakeChanges
   startMessage
   submissionMessage
-  version
   versionId
   serialPattern
   icon
@@ -46987,7 +46955,6 @@ export const FullTemplateFragmentDoc = gql`
       id
     }
   }
-  version
   versionId
   versionTimestamp
   parentVersionId
@@ -48807,8 +48774,8 @@ export type GetApplicationDocsQueryHookResult = ReturnType<typeof useGetApplicat
 export type GetApplicationDocsLazyQueryHookResult = ReturnType<typeof useGetApplicationDocsLazyQuery>;
 export type GetApplicationDocsQueryResult = Apollo.QueryResult<GetApplicationDocsQuery, GetApplicationDocsQueryVariables>;
 export const GetHistoryForApplicantDocument = gql`
-    query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!, $templateVersion: Int!) {
-  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: $templateVersion) {
+    query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!, $templateVersionId: String!) {
+  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: $templateVersionId) {
     ...elementFragment
     reviewResponses(filter: {isVisibleToApplicant: {equalTo: true}}) {
       nodes {
@@ -48853,7 +48820,7 @@ ${UserFragmentDoc}`;
  *      serial: // value for 'serial'
  *      questionCode: // value for 'questionCode'
  *      templateCode: // value for 'templateCode'
- *      templateVersion: // value for 'templateVersion'
+ *      templateVersionId: // value for 'templateVersionId'
  *   },
  * });
  */
@@ -48867,8 +48834,8 @@ export type GetHistoryForApplicantQueryHookResult = ReturnType<typeof useGetHist
 export type GetHistoryForApplicantLazyQueryHookResult = ReturnType<typeof useGetHistoryForApplicantLazyQuery>;
 export type GetHistoryForApplicantQueryResult = Apollo.QueryResult<GetHistoryForApplicantQuery, GetHistoryForApplicantQueryVariables>;
 export const GetHistoryForReviewerDocument = gql`
-    query getHistoryForReviewer($serial: String!, $questionCode: String!, $templateCode: String!, $templateVersion: Int!, $userId: Int!) {
-  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: $templateVersion) {
+    query getHistoryForReviewer($serial: String!, $questionCode: String!, $templateCode: String!, $templateVersionId: String!, $userId: Int!) {
+  templateElementByTemplateCodeAndCodeAndTemplateVersion(code: $questionCode, templateCode: $templateCode, templateVersion: $templateVersionId) {
     ...elementFragment
     reviewResponses(filter: {review: {application: {serial: {equalTo: $serial}}}, or: [{status: {equalTo: SUBMITTED}}, {and: [{status: {equalTo: DRAFT}}, {review: {reviewer: {id: {equalTo: $userId}}}}]}]}) {
       nodes {
@@ -48913,7 +48880,7 @@ ${UserFragmentDoc}`;
  *      serial: // value for 'serial'
  *      questionCode: // value for 'questionCode'
  *      templateCode: // value for 'templateCode'
- *      templateVersion: // value for 'templateVersion'
+ *      templateVersionId: // value for 'templateVersionId'
  *      userId: // value for 'userId'
  *   },
  * });
@@ -49597,7 +49564,6 @@ export const GetAllTemplatesDocument = gql`
       code
       status
       id
-      version
       versionId
       versionTimestamp
       parentVersionId
@@ -49744,7 +49710,7 @@ export const GetPermissionStatisticsDocument = gql`
           id
           name
           code
-          version
+          versionId
           status
         }
       }
@@ -49760,7 +49726,7 @@ export const GetPermissionStatisticsDocument = gql`
       template {
         code
         name
-        version
+        versionId
         status
       }
     }
@@ -49776,7 +49742,7 @@ export const GetPermissionStatisticsDocument = gql`
           code
           name
           status
-          version
+          versionId
         }
       }
     }

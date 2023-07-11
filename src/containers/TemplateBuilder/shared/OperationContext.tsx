@@ -53,7 +53,6 @@ export type UpdateTemplate = (
   template: {
     id: number
     isDraft: boolean
-    version: number
     versionId: string
     versionHistory: VersionObject[]
     name: string

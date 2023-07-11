@@ -10,7 +10,6 @@ export default gql`
         id
       }
     }
-    version
     versionId
     versionTimestamp
     parentVersionId

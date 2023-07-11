@@ -16,7 +16,6 @@ export type Template = {
   id: number
   code: string
   category: string
-  version: number
   versionId: string
   versionExportComment: string | null
   versionTimestamp: DateTime
@@ -46,7 +45,6 @@ const useGetTemplates = () => {
           !template?.code ||
           !template.name ||
           !template.status ||
-          !template?.version ||
           !template?.versionId ||
           !template?.versionTimestamp
         ) {
@@ -59,7 +57,6 @@ const useGetTemplates = () => {
           name,
           status,
           id,
-          version,
           versionId,
           parentVersionId = null,
           versionTimestamp,
@@ -76,7 +73,6 @@ const useGetTemplates = () => {
           id,
           code,
           category: templateCategory?.title || '',
-          version,
           versionId,
           parentVersionId,
           versionExportComment,
