@@ -21,6 +21,9 @@ import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { DateTime } from 'luxon'
 import { customAlphabet } from 'nanoid'
+import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
+
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
 
 type CellPropsTemplate = Template & { numberOfTemplates?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void }
@@ -104,36 +107,76 @@ const ViewEditButton: React.FC<CellProps> = ({ template: { id } }) => {
   )
 }
 
-const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) => {
-  const { exportTemplate } = useOperationState()
-  const snapshotName = `${code}-${version}`
+const ExportButton: React.FC<CellProps> = ({ template }) => {
+  const { exportTemplate, updateTemplate } = useOperationState()
   const JWT = localStorage.getItem(config.localStorageJWTKey)
+  const [open, setOpen] = useState(false)
+  const [commitMessage, setCommitMessage] = useState('')
+
+  const doExport = async (versionId = template.versionId) => {
+    const { code, versionHistory, id } = template
+    const snapshotName = `${code}-${versionId}_v${versionHistory.length + 1}`
+    if (await exportTemplate({ id, snapshotName })) {
+      const res = await fetch(
+        getServerUrl('snapshot', { action: 'download', name: snapshotName }),
+        {
+          headers: { Authorization: `Bearer ${JWT}` },
+        }
+      )
+      const data = await res.blob()
+      var a = document.createElement('a')
+      a.href = window.URL.createObjectURL(data)
+      a.download = `${snapshotName}.zip`
+      a.click()
+      // Delete the snapshot cos we don't want snapshots page cluttered
+      // with individual templates
+      await fetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${JWT}` },
+      })
+    }
+  }
 
   return (
     <div key="export">
+      <Confirm
+        open={open}
+        // Prevent click in Input from closing modal
+        onClick={(e: any) => e.stopPropagation()}
+        content={
+          <div style={{ padding: 10, gap: 10 }} className="flex-column">
+            <p>Commit and export template?</p>
+            <p>
+              By exporting this template now, you will be committing the current version. To make
+              any further changes, you will need to duplicate it and start a new template version.
+            </p>
+            <div className="flex-row-start-center" style={{ gap: 10 }}>
+              <label>Please provide a commit message:</label>
+              <Input
+                value={commitMessage}
+                onChange={(e) => setCommitMessage(e.target.value)}
+                style={{ width: '60%' }}
+              />
+            </div>
+          </div>
+        }
+        onCancel={() => setOpen(false)}
+        onConfirm={async () => {
+          const versionId = nanoid()
+          await updateTemplate(template as any, {
+            versionId,
+            versionExportComment: commitMessage,
+          })
+          setOpen(false)
+          await doExport(versionId)
+        }}
+      />
       <div
         className="clickable"
         onClick={async (e) => {
           e.stopPropagation()
-          if (await exportTemplate({ id, snapshotName })) {
-            const res = await fetch(
-              getServerUrl('snapshot', { action: 'download', name: snapshotName }),
-              {
-                headers: { Authorization: `Bearer ${JWT}` },
-              }
-            )
-            const data = await res.blob()
-            var a = document.createElement('a')
-            a.href = window.URL.createObjectURL(data)
-            a.download = `${snapshotName}.zip`
-            a.click()
-            // Delete the snapshot cos we don't want snapshots page cluttered
-            // with individual templates
-            await fetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {
-              method: 'POST',
-              headers: { Authorization: `Bearer ${JWT}` },
-            })
-          }
+          if (template.versionId === '*') setOpen(true)
+          else doExport()
         }}
       >
         <Icon className="clickable" key="export" name="sign-out" />
@@ -154,8 +197,6 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
   const [codeError, setCodeError] = useState(false)
   const [commitCurrent, setCommitCurrent] = useState(template.versionId === '*')
   const [commitMessage, setCommitMessage] = useState('')
-
-  const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
 
   return (
     <div key="duplicate">
@@ -232,12 +273,16 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
               versionId: nanoid(),
               versionExportComment: commitMessage,
             })
+          setOpen(false)
           if (
-            await duplicateTemplate({ id: template.id, snapshotName, resetVersion: commitCurrent })
+            await duplicateTemplate({
+              id: template.id,
+              snapshotName,
+              resetVersion: commitCurrent || template.versionId !== '*',
+            })
           ) {
             await refetch()
           }
-          setOpen(false)
         }}
       />
     </div>
