@@ -116,6 +116,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
 
       const name = 'name' in options ? options.name : null
       const optionsName = 'options' in options ? options.options : null
+      const extraOptions = 'extraOptions' in options ? options.extraOptions : null
 
       if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
@@ -128,7 +129,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       // Must be "take" or "user", which uses "options" file
       return `${serverREST}${endpointPath}/${action}?name=${name}${
         optionsName ? `&optionsName=${optionsName}` : ''
-      }`
+      }${extraOptions ? `&extraOptions=${extraOptions}` : ''}`
 
     case 'lookupTable': {
       let { action } = options as LookupTableEndpoint[1]

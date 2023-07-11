@@ -5,11 +5,13 @@ import {
   useDeleteWholeApplicationMutation,
   useRestartApplicationMutation,
   useUpdateTemplateStageMutation,
+  useGetFullTemplateInfoQuery,
 } from '../../../utils/generated/graphql'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import useCreateApplication from '../../../utils/hooks/useCreateApplication'
 import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
+import useGetTemplates from '../useGetTemplates'
 import {
   ImportTemplate,
   UpdateTemplate,
@@ -99,6 +101,7 @@ export const updateTemplate: UpdateTemplateHelper =
       return false
     }
   }
+
 export const updateTemplateFilterJoin: UpdateTemplateFilterJoinHelper =
   (setErrorAndLoadingState: SetErrorAndLoadingState, updateTemplateFilterJoin) =>
   async (id, patch) => {
@@ -196,7 +199,7 @@ export const exportTemplate: TemplateOperationHelper = async (
       name: snapshotName,
       options: templateExportOptionName,
     }),
-    getFilterBody(id),
+    JSON.stringify(getFilterBody(id)),
     setErrorAndLoadingState
   )
 
@@ -204,10 +207,10 @@ export const exportTemplate: TemplateOperationHelper = async (
 }
 
 export const duplicateTemplate: TemplateOperationHelper = async (
-  { id, snapshotName },
+  { id, snapshotName, resetVersion = false },
   setErrorAndLoadingState
 ) => {
-  const body = getFilterBody(id)
+  const body = JSON.stringify({ ...getFilterBody(id), resetTemplate: resetVersion })
 
   const result = await safeFetch(
     getServerUrl('snapshot', {
@@ -230,8 +233,6 @@ export const duplicateTemplate: TemplateOperationHelper = async (
     body,
     setErrorAndLoadingState
   )
-
-  console.log('snapshotResult', snapshotResult)
 
   // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
   safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})
@@ -288,7 +289,7 @@ const getFilterBody = (id: number) => {
       templateCategory: { templates: { some: { id: { equalTo: id } } } },
     },
   }
-  return JSON.stringify(filters)
+  return filters
 }
 const safeFetch = async (
   url: string,

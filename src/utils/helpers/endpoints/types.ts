@@ -79,7 +79,7 @@ export type SnapshotEndpoint = [
   options:
     | { action: 'list' }
     | { action: 'download' | 'upload' | 'delete'; name: string }
-    | { action: 'take' | 'use'; name: string; options?: string }
+    | { action: 'take' | 'use'; name: string; options?: string; extraOptions?: object }
 ]
 
 export type LookupTableEndpoint = [

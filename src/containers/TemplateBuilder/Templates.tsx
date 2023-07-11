@@ -9,9 +9,7 @@ import {
   Dropdown,
   Checkbox,
   Confirm,
-  Container,
   Input,
-  FormInput,
 } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { useOperationState } from './shared/OperationContext'
@@ -22,6 +20,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { DateTime } from 'luxon'
+import { customAlphabet } from 'nanoid'
 
 type CellPropsTemplate = Template & { numberOfTemplates?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void }
@@ -143,13 +142,20 @@ const ExportButton: React.FC<CellProps> = ({ template: { code, version, id } }) 
   )
 }
 
-const DuplicateButton: React.FC<CellProps> = ({ template: { code, version, id }, refetch }) => {
-  const snapshotName = `${code}-${version}`
+const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
+  const { updateTemplate } = useOperationState()
+
+  const { code, versionId } = template
+  const snapshotName = `${code}-${versionId}`
   const { duplicateTemplate } = useOperationState()
   const [open, setOpen] = useState(false)
   const [selectedType, setSelectedType] = useState<'version' | 'template'>('version')
   const [newCode, setNewCode] = useState('')
   const [codeError, setCodeError] = useState(false)
+  const [commitCurrent, setCommitCurrent] = useState(template.versionId === '*')
+  const [commitMessage, setCommitMessage] = useState('')
+
+  const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz1234567890', 6)
 
   return (
     <div key="duplicate">
@@ -164,7 +170,8 @@ const DuplicateButton: React.FC<CellProps> = ({ template: { code, version, id },
       </div>
       <Confirm
         open={open}
-        closeOnTriggerBlur={false}
+        // Prevent click in Input from closing modal
+        onClick={(e: any) => e.stopPropagation()}
         content={
           <div style={{ padding: 10, gap: 10 }} className="flex-column">
             <p>
@@ -195,6 +202,23 @@ const DuplicateButton: React.FC<CellProps> = ({ template: { code, version, id },
                 />
               </div>
             )}
+            {template.versionId === '*' && (
+              <Checkbox
+                label="Commit current version?"
+                checked={commitCurrent}
+                onChange={(_) => setCommitCurrent(!commitCurrent)}
+              />
+            )}
+            {commitCurrent && (
+              <div className="flex-row-start-center" style={{ gap: 10 }}>
+                <label>Commit message:</label>
+                <Input
+                  value={commitMessage}
+                  onChange={(e) => setCommitMessage(e.target.value)}
+                  style={{ width: '80%' }}
+                />
+              </div>
+            )}
           </div>
         }
         onCancel={() => setOpen(false)}
@@ -203,7 +227,16 @@ const DuplicateButton: React.FC<CellProps> = ({ template: { code, version, id },
             setCodeError(true)
             return
           }
-          if (await duplicateTemplate({ id, snapshotName })) refetch()
+          if (commitCurrent)
+            await updateTemplate(template as any, {
+              versionId: nanoid(),
+              versionExportComment: commitMessage,
+            })
+          if (
+            await duplicateTemplate({ id: template.id, snapshotName, resetVersion: commitCurrent })
+          ) {
+            await refetch()
+          }
           setOpen(false)
         }}
       />
@@ -224,7 +257,7 @@ const Templates: React.FC = () => {
   const [selectedRow, setSelectedRow] = useState(-1)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
-  const { importTemplate } = useOperationState()
+  const { importTemplate, updateTemplate } = useOperationState()
   const { query, updateQuery } = useRouter()
   const [hideInactive, setHideInactive] = useState(query.hideInactive === 'true')
   const [selectedCategories, setSelectedCategories] = useState<string[]>(

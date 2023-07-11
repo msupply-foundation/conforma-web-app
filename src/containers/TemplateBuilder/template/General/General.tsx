@@ -22,7 +22,6 @@ import config from '../../../../config'
 import { Link } from 'react-router-dom'
 import { DateTime } from 'luxon'
 import { getVersionString } from '../../Templates'
-import { Template } from '../../useGetTemplates'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()

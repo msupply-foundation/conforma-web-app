@@ -37,7 +37,7 @@ export type ErrorAndLoadingState = {
   isLoading: boolean
 }
 
-export type TemplatesOperationProps = { id: number; snapshotName: string }
+export type TemplatesOperationProps = { id: number; snapshotName: string; resetVersion?: boolean }
 export type TemplatesOperation = (props: TemplatesOperationProps) => Promise<boolean>
 export type ImportTemplate = (e: any) => Promise<boolean>
 export type UpdateTemplate = (
@@ -67,6 +67,7 @@ export type DeleteApplication = (id: number) => Promise<boolean>
 export type CreateApplication = (props: CreateApplicationProps) => Promise<boolean>
 export type UpdateApplication = (serial: string, patch: ApplicationPatch) => Promise<boolean>
 export type UpdateTemplateStage = (id: number, patch: TemplateStagePatch) => Promise<boolean>
+export type UpdateNewTemplate = (origId: number, patch: TemplatePatch) => Promise<boolean>
 
 type OperationContextState = {
   fetch: (something: any) => any
