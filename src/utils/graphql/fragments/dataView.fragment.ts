@@ -21,5 +21,7 @@ export default gql`
     priority
     defaultSortColumn
     defaultFilterString
+    submenu
+    enabled
   }
 `
