@@ -3,11 +3,25 @@ import { Dropdown, Label } from 'semantic-ui-react'
 import { ResponseFull } from '../../../utils/types'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { substituteValues } from '../../../utils/helpers/utilityFunctions'
 import useDefault from '../../useDefault'
 
+// From
+// https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-certificates/requireatleastone
+type RequireAtLeastOne<T> = {
+  [K in keyof T]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<keyof T, K>>>
+}[keyof T]
+
 type ObjectOption = { [key: string]: any }
-type ObjectOptions = { options: ObjectOption[]; optionsDisplayProperty: string }
-type StringOptions = { options: string[]; optionsDisplayProperty: never }
+type ObjectOptions = { options: ObjectOption[] } & RequireAtLeastOne<{
+  optionsDisplayProperty: string
+  optionsDisplayExpression: string
+}>
+type StringOptions = {
+  options: string[]
+  optionsDisplayProperty: never
+  optionsDisplayExpression: never
+}
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -27,6 +41,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     search,
     options,
     optionsDisplayProperty,
+    optionsDisplayExpression,
     hasOther,
     multiSelect = false,
     default: defaultValue,
@@ -98,8 +113,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       onSave({
         optionIndex: optionIndex,
         text:
-          optionIndex.map((i) => getTextValue(options, i, optionsDisplayProperty)).join(', ') +
-          (addedText ?? ''),
+          optionIndex
+            .map((i) => getTextValue(options, i, optionsDisplayProperty, optionsDisplayExpression))
+            .join(', ') + (addedText ?? ''),
         selection: optionIndex.map((i) => (options[i] ? options[i] : addedText)),
         isCustomOption: !!addedText,
       })
@@ -120,7 +136,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       // Save regular option
       else
         onSave({
-          text: getTextValue(options, optionIndex, optionsDisplayProperty),
+          text: getTextValue(
+            options,
+            optionIndex,
+            optionsDisplayProperty,
+            optionsDisplayExpression
+          ),
           selection: options[optionIndex],
           optionIndex,
           isCustomOption: false,
@@ -157,7 +178,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           currentResponse,
           addedOption,
           setAddedOption,
-          optionsDisplayProperty
+          optionsDisplayProperty,
+          optionsDisplayExpression
         )}
         onChange={(e, data) => handleChange(data.value as string | number)}
         value={selectedIndex}
@@ -177,7 +199,8 @@ const getDropdownOptions = (
   currentResponse: ResponseFull | null,
   addedOption: string | null,
   setAddedOption: (value: string) => void,
-  displayProperty?: string
+  displayProperty?: string,
+  displayExpression?: string
 ) => {
   if (options[0] === 'Loading...') return [{ key: 'loading', text: 'Loading...', value: 0 }]
   // Figure out if the currentResponse contains an added custom response. This
@@ -202,7 +225,12 @@ const getDropdownOptions = (
 
   const dropdownOptions = options.map((option, index) => ({
     key: `${index}_${option}`,
-    text: displayProperty && typeof option !== 'string' ? option[displayProperty] : option,
+    text:
+      (displayProperty || displayExpression) && typeof option !== 'string'
+        ? displayExpression
+          ? substituteValues(displayExpression, option)
+          : option[displayProperty as string]
+        : option,
     value: index,
   }))
 
@@ -219,12 +247,15 @@ const getDropdownOptions = (
 const getTextValue = (
   options: (object | string)[],
   optionIndex: number,
-  optionsDisplayProperty?: string
+  displayProperty?: string,
+  displayExpression?: string
 ): string => {
   if (typeof options[optionIndex] === 'object') {
-    if (!optionsDisplayProperty) return 'Missing optionsDisplayProperty'
+    if (!displayProperty && !displayExpression) return 'Missing display property or expression'
     return options[optionIndex]
-      ? (options[optionIndex] as ObjectOption)[optionsDisplayProperty]
+      ? displayExpression
+        ? substituteValues(displayExpression, options[optionIndex] as ObjectOption)
+        : (options[optionIndex] as ObjectOption)[displayProperty as string]
       : ''
   }
 
