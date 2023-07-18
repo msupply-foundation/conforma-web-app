@@ -2118,7 +2118,6 @@ a:hover {
 }
 
 // Text sizes
-
 .smaller-text {
   font-size: @smallerText;
 }
