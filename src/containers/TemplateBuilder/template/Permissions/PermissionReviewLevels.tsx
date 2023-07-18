@@ -35,7 +35,7 @@ const PermissionReviewLevel: React.FC<PemrmissionReviewLevelProps> = ({ stage })
     }).length === 0
 
   const {
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
 
   const addLevel = () => {
@@ -70,7 +70,7 @@ const PermissionReviewLevel: React.FC<PemrmissionReviewLevelProps> = ({ stage })
         </Header>
         <IconButton
           name="add square"
-          disabled={!isDraft}
+          disabled={!canEdit}
           disabledMessage={disabledMessage}
           onClick={addLevel}
         />
@@ -89,14 +89,14 @@ const PermissionReviewLevel: React.FC<PemrmissionReviewLevelProps> = ({ stage })
             <TextIO
               title="Level Name"
               text={level?.name}
-              disabled={!isDraft}
+              disabled={!canEdit}
               labelNegative
               disabledMessage={disabledMessage}
               setText={(name) => updateLevelName(level?.id || 0, name ?? '')}
             />
             {canRemoveLevel(level?.number || 0) && (
               <IconButton
-                disabled={!isDraft}
+                disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 name="window close"
                 onClick={() => removeLevel(level?.id || 0)}

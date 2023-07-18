@@ -21,15 +21,13 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
   stageNumber,
   levelNumber,
 }) => {
-  const {
-    template: { id: templateId, isDraft },
-    templatePermissions,
-  } = useTemplateState()
+  const { template, templatePermissions } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [permissionNameInfo, setPermissionNameInfo] = useState<PermissionName | null>(null)
+  const { canEdit } = template
 
   const removeTemplatePermission = (id: number) => {
-    updateTemplate(templateId, { templatePermissionsUsingId: { deleteById: [{ id }] } })
+    updateTemplate(template, { templatePermissionsUsingId: { deleteById: [{ id }] } })
   }
   return (
     <div className="flex-column-start-stretch">
@@ -52,7 +50,7 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
               />
               <IconButton
                 name="window close"
-                disabled={!isDraft}
+                disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 onClick={() => removeTemplatePermission(templatePermission?.id || 0)}
               />

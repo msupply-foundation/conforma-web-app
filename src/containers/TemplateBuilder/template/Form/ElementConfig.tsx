@@ -85,7 +85,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
 
   const { structure } = useFullApplicationState()
   const {
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
   const { selectedSectionId } = useFormState()
   const { updateApplication, updateTemplateSection } = useOperationState()
@@ -156,6 +156,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <DropdownIO
               title="Type"
               value={state.elementTypePluginCode}
+              disabled={!canEdit}
+              disabledMessage={disabledMessage}
               getKey={'code'}
               getValue={'code'}
               getText={'displayName'}
@@ -168,13 +170,15 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               labelNegative
               minLabelWidth={50}
             />
-            <FromExistingElement
-              pluginCode={state.elementTypePluginCode}
-              setTemplateElement={(existingElement) => {
-                setState({ ...state, ...existingElement })
-                markNeedsUpdate()
-              }}
-            />
+            {canEdit && (
+              <FromExistingElement
+                pluginCode={state.elementTypePluginCode}
+                setTemplateElement={(existingElement) => {
+                  setState({ ...state, ...existingElement })
+                  markNeedsUpdate()
+                }}
+              />
+            )}
           </div>
         </div>
         <Label
@@ -190,7 +194,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           </a>
         </Label>
         <div className="config-modal-info">
-          {!isDraft && <Label color="red">Template form only editable on draft templates</Label>}
+          {!canEdit && <Label color="red">Template form only editable on draft templates</Label>}
           <div className="spacer-10" />
           <div className="config-container-outline" style={{ maxWidth: 600 }}>
             <div className="flex-row-start-start">
@@ -201,6 +205,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   setText={(text) => {
                     setState({ ...state, title: text })
                   }}
+                  disabled={!canEdit}
+                  disabledMessage={disabledMessage}
                   markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
                   minLabelWidth={60}
@@ -215,6 +221,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 setText={(text) => {
                   setState({ ...state, code: text ?? '' })
                 }}
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={60}
@@ -223,6 +231,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               <DropdownIO
                 title="Category"
                 value={state.category}
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
                 getKey={'category'}
                 getValue={'category'}
                 getText={'title'}
@@ -241,6 +251,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               <DropdownIO
                 title="Is Reviewable"
                 value={state.reviewability || 'default'}
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
                 getKey={'value'}
                 getValue={'value'}
                 getText={'text'}
@@ -270,6 +282,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 <TextIO
                   text={state?.validationMessage || ''}
                   title="Validation Message"
+                  disabled={!canEdit}
+                  disabledMessage={disabledMessage}
                   isTextArea={true}
                   setText={(text) => {
                     setState({ ...state, validationMessage: text || null })
@@ -289,6 +303,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   text={state?.helpText || ''}
                   isTextArea={true}
                   title="Help Text"
+                  disabled={!canEdit}
+                  disabledMessage={disabledMessage}
                   setText={(text) => {
                     setState({ ...state, helpText: text || null })
                   }}
@@ -329,25 +345,26 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               setState({ ...state, parameters })
               markNeedsUpdate()
             }}
+            canEdit={canEdit}
             type="FormElement"
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
               title={t('BUTTON_SAVE')}
-              disabled={!isDraft || !shouldUpdate}
-              disabledMessage={!isDraft ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
+              disabled={!canEdit || !shouldUpdate}
+              disabledMessage={!canEdit ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
               onClick={updateElement}
             />
             <ButtonWithFallback
-              disabled={!isDraft}
+              disabled={!canEdit}
               disabledMessage={disabledMessage}
               title={t('BUTTON_REMOVE')}
               onClick={() => showRemoveElementModal({ onConfirm: () => removeElement() })}
             />
             <ButtonWithFallback
               title={t('BUTTON_CLOSE')}
-              onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
+              onClick={() => (shouldUpdate && canEdit ? setOpen(true) : onClose())}
             />
             <Modal
               basic

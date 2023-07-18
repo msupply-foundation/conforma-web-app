@@ -473,7 +473,8 @@ export default {
   TEMPLATE_GEN_BUTTON_AVAILABLE_DISABLED:
     'At least one template with the same code is already available, or this template already available',
   TEMPLATE_GEN_BUTTON_DRAFT: 'Make Draft',
-  TEMPLATE_GEN_BUTTON_DRAFT_DISABLED: 'Already has applications or is draft',
+  TEMPLATE_GEN_BUTTON_DRAFT_DISABLED:
+    'Already has applications, or version is committed, or is draft',
   TEMPLATE_GEN_BUTTON_DISABLE: 'Disable',
   TEMPLATE_GEN_BUTTON_DISABLE_DISABLED: 'Already disabled',
   TEMPLATE_ICON: 'Icon',

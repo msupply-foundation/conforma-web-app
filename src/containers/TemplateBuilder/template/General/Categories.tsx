@@ -70,6 +70,7 @@ const Category: React.FC<{}> = () => {
   const renderAddEdit = () => {
     if (updateState) return null
     const canRenderEdit = selectedCategory.id !== noCategory.id
+    if (!template.canEdit) return null
     return (
       <>
         <Icon className="clickable" name="add square" onClick={() => setUpdateState(newCategory)} />
@@ -95,7 +96,7 @@ const Category: React.FC<{}> = () => {
 
   const addCategory = async () => {
     if (
-      await updateTemplate(template.id, {
+      await updateTemplate(template, {
         templateCategoryToTemplateCategoryId: {
           create: updateState,
         },
@@ -108,7 +109,7 @@ const Category: React.FC<{}> = () => {
   const editCategory = async () => {
     if (updateState === null) return
     if (
-      await updateTemplate(template.id, {
+      await updateTemplate(template, {
         templateCategoryToTemplateCategoryId: {
           updateById: {
             patch: updateState,
@@ -133,12 +134,12 @@ const Category: React.FC<{}> = () => {
           value={selectedCategory.id}
           title={t('TEMPLATE_CATEGORIES')}
           options={categoryOptions}
-          disabled={!!updateState}
+          disabled={!!updateState || !template.canEdit}
           getKey={'id'}
           getValue={'id'}
           getText={'title'}
           setValue={(value) => {
-            updateTemplate(template.id, { templateCategoryId: value === -1 ? null : Number(value) })
+            updateTemplate(template, { templateCategoryId: value === -1 ? null : Number(value) })
           }}
           minLabelWidth={100}
           labelTextAlign="right"

@@ -46,12 +46,12 @@ type RemoveAction = (id: number) => void
 const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateActions }) => {
   const { t } = useLanguageProvider()
   const { updateTemplate } = useOperationState()
-  const {
-    template: { id: templateId, isDraft },
-  } = useTemplateState()
+  const { template } = useTemplateState()
   const { allActionsByCode } = useActionState()
   const [addActionAtBottom, setAddActionAtBottom] = useState(true)
   const { sequential, asynchronous } = getActionsForTrigger(trigger, allTemplateActions)
+
+  const { canEdit } = template
 
   const newAction = {
     actionCode: 'cLog',
@@ -73,7 +73,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
   )
 
   const removeAction: RemoveAction = (id) => {
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateActionsUsingId: { deleteById: [{ id }] },
     })
   }
@@ -81,11 +81,11 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
   const addAction = () => {
     let counter = 1
     if (addActionAtBottom)
-      updateTemplate(templateId, {
+      updateTemplate(template, {
         templateActionsUsingId: { create: [{ ...newAction, trigger, sequence: lastSequence + 1 }] },
       })
     else
-      updateTemplate(templateId, {
+      updateTemplate(template, {
         templateActionsUsingId: {
           updateById: sequential.map((action) => ({
             id: action.id,
@@ -97,7 +97,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
   }
 
   const setIsSequential: SetIsSequential = (id, isSequential) => {
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateActionsUsingId: {
         updateById: [{ id, patch: { sequence: isSequential ? lastSequence + 1 : null } }],
       },
@@ -105,7 +105,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
   }
 
   const swapSequences: SwapSequences = (fromAction, toAction) => {
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateActionsUsingId: {
         updateById: [
           { id: fromAction?.id, patch: { sequence: toAction?.sequence } },
@@ -129,7 +129,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
           {templateActions.map((templateAction, index) => (
             <div key={templateAction.id} className="config-container">
               <div className="flex-row-start-center">
-                {!isAsynchronous(templateAction) && (
+                {!isAsynchronous(templateAction) && canEdit && (
                   <IconButton
                     name="angle up"
                     onClick={() => {
@@ -138,7 +138,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                     hidden={templateAction?.sequence === firstSequence}
                   />
                 )}
-                {!isAsynchronous(templateAction) && (
+                {!isAsynchronous(templateAction) && canEdit && (
                   <IconButton
                     name="angle down"
                     onClick={() => {
@@ -180,7 +180,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                   <div className="flex-row">
                     <div style={{ alignSelf: 'flex-end' }}>
                       <CheckboxIO
-                        disabled={!isDraft}
+                        disabled={!canEdit}
                         disabledMessage={disabledMessage}
                         title={t('TEMPLATE_LABEL_SEQUENTIAL')}
                         value={!isAsynchronous(templateAction)}
@@ -191,7 +191,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
                     </div>
                     <div style={{ alignSelf: 'flex-start' }}>
                       <IconButton
-                        disabled={!isDraft}
+                        disabled={!canEdit}
                         disabledMessage={disabledMessage}
                         name="window close"
                         onClick={() => removeAction(templateAction?.id)}
@@ -219,7 +219,7 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
           <Header as="h4" className="no-margin-no-padding">
             {trigger}
           </Header>
-          {isDraft && (
+          {canEdit && (
             <>
               <Button primary inverted onClick={addAction}>
                 {t('TEMPLATE_BUTTON_ADD_ACTION')}

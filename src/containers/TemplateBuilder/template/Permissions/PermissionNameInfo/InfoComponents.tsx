@@ -7,7 +7,6 @@ import {
   TemplatePermission,
 } from '../../../../../utils/generated/graphql'
 import Evaluation from '../../../shared/Evaluation'
-import { Parameters } from '../../../shared/Parameters'
 import TextIO from '../../../shared/TextIO'
 
 type TemplateInfoProps = {
@@ -22,10 +21,10 @@ export const TemplateInfo: React.FC<TemplateInfoProps> = ({ template }) => (
       additionalStyles={{ margin: 0 }}
     />
     <TextIO
-      title="Version"
+      title="Version ID"
       icon="info circle"
       link={`/admin/template/${template?.id}/permissions`}
-      text={String(template?.version)}
+      text={String(template?.versionId)}
       additionalStyles={{ margin: 0 }}
     />
     <TextIO title="Status" text={String(template?.status)} additionalStyles={{ margin: 0 }} />

@@ -5,12 +5,12 @@ export default gql`
     $serial: String!
     $questionCode: String!
     $templateCode: String!
-    $templateVersion: Int!
+    $templateVersionId: String!
   ) {
     templateElementByTemplateCodeAndCodeAndTemplateVersion(
       code: $questionCode
       templateCode: $templateCode
-      templateVersion: $templateVersion
+      templateVersion: $templateVersionId
     ) {
       ...elementFragment
       reviewResponses(filter: { isVisibleToApplicant: { equalTo: true } }) {
