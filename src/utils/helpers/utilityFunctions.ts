@@ -68,3 +68,12 @@ export const constructOrObjectFilters = (filters: { [key: string]: string }[]) =
     return { [filterKey]: { equalTo: filterValue } }
   }),
 })
+
+// Nicely formatted file sizes, e.g. 1000000 => "1MB"
+export const fileSizeWithUnits = (size: number): string => {
+  const sizeInKb = size / 1000
+  if (sizeInKb < 1000) return `${sizeInKb} kB`
+  const sizeInMB = size / 1000000
+  if (sizeInKb < 100_000) return `${parseInt(String(sizeInMB * 10)) / 10} MB`
+  return `${parseInt(String(sizeInKb / 1000))} MB`
+}

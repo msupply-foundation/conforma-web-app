@@ -1,12 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Icon, Input, Label, Loader, Modal, Table, Header } from 'semantic-ui-react'
+import {
+  Button,
+  Icon,
+  Input,
+  Label,
+  Loader,
+  Modal,
+  Table,
+  Header,
+  SemanticCOLORS,
+} from 'semantic-ui-react'
 import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../contexts/Toast'
+import { DateTime } from 'luxon'
+import TextIO from '../TemplateBuilder/shared/TextIO'
+import { fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
 
 // const diffSnapshotUrl = `${snapshotsBaseUrl}/diff`
+
+type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
+interface SnapshotData {
+  name: string
+  size: number
+  timestamp: string
+  version: string
+  archive?: ArchiveType
+}
 
 const Snapshots: React.FC = () => {
   const [compareFrom, setCompareFrom] = useState('')
@@ -15,7 +37,7 @@ const Snapshots: React.FC = () => {
     null
   )
 
-  const [data, setData] = useState<string[] | null>(null)
+  const [data, setData] = useState<SnapshotData[] | null>(null)
 
   const { ConfirmModal, showModal } = useConfirmationModal({ type: 'warning', awaitAction: false })
   const showToast = useToast({ style: 'success' })
@@ -33,9 +55,8 @@ const Snapshots: React.FC = () => {
   const getList = async () => {
     try {
       const snapshotListRaw = await getRequest(getServerUrl('snapshot', { action: 'list' }))
-      const snapshotList: string[] = snapshotListRaw.snapshotsNames
 
-      setData(snapshotList)
+      setData(snapshotListRaw)
     } catch (e) {}
   }
 
@@ -73,7 +94,7 @@ const Snapshots: React.FC = () => {
 
       if (resultJson.success) {
         setIsLoading(false)
-        location.reload(true)
+        location.reload()
         return
       }
 
@@ -143,14 +164,16 @@ const Snapshots: React.FC = () => {
     if (!data) return null
     return (
       <>
-        {data.map((snapshotName) => (
-          <Table.Row key={`app_menu_${snapshotName}`} style={{ paddingBottom: 0 }}>
-            <Table.Cell textAlign="right">
-              <p>{snapshotName}</p>
-            </Table.Cell>
-            {compareFrom === '' && (
-              <>
-                <Table.Cell>
+        {data.map(({ name, timestamp, archive, size }) => (
+          <Table.Row key={`app_menu_${name}`}>
+            <Table.Cell colSpan={12} style={{ padding: 5 }}>
+              <div className="flex-row-space-between" style={{ width: '100%', padding: 5 }}>
+                <div className="flex-row" style={{ gap: 30 }}>
+                  <strong>{name}</strong>
+                  <span className="smaller-text">{fileSizeWithUnits(size)}</span>
+                  {renderArchiveLabel(archive)}
+                </div>
+                <div className="flex-row" style={{ gap: 5 }}>
                   <Icon
                     size="large"
                     className="clickable"
@@ -160,13 +183,12 @@ const Snapshots: React.FC = () => {
                         showModal({
                           title: 'Are you sure?',
                           message: `This will overwrite ALL existing data on: ${window.location.host}`,
-                          onConfirm: () => useSnapshot(snapshotName),
+                          onConfirm: () => useSnapshot(name),
                         })
-                      else useSnapshot(snapshotName)
+                      else useSnapshot(name)
                     }}
                   />
-                </Table.Cell>
-                <Table.Cell width={1}>
+
                   <Icon
                     size="large"
                     className="clickable"
@@ -175,69 +197,59 @@ const Snapshots: React.FC = () => {
                       if (isProductionBuild)
                         showModal({
                           title: 'Are you sure?',
-                          message: `This will overwrite saved snapshot: ${snapshotName} with the current system state`,
+                          message: `This will overwrite saved snapshot: ${name} with the current system state`,
                           onConfirm: async () => {
-                            await takeSnapshot(snapshotName)
-                            showToast({ title: 'Snapshot saved', text: snapshotName })
+                            await takeSnapshot(name)
+                            showToast({ title: 'Snapshot saved', text: name })
                           },
                         })
-                      else takeSnapshot(snapshotName)
+                      else takeSnapshot(name)
                     }}
                   />
-                </Table.Cell>
-                <Table.Cell>
+
                   <Icon
                     name="download"
                     size="large"
                     className="clickable blue"
                     onClick={async () => {
                       showToast({ title: 'Download started...', timeout: 2000 })
-                      await downloadSnapshot(snapshotName)
+                      await downloadSnapshot(name)
                       showToast({
                         title: 'Download complete',
-                        text: snapshotName,
+                        text: name,
                         timeout: 30000,
                       })
                     }}
                   />
-                </Table.Cell>
-                <Table.Cell textAlign="left">
+
                   <Icon
                     size="large"
                     className="clickable"
                     name="trash alternate"
                     onClick={async () => {
-                      await deleteSnapshot(snapshotName)
-                      showToast({ title: 'Snapshot deleted', text: snapshotName })
+                      await deleteSnapshot(name)
+                      showToast({ title: 'Snapshot deleted', text: name })
                     }}
                   />
-                </Table.Cell>
-                {/* <Icon
-                  className="clickable"
-                  size="big"
-                  name="random"
-                  onClick={() => setCompareFrom(snapshotName)}
-                /> */}
-              </>
-            )}
-            {/* {compareFrom !== snapshotName && compareFrom !== '' ? (
-                <>
-                  <a
-                    ref={compareLinkRef}
-                    href={`${diffSnapshotUrl}?from=${compareFrom}&to=${snapshotName}`}
-                    target="_blank"
-                    hidden
-                  ></a>
-                  <Icon
-                    className="clickable"
-                    name="random"
-                    onClick={() => {
-                      setIsOpen(false)
-                      compareLinkRef?.current?.click()
-                    }}
-                  />
-                </>
-              ) : null} */}
+                </div>
+              </div>
+              <div className="flex-row">
+                <TextIO
+                  text={DateTime.fromISO(timestamp).toLocaleString(DateTime.DATETIME_SHORT)}
+                  title="Timestamp"
+                />
+                {archive && (
+                  <div className="flex-row">
+                    <TextIO
+                      title="Archive"
+                      text={`${DateTime.fromISO(
+                        archive.from ?? ''
+                      ).toLocaleString()}–${DateTime.fromISO(archive.to ?? '').toLocaleString()}`}
+                    />
+                  </div>
+                )}
+              </div>
+            </Table.Cell>
           </Table.Row>
         ))}
       </>
@@ -264,6 +276,33 @@ const Snapshots: React.FC = () => {
       )}
     </Modal>
   )
+
+  const renderArchiveLabel = (archive?: ArchiveType) => {
+    if (!archive) return null
+    let color: SemanticCOLORS
+    let text: string
+    switch (archive.type) {
+      case 'full':
+        color = 'green'
+        text = 'Full archive'
+        break
+      case 'partial':
+        color = 'blue'
+        text = 'Partial archive'
+        break
+      default:
+        color = 'red'
+        text = 'No archive'
+    }
+    return (
+      <Label
+        // className="stage-label"
+        content={text}
+        color={color}
+        size="small"
+      />
+    )
+  }
 
   const newSnapshot = () => {
     const [value, setValue] = useState('')
