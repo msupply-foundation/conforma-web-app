@@ -77,9 +77,9 @@ export type RemoveLanguageEndpoint = [endpoint: 'removeLanguage', options: { cod
 export type SnapshotEndpoint = [
   endpoint: 'snapshot',
   options:
-    | { action: 'list' }
-    | { action: 'download' | 'upload' | 'delete'; name: string }
-    | { action: 'take' | 'use'; name: string; options?: string }
+    | { action: 'list'; archive?: boolean }
+    | { action: 'download' | 'upload' | 'delete'; name: string; archive?: boolean }
+    | { action: 'take' | 'use'; name: string; options?: string; archive?: boolean }
 ]
 
 export type LookupTableEndpoint = [

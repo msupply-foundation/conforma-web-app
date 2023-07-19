@@ -112,7 +112,10 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
 
     case 'snapshot':
       const { action } = options as SnapshotEndpoint[1]
-      if (action === 'list') return `${serverREST}${endpointPath}/list`
+      const isArchive = 'archive' in options && options.archive
+
+      if (action === 'list')
+        return `${serverREST}${endpointPath}/list${isArchive ? '?archive=true' : ''}`
 
       const name = 'name' in options ? options.name : null
       const optionsName = 'options' in options ? options.options : null
@@ -120,15 +123,18 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
       // "download" is direct download url
-      if (action === 'download') return `${serverREST}${endpointPath}/files/${name}.zip`
+      if (action === 'download')
+        return `${serverREST}${endpointPath}/files/${isArchive ? '_archives/' : ''}${name}.zip`
 
       if (action === 'upload' || action === 'delete')
-        return `${serverREST}${endpointPath}/${action}?name=${name}`
+        return `${serverREST}${endpointPath}/${action}?name=${name}${
+          isArchive ? '&archive=true' : ''
+        }`
 
       // Must be "take" or "use", which uses "options" file
       return `${serverREST}${endpointPath}/${action}?name=${name}${
         optionsName ? `&optionsName=${optionsName}` : ''
-      }`
+      }${isArchive ? '&archive=true' : ''}`
 
     case 'lookupTable': {
       let { action } = options as LookupTableEndpoint[1]
