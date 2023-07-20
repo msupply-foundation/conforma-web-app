@@ -90,6 +90,8 @@ const Snapshots: React.FC = () => {
   const takeSnapshot = async (name: string) => {
     if (!name) return
 
+    localStorage.setItem('defaultSnapshotName', name)
+
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
@@ -189,9 +191,6 @@ const Snapshots: React.FC = () => {
       setSnapshotError({ message: 'Front end error while uploading snapshot', error })
     }
   }
-
-  const formatTimestamp = (timestamp: string) =>
-    DateTime.fromISO(timestamp).toFormat('yyyy-LL-dd_HH-mm-ss')
 
   const downloadSnapshot = async (name: string) => {
     const res = await fetch(
@@ -357,7 +356,8 @@ const Snapshots: React.FC = () => {
   }
 
   const newSnapshot = () => {
-    const [name, setName] = useState('')
+    const [name, setName] = useState(localStorage.getItem('defaultSnapshotName') ?? '')
+    console.log('NAME', localStorage.getItem('defaultSnapshotName'))
     const archiveOptions =
       data && data.currentArchives?.length > 0
         ? [
@@ -382,6 +382,7 @@ const Snapshots: React.FC = () => {
         <div className="flex-column" style={{ gap: 10, width: '100%' }}>
           <Input
             onChange={(_, { value }) => setName(value)}
+            value={name}
             placeholder="Enter snapshot name"
             style={{ width: 200 }}
           />
