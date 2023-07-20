@@ -355,9 +355,8 @@ const Snapshots: React.FC = () => {
     return <Label content={text} color={color} size="mini" />
   }
 
-  const newSnapshot = () => {
+  const renderNewSnapshot = () => {
     const [name, setName] = useState(localStorage.getItem('defaultSnapshotName') ?? '')
-    console.log('NAME', localStorage.getItem('defaultSnapshotName'))
     const archiveOptions =
       data && data.currentArchives?.length > 0
         ? [
@@ -427,9 +426,7 @@ const Snapshots: React.FC = () => {
           </Header>
           <Button
             primary
-            disabled={
-              !name || (data?.currentArchives && data?.currentArchives.length > 0 && !archive)
-            }
+            disabled={!name || (displayType === 'archives' && !archive)}
             onClick={() => {
               takeSnapshot(name)
             }}
@@ -483,7 +480,7 @@ const Snapshots: React.FC = () => {
 
       <Table stackable style={{ marginTop: 0 }}>
         <Table.Body>
-          <Table.Row>{newSnapshot()}</Table.Row>
+          <Table.Row>{renderNewSnapshot()}</Table.Row>
           {renderSnapshotList()}
         </Table.Body>
       </Table>
