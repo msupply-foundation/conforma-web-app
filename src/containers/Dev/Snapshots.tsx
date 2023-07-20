@@ -215,7 +215,7 @@ const Snapshots: React.FC = () => {
     return (
       <>
         {data.snapshots.map(({ name, filename, timestamp, archive, size }) => (
-          <Table.Row key={`app_menu_${name}`}>
+          <Table.Row key={filename}>
             <Table.Cell colSpan={12} style={{ padding: 5 }}>
               <div className="flex-row-space-between" style={{ width: '100%', padding: 5 }}>
                 <div className="flex-row" style={{ gap: 10 }}>
@@ -279,7 +279,12 @@ const Snapshots: React.FC = () => {
                     name="trash alternate"
                     onClick={async () => {
                       await deleteSnapshot(filename)
-                      showToast({ title: 'Snapshot deleted', text: name })
+                      showToast({
+                        title: `${
+                          displayType === 'archives' ? 'Archive snapshot' : 'Snapshot'
+                        } deleted`,
+                        text: name,
+                      })
                     }}
                   />
                 </div>
