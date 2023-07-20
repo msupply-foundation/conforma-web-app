@@ -26,6 +26,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
 interface SnapshotData {
   name: string
+  filename: string
   size: number
   timestamp: string
   version: string
@@ -83,8 +84,13 @@ const Snapshots: React.FC = () => {
   }
 
   const normaliseSnapshotName = (name: string) =>
-    // not word, not digit
-    name.replace(/[^\w\d]/g, '_')
+    name
+      // Not word, not digit
+      .replace(/[^\w\d]/g, '_')
+      // Remove "ARHIVE_" prefix
+      .replace(/^ARCHIVE_/, '')
+      // Remove timestamp suffix
+      .replace(/_\d\d\d\d_\d\d_\d\d_\d\d_\d\d_\d\d$/, '')
 
   const takeSnapshot = async (name: string) => {
     if (!name) return
@@ -175,7 +181,8 @@ const Snapshots: React.FC = () => {
     if (!event.target?.files) return
 
     const file = event.target.files[0]
-    const snapshotName = normaliseSnapshotName(file.name.replace('.zip', ''))
+
+    console.log('URL', getServerUrl('snapshot', { action: 'upload' }))
 
     setIsLoading(true)
     try {
@@ -184,7 +191,7 @@ const Snapshots: React.FC = () => {
 
       const resultJson = await postRequest({
         otherBody: data,
-        url: getServerUrl('snapshot', { action: 'upload', name: snapshotName }),
+        url: getServerUrl('snapshot', { action: 'upload' }),
       })
 
       if (resultJson.success) {
@@ -198,11 +205,14 @@ const Snapshots: React.FC = () => {
     }
   }
 
-  const downloadSnapshot = async (snapshotName: string, timestamp: string) => {
+  const formatTimestamp = (timestamp: string) =>
+    DateTime.fromISO(timestamp).toFormat('yyyy-LL-dd_HH-mm-ss')
+
+  const downloadSnapshot = async (name: string) => {
     const res = await fetch(
       getServerUrl('snapshot', {
         action: 'download',
-        name: snapshotName,
+        name,
         archive: displayType === 'archives',
       }),
       {
@@ -212,9 +222,7 @@ const Snapshots: React.FC = () => {
     const data = await res.blob()
     var a = document.createElement('a')
     a.href = window.URL.createObjectURL(data)
-    a.download = `${displayType === 'archives' ? 'ARCHIVE_' : ''}${snapshotName}_${DateTime.fromISO(
-      timestamp
-    ).toFormat('yyyy-LL-dd_HH-mm-ss')}.zip`
+    a.download = `${displayType === 'archives' ? 'ARCHIVE_' : ''}${name}.zip`
     a.click()
   }
 
@@ -222,7 +230,7 @@ const Snapshots: React.FC = () => {
     if (!data) return null
     return (
       <>
-        {data.snapshots.map(({ name, timestamp, archive, size }) => (
+        {data.snapshots.map(({ name, filename, timestamp, archive, size }) => (
           <Table.Row key={`app_menu_${name}`}>
             <Table.Cell colSpan={12} style={{ padding: 5 }}>
               <div className="flex-row-space-between" style={{ width: '100%', padding: 5 }}>
@@ -272,10 +280,10 @@ const Snapshots: React.FC = () => {
                     className="clickable blue"
                     onClick={async () => {
                       showToast({ title: 'Download started...', timeout: 2000 })
-                      await downloadSnapshot(name, timestamp)
+                      await downloadSnapshot(filename)
                       showToast({
                         title: 'Download complete',
-                        text: name,
+                        text: `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}`,
                         timeout: 30000,
                       })
                     }}
@@ -286,7 +294,7 @@ const Snapshots: React.FC = () => {
                     className="clickable"
                     name="trash alternate"
                     onClick={async () => {
-                      await deleteSnapshot(name)
+                      await deleteSnapshot(filename)
                       showToast({ title: 'Snapshot deleted', text: name })
                     }}
                   />

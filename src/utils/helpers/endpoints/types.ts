@@ -78,7 +78,8 @@ export type SnapshotEndpoint = [
   endpoint: 'snapshot',
   options:
     | { action: 'list'; archive?: boolean }
-    | { action: 'download' | 'upload' | 'delete'; name: string; archive?: boolean }
+    | { action: 'download' | 'delete'; name: string; archive?: boolean }
+    | { action: 'upload' }
     | { action: 'take' | 'use'; name: string; options?: string; archive?: boolean }
 ]
 

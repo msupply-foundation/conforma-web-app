@@ -120,13 +120,15 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       const name = 'name' in options ? options.name : null
       const optionsName = 'options' in options ? options.options : null
 
+      if (action === 'upload') return `${serverREST}${endpointPath}/upload`
+
       if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
       // "download" is direct download url
       if (action === 'download')
         return `${serverREST}${endpointPath}/files/${isArchive ? '_archives/' : ''}${name}.zip`
 
-      if (action === 'upload' || action === 'delete')
+      if (action === 'delete')
         return `${serverREST}${endpointPath}/${action}?name=${name}${
           isArchive ? '&archive=true' : ''
         }`
