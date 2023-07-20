@@ -84,57 +84,42 @@ const Snapshots: React.FC = () => {
   }
 
   const normaliseSnapshotName = (name: string) =>
-    name
-      // Not word, not digit
-      .replace(/[^\w\d]/g, '_')
-      // Remove "ARHIVE_" prefix
-      .replace(/^ARCHIVE_/, '')
-      // Remove timestamp suffix
-      .replace(/_\d\d\d\d_\d\d_\d\d_\d\d_\d\d_\d\d$/, '')
+    // Not word, not digit
+    name.replace(/[^\w\d-]/g, '_')
 
   const takeSnapshot = async (name: string) => {
     if (!name) return
 
-    const doOperation = async () => {
-      setIsLoading(true)
-      try {
-        const resultJson = await postRequest({
-          url: getServerUrl('snapshot', {
-            action: 'take',
-            name: normaliseSnapshotName(name),
-            archive: displayType === 'archives',
-          }),
-          jsonBody: {
-            archive:
-              typeof archive === 'string'
-                ? archive
-                : archive === undefined
-                ? 'full'
-                : { from: archive, to: archiveEnd },
-          },
-          headers: { 'Content-Type': 'application/json' },
-        })
-
-        if (resultJson.success) {
-          await getList(displayType)
-          setIsLoading(false)
-          if (displayType === 'snapshots') location.reload()
-          return
-        }
-
-        setSnapshotError(resultJson)
-      } catch (error) {
-        setSnapshotError({ message: 'Front end error while taking snapshot', error })
-      }
-    }
-
-    if (data?.snapshots.find((snapshot) => snapshot.name === normaliseSnapshotName(name))) {
-      showModal({
-        title: `A snapshot with this name already exists`,
-        message: `This will overwrite ${normaliseSnapshotName(name)}`,
-        onConfirm: doOperation,
+    setIsLoading(true)
+    try {
+      const resultJson = await postRequest({
+        url: getServerUrl('snapshot', {
+          action: 'take',
+          name: normaliseSnapshotName(name),
+          archive: displayType === 'archives',
+        }),
+        jsonBody: {
+          archive:
+            typeof archive === 'string'
+              ? archive
+              : archive === undefined
+              ? 'full'
+              : { from: archive, to: archiveEnd },
+        },
+        headers: { 'Content-Type': 'application/json' },
       })
-    } else doOperation()
+
+      if (resultJson.success) {
+        await getList(displayType)
+        setIsLoading(false)
+        if (displayType === 'snapshots') location.reload()
+        return
+      }
+
+      setSnapshotError(resultJson)
+    } catch (error) {
+      setSnapshotError({ message: 'Front end error while taking snapshot', error })
+    }
   }
 
   const useSnapshot = async (name: string) => {
