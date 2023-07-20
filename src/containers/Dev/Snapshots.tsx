@@ -234,9 +234,9 @@ const Snapshots: React.FC = () => {
                           showModal({
                             title: 'Are you sure?',
                             message: `This will overwrite ALL existing data on: ${window.location.host}`,
-                            onConfirm: () => useSnapshot(name),
+                            onConfirm: () => useSnapshot(filename),
                           })
-                        else useSnapshot(name)
+                        else useSnapshot(filename)
                       }}
                     />
                   )}
@@ -321,7 +321,7 @@ const Snapshots: React.FC = () => {
   }
 
   const renderLoadingAndError = () => (
-    <Modal open={isLoading} onClick={resetLoading} onClose={resetLoading}>
+    <Modal open={isLoading} onClose={resetLoading}>
       {snapshotError ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Label size="large" color="red">
