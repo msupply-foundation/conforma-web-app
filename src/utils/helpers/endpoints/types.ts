@@ -83,6 +83,8 @@ export type SnapshotEndpoint = [
     | { action: 'take' | 'use'; name: string; options?: string; archive?: boolean }
 ]
 
+export type ArchiveEndpoint = [endpoint: 'archiveFiles', options: { days: number }]
+
 export type LookupTableEndpoint = [
   endpoint: 'lookupTable',
   options:
@@ -117,5 +119,6 @@ export type ComplexEndpoint =
   | EnableLanguageEndpoint
   | RemoveLanguageEndpoint
   | SnapshotEndpoint
+  | ArchiveEndpoint
   | LookupTableEndpoint
   | GetApplicationDataEndpoint

@@ -12,6 +12,7 @@ import {
   RemoveLanguageEndpoint,
   GetApplicationDataEndpoint,
   SnapshotEndpoint,
+  ArchiveEndpoint,
 } from './types'
 
 const {
@@ -161,6 +162,10 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       return `${serverREST}${endpointPath}?applicationId=${applicationId}${
         reviewId ? `&reviewId=${reviewId}` : ''
       }`
+
+    case 'archiveFiles':
+      const { days } = options as ArchiveEndpoint[1]
+      return `${serverREST}${endpointPath}?days=${days}`
 
     default:
       // "never" type ensures we will get a *compile-time* error if we are

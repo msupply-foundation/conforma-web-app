@@ -10,6 +10,7 @@ import {
   Header,
   SemanticCOLORS,
   Dropdown,
+  Form,
 } from 'semantic-ui-react'
 import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
@@ -442,12 +443,55 @@ const Snapshots: React.FC = () => {
     )
   }
 
+  const renderArchiveFiles = () => {
+    const [days, setDays] = useState(7)
+    const [loading, setLoading] = useState(false)
+
+    const archiveFiles = async () => {
+      setLoading(true)
+      const result = await getRequest(getServerUrl('archiveFiles', { days }))
+      showToast({
+        title: result === null ? 'Nothing to archive' : 'Archive complete',
+        text: result === null ? undefined : `${result.numFiles} files archived`,
+        style: result ? 'success' : 'warning',
+      })
+      setLoading(false)
+    }
+
+    return (
+      <div
+        className="flex-row-space-between-center"
+        style={{
+          marginTop: 10,
+          marginBottom: 5,
+          display: displayType === 'snapshots' ? 'none' : 'flex',
+        }}
+      >
+        <div className="flex-row-start-center" style={{ gap: 5 }}>
+          Archive files older than
+          <Form.Input
+            size="mini"
+            type="number"
+            min={0}
+            value={days}
+            onChange={(e) => setDays(Number(e.target.value))}
+            style={{ maxWidth: 65 }}
+          />
+          days
+        </div>
+        <Button primary inverted loading={loading} onClick={archiveFiles}>
+          Archive <Icon name="archive" style={{ paddingLeft: 5, transform: 'translateY(0px)' }} />
+        </Button>
+      </div>
+    )
+  }
+
   const renderUploadSnapshot = () => {
     const fileInputRef = useRef<HTMLInputElement>(null)
     return (
       <div>
         <Button primary inverted onClick={() => fileInputRef?.current?.click()}>
-          Upload <Icon name="upload" />
+          Upload <Icon name="upload" style={{ paddingLeft: 5 }} />
         </Button>
         <input
           type="file"
@@ -482,6 +526,7 @@ const Snapshots: React.FC = () => {
         </div>
         {renderUploadSnapshot()}
       </div>
+      {renderArchiveFiles()}
 
       <Table stackable style={{ marginTop: 0 }}>
         <Table.Body>
