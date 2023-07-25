@@ -55,6 +55,7 @@ const Snapshots: React.FC = () => {
   )
   const [archive, setArchive] = useState<number | 'full' | 'none'>()
   const [archiveEnd, setArchiveEnd] = useState<number>()
+  const [refetchData, setRefetchData] = useState(false)
 
   const [data, setData] = useState<{
     snapshots: SnapshotData[]
@@ -72,7 +73,7 @@ const Snapshots: React.FC = () => {
     setData(null)
     setSnapshotError(null)
     getList(displayType)
-  }, [displayType])
+  }, [displayType, refetchData])
 
   const getList = async (displayType: SnapshotType) => {
     try {
@@ -221,7 +222,9 @@ const Snapshots: React.FC = () => {
               <div className="flex-row-space-between" style={{ width: '100%', padding: 5 }}>
                 <div className="flex-row" style={{ gap: 10 }}>
                   <strong>{name}</strong>
-                  <span className="smaller-text">{fileSizeWithUnits(size)}</span>
+                  <span className="smaller-text">
+                    {size ? fileSizeWithUnits(size) : 'Size unknown'}
+                  </span>
                 </div>
                 <div className="flex-row" style={{ gap: 5 }}>
                   {displayType === 'snapshots' && (
@@ -240,25 +243,6 @@ const Snapshots: React.FC = () => {
                       }}
                     />
                   )}
-
-                  {/* <Icon
-                    size="large"
-                    className="clickable"
-                    name="record"
-                    onClick={() => {
-                      if (isProductionBuild)
-                        showModal({
-                          title: 'Are you sure?',
-                          message: `This will overwrite saved snapshot: ${name} with the current system state`,
-                          onConfirm: async () => {
-                            await takeSnapshot(name)
-                            showToast({ title: 'Snapshot saved', text: name })
-                          },
-                        })
-                      else takeSnapshot(name)
-                    }}
-                  /> */}
-
                   <Icon
                     name="download"
                     size="large"
@@ -456,32 +440,44 @@ const Snapshots: React.FC = () => {
         style: result ? 'success' : 'warning',
       })
       setLoading(false)
+      setRefetchData(!refetchData)
     }
 
     return (
-      <div
-        className="flex-row-space-between-center"
-        style={{
-          marginTop: 10,
-          marginBottom: 5,
-          display: displayType === 'snapshots' ? 'none' : 'flex',
-        }}
-      >
-        <div className="flex-row-start-center" style={{ gap: 5 }}>
-          Archive files older than
-          <Form.Input
-            size="mini"
-            type="number"
-            min={0}
-            value={days}
-            onChange={(e) => setDays(Number(e.target.value))}
-            style={{ maxWidth: 65 }}
-          />
-          days
+      <div style={{ display: displayType === 'snapshots' ? 'none' : 'block' }}>
+        <Header as="h3">Create a new archive</Header>
+        <div className="flex-row-space-between-center" style={{ marginTop: 10 }}>
+          <div className="flex-row-start-center" style={{ gap: 5 }}>
+            Archive files older than
+            <Form.Input
+              size="mini"
+              type="number"
+              min={1}
+              value={days}
+              onChange={(e) => {
+                const num = Number(e.target.value)
+                if (num < 1) setDays(1)
+                else setDays(num)
+              }}
+              style={{ maxWidth: 65 }}
+            />
+            days
+          </div>
+          <Button
+            primary
+            inverted
+            loading={loading}
+            onClick={() =>
+              showModal({
+                title: 'Make a new archive?',
+                message: `This will archive system files older than ${days} days. Are you sure?`,
+                onConfirm: archiveFiles,
+              })
+            }
+          >
+            Archive <Icon name="archive" style={{ paddingLeft: 5, transform: 'translateY(0px)' }} />
+          </Button>
         </div>
-        <Button primary inverted loading={loading} onClick={archiveFiles}>
-          Archive <Icon name="archive" style={{ paddingLeft: 5, transform: 'translateY(0px)' }} />
-        </Button>
       </div>
     )
   }
@@ -512,7 +508,7 @@ const Snapshots: React.FC = () => {
       <Header>Snapshots</Header>
       <div className="flex-row-space-between">
         <div className="flex-row-start-center" style={{ gap: 10 }}>
-          Snapshot type:
+          Show:
           <Dropdown
             selection
             value={displayType}
@@ -526,8 +522,6 @@ const Snapshots: React.FC = () => {
         </div>
         {renderUploadSnapshot()}
       </div>
-      {renderArchiveFiles()}
-
       <Table stackable style={{ marginTop: 0 }}>
         <Table.Body>
           <Table.Row>{renderNewSnapshot()}</Table.Row>
@@ -535,6 +529,7 @@ const Snapshots: React.FC = () => {
         </Table.Body>
       </Table>
       {renderLoadingAndError()}
+      {renderArchiveFiles()}
     </div>
   )
 }
