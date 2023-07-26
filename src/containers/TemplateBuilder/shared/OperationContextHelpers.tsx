@@ -269,7 +269,7 @@ export const importTemplate: ImportTemplateHelper =
       data.append('file', file)
 
       const result = await safeFetch(
-        getServerUrl('snapshot', { action: 'upload', name: snapshotName }),
+        getServerUrl('snapshot', { action: 'upload' }),
         data,
         setErrorAndLoadingState
       )
