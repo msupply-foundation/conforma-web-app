@@ -4241,6 +4241,8 @@ export type FileFilter = {
   submitted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `archivePath` field. */
+  archivePath?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -6375,6 +6377,8 @@ export type DataTableProvisionalProductFilter = {
   gmpCertificate?: Maybe<JsonFilter>;
   /** Filter by the object’s `prodRegCertificate` field. */
   prodRegCertificate?: Maybe<JsonFilter>;
+  /** Filter by the object’s `prequalified` field. */
+  prequalified?: Maybe<BooleanFilter>;
   /** Filter by the object’s `dataTableProvisionalProductApplicationJoins` relation. */
   dataTableProvisionalProductApplicationJoins?: Maybe<DataTableProvisionalProductToManyDataTableProvisionalProductApplicationJoinFilter>;
   /** Some related `dataTableProvisionalProductApplicationJoins` exist. */
@@ -8512,6 +8516,8 @@ export enum FilesOrderBy {
   SubmittedDesc = 'SUBMITTED_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
+  ArchivePathAsc = 'ARCHIVE_PATH_ASC',
+  ArchivePathDesc = 'ARCHIVE_PATH_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -8554,6 +8560,8 @@ export type FileCondition = {
   submitted?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `archivePath` field. */
+  archivePath?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `File` values. */
@@ -8591,6 +8599,7 @@ export type File = Node & {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp: Scalars['Datetime'];
+  archivePath?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Template` that is related to this `File`. */
@@ -10612,6 +10621,7 @@ export type DataTableProvisionalProduct = Node & {
   pharmacopeia?: Maybe<Scalars['String']>;
   gmpCertificate?: Maybe<Scalars['JSON']>;
   prodRegCertificate?: Maybe<Scalars['JSON']>;
+  prequalified?: Maybe<Scalars['Boolean']>;
   /** Reads and enables pagination through a set of `DataTableProvisionalProductApplicationJoin`. */
   dataTableProvisionalProductApplicationJoins: DataTableProvisionalProductApplicationJoinsConnection;
 };
@@ -13660,6 +13670,8 @@ export enum DataTableProvisionalProductsOrderBy {
   GmpCertificateDesc = 'GMP_CERTIFICATE_DESC',
   ProdRegCertificateAsc = 'PROD_REG_CERTIFICATE_ASC',
   ProdRegCertificateDesc = 'PROD_REG_CERTIFICATE_DESC',
+  PrequalifiedAsc = 'PREQUALIFIED_ASC',
+  PrequalifiedDesc = 'PREQUALIFIED_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -13724,6 +13736,8 @@ export type DataTableProvisionalProductCondition = {
   gmpCertificate?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `prodRegCertificate` field. */
   prodRegCertificate?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `prequalified` field. */
+  prequalified?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `DataTableProvisionalProduct` values. */
@@ -22419,6 +22433,7 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -23166,6 +23181,7 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -25047,6 +25063,7 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -27889,6 +27906,7 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -29382,6 +29400,7 @@ export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -29424,6 +29443,7 @@ export type FilePatch = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -29450,6 +29470,7 @@ export type FileApplicationNoteIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -29527,6 +29548,7 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -30290,6 +30312,7 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -30436,6 +30459,7 @@ export type UpdateDataTableProvisionalProductOnDataTableProvisionalProductApplic
   pharmacopeia?: Maybe<Scalars['String']>;
   gmpCertificate?: Maybe<Scalars['JSON']>;
   prodRegCertificate?: Maybe<Scalars['JSON']>;
+  prequalified?: Maybe<Scalars['Boolean']>;
   dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProducDataTableProvisionalProduFkeyInverseInput>;
 };
 
@@ -30538,6 +30562,7 @@ export type DataTableProvisionalProductPatch = {
   pharmacopeia?: Maybe<Scalars['String']>;
   gmpCertificate?: Maybe<Scalars['JSON']>;
   prodRegCertificate?: Maybe<Scalars['JSON']>;
+  prequalified?: Maybe<Scalars['Boolean']>;
   dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProducDataTableProvisionalProduFkeyInverseInput>;
 };
 
@@ -30572,6 +30597,7 @@ export type DataTableProvisionalProducDataTableProvisionalProduFkeyDataTableProv
   pharmacopeia?: Maybe<Scalars['String']>;
   gmpCertificate?: Maybe<Scalars['JSON']>;
   prodRegCertificate?: Maybe<Scalars['JSON']>;
+  prequalified?: Maybe<Scalars['Boolean']>;
   dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProducDataTableProvisionalProduFkeyInverseInput>;
 };
 
@@ -32447,6 +32473,7 @@ export type FileUserIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -33109,6 +33136,7 @@ export type FileTemplateIdFkeyFileCreateInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -36340,6 +36368,7 @@ export type DataTableProvisionalProductInput = {
   pharmacopeia?: Maybe<Scalars['String']>;
   gmpCertificate?: Maybe<Scalars['JSON']>;
   prodRegCertificate?: Maybe<Scalars['JSON']>;
+  prequalified?: Maybe<Scalars['Boolean']>;
   dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProducDataTableProvisionalProduFkeyInverseInput>;
 };
 
@@ -36668,6 +36697,7 @@ export type FileInput = {
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  archivePath?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
@@ -44418,7 +44448,7 @@ export type StageFragment = (
 
 export type TemplateFragmentFragment = (
   { __typename?: 'Template' }
-  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'canApplicantMakeChanges' | 'startMessage' | 'submissionMessage' | 'versionId' | 'serialPattern' | 'icon'>
+  & Pick<Template, 'code' | 'id' | 'name' | 'status' | 'namePlural' | 'isLinear' | 'canApplicantMakeChanges' | 'startMessage' | 'submissionMessage' | 'versionId' | 'serialPattern' | 'icon' | 'dashboardRestrictions'>
   & { templateCategory?: Maybe<(
     { __typename?: 'TemplateCategory' }
     & Pick<TemplateCategory, 'id' | 'code' | 'title' | 'icon' | 'uiLocation' | 'isSubmenu'>
@@ -45995,6 +46025,7 @@ export const TemplateFragmentFragmentDoc = gql`
   versionId
   serialPattern
   icon
+  dashboardRestrictions
   templateCategory {
     id
     code

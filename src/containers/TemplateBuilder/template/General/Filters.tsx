@@ -119,7 +119,7 @@ const Filters: React.FC = () => {
   const addDashboardRestriction = async () => {
     const currentRestrictions = template.dashboardRestrictions ?? []
     if (selectedRestriction)
-      updateTemplate(template.id, {
+      updateTemplate(template, {
         dashboardRestrictions: [...currentRestrictions, selectedRestriction?.code],
       })
     setSelectedRestriction(undefined)
@@ -132,7 +132,7 @@ const Filters: React.FC = () => {
     )
     setSelectedRestrictFilter(undefined)
     setSelectedRestriction(undefined)
-    updateTemplate(template.id, {
+    updateTemplate(template, {
       dashboardRestrictions: newRestrictions.length > 0 ? newRestrictions : null,
     })
   }
