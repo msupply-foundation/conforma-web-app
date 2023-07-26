@@ -366,6 +366,8 @@ const Snapshots: React.FC = () => {
         ? archiveOptions.filter(({ value }) => typeof value === 'number' && value > archive)
         : []
 
+    const hasArchives = data && data.currentArchives?.length > 0
+
     return (
       <Table.Cell className="flex-row-start-center" style={{ gap: 10, padding: 15 }}>
         <div className="flex-column" style={{ gap: 10, width: '100%' }}>
@@ -375,7 +377,7 @@ const Snapshots: React.FC = () => {
             placeholder="Enter snapshot name"
             style={{ width: 200 }}
           />
-          {data && data.currentArchives?.length > 0 && (
+          {hasArchives && (
             <div className="flex-row-start-center" style={{ gap: 10 }}>
               {typeof archive === 'number' && <span>From: </span>}
               <Dropdown
@@ -391,6 +393,7 @@ const Snapshots: React.FC = () => {
                 style={{ maxWidth: 350 }}
               />
               {typeof archive === 'number' &&
+                data &&
                 data?.currentArchives.filter(({ timestamp }) => timestamp > archive).length > 0 && (
                   <>
                     <span>to: </span>
@@ -416,7 +419,9 @@ const Snapshots: React.FC = () => {
           </Header>
           <Button
             primary
-            disabled={!name || (displayType === 'archives' && !archive)}
+            disabled={
+              !name || (hasArchives && !archive) || (displayType === 'archives' && !archive)
+            }
             onClick={() => {
               takeSnapshot(name)
             }}
