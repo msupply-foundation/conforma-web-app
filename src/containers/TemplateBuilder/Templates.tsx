@@ -14,7 +14,7 @@ import {
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { TemplateOptions, useOperationState } from './shared/OperationContext'
 import TextIO from './shared/TextIO'
-import useGetTemplates, { Template, Templates, VersionObject } from './useGetTemplates'
+import useGetTemplates, { Template, Templates } from './useGetTemplates'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import config from '../../config'
