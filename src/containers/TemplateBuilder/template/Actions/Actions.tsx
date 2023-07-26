@@ -69,7 +69,7 @@ const Actions: React.FC = () => {
   const [usedTriggers, setUsedTrigger] = useState<Trigger[]>([])
   const {
     actions,
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const Actions: React.FC = () => {
           title=""
           isPropUpdated={true}
           value={String(selectedTrigger)}
-          disabled={!isDraft}
+          disabled={!canEdit}
           placeholder={availableTriggers.length === 0 ? 'All triggers are in use' : 'Select To Add'}
           disabledMessage={disabledMessage}
           minLabelWidth={0}
@@ -114,7 +114,7 @@ const Actions: React.FC = () => {
           <IconButton
             name="add square"
             onClick={addTrigger}
-            disabled={!isDraft}
+            disabled={!canEdit}
             size="large"
             disabledMessage={disabledMessage}
           />

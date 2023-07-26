@@ -35,7 +35,7 @@ const calculatePageBreaksToTrim = (sections: TemplateSection[]) => {
     currentSectionId = section?.id || 0
     const elements = section?.templateElementsBySectionId?.nodes || []
 
-    let consequitivePageBreaks: number[] = []
+    let consecutivePageBreaks: number[] = []
 
     elements.forEach((element, index) => {
       const isPageBreak = element?.elementTypePluginCode === pageBreakCode
@@ -44,15 +44,15 @@ const calculatePageBreaksToTrim = (sections: TemplateSection[]) => {
       if (isPageBreak) {
         if (isStartOfSection || isEndOfSection)
           addToPageBreaksToTrim(currentSectionId, [element?.id || 0])
-        consequitivePageBreaks.push(element?.id || 0)
+        consecutivePageBreaks.push(element?.id || 0)
       } else {
-        if (consequitivePageBreaks.length > 1)
-          addToPageBreaksToTrim(currentSectionId, consequitivePageBreaks)
-        consequitivePageBreaks = []
+        if (consecutivePageBreaks.length > 1)
+          addToPageBreaksToTrim(currentSectionId, consecutivePageBreaks)
+        consecutivePageBreaks = []
       }
     })
-    if (consequitivePageBreaks.length > 1)
-      addToPageBreaksToTrim(currentSectionId, consequitivePageBreaks)
+    if (consecutivePageBreaks.length > 1)
+      addToPageBreaksToTrim(currentSectionId, consecutivePageBreaks)
   })
 
   return pageBreaksToTrim

@@ -26,10 +26,8 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
   levelNumber,
 }) => {
   const { updateTemplate } = useOperationState()
-  const {
-    template: { id: templateId, isDraft },
-    sections,
-  } = useTemplateState()
+  const { template, sections } = useTemplateState()
+  const { isDraft } = template
 
   const sectionCodes = sections.map((section) => section?.code || '')
   const selfAssignDisabled = levelNumber > 1
@@ -42,7 +40,7 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
   )
 
   const setMakeDecision: SetMakeDecision = (canMakeDecision) => {
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templatePermissionsUsingId: {
         updateById: [
           {
@@ -59,7 +57,7 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
   }
 
   const setSelfAssign: SetSelfAssign = (canSelfAssign) => {
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templatePermissionsUsingId: {
         updateById: [
           { id: templatePermission?.id || 0, patch: { canSelfAssign, allowedSections: null } },
@@ -108,7 +106,7 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
     }
 
     const newAllowedSections = sortSections(getNewSections())
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templatePermissionsUsingId: {
         updateById: [
           {
