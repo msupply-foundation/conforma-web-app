@@ -71,7 +71,7 @@ const TemplateContainer: React.FC = () => {
     location,
   } = useRouter()
   const { template } = useTemplateState()
-  const { name, code, status, applicationCount, id, canEdit } = template
+  const { name, code, status, applicationCount, id, versionId, canEdit } = template
   const prevQuery = useRef(location?.state?.queryString ?? '')
 
   const selected = tabs.find(({ route }) =>
@@ -112,7 +112,7 @@ const TemplateContainer: React.FC = () => {
           </div>
         ))}
       </div>
-      {!canEdit && (
+      {!canEdit && versionId !== '*' && (
         <Message warning size="tiny">
           This template version has previously been exported or committed, so can no longer be
           edited. Create a new version by clicking the "Duplicate" icon in the Templates list.

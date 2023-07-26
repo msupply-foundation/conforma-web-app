@@ -114,6 +114,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'snapshot':
       const { action } = options as SnapshotEndpoint[1]
       const isArchive = 'archive' in options && options.archive
+      const isTemplate = 'template' in options && options.template
 
       if (action === 'list')
         return `${serverREST}${endpointPath}/list${isArchive ? '?archive=true' : ''}`
@@ -121,7 +122,8 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       const name = 'name' in options ? options.name : null
       const optionsName = 'options' in options ? options.options : null
 
-      if (action === 'upload') return `${serverREST}${endpointPath}/upload`
+      if (action === 'upload')
+        return `${serverREST}${endpointPath}/upload${isTemplate ? '?template=true' : ''}`
 
       if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
