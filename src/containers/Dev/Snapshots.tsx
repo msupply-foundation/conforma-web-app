@@ -22,8 +22,6 @@ import TextIO from '../TemplateBuilder/shared/TextIO'
 import { fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
 import { useRouter } from '../../utils/hooks/useRouter'
 
-// const diffSnapshotUrl = `${snapshotsBaseUrl}/diff`
-
 type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
 interface SnapshotData {
   name: string
@@ -170,8 +168,6 @@ const Snapshots: React.FC = () => {
     if (!event.target?.files) return
 
     const file = event.target.files[0]
-
-    console.log('URL', getServerUrl('snapshot', { action: 'upload' }))
 
     setIsLoading(true)
     try {
