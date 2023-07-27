@@ -400,7 +400,7 @@ const Snapshots: React.FC = () => {
                       value={archiveEnd}
                       options={archiveEndOptions}
                       onChange={(_, { value }) => {
-                        setArchiveEnd(value as number)
+                        setArchiveEnd(value === '' ? undefined : (value as number))
                       }}
                       style={{ maxWidth: 350 }}
                     />
