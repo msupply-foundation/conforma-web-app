@@ -359,7 +359,7 @@ const Snapshots: React.FC = () => {
 
     const archiveEndOptions =
       typeof archive === 'number'
-        ? archiveOptions.filter(({ value }) => typeof value === 'number' && value > archive)
+        ? archiveOptions.filter(({ value }) => typeof value === 'number' && value >= archive)
         : []
 
     const hasArchives = data && data.currentArchives?.length > 0
