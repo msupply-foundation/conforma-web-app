@@ -21,6 +21,7 @@ import { DateTime } from 'luxon'
 import TextIO from '../TemplateBuilder/shared/TextIO'
 import { fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
 import { useRouter } from '../../utils/hooks/useRouter'
+import Tooltip from '../../components/Tooltip'
 
 type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
 interface SnapshotData {
@@ -279,15 +280,25 @@ const Snapshots: React.FC = () => {
                 {archive && (
                   <div className="flex-row-start-center" style={{ gap: 5 }}>
                     {archive.type !== 'none' && (
-                      <TextIO
-                        title={`Archive`}
-                        text={`${DateTime.fromISO(
-                          archive.from ?? ''
-                        ).toLocaleString()} – ${DateTime.fromISO(
-                          archive.to ?? ''
-                        ).toLocaleString()}`}
-                        additionalStyles={{ margin: 0 }}
-                      />
+                      <>
+                        <TextIO
+                          title={`Archive`}
+                          text={`${DateTime.fromISO(
+                            archive.from ?? ''
+                          ).toLocaleString()} – ${DateTime.fromISO(
+                            archive.to ?? ''
+                          ).toLocaleString()}`}
+                          additionalStyles={{ margin: 0 }}
+                        />
+                        <Tooltip
+                          message={`### Archives\n\nFrom: **${DateTime.fromISO(
+                            archive.from ?? ''
+                          ).toLocaleString(DateTime.DATETIME_MED)}**  \nTo: **${DateTime.fromISO(
+                            archive.to ?? ''
+                          ).toLocaleString(DateTime.DATETIME_MED)}**`}
+                          iconStyle={{ marginLeft: 0, height: 'auto' }}
+                        />
+                      </>
                     )}
                     {renderArchiveLabel(archive)}
                   </div>
