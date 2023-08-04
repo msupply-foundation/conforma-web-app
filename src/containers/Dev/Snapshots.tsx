@@ -40,6 +40,7 @@ interface ArchiveInfo {
   archiveFolder: string
   prevArchiveFolder: string | null
   prevUid: string | null
+  totalFileSize?: number
 }
 
 interface ListData {
@@ -327,7 +328,14 @@ const Snapshots: React.FC = () => {
             {snapshotError.message}
             <Icon name="close" onClick={resetLoading} />
           </Label>
-          <div style={{ margin: 20 }}>{snapshotError.error}</div>
+          <div style={{ margin: 20 }}>
+            {snapshotError.error.split('\n').map((line) => (
+              <>
+                <span>{line}</span>
+                <br />
+              </>
+            ))}
+          </div>
         </div>
       ) : (
         <Loader active>Loading</Loader>
@@ -361,8 +369,10 @@ const Snapshots: React.FC = () => {
       data && data.currentArchives?.length > 0
         ? [
             { key: 'full', value: 'full', text: 'Include full archive' },
-            ...data?.currentArchives.map(({ timestamp, uid }) => ({
-              text: DateTime.fromMillis(timestamp).toLocaleString(DateTime.DATETIME_SHORT),
+            ...data?.currentArchives.map(({ timestamp, uid, totalFileSize }) => ({
+              text: `${DateTime.fromMillis(timestamp).toLocaleString(DateTime.DATETIME_SHORT)}${
+                totalFileSize ? ` (${fileSizeWithUnits(totalFileSize)})` : ''
+              }`,
               value: timestamp,
               key: uid,
             })),
@@ -378,6 +388,8 @@ const Snapshots: React.FC = () => {
 
     const hasArchives = data && data.currentArchives?.length > 0
 
+    const totalSelectionSize = getTotalSize(archive, archiveEnd, data?.currentArchives)
+
     return (
       <Table.Row>
         <Table.Cell className="flex-row-start-center" style={{ gap: 10, padding: 15 }}>
@@ -386,43 +398,63 @@ const Snapshots: React.FC = () => {
               onChange={(_, { value }) => setName(value)}
               value={name}
               placeholder="Enter snapshot name"
-              style={{ width: 200 }}
+              style={{ width: 250 }}
             />
             {hasArchives && (
-              <div className="flex-row-start-center" style={{ gap: 10 }}>
-                {typeof archive === 'number' && <span>From: </span>}
-                <Dropdown
-                  placeholder="Select earliest archive"
-                  selection
-                  clearable
-                  value={archive}
-                  options={archiveOptions}
-                  onChange={(_, { value }) => {
-                    setArchive(value as number | 'none' | 'full')
-                    if (value === 'none' || value === 'full') setArchiveEnd(undefined)
-                  }}
-                  style={{ maxWidth: 350 }}
-                />
-                {typeof archive === 'number' &&
-                  data &&
-                  data?.currentArchives.filter(({ timestamp }) => timestamp > archive).length >
-                    0 && (
-                    <>
-                      <span>to: </span>
-                      <Dropdown
-                        placeholder="Select latest archive"
-                        selection
-                        clearable
-                        value={archiveEnd}
-                        options={archiveEndOptions}
-                        onChange={(_, { value }) => {
-                          setArchiveEnd(value === '' ? undefined : (value as number))
-                        }}
-                        style={{ maxWidth: 350 }}
-                      />
-                    </>
-                  )}
-              </div>
+              <>
+                <div className="flex-row-start-center" style={{ gap: 10 }}>
+                  {typeof archive === 'number' && <span>From: </span>}
+                  <Dropdown
+                    placeholder="Select earliest archive"
+                    selection
+                    clearable
+                    value={archive}
+                    options={archiveOptions}
+                    onChange={(_, { value }) => {
+                      setArchive(value as number | 'none' | 'full')
+                      if (
+                        value === 'none' ||
+                        value === 'full' ||
+                        (value as number) > (archiveEnd ?? 0)
+                      )
+                        setArchiveEnd(undefined)
+                    }}
+                    style={{ maxWidth: 400, fontSize: '90%' }}
+                  />
+                  {typeof archive === 'number' &&
+                    data &&
+                    data?.currentArchives.filter(({ timestamp }) => timestamp > archive).length >
+                      0 && (
+                      <>
+                        <span>to: </span>
+                        <Dropdown
+                          placeholder="Select latest archive"
+                          selection
+                          clearable
+                          value={archiveEnd}
+                          options={archiveEndOptions}
+                          onChange={(_, { value }) => {
+                            setArchiveEnd(value === '' ? undefined : (value as number))
+                          }}
+                          style={{ maxWidth: 400, fontSize: '90%' }}
+                        />
+                      </>
+                    )}
+                </div>
+                {totalSelectionSize && (
+                  <div className="flex-row-start-center" style={{ gap: 6 }}>
+                    Total selected size:
+                    {typeof totalSelectionSize === 'number' ? (
+                      <span>
+                        {fileSizeWithUnits(totalSelectionSize)}{' '}
+                        <span className="smaller-text">(before zip compression)</span>
+                      </span>
+                    ) : (
+                      <em>{totalSelectionSize}</em>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
           <div className="flex-column" style={{ gap: 10 }}>
@@ -455,7 +487,7 @@ const Snapshots: React.FC = () => {
             </p>
             <List bulleted style={{ textAlign: 'left' }}>
               {missingArchives.map((archive) => (
-                <List.Item className="slightly-smaller-text">
+                <List.Item key={archive.uid} className="slightly-smaller-text">
                   {DateTime.fromMillis(archive.timestamp).toLocaleString(DateTime.DATETIME_MED)} |{' '}
                   {archive.uid}
                 </List.Item>
@@ -545,7 +577,7 @@ const Snapshots: React.FC = () => {
   const missingArchives = data ? getMissingArchives(data) : []
 
   return (
-    <div id="list-container" style={{ minWidth: 500, maxWidth: 700 }}>
+    <div id="list-container" style={{ minWidth: 500, maxWidth: 750 }}>
       <ConfirmModal />
       <Header>Snapshots</Header>
       <div className="flex-row-space-between">
@@ -588,6 +620,25 @@ const getMissingArchives = ({ currentArchives, snapshots }: ListData) => {
     })
   })
   return currentArchives.filter(({ uid }) => !availableArchives.has(uid))
+}
+
+const getTotalSize = (
+  archiveStart: number | 'full' | 'none' | undefined,
+  archiveEnd: number | undefined,
+  currentArchives: ArchiveInfo[] | undefined
+) => {
+  if (!currentArchives) return null
+  if (!archiveStart || archiveStart === 'none') return null
+  if (archiveStart === 'full')
+    return currentArchives.reduce((sum, archive) => sum + (archive?.totalFileSize ?? 0), 0)
+  const end = archiveEnd ?? Infinity
+
+  const includedArchives = currentArchives.filter(
+    (archive) => archive.timestamp >= archiveStart && archive.timestamp <= end
+  )
+  if (includedArchives.some((archive) => !archive.totalFileSize)) return 'Unknown'
+
+  return includedArchives.reduce((sum, archive) => sum + (archive.totalFileSize ?? 0), 0)
 }
 
 export default Snapshots
