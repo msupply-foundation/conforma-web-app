@@ -11,6 +11,7 @@ import {
   SemanticCOLORS,
   Dropdown,
   Form,
+  List,
 } from 'semantic-ui-react'
 import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
@@ -41,6 +42,11 @@ interface ArchiveInfo {
   prevUid: string | null
 }
 
+interface ListData {
+  snapshots: SnapshotData[]
+  currentArchives: ArchiveInfo[]
+}
+
 type SnapshotType = 'snapshots' | 'archives'
 
 const Snapshots: React.FC = () => {
@@ -56,10 +62,7 @@ const Snapshots: React.FC = () => {
   const [archiveEnd, setArchiveEnd] = useState<number>()
   const [refetchData, setRefetchData] = useState(false)
 
-  const [data, setData] = useState<{
-    snapshots: SnapshotData[]
-    currentArchives: ArchiveInfo[]
-  } | null>(null)
+  const [data, setData] = useState<ListData | null>(null)
 
   const { ConfirmModal, showModal } = useConfirmationModal({ type: 'warning', awaitAction: false })
   const showToast = useToast({ style: 'success' })
@@ -376,66 +379,91 @@ const Snapshots: React.FC = () => {
     const hasArchives = data && data.currentArchives?.length > 0
 
     return (
-      <Table.Cell className="flex-row-start-center" style={{ gap: 10, padding: 15 }}>
-        <div className="flex-column" style={{ gap: 10, width: '100%' }}>
-          <Input
-            onChange={(_, { value }) => setName(value)}
-            value={name}
-            placeholder="Enter snapshot name"
-            style={{ width: 200 }}
-          />
-          {hasArchives && (
-            <div className="flex-row-start-center" style={{ gap: 10 }}>
-              {typeof archive === 'number' && <span>From: </span>}
-              <Dropdown
-                placeholder="Select earliest archive"
-                selection
-                clearable
-                value={archive}
-                options={archiveOptions}
-                onChange={(_, { value }) => {
-                  setArchive(value as number | 'none' | 'full')
-                  if (value === 'none' || value === 'full') setArchiveEnd(undefined)
-                }}
-                style={{ maxWidth: 350 }}
-              />
-              {typeof archive === 'number' &&
-                data &&
-                data?.currentArchives.filter(({ timestamp }) => timestamp > archive).length > 0 && (
-                  <>
-                    <span>to: </span>
-                    <Dropdown
-                      placeholder="Select latest archive"
-                      selection
-                      clearable
-                      value={archiveEnd}
-                      options={archiveEndOptions}
-                      onChange={(_, { value }) => {
-                        setArchiveEnd(value === '' ? undefined : (value as number))
-                      }}
-                      style={{ maxWidth: 350 }}
-                    />
-                  </>
-                )}
-            </div>
-          )}
-        </div>
-        <div className="flex-column" style={{ gap: 10 }}>
-          <Header as="h4" style={{ marginBottom: 0, textAlign: 'center', maxWidth: 250 }}>
-            {`Create new ${displayType === 'archives' ? 'Archive ' : ''}snapshot`}
-          </Header>
-          <Button
-            primary
-            disabled={
-              !name || (hasArchives && !archive) || (displayType === 'archives' && !archive)
-            }
-            onClick={() => {
-              takeSnapshot(name)
-            }}
-            content="Save"
-          />
-        </div>
-      </Table.Cell>
+      <Table.Row>
+        <Table.Cell className="flex-row-start-center" style={{ gap: 10, padding: 15 }}>
+          <div className="flex-column" style={{ gap: 10, width: '100%' }}>
+            <Input
+              onChange={(_, { value }) => setName(value)}
+              value={name}
+              placeholder="Enter snapshot name"
+              style={{ width: 200 }}
+            />
+            {hasArchives && (
+              <div className="flex-row-start-center" style={{ gap: 10 }}>
+                {typeof archive === 'number' && <span>From: </span>}
+                <Dropdown
+                  placeholder="Select earliest archive"
+                  selection
+                  clearable
+                  value={archive}
+                  options={archiveOptions}
+                  onChange={(_, { value }) => {
+                    setArchive(value as number | 'none' | 'full')
+                    if (value === 'none' || value === 'full') setArchiveEnd(undefined)
+                  }}
+                  style={{ maxWidth: 350 }}
+                />
+                {typeof archive === 'number' &&
+                  data &&
+                  data?.currentArchives.filter(({ timestamp }) => timestamp > archive).length >
+                    0 && (
+                    <>
+                      <span>to: </span>
+                      <Dropdown
+                        placeholder="Select latest archive"
+                        selection
+                        clearable
+                        value={archiveEnd}
+                        options={archiveEndOptions}
+                        onChange={(_, { value }) => {
+                          setArchiveEnd(value === '' ? undefined : (value as number))
+                        }}
+                        style={{ maxWidth: 350 }}
+                      />
+                    </>
+                  )}
+              </div>
+            )}
+          </div>
+          <div className="flex-column" style={{ gap: 10 }}>
+            <Header as="h4" style={{ marginBottom: 0, textAlign: 'center', maxWidth: 250 }}>
+              {`Create new ${displayType === 'archives' ? 'Archive ' : ''}snapshot`}
+            </Header>
+            <Button
+              primary
+              disabled={
+                !name || (hasArchives && !archive) || (displayType === 'archives' && !archive)
+              }
+              onClick={() => {
+                takeSnapshot(name)
+              }}
+              content="Save"
+            />
+          </div>
+        </Table.Cell>
+      </Table.Row>
+    )
+  }
+
+  const renderMissingArchives = (missingArchives: ArchiveInfo[]) => {
+    return (
+      <Table.Row>
+        <Table.Cell className="flex-row-start-center">
+          <div className="flex-column-start-start" style={{ margin: 8 }}>
+            <p style={{ marginBottom: 6, marginTop: 0 }}>
+              The following archives are not present in any archive snapshot:
+            </p>
+            <List bulleted style={{ textAlign: 'left' }}>
+              {missingArchives.map((archive) => (
+                <List.Item className="slightly-smaller-text">
+                  {DateTime.fromMillis(archive.timestamp).toLocaleString(DateTime.DATETIME_MED)} |{' '}
+                  {archive.uid}
+                </List.Item>
+              ))}
+            </List>
+          </div>
+        </Table.Cell>
+      </Table.Row>
     )
   }
 
@@ -514,6 +542,8 @@ const Snapshots: React.FC = () => {
     )
   }
 
+  const missingArchives = data ? getMissingArchives(data) : []
+
   return (
     <div id="list-container" style={{ minWidth: 500, maxWidth: 700 }}>
       <ConfirmModal />
@@ -536,7 +566,8 @@ const Snapshots: React.FC = () => {
       </div>
       <Table stackable style={{ marginTop: 0 }}>
         <Table.Body>
-          <Table.Row>{renderNewSnapshot()}</Table.Row>
+          {renderNewSnapshot()}
+          {missingArchives.length > 0 && renderMissingArchives(missingArchives)}
           {renderSnapshotList()}
         </Table.Body>
       </Table>
@@ -544,6 +575,19 @@ const Snapshots: React.FC = () => {
       {renderArchiveFiles()}
     </div>
   )
+}
+
+const getMissingArchives = ({ currentArchives, snapshots }: ListData) => {
+  const availableArchives = new Set<string>()
+  snapshots.forEach(({ archive }) => {
+    if (!archive) return
+    const from = archive.from ? DateTime.fromISO(archive.from).toMillis() : 0
+    const to = archive.to ? DateTime.fromISO(archive.to).toMillis() : Infinity
+    currentArchives.forEach((archive) => {
+      if (archive.timestamp >= from && archive.timestamp <= to) availableArchives.add(archive.uid)
+    })
+  })
+  return currentArchives.filter(({ uid }) => !availableArchives.has(uid))
 }
 
 export default Snapshots

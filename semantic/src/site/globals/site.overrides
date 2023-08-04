@@ -162,9 +162,9 @@ a:hover {
   justify-content: flex-start;
 }
 
-.flex-column-start-stretch {
+.flex-column-start-start {
   .flex-column-start();
-  align-items: stretch;
+  align-items: start;
 }
 
 .flex-column-center-start {
