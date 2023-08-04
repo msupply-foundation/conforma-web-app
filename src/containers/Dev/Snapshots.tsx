@@ -328,7 +328,14 @@ const Snapshots: React.FC = () => {
             {snapshotError.message}
             <Icon name="close" onClick={resetLoading} />
           </Label>
-          <div style={{ margin: 20 }}>{snapshotError.error}</div>
+          <div style={{ margin: 20 }}>
+            {snapshotError.error.split('\n').map((line) => (
+              <>
+                <span>{line}</span>
+                <br />
+              </>
+            ))}
+          </div>
         </div>
       ) : (
         <Loader active>Loading</Loader>
