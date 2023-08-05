@@ -25,9 +25,9 @@ export type Template = {
 }
 export type Templates = {
   main: Template
-  applicationCount: number
-  numberOfTemplates: number
-  all: Template[]
+  totalApplicationCount: number
+  numberOfVersions: number
+  others: Template[]
 }[]
 
 const useGetTemplates = () => {
@@ -84,22 +84,28 @@ const useGetTemplates = () => {
         if (!holder)
           return templates.push({
             main: current,
-            applicationCount: current.applicationCount,
-            numberOfTemplates: 1,
-            all: [current],
+            totalApplicationCount: current.applicationCount,
+            numberOfVersions: 1,
+            others: [current],
           })
-        const { main, all } = holder
+        const { main, others } = holder
 
-        all.push(current)
         if (
           status === TemplateStatus.Available ||
           (main.status !== TemplateStatus.Available &&
             main.versionTimestamp < current.versionTimestamp)
         )
           holder.main = current
+        others.push(current)
 
-        holder.applicationCount += current.applicationCount
-        holder.numberOfTemplates = all.length
+        holder.totalApplicationCount += current.applicationCount
+        holder.numberOfVersions = others.length
+      })
+
+      // Don't include the "main" version in the "others", and order by most
+      // recent
+      templates.forEach((template) => {
+        template.others = template.others.filter(({ id }) => id !== template.main.id).reverse()
       })
 
       setTemplates(templates)

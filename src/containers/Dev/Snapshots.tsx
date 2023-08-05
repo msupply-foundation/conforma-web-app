@@ -305,7 +305,11 @@ const Snapshots: React.FC = () => {
         {hasChildren && (
           <div
             className="flex-row-start-center clickable"
-            onClick={() => {
+            onClick={(e: React.MouseEvent<HTMLElement>) => {
+              if (e.getModifierState('Meta') || e.getModifierState('Control')) {
+                setExpandedSnapshots([])
+                return
+              }
               if (expandedSnapshots.includes(name))
                 setExpandedSnapshots(expandedSnapshots.filter((el) => el !== name))
               else setExpandedSnapshots([...expandedSnapshots, name])
