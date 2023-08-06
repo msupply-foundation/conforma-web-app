@@ -24,7 +24,6 @@ import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
 import { getVersionString, getTemplateVersionId, isTemplateUnlocked } from '../helpers'
-import te from 'date-fns/esm/locale/te/index.js'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
