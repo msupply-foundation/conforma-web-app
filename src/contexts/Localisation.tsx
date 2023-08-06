@@ -7,8 +7,6 @@ import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 import { mapValues, mapKeys } from 'lodash'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 
-const { pluginsFolder } = config
-
 const savedLanguageCode = localStorage.getItem('language')
 
 // For matching {{replacementKey}} in localised strings
