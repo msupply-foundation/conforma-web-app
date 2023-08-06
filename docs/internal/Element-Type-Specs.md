@@ -265,6 +265,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 - **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **search**: `boolean` (default: `false`) -- if `true`, the list of options can be searched and filtered by user
 - **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of organisation objects (i.e. `{orgId, name, licenceNumber}`), you'd probably specify `name` as the `optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection. And if `optionsDisplayProperty` refers to a field that doesn't exist on the supplied object, the plugin will fail and show in error in the application.
+- **optionsDisplayExpression**: Similar to `optionsDisplayProperty`, but you can build a display string out of multiple object properties, using the same substitution/templating mechanism as the [listBuilder](#list-builder-ingredients-list) `displayFormat` property.
 - **hasOther**: `boolean` (default `false`) -- if `true`, allows the user to enter a custom "free text" value instead of one of the pre-defined options.
 - **multiSelect**: `boolean` -- whether or not the user can select multiple items for their response (default: `false`)
 

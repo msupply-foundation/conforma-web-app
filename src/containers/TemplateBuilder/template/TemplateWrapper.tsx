@@ -139,6 +139,7 @@ export interface TemplateState {
   isLinear: boolean
   serialPattern: string
   canApplicantMakeChanges: boolean
+  dashboardRestrictions: string[] | null
   canEdit: boolean
 }
 
@@ -173,6 +174,7 @@ const defaultTemplateContextState: TemplateContextState = {
     serialPattern: '',
     canApplicantMakeChanges: true,
     canEdit: true,
+    dashboardRestrictions: null,
   },
   refetch: () => {},
   sections: [],
@@ -229,6 +231,7 @@ const TemplateWrapper: React.FC = () => {
           applicationCount: template?.applications?.totalCount || 0,
           isDraft: template.status === TemplateStatus.Draft,
           canEdit: isTemplateUnlocked(template) && template.status === TemplateStatus.Draft,
+          dashboardRestrictions: template?.dashboardRestrictions as string[] | null,
         },
         category: (template?.templateCategory as TemplateCategory) || undefined,
         fromQuery: template,
