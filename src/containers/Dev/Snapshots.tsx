@@ -59,6 +59,7 @@ const Snapshots: React.FC = () => {
   const [displayType, setDisplayType] = useState<SnapshotType>(
     (query.type as SnapshotType) ?? 'snapshots'
   )
+  const [expandedSnapshots, setExpandedSnapshots] = useState<string[]>([])
   const [archive, setArchive] = useState<number | 'full' | 'none'>()
   const [archiveEnd, setArchiveEnd] = useState<number>()
   const [refetchData, setRefetchData] = useState(false)
@@ -213,106 +214,137 @@ const Snapshots: React.FC = () => {
     a.click()
   }
 
+  const renderSingleSnapshot = (
+    { name, filename, timestamp, archive, size }: SnapshotData,
+    hasChildren = false
+  ) => (
+    <Table.Row key={filename}>
+      <Table.Cell style={{ padding: 5 }}>
+        <div className="flex-row-space-between" style={{ width: '100%', padding: 5 }}>
+          <div className="flex-row" style={{ gap: 10 }}>
+            <strong>{name}</strong>
+            <span className="smaller-text">{size ? fileSizeWithUnits(size) : 'Size unknown'}</span>
+          </div>
+          <div className="flex-row" style={{ gap: 5 }}>
+            {displayType === 'snapshots' && (
+              <Icon
+                size="large"
+                className="clickable"
+                name="play circle"
+                onClick={() => {
+                  if (isProductionBuild)
+                    showModal({
+                      title: 'Are you sure?',
+                      message: `This will overwrite ALL existing data on: ${window.location.host}`,
+                      onConfirm: () => useSnapshot(filename),
+                    })
+                  else useSnapshot(filename)
+                }}
+              />
+            )}
+            <Icon
+              name="download"
+              size="large"
+              className="clickable blue"
+              onClick={async () => {
+                showToast({ title: 'Download started...', timeout: 2000 })
+                await downloadSnapshot(filename)
+                showToast({
+                  title: 'Download complete',
+                  text: `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}`,
+                  timeout: 30000,
+                })
+              }}
+            />
+
+            <Icon
+              size="large"
+              className="clickable"
+              name="trash alternate"
+              onClick={async () => {
+                await deleteSnapshot(filename)
+                showToast({
+                  title: `${displayType === 'archives' ? 'Archive snapshot' : 'Snapshot'} deleted`,
+                  text: name,
+                })
+              }}
+            />
+          </div>
+        </div>
+        <div className="flex-row" style={{ gap: 10, padding: 5 }}>
+          <TextIO
+            text={DateTime.fromISO(timestamp).toLocaleString(DateTime.DATETIME_SHORT)}
+            title="Timestamp"
+            additionalStyles={{ margin: 0 }}
+          />
+          {archive && (
+            <div className="flex-row-start-center" style={{ gap: 5 }}>
+              {archive.type !== 'none' && (
+                <>
+                  <TextIO
+                    title={`Archive`}
+                    text={`${DateTime.fromISO(
+                      archive.from ?? ''
+                    ).toLocaleString()} – ${DateTime.fromISO(archive.to ?? '').toLocaleString()}`}
+                    additionalStyles={{ margin: 0 }}
+                  />
+                  <Tooltip
+                    message={`### Archives\n\nFrom: **${DateTime.fromISO(
+                      archive.from ?? ''
+                    ).toLocaleString(DateTime.DATETIME_MED)}**  \nTo: **${DateTime.fromISO(
+                      archive.to ?? ''
+                    ).toLocaleString(DateTime.DATETIME_MED)}**`}
+                    iconStyle={{ marginLeft: 0, height: 'auto' }}
+                  />
+                </>
+              )}
+              {renderArchiveLabel(archive)}
+            </div>
+          )}
+        </div>
+        {hasChildren && (
+          <div
+            className="flex-row-start-center clickable"
+            onClick={(e: React.MouseEvent<HTMLElement>) => {
+              if (e.getModifierState('Meta') || e.getModifierState('Control')) {
+                setExpandedSnapshots([])
+                return
+              }
+              if (expandedSnapshots.includes(name))
+                setExpandedSnapshots(expandedSnapshots.filter((el) => el !== name))
+              else setExpandedSnapshots([...expandedSnapshots, name])
+            }}
+          >
+            <Icon
+              size="large"
+              name="dropdown"
+              style={{
+                transform: expandedSnapshots.includes(name) ? 'rotate(0deg)' : 'rotate(-90deg)',
+                transition: '0.2s',
+              }}
+            />
+            <p className="smaller-text">Show all</p>
+          </div>
+        )}
+      </Table.Cell>
+    </Table.Row>
+  )
+
   const renderSnapshotList = () => {
     if (!data) return null
-    return (
+    const nestedSnapshots = getNestedSnapshots(data.snapshots)
+    return nestedSnapshots.map((snapshot) => (
       <>
-        {data.snapshots.map(({ name, filename, timestamp, archive, size }) => (
-          <Table.Row key={filename}>
-            <Table.Cell colSpan={12} style={{ padding: 5 }}>
-              <div className="flex-row-space-between" style={{ width: '100%', padding: 5 }}>
-                <div className="flex-row" style={{ gap: 10 }}>
-                  <strong>{name}</strong>
-                  <span className="smaller-text">
-                    {size ? fileSizeWithUnits(size) : 'Size unknown'}
-                  </span>
-                </div>
-                <div className="flex-row" style={{ gap: 5 }}>
-                  {displayType === 'snapshots' && (
-                    <Icon
-                      size="large"
-                      className="clickable"
-                      name="play circle"
-                      onClick={() => {
-                        if (isProductionBuild)
-                          showModal({
-                            title: 'Are you sure?',
-                            message: `This will overwrite ALL existing data on: ${window.location.host}`,
-                            onConfirm: () => useSnapshot(filename),
-                          })
-                        else useSnapshot(filename)
-                      }}
-                    />
-                  )}
-                  <Icon
-                    name="download"
-                    size="large"
-                    className="clickable blue"
-                    onClick={async () => {
-                      showToast({ title: 'Download started...', timeout: 2000 })
-                      await downloadSnapshot(filename)
-                      showToast({
-                        title: 'Download complete',
-                        text: `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}`,
-                        timeout: 30000,
-                      })
-                    }}
-                  />
-
-                  <Icon
-                    size="large"
-                    className="clickable"
-                    name="trash alternate"
-                    onClick={async () => {
-                      await deleteSnapshot(filename)
-                      showToast({
-                        title: `${
-                          displayType === 'archives' ? 'Archive snapshot' : 'Snapshot'
-                        } deleted`,
-                        text: name,
-                      })
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="flex-row" style={{ gap: 10, padding: 5 }}>
-                <TextIO
-                  text={DateTime.fromISO(timestamp).toLocaleString(DateTime.DATETIME_SHORT)}
-                  title="Timestamp"
-                  additionalStyles={{ margin: 0 }}
-                />
-                {archive && (
-                  <div className="flex-row-start-center" style={{ gap: 5 }}>
-                    {archive.type !== 'none' && (
-                      <>
-                        <TextIO
-                          title={`Archive`}
-                          text={`${DateTime.fromISO(
-                            archive.from ?? ''
-                          ).toLocaleString()} – ${DateTime.fromISO(
-                            archive.to ?? ''
-                          ).toLocaleString()}`}
-                          additionalStyles={{ margin: 0 }}
-                        />
-                        <Tooltip
-                          message={`### Archives\n\nFrom: **${DateTime.fromISO(
-                            archive.from ?? ''
-                          ).toLocaleString(DateTime.DATETIME_MED)}**  \nTo: **${DateTime.fromISO(
-                            archive.to ?? ''
-                          ).toLocaleString(DateTime.DATETIME_MED)}**`}
-                          iconStyle={{ marginLeft: 0, height: 'auto' }}
-                        />
-                      </>
-                    )}
-                    {renderArchiveLabel(archive)}
-                  </div>
-                )}
-              </div>
-            </Table.Cell>
-          </Table.Row>
-        ))}
+        {renderSingleSnapshot(snapshot, snapshot.otherVersions.length > 0)}
+        {expandedSnapshots.includes(snapshot.name) && (
+          <Table style={{ marginTop: -10, marginBottom: 0, paddingLeft: 20 }}>
+            <Table.Body>
+              {snapshot.otherVersions.map((snapshot) => renderSingleSnapshot(snapshot))}
+            </Table.Body>
+          </Table>
+        )}
       </>
-    )
+    ))
   }
 
   const resetLoading = () => {
@@ -639,6 +671,16 @@ const getTotalSize = (
   if (includedArchives.some((archive) => !archive.totalFileSize)) return 'Unknown'
 
   return includedArchives.reduce((sum, archive) => sum + (archive.totalFileSize ?? 0), 0)
+}
+
+const getNestedSnapshots = (snapshots: SnapshotData[]) => {
+  const nestedSnapshots: (SnapshotData & { otherVersions: SnapshotData[] })[] = []
+  snapshots.forEach((snapshot) => {
+    const outer = nestedSnapshots.find((el) => el.name === snapshot.name)
+    if (outer) outer.otherVersions.push(snapshot)
+    else nestedSnapshots.push({ ...snapshot, otherVersions: [] })
+  })
+  return nestedSnapshots
 }
 
 export default Snapshots
