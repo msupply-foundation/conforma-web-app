@@ -24,6 +24,7 @@ import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
 import { getVersionString, getTemplateVersionId, isTemplateUnlocked } from '../helpers'
+import te from 'date-fns/esm/locale/te/index.js'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -51,6 +52,7 @@ const General: React.FC = () => {
   const canSetAvailable = template.status !== TemplateStatus.Available
 
   const canSetDraft =
+    isTemplateUnlocked(template) &&
     applicationCount === 0 &&
     !isDraft &&
     (template.applicationCount === 0 ||
@@ -72,7 +74,7 @@ const General: React.FC = () => {
               confirmMakeAvailable({
                 title: 'Make template available?',
                 message:
-                  'You are about to enable a template version that has not yet been committed. This is allowed, but you are recommended to commit first if you are about to enable it in a production environment.',
+                  'This will enable a template version that has not yet been committed. This is allowed, but it is recommended that you commit first if you are about to enable it in a production environment.',
                 onConfirm: () => updateTemplate(template, { status: TemplateStatus.Available }),
                 confirmText: 'Make available now',
                 cancelText: 'Go back and commit version',
