@@ -92,6 +92,7 @@ const convertFromTemplateToTemplateDetails = (
 
   const totalApplications = template?.applications.totalCount || 0
 
+  const categoryCode = template.templateCategory?.code || ''
   const categoryTitle: string = template?.templateCategory?.title || ''
   const categoryIcon: SemanticICONS =
     (template?.templateCategory?.icon as SemanticICONS) || undefined
@@ -104,6 +105,7 @@ const convertFromTemplateToTemplateDetails = (
   const hasNonApplyPermissions = !hasApplyPermission && permissions.length > 0
 
   const filters = extractFilters(template, permissions)
+  const dashboardRestrictions = template.dashboardRestrictions as string[] | null
 
   const result: TemplateInList = {
     id,
@@ -114,9 +116,11 @@ const convertFromTemplateToTemplateDetails = (
     icon,
     permissions,
     filters,
+    dashboardRestrictions,
     hasApplyPermission,
     hasNonApplyPermissions,
     templateCategory: {
+      code: categoryCode,
       icon: categoryIcon,
       title: categoryTitle,
       uiLocation: categoryUILocation,
