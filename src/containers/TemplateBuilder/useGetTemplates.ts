@@ -2,14 +2,25 @@ import { DateTime } from 'luxon'
 import { useState, useEffect } from 'react'
 import { TemplateStatus, useGetAllTemplatesQuery } from '../../utils/generated/graphql'
 
+export interface VersionObject {
+  versionId: string
+  timestamp: string
+  number: number
+  parentVersionId: string | null
+  comment: string | null
+}
+
 export type Template = {
   name: string
   status: TemplateStatus
   id: number
   code: string
   category: string
-  version: number
+  versionId: string
+  versionComment: string | null
   versionTimestamp: DateTime
+  parentVersionId: string | null
+  versionHistory: VersionObject[]
   applicationCount: number
 }
 export type Templates = {
@@ -34,7 +45,7 @@ const useGetTemplates = () => {
           !template?.code ||
           !template.name ||
           !template.status ||
-          !template?.version ||
+          !template?.versionId ||
           !template?.versionTimestamp
         ) {
           console.log('failed to load template', template)
@@ -46,8 +57,11 @@ const useGetTemplates = () => {
           name,
           status,
           id,
-          version,
+          versionId,
+          parentVersionId = null,
           versionTimestamp,
+          versionComment = null,
+          versionHistory = [],
           templateCategory,
           applications,
         } = template
@@ -59,7 +73,10 @@ const useGetTemplates = () => {
           id,
           code,
           category: templateCategory?.title || '',
-          version,
+          versionId,
+          parentVersionId,
+          versionComment,
+          versionHistory,
           versionTimestamp: DateTime.fromISO(versionTimestamp),
           applicationCount: applications.totalCount || 0,
         }

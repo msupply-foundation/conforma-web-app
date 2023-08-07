@@ -584,7 +584,7 @@ interface TemplateInList {
   name: string
   namePlural?: string
   code: string
-  version: number
+  versionId: string
   icon: string | null | undefined
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
@@ -599,7 +599,7 @@ interface TemplateDetails {
   id: number
   name: string
   code: string
-  version: number
+  versionId: string
   elementsIds?: number[] // TODO: Change to not optional after re-structure
   elementsDefaults?: EvaluatorNode[]
   sections?: SectionDetails[] // TODO: Change to not optional after re-structure

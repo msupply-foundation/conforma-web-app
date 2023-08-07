@@ -82,7 +82,7 @@ type ApplicationContextState = {
   structure: FullStructure
 }
 
-const AppicationContext = createContext<ApplicationContextState>({} as ApplicationContextState)
+const ApplicationContext = createContext<ApplicationContextState>({} as ApplicationContextState)
 
 const ApplicationWrapper: React.FC = ({ children }) => {
   const {
@@ -105,7 +105,7 @@ const ApplicationWrapper: React.FC = ({ children }) => {
 
   if (!state) return <Loading />
 
-  return <AppicationContext.Provider value={state}>{children}</AppicationContext.Provider>
+  return <ApplicationContext.Provider value={state}>{children}</ApplicationContext.Provider>
 }
 
 type FullApplicationContextState = {
@@ -116,7 +116,7 @@ const FullApplicationContext = createContext<FullApplicationContextState>(
   {} as FullApplicationContextState
 )
 
-const FullAppllicationWrapper: React.FC = ({ children }) => {
+const FullApplicationWrapper: React.FC = ({ children }) => {
   const { structure } = useApplicationState()
   const [state, setState] = useState<FullApplicationContextState | null>(null)
   const { fullStructure } = useGetApplicationStructure({
@@ -139,11 +139,11 @@ const FullAppllicationWrapper: React.FC = ({ children }) => {
 
 const useApplicationOperationState = () => useContext(ApplicationOperationContext)
 const useFullApplicationState = () => useContext(FullApplicationContext)
-const useApplicationState = () => useContext(AppicationContext)
+const useApplicationState = () => useContext(ApplicationContext)
 export {
   CreateApplicationWrapper,
   ApplicationWrapper,
-  FullAppllicationWrapper,
+  FullApplicationWrapper,
   useApplicationOperationState,
   useFullApplicationState,
   useApplicationState,

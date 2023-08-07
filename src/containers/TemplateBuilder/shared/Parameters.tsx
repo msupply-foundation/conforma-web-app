@@ -14,6 +14,7 @@ type ParametersProps = {
   parameters: ParametersType
   currentElementCode: string
   setParameters: (parameters: ParametersType) => void
+  canEdit: boolean
   fullStructure?: FullStructure
   requiredParameters?: string[]
   optionalParameters?: string[]
@@ -23,6 +24,7 @@ type ParametersProps = {
 export const Parameters: React.FC<ParametersProps> = ({
   parameters,
   setParameters,
+  canEdit,
   currentElementCode,
   fullStructure,
   requiredParameters,
@@ -87,6 +89,7 @@ export const Parameters: React.FC<ParametersProps> = ({
                     <Button
                       primary
                       inverted
+                      disabled={!canEdit}
                       onClick={() => {
                         setParameters({ ...parameters, newParameter: null })
                       }}
@@ -116,11 +119,15 @@ export const Parameters: React.FC<ParametersProps> = ({
                       delete newParameters[key]
                       newKey && setParameters({ ...newParameters, [newKey]: value })
                     }}
-                    deleteKey={() => {
-                      const newParameters = { ...parameters }
-                      delete newParameters[key]
-                      setParameters(newParameters)
-                    }}
+                    deleteKey={
+                      canEdit
+                        ? () => {
+                            const newParameters = { ...parameters }
+                            delete newParameters[key]
+                            setParameters(newParameters)
+                          }
+                        : undefined
+                    }
                     key={key}
                     evaluation={value}
                     fullStructure={fullStructure}

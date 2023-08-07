@@ -2300,7 +2300,7 @@ a:hover {
   }
 }
 
-.template-bulder-filter-input {
+.template-builder-filter-input {
   .template-builder-category-input();
 }
 

@@ -69,7 +69,7 @@ const Filters: React.FC = () => {
 
   const deleteFilterJoin = async () => {
     if (
-      await updateTemplate(template.id, {
+      await updateTemplate(template, {
         templateFilterJoinsUsingId: { deleteById: [{ id: selectedFilterJoin?.id || 0 }] },
       })
     ) {
@@ -97,14 +97,14 @@ const Filters: React.FC = () => {
 
   const addFilterJoin = async () => {
     if (selectedFilter?.id !== -1) {
-      updateTemplate(template.id, {
+      updateTemplate(template, {
         templateFilterJoinsUsingId: {
           create: [{ filterId: selectedFilter?.id || 0 }],
         },
       })
     } else {
       const { id, code, ...newPartial } = newFilter
-      updateTemplate(template.id, {
+      updateTemplate(template, {
         templateFilterJoinsUsingId: {
           create: [
             {
@@ -119,7 +119,7 @@ const Filters: React.FC = () => {
   const addDashboardRestriction = async () => {
     const currentRestrictions = template.dashboardRestrictions ?? []
     if (selectedRestriction)
-      updateTemplate(template.id, {
+      updateTemplate(template, {
         dashboardRestrictions: [...currentRestrictions, selectedRestriction?.code],
       })
     setSelectedRestriction(undefined)
@@ -132,7 +132,7 @@ const Filters: React.FC = () => {
     )
     setSelectedRestrictFilter(undefined)
     setSelectedRestriction(undefined)
-    updateTemplate(template.id, {
+    updateTemplate(template, {
       dashboardRestrictions: newRestrictions.length > 0 ? newRestrictions : null,
     })
   }
@@ -140,31 +140,38 @@ const Filters: React.FC = () => {
   return (
     <>
       <Header as="h3">Dashboard Filters</Header>
-      <div className="flex-row-start-center">
-        <DropdownIO
-          value={selectedFilter.id}
-          placeholder="Select filter"
-          title="Filters"
-          options={[...allFilters, newFilter].filter((fil) => !filterJoinCodes.includes(fil?.code))}
-          getKey={'id'}
-          getValue={'id'}
-          getText={'title'}
-          setValue={(_, fullValue) => {
-            setSelectedFilter(fullValue)
-          }}
-          additionalStyles={{ marginBottom: 0 }}
-        />
-        <Icon className="clickable" name="add square" onClick={addFilterJoin} />
-      </div>
+      {template.canEdit && (
+        <div className="flex-row-start-center">
+          <DropdownIO
+            value={selectedFilter.id}
+            title="Filters"
+            options={[...allFilters, newFilter].filter(
+              (fil) => !filterJoinCodes.includes(fil?.code)
+            )}
+            getKey={'id'}
+            getValue={'id'}
+            getText={'title'}
+            setValue={(_, fullValue) => {
+              setSelectedFilter(fullValue)
+            }}
+            additionalStyles={{ marginBottom: 0 }}
+          />
+          <Icon className="clickable" name="add square" onClick={addFilterJoin} />
+        </div>
+      )}
       <div className="spacer-20" />
       <div className="filter-joins">
         {filterJoins.map((filterJoin) => (
           <Label
             key={filterJoin.id}
-            onClick={() => {
-              selectFilterJoin(filterJoin)
-            }}
-            className={`clickable ${
+            onClick={
+              template.canEdit
+                ? () => {
+                    selectFilterJoin(filterJoin)
+                  }
+                : () => {}
+            }
+            className={`${template.canEdit ? 'clickable' : ''} ${
               filterJoin?.id === selectedFilterJoin?.id ? 'builder-selected' : ''
             }`}
           >
@@ -173,7 +180,7 @@ const Filters: React.FC = () => {
         ))}
       </div>
       {updateState && (
-        <div key={selectedFilterJoin?.id} className="template-bulder-filter-input">
+        <div key={selectedFilterJoin?.id} className="template-builder-filter-input">
           <Header as="h5">{`Edit Filter`}</Header>
           <TextIO
             text={updateState.code}

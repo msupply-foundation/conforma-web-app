@@ -28,7 +28,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplica
     serial: serialNumber,
     questionCode: showHistory,
     templateCode: template.code,
-    templateVersion: template.version,
+    templateVersionId: template.versionId,
     userId: currentUser?.userId || 0,
     // userLevel,
     isApplicant,

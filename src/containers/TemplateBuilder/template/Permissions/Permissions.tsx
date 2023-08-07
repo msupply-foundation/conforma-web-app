@@ -35,12 +35,10 @@ type CanRemoveStage = (stage: TemplateStage) => boolean
 type RemoveStage = (id: number) => void
 
 const Permissions: React.FC = () => {
-  const {
-    templateStages,
-    template: { isDraft, id: templateId },
-    templatePermissions,
-  } = useTemplateState()
+  const { templateStages, template, templatePermissions } = useTemplateState()
   const { updateTemplate } = useOperationState()
+
+  const { canEdit } = template
 
   const latestStageNumber = templateStages.reduce(
     (max, current) => (max > (current?.number || 0) ? max : current?.number || 0),
@@ -57,18 +55,18 @@ const Permissions: React.FC = () => {
     (stage?.templateStageReviewLevelsByStageId?.nodes || []).length == 0
 
   const removeStage: RemoveStage = (id) => {
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateStagesUsingId: { deleteById: [{ id }] },
     })
   }
 
   const addStage = () =>
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateStagesUsingId: { create: [{ number: latestStageNumber + 1, ...newStage }] },
     })
 
   const updateStage: UpdateStage = (id, patch) => {
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateStagesUsingId: { updateById: [{ id, patch }] },
     })
   }
@@ -93,7 +91,7 @@ const Permissions: React.FC = () => {
         <IconButton
           name="add square"
           size="large"
-          disabled={!isDraft}
+          disabled={!canEdit}
           disabledMessage={disabledMessage}
           onClick={addStage}
         />
@@ -107,7 +105,7 @@ const Permissions: React.FC = () => {
                   title="Name"
                   text={stage?.title || ''}
                   setText={(title) => updateStage(stage.id, { title })}
-                  disabled={!isDraft}
+                  disabled={!canEdit}
                   disabledMessage={disabledMessage}
                 />
                 <TextIO
@@ -122,7 +120,7 @@ const Permissions: React.FC = () => {
                   text={stage?.colour || ''}
                   color={stage?.colour || ''}
                   setText={(colour) => updateStage(stage.id, { colour })}
-                  disabled={!isDraft}
+                  disabled={!canEdit}
                   disabledMessage={disabledMessage}
                 />
 
@@ -131,7 +129,7 @@ const Permissions: React.FC = () => {
                     title="Description"
                     text={stage?.description || ''}
                     setText={(description) => updateStage(stage.id, { description })}
-                    disabled={!isDraft}
+                    disabled={!canEdit}
                     disabledMessage={disabledMessage}
                   />
                 </div>
@@ -140,7 +138,7 @@ const Permissions: React.FC = () => {
               {canRemoveStage(stage) && (
                 <IconButton
                   name="window close"
-                  disabled={!isDraft}
+                  disabled={!canEdit}
                   disabledMessage={disabledMessage}
                   onClick={() => removeStage(stage?.id || 0)}
                 />

@@ -12,7 +12,7 @@ import useLocalisedEnums from './useLocalisedEnums'
 interface UseGetQuestionHistoryProps {
   serial: string
   templateCode: string
-  templateVersion: number
+  templateVersionId: string
   questionCode: string
   userId: number
   // userLevel: number

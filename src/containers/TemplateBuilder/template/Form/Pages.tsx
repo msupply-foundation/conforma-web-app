@@ -17,7 +17,7 @@ const Pages: React.FC = () => {
   const { updateTemplateSection } = useOperationState()
 
   const {
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
 
   if (selectedSectionId === -1) return null
@@ -57,7 +57,7 @@ const Pages: React.FC = () => {
           Pages
         </Header>
         <IconButton
-          disabled={!isDraft}
+          disabled={!canEdit}
           disabledMessage={disabledMessage}
           name="add square"
           size="large"
@@ -87,7 +87,7 @@ const Page: React.FC = () => {
   const { selectedPageNumber, selectedSectionId, setSelectedPageNumber } = useFormState()
   const { askForConfirmation } = useConfirmationState()
   const {
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
   const { structure } = useFullApplicationState()
   const { updateTemplateSection, updateApplication } = useOperationState()
@@ -137,7 +137,7 @@ const Page: React.FC = () => {
         <PageMove />
         <Header className="no-margin-no-padding" as="h5">{`Page ${selectedPageNumber}`}</Header>
         <IconButton
-          disabled={!isDraft}
+          disabled={!canEdit}
           disabledMessage={disabledMessage}
           name="window close"
           onClick={deletePage}
@@ -150,7 +150,7 @@ const Page: React.FC = () => {
 const PageMove: React.FC = () => {
   const { selectedPageNumber, selectedSectionId, setSelectedPageNumber } = useFormState()
   const {
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
   const { updateTemplateSection } = useOperationState()
   const { moveStructure } = useFormStructureState()
@@ -241,7 +241,7 @@ const PageMove: React.FC = () => {
     <>
       <IconButton
         name="angle double left"
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         onClick={() => moveToSection(currentSection.previousSection)}
         hidden={currentSection.isFirst}
@@ -249,7 +249,7 @@ const PageMove: React.FC = () => {
       />
       <IconButton
         name="angle double right"
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         onClick={() => moveToSection(currentSection.nextSection)}
         hidden={currentSection.isLast}
@@ -257,7 +257,7 @@ const PageMove: React.FC = () => {
       />
       <IconButton
         name="angle up"
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         onClick={() => {
           movePageInSection(selectedPageNumber, selectedPageNumber - 1, selectedPageNumber - 1)
@@ -267,7 +267,7 @@ const PageMove: React.FC = () => {
       />
       <IconButton
         name="angle down"
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         onClick={() => {
           movePageInSection(selectedPageNumber + 1, selectedPageNumber, selectedPageNumber + 1)

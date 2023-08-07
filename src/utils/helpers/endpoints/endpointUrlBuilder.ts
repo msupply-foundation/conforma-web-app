@@ -125,7 +125,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       if (action === 'upload' || action === 'delete')
         return `${serverREST}${endpointPath}/${action}?name=${name}`
 
-      // Must be "take" or "user", which uses "options" file
+      // Must be "take" or "use", which uses "options" file
       return `${serverREST}${endpointPath}/${action}?name=${name}${
         optionsName ? `&optionsName=${optionsName}` : ''
       }`
