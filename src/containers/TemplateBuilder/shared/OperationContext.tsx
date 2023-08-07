@@ -31,7 +31,6 @@ import {
   updateTemplateStage,
   deleteTemplate,
 } from './OperationContextHelpers'
-import { VersionObject } from '../useGetTemplates'
 import { TemplateState } from '../template/TemplateWrapper'
 
 type Error = { message: string; error: string }
@@ -128,7 +127,7 @@ const OperationContext: React.FC = ({ children }) => {
 
   const { isLoading, error } = innerState
   const renderExtra = () => (
-    <Modal open={!!isLoading || !!error} onClick={resetLoading} onClose={resetLoading}>
+    <Modal open={!!isLoading || !!error} onClose={resetLoading}>
       {error ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Label size="large" color="red">

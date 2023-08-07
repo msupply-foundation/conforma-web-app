@@ -46,6 +46,7 @@ const config = {
     getApplicationData: '/admin/get-application-data',
     getAllPrefs: '/admin/get-all-prefs',
     setPrefs: '/admin/set-prefs',
+    archiveFiles: '/admin/archive-files',
   },
   version,
   pluginsFolder: 'formElementPlugins',

@@ -1,21 +1,68 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, Icon, Input, Label, Loader, Modal, Table, Header } from 'semantic-ui-react'
+import {
+  Button,
+  Icon,
+  Input,
+  Label,
+  Loader,
+  Modal,
+  Table,
+  Header,
+  SemanticCOLORS,
+  Dropdown,
+  Form,
+  List,
+} from 'semantic-ui-react'
 import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../contexts/Toast'
+import { DateTime } from 'luxon'
+import TextIO from '../TemplateBuilder/shared/TextIO'
+import { fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
+import { useRouter } from '../../utils/hooks/useRouter'
+import Tooltip from '../../components/Tooltip'
 
-// const diffSnapshotUrl = `${snapshotsBaseUrl}/diff`
+type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
+interface SnapshotData {
+  name: string
+  filename: string
+  size: number
+  timestamp: string
+  version: string
+  archive?: ArchiveType
+}
+
+interface ArchiveInfo {
+  timestamp: number
+  uid: string
+  archiveFolder: string
+  prevArchiveFolder: string | null
+  prevUid: string | null
+}
+
+interface ListData {
+  snapshots: SnapshotData[]
+  currentArchives: ArchiveInfo[]
+}
+
+type SnapshotType = 'snapshots' | 'archives'
 
 const Snapshots: React.FC = () => {
-  const [compareFrom, setCompareFrom] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [snapshotError, setSnapshotError] = useState<{ message: string; error: string } | null>(
     null
   )
+  const { query, updateQuery } = useRouter()
+  const [displayType, setDisplayType] = useState<SnapshotType>(
+    (query.type as SnapshotType) ?? 'snapshots'
+  )
+  const [archive, setArchive] = useState<number | 'full' | 'none'>()
+  const [archiveEnd, setArchiveEnd] = useState<number>()
+  const [refetchData, setRefetchData] = useState(false)
 
-  const [data, setData] = useState<string[] | null>(null)
+  const [data, setData] = useState<ListData | null>(null)
 
   const { ConfirmModal, showModal } = useConfirmationModal({ type: 'warning', awaitAction: false })
   const showToast = useToast({ style: 'success' })
@@ -24,37 +71,54 @@ const Snapshots: React.FC = () => {
   const isProductionBuild = config.isProductionBuild
 
   useEffect(() => {
+    updateQuery({ type: displayType })
     setData(null)
-    setCompareFrom('')
     setSnapshotError(null)
-    getList()
-  }, [])
+    getList(displayType)
+  }, [displayType, refetchData])
 
-  const getList = async () => {
+  const getList = async (displayType: SnapshotType) => {
     try {
-      const snapshotListRaw = await getRequest(getServerUrl('snapshot', { action: 'list' }))
-      const snapshotList: string[] = snapshotListRaw.snapshotsNames
-
-      setData(snapshotList)
+      setData(
+        await getRequest(
+          getServerUrl('snapshot', { action: 'list', archive: displayType === 'archives' })
+        )
+      )
     } catch (e) {}
   }
 
   const normaliseSnapshotName = (name: string) =>
-    // not word, not digit
-    name.replace(/[^\w\d]/g, '_')
+    // Not word, not digit
+    name.replace(/[^\w\d-]/g, '_')
 
   const takeSnapshot = async (name: string) => {
     if (!name) return
+
+    localStorage.setItem('defaultSnapshotName', name)
+
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
-        url: getServerUrl('snapshot', { action: 'take', name: normaliseSnapshotName(name) }),
+        url: getServerUrl('snapshot', {
+          action: 'take',
+          name: normaliseSnapshotName(name),
+          archive: displayType === 'archives',
+        }),
+        jsonBody: {
+          archive:
+            typeof archive === 'string'
+              ? archive
+              : archive === undefined
+              ? 'full'
+              : { from: archive, to: archiveEnd },
+        },
+        headers: { 'Content-Type': 'application/json' },
       })
 
       if (resultJson.success) {
-        await getList()
+        await getList(displayType)
         setIsLoading(false)
-        location.reload(true)
+        if (displayType === 'snapshots') location.reload()
         return
       }
 
@@ -73,7 +137,7 @@ const Snapshots: React.FC = () => {
 
       if (resultJson.success) {
         setIsLoading(false)
-        location.reload(true)
+        location.reload()
         return
       }
 
@@ -87,10 +151,14 @@ const Snapshots: React.FC = () => {
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
-        url: getServerUrl('snapshot', { action: 'delete', name }),
+        url: getServerUrl('snapshot', {
+          action: 'delete',
+          name,
+          archive: displayType === 'archives',
+        }),
       })
       if (resultJson.success) {
-        await getList()
+        await getList(displayType)
         setIsLoading(false)
         return
       }
@@ -104,7 +172,6 @@ const Snapshots: React.FC = () => {
     if (!event.target?.files) return
 
     const file = event.target.files[0]
-    const snapshotName = normaliseSnapshotName(file.name.replace('.zip', ''))
 
     setIsLoading(true)
     try {
@@ -113,11 +180,11 @@ const Snapshots: React.FC = () => {
 
       const resultJson = await postRequest({
         otherBody: data,
-        url: getServerUrl('snapshot', { action: 'upload', name: snapshotName }),
+        url: getServerUrl('snapshot', { action: 'upload' }),
       })
 
       if (resultJson.success) {
-        await getList()
+        await getList(displayType)
         setIsLoading(false)
         return
       }
@@ -127,117 +194,120 @@ const Snapshots: React.FC = () => {
     }
   }
 
-  const downloadSnapshot = async (snapshotName: string) => {
-    const res = await fetch(getServerUrl('snapshot', { action: 'download', name: snapshotName }), {
-      headers: { Authorization: `Bearer ${JWT}` },
-    })
+  const downloadSnapshot = async (name: string) => {
+    const res = await fetch(
+      getServerUrl('snapshot', {
+        action: 'download',
+        name,
+        archive: displayType === 'archives',
+      }),
+      {
+        headers: { Authorization: `Bearer ${JWT}` },
+      }
+    )
     const data = await res.blob()
     var a = document.createElement('a')
     a.href = window.URL.createObjectURL(data)
-    a.download = `${snapshotName}.zip`
+    a.download = `${displayType === 'archives' ? 'ARCHIVE_' : ''}${name}.zip`
     a.click()
   }
 
   const renderSnapshotList = () => {
-    // const compareLinkRef = useRef<HTMLAnchorElement>(null)
     if (!data) return null
     return (
       <>
-        {data.map((snapshotName) => (
-          <Table.Row key={`app_menu_${snapshotName}`} style={{ paddingBottom: 0 }}>
-            <Table.Cell textAlign="right">
-              <p>{snapshotName}</p>
-            </Table.Cell>
-            {compareFrom === '' && (
-              <>
-                <Table.Cell>
-                  <Icon
-                    size="large"
-                    className="clickable"
-                    name="play circle"
-                    onClick={() => {
-                      if (isProductionBuild)
-                        showModal({
-                          title: 'Are you sure?',
-                          message: `This will overwrite ALL existing data on: ${window.location.host}`,
-                          onConfirm: () => useSnapshot(snapshotName),
-                        })
-                      else useSnapshot(snapshotName)
-                    }}
-                  />
-                </Table.Cell>
-                <Table.Cell width={1}>
-                  <Icon
-                    size="large"
-                    className="clickable"
-                    name="record"
-                    onClick={() => {
-                      if (isProductionBuild)
-                        showModal({
-                          title: 'Are you sure?',
-                          message: `This will overwrite saved snapshot: ${snapshotName} with the current system state`,
-                          onConfirm: async () => {
-                            await takeSnapshot(snapshotName)
-                            showToast({ title: 'Snapshot saved', text: snapshotName })
-                          },
-                        })
-                      else takeSnapshot(snapshotName)
-                    }}
-                  />
-                </Table.Cell>
-                <Table.Cell>
+        {data.snapshots.map(({ name, filename, timestamp, archive, size }) => (
+          <Table.Row key={filename}>
+            <Table.Cell colSpan={12} style={{ padding: 5 }}>
+              <div className="flex-row-space-between" style={{ width: '100%', padding: 5 }}>
+                <div className="flex-row" style={{ gap: 10 }}>
+                  <strong>{name}</strong>
+                  <span className="smaller-text">
+                    {size ? fileSizeWithUnits(size) : 'Size unknown'}
+                  </span>
+                </div>
+                <div className="flex-row" style={{ gap: 5 }}>
+                  {displayType === 'snapshots' && (
+                    <Icon
+                      size="large"
+                      className="clickable"
+                      name="play circle"
+                      onClick={() => {
+                        if (isProductionBuild)
+                          showModal({
+                            title: 'Are you sure?',
+                            message: `This will overwrite ALL existing data on: ${window.location.host}`,
+                            onConfirm: () => useSnapshot(filename),
+                          })
+                        else useSnapshot(filename)
+                      }}
+                    />
+                  )}
                   <Icon
                     name="download"
                     size="large"
                     className="clickable blue"
                     onClick={async () => {
                       showToast({ title: 'Download started...', timeout: 2000 })
-                      await downloadSnapshot(snapshotName)
+                      await downloadSnapshot(filename)
                       showToast({
                         title: 'Download complete',
-                        text: snapshotName,
+                        text: `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}`,
                         timeout: 30000,
                       })
                     }}
                   />
-                </Table.Cell>
-                <Table.Cell textAlign="left">
+
                   <Icon
                     size="large"
                     className="clickable"
                     name="trash alternate"
                     onClick={async () => {
-                      await deleteSnapshot(snapshotName)
-                      showToast({ title: 'Snapshot deleted', text: snapshotName })
+                      await deleteSnapshot(filename)
+                      showToast({
+                        title: `${
+                          displayType === 'archives' ? 'Archive snapshot' : 'Snapshot'
+                        } deleted`,
+                        text: name,
+                      })
                     }}
                   />
-                </Table.Cell>
-                {/* <Icon
-                  className="clickable"
-                  size="big"
-                  name="random"
-                  onClick={() => setCompareFrom(snapshotName)}
-                /> */}
-              </>
-            )}
-            {/* {compareFrom !== snapshotName && compareFrom !== '' ? (
-                <>
-                  <a
-                    ref={compareLinkRef}
-                    href={`${diffSnapshotUrl}?from=${compareFrom}&to=${snapshotName}`}
-                    target="_blank"
-                    hidden
-                  ></a>
-                  <Icon
-                    className="clickable"
-                    name="random"
-                    onClick={() => {
-                      setIsOpen(false)
-                      compareLinkRef?.current?.click()
-                    }}
-                  />
-                </>
-              ) : null} */}
+                </div>
+              </div>
+              <div className="flex-row" style={{ gap: 10, padding: 5 }}>
+                <TextIO
+                  text={DateTime.fromISO(timestamp).toLocaleString(DateTime.DATETIME_SHORT)}
+                  title="Timestamp"
+                  additionalStyles={{ margin: 0 }}
+                />
+                {archive && (
+                  <div className="flex-row-start-center" style={{ gap: 5 }}>
+                    {archive.type !== 'none' && (
+                      <>
+                        <TextIO
+                          title={`Archive`}
+                          text={`${DateTime.fromISO(
+                            archive.from ?? ''
+                          ).toLocaleString()} – ${DateTime.fromISO(
+                            archive.to ?? ''
+                          ).toLocaleString()}`}
+                          additionalStyles={{ margin: 0 }}
+                        />
+                        <Tooltip
+                          message={`### Archives\n\nFrom: **${DateTime.fromISO(
+                            archive.from ?? ''
+                          ).toLocaleString(DateTime.DATETIME_MED)}**  \nTo: **${DateTime.fromISO(
+                            archive.to ?? ''
+                          ).toLocaleString(DateTime.DATETIME_MED)}**`}
+                          iconStyle={{ marginLeft: 0, height: 'auto' }}
+                        />
+                      </>
+                    )}
+                    {renderArchiveLabel(archive)}
+                  </div>
+                )}
+              </div>
+            </Table.Cell>
           </Table.Row>
         ))}
       </>
@@ -250,7 +320,7 @@ const Snapshots: React.FC = () => {
   }
 
   const renderLoadingAndError = () => (
-    <Modal open={isLoading} onClick={resetLoading} onClose={resetLoading}>
+    <Modal open={isLoading} onClose={resetLoading}>
       {snapshotError ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Label size="large" color="red">
@@ -265,71 +335,259 @@ const Snapshots: React.FC = () => {
     </Modal>
   )
 
-  const newSnapshot = () => {
-    const [value, setValue] = useState('')
-    if (compareFrom !== '') return null
+  const renderArchiveLabel = (archive?: ArchiveType) => {
+    if (!archive) return null
+    let color: SemanticCOLORS
+    let text: string
+    switch (archive.type) {
+      case 'full':
+        color = 'green'
+        text = 'FULL'
+        break
+      case 'partial':
+        color = 'orange'
+        text = 'PARTIAL'
+        break
+      default:
+        color = 'red'
+        text = 'No archive'
+    }
+    return <Label content={text} color={color} size="mini" />
+  }
+
+  const renderNewSnapshot = () => {
+    const [name, setName] = useState(localStorage.getItem('defaultSnapshotName') ?? '')
+    const archiveOptions =
+      data && data.currentArchives?.length > 0
+        ? [
+            { key: 'full', value: 'full', text: 'Include full archive' },
+            ...data?.currentArchives.map(({ timestamp, uid }) => ({
+              text: DateTime.fromMillis(timestamp).toLocaleString(DateTime.DATETIME_SHORT),
+              value: timestamp,
+              key: uid,
+            })),
+          ]
+        : []
+    if (displayType === 'snapshots' && archiveOptions.length > 0)
+      archiveOptions.unshift({ key: 'none', value: 'none', text: 'No archive' })
+
+    const archiveEndOptions =
+      typeof archive === 'number'
+        ? archiveOptions.filter(({ value }) => typeof value === 'number' && value >= archive)
+        : []
+
+    const hasArchives = data && data.currentArchives?.length > 0
+
     return (
-      <>
-        <Table.Cell>
-          <div className="flex-row-start" style={{ alignItems: 'center' }}>
+      <Table.Row>
+        <Table.Cell className="flex-row-start-center" style={{ gap: 10, padding: 15 }}>
+          <div className="flex-column" style={{ gap: 10, width: '100%' }}>
             <Input
-              size="mini"
-              onChange={(_, { value }) => setValue(value)}
-              placeholder="New Snapshot"
-              style={{ paddingRight: 10 }}
+              onChange={(_, { value }) => setName(value)}
+              value={name}
+              placeholder="Enter snapshot name"
+              style={{ width: 200 }}
             />
-            <Icon
-              size="large"
-              className="clickable"
-              name="record"
-              onClick={() => takeSnapshot(value)}
+            {hasArchives && (
+              <div className="flex-row-start-center" style={{ gap: 10 }}>
+                {typeof archive === 'number' && <span>From: </span>}
+                <Dropdown
+                  placeholder="Select earliest archive"
+                  selection
+                  clearable
+                  value={archive}
+                  options={archiveOptions}
+                  onChange={(_, { value }) => {
+                    setArchive(value as number | 'none' | 'full')
+                    if (value === 'none' || value === 'full') setArchiveEnd(undefined)
+                  }}
+                  style={{ maxWidth: 350 }}
+                />
+                {typeof archive === 'number' &&
+                  data &&
+                  data?.currentArchives.filter(({ timestamp }) => timestamp > archive).length >
+                    0 && (
+                    <>
+                      <span>to: </span>
+                      <Dropdown
+                        placeholder="Select latest archive"
+                        selection
+                        clearable
+                        value={archiveEnd}
+                        options={archiveEndOptions}
+                        onChange={(_, { value }) => {
+                          setArchiveEnd(value === '' ? undefined : (value as number))
+                        }}
+                        style={{ maxWidth: 350 }}
+                      />
+                    </>
+                  )}
+              </div>
+            )}
+          </div>
+          <div className="flex-column" style={{ gap: 10 }}>
+            <Header as="h4" style={{ marginBottom: 0, textAlign: 'center', maxWidth: 250 }}>
+              {`Create new ${displayType === 'archives' ? 'Archive ' : ''}snapshot`}
+            </Header>
+            <Button
+              primary
+              disabled={
+                !name || (hasArchives && !archive) || (displayType === 'archives' && !archive)
+              }
+              onClick={() => {
+                takeSnapshot(name)
+              }}
+              content="Save"
             />
           </div>
         </Table.Cell>
-      </>
+      </Table.Row>
+    )
+  }
+
+  const renderMissingArchives = (missingArchives: ArchiveInfo[]) => {
+    return (
+      <Table.Row>
+        <Table.Cell className="flex-row-start-center">
+          <div className="flex-column-start-start" style={{ margin: 8 }}>
+            <p style={{ marginBottom: 6, marginTop: 0 }}>
+              The following archives are not present in any archive snapshot:
+            </p>
+            <List bulleted style={{ textAlign: 'left' }}>
+              {missingArchives.map((archive) => (
+                <List.Item className="slightly-smaller-text">
+                  {DateTime.fromMillis(archive.timestamp).toLocaleString(DateTime.DATETIME_MED)} |{' '}
+                  {archive.uid}
+                </List.Item>
+              ))}
+            </List>
+          </div>
+        </Table.Cell>
+      </Table.Row>
+    )
+  }
+
+  const renderArchiveFiles = () => {
+    const [days, setDays] = useState(7)
+    const [loading, setLoading] = useState(false)
+
+    const archiveFiles = async () => {
+      setLoading(true)
+      const result = await getRequest(getServerUrl('archiveFiles', { days }))
+      showToast({
+        title: result === null ? 'Nothing to archive' : 'Archive complete',
+        text: result === null ? undefined : `${result.numFiles} files archived`,
+        style: result ? 'success' : 'warning',
+      })
+      setLoading(false)
+      setRefetchData(!refetchData)
+    }
+
+    return (
+      <div style={{ display: displayType === 'snapshots' ? 'none' : 'block' }}>
+        <Header as="h3">Create a new archive</Header>
+        <div className="flex-row-space-between-center" style={{ marginTop: 10 }}>
+          <div className="flex-row-start-center" style={{ gap: 5 }}>
+            Archive files older than
+            <Form.Input
+              size="mini"
+              type="number"
+              min={1}
+              value={days}
+              onChange={(e) => {
+                const num = Number(e.target.value)
+                if (num < 1) setDays(1)
+                else setDays(num)
+              }}
+              style={{ maxWidth: 65 }}
+            />
+            days
+          </div>
+          <Button
+            primary
+            inverted
+            loading={loading}
+            onClick={() =>
+              showModal({
+                title: 'Make a new archive?',
+                message: `This will archive system files older than ${days} days. Are you sure?`,
+                onConfirm: archiveFiles,
+              })
+            }
+          >
+            Archive <Icon name="archive" style={{ paddingLeft: 5, transform: 'translateY(0px)' }} />
+          </Button>
+        </div>
+      </div>
     )
   }
 
   const renderUploadSnapshot = () => {
     const fileInputRef = useRef<HTMLInputElement>(null)
-    if (compareFrom !== '') return null
-    // />
     return (
-      <>
-        <Table.Cell colSpan={4} textAlign="right">
-          <Button primary onClick={() => fileInputRef?.current?.click()}>
-            Upload <Icon name="upload" />
-          </Button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            accept=".zip"
-            hidden
-            name="file"
-            multiple={false}
-            onChange={(e) => uploadSnapshot(e)}
-          />
-        </Table.Cell>
-      </>
+      <div>
+        <Button primary inverted onClick={() => fileInputRef?.current?.click()}>
+          Upload <Icon name="upload" style={{ paddingLeft: 5 }} />
+        </Button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept=".zip"
+          hidden
+          name="file"
+          multiple={false}
+          onChange={(e) => uploadSnapshot(e)}
+        />
+      </div>
     )
   }
 
+  const missingArchives = data ? getMissingArchives(data) : []
+
   return (
-    <div id="list-container" style={{ width: 400 }}>
+    <div id="list-container" style={{ minWidth: 500, maxWidth: 700 }}>
       <ConfirmModal />
       <Header>Snapshots</Header>
-      <Table stackable>
+      <div className="flex-row-space-between">
+        <div className="flex-row-start-center" style={{ gap: 10 }}>
+          Show:
+          <Dropdown
+            selection
+            value={displayType}
+            options={[
+              { key: 'snapshots', value: 'snapshots', text: 'Snapshots' },
+              { key: 'archives', value: 'archives', text: 'Archive snapshots' },
+            ]}
+            onChange={(_, { value }) => setDisplayType(value as SnapshotType)}
+            style={{ maxWidth: 350 }}
+          />
+        </div>
+        {renderUploadSnapshot()}
+      </div>
+      <Table stackable style={{ marginTop: 0 }}>
         <Table.Body>
-          <Table.Row>
-            {newSnapshot()}
-            {renderUploadSnapshot()}
-          </Table.Row>
+          {renderNewSnapshot()}
+          {missingArchives.length > 0 && renderMissingArchives(missingArchives)}
           {renderSnapshotList()}
         </Table.Body>
       </Table>
       {renderLoadingAndError()}
+      {renderArchiveFiles()}
     </div>
   )
+}
+
+const getMissingArchives = ({ currentArchives, snapshots }: ListData) => {
+  const availableArchives = new Set<string>()
+  snapshots.forEach(({ archive }) => {
+    if (!archive) return
+    const from = archive.from ? DateTime.fromISO(archive.from).toMillis() : 0
+    const to = archive.to ? DateTime.fromISO(archive.to).toMillis() : Infinity
+    currentArchives.forEach((archive) => {
+      if (archive.timestamp >= from && archive.timestamp <= to) availableArchives.add(archive.uid)
+    })
+  })
+  return currentArchives.filter(({ uid }) => !availableArchives.has(uid))
 }
 
 export default Snapshots
