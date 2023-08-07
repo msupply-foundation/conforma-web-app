@@ -14,6 +14,7 @@ export const options: FigTreeOptions = {
   fragments,
   graphQLConnection: { endpoint: getServerUrl('graphQL') },
   nullEqualsUndefined: true,
+  supportDeprecatedValueNodes: true,
 }
 
 const figTree = new FigTreeEvaluator(options)

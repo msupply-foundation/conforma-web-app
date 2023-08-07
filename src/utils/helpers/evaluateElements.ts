@@ -19,7 +19,7 @@ type EvaluationData = {
 type EvaluateElements = (
   elements: ElementForEvaluation[],
   evaluationOptions: EvaluationOptions,
-  data: EvaluationData
+  objects: EvaluationData
 ) => Promise<PartialEvaluatedElement[]>
 
 const evaluationMapping: { [resultKey in keyof EvaluatedElement]: keyof ElementForEvaluation } = {
@@ -30,10 +30,10 @@ const evaluationMapping: { [resultKey in keyof EvaluatedElement]: keyof ElementF
   initialValue: 'initialValueExpression',
 }
 
-export const evaluateElements: EvaluateElements = async (elements, evaluationOptions, data) => {
+export const evaluateElements: EvaluateElements = async (elements, evaluationOptions, objects) => {
   const elementPromiseArray: Promise<PartialEvaluatedElement>[] = []
   elements.forEach((element) => {
-    elementPromiseArray.push(evaluateSingleElement(element, evaluationOptions, data))
+    elementPromiseArray.push(evaluateSingleElement(element, evaluationOptions, objects))
   })
   return await Promise.all<PartialEvaluatedElement>(elementPromiseArray)
 }
@@ -41,10 +41,14 @@ export const evaluateElements: EvaluateElements = async (elements, evaluationOpt
 type EvaluateElement = (
   element: ElementForEvaluation,
   evaluationOptions: EvaluationOptions,
-  data: { [key: string]: any }
+  objects: EvaluationData
 ) => Promise<PartialEvaluatedElement>
 
-const evaluateSingleElement: EvaluateElement = async (element, evaluationOptions, data) => {
+const evaluateSingleElement: EvaluateElement = async (
+  element,
+  evaluationOptions,
+  { responses, currentUser, applicationData }
+) => {
   const evaluatedElement: PartialEvaluatedElement = {}
 
   const evaluateSingleExpression = async (
@@ -52,22 +56,25 @@ const evaluateSingleElement: EvaluateElement = async (element, evaluationOptions
     elementResultKey: keyof EvaluatedElement
   ) => {
     try {
-      evaluatedElement[elementResultKey] = figTree.evaluate(expressionOrValue, { data })
+      evaluatedElement[elementResultKey] = await figTree.evaluate(expressionOrValue, {
+        data: {
+          responses: { ...responses, thisResponse: responses?.[element.code]?.text },
+          currentUser,
+          applicationData,
+        },
+      })
     } catch (e) {
-      console.log(e, expressionOrValue)
+      // console.log(e, expressionOrValue)
     }
   }
 
   const evaluations = evaluationOptions.map((evaluationResultKey) => {
     const elementExpressionKey = evaluationMapping[evaluationResultKey]
     const evaluationExpression = element[elementExpressionKey]
-
     return evaluateSingleExpression(evaluationExpression, evaluationResultKey)
   })
 
   await Promise.all(evaluations)
-
-  console.log('evaluatedElement', evaluatedElement)
 
   return evaluatedElement
 }
