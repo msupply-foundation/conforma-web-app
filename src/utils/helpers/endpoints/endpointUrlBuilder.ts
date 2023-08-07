@@ -1,4 +1,3 @@
-import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import config from '../../../config'
 import {
   ComplexEndpoint,
@@ -177,7 +176,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
   }
 }
 
-const buildQueryString = (query?: BasicObject): string => {
+const buildQueryString = (query?: { [key: string]: any }): string => {
   if (!query) return ''
   const keyValStrings = Object.entries(query)
     .filter(([_, value]) => !!value)

@@ -2,17 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import figTree from '../components/FigTreeEvaluator'
 import { EvaluatorNode } from '../utils/types'
 import { buildParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
-import globalConfig from '../config'
 import { TemplateElementCategory } from '../utils/generated/graphql'
-import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
-import functions from '../components/FigTreeEvaluator/customFunctions'
-
-const graphQLEndpoint = getServerUrl('graphQL')
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   element,
@@ -39,21 +34,18 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   useEffect(() => {
     // Update dynamic parameters when responses change
-    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
-      evaluateExpression(expression as EvaluatorNode, {
-        objects: {
-          responses: { ...allResponses, thisResponse: response?.text },
-          currentUser,
-          applicationData,
-          functions,
-        },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-        headers: { Authorization: 'Bearer ' + JWT },
-      }).then((result: any) =>
-        setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
-      )
+      figTree
+        .evaluate(expression as EvaluatorNode, {
+          data: {
+            responses: { ...allResponses, thisResponse: response?.text },
+            currentUser,
+            applicationData,
+          },
+        })
+        .then((result: any) =>
+          setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
+        )
     })
   }, [allResponses])
 

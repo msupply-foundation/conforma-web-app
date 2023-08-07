@@ -2,27 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
-import {
-  EvaluatorNode,
-  EvaluatorParameters,
-  LooseString,
-  ResponseFull,
-  ElementPluginParameters,
-} from '../utils/types'
+import { LooseString, ResponseFull, ElementPluginParameters } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
-import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
+import figTree, { EvaluatorNode } from '../components/FigTreeEvaluator'
+import { isEvaluationExpression } from '@openmsupply/expression-evaluator'
 import { isEqual } from 'lodash'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
 import { useLanguageProvider } from '../contexts/Localisation'
-import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
-import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
-import functions from '../components/FigTreeEvaluator/customFunctions'
-
-const graphQLEndpoint = getServerUrl('graphQL')
 
 export const DEFAULT_LOADING_VALUE = 'Loading...'
 
@@ -73,21 +63,19 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   // Update dynamic parameters when responses change
   useEffect(() => {
-    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
-      evaluateExpression(expression as EvaluatorNode, {
-        objects: { responses: allResponses, currentUser, applicationData, functions },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-        headers: { Authorization: 'Bearer ' + JWT },
-      }).then((result: any) => {
-        // Need to do our own equality check since React treats 'result' as
-        // different object to original and causes a re-render even when not
-        // really changed
-        if (!isEqual(result, evaluatedParameters?.[field])) {
-          setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
-        }
-      })
+      figTree
+        .evaluate(expression as EvaluatorNode, {
+          data: { responses: allResponses, currentUser, applicationData },
+        })
+        .then((result: any) => {
+          // Need to do our own equality check since React treats 'result' as
+          // different object to original and causes a re-render even when not
+          // really changed
+          if (!isEqual(result, evaluatedParameters?.[field])) {
+            setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
+          }
+        })
     })
   }, [allResponses])
 
@@ -96,7 +84,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }, [currentResponse, isStrictPage])
 
   const onUpdate = async (value: LooseString) => {
-    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     const responses = { thisResponse: value, ...allResponses }
     const newValidationState = await calculateValidationState({
       validationExpression,
@@ -104,12 +91,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       isRequired,
       isStrictPage,
       responses,
-      evaluationParameters: {
-        objects: { responses, currentUser, applicationData, functions },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-        headers: { Authorization: 'Bearer ' + JWT },
-      },
+      data: { responses, currentUser, applicationData },
       currentResponse,
     })
     setValidationState(newValidationState)
@@ -292,7 +274,7 @@ const useCalculateValidationState = () => {
     isRequired,
     isStrictPage,
     responses,
-    evaluationParameters,
+    data,
     currentResponse,
   }: {
     validationExpression: EvaluatorNode | undefined
@@ -300,11 +282,11 @@ const useCalculateValidationState = () => {
     isRequired: boolean | undefined
     isStrictPage: boolean | undefined
     responses: any // thisResponse field makes it not "ResponsesByCode"
-    evaluationParameters: EvaluatorParameters
+    data: { [key: string]: any }
     currentResponse: ResponseFull | null
   }) => {
     const validationResult = validationExpression
-      ? await validate(validationExpression, validationMessage as string, evaluationParameters)
+      ? await validate(validationExpression, validationMessage as string, data)
       : { isValid: true }
 
     if (!validationResult.isValid && currentResponse?.text !== undefined) return validationResult

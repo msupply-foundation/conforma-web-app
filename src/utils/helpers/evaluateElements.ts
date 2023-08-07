@@ -1,5 +1,4 @@
 import figTree from '../../components/FigTreeEvaluator'
-import getServerUrl from './endpoints/endpointUrlBuilder'
 import {
   EvaluatedElement,
   ResponsesByCode,
@@ -9,8 +8,6 @@ import {
   EvaluationOptions,
   EvaluatorNode,
 } from '../types'
-
-const graphQLEndpoint = getServerUrl('graphQL')
 
 type PartialEvaluatedElement = Partial<EvaluatedElement>
 type EvaluationObject = {
