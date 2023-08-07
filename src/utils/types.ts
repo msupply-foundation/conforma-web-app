@@ -48,7 +48,6 @@ export {
   ElementPluginParameters,
   ElementState,
   EvaluatorNode,
-  EvaluatorParameters,
   Filters,
   FullStructure,
   HistoryElement,
@@ -254,14 +253,6 @@ interface ElementsActivityState {
   elementLostFocusTimestamp: number
   elementsStateUpdatedTimestamp: number
   areTimestampsInSequence: boolean
-}
-
-interface EvaluatorParameters {
-  objects?: { [key: string]: any }
-  pgConnection?: any // Any, because not likely to be used in front-end
-  graphQLConnection?: IGraphQLConnection
-  APIfetch?: Function
-  headers?: { [key: string]: string }
 }
 
 type ElementsById = { [templateElementId: string]: PageElement }

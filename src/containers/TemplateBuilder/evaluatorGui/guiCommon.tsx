@@ -28,7 +28,7 @@ export const renderDynamicParameters: RenderDynamicParametersType = ({
   setEvaluation,
   evaluation,
   ComponentLibrary,
-  evaluatorParameters,
+  data,
 }) => {
   const paramaterValueOffset = parametersOffset + 1
   const parameterNamesChild = evaluation.asOperator.children[parametersOffset]
@@ -82,7 +82,7 @@ export const renderDynamicParameters: RenderDynamicParametersType = ({
                       setInArray(evaluation, index + paramaterValueOffset, newParameterValue)
                     ),
                   ComponentLibrary,
-                  evaluatorParameters
+                  data
                 )}
               </ComponentLibrary.FlexColumn>
             </ComponentLibrary.FlexRow>
@@ -101,7 +101,7 @@ export const renderArrayControl: RenderArrayControlType = ({
   newValue,
   title = '',
   ComponentLibrary,
-  evaluatorParameters,
+  data,
 }) => {
   const isRootArray = evaluation.type === 'array'
   const array = isRootArray ? evaluation.asArray : evaluation.asOperator.children
@@ -127,7 +127,7 @@ export const renderArrayControl: RenderArrayControlType = ({
                 (newChildEvaluation) =>
                   setEvaluation(setInArray(evaluation, index, newChildEvaluation)),
                 ComponentLibrary,
-                evaluatorParameters
+                data
               )}
             </ComponentLibrary.FlexRow>
           )
@@ -142,7 +142,7 @@ export const pureArray: PureArrayType = ({ newValue, selector, operator }) => ({
   default: getTypedEvaluation({ operator: operator, children: [newValue] }),
   match: (typedEvaluation) =>
     typedEvaluation.type === 'operator' && typedEvaluation.asOperator.operator === operator,
-  render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) =>
+  render: (evaluation, setEvaluation, ComponentLibrary, data) =>
     renderArrayControl({
       title: 'Elements',
       key: selector,
@@ -151,7 +151,7 @@ export const pureArray: PureArrayType = ({ newValue, selector, operator }) => ({
       setEvaluation,
       newValue,
       ComponentLibrary,
-      evaluatorParameters,
+      data,
     }),
 })
 
@@ -160,11 +160,11 @@ export const renderSingleChild: RenderSingleChildType = (
   index,
   setEvaluation,
   ComponentLibrary,
-  evaluatorParameters
+  data
 ) =>
   renderEvaluationElement(
     getTypedEvaluation(evaluation.asOperator.children[index]),
     (newChildEvaluation) => setEvaluation(setInArray(evaluation, index, newChildEvaluation)),
     ComponentLibrary,
-    evaluatorParameters
+    data
   )

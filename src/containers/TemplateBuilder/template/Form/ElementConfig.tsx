@@ -1,4 +1,4 @@
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 import React, { useEffect, useState } from 'react'
 import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
 import { pluginProvider } from '../../../../formElementPlugins'

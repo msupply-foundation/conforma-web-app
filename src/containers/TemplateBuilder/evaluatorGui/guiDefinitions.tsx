@@ -5,7 +5,7 @@ import {
   renderDynamicParameters,
   renderSingleChild,
 } from './guiCommon'
-import { addToArray, removeFromArray, setInArray } from './helpers'
+import { addToArray, removeFromArray } from './helpers'
 import { renderEvaluationElement } from './renderEvaluation'
 
 import { getTypedEvaluation } from './typeHelpers'
@@ -61,7 +61,7 @@ export const guis: GuisType = [
     selector: 'Array',
     default: getTypedEvaluation(['array element']),
     match: (typedEvaluation) => typedEvaluation.type === 'array',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => {
       return renderArrayControl({
         title: 'Elements',
         key: 'arrayControl',
@@ -70,7 +70,7 @@ export const guis: GuisType = [
         setEvaluation,
         newValue: getTypedEvaluation('array element'),
         ComponentLibrary,
-        evaluatorParameters,
+        data,
       })
     },
   },
@@ -114,13 +114,13 @@ export const guis: GuisType = [
       children: ['02312312', '^[0-9]+$'],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'REGEX',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => (
       <React.Fragment key="regexCompare">
         <ComponentLibrary.Label key="value" title="String to match: " />
-        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
 
         <ComponentLibrary.Label key="value" title="Regex: " />
-        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, data)}
       </React.Fragment>
     ),
   },
@@ -131,10 +131,10 @@ export const guis: GuisType = [
       children: ['Compare me', 'To me'],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === '=',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => (
       <React.Fragment key="equalityCompare">
         <ComponentLibrary.Label key="value" title="Compare this Value: " />
-        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
 
         {renderArrayControl({
           title: 'To these Values',
@@ -144,7 +144,7 @@ export const guis: GuisType = [
           setEvaluation,
           newValue: getTypedEvaluation('to me'),
           ComponentLibrary,
-          evaluatorParameters,
+          data,
         })}
       </React.Fragment>
     ),
@@ -156,12 +156,12 @@ export const guis: GuisType = [
       children: ['compare me', 'to me'],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === '!=',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => (
       <>
         <ComponentLibrary.Label key="compare" title="Compare this Value: " />
-        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
         <ComponentLibrary.Label key="compareTo" title="To these Values: " />
-        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, data)}
       </>
     ),
   },
@@ -172,14 +172,14 @@ export const guis: GuisType = [
       children: [true, 'if true', 'if false'],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === '?',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => (
       <>
         <ComponentLibrary.Label key="ifCondition" title="If condition: " />
-        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
         <ComponentLibrary.Label key="valueTrue" title="Value if true: " />
-        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, data)}
         <ComponentLibrary.Label key="valueFalse" title="Value if false: " />
-        {renderSingleChild(evaluation, 2, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 2, setEvaluation, ComponentLibrary, data)}
       </>
     ),
   },
@@ -190,10 +190,10 @@ export const guis: GuisType = [
       children: ['%1 %2 %1', 'first', 'second'],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'stringSubstitution',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => (
       <React.Fragment key="stringSubstitutionComponent">
         <ComponentLibrary.Label key="stringLiteral" title="String literal: " />
-        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
 
         {renderArrayControl({
           title: 'Substitution values',
@@ -203,7 +203,7 @@ export const guis: GuisType = [
           setEvaluation,
           newValue: getTypedEvaluation({ value: 'substitution' }),
           ComponentLibrary,
-          evaluatorParameters,
+          data,
         })}
       </React.Fragment>
     ),
@@ -215,12 +215,12 @@ export const guis: GuisType = [
       children: ['firstName', null],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'objectProperties',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => {
       const isFallbackSpecified = evaluation.asOperator.children.length === 2
       return (
         <React.Fragment key="objectProperties">
           <ComponentLibrary.Label key="objectPath" title="Object path (e.g. thisResponse.text): " />
-          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
           <ComponentLibrary.Label
             key="fallback"
             title="Fallback (in case object path is not found): "
@@ -234,13 +234,7 @@ export const guis: GuisType = [
               }}
             />
             {isFallbackSpecified &&
-              renderSingleChild(
-                evaluation,
-                1,
-                setEvaluation,
-                ComponentLibrary,
-                evaluatorParameters
-              )}
+              renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, data)}
           </ComponentLibrary.FlexRow>
         </React.Fragment>
       )
@@ -253,13 +247,13 @@ export const guis: GuisType = [
       children: ['functions.getYear'],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'objectFunctions',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => (
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => (
       <React.Fragment key="objectFunctions">
         <ComponentLibrary.Label
           key="functionPath"
           title="Function path (e.g. functions.getYear): "
         />
-        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+        {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
         <ComponentLibrary.Label key="parameters" title="Function parameters: " />
         {renderArrayControl({
           title: 'Parameters',
@@ -269,7 +263,7 @@ export const guis: GuisType = [
           setEvaluation,
           newValue: getTypedEvaluation({ value: {} }),
           ComponentLibrary,
-          evaluatorParameters,
+          data,
         })}
       </React.Fragment>
     ),
@@ -287,7 +281,7 @@ export const guis: GuisType = [
       ],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'GET',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => {
       const parametersOffset = 1
       const children = evaluation.asOperator.children
       const parametersLength = children[parametersOffset].asArray.length
@@ -300,7 +294,7 @@ export const guis: GuisType = [
       return (
         <React.Fragment key="apiComponent">
           <ComponentLibrary.Label key="title" title="URL:" />
-          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
           {renderDynamicParameters({
             header: 'Query Parameters',
             parametersOffset,
@@ -311,7 +305,7 @@ export const guis: GuisType = [
             setEvaluation,
             evaluation,
             ComponentLibrary,
-            evaluatorParameters,
+            data,
           })}
 
           <ComponentLibrary.FlexRow key="extractionBoolean">
@@ -332,7 +326,7 @@ export const guis: GuisType = [
                   lastChildIndex,
                   setEvaluation,
                   ComponentLibrary,
-                  evaluatorParameters
+                  data
                 )}
               </ComponentLibrary.FlexColumn>
             )}
@@ -348,7 +342,7 @@ export const guis: GuisType = [
       children: ['http://localhost:8080/login', ['username', 'password'], 'js', '123456'],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'POST',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => {
       const parametersOffset = 1
       const children = evaluation.asOperator.children
       const parametersLength = children[parametersOffset].asArray.length
@@ -361,7 +355,7 @@ export const guis: GuisType = [
       return (
         <React.Fragment key="apiComponent">
           <ComponentLibrary.Label key="title" title="URL:" />
-          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
           {renderDynamicParameters({
             header: 'Query Parameters',
             parametersOffset,
@@ -372,7 +366,7 @@ export const guis: GuisType = [
             setEvaluation,
             evaluation,
             ComponentLibrary,
-            evaluatorParameters,
+            data,
           })}
 
           <ComponentLibrary.FlexRow key="extractionBoolean">
@@ -393,7 +387,7 @@ export const guis: GuisType = [
                   lastChildIndex,
                   setEvaluation,
                   ComponentLibrary,
-                  evaluatorParameters
+                  data
                 )}
               </ComponentLibrary.FlexColumn>
             )}
@@ -419,7 +413,7 @@ export const guis: GuisType = [
       ],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'graphQL',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => {
       const parametersOffset = 2
       const children = evaluation.asOperator.children
       const parametersLength = children[parametersOffset].asArray.length
@@ -432,9 +426,9 @@ export const guis: GuisType = [
       return (
         <React.Fragment key="graphQLComponent">
           <ComponentLibrary.Label key="graphQL" title="graphQL query:" />
-          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, data)}
           <ComponentLibrary.Label key="url" title="URL:" />
-          {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, evaluatorParameters)}
+          {renderSingleChild(evaluation, 1, setEvaluation, ComponentLibrary, data)}
           {renderDynamicParameters({
             header: 'Query Parameters',
             parametersOffset,
@@ -445,7 +439,7 @@ export const guis: GuisType = [
             setEvaluation,
             evaluation,
             ComponentLibrary,
-            evaluatorParameters,
+            data,
           })}
 
           <ComponentLibrary.FlexRow key="extractionBoolean">
@@ -466,7 +460,7 @@ export const guis: GuisType = [
                   lastChildIndex,
                   setEvaluation,
                   ComponentLibrary,
-                  evaluatorParameters
+                  data
                 )}
               </ComponentLibrary.FlexColumn>
             )}
@@ -482,7 +476,7 @@ export const guis: GuisType = [
       properties: [{ key: 'keyToBuild', value: 'valueToBuild' }],
     }),
     match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'buildObject',
-    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
+    render: (evaluation, setEvaluation, ComponentLibrary, data) => {
       const propertiesToBuild = evaluation.asBuildObjectOperator.properties
       const newProperty = {
         key: getTypedEvaluation('keyToBuild'),
@@ -522,7 +516,7 @@ export const guis: GuisType = [
                       },
 
                       ComponentLibrary,
-                      evaluatorParameters
+                      data
                     )}
                     <ComponentLibrary.Label key="valueTitle" title="Value:" />
                     {renderEvaluationElement(
@@ -532,7 +526,7 @@ export const guis: GuisType = [
                         setEvaluation(evaluation)
                       },
                       ComponentLibrary,
-                      evaluatorParameters
+                      data
                     )}
                   </ComponentLibrary.FlexColumn>
                 </ComponentLibrary.FlexRow>

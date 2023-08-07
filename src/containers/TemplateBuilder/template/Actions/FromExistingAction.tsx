@@ -1,4 +1,4 @@
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { Dropdown } from 'semantic-ui-react'

@@ -10,7 +10,7 @@ import {
 } from '../types'
 
 type PartialEvaluatedElement = Partial<EvaluatedElement>
-type EvaluationObject = {
+type EvaluationData = {
   responses?: ResponsesByCode
   currentUser?: User | null
   applicationData?: ApplicationDetails
@@ -19,7 +19,7 @@ type EvaluationObject = {
 type EvaluateElements = (
   elements: ElementForEvaluation[],
   evaluationOptions: EvaluationOptions,
-  objects: EvaluationObject
+  data: EvaluationData
 ) => Promise<PartialEvaluatedElement[]>
 
 const evaluationMapping: { [resultKey in keyof EvaluatedElement]: keyof ElementForEvaluation } = {
@@ -30,10 +30,10 @@ const evaluationMapping: { [resultKey in keyof EvaluatedElement]: keyof ElementF
   initialValue: 'initialValueExpression',
 }
 
-export const evaluateElements: EvaluateElements = async (elements, evaluationOptions, objects) => {
+export const evaluateElements: EvaluateElements = async (elements, evaluationOptions, data) => {
   const elementPromiseArray: Promise<PartialEvaluatedElement>[] = []
   elements.forEach((element) => {
-    elementPromiseArray.push(evaluateSingleElement(element, evaluationOptions, objects))
+    elementPromiseArray.push(evaluateSingleElement(element, evaluationOptions, data))
   })
   return await Promise.all<PartialEvaluatedElement>(elementPromiseArray)
 }
@@ -41,14 +41,10 @@ export const evaluateElements: EvaluateElements = async (elements, evaluationOpt
 type EvaluateElement = (
   element: ElementForEvaluation,
   evaluationOptions: EvaluationOptions,
-  objects: EvaluationObject
+  data: { [key: string]: any }
 ) => Promise<PartialEvaluatedElement>
 
-const evaluateSingleElement: EvaluateElement = async (
-  element,
-  evaluationOptions,
-  { responses, currentUser, applicationData }
-) => {
+const evaluateSingleElement: EvaluateElement = async (element, evaluationOptions, data) => {
   const evaluatedElement: PartialEvaluatedElement = {}
 
   const evaluateSingleExpression = async (
@@ -56,13 +52,7 @@ const evaluateSingleElement: EvaluateElement = async (
     elementResultKey: keyof EvaluatedElement
   ) => {
     try {
-      evaluatedElement[elementResultKey] = figTree.evaluate(expressionOrValue, {
-        data: {
-          responses: { ...responses, thisResponse: responses?.[element.code]?.text },
-          currentUser,
-          applicationData,
-        },
-      })
+      evaluatedElement[elementResultKey] = figTree.evaluate(expressionOrValue, { data })
     } catch (e) {
       console.log(e, expressionOrValue)
     }
@@ -76,6 +66,8 @@ const evaluateSingleElement: EvaluateElement = async (
   })
 
   await Promise.all(evaluations)
+
+  console.log('evaluatedElement', evaluatedElement)
 
   return evaluatedElement
 }

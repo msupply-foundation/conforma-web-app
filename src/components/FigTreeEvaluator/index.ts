@@ -1,4 +1,9 @@
-import { FigTreeEvaluator, FigTreeOptions, EvaluatorNode } from 'fig-tree-evaluator'
+import {
+  FigTreeEvaluator,
+  FigTreeOptions,
+  EvaluatorNode,
+  EvaluatorOutput,
+} from 'fig-tree-evaluator'
 import functions from './customFunctions'
 import fragments from './fragments'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
@@ -18,4 +23,4 @@ if (JWT) figTree.updateOptions({ headers: { Authorization: 'Bearer ' + JWT } })
 
 export default figTree
 
-export { EvaluatorNode }
+export { EvaluatorNode, EvaluatorOutput }

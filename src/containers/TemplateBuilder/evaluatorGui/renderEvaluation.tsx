@@ -1,5 +1,4 @@
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import { IParameters, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
+import figTree, { EvaluatorOutput } from '../../../components/FigTreeEvaluator'
 import React, { useState } from 'react'
 import { Header, Icon, Modal } from 'semantic-ui-react'
 import { Loading } from '../../../components'
@@ -18,26 +17,27 @@ export const renderEvaluation: ParseAndRenderEvaluationType = (
   evaluation,
   setEvaluation,
   ComponentLibrary,
-  evaluatorParameters
+  data
 ) => {
   const _setEvaluation = (typedEvaluation: EvaluationType) =>
     setEvaluation(convertTypedEvaluationToBaseType(typedEvaluation))
 
-  return renderEvaluationElement(evaluation, _setEvaluation, ComponentLibrary, evaluatorParameters)
+  return renderEvaluationElement(evaluation, _setEvaluation, ComponentLibrary, data)
 }
 
 const Evaluate: React.FC<{
   typedEvaluation: EvaluationType
-  evaluatorParameters?: IParameters
-}> = ({ typedEvaluation, evaluatorParameters }) => {
-  const [evaluationResult, setEvaluationResult] = useState<ValueNode | undefined | null>(undefined)
+  data?: { [key: string]: any }
+}> = ({ typedEvaluation, data }) => {
+  const [evaluationResult, setEvaluationResult] = useState<EvaluatorOutput | undefined | null>(
+    undefined
+  )
 
   const evaluateNode = async () => {
     try {
-      const result = await evaluateExpression(
-        convertTypedEvaluationToBaseType(typedEvaluation),
-        evaluatorParameters
-      )
+      const result = await figTree.evaluate(convertTypedEvaluationToBaseType(typedEvaluation), {
+        data,
+      })
       setEvaluationResult(result)
     } catch (e) {
       setEvaluationResult('Problem Executing Evaluation')
@@ -80,7 +80,7 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
   evaluation,
   setEvaluation,
   ComponentLibrary,
-  evaluatorParameters
+  data
 ) => {
   const typedEvaluation = getTypedEvaluation(evaluation)
   const gui = guis.find(({ match }) => match(typedEvaluation))
@@ -102,14 +102,11 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
                 setSelected={onSelect}
                 title="operator"
               />
-              <Evaluate
-                typedEvaluation={typedEvaluation}
-                evaluatorParameters={evaluatorParameters}
-              />
+              <Evaluate typedEvaluation={typedEvaluation} data={data} />
             </ComponentLibrary.FlexRow>
             <EvaluationOutputType evaluation={typedEvaluation} setEvaluation={setEvaluation} />
             <EvaluationFallback evaluation={typedEvaluation} setEvaluation={setEvaluation} />
-            {gui.render(typedEvaluation, setEvaluation, ComponentLibrary, evaluatorParameters)}
+            {gui.render(typedEvaluation, setEvaluation, ComponentLibrary, data)}
           </ComponentLibrary.OperatorContainer>
         </ComponentLibrary.FlexRow>
       )
