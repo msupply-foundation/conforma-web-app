@@ -334,16 +334,20 @@ const Snapshots: React.FC = () => {
     if (!data) return null
     const nestedSnapshots = getNestedSnapshots(data.snapshots)
     return nestedSnapshots.map((snapshot) => (
-      <>
+      <React.Fragment key={snapshot.filename}>
         {renderSingleSnapshot(snapshot, snapshot.otherVersions.length > 0)}
         {expandedSnapshots.includes(snapshot.name) && (
-          <Table style={{ marginTop: -10, marginBottom: 0, paddingLeft: 20 }}>
-            <Table.Body>
-              {snapshot.otherVersions.map((snapshot) => renderSingleSnapshot(snapshot))}
-            </Table.Body>
-          </Table>
+          <Table.Row>
+            <Table.Cell style={{ background: 'transparent', paddingRight: 0 }}>
+              <Table style={{ marginTop: -14, marginBottom: -10 }}>
+                <Table.Body>
+                  {snapshot.otherVersions.map((snapshot) => renderSingleSnapshot(snapshot))}
+                </Table.Body>
+              </Table>
+            </Table.Cell>
+          </Table.Row>
         )}
-      </>
+      </React.Fragment>
     ))
   }
 
@@ -661,12 +665,11 @@ const getTotalSize = (
 ) => {
   if (!currentArchives) return null
   if (!archiveStart || archiveStart === 'none') return null
-  if (archiveStart === 'full')
-    return currentArchives.reduce((sum, archive) => sum + (archive?.totalFileSize ?? 0), 0)
+  const start = archiveStart === 'full' ? 0 : archiveStart ?? 0
   const end = archiveEnd ?? Infinity
 
   const includedArchives = currentArchives.filter(
-    (archive) => archive.timestamp >= archiveStart && archive.timestamp <= end
+    (archive) => archive.timestamp >= start && archive.timestamp <= end
   )
   if (includedArchives.some((archive) => !archive.totalFileSize)) return 'Unknown'
 
