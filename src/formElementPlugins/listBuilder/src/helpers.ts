@@ -9,7 +9,7 @@ import { TemplateElement, TemplateElementCategory } from '../../../utils/generat
 import { evaluateElements } from '../../../utils/helpers/evaluateElements'
 import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
 import { ListItem } from './types'
-import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import functions from '../../../components/FigTreeEvaluator/customFunctions'
 
 // Formatting and Text manipulation
 export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {

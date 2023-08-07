@@ -10,7 +10,7 @@ import Markdown from '../utils/helpers/semanticReactMarkdown'
 import globalConfig from '../config'
 import { TemplateElementCategory } from '../utils/generated/graphql'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
-import functions from '../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import functions from '../components/FigTreeEvaluator/customFunctions'
 
 const graphQLEndpoint = getServerUrl('graphQL')
 

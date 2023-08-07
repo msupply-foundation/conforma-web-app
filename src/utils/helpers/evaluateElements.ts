@@ -1,7 +1,5 @@
-import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
-import functions from '../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import figTree from '../../components/FigTreeEvaluator'
 import getServerUrl from './endpoints/endpointUrlBuilder'
-import config from '../../config'
 import {
   EvaluatedElement,
   ResponsesByCode,
@@ -54,19 +52,6 @@ const evaluateSingleElement: EvaluateElement = async (
   evaluationOptions,
   { responses, currentUser, applicationData }
 ) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-  const evaluationParameters = {
-    objects: {
-      responses: { ...responses, thisResponse: responses?.[element.code]?.text },
-      currentUser,
-      applicationData,
-      functions,
-    },
-    APIfetch: fetch,
-    graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-    headers: { Authorization: 'Bearer ' + JWT },
-  }
-
   const evaluatedElement: PartialEvaluatedElement = {}
 
   const evaluateSingleExpression = async (
@@ -74,11 +59,15 @@ const evaluateSingleElement: EvaluateElement = async (
     elementResultKey: keyof EvaluatedElement
   ) => {
     try {
-      evaluatedElement[elementResultKey] = isEvaluationExpression(expressionOrValue)
-        ? await evaluateExpression(expressionOrValue, evaluationParameters)
-        : expressionOrValue
+      evaluatedElement[elementResultKey] = figTree.evaluate(expressionOrValue, {
+        data: {
+          responses: { ...responses, thisResponse: responses?.[element.code]?.text },
+          currentUser,
+          applicationData,
+        },
+      })
     } catch (e) {
-      // console.log(e, expressionOrValue)
+      console.log(e, expressionOrValue)
     }
   }
 

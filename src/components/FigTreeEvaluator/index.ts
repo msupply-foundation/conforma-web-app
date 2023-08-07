@@ -1,0 +1,21 @@
+import { FigTreeOptions, FigTreeEvaluator } from 'fig-tree-evaluator'
+import functions from './customFunctions'
+import fragments from './fragments'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
+import config from '../../config'
+
+export const options: FigTreeOptions = {
+  functions,
+  fragments,
+  graphQLConnection: { endpoint: getServerUrl('graphQL') },
+  nullEqualsUndefined: true,
+}
+
+const figTree = new FigTreeEvaluator(options)
+
+const JWT = localStorage.getItem(config.localStorageJWTKey)
+if (JWT) figTree.updateOptions({ headers: { Authorization: 'Bearer ' + JWT } })
+
+export default figTree
+
+export {}

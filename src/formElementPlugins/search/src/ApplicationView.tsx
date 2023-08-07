@@ -11,7 +11,7 @@ import config from '../../../config'
 import useDebounce from './useDebounce'
 import './styles.css'
 import useDefault from '../../useDefault'
-import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import functions from '../../../components/FigTreeEvaluator/customFunctions'
 
 interface DisplayFormat {
   title?: string

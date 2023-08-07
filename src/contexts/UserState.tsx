@@ -3,6 +3,7 @@ import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import config from '../config'
+import figTree from '../components/FigTreeEvaluator'
 
 type UserState = {
   currentUser: User | null
@@ -114,6 +115,7 @@ export function UserProvider({ children }: UserProviderProps) {
       })
       dispatch({ type: 'setLoading', isLoading: false })
     }
+    figTree.updateOptions({ headers: { Authorization: 'Bearer ' + JWT } })
   }
 
   // Initial check for persisted user in local storage
