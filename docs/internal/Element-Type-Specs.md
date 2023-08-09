@@ -388,6 +388,9 @@ Note: this display option is only suitable if you have separately defined `label
 This tells the element to look at the "name" field for the `label`, and the "active" field for the `selected` status. Note that all the "checkbox" fields can be re-mapped, but it is only required that you provide the ones that are different.
 - **default**: `string |  string[] | Checkbox[] | {key: Checkbox...}`  -- the "default" value works a bit differently to most of the other elements, as checkbox values can already be dynamically controlled by updating the `checkboxes` parameter and changing the `selected` value within each. However, this `default` value is more flexible in what it can take as input. In particular, it can take a comma-delimited string (or array of strings), which will be converted to checkboxes whose `selected` values are set to `true` if the Checkbox `text` (or `label` if `text` not specified) value is included in the string.  
 e.g. If the default value is = `"Medicine, Chemical"`, and the `checkboxes` are: `["Chemical", "Poisons", "Medicine"]`, then the element will be instantiated with two of the three checkboxes already checked. There are some subtle differences in how the `default` value responds to dynamic changes (e.g. as a result of other elements) as compared to `checkboxes`, but this should be apparent when configuring/testing the template.
+- **hasOther**: `boolean` (default `false`) -- if `true`, allows the user to enter a custom "free text" value instead of one of the pre-defined options.
+- **otherLabel**: `string` (default `"Other"`) -- if `hasOther` is `true`, this is the label text for the new text input.
+- **otherPlaceholder**: `string` (default `"Enter other value"`) -- if `hasOther` is `true`, this is the placeholder text that appears in the input field before any user input.
 
 #### Response type
 
@@ -398,7 +401,7 @@ e.g. If the default value is = `"Medicine, Chemical"`, and the `checkboxes` are:
     textUnselected: <string> -- comma separated list of all unselected checkbox "text"
     textMarkdownList: <string> -- selected text values formatted as a Markdown list
     textUnselectedMarkdownList: <string> -- unselected text values formatted as a Markdown list
-    textMarkdownPropertyList: <string> -- all checboxes displayed as a Markdown <label>: <text/textNegative> list (see "textDisplay -> propertyList" above)
+    textMarkdownPropertyList: <string> -- all checkboxes displayed as a Markdown <label>: <text/textNegative> list (see "textDisplay -> propertyList" above)
     values, shown in Summary view (or Review)
     values: {
         <key-name-1> : { text: <text value>, isSelected: <boolean>}
