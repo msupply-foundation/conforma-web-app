@@ -3,7 +3,7 @@ import { Button, Form, List, Header, Message, Icon } from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure, User } from '../../../utils/types'
 import reactStringReplace from 'react-string-replace'
-import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
+import { TranslateMethod, useLanguageProvider } from '../../../contexts/Localisation'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import { NotesState } from './NotesTab'
 
@@ -13,7 +13,7 @@ const NewCommentForm: React.FC<{
   setState: (state: NotesState) => void
   refetchNotes: Function
 }> = ({ structure, state, setState, refetchNotes }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -28,7 +28,7 @@ const NewCommentForm: React.FC<{
 
   const handleSubmit = async () => {
     if (!comment) {
-      setError(strings.REVIEW_NOTES_COMMENT_ERROR)
+      setError(t('REVIEW_NOTES_COMMENT_ERROR'))
       return
     }
     await submit(currentUser as User, structure, comment, files)
@@ -45,12 +45,12 @@ const NewCommentForm: React.FC<{
       <Form onSubmit={handleSubmit} className="item-container">
         <Form.Field>
           <label>
-            {strings.REVIEW_NOTES_ENTER_COMMENT}{' '}
+            {t('REVIEW_NOTES_ENTER_COMMENT')}{' '}
             {reactStringReplace(
-              strings.REVIEW_NOTES_MARKDOWN_SUPPORT,
-              strings.MARKDOWN,
+              t('REVIEW_NOTES_MARKDOWN_SUPPORT'),
+              t('MARKDOWN'),
               (match, index) => (
-                <a href={strings.MARKDOWN_LINK} target="_blank" key={index}>
+                <a href={t('MARKDOWN_LINK')} target="_blank" key={index}>
                   {match}
                 </a>
               )
@@ -72,7 +72,7 @@ const NewCommentForm: React.FC<{
               <FileList
                 files={files}
                 setFiles={(files: File[]) => setState({ ...state, files })}
-                strings={strings}
+                t={t}
               />
             )}
           </div>
@@ -86,20 +86,18 @@ const NewCommentForm: React.FC<{
           onChange={handleFiles}
         />
         <p className="clickable slightly-smaller-text">
-          <a
-            onClick={() => fileInputRef?.current?.click()}
-          >{`+ ${strings.REVIEW_NOTES_ADD_FILES}`}</a>
+          <a onClick={() => fileInputRef?.current?.click()}>{`+ ${t('REVIEW_NOTES_ADD_FILES')}`}</a>
         </p>
         <div className="file-row">
           <Button loading={!!loadingMessage} type="submit" primary className="wide-button">
-            {strings.BUTTON_SUBMIT}
+            {t('BUTTON_SUBMIT')}
           </Button>
           <Button
             secondary
             className="wide-button"
             onClick={() => setState({ ...state, showForm: false, comment: '', files: [] })}
           >
-            {strings.OPTION_CANCEL}
+            {t('OPTION_CANCEL')}
           </Button>
           <p className="smaller-text">
             <em>{loadingMessage}</em>
@@ -110,15 +108,15 @@ const NewCommentForm: React.FC<{
   )
 }
 
-const FileList: React.FC<{ files: File[]; setFiles: Function; strings: LanguageStrings }> = ({
+const FileList: React.FC<{ files: File[]; setFiles: Function; t: TranslateMethod }> = ({
   files,
   setFiles,
-  strings,
+  t,
 }) => (
   <div id="files-list">
-    <Header as="h4">{strings.REVIEW_NOTES_FILES}</Header>
+    <Header as="h4">{t('REVIEW_NOTES_FILES')}</Header>
     <p className="smaller-text" style={{ marginBottom: '0.5em' }}>
-      {strings.REVIEW_NOTES_HOVER_TO_REMOVE}
+      {t('REVIEW_NOTES_HOVER_TO_REMOVE')}
     </p>
     <List bulleted>
       {files.map((file) => (

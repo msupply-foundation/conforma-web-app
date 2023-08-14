@@ -42,8 +42,16 @@ These fields are common to all element types and have their own field in the `te
   - default: `{"value": true}`
 - **is_editable**: `JSON` -- dynamic query determining whether can be edited (Would only be false in rare circumstances)
   - default: `{"value": true}`
-- **defaultValue**: `JSON` - the default value for the response. Note: several plugins have their own "default" parameter, which may be easier to use in many situations. What's the difference? In this one, the default response is generated when the application is first created, and from then on it behaves just like a normal question element. The default parameter for individual elements is calculated when the element is rendered, so it can change in response to other changes. If you need a default value to be made from answers the user provided earlier in the form, that would be the one to use. See individual elements for the respective details.  
-**Important**: When you use this `defaultValue` parameter, it must conform to the shape of the saved response for that question type, since it is saved directly as a response when created, not processed in the form itself -- see individual element types for correct response shape
+- **initialValue**: `JSON` - this "initial value" response is evaluated *and saved* before anything is even exposed to the form element components, and so it must match the shape of the "response" values for the particular element type (see individual elements below). After that it behaves just like a normal question element. Most plugins also have their own **default** parameter which is evaluated when the element is rendered, so it can change in response to other changes and is *only saved after* the user loads the relevant page. Usually used when the default response depends on other elements responses.
+Example for `shortText` plugin element:
+```
+{
+  "text": "Something to be saved by default"
+}
+```
+![style:basic](images/Element-Type-Specs-initial-value.png)
+
+  Use cases for setting an `initialValue` over a `default` would be if you wanted to ensure that a particular element had a valid response in it before its page was even loaded, or if you want a hidden element to have a response without the user ever interacting with it (or even seeing it).
 - **validation**: `JSON` -- a dynamic expression for checking if the user's response is a valid input.
   - default: `{"value": true}` or just `true`
 - **validation_message**: `string` -- the message that shows in the UI when validation fails.  
@@ -66,12 +74,16 @@ These fields are common to all element types and have their own field in the `te
 
 _Free-form, single-line text input element_
 
-#### Input parameters (in the `parameters` JSON)
+<a name="input-params" />
+
+#### Input parameters (in the "parameters" JSON)
 
 - **label**: `string` -- Text that shows in the HTML "label" attribute of the form element (Markdown string, with dynamic expression evaluation)
 - **description**: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **default**: `string` -- default response, will change dynamically in response to form changes until the user has edited it [Optional]
+- **persistUserInput**: `boolean` -- if `false`, when the `default` value changes, the current response will be replaced by the new default. Otherwise (`true`), the default will only be used if there is no response yet. [Optional; default `false`]
+- **ignoreNullDefault**: `boolean` -- if you have a dynamic default value, in some conditions you might want no default at all. In which case, you can configure it so that the default value is `null`. However, the component receiving this value doesn't know whether `null` means "reset the response to empty" or "ignore and leave it alone". By default, it will use the former, but in the cases where you want `null` defaults to be ignored, set this parameter to `true`.
 - **maskedInput**: `boolean` -- if `true`, displays user input as masked (hidden) characters -- i.e. for passwords. [Optional]
 - **maxWidth**: `number` -- the maximum width (in pixels) for the text input box (defaults to fill the width of the container)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length.  
@@ -113,6 +125,7 @@ _Free-form, multi-line text input element_
 - **description**: `string` -- additional explanatory text (usually not required) [Optional]
 - **placeholder**: `string`-- text to display before user input (HTML "placeholder" attribute) [Optional]
 - **default**: `string` -- default response, will change dynamically in response to form changes until the user has edited it [Optional]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **lines**: `number` -- height of the TextArea input, in number of lines/rows (default: 5)
 - **maxLength**: `number` -- response must be no longer than this many characters. If the user tries to type more, the response will be truncated to the maximum length. (See Note in ShortText above for how to integrate `maxLength` with validation.)
 
@@ -182,35 +195,35 @@ _For displaying blocks of text in the application_
 
 #### `style: none` (default)
 
-![style:none](./images/Element-Type-Specs-textInfo-none.png)
+![style:none](images/Element-Type-Specs-textInfo-none.png)
 
 #### `style: basic`
 
-![style:basic](./images/Element-Type-Specs-textInfo-basic.png)
+![style:basic](images/Element-Type-Specs-textInfo-basic.png)
 
 #### `style: info`
 
-![style:info](./images/Element-Type-Specs-textInfo-info.png)
+![style:info](images/Element-Type-Specs-textInfo-info.png)
 
 #### `style: warning`
 
-![style:warning](./images/Element-Type-Specs-textInfo-warning.png)
+![style:warning](images/Element-Type-Specs-textInfo-warning.png)
 
 #### `style: success`
 
-![style:success](./images/Element-Type-Specs-textInfo-success.png)
+![style:success](images/Element-Type-Specs-textInfo-success.png)
 
 #### `style: positive`
 
-![style:positive](./images/Element-Type-Specs-textInfo-positive.png)
+![style:positive](images/Element-Type-Specs-textInfo-positive.png)
 
 #### `style: error`
 
-![style:error](./images/Element-Type-Specs-textInfo-error.png)
+![style:error](images/Element-Type-Specs-textInfo-error.png)
 
 #### `style: negative`
 
-![style:negative](./images/Element-Type-Specs-textInfo-negative.png)
+![style:negative](images/Element-Type-Specs-textInfo-negative.png)
 
 ---
 
@@ -248,19 +261,36 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 - **label**: `string` -- as above
 - **description**: `string` -- as above [Optional]
 - **options**: `array[string | object]` -- array of options for the user to select from. If an array of **strings** is provided, these strings will be displayed to the user. However, if an array of **objects** is provided, you will also need to specify an `optionsDisplayProperty` (see below)
-- **default**: `string`/`number` -- if not provided, defaults to index 0.
+- **default**: `string`/`number` -- can be either a string representing the *value*, or a number representing the index in the `options` array. [Optional]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **search**: `boolean` (default: `false`) -- if `true`, the list of options can be searched and filtered by user
 - **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of organisation objects (i.e. `{orgId, name, licenceNumber}`), you'd probably specify `name` as the `optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection. And if `optionsDisplayProperty` refers to a field that doesn't exist on the supplied object, the plugin will fail and show in error in the application.
+- **optionsDisplayExpression**: Similar to `optionsDisplayProperty`, but you can build a display string out of multiple object properties, using the same substitution/templating mechanism as the [listBuilder](#list-builder-ingredients-list) `displayFormat` property.
 - **hasOther**: `boolean` (default `false`) -- if `true`, allows the user to enter a custom "free text" value instead of one of the pre-defined options.
+- **multiSelect**: `boolean` -- whether or not the user can select multiple items for their response (default: `false`)
+
+Note: if including an "Other" options, then options should only be an array of strings, or else you'll be mixing objects with strings, which will cause problems. In other words, you should never have both optionsDisplayProperty and hasOther defined in the same question element.
 
 #### Response type
 
+For single response configurations (`multiSelect = false`):
 ```
 {
   optionIndex: <integer> (index from the options array)
   text: <string> (actual text from options array)
   selection: <string | object> (entire object or string from the supplied options list)
   isCustomOption: <boolean> (if the selection is a custom "hasOther" option)
+}
+
+```
+
+For multiple response configurations (`multiSelect = true`):
+```
+{
+  optionIndex: array[<integer>] (indexes from the options array)
+  text: <string> (concatenation of selected text values from options array)
+  selection: array[<string | object>] (array of selected objects or strings from the supplied options list)
+  isCustomOption: <boolean> (if the selection includes a custom "hasOther" option)
 }
 
 ```
@@ -282,6 +312,7 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 - **description**: `string` -- as above [Optional]
 - **options**: `array[string | object]` -- as above (in [Drop-down](#dropdown))
 - **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **optionsDisplayProperty**: -- as above (in Drop-down)
 - **layout**: `string` -- if "inline", displays radio buttons horizontally, rather than stacked vertically (default)
 - **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
@@ -327,9 +358,8 @@ _One or more checkboxes, any number of which can be selected/toggled_
   selected: <boolean> - initial state of checkbox
   ...Other properties
 }
-```
-
-"Other properties" refers to any additional properties included in the object. For example, an API call might return objects with a bunch of additional fields. These are not required for the Checbox display, but will be passed along and stored as part of the response, so any of these properties can be referred to in subsequent elements or actions.
+```  
+"Other properties" refers to any additional properties included in the object. For example, an API call might return objects with a bunch of additional fields. These are not required for the Checkbox display, but will be passed along and stored as part of the response, so any of these properties can be referred to in subsequent elements or actions.
 
 To handle objects returned that don't have the required fields, you can use the `keyMap` parameter (below) to map fields to required key names.
 
@@ -338,7 +368,7 @@ To handle objects returned that don't have the required fields, you can use the 
 - **resetButton**: `boolean` -- if `true`, element will show a "Reset" button, which allows user to reset selections to the initial (loading) state. (Default: `false`)
 - **displayFormat**: (Options: `text`, `list` (default), `checkboxes`, `propertyList`) -- specifies how to show the applicant's response on the Summary page:
   - `list`: shows the selected checkboxes in a (Markdown) list
-  - `text`: shows the selected values in a comma-seperated text string
+  - `text`: shows the selected values in a comma-separated text string
   - `checkboxes`: displays the selected values as checkboxes as per the application view
   - `propertyList`: displays in a list with properties (the checkbox `label` field) and values (the checkbox `text` or `textNegative` values, depending on selection).  
   e.g.
@@ -346,17 +376,21 @@ To handle objects returned that don't have the required fields, you can use the 
     - Option 2: NO
     - \<checkbox `label`\>: \<`text`\/`textNegative` value\>  
 Note: this display option is only suitable if you have separately defined `label`, `text` and `textNegative` fields for each checkbox.
-- **preventNonResponse**: `boolean` (default `false`) -- normally, we want to allow the user to leave checkboxes unchecked and be considered a valid response. However, if we want to force the user to tick a box (e.g. for a declaration, say), then set `preventNonResponse` to `true`.
-- **keyMap**: `object` -- if the input `checkboxes` property (above) has different property names that what is required (for example, if pulling from an API), then this `keyMap` parameter can be used to re-map the input property names to the requried property names. For example, if your input "checkbox" data contained an array of objects of the type `{ name: "Nicole", active: true}`, you would provide a `keyMap` object like this:
+- **preventNonResponse**: `boolean` (default `false`) -- normally, we want to allow the user to leave checkboxes unchecked and be considered a valid response. However, if we want to force the user to tick a box (e.g. for a declaration, say), then set `preventNonResponse` to `true`. Note that `isRequired` must be `true` for this element for this parameter to have an effect.
+- **keyMap**: `object` -- if the input `checkboxes` property (above) has different property names that what is required (for example, if pulling from an API), then this `keyMap` parameter can be used to re-map the input property names to the required property names. For example, if your input "checkbox" data contained an array of objects of the type `{ name: "Nicole", active: true}`, you would provide a `keyMap` object like this:
 
 ```
 {
   label: "name",
   selected: "active"
 }
-```
-
+```  
 This tells the element to look at the "name" field for the `label`, and the "active" field for the `selected` status. Note that all the "checkbox" fields can be re-mapped, but it is only required that you provide the ones that are different.
+- **default**: `string |  string[] | Checkbox[] | {key: Checkbox...}`  -- the "default" value works a bit differently to most of the other elements, as checkbox values can already be dynamically controlled by updating the `checkboxes` parameter and changing the `selected` value within each. However, this `default` value is more flexible in what it can take as input. In particular, it can take a comma-delimited string (or array of strings), which will be converted to checkboxes whose `selected` values are set to `true` if the Checkbox `text` (or `label` if `text` not specified) value is included in the string.  
+e.g. If the default value is = `"Medicine, Chemical"`, and the `checkboxes` are: `["Chemical", "Poisons", "Medicine"]`, then the element will be instantiated with two of the three checkboxes already checked. There are some subtle differences in how the `default` value responds to dynamic changes (e.g. as a result of other elements) as compared to `checkboxes`, but this should be apparent when configuring/testing the template.
+- **hasOther**: `boolean` (default `false`) -- if `true`, allows the user to enter a custom "free text" value instead of one of the pre-defined options.
+- **otherLabel**: `string` (default `"Other"`) -- if `hasOther` is `true`, this is the label text for the new text input.
+- **otherPlaceholder**: `string` (default `"Enter other value"`) -- if `hasOther` is `true`, this is the placeholder text that appears in the input field before any user input.
 
 #### Response type
 
@@ -367,7 +401,7 @@ This tells the element to look at the "name" field for the `label`, and the "act
     textUnselected: <string> -- comma separated list of all unselected checkbox "text"
     textMarkdownList: <string> -- selected text values formatted as a Markdown list
     textUnselectedMarkdownList: <string> -- unselected text values formatted as a Markdown list
-    textMarkdownPropertyList: <string> -- all checboxes displayed as a Markdown <label>: <text/textNegative> list (see "textDisplay -> propertyList" above)
+    textMarkdownPropertyList: <string> -- all checkboxes displayed as a Markdown <label>: <text/textNegative> list (see "textDisplay -> propertyList" above)
     values, shown in Summary view (or Review)
     values: {
         <key-name-1> : { text: <text value>, isSelected: <boolean>}
@@ -405,6 +439,7 @@ _Interface for uploading documents or other files_
 - **fileSizeLimit**: `number` -- maximum file size in KB (default: no limit)
 - **subfolder**: `string` -- by default, files are uploaded into a subfolder with the name of the application serial. However, this can be over-ridden by specifying this parameter. This should rarely be required.
 - **showDescription**: `boolean` -- if `true`, an additional text input will be displayed alongside each file to allow the applicant to specify a description for each file. (default `false`)
+- **showFileRestrictions**: `boolean` -- will display the allowed file extensions and maximum size below the upload box (default: `true`)
 
 #### Response type
 
@@ -442,6 +477,8 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 
 - **label**: `string` -- as above
 - **description**: `string` -- as above [Optional]
+- **default** `ResponseList` -- default value for the list. Must be in the format of the `list` parameter from the Response object (i.e. an array of objects)
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **createModalButtonText** `string` -- text to display on the button to launch the new item interface (modal) (default: "Add item")
 - **addButtonText** `string` -- text to display on the button to add a new item from the item editing modal (default: "Add")
 - **updateButtonText** `string` -- text to display on the button to update an existing item from the item editing modal (default: "Update")
@@ -496,6 +533,8 @@ _Allows user to build a list of items, such as an **Ingredients List**_
   where `LB1`...`LB6` are the element codes from the template. (Note, also, the additional escape `\` characters required if used inside a GraphQL query string)
 
   If a `displayFormat` parameter is not specified, the card view will just show a simplified list of fields representing `title: value` for each input.
+- **inlineOpen** `boolean` (only relevant for **inline** view) -- if `true`, all elements will be displayed "open" (i.e. not collapsed) on initial load (default `false`)
+- **tableExcludeColumns** `string[]` (only relevant for **table** view) -- an array of fields to exclude from the table view, which can be useful when there are a lot of fields being collected which can make the table overly cluttered. The values correspond to *either* the **title** or the **code** fields of the individual elements.
 
 #### Response type
 
@@ -555,7 +594,8 @@ Once selected, items are displayed in a "card" view:
     children: [ "search.text" ]
   }
   ```
-
+- **default** `ResponseSelection` / `ResponseSelection[]` -- default value for the selection(s). Must be in the format of the `selection` parameter from the Response object (i.e. an array of objects), or just a single object if not multi-select.
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **icon**: `string` -- the name of the icon shown in the search box, from Semantic-UI icons. (default: "search" : 🔍 )
 - **multiSelect**: `boolean` -- whether or not the user can select multiple items for their response (default: `false`)
 - **minCharacters**: `number` -- the minimum number of characters the user must type before the search query executes (default: 1). This is useful in situations where need the user to look up a specific item without being able to freely browse through the entire results list. For example, to look up organisation in our system using "registration" code, we set `minCharacters = 6`, so the user will need to know an exact code rather than being able to try characters one at a time.
@@ -605,6 +645,7 @@ Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semanti
 - **label**: `string` -- as above
 - **description**: `string` -- as above [Optional]
 - **default**: `(ISO) string` -- a pre-selected date [Optional]
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **allowRange**: `boolean` -- if `true`, input is expected to be a date _range_ (a start and end date). Default: `false` (i.e. can only enter single date)
 - **minDate**/**maxDate**: `(ISO) string` -- specifies how far into the future or past the selector can go
 - **minAge**/**maxAge**: `(ISO) string` -- same as above, but a number (in years) relative to the _current_ date. For example, if an applicant was required to be over 18 years old, you'd set `minAge` to `18`.
@@ -617,11 +658,11 @@ Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semanti
 
 ```
 {
-  text: <text format of date (range) as specified in "displayFormat">
-  date: {
-     start: <ISO YYYY-MM-DD date>
-     end?:  <ISO YYYY-MM-DD date>
-  }
+text: <text format of date (range) as specified in "displayFormat">
+date: {
+  start: <ISO YYYY-MM-DD date>
+  end?:  <ISO YYYY-MM-DD date>
+}
 ```
 
 Note, if response is a single date (i.e. not a range), only `start` will be specified.
@@ -640,7 +681,8 @@ _Input for numeric fields_
 #### Input parameters
 
 - **label** / **description** / **placeholder** / **maxWidth**: `string` -- as above
-- **default** -- default value (Note: if you require a dynamic value for "default", please use the "defaultValue" field on `template_element`)
+- **default**: `string`/`number` -- default value 
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
 - **type** -- `enum` -- either "integer" or "float" (default: "integer")
 - **simple** -- `boolean` (default: `true`) If `true`, the input field will always show only a non-formatted version of the number (i.e. "1000", not "1,000"), but it will have a "stepper" which can be clicked to increment the number up and down.
 - **minValue** -- minimum allowed value (default: 0)
@@ -649,10 +691,11 @@ _Input for numeric fields_
 - **prefix** / **suffix** -- `string` If specified, the number will display these values either side of the number input. They'll also be pre/appended to the "text" representation of the number in the saved response. Useful if you want to define units with the input number (e.g. `12 km`)
 - **suffixPlural** -- `string` (only relevant if `suffix` is specified above) Changes the displayed/stored suffix depending on the value of the number based on pluralisation rules.  
 (e.g. if `suffix = "month"` and `suffixPlural = "months"`, then when number is 1: "1 month", when number is 2:  "2 months")  
-**NOTE**: The parameters below are only relevant if `simple == false` (above)
-- **locale** -- `string` specifies the international "locale" code (e.g `'ja-JP'`) for displaying the calendar in local format. Default is the local setting.
+**NOTE**: The parameters below are only relevant if `simple == false` (above). They also only apply to the *formatting* of the number, not the number value itself.
+- **locale** -- `string` specifies the international "locale" code (e.g `'ja-JP'`) for displaying the number in local format. Default is the local setting.
 - **currency** -- `string` If specified, number will be formatted as a currency value (e.g. $4.95). Should be specified in ISO4217 country code format (e.g. "USD", "JPY") See: [https://www.iban.com/currency-codes](https://www.iban.com/currency-codes)
 - **maxSignificantDigits** -- `number` If specified, number will be rounded to the specified number of significant figures
+- **decimals** -- `number` If specified, number will be displayed with exactly this many decimal places.
 
 #### Response type
 
@@ -685,12 +728,3 @@ _For specifying where the list of questions is broken into UI pages/steps. The *
 - ~~**pageBreakValidityCheck**: `boolean` -- If `true`, the user cannot proceed to the next page unless _all_ questions on the current page have passed validation~~
   - ~~default: `false`~~
 
----
-
-```
-
-```
-
-```
-
-```

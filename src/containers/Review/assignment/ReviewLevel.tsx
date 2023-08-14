@@ -12,7 +12,7 @@ type ReviewLevelProps = {
 }
 
 const ReviewLevel: React.FC<ReviewLevelProps> = ({ structure, filters, setFilters }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   useEffect(() => {
     setFilters({
@@ -38,7 +38,7 @@ const ReviewLevel: React.FC<ReviewLevelProps> = ({ structure, filters, setFilter
     levelsOptions.push({
       value: ALL_LEVELS,
       key: ALL_LEVELS,
-      text: strings.REVIEW_FILTER_ALL_LEVELS,
+      text: t('REVIEW_FILTER_ALL_LEVELS'),
     })
 
     return levelsOptions
@@ -53,7 +53,7 @@ const ReviewLevel: React.FC<ReviewLevelProps> = ({ structure, filters, setFilter
   return (
     <div className="section-single-row-box-container" id="review-filters-container">
       <div className="centered-flex-box-row">
-        <Label className="uppercase-label" content={strings.REVIEW_FILTER_SHOW_TASKS_FOR} />
+        <Label className="uppercase-label" content={t('REVIEW_FILTER_SHOW_TASKS_FOR')} />
         <Dropdown
           className="reviewer-dropdown"
           options={getLevelsOptions(stage.levels)}

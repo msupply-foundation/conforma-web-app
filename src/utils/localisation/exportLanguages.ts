@@ -1,5 +1,5 @@
 import { getRequest } from '../helpers/fetchMethods'
-import { LanguageOption, LanguageStrings } from '../../contexts/Localisation'
+import { LanguageOption, LanguageStrings, getPluginStrings } from '../../contexts/Localisation'
 import defaultLanguageStrings from '../../utils/defaultLanguageStrings'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 import { mapValues } from 'lodash'
@@ -25,8 +25,10 @@ export const exportLanguages = async (
       translations: allLanguageStrings[language.code],
     }))
 
+    const allDefaultStrings = { ...defaultLanguageStrings, ...getPluginStrings() }
+
     // Iterate over default strings and extract all translations
-    const translationsObject = mapValues(defaultLanguageStrings, (value, key) =>
+    const translationsObject = mapValues(allDefaultStrings, (value, key) =>
       getTranslations(value, key as keyof LanguageStrings, languageObject)
     )
 
@@ -55,7 +57,7 @@ export const exportLanguages = async (
     const row5Locale = ['Locale:', '', ...languageOptions.map((opt) => opt.locale)]
     const row6Enabled = ['Enabled?', '', ...languageOptions.map((opt) => opt.enabled)]
 
-    const translationRows = Object.keys(defaultLanguageStrings).map((key) => [
+    const translationRows = Object.keys(allDefaultStrings).map((key) => [
       key,
       ...Object.values(translationsObject[key as keyof LanguageStrings]),
     ])

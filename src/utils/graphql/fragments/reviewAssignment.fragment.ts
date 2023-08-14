@@ -7,11 +7,12 @@ export default gql`
     timeUpdated
     levelNumber
     reviewerId
-    isLocked
     isLastLevel
+    # TODO: Rename property in Backend to isMakeDecision
     isFinalDecision
     isSelfAssignable
     allowedSections
     assignedSections
+    availableSections
   }
 `

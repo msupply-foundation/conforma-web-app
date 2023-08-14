@@ -1,4 +1,4 @@
-import { LanguageStrings } from '../../../contexts/Localisation'
+import { TranslateMethod } from '../../../contexts/Localisation'
 import { ActivityLog, Decision } from '../../generated/graphql'
 import { FullStructure, SectionsStructure } from '../../types'
 import { Section } from './types'
@@ -34,14 +34,12 @@ export const checkResubmission = (event: ActivityLog, fullLog: ActivityLog[]) =>
 export const stringifySections = (
   sections: Section[],
   sectionsStructure: SectionsStructure,
-  strings: LanguageStrings
+  t: TranslateMethod
 ) => {
   if (!sections) return '---'
   return sections.length === Object.keys(sectionsStructure).length
-    ? `*${strings.TIMELINE_ALL_SECTIONS}*`
-    : `${strings.TIMELINE_SECTIONS}: *${sections
-        .map((section: Section) => section.title)
-        .join(', ')}*`
+    ? `*${t('TIMELINE_ALL_SECTIONS')}*`
+    : `${t('TIMELINE_SECTIONS')}: *${sections.map((section: Section) => section.title).join(', ')}*`
 }
 
 export const getReviewLinkString = (

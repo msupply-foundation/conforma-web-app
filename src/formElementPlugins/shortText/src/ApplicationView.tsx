@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
+import useDefault from '../../useDefault'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -13,9 +14,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
 }) => {
   const [value, setValue] = useState<string | null | undefined>(currentResponse?.text)
-  const [hasEdited, setHasEdited] = useState(
-    currentResponse?.text !== null && currentResponse?.text !== parameters?.default
-  )
+
   const { isEditable } = element
   const {
     placeholder,
@@ -24,15 +23,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     description,
     maxWidth,
     maxLength = Infinity,
-    default: defaultText,
+    default: defaultValue,
   } = parameters
 
-  useEffect(() => {
-    if (defaultText && (!hasEdited || !value)) {
-      onSave({ text: defaultText })
+  useDefault({
+    defaultValue,
+    currentResponse,
+    parameters,
+    onChange: (defaultText: string) => {
       setValue(defaultText)
-    } else onUpdate(value)
-  }, [defaultText])
+      onSave({ text: defaultText })
+    },
+  })
 
   function handleChange(e: any) {
     let text = e.target.value
@@ -41,7 +43,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     }
     onUpdate(text)
     setValue(text)
-    setHasEdited(true)
   }
 
   function handleLoseFocus(e: any) {

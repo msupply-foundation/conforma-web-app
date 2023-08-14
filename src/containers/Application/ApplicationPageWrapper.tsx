@@ -25,7 +25,7 @@ interface RevalidationState {
 }
 
 const ApplicationPageWrapper: React.FC<ApplicationProps> = ({ structure }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     match: { path },
   } = useRouter()
@@ -76,7 +76,7 @@ const ApplicationPageWrapper: React.FC<ApplicationProps> = ({ structure }) => {
     }
   }, [revalidationState, fullStructure])
 
-  if (error) return <Message error header={strings.ERROR_APPLICATION_PAGE} list={[error]} />
+  if (error) return <Message error header={t('ERROR_APPLICATION_PAGE')} list={[error]} />
 
   if (!fullStructure || !fullStructure.responsesByCode) return <Loading />
 

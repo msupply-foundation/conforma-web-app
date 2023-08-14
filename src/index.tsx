@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import '../semantic/src/semantic.less'
 import config from './config'
 import cache from './cache'
@@ -10,7 +10,7 @@ import { LanguageOption, LanguageProvider } from './contexts/Localisation'
 import { ToastProvider } from './contexts/Toast/ToastProvider'
 import { SystemPrefsProvider } from './contexts/SystemPrefs'
 import { usePrefs } from './contexts/SystemPrefs'
-import { persistCache } from 'apollo3-cache-persist'
+// import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
 import getServerUrl from './utils/helpers/endpoints/endpointUrlBuilder'
 
@@ -91,9 +91,11 @@ const App: React.FC = () => {
   )
 }
 
-ReactDOM.render(
+const container = document.getElementById('root')
+const root = createRoot(container!)
+
+root.render(
   <SystemPrefsProvider>
     <App />
-  </SystemPrefsProvider>,
-  document.getElementById('root')
+  </SystemPrefsProvider>
 )

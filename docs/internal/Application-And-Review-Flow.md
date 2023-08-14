@@ -1,7 +1,3 @@
-# Application and Review Flow
-
-TODO add written description
-
 ## Overall Diagram
 
 ![Application and Review Workflow.png](images/Application-and-Review-Workflow.png)

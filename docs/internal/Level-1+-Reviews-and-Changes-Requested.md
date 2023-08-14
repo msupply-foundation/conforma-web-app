@@ -1,5 +1,3 @@
-# Level 1+ Reviews and Changes Requested
-
 The [Level 1 Reviews](Level-1-Review-And-LOQ.md) page explains how reviews with only one level work, which is a subset of how a review with more levels (per stage) should work.
 
 The aim of this page is to outline the structure changes and flows:
@@ -71,7 +69,6 @@ Currently we don't allow submitting directly to Applicant when there is a disagr
   - in the list of applications the action `VIEW_REVIEW` is available for this user now (review is not editable)
 * On review level 2 **self-assign**:
   - update `review_assignment` status `ASSIGNED`
-  - update other `review_assignment` with status `AVAILABLE` to have isLocked = True to inform front end that other reviews cannot be assigned
   - create `review_question_assignment` to each `review_response` that have latest status as `SUBMITTED` (to get only from submitted reviews)
   - in the list of applications the action `START_REVIEW` is available for this user
 * On review level 2 **start**:

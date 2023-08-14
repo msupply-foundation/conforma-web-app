@@ -8,31 +8,33 @@ import {
   ReviewerAction,
 } from '../../../utils/generated/graphql'
 import { Icon } from 'semantic-ui-react'
+import { useRouter } from '../../../utils/hooks/useRouter'
 
 const ReviewerActionCell: React.FC<CellProps> = ({
   application: { serial, reviewerAction, assignerAction, outcome },
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
+  const { location } = useRouter()
 
   const getReviewActionString = (reviewerAction: ReviewerAction) => {
     switch (reviewerAction) {
       case ReviewerAction.SelfAssign:
-        return strings.ACTION_SELF_ASSIGN
+        return t('ACTION_SELF_ASSIGN')
       case ReviewerAction.UpdateReview:
-        return strings.ACTION_UPDATE
+        return t('ACTION_UPDATE')
       case ReviewerAction.RestartReview:
-        return strings.ACTION_RE_REVIEW
+        return t('ACTION_RE_REVIEW')
       case ReviewerAction.ContinueReview:
-        return strings.ACTION_CONTINUE
+        return t('ACTION_CONTINUE')
       case ReviewerAction.StartReview:
-        return strings.ACTION_START
+        return t('ACTION_START')
       case ReviewerAction.MakeDecision:
-        return strings.ACTION_MAKE_DECISION
+        return t('ACTION_MAKE_DECISION')
       case ReviewerAction.AwaitingResponse:
-        return strings.ACTION_AWAITING_RESPONSE
+        return t('ACTION_AWAITING_RESPONSE')
       default:
         // ReviewerAction.ViewReview
-        return strings.ACTION_VIEW
+        return t('ACTION_VIEW')
     }
   }
 
@@ -44,7 +46,7 @@ const ReviewerActionCell: React.FC<CellProps> = ({
         return null
       default:
         // AssignerAction.Assign
-        return strings.ACTION_ASSIGN
+        return t('ACTION_ASSIGN')
     }
   }
 
@@ -53,14 +55,19 @@ const ReviewerActionCell: React.FC<CellProps> = ({
     outcome === ApplicationOutcome.Pending
       ? !!reviewerAction
         ? getReviewActionString(reviewerAction)
-        : !!assignerAction && assignerAction != AssignerAction.AssignLocked
+        : !!assignerAction
         ? getAssignActionString(assignerAction)
         : null
       : null
 
+  const actionLink = {
+    pathname: `/application/${serial}/review`,
+    state: { prevQuery: location?.search },
+  }
+
   if (!action)
     return (
-      <Link className="user-action" to={`/application/${serial}/review`}>
+      <Link className="user-action" to={actionLink}>
         <Icon name="chevron right" />
       </Link>
     )
@@ -69,11 +76,7 @@ const ReviewerActionCell: React.FC<CellProps> = ({
     <div>
       <Link
         className="user-action"
-        to={
-          action === strings.ACTION_VIEW
-            ? `/application/${serial}/review`
-            : `/application/${serial}/review?tab=assignment`
-        }
+        to={action === t('ACTION_VIEW') ? actionLink : { ...actionLink, search: '?tab=assignment' }}
       >
         {action}
       </Link>

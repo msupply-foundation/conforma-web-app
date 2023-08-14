@@ -2,21 +2,32 @@ import { DateTime } from 'luxon'
 import { useState, useEffect } from 'react'
 import { TemplateStatus, useGetAllTemplatesQuery } from '../../utils/generated/graphql'
 
+export interface VersionObject {
+  versionId: string
+  timestamp: string
+  number: number
+  parentVersionId: string | null
+  comment: string | null
+}
+
 export type Template = {
   name: string
   status: TemplateStatus
   id: number
   code: string
   category: string
-  version: number
+  versionId: string
+  versionComment: string | null
   versionTimestamp: DateTime
+  parentVersionId: string | null
+  versionHistory: VersionObject[]
   applicationCount: number
 }
 export type Templates = {
   main: Template
-  applicationCount: number
-  numberOfTemplates: number
-  all: Template[]
+  totalApplicationCount: number
+  numberOfVersions: number
+  others: Template[]
 }[]
 
 const useGetTemplates = () => {
@@ -34,7 +45,7 @@ const useGetTemplates = () => {
           !template?.code ||
           !template.name ||
           !template.status ||
-          !template?.version ||
+          !template?.versionId ||
           !template?.versionTimestamp
         ) {
           console.log('failed to load template', template)
@@ -46,8 +57,11 @@ const useGetTemplates = () => {
           name,
           status,
           id,
-          version,
+          versionId,
+          parentVersionId = null,
           versionTimestamp,
+          versionComment = null,
+          versionHistory = [],
           templateCategory,
           applications,
         } = template
@@ -59,7 +73,10 @@ const useGetTemplates = () => {
           id,
           code,
           category: templateCategory?.title || '',
-          version,
+          versionId,
+          parentVersionId,
+          versionComment,
+          versionHistory,
           versionTimestamp: DateTime.fromISO(versionTimestamp),
           applicationCount: applications.totalCount || 0,
         }
@@ -67,22 +84,28 @@ const useGetTemplates = () => {
         if (!holder)
           return templates.push({
             main: current,
-            applicationCount: current.applicationCount,
-            numberOfTemplates: 1,
-            all: [current],
+            totalApplicationCount: current.applicationCount,
+            numberOfVersions: 1,
+            others: [current],
           })
-        const { main, all } = holder
+        const { main, others } = holder
 
-        all.push(current)
         if (
           status === TemplateStatus.Available ||
           (main.status !== TemplateStatus.Available &&
             main.versionTimestamp < current.versionTimestamp)
         )
           holder.main = current
+        others.push(current)
 
-        holder.applicationCount += current.applicationCount
-        holder.numberOfTemplates = all.length
+        holder.totalApplicationCount += current.applicationCount
+        holder.numberOfVersions = others.length
+      })
+
+      // Don't include the "main" version in the "others", and order by most
+      // recent
+      templates.forEach((template) => {
+        template.others = template.others.filter(({ id }) => id !== template.main.id).reverse()
       })
 
       setTemplates(templates)

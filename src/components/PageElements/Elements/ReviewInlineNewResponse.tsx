@@ -26,7 +26,7 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
   reviewInfo,
   stageNumber,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [reviewResponse, setReviewResponse] = useState<{
     comment?: string
     decision?: ReviewResponseDecision
@@ -47,11 +47,11 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
 
   const reviewOptions = [
     {
-      label: strings.LABEL_REVIEW_APPROVE,
+      label: t('LABEL_REVIEW_APPROVE'),
       decision: ReviewResponseDecision.Approve,
     },
     {
-      label: strings.LABEL_REVIEW_RESSUBMIT,
+      label: t('LABEL_REVIEW_RESSUBMIT'),
       decision: ReviewResponseDecision.Decline,
     },
   ]
@@ -62,7 +62,6 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
         templateElementId,
         applicationId,
         reviewId,
-        stageNumber,
         decision: reviewResponse.decision as ReviewResponseDecision,
         comment: reviewResponse.comment,
         timeSubmitted,
@@ -82,7 +81,7 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
       <div className="response-element-content">
         <Form>
           <Form.Field>
-            <label>{strings.LABEL_REVIEW}</label>
+            <label>{t('LABEL_REVIEW')}</label>
           </Form.Field>
           {reviewOptions.map(({ decision, label }) => (
             <Form.Field key={decision}>
@@ -101,7 +100,7 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
             </Form.Field>
           ))}
           <Form.Field>
-            <label>{strings.LABEL_COMMENT}</label>
+            <label>{t('LABEL_COMMENT')}</label>
           </Form.Field>
           <Form.Field>
             <TextArea
@@ -116,14 +115,14 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
             <Button
               primary
               disabled={isInvalidComment || !reviewResponse.decision}
-              content={strings.BUTTON_ADD_REVIEW}
+              content={t('BUTTON_ADD_REVIEW')}
               onClick={submit}
               className="button-med"
             />
             <Button
               primary
               inverted
-              content={strings.OPTION_CANCEL}
+              content={t('OPTION_CANCEL')}
               onClick={() => setIsActiveEdit(false)}
               className="button-med"
             />

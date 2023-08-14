@@ -1,76 +1,72 @@
 import React, { ReactNode } from 'react'
 import { Icon, Label } from 'semantic-ui-react'
-import { LanguageStrings } from '../../contexts/Localisation'
+import { TranslateMethod } from '../../contexts/Localisation'
 import { User } from '../../utils/generated/graphql'
 interface ReviewLabelProps {
   reviewer?: User
   message?: string
-  strings: LanguageStrings
+  t: TranslateMethod
 }
 
-export const ReviewInProgressLabel: React.FC<ReviewLabelProps> = ({ reviewer, strings }) =>
+export const ReviewInProgressLabel: React.FC<ReviewLabelProps> = ({ reviewer, t }) =>
   reviewer ? (
-    <LabelWrapper labelContent={`${strings.REVIEW_IN_PROGRESS_BY} `} reviewer={reviewer} />
+    <LabelWrapper labelContent={`${t('REVIEW_IN_PROGRESS_BY')} `} reviewer={reviewer} />
   ) : (
     <LabelWrapper
-      labelContent={strings.LABEL_ASSIGNED_TO_YOU}
+      labelContent={t('LABEL_ASSIGNED_TO_YOU')}
       iconNode={<Icon name="circle" size="tiny" color="blue" />}
       showAsRelevantInfo={true}
     />
   )
 
-export const ReviewLockedLabel: React.FC<ReviewLabelProps> = ({ reviewer, strings }) => (
+export const ReviewLockedLabel: React.FC<ReviewLabelProps> = ({ reviewer, t }) => (
   <LabelWrapper
-    labelContent={`${strings.LABEL_ASSIGNMENT_LOCKED} ${
-      reviewer ? '' : strings.ASSIGNMENT_YOURSELF
-    }`}
+    labelContent={`${t('LABEL_ASSIGNMENT_LOCKED')} ${reviewer ? '' : t('ASSIGNMENT_YOURSELF')}`}
     iconNode={<Icon name="ban" size="small" color="pink" />}
     reviewer={reviewer}
   />
 )
 
-export const ReviewLabel: React.FC<ReviewLabelProps> = ({ reviewer, message, strings }) => (
-  <LabelWrapper labelContent={message || strings.REVIEW_NOT_FOUND} reviewer={reviewer} />
+export const ReviewLabel: React.FC<ReviewLabelProps> = ({ reviewer, message, t }) => (
+  <LabelWrapper labelContent={message || t('REVIEW_NOT_FOUND')} reviewer={reviewer} />
 )
 
-export const ReviewCanMakeDecisionLabel: React.FC<ReviewLabelProps> = ({ reviewer, strings }) => {
+export const ReviewCanMakeDecisionLabel: React.FC<ReviewLabelProps> = ({ reviewer, t }) => {
   const doneByYourself = !reviewer
-  const consolidationLabel = `${strings.LABEL_REVIEW_MAKE_DECISION_BY} ${
-    doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''
+  const consolidationLabel = `${t('LABEL_REVIEW_MAKE_DECISION_BY')} ${
+    doneByYourself ? t('ASSIGNMENT_YOURSELF') : ''
   }`
   return <LabelWrapper labelContent={consolidationLabel} reviewer={reviewer} />
 }
 
-export const ReviewSelfAssignmentLabel: React.FC<ReviewLabelProps> = ({ reviewer, strings }) => (
+export const ReviewSelfAssignmentLabel: React.FC<ReviewLabelProps> = ({ reviewer, t }) => (
   <LabelWrapper
-    labelContent={
-      reviewer ? `${strings.LABEL_ASSIGNMENT_AVAILABLE} ` : strings.LABEL_ASSIGNMENT_SELF
-    }
+    labelContent={reviewer ? `${t('LABEL_ASSIGNMENT_AVAILABLE')} ` : t('LABEL_ASSIGNMENT_SELF')}
     reviewer={reviewer}
   />
 )
 
 export const ReviewByLabel: React.FC<{
   user?: User
-  strings: LanguageStrings
+  t: TranslateMethod
   isSubmitted?: boolean
-}> = ({ user, strings, isSubmitted = false }) => {
+}> = ({ user, t, isSubmitted = false }) => {
   const doneByYourself = !user
-  const reviewLabel = `${isSubmitted ? strings.REVIEW_DONE_BY : strings.REVIEW_IN_PROGRESS_BY} ${
-    doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''
+  const reviewLabel = `${isSubmitted ? t('REVIEW_DONE_BY') : t('REVIEW_IN_PROGRESS_BY')} ${
+    doneByYourself ? t('ASSIGNMENT_YOURSELF') : ''
   }`
   return <LabelWrapper labelContent={reviewLabel} reviewer={user} />
 }
 
 export const ConsolidationByLabel: React.FC<{
   user?: User
-  strings: LanguageStrings
+  t: TranslateMethod
   isSubmitted?: boolean
-}> = ({ user, strings, isSubmitted = false }) => {
+}> = ({ user, t, isSubmitted = false }) => {
   const doneByYourself = !user
   const consolidationLabel = `${
-    isSubmitted ? strings.CONSOLIDATION_DONE_BY : strings.CONSOLIDATION_IN_PROGRESS_BY
-  } ${doneByYourself ? strings.ASSIGNMENT_YOURSELF : ''}`
+    isSubmitted ? t('CONSOLIDATION_DONE_BY') : t('CONSOLIDATION_IN_PROGRESS_BY')
+  } ${doneByYourself ? t('ASSIGNMENT_YOURSELF') : ''}`
   return <LabelWrapper labelContent={consolidationLabel} reviewer={user} />
 }
 

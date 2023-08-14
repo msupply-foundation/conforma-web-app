@@ -12,6 +12,7 @@ import {
   RemoveLanguageEndpoint,
   GetApplicationDataEndpoint,
   SnapshotEndpoint,
+  ArchiveEndpoint,
 } from './types'
 
 const {
@@ -52,6 +53,8 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'allLanguages':
     case 'previewActions':
     case 'extendApplication':
+    case 'getAllPrefs':
+    case 'setPrefs':
       return serverREST + endpointPath
 
     case 'userPermissions':
@@ -110,23 +113,33 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
 
     case 'snapshot':
       const { action } = options as SnapshotEndpoint[1]
-      if (action === 'list') return `${serverREST}${endpointPath}/list`
+      const isArchive = 'archive' in options && options.archive
+      const isTemplate = 'template' in options && options.template
+
+      if (action === 'list')
+        return `${serverREST}${endpointPath}/list${isArchive ? '?archive=true' : ''}`
 
       const name = 'name' in options ? options.name : null
       const optionsName = 'options' in options ? options.options : null
 
+      if (action === 'upload')
+        return `${serverREST}${endpointPath}/upload${isTemplate ? '?template=true' : ''}`
+
       if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
       // "download" is direct download url
-      if (action === 'download') return `${serverREST}${endpointPath}/files/${name}.zip`
+      if (action === 'download')
+        return `${serverREST}${endpointPath}/files/${isArchive ? '_archives/' : ''}${name}.zip`
 
-      if (action === 'upload' || action === 'delete')
-        return `${serverREST}${endpointPath}/${action}?name=${name}`
+      if (action === 'delete')
+        return `${serverREST}${endpointPath}/${action}?name=${name}${
+          isArchive ? '&archive=true' : ''
+        }`
 
-      // Must be "take" or "user", which uses "options" file
+      // Must be "take" or "use", which uses "options" file
       return `${serverREST}${endpointPath}/${action}?name=${name}${
         optionsName ? `&optionsName=${optionsName}` : ''
-      }`
+      }${isArchive ? '&archive=true' : ''}`
 
     case 'lookupTable': {
       let { action } = options as LookupTableEndpoint[1]
@@ -151,6 +164,10 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       return `${serverREST}${endpointPath}?applicationId=${applicationId}${
         reviewId ? `&reviewId=${reviewId}` : ''
       }`
+
+    case 'archiveFiles':
+      const { days } = options as ArchiveEndpoint[1]
+      return `${serverREST}${endpointPath}?days=${days}`
 
     default:
       // "never" type ensures we will get a *compile-time* error if we are

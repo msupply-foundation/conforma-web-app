@@ -13,10 +13,10 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
-import useCreateFinalDecisionReview from '../../utils/hooks/useCreateFinalDecisionReview'
+import useCreateFinalDecisionReview from '../../utils/hooks/useCreateMakeDecisionReview'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { action, isAssignedToCurrentUser } = props
 
   const getContent = () => {
@@ -27,7 +27,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         }
         return (
           <Label className="simple-label">
-            <em>{strings.REVIEW_STATUS_IN_PROGRESS}</em>
+            <em>{t('REVIEW_STATUS_IN_PROGRESS')}</em>
           </Label>
         )
       }
@@ -46,7 +46,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         }
         return (
           <Label className="simple-label">
-            <em>{strings.REVIEW_STATUS_NOT_STARTED}</em>
+            <em>{t('REVIEW_STATUS_NOT_STARTED')}</em>
           </Label>
         )
       }
@@ -59,7 +59,7 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
         }
         return (
           <Label className="simple-label">
-            <em>{strings.REVIEW_STATUS_PENDING_ACTION}</em>
+            <em>{t('REVIEW_STATUS_PENDING_ACTION')}</em>
           </Label>
         )
       }
@@ -90,10 +90,9 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   reviewStructure,
   reviewAssignment,
   section: { reviewProgress, consolidationProgress, changeRequestsProgress },
-  previousAssignment,
   action,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     location: { pathname },
     push,
@@ -108,56 +107,54 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   const copyPreviousStageReview = useCreateFinalDecisionReview({
     reviewStructure,
     reviewAssignment,
-    previousAssignment,
   })
 
   const getButtonName = () => {
     switch (action) {
       case ReviewAction.canUpdate: {
         const changeRequestsCount = getConsolidatorChangesRequestedCount(changeRequestsProgress)
-        return strings.ACTION_UPDATE.concat(
-          changeRequestsCount > 0 ? ` (${changeRequestsCount})` : ''
-        )
+        return t('ACTION_UPDATE').concat(changeRequestsCount > 0 ? ` (${changeRequestsCount})` : '')
       }
       case ReviewAction.canReReview: {
         const applicantChangesCount = getApplicantChangesUpdatedCount(reviewProgress)
-        return strings.BUTTON_REVIEW_RE_REVIEW.concat(
+        return t('BUTTON_REVIEW_RE_REVIEW').concat(
           applicantChangesCount > 0 ? ` (${applicantChangesCount})` : ''
         )
       }
       case ReviewAction.canReStartReview: {
         const reviewerChangesCount = getReviewerChangesUpdatedCount(consolidationProgress)
-        return strings.BUTTON_REVIEW_RE_REVIEW.concat(
+        return t('BUTTON_REVIEW_RE_REVIEW').concat(
           reviewerChangesCount > 0 ? ` (${reviewerChangesCount})` : ''
         )
       }
       case ReviewAction.canMakeDecision:
-        return strings.ACTION_MAKE_DECISION
+        return t('ACTION_MAKE_DECISION')
       case ReviewAction.canContinue:
-        return strings.ACTION_CONTINUE
+        return t('ACTION_CONTINUE')
       default:
-        return strings.ACTION_START
+        return t('ACTION_START')
     }
   }
 
   const doAction = async () => {
-    const { isFinalDecision } = reviewStructure.assignment as ReviewAssignment
+    const { isMakeDecision } = reviewStructure.assignment as ReviewAssignment
     let reviewId = reviewStructure.thisReview?.id as number
     if (reviewStructure.thisReview?.current.reviewStatus == ReviewStatus.Draft)
       return push(
         `${pathname}/${reviewId}?activeSections=${
-          isFinalDecision ? 'none' : reviewAssignment.assignedSections.join(',')
+          isMakeDecision ? 'none' : reviewAssignment.assignedSections.join(',')
         }`
       )
 
     try {
-      if (isFinalDecision && previousAssignment) {
+      if (isMakeDecision) {
         reviewId = (await copyPreviousStageReview()).data?.createReview?.review?.id as number
+        push(`${pathname}/${reviewId}?activeSections=none`)
       } else if (reviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
       push(
         `${pathname}/${reviewId}?activeSections=${
-          isFinalDecision ? 'none' : reviewAssignment.assignedSections.join(',')
+          isMakeDecision ? 'none' : reviewAssignment.assignedSections.join(',')
         }`
       )
     } catch (e) {
@@ -166,7 +163,7 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
     }
   }
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} />
+  if (error) return <Message error title={t('ERROR_GENERIC')} />
 
   return (
     <a className="user-action clickable" onClick={doAction}>
@@ -179,7 +176,7 @@ const ViewSubmittedReviewButton: React.FC<ReviewSectionComponentProps> = ({
   reviewStructure: reviewStructure,
   section: { details },
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { pathname, push } = useRouter()
   const reviewId = reviewStructure.thisReview?.id
   return (
@@ -187,7 +184,7 @@ const ViewSubmittedReviewButton: React.FC<ReviewSectionComponentProps> = ({
       className="user-action clickable"
       onClick={() => push(`${pathname}/${reviewId}?activeSections=${details.code}`)}
     >
-      {strings.ACTION_VIEW}
+      {t('ACTION_VIEW')}
     </a>
   )
 }

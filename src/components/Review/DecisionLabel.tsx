@@ -11,17 +11,15 @@ interface DecisionLabelProps {
 }
 
 const useGetDecisionString = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const getDecisionString = (isPositiveDecision: boolean, isConsolidation: boolean) => {
     if (isConsolidation) {
       return isPositiveDecision
-        ? strings.LABEL_CONSOLIDATION_AGREEMENT
-        : strings.LABEL_CONSOLIDATION_DISAGREEMENT
+        ? t('LABEL_CONSOLIDATION_AGREEMENT')
+        : t('LABEL_CONSOLIDATION_DISAGREEMENT')
     }
 
-    return isPositiveDecision
-      ? strings.LABEL_REVIEW_APPROVED
-      : strings.LABEL_REVIEW_DECLINED
+    return isPositiveDecision ? t('LABEL_REVIEW_APPROVED') : t('LABEL_REVIEW_DECLINED')
   }
   return getDecisionString
 }

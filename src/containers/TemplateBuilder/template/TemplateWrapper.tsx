@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { matchPath } from 'react-router'
-import { Link } from 'react-router-dom'
 import { Header, Icon, Message, Label } from 'semantic-ui-react'
 import { Loading, NoMatch } from '../../../components'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -26,13 +25,17 @@ import Actions from './Actions/Actions'
 import {
   CreateApplicationWrapper,
   ApplicationWrapper,
-  FullAppllicationWrapper,
+  FullApplicationWrapper,
 } from './ApplicationWrapper'
 
 import Form from './Form/Form'
 import FormWrapper from './Form/FormWrapper'
 import General from './General/General'
 import Permissions from './Permissions/Permissions'
+import { VersionObject } from '../useGetTemplates'
+import { DateTime } from 'luxon'
+import { isTemplateUnlocked } from './helpers'
+import { getVersionString } from './helpers'
 
 export type TemplateInfo = GetFullTemplateInfoQuery['template']
 
@@ -67,9 +70,9 @@ const TemplateContainer: React.FC = () => {
     push,
     location,
   } = useRouter()
-  const {
-    template: { version, name, code, status, applicationCount, id },
-  } = useTemplateState()
+  const { template } = useTemplateState()
+  const { name, code, status, applicationCount, id, versionId, canEdit } = template
+  const prevQuery = useRef(location?.state?.queryString ?? '')
 
   const selected = tabs.find(({ route }) =>
     matchPath(location.pathname, { path: `${path}/${route}`, exact: true, strict: false })
@@ -81,7 +84,7 @@ const TemplateContainer: React.FC = () => {
     <div className="template-builder-wrapper">
       <Label
         className="back-label clickable"
-        onClick={() => push(`/admin/templates`)}
+        onClick={() => push(`/admin/templates${prevQuery.current}`)}
         content={
           <>
             <Icon name="chevron left" className="dark-grey" />
@@ -91,7 +94,7 @@ const TemplateContainer: React.FC = () => {
       />
       <div className="flex-row-space-between-center-wrap">
         <div className="template-builder-info-bar">
-          <TextIO title="version" text={String(version)} labelNegative />
+          <TextIO title="version" text={getVersionString(template)} labelNegative />
           <TextIO title="name" text={name} labelNegative />
           <TextIO title="code" text={code} labelNegative />
           <TextIO title="status" text={status} labelNegative />
@@ -109,24 +112,39 @@ const TemplateContainer: React.FC = () => {
           </div>
         ))}
       </div>
+      {!canEdit && versionId !== '*' && (
+        <Message warning size="tiny">
+          This template version has previously been exported or committed, so can no longer be
+          edited. Create a new version by clicking the "Duplicate" icon in the Templates list.
+        </Message>
+      )}
       <div className="template-builder-content">{selected.render()}</div>
     </div>
   )
 }
 
+export interface TemplateState {
+  id: number
+  isDraft: boolean
+  versionId: string
+  versionTimestamp: DateTime
+  parentVersionId: string | null
+  versionHistory: VersionObject[]
+  versionComment: string | null
+  name: string
+  code: string
+  status: string
+  applicationCount: number
+  namePlural: string
+  isLinear: boolean
+  serialPattern: string
+  canApplicantMakeChanges: boolean
+  dashboardRestrictions: string[] | null
+  canEdit: boolean
+}
+
 type TemplateContextState = {
-  template: {
-    id: number
-    isDraft: boolean
-    version: number
-    name: string
-    code: string
-    status: string
-    applicationCount: number
-    namePlural: string
-    isLinear: boolean
-    canApplicantMakeChanges: boolean
-  }
+  template: TemplateState
   refetch: () => void
   category?: TemplateCategory
   sections: TemplateSection[]
@@ -142,14 +160,21 @@ const defaultTemplateContextState: TemplateContextState = {
   template: {
     id: 0,
     isDraft: false,
-    version: 0,
+    versionId: '*',
+    versionTimestamp: DateTime.now(),
+    parentVersionId: null,
+    versionHistory: [],
+    versionComment: null,
     name: '',
     code: '',
     status: '',
     applicationCount: 0,
     namePlural: '',
     isLinear: false,
+    serialPattern: '',
     canApplicantMakeChanges: true,
+    canEdit: true,
+    dashboardRestrictions: null,
   },
   refetch: () => {},
   sections: [],
@@ -163,7 +188,7 @@ const defaultTemplateContextState: TemplateContextState = {
 const Context = createContext<TemplateContextState>(defaultTemplateContextState)
 
 const TemplateWrapper: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     query: { templateId },
   } = useRouter()
@@ -185,15 +210,28 @@ const TemplateWrapper: React.FC = () => {
       setState({
         template: {
           id: template.id || 0,
-          version: template?.version || 0,
+          versionId: template?.versionId,
+          versionTimestamp: DateTime.fromISO(template?.versionTimestamp) || DateTime.now(),
+          parentVersionId: template?.parentVersionId || null,
+          versionHistory:
+            [...template?.versionHistory]
+              .map((version, index) => ({
+                ...version,
+                number: index + 1,
+              }))
+              .reverse() || [],
+          versionComment: template.versionComment ?? null,
           name: template?.name || '',
           code: template?.code || '',
           namePlural: template?.namePlural || '',
           isLinear: !!template?.isLinear,
+          serialPattern: template?.serialPattern || '',
           canApplicantMakeChanges: !!template?.canApplicantMakeChanges,
           status: template?.status || TemplateStatus.Disabled,
           applicationCount: template?.applications?.totalCount || 0,
           isDraft: template.status === TemplateStatus.Draft,
+          canEdit: isTemplateUnlocked(template) && template.status === TemplateStatus.Draft,
+          dashboardRestrictions: template?.dashboardRestrictions as string[] | null,
         },
         category: (template?.templateCategory as TemplateCategory) || undefined,
         fromQuery: template,
@@ -209,7 +247,7 @@ const TemplateWrapper: React.FC = () => {
     }
   }, [data])
 
-  if (error) return <Message error title={strings.ERROR_GENERIC} list={[error]} />
+  if (error) return <Message error title={t('ERROR_GENERIC')} list={[error]} />
 
   if (!firstLoaded) return <Loading />
   return (
@@ -219,9 +257,9 @@ const TemplateWrapper: React.FC = () => {
           <FormWrapper>
             <CreateApplicationWrapper>
               <ApplicationWrapper>
-                <FullAppllicationWrapper>
+                <FullApplicationWrapper>
                   <TemplateContainer />
-                </FullAppllicationWrapper>
+                </FullApplicationWrapper>
               </ApplicationWrapper>
             </CreateApplicationWrapper>
           </FormWrapper>

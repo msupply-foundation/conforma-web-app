@@ -11,6 +11,7 @@ import {
   resetCurrentResponses,
   anyErrorItems,
   createTextString,
+  combineResponses,
 } from './helpers'
 import {
   ListCardLayout,
@@ -20,6 +21,7 @@ import {
 } from './displayComponents'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
+import useDefault from '../../useDefault'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -28,26 +30,28 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   onUpdate,
   Markdown,
   validationState,
-  initialValue,
   currentResponse,
   applicationData,
   allResponses,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('listBuilder')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('listBuilder')
 
   const { isEditable } = element
   const {
     label,
     description,
-    createModalButtonText = strings.BUTTON_LAUNCH_MODAL,
+    createModalButtonText = t('BUTTON_LAUNCH_MODAL'),
     modalText,
-    addButtonText = strings.BUTTON_ADD,
-    updateButtonText = strings.BUTTON_UPDATE,
-    deleteItemText = strings.BUTTON_DELETE,
+    addButtonText = t('BUTTON_ADD'),
+    updateButtonText = t('BUTTON_UPDATE'),
+    deleteItemText = t('BUTTON_DELETE'),
     inputFields,
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
+    default: defaultValue,
+    inlineOpen = false,
+    tableExcludeColumns = [],
   } = parameters
   const {
     userState: { currentUser },
@@ -69,7 +73,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const [inputState, setInputState] = useState<InputState>(defaultInputState)
-  const [listItems, setListItems] = useState<ListItem[]>(initialValue?.list ?? [])
+  const [listItems, setListItems] = useState<ListItem[]>(currentResponse?.list ?? [])
 
   useEffect(() => {
     buildElements(
@@ -81,7 +85,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     ).then((elements) =>
       setInputState((prevState) => ({ ...prevState, currentElementsState: elements }))
     )
-  }, [inputState.currentResponses])
+  }, [inputState.currentResponses, allResponses])
+
+  useDefault({
+    defaultValue,
+    currentResponse,
+    parameters,
+    onChange: (defaultList) => setListItems(defaultList ?? []),
+  })
 
   useEffect(() => {
     onSave({
@@ -135,30 +146,29 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const listDisplayProps: ListLayoutProps = {
     listItems,
+    inputFields,
     displayFormat,
     editItem: isEditable ? editItem : () => {},
     deleteItem: isEditable ? deleteItem : () => {},
-    fieldTitles: inputFields.map((e: TemplateElement) => e.title),
-    codes: inputFields.map((e: TemplateElement) => e.code),
     Markdown,
     isEditable,
   }
 
   const DisplayComponent =
     displayType === DisplayType.TABLE ? (
-      <ListTableLayout {...listDisplayProps} />
+      <ListTableLayout {...listDisplayProps} excludeColumns={tableExcludeColumns} />
     ) : displayType === DisplayType.INLINE ? (
       <ListInlineLayout
         {...listDisplayProps}
-        inputFields={inputFields}
         responses={allResponses}
         currentUser={currentUser as User}
         applicationData={applicationData}
-        editItemText={strings.BUTTON_EDIT}
+        editItemText={t('BUTTON_EDIT')}
         deleteItemText={deleteItemText}
         updateButtonText={updateButtonText}
         innerElementUpdate={innerElementUpdate}
         updateList={updateList}
+        initialOpen={inlineOpen}
       />
     ) : displayType === DisplayType.LIST ? (
       <ListListLayout {...listDisplayProps} />
@@ -177,7 +187,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               key={`list-${element.code}`}
               element={element}
               isStrictPage={inputState.error}
-              allResponses={allResponses}
+              allResponses={combineResponses(allResponses, inputState.currentResponses)}
               currentResponse={inputState.currentResponses[element.code].value}
               onSaveUpdateMethod={innerElementUpdate(element.code)}
               applicationData={applicationData}
@@ -199,14 +209,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {displayType === DisplayType.INLINE && (
         <Button
           secondary
-          content={strings.BUTTON_CANCEL}
+          content={t('BUTTON_CANCEL')}
           onClick={() => setInputState({ ...inputState, isOpen: false })}
         />
       )}
       {inputState.error && (
         <p className="alert">
           <Icon name="attention" />
-          {strings.ERROR_LIST_ITEMS_NOT_VALID}
+          {t('ERROR_LIST_ITEMS_NOT_VALID')}
         </p>
       )}
     </>
@@ -231,7 +241,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       {!validationState.isValid && (
         <p className="alert">
           <Icon name="attention" />
-          {validationState.validationMessage || strings.VALIDATION_MESSAGE_DEFAULT}
+          {validationState.validationMessage || t('VALIDATION_MESSAGE_DEFAULT')}
         </p>
       )}
       {displayType !== DisplayType.INLINE && (

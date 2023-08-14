@@ -10,10 +10,12 @@ import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { AdminLocalisations } from './AdminLocalisations'
+import { AdminPreferences } from './AdminPreferences'
+import { AdminDataViews } from './AdminDataViews/AdminDataViews'
 // import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Admin: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     match: { path },
   } = useRouter()
@@ -28,22 +30,22 @@ const Admin: React.FC = () => {
   const adminOption = [
     {
       route: 'templates',
-      header: strings.MENU_ITEM_ADMIN_TEMPLATES,
+      header: t('MENU_ITEM_ADMIN_TEMPLATES'),
       Element: <Templates />,
     },
     {
       route: 'lookup-tables',
-      header: strings.MENU_ITEM_ADMIN_LOOKUP_TABLES,
+      header: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
       Element: <LookupTableRoutes />,
     },
-    // {
-    //   route: 'data',
-    //   header: strings.MENU_ITEM_ADMIN_DATA_VIEW_CONFIG,
-    //   Element: <AdminDataViews />,
-    // },
+    {
+      route: 'data-views',
+      header: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
+      Element: <AdminDataViews />,
+    },
     // {
     //   route: 'permissions',
-    //   header: strings.MENU_ITEM_ADMIN_PERMISSIONS,
+    //   header: t('MENU_ITEM_ADMIN_PERMISSIONS'),
     //   Element: <AdminPermissions />,
     // },
     // {
@@ -53,8 +55,13 @@ const Admin: React.FC = () => {
     // },
     {
       route: 'localisations',
-      header: strings.MENU_ITEM_ADMIN_LOCALISATION,
+      header: t('MENU_ITEM_ADMIN_LOCALISATION'),
       Element: <AdminLocalisations />,
+    },
+    {
+      route: 'preferences',
+      header: t('MENU_ITEM_ADMIN_PREFS'),
+      Element: <AdminPreferences />,
     },
     {
       route: 'snapshots',

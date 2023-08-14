@@ -102,7 +102,7 @@ const PageElements: React.FC<PageElementProps> = ({
               {renderConfigElement(element)}
               <div className="form-element">
                 {element.category === TemplateElementCategory.Information ? (
-                  <RenderElementWrapper key={element.code}>
+                  <RenderElementWrapper key={element.code} isVisible={element.isVisible}>
                     <SummaryViewWrapper {...getSummaryViewProps(element)} />
                   </RenderElementWrapper>
                 ) : (
@@ -272,8 +272,12 @@ const PageElements: React.FC<PageElementProps> = ({
   return null
 }
 
-const RenderElementWrapper: React.FC<{ extraSpacing?: boolean }> = ({ children, extraSpacing }) => (
-  <Segment basic className="summary-page-element-container">
+const RenderElementWrapper: React.FC<{ extraSpacing?: boolean; isVisible?: boolean }> = ({
+  children,
+  extraSpacing,
+  isVisible = true,
+}) => (
+  <Segment basic className={`summary-page-element-container${isVisible ? '' : ' hidden-element'}`}>
     {children}
   </Segment>
 )
@@ -287,12 +291,12 @@ export const AddIcon: React.FC<{ onClick: Function }> = ({ onClick }) => (
 )
 
 export const UpdatedLabel: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <div className="updated-label">
       <Icon name="circle" size="tiny" color="blue" />
       <Label className="simple-label">
-        <strong>{strings.LABEL_RESPONSE_UPDATED}</strong>
+        <strong>{t('LABEL_RESPONSE_UPDATED')}</strong>
       </Label>
     </div>
   )

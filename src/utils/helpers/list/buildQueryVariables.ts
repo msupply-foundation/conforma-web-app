@@ -34,9 +34,6 @@ interface PaginationValues {
   paginationOffset?: number
 }
 
-export function getPaginationVariables(
-  page: number,
-  perPage: number | undefined
-): PaginationValues {
+export function getPaginationVariables(page: number, perPage: number): PaginationValues {
   return { numberToFetch: perPage, paginationOffset: perPage ? (page - 1) * perPage : undefined }
 }

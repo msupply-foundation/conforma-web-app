@@ -6,7 +6,7 @@ import { useUserState } from '../../../contexts/UserState'
 export const NOT_ASSIGNED = -1
 
 const useGetAssignmentOptions = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -20,7 +20,7 @@ const useGetAssignmentOptions = () => {
       key: reviewer.id,
       value: reviewer.id,
       text: isCurrentUserReviewer
-        ? strings.ASSIGNMENT_YOURSELF
+        ? t('ASSIGNMENT_YOURSELF')
         : `${reviewer.firstName || ''} ${reviewer.lastName || ''}`,
       disabled: review?.current.reviewStatus === ReviewStatus.Submitted,
     }
@@ -40,9 +40,13 @@ const useGetAssignmentOptions = () => {
       ({ allowedSections }) => allowedSections.length === 0 || allowedSections.includes(sectionCode)
     )
 
+    // Possible reviewers to show on dropdown, are either
+    // - Assignees that can be assigned by current assigner (keep all Available assignee because is considering Re-assignmet)
+    // - Self-assignemnt reviewer with the sectionCode in its availableSections ReviewAssignment record
     const currentUserAssignable = currentSectionAssignable.filter(
-      ({ isCurrentUserAssigner, isSelfAssignable, isCurrentUserReviewer }) =>
-        isCurrentUserAssigner || (isSelfAssignable && isCurrentUserReviewer)
+      ({ isCurrentUserAssigner, isSelfAssignable, isCurrentUserReviewer, availableSections }) =>
+        isCurrentUserAssigner ||
+        (isSelfAssignable && isCurrentUserReviewer && availableSections.includes(sectionCode))
     )
 
     const currentlyAssigned = assignments.find(

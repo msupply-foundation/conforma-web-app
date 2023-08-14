@@ -19,11 +19,11 @@ const AssigneeLabel: React.FC<AssigneeLabelProps> = ({
   setIsReassignment,
   setIsUnassignment,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <>
       <Label className="simple-label" style={{ marginRight: 30 }}>
-        {isReassignment ? strings.LABEL_UNASSIGN_FROM : strings.LABEL_REVIEWER}:{' '}
+        {isReassignment ? t('LABEL_UNASSIGN_FROM') : t('LABEL_REVIEWER')}:{' '}
         <strong>{assignee}</strong>
       </Label>
       {isCompleted ? null : (
@@ -31,11 +31,11 @@ const AssigneeLabel: React.FC<AssigneeLabelProps> = ({
           {!isReassignment && !isSelfAssigned && (
             <>
               <a className="user-action clickable" onClick={() => setIsReassignment(true)}>
-                {strings.ACTION_RE_ASSIGN}
+                {t('ACTION_RE_ASSIGN')}
               </a>
               <span>{' | '}</span>
               <a className="user-action clickable" onClick={setIsUnassignment}>
-                {strings.ACTION_UNASSIGN}
+                {t('ACTION_UNASSIGN')}
               </a>
             </>
           )}

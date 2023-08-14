@@ -21,7 +21,7 @@ const Elements: React.FC = () => {
   const { selectedPageNumber, selectedSectionId } = useFormState()
   const { structure } = useFullApplicationState()
   const {
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
   const { moveStructure } = useFormStructureState()
   const { updateTemplateSection } = useOperationState()
@@ -66,7 +66,7 @@ const Elements: React.FC = () => {
           <ElementConfigOptions
             elementId={element.id}
             isVisible={element.isVisible}
-            setElementUpdatState={setElementUpdateState}
+            setElementUpdateState={setElementUpdateState}
           />
         )}
         elements={selectedPage.state}
@@ -74,7 +74,7 @@ const Elements: React.FC = () => {
         applicationData={structure.info}
       />
       <ButtonWithFallback
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         title="New Element"
         onClick={createElement}
@@ -87,11 +87,11 @@ const Elements: React.FC = () => {
 const ElementConfigOptions: React.FC<{
   elementId: number
   isVisible: boolean
-  setElementUpdatState: SetElementUpdateState
-}> = ({ elementId, isVisible, setElementUpdatState }) => {
+  setElementUpdateState: SetElementUpdateState
+}> = ({ elementId, isVisible, setElementUpdateState }) => {
   const {
     sections,
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
   const currentElement =
     sections
@@ -104,7 +104,7 @@ const ElementConfigOptions: React.FC<{
   return (
     <div className="element-config-options-container" key={elementId}>
       <ElementMove elementId={elementId} />
-      <IconButton name="setting" onClick={() => setElementUpdatState(currentElement)} />
+      <IconButton name="setting" onClick={() => setElementUpdateState(currentElement)} />
       {!isVisible && (
         <Popup content="Visibility criteria did not match" trigger={<Icon name="eye slash" />} />
       )}
@@ -117,7 +117,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
   const { selectedSectionId, selectedPageNumber } = useFormState()
   const { moveStructure } = useFormStructureState()
   const {
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
 
   const currentElement = moveStructure.elements[elementId]
@@ -195,7 +195,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
   return (
     <>
       <IconButton
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         name="angle double left"
         onClick={() => doubleMove(true)}
@@ -203,7 +203,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
         toolTip="Move to previous page"
       />
       <IconButton
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         name="angle double right"
         onClick={() => doubleMove(false)}
@@ -211,7 +211,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
         toolTip="Move to next page"
       />
       <IconButton
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         name="angle up"
         onClick={() => {
@@ -221,7 +221,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
         toolTip="Move up"
       />
       <IconButton
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         name="angle down"
         onClick={async () => {
@@ -247,7 +247,7 @@ const getNewElement = (applicationId: number, index: number) => ({
   validationMessage: 'no validation',
   helpText: '',
   parameters: { label: 'New Element' },
-  defaultValue: null,
+  initialValue: null,
   applicationResponsesUsingId: {
     create: [{ applicationId }],
   },

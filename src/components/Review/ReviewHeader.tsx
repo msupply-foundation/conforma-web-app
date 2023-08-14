@@ -10,11 +10,11 @@ export interface ReviewHeaderProps {
 }
 
 const ReviewHeader: React.FC<ReviewHeaderProps> = ({ applicationName, stage }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   return (
     <div id="application-summary-header">
       <Header as="h5" content={applicationName} />
-      <Header as="h2" content={strings.LABEL_REVIEW} />
+      <Header as="h2" content={t('LABEL_REVIEW')} />
       <Stage name={stage.name || ''} colour={stage.colour} />
     </div>
   )

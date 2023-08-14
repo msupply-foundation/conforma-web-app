@@ -87,38 +87,44 @@ const convertFromTemplateToTemplateDetails = (
   template: Template,
   templatePermissions: TemplatePermissions
 ) => {
-  const { id, code, name, namePlural, icon, version } = template
+  const { id, code, versionId, name, namePlural, icon } = template
   const permissions = templatePermissions[code] || []
 
   const totalApplications = template?.applications.totalCount || 0
 
+  const categoryCode = template.templateCategory?.code || ''
   const categoryTitle: string = template?.templateCategory?.title || ''
   const categoryIcon: SemanticICONS =
     (template?.templateCategory?.icon as SemanticICONS) || undefined
   const categoryUILocation: UiLocation[] =
     (template?.templateCategory?.uiLocation as UiLocation[]) || []
+  const categoryIsSubmenu = template?.templateCategory?.isSubmenu || false
 
   const hasApplyPermission = permissions.includes(PermissionPolicyType.Apply)
   // This is already checked (permission.length > 0), but added to avoid confusion
   const hasNonApplyPermissions = !hasApplyPermission && permissions.length > 0
 
   const filters = extractFilters(template, permissions)
+  const dashboardRestrictions = template.dashboardRestrictions as string[] | null
 
   const result: TemplateInList = {
     id,
     code,
     name: String(name),
-    version: Number(version),
+    versionId,
     namePlural: namePlural || undefined,
     icon,
     permissions,
     filters,
+    dashboardRestrictions,
     hasApplyPermission,
     hasNonApplyPermissions,
     templateCategory: {
+      code: categoryCode,
       icon: categoryIcon,
       title: categoryTitle,
       uiLocation: categoryUILocation,
+      isSubmenu: categoryIsSubmenu,
     },
     totalApplications,
   }

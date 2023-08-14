@@ -15,7 +15,7 @@ interface HistoryPanelProps {
 }
 
 const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplicant = false }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -28,7 +28,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplica
     serial: serialNumber,
     questionCode: showHistory,
     templateCode: template.code,
-    templateVersion: template.version,
+    templateVersionId: template.versionId,
     userId: currentUser?.userId || 0,
     // userLevel,
     isApplicant,
@@ -41,13 +41,13 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplica
       open={!!showHistory}
       onClose={() => updateQuery({ showHistory: null })}
     >
-      <Modal.Header>{strings.TITLE_HISTORY_PANEL}</Modal.Header>
+      <Modal.Header>{t('TITLE_HISTORY_PANEL')}</Modal.Header>
       <Modal.Content scrolling>
         <Modal.Description>
           <Form>
             {historyList.map(({ stageNumber, historyElements }) => {
               const stageDetails = stages.find(({ number }) => number === stageNumber)
-              const stageName = stageDetails?.name || strings.ERROR_STAGE_NOT_FOUND
+              const stageName = stageDetails?.name || t('ERROR_STAGE_NOT_FOUND')
               const stageColour = stageDetails?.colour || ''
               return (
                 <div key={`history_stage_${stageName}`} className="history-block">
@@ -71,7 +71,7 @@ const HistoryPanel: React.FC<HistoryPanelProps> = ({ template, stages, isApplica
         <Button
           onClick={() => updateQuery({ showHistory: null })}
           primary
-          content={strings.BUTTON_BACK}
+          content={t('BUTTON_BACK')}
         />
       </Modal.Actions>
     </Modal>

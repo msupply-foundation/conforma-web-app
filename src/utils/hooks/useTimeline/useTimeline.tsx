@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
+import {
+  LanguageStrings,
+  TranslateMethod,
+  useLanguageProvider,
+} from '../../../contexts/Localisation'
 import {
   ActivityLog,
   ApplicationStatus,
@@ -21,7 +25,7 @@ import { TimelineStage, Timeline, TimelineEventType, EventOutput, TimelineEvent 
 
 const useTimeline = (structure: FullStructure) => {
   const {
-    strings,
+    t,
     selectedLanguage: { locale },
   } = useLanguageProvider()
   const { Decision: decisionStrings } = useLocalisedEnums()
@@ -48,7 +52,7 @@ const useTimeline = (structure: FullStructure) => {
         buildTimeline(
           data?.activityLogs?.nodes as ActivityLog[],
           structure,
-          strings,
+          t,
           decisionStrings,
           locale
         )
@@ -65,7 +69,7 @@ export default useTimeline
 const buildTimeline = (
   activityLog: ActivityLog[],
   structure: FullStructure,
-  strings: LanguageStrings,
+  translate: TranslateMethod,
   decisionStrings: { [key in Decision]: string },
   locale: string
 ): Timeline => {
@@ -89,7 +93,7 @@ const buildTimeline = (
           activityLog,
           structure,
           index,
-          strings,
+          translate,
           decisionStrings,
           locale
         ),
@@ -129,7 +133,7 @@ const buildTimeline = (
   if (stageIndex > -1 && stages[stageIndex].events.length === 0)
     stages[stageIndex].events.push({
       eventType: TimelineEventType.Ignore,
-      displayString: `*${strings.TIMELINE_NO_ACTIVITY}*`,
+      displayString: `*${translate('TIMELINE_NO_ACTIVITY')}*`,
       id: 0,
       timestamp: stages[stageIndex].timestamp,
       details: {},
@@ -160,7 +164,7 @@ const generateTimelineEvent: {
     fullLog: ActivityLog[],
     structure: FullStructure,
     index: number,
-    strings: LanguageStrings,
+    translate: TranslateMethod,
     decisionStrings: {
       [key in Decision]: string
     },
@@ -170,13 +174,14 @@ const generateTimelineEvent: {
   STAGE: () =>
     // Already handled in caller
     ({ eventType: TimelineEventType.Ignore, displayString: '' }),
-  STATUS: (event, fullLog, _, __, strings) => getStatusEvent(event, fullLog, strings),
-  OUTCOME: (event, _, __, ___, strings) => getOutcomeEvent(event, strings),
-  EXTENSION: (event, _, __, ___, strings, ____, locale) =>
-    getExtensionEvent(event, strings, locale),
-  ASSIGNMENT: (event, _, structure, __, strings) => getAssignmentEvent(event, structure, strings),
-  REVIEW: (event, fullLog, structure, index, strings, decisionStrings) =>
-    getReviewEvent(event, fullLog, structure, index, strings, decisionStrings),
+  STATUS: (event, fullLog, _, __, translate) => getStatusEvent(event, fullLog, translate),
+  OUTCOME: (event, _, __, ___, translate) => getOutcomeEvent(event, translate),
+  EXTENSION: (event, _, __, ___, translate, ____, locale) =>
+    getExtensionEvent(event, translate, locale),
+  ASSIGNMENT: (event, _, structure, __, translate) =>
+    getAssignmentEvent(event, structure, translate),
+  REVIEW: (event, fullLog, structure, index, translate, decisionStrings) =>
+    getReviewEvent(event, fullLog, structure, index, translate, decisionStrings),
   REVIEW_DECISION: () =>
     // Ignore all because decision gets combined into Review event
     ({ eventType: TimelineEventType.Ignore, displayString: '' }),

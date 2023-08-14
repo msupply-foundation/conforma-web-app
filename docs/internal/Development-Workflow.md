@@ -1,6 +1,6 @@
 _This should help Front-end developers understand the flow of how React components and GraphQL calls interact and the current project structure._
 
-# Project Workflow
+## Project Workflow
 
 We have a few rules to maintain our structure comprehensive. This rules may change with time, and we should keep this file up-to-date with the current ones. Check the rules in each section below.
 Inside the `/src` folder all files used for the Front-end are distribuited in the following structure:

@@ -43,7 +43,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
   strictSectionPage,
   context,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     info: { isLinear },
     sections,
@@ -251,7 +251,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
           className="progress-name-column clickable"
           onClick={() => push(`/application/${structure.info.serial}`)}
         >
-          {strings.TITLE_INTRODUCTION}
+          {t('TITLE_INTRODUCTION')}
         </Grid.Column>
       </Grid>
       <Accordion activeIndex={activeIndex} panels={sectionsList} />

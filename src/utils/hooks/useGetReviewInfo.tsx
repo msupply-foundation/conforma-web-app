@@ -19,7 +19,7 @@ interface UseGetReviewInfoProps {
 }
 
 const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewInfoProps) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [assignments, setAssignments] = useState<AssignmentDetails[]>()
   const [isFetching, setIsFetching] = useState(true)
   const [fetchingError, setFetchingError] = useState('')
@@ -48,7 +48,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
 
   useEffect(() => {
     if (triggersError) {
-      setFetchingError(strings.ERROR_TRIGGER)
+      setFetchingError(t('ERROR_TRIGGER'))
       console.error('Trigger error:', triggersError)
       return
     }
@@ -84,10 +84,10 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
         reviewAssignmentAssignerJoins,
         allowedSections,
         assignedSections,
+        availableSections,
         isFinalDecision,
         isLastLevel,
         isSelfAssignable,
-        isLocked,
       } = reviewAssignment
 
       const stage = {
@@ -109,12 +109,12 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
         },
         isCurrentUserReviewer: reviewer?.id === (currentUser?.userId as number),
         isCurrentUserAssigner: reviewAssignmentAssignerJoins.nodes.length > 0,
-        isFinalDecision: !!isFinalDecision,
+        isMakeDecision: !!isFinalDecision,
         isLastLevel: !!isLastLevel,
         isSelfAssignable: !!isSelfAssignable,
-        isLocked: !!isLocked,
         allowedSections: (allowedSections as string[]) || [],
         assignedSections: assignedSections as string[],
+        availableSections: availableSections as string[],
         review: review
           ? {
               id: review.id,
@@ -127,6 +127,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
               },
               reviewDecision: review.reviewDecisions.nodes[0], // this will be the latest, sorted in query
               reviewer: reviewer as User,
+              isLocked: review.isLocked as boolean,
             }
           : null,
       }

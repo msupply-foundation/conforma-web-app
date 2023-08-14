@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import config from '../config'
-import strings from '../utils/defaultLanguageStrings'
+import defaultStrings from '../utils/defaultLanguageStrings'
 import { getRequest } from '../utils/helpers/fetchMethods'
+import { pluginProvider } from '../formElementPlugins'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
-import { mapValues } from 'lodash'
-
-const { pluginsFolder } = config
+import { mapValues, mapKeys } from 'lodash'
+import Markdown from '../utils/helpers/semanticReactMarkdown'
 
 const savedLanguageCode = localStorage.getItem('language')
+
+// For matching {{replacementKey}} in localised strings
+const stringReplacementRegex = /{{([A-z0-9]+)}}/gm
 
 const initSelectedLanguage: LanguageOption = {
   code: savedLanguageCode ?? '',
@@ -34,7 +37,7 @@ export type LanguageOption = {
   enabled: boolean
 }
 
-export type LanguageStrings = { [Property in keyof typeof strings]: string }
+export type LanguageStrings = { [Property in keyof typeof defaultStrings]: string }
 
 interface LanguageState {
   languageOptions: LanguageOption[]
@@ -44,29 +47,63 @@ interface LanguageState {
   error: any
 }
 
+type Substitutions = Record<string, unknown> | string | number
+
+export type TranslateMethod = (
+  key: keyof typeof defaultStrings,
+  substitutions?: Substitutions
+) => string
+
+type TranslateMarkdownMethod = (
+  key: keyof typeof defaultStrings,
+  substitutions?: Substitutions
+) => JSX.Element
+
+export type TranslatePluginMethod = (key: string, substitutions?: Substitutions) => string
+
 const initialContext: {
-  strings: LanguageStrings
   selectedLanguage: LanguageOption
   languageOptions: LanguageOption[]
   languageOptionsFull: LanguageOption[]
   loading: boolean
   error: any
   setLanguage: Function
-  getPluginStrings: Function
   refetchLanguages: Function
+  translate: TranslateMethod
+  t: TranslateMethod
+  translateMarkdown: TranslateMarkdownMethod
+  tFormat: TranslateMarkdownMethod
+  getPluginTranslator: (pluginCode: string) => TranslatePluginMethod
 } = {
-  strings: {} as LanguageStrings,
   selectedLanguage: initSelectedLanguage,
   languageOptions: [],
   languageOptionsFull: [],
   loading: true,
   error: null,
   setLanguage: () => {},
-  getPluginStrings: () => {},
   refetchLanguages: () => {},
+  translate: () => '',
+  t: () => '',
+  translateMarkdown: () => <></>,
+  tFormat: () => <></>,
+  getPluginTranslator: () => () => '',
 }
 
 const LanguageProviderContext = createContext(initialContext)
+
+// Get localisation strings from all form element plugins
+export const getPluginStrings = () => {
+  let pluginStrings = {}
+  for (const plugin of Object.values(pluginProvider.pluginManifest)) {
+    try {
+      const strings = require(`../${config.pluginsFolder}/${plugin.folderName}/localisation.json`)
+      pluginStrings = { ...pluginStrings, ...mapKeys(strings, (_, key) => `${plugin.code}.${key}`) }
+    } catch {}
+  }
+  return pluginStrings
+}
+
+const allDefaultStrings = { ...defaultStrings, ...getPluginStrings() }
 
 export function LanguageProvider({
   children,
@@ -77,7 +114,7 @@ export function LanguageProvider({
   const [languageState, setLanguageState] = useState<LanguageState>({
     languageOptions,
     selectedLanguage: initSelectedLanguage,
-    strings: {} as LanguageStrings,
+    strings: allDefaultStrings,
     loading: true,
     error: null,
   })
@@ -85,19 +122,6 @@ export function LanguageProvider({
     savedLanguageCode ?? defaultLanguageCode
   )
   const [shouldRefetchStrings, setShouldRefetchStrings] = useState(false)
-
-  // Helper function provided to plugins to determine where to read their
-  // language strings from
-  const getPluginStrings = (plugin: string) => {
-    const defaultPluginStrings = require(`../${pluginsFolder}/${plugin}/localisation/default/strings.json`)
-    if (selectedLanguageCode === 'default') return defaultPluginStrings
-    try {
-      const localisedPluginStrings = require(`../${pluginsFolder}/${plugin}/localisation/${selectedLanguageCode}/strings.json`)
-      return consolidateStrings(defaultPluginStrings, localisedPluginStrings)
-    } catch {
-      return defaultPluginStrings
-    }
-  }
 
   // Load initial language and fetch options list
   const updateLanguageState = async (languageCode: string) => {
@@ -150,6 +174,26 @@ export function LanguageProvider({
     refetchPrefs()
   }
 
+  const translate: TranslateMethod = (key, substitutions = {}) =>
+    getTranslation(languageState.strings, key, substitutions)
+
+  const translateMarkdown: TranslateMarkdownMethod = (key, substitutions = {}) => {
+    return (
+      <Markdown
+        text={getTranslation(languageState.strings, key, substitutions)}
+        semanticComponent="noParagraph"
+      />
+    )
+  }
+
+  // Same as the regular "translate" function, except appends the pluginCode as
+  // key. We use the pluginCode as part of the key to avoid collisions if
+  // plugins happen to use the same keys as the main app.
+  const translatePlugin = (pluginCode: string, key: string, substitutions: Substitutions = {}) => {
+    const fullKey = `${pluginCode}.${key}`
+    return getTranslation(languageState.strings, fullKey, substitutions)
+  }
+
   // Fetch new language when language code changes
   useEffect(() => {
     updateLanguageState(selectedLanguageCode)
@@ -167,7 +211,6 @@ export function LanguageProvider({
   return (
     <LanguageProviderContext.Provider
       value={{
-        strings: languageState.strings,
         selectedLanguage: languageState.selectedLanguage,
         languageOptions: languageState.languageOptions.filter(
           (lang: LanguageOption) => lang?.enabled
@@ -176,8 +219,13 @@ export function LanguageProvider({
         loading: languageState.loading,
         error: languageState.error,
         setLanguage: setSelectedLanguageCode,
-        getPluginStrings,
         refetchLanguages,
+        translate,
+        t: translate,
+        translateMarkdown: translateMarkdown,
+        tFormat: translateMarkdown,
+        getPluginTranslator: (pluginCode) => (key, substitutions) =>
+          translatePlugin(pluginCode, key, substitutions),
       }}
     >
       {children}
@@ -189,12 +237,12 @@ export const useLanguageProvider = () => useContext(LanguageProviderContext)
 
 const getLanguageStrings = async (code: string) => {
   // If default language code not available on server, just use local defaults
-  if (code === 'default') return strings
+  if (code === 'default') return allDefaultStrings
   // Else fetch language file from server
   try {
     const fetchedStrings = await getRequest(getServerUrl('language', { code }))
     if (fetchedStrings?.error) throw new Error(`Language code: ${code}, ${fetchedStrings?.message}`)
-    return consolidateStrings(strings, fetchedStrings)
+    return consolidateStrings(allDefaultStrings, fetchedStrings)
   } catch (err) {
     throw err
   }
@@ -206,3 +254,31 @@ const consolidateStrings = (refStrings: LanguageStrings, remoteStrings: Language
   mapValues(refStrings, (englishString, key: keyof LanguageStrings) =>
     remoteStrings?.[key] ? remoteStrings?.[key] : englishString
   )
+
+// Returns translated string with substitutions
+const getTranslation = (
+  strings: Record<string, string>,
+  key: string,
+  substitutions: Substitutions
+) => {
+  let localisedString = strings[key]
+  if (localisedString === undefined) return key
+
+  if (typeof substitutions === 'string' || typeof substitutions === 'number') {
+    const match = localisedString.match(/{{([A-z0-9]+)}}/m)
+    if (match) {
+      substitutions = { [match[1]]: substitutions }
+    } else substitutions = {}
+  }
+
+  // "{{count}}" is a special replacement, where an alternative string can be
+  // provided for certain numbers, usually a single value (1).
+  if ('count' in substitutions) {
+    const altKey = `${key}_${substitutions.count}` as keyof typeof strings
+    if (strings[altKey]) localisedString = strings[altKey]
+  }
+
+  return localisedString.replace(stringReplacementRegex, (match, sub) =>
+    String((substitutions as Record<string, unknown>)[sub] ?? match)
+  )
+}

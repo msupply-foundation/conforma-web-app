@@ -5,25 +5,25 @@ import { ReviewResponse, ReviewResponseDecision } from '../../../utils/generated
 import useUpdateReviewResponse from '../../../utils/hooks/useUpdateReviewResponse'
 
 const useOptionsMap = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const optionsMap = {
     consolidation: [
       {
-        label: strings.LABEL_CONSOLIDATION_AGREE,
+        label: t('LABEL_CONSOLIDATION_AGREE'),
         decision: ReviewResponseDecision.Agree,
       },
       {
-        label: strings.LABEL_CONSOLIDATION_DISAGREE,
+        label: t('LABEL_CONSOLIDATION_DISAGREE'),
         decision: ReviewResponseDecision.Disagree,
       },
     ],
     review: [
       {
-        label: strings.LABEL_REVIEW_APPROVE,
+        label: t('LABEL_REVIEW_APPROVE'),
         decision: ReviewResponseDecision.Approve,
       },
       {
-        label: strings.LABEL_REVIEW_RESSUBMIT,
+        label: t('LABEL_REVIEW_RESSUBMIT'),
         decision: ReviewResponseDecision.Decline,
       },
     ],
@@ -35,25 +35,24 @@ interface ReviewInlineInputProps {
   setIsActiveEdit: (_: boolean) => void
   reviewResponse: ReviewResponse
   isConsolidation: boolean
-  stageNumber: number
 }
 
 const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
   setIsActiveEdit,
   reviewResponse: initialReviewResponse,
   isConsolidation,
-  stageNumber,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [reviewResponse, setReviewResponse] = useState(initialReviewResponse)
   const updateResponse = useUpdateReviewResponse()
 
   const optionsMap = useOptionsMap()
   const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
 
-  const submit = async () => {
+  const submit = async (e: any) => {
+    e.preventDefault()
     // TODO do we need to handle update error ?
-    await updateResponse(reviewResponse, stageNumber)
+    await updateResponse(reviewResponse)
     setIsActiveEdit(false)
   }
 
@@ -68,7 +67,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
       <div className="response-element-content">
         <Form>
           <Form.Field>
-            <label>{isConsolidation ? strings.LABEL_CONSOLIDATE : strings.LABEL_REVIEW}</label>
+            <label>{isConsolidation ? t('LABEL_CONSOLIDATE') : t('LABEL_REVIEW')}</label>
           </Form.Field>
           {options.map(({ decision, label }) => (
             <Form.Field key={decision}>
@@ -87,7 +86,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
             </Form.Field>
           ))}
           <Form.Field>
-            <label>{strings.LABEL_COMMENT}</label>
+            <label>{t('LABEL_COMMENT')}</label>
           </Form.Field>
           <Form.Field>
             <TextArea
@@ -102,14 +101,14 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
             <Button
               primary
               disabled={isInvalidComment || !reviewResponse.decision}
-              content={strings.BUTTON_ADD_REVIEW}
+              content={t('BUTTON_ADD_REVIEW')}
               onClick={submit}
               className="button-med"
             />
             <Button
               primary
               inverted
-              content={strings.OPTION_CANCEL}
+              content={t('OPTION_CANCEL')}
               onClick={() => setIsActiveEdit(false)}
               className="button-med"
             />

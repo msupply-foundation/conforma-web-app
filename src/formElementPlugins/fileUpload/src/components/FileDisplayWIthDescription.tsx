@@ -15,8 +15,8 @@ export const FileDisplayWithDescription = ({
   onDelete,
   updateDescription,
 }: FileDisplayDescriptionProps) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('fileUpload')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('fileUpload')
   const { loading, error, errorMessage, filename, fileData, key } = file
   const [description, setDescription] = useState<string>(fileData?.description ?? '')
   return (
@@ -89,7 +89,7 @@ export const FileDisplayWithDescription = ({
         {fileData && (
           <Input
             fluid
-            placeholder={strings.ADD_DESCRIPTION}
+            placeholder={t('ADD_DESCRIPTION')}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             onBlur={(e: any) => updateDescription(fileData.uniqueId, e.target.value, key)}

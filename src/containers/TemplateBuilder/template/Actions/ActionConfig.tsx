@@ -43,19 +43,19 @@ const getState: GetState = (action: TemplateAction) => ({
 })
 
 const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) => {
-  const { strings } = useLanguageProvider()
-  const {
-    template: { id: templateId, isDraft },
-  } = useTemplateState()
+  const { t } = useLanguageProvider()
+  const { template } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [state, setState] = useState<ActionUpdateState | null>(null)
   const { allActionsByCode, applicationData } = useActionState()
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
   const showToast = useToast({
-    title: strings.TEMPLATE_MESSAGE_SAVE_SUCCESS,
+    title: t('TEMPLATE_MESSAGE_SAVE_SUCCESS'),
     style: 'success',
   })
+
+  const { canEdit } = template
 
   useEffect(() => {
     if (!templateAction) return setState(null)
@@ -65,7 +65,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   if (!state || !templateAction) return null
 
   const updateAction = async () => {
-    const result = await updateTemplate(templateId, {
+    const result = await updateTemplate(template, {
       templateActionsUsingId: {
         updateById: [{ id: state.id, patch: state }],
       },
@@ -98,6 +98,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             <DropdownIO
               title="Type"
               value={templateAction?.actionCode || ''}
+              disabled={!canEdit}
+              disabledMessage={disabledMessage}
               getKey={'code'}
               getValue={'code'}
               getText={'name'}
@@ -110,13 +112,15 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               labelNegative
               minLabelWidth={50}
             />
-            <FromExistingAction
-              pluginCode={state.actionCode}
-              setTemplateAction={(templateAction) => {
-                setState({ ...state, ...templateAction })
-                markNeedsUpdate()
-              }}
-            />
+            {canEdit && (
+              <FromExistingAction
+                pluginCode={state.actionCode}
+                setTemplateAction={(templateAction) => {
+                  setState({ ...state, ...templateAction })
+                  markNeedsUpdate()
+                }}
+              />
+            )}
           </div>
         </div>
         <Label
@@ -132,13 +136,15 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           </a>
         </Label>
         <div className="config-modal-info">
-          {!isDraft && <Label color="red">Actions only editable in draft templates</Label>}
+          {!canEdit && <Label color="red">Actions only editable in draft templates</Label>}
           <div className="spacer-10" />
           <div className="config-container-outline">
             <div className="flex-column-start-center">
               <TextIO
                 text={state?.code || ''}
                 title="Code"
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
                 setText={(text) => {
                   setState({ ...state, code: text || null })
                 }}
@@ -149,6 +155,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               <TextIO
                 text={state?.eventCode || ''}
                 title="Scheduled Event Code"
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
                 setText={(text) => {
                   setState({ ...state, eventCode: text || null })
                 }}
@@ -160,6 +168,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 text={state?.description || ''}
                 isTextArea={true}
                 title="Description"
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
                 setText={(text) => {
                   setState({ ...state, description: text || null })
                 }}
@@ -191,6 +201,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               setState({ ...state, parameterQueries })
               markNeedsUpdate()
             }}
+            canEdit={template.canEdit}
             requiredParameters={(currentActionPlugin?.requiredParameters as string[]) || []}
             optionalParameters={(currentActionPlugin?.optionalParameters as string[]) || []}
             type="Action"
@@ -198,32 +209,32 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
-              title={strings.BUTTON_SAVE}
-              disabled={!isDraft || !shouldUpdate}
-              disabledMessage={!isDraft ? disabledMessage : strings.TEMPLATE_MESSAGE_SAVE_DISABLED}
+              title={t('BUTTON_SAVE')}
+              disabled={!canEdit || !shouldUpdate}
+              disabledMessage={!canEdit ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
               onClick={updateAction}
             />
             <ButtonWithFallback
-              title={strings.BUTTON_CLOSE}
-              onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
+              title={t('BUTTON_CLOSE')}
+              onClick={() => (shouldUpdate && canEdit ? setOpen(true) : onClose())}
             />
             <Modal
               basic
               size="small"
               icon="save"
-              header={strings.TEMPLATE_MESSAGE_SAVE_AND_CLOSE}
+              header={t('TEMPLATE_MESSAGE_SAVE_AND_CLOSE')}
               open={open}
               onClose={() => setOpen(false)}
               actions={[
                 {
                   key: 'save',
-                  content: strings.BUTTON_SAVE,
+                  content: t('BUTTON_SAVE'),
                   positive: true,
                   onClick: saveAndClose,
                 },
                 {
                   key: 'close',
-                  content: strings.BUTTON_CLOSE,
+                  content: t('BUTTON_CLOSE'),
                   positive: false,
                   onClick: onClose,
                 },

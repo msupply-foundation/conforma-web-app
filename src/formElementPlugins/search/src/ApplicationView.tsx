@@ -10,6 +10,8 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import config from '../../../config'
 import useDebounce from './useDebounce'
 import './styles.css'
+import useDefault from '../../useDefault'
+import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
 
 interface DisplayFormat {
   title?: string
@@ -28,12 +30,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   applicationData,
   allResponses,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('search')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('search')
   const {
     label,
     description,
-    placeholder = strings.DEFAULT_PLACEHOLDER,
+    placeholder = t('DEFAULT_PLACEHOLDER'),
     source,
     icon = 'search',
     multiSelect = false,
@@ -42,6 +44,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     resultFormat = displayFormat,
     textFormat,
     displayType = 'card',
+    default: defaultValue,
   } = parameters
 
   const {
@@ -60,15 +63,39 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<any[]>([])
-  const [selection, setSelection] = useState<any[]>(currentResponse?.selection || [])
+  const [selection, setSelection] = useState<any[]>(
+    currentResponse?.selection
+      ? Array.isArray(currentResponse.selection)
+        ? currentResponse.selection
+        : [currentResponse.selection]
+      : []
+  )
   const { isEditable } = element
 
   const [debounceOutput, setDebounceInput] = useDebounce<string>('', DEBOUNCE_TIMEOUT)
 
+  useDefault({
+    defaultValue,
+    currentResponse,
+    parameters,
+    onChange: (defaultSelection) => {
+      if (!defaultSelection) {
+        setSelection([])
+        return
+      }
+      setSelection(Array.isArray(defaultSelection) ? defaultSelection : [defaultSelection])
+      setSearchText(
+        displayType === 'input'
+          ? substituteValues(displayFormat.title ?? displayFormat.description, defaultSelection)
+          : ''
+      )
+    },
+  })
+
   useEffect(() => {
     onSave({
       text: getTextFormat(textFormat, selection),
-      selection: selection,
+      selection,
     })
   }, [selection])
 
@@ -81,7 +108,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const search = { text }
     const JWT = localStorage.getItem(config.localStorageJWTKey)
     evaluateExpression(source, {
-      objects: { search, currentUser, applicationData, responses: allResponses },
+      objects: { search, currentUser, applicationData, responses: allResponses, functions },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
       headers: { Authorization: 'Bearer ' + JWT },
@@ -102,6 +129,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const handleChange = (e: any) => {
+    // With "Input" style, we clear the selection if the user changes the input
+    // string (otherwise it remains even though it's not displayed anywhere)
+    if (displayType === 'input') setSelection([])
+
     const text = e.target.value
     setSearchText(text)
     if (text.length < minCharacters) return
@@ -121,6 +152,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     )
   }
 
+  const handleFocus = (e: any) => {
+    // This makes the component perform a new search when re-focusing (if no
+    // selection already), as changes in other elements may have changed some of
+    // the dynamic parameters in this element
+    if (searchText.length > 0 && selection.length === 0) handleChange(e)
+  }
+
   const deleteItem = async (index: number) => {
     setSelection(selection.filter((_, i) => i !== index))
   }
@@ -130,12 +168,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const noFormatProvided = !title && !description
     return results.map((result: any, index: number) => {
       const titleString = noFormatProvided
-        ? getDefaultString(result, strings.MESSAGE_NO_RESULTS)
+        ? getDefaultString(result, t('MESSAGE_NO_RESULTS'))
         : title
         ? substituteValues(title, result)
         : ''
       const descriptionString = noFormatProvided
-        ? getDefaultString(result, strings.MESSAGE_NO_RESULTS, 'description')
+        ? getDefaultString(result, t('MESSAGE_NO_RESULTS'), 'description')
         : description
         ? substituteValues(description, result)
         : ''
@@ -169,18 +207,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Search
           value={searchText}
           loading={loading}
+          onFocus={handleFocus}
           onSearchChange={handleChange}
           onResultSelect={handleSelect}
           minCharacters={minCharacters}
           placeholder={placeholder}
           results={
-            loading
-              ? [{ title: strings.MESSAGE_LOADING }]
-              : createResultsArray(results, resultFormat)
+            loading ? [{ title: t('MESSAGE_LOADING') }] : createResultsArray(results, resultFormat)
           }
           disabled={!isEditable}
           input={{ icon, iconPosition: 'left' }}
-          noResultsMessage={strings.MESSAGE_NO_RESULTS}
+          noResultsMessage={t('MESSAGE_NO_RESULTS')}
         />
         {validationState.isValid ? null : (
           <Label pointing prompt content={validationState?.validationMessage} />
@@ -224,8 +261,8 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
   Markdown,
   isEditable = true,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('search')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('search')
   const { title, subtitle, description } = displayFormat
   const showFallbackString = !title && !subtitle && !description
   return displayType === 'list' || displayType === 'input' ? (
@@ -241,7 +278,7 @@ export const DisplaySelection: React.FC<DisplayProps> = ({
                 semanticComponent="noParagraph"
               />
             ) : (
-              getDefaultString(item, strings.MESSAGE_NO_RESULTS, 'description')
+              getDefaultString(item, t('MESSAGE_NO_RESULTS'), 'description')
             )}{' '}
             {isEditable && (
               <Icon

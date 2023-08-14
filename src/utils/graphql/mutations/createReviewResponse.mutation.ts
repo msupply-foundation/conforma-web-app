@@ -10,7 +10,6 @@ export default gql`
   mutation createReviewResponse(
     $templateElementId: Int!
     $applicationId: Int!
-    $stageNumber: Int!
     $reviewId: Int!
     $decision: ReviewResponseDecision!
     $comment: String
@@ -33,7 +32,6 @@ export default gql`
           }
           applicationId: $applicationId
           status: SUBMITTED
-          stageNumber: $stageNumber
           timeSubmitted: $timeSubmitted
         }
       }

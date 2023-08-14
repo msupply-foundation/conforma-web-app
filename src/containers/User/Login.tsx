@@ -13,6 +13,7 @@ import { LoginPayload, OrganisationSimple } from '../../utils/types'
 
 const defaultLogo = require('../../../images/logos/conforma_logo_wide_1024.png').default
 import config from '../../config'
+import { Tracker } from '../Main/Tracker'
 
 const LOGIN_AS_NO_ORG = 0
 const NO_ORG_SELECTED = -1
@@ -27,12 +28,12 @@ const Login: React.FC = () => {
   const { push, history } = useRouter()
   const { onLogin } = useUserState()
   const client = useApolloClient()
-  const { strings, languageOptions } = useLanguageProvider()
+  const { t, languageOptions } = useLanguageProvider()
   const { preferences } = usePrefs()
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
-    orgName: strings.LABEL_NO_ORG_OPTION ?? '',
+    orgName: t('LABEL_NO_ORG_OPTION') ?? '',
     userRole: null,
     isSystemOrg: false,
   }
@@ -109,24 +110,26 @@ const Login: React.FC = () => {
 
   return (
     <Container id="login-container">
+      {/* Tracker required here as its outside the Authenticated Wrapper */}
+      <Tracker />
       {languageOptions.length > 1 && <LanguageSelector />}
       <div id="login-box">
         <div className="flex-column-center">
           <Image src={logoUrl} className="image-icon" />
           <Header as="h3" className="login-header">
-            {strings.TITLE_LOGIN_HEADER}
+            {t('TITLE_LOGIN_HEADER')}
           </Header>
         </div>
         <Header as="h2" className="centered header-space-around-medium">
           {loginPayload && selectedOrgId === NO_ORG_SELECTED
-            ? strings.LOGIN_WELCOME.replace('%1', loginPayload.user.firstName)
-            : strings.TITLE_LOGIN}
+            ? t('LOGIN_WELCOME', loginPayload.user.firstName)
+            : t('TITLE_LOGIN')}
         </Header>
         <Form>
           {isError && (
             <p className="alert">
               <Icon name="attention" />
-              {strings.ERROR_LOGIN_PASSWORD}
+              {t('ERROR_LOGIN_PASSWORD')}
             </p>
           )}
           {networkError && (
@@ -138,9 +141,9 @@ const Login: React.FC = () => {
           {!loginPayload && (
             <>
               <Form.Field error={isError} className="form-extra-spacing">
-                <label>{strings.LABEL_LOGIN_USERNAME}</label>
+                <label>{t('LABEL_LOGIN_USERNAME')}</label>
                 <input
-                  placeholder={strings.LABEL_LOGIN_USERNAME}
+                  placeholder={t('LABEL_LOGIN_USERNAME')}
                   name="username"
                   type="text"
                   value={username}
@@ -148,9 +151,9 @@ const Login: React.FC = () => {
                 />
               </Form.Field>
               <Form.Field error={isError}>
-                <label>{strings.LABEL_LOGIN_PASSWORD}</label>
+                <label>{t('LABEL_LOGIN_PASSWORD')}</label>
                 <input
-                  placeholder={strings.LABEL_LOGIN_PASSWORD}
+                  placeholder={t('LABEL_LOGIN_PASSWORD')}
                   name="password"
                   type="password"
                   value={password}
@@ -158,15 +161,15 @@ const Login: React.FC = () => {
                 />
               </Form.Field>
               <Button id="login-button" primary fluid type="submit" onClick={handleSubmit}>
-                {strings.LABEL_LOG_IN}
+                {t('LABEL_LOG_IN')}
               </Button>
               <p className="center-text">
                 <strong>
-                  <Link to="/register">{strings.LINK_NEW_ACCOUNT}</Link>
+                  <Link to="/register">{t('LINK_NEW_ACCOUNT')}</Link>
                 </strong>
                 <br />
                 <span className="smaller-text">
-                  <Link to="/reset-password">{strings.LINK_RESET_PASSWORD}</Link>
+                  <Link to="/reset-password">{t('LINK_RESET_PASSWORD')}</Link>
                 </span>
               </p>
             </>
@@ -174,7 +177,7 @@ const Login: React.FC = () => {
           {loginPayload?.orgList && loginPayload?.orgList?.length > 1 && (
             <>
               <p>
-                <strong>{strings.LOGIN_ORG_SELECT}</strong>
+                <strong>{t('LOGIN_ORG_SELECT')}</strong>
               </p>
               <List
                 celled

@@ -3,7 +3,7 @@ import { Image } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters }) => {
-  const { url, size, alignment, altText } = parameters
+  const { url, size, alignment, altText, style = {} } = parameters
 
   return (
     <Image
@@ -12,7 +12,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters }) => {
       // Have to do a bit of trickery in terms margin over-rides to get
       // right-alignment working
       centered={alignment === 'center' || alignment === 'right'}
-      style={alignment === 'right' ? { marginRight: 'unset' } : {}}
+      style={alignment === 'right' ? { marginRight: 'unset', ...style } : style}
       alt={altText}
       title={altText}
     />
@@ -21,4 +21,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({ parameters }) => {
 
 export default ApplicationView
 
-const allowedSizeValues = ['mini', 'tiny', 'small', 'medium', 'large', 'big', 'huge', 'massive']
+export const allowedSizeValues = [
+  'mini',
+  'tiny',
+  'small',
+  'medium',
+  'large',
+  'big',
+  'huge',
+  'massive',
+]

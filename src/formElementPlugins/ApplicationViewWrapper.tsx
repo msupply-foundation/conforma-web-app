@@ -20,11 +20,14 @@ import { useLanguageProvider } from '../contexts/Localisation'
 import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
+import functions from '../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
 
 const graphQLEndpoint = getServerUrl('graphQL')
 
+export const DEFAULT_LOADING_VALUE = 'Loading...'
+
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const calculateValidationState = useCalculateValidationState()
   const [responseMutation] = useUpdateResponseMutation()
   const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
@@ -73,7 +76,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     Object.entries(parameterExpressions).forEach(([field, expression]) => {
       evaluateExpression(expression as EvaluatorNode, {
-        objects: { responses: allResponses, currentUser, applicationData },
+        objects: { responses: allResponses, currentUser, applicationData, functions },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
         headers: { Authorization: 'Bearer ' + JWT },
@@ -102,7 +105,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       isStrictPage,
       responses,
       evaluationParameters: {
-        objects: { responses, currentUser, applicationData },
+        objects: { responses, currentUser, applicationData, functions },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
         headers: { Authorization: 'Bearer ' + JWT },
@@ -188,7 +191,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     <ApplicationView
       onUpdate={onUpdate}
       onSave={onSave}
-      initialValue={currentResponse}
       {...props}
       {...element}
       parameters={{ ...simpleParameters, ...evaluatedParameters }}
@@ -203,7 +205,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const {
     isChangeRequest = false,
     isChanged = false,
-    reviewerComment = strings.APPLICATION_OTHER_CHANGES_MADE,
+    reviewerComment = t('APPLICATION_OTHER_CHANGES_MADE'),
   } = changesRequired || {}
 
   const getChangeRequestClassesAndIcon = () => {
@@ -275,14 +277,14 @@ export const buildParameters = (
     if (internalParameters.includes(key)) simpleParameters[key] = value
     else if (isEvaluationExpression(value)) {
       parameterExpressions[key] = value
-      simpleParameters[key] = parameterLoadingValues?.[key] ?? 'Loading...'
+      simpleParameters[key] = parameterLoadingValues?.[key] ?? DEFAULT_LOADING_VALUE
     } else simpleParameters[key] = value
   }
   return [simpleParameters, parameterExpressions]
 }
 
 const useCalculateValidationState = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const calculateValidationState = async ({
     validationExpression,
@@ -310,7 +312,7 @@ const useCalculateValidationState = () => {
     if (isRequired && isStrictPage && !responses?.thisResponse)
       return {
         isValid: false,
-        validationMessage: validationMessage || strings.VALIDATION_REQUIRED_ERROR,
+        validationMessage: validationMessage || t('VALIDATION_REQUIRED_ERROR'),
       }
     return { isValid: true }
   }

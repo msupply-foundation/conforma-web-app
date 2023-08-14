@@ -11,14 +11,17 @@ export default gql`
     canApplicantMakeChanges
     startMessage
     submissionMessage
-    version
+    versionId
+    serialPattern
     icon
+    dashboardRestrictions
     templateCategory {
       id
       code
       title
       icon
       uiLocation
+      isSubmenu
     }
     templateFilterJoins {
       nodes {

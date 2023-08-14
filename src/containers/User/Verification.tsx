@@ -14,7 +14,7 @@ interface Verification {
 }
 
 const Verify: React.FC = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const {
     query: { uid },
   } = useRouter()
@@ -43,14 +43,14 @@ const Verify: React.FC = () => {
       <Segment basic textAlign="center" id="submission-header">
         <Header as="h4" icon>
           {icon}
-          {!verification?.success && strings.LABEL_VERIFICATION_FAILED}
+          {!verification?.success && t('LABEL_VERIFICATION_FAILED')}
         </Header>
         <Markdown text={verification?.message || ''} />
       </Segment>
       <Segment basic textAlign="center" id="submission-nav">
         <p>
           <Link to={'/'}>
-            <strong>{isLoggedIn() ? strings.MENU_ITEM_DASHBOARD : strings.LABEL_LOG_IN}</strong>
+            <strong>{isLoggedIn() ? t('MENU_ITEM_DASHBOARD') : t('LABEL_LOG_IN')}</strong>
           </Link>
         </p>
       </Segment>

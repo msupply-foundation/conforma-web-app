@@ -10,7 +10,7 @@ import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 const DocumentsTab: React.FC<{
   structure: FullStructure
 }> = ({ structure: fullStructure }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const { data, loading, error } = useGetApplicationDocsQuery({
     variables: { applicationSerial: fullStructure.info.serial },
@@ -25,7 +25,7 @@ const DocumentsTab: React.FC<{
   return docs ? (
     <Container id="documents-tab">
       <Header as="h3" className="center-text">
-        {strings.REVIEW_DOC_HEADER}
+        {t('REVIEW_DOC_HEADER')}
       </Header>
       <div className="flex-column-center-start"></div>
       <List id="document-list" className="flex-row-space_evenly flex-extra">

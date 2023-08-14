@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { ApplicationViewProps } from '../../types'
 import SemanticDatepicker from 'react-semantic-ui-datepickers'
 import { DateTime } from 'luxon'
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { LocaleOptions } from 'react-semantic-ui-datepickers/dist/types'
+import useDefault from '../../useDefault'
 
 // Stored response date format
 interface DateSaved {
@@ -12,7 +12,8 @@ interface DateSaved {
   end?: string
 }
 
-// This is the type used by react-semantic-ui-datepicker, and what we use for local "value" here
+// This is the type used by react-semantic-ui-datepicker, and what we use for
+// local "value" here
 type SelectedDateRange = Date[] | Date | null
 
 type DateFormats = 'short' | 'med' | 'medWeekday' | 'full' | 'huge'
@@ -42,8 +43,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     label,
     description,
-    default: defaultDate,
-    allowRange = Array.isArray(defaultDate),
+    default: defaultValue,
+    allowRange = Array.isArray(defaultValue),
     locale = selectedLanguage.locale,
     displayFormat = 'short',
     entryFormat = 'YYYY-MM-DD',
@@ -61,24 +62,35 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     [minDate, maxDate, minAge, maxAge]
   )
 
-  // Set "default" date if present
-  useEffect(() => {
-    if (!selectedDate && defaultDate) {
+  useDefault({
+    defaultValue,
+    currentResponse,
+    parameters,
+    onChange: (defaultDate) => {
       const date = dateFromDefault(defaultDate)
-      onSave({ text: toDisplayString(date, locale, displayFormat), date })
-      setSelectedDate(date)
+      handleSelect(date)
+    },
+  })
+
+  const handleSelect = (date?: SelectedDateRange) => {
+    if (date === undefined) return
+
+    // The DatePicker component doesn't check that date falls within allowed
+    // range when it is manually entered, so we need to check it here.
+    const [minDate, maxDate] =
+      date instanceof Date ? [date, date] : Array.isArray(date) ? [date[0], date[1]] : [null, null]
+    if (
+      minDate !== null &&
+      maxDate !== null &&
+      (minDate < minDateValue || maxDate > maxDateValue)
+    ) {
+      console.log('Selected date outside allowed range')
+      setSelectedDate(null)
+      return
     }
-  }, [defaultDate])
 
-  useEffect(() => {
-    onSave({
-      text: toDisplayString(selectedDate, locale, displayFormat),
-      date: toDateSaved(selectedDate),
-    })
-  }, [selectedDate])
-
-  const handleSelect = (event: any, data: any) => {
-    setSelectedDate(data.value)
+    setSelectedDate(date)
+    onSave({ text: toDisplayString(date, locale, displayFormat), date: toDateSaved(date) })
   }
 
   return (
@@ -91,7 +103,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <SemanticDatepicker
         locale={locale}
-        onChange={handleSelect}
+        onChange={(_, data) => handleSelect(data.value)}
         type={allowRange ? 'range' : 'basic'}
         value={selectedDate}
         format={entryFormat}

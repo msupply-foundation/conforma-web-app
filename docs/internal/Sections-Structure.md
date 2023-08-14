@@ -1,7 +1,5 @@
 _This should help Front-end developers understand the base UI display structure used in Application and Review pages._
 
-# Sections structure
-
 A few hooks are used to build and update the sections structure. This structure is an object with keys as each section `code` and storing everything related to the section on a `SectionState` object. This object contain the properties: `details`, `pages`, `progress` and `assigned` (only used in reviews). In the `pages` object each page `name` has all the `PageState` object which contains all elements (and corresponding response and review) in each page.
 
 ## List of hooks

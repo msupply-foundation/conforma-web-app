@@ -6,7 +6,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 
 const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [error, setError] = useState<string>()
   const [loadingMessage, setLoadingMessage] = useState('')
 
@@ -23,7 +23,7 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
     const {
       info: { serial, id: applicationId },
     } = structure
-    setLoadingMessage(strings.REVIEW_NOTES_SUBMIT_MSG)
+    setLoadingMessage(t('REVIEW_NOTES_SUBMIT_MSG'))
     // First create the note
     const mutationResult = await createNoteMutation({
       variables: {
@@ -34,7 +34,7 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
       },
     })
     if (mutationResult?.errors) {
-      setError(strings.REVIEW_NOTES_MUTATION_ERROR)
+      setError(t('REVIEW_NOTES_MUTATION_ERROR'))
       console.log(mutationResult?.errors)
       return
     }
@@ -42,7 +42,7 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
     // Then upload the files with Post request
     const noteId = mutationResult.data?.createApplicationNote?.applicationNote?.id
 
-    if (files.length > 0) setLoadingMessage(strings.REVIEW_NOTES_UPLOADING_MSG)
+    if (files.length > 0) setLoadingMessage(t('REVIEW_NOTES_UPLOADING_MSG'))
 
     const fileResults: any = []
     files.forEach((file) => {
@@ -70,14 +70,14 @@ const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
   }
 
   const deleteNote = async (noteId: number) => {
-    setLoadingMessage(strings.REVIEW_NOTES_DELETING_MSG)
+    setLoadingMessage(t('REVIEW_NOTES_DELETING_MSG'))
     const mutationResult = await deleteNoteMutation({
       variables: {
         noteId,
       },
     })
     if (mutationResult?.errors) {
-      setError(strings.REVIEW_NOTES_MUTATION_ERROR)
+      setError(t('REVIEW_NOTES_MUTATION_ERROR'))
       console.log(mutationResult.errors)
     }
     // We don't need to delete file records, as they'll be deleted automatically

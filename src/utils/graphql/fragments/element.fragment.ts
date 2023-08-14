@@ -14,7 +14,7 @@ export default gql`
     validation
     validationMessage
     helpText
-    defaultValue
+    initialValue
     parameters
     reviewability
     # reviewRequired

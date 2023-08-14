@@ -5,6 +5,7 @@ import {
   useDeleteWholeApplicationMutation,
   useRestartApplicationMutation,
   useUpdateTemplateStageMutation,
+  useDeleteTemplateMutation,
 } from '../../../utils/generated/graphql'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
@@ -20,6 +21,7 @@ import {
   ErrorAndLoadingState,
   UpdateApplication,
   UpdateTemplateStage,
+  DeleteTemplate,
 } from './OperationContext'
 
 const templateExportOptionName = 'templateExport'
@@ -37,6 +39,11 @@ type UpdateTemplateHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
   updateTemplateMutation: ReturnType<typeof useUpdateTemplateMutation>[0]
 ) => UpdateTemplate
+
+type DeleteTemplateHelper = (
+  setErrorAndLoadingState: SetErrorAndLoadingState,
+  updateTemplateSectionMutation: ReturnType<typeof useDeleteTemplateMutation>[0]
+) => DeleteTemplate
 
 type UpdateTemplateFilterJoinHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
@@ -88,15 +95,18 @@ const checkMutationResult = async (
 
 export const updateTemplate: UpdateTemplateHelper =
   (setErrorAndLoadingState: SetErrorAndLoadingState, updateTemplateMutation) =>
-  async (id, patch) => {
+  async (template, patch) => {
     try {
-      const result = await updateTemplateMutation({ variables: { id, templatePatch: patch } })
+      const result = await updateTemplateMutation({
+        variables: { id: template.id, templatePatch: patch },
+      })
       return checkMutationResult(result, setErrorAndLoadingState)
     } catch (e) {
       setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
       return false
     }
   }
+
 export const updateTemplateFilterJoin: UpdateTemplateFilterJoinHelper =
   (setErrorAndLoadingState: SetErrorAndLoadingState, updateTemplateFilterJoin) =>
   async (id, patch) => {
@@ -194,22 +204,18 @@ export const exportTemplate: TemplateOperationHelper = async (
       name: snapshotName,
       options: templateExportOptionName,
     }),
-    getFilterBody(id),
+    JSON.stringify(getFilterBody(id)),
     setErrorAndLoadingState
   )
-
-  // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
-  if (result)
-    safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})
 
   return result
 }
 
 export const duplicateTemplate: TemplateOperationHelper = async (
-  { id, snapshotName },
+  { id, snapshotName, templates = {} },
   setErrorAndLoadingState
 ) => {
-  const body = getFilterBody(id)
+  const body = JSON.stringify({ ...getFilterBody(id), templates })
 
   const result = await safeFetch(
     getServerUrl('snapshot', {
@@ -239,6 +245,19 @@ export const duplicateTemplate: TemplateOperationHelper = async (
   return snapshotResult
 }
 
+export const deleteTemplate: DeleteTemplateHelper =
+  (setErrorAndLoadingState: SetErrorAndLoadingState, deleteTemplateMutation) => async (id) => {
+    try {
+      const result = await deleteTemplateMutation({
+        variables: { id },
+      })
+      return checkMutationResult(result, setErrorAndLoadingState)
+    } catch (e) {
+      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      return false
+    }
+  }
+
 export const importTemplate: ImportTemplateHelper =
   (setErrorAndLoadingState: SetErrorAndLoadingState) => async (e) => {
     if (!e.target?.files) return false
@@ -250,7 +269,7 @@ export const importTemplate: ImportTemplateHelper =
       data.append('file', file)
 
       const result = await safeFetch(
-        getServerUrl('snapshot', { action: 'upload', name: snapshotName }),
+        getServerUrl('snapshot', { action: 'upload', template: true }),
         data,
         setErrorAndLoadingState
       )
@@ -288,7 +307,7 @@ const getFilterBody = (id: number) => {
       templateCategory: { templates: { some: { id: { equalTo: id } } } },
     },
   }
-  return JSON.stringify(filters)
+  return filters
 }
 const safeFetch = async (
   url: string,

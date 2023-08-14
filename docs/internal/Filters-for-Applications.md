@@ -1,6 +1,23 @@
+## Contents <!-- omit in toc -->
+<!-- toc -->
+- [Overview](#overview)
+- [Examples: UI Design](#examples-ui-design)
+- [Filters](#filters)
+  - [Label filters:](#label-filters)
+  - [Applicant action](#applicant-action)
+  - [Assigner action](#assigner-action)
+  - [Reviewer action](#reviewer-action)
+  - [String filters:](#string-filters)
+  - [Date filters:](#date-filters)
+  - [Number filters:](#number-filters)
+  - [Boolean filters](#boolean-filters)
+- [Formats \& Rules](#formats--rules)
+  - [Pre-defined dates](#pre-defined-dates)
+  - [Strings](#strings)
+  - [Labels](#labels)
+  - [General](#general)
+<!-- tocstop -->
 ## Overview
-
----
 
 The list of applications to display for the current user is based on:
 
@@ -14,42 +31,6 @@ For example to see the list of Applications for "Drug Registration" applied by y
 The `type` is the template code related to the applications type to be listed.
 The `user-role` is used to determine which columns should be displayed.
 In this example the user has **applicant** role. The user-role can only be `applicant` or `reviewer` and is deduced from the permissions that the current user has to view this application type.
-
-## Table of contents
-
-- [Overview](#overview)
-- [Examples: UI Design](#examples-ui-design)
-- [Filters](#filters)
-  - [Label filters:](#label-filters)
-    - [type](#type)
-    - [category (_not yet implemented in schema_)](#category-not-yet-implemented-in-schema)
-    - [stage](#stage)
-    - [status](#status)
-    - [sort-by](#sort-by)
-    - [user-role](#user-role)
-    - [outcome](#outcome)
-  - [applicant action _not implemented_](#applicant-action-not-implemented)
-    - [assigner action](#assigner-action)
-    - [reviewer action](#reviewer-action)
-  - [String filters:](#string-filters)
-    - [reviewer](#reviewer)
-    - [assigner](#assigner)
-    - [applicant](#applicant)
-    - [org](#org)
-    - [search](#search)
-  - [Date filters:](#date-filters)
-    - [last-active-date](#last-active-date)
-    - [deadline-date](#deadline-date)
-  - [Number filters:](#number-filters)
-    - [page](#page)
-    - [per-page](#per-page)
-  - [Boolean filters](#boolean-filters)
-    - [Is fully assigned level 1](#is-fully-assigned-level-1)
-- [Formats & Rules](#formats-&-rules)
-  - [Pre-defined dates](#pre-defined-dates)
-  - [Strings](#strings)
-  - [Labels](#labels)
-  - [General](#general)
 
 ## Examples: UI Design
 
@@ -72,6 +53,7 @@ Each filter type can be selected by the user, it will be displayed on the right 
 The user can select the value to filter by after clicking on one of the filter and check one or more of the options that are displayed:
 
  ![Filters-values](images/Filters-for-Applications-values.png)
+ 
 ---
 
 ### Label filters:
@@ -165,17 +147,24 @@ Options: Set of static `outcome` from `ApplicationOutcome` ENUM
 
 <a name="applicant-action"></a>
 
-### applicant action _not implemented_
+### Applicant action
 
-- Applicant:
-  `edit-draft`
-  `make-updates`
-  `renew`
-  `view` (Submitted)
+The applicant actions are simpler and deduces in Front-end based
+on current Application status. 
+Included: **Yes**
+Can have combined values: **No**
+Examples: 
+- `ACTION_UPDATE` meaning some changes for applicant to take care (after reviewed) and re-submit.
+- `ACTION_CONTINUE` meaning application in in Draft - either before submission or after started updating
+
+Options:
+- `ACTION_UPDATE`
+- `ACTION_CONTINUE`
+- Default `VIEW` (Submitted)
 
 <a name="assigner-action"></a>
 
-#### assigner action
+### Assigner action
 
 Check out in schema `AssignerAction` ENUM and Function `assigner_list`
 Included: **Yes**
@@ -189,7 +178,7 @@ Options:
 
 <a name="reviewer-action"></a>
 
-#### reviewer action
+### Reviewer action
 
 Check out in schema `ReviewerAction` ENUM and Function `review_list`
 Included: **Yes**
@@ -201,6 +190,7 @@ Options:
 - `SELF_ASSIGN`
 - `START_REVIEW`
 - `CONTINUE_REVIEW`
+- `MAKE_DECISION`
 - `RESTART_REVIEW`
 - `UPDATE_REVIEW`
 - `VIEW_REVIEW`

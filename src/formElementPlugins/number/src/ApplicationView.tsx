@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Form } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import useDefault from '../../useDefault'
 
 export enum NumberType {
   INTEGER = 'integer',
@@ -20,14 +21,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   currentResponse,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('number')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('number')
   const { isEditable } = element
   const {
     placeholder,
     label,
     description,
-    default: defaultValue,
     maxWidth,
     type = NumberType.INTEGER,
     simple = true,
@@ -40,6 +40,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     suffix,
     suffixPlural = suffix,
     maxSignificantDigits,
+    decimals,
+    default: defaultValue,
   } = parameters
   const [textValue, setTextValue] = useState<string | null | undefined>(currentResponse?.text)
   const [internalValidation, setInternalValidation] = useState(validationState)
@@ -48,45 +50,37 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     style: currency ? 'currency' : undefined,
     currency: currency !== '' ? currency : undefined,
     maximumSignificantDigits: maxSignificantDigits,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   }
   const numberFormatter = new Intl.NumberFormat(locale, formatOptions)
 
-  useEffect(() => {
-    // Ensures defaultValue is saved on first load
-    if (!currentResponse?.text && defaultValue !== undefined) {
-      const { number, formattedNumber, fullText } = parseInput(
-        String(defaultValue),
-        numberFormatter,
-        simple,
-        prefix,
-        suffix,
-        suffixPlural
-      )
-      const validation = customValidate(number, type, minValue, maxValue)
-      setInternalValidation(validation)
-      if (validation.isValid)
-        onSave({ text: fullText, number, type, currency, locale, prefix, suffix, suffixPlural })
-      setTextValue(formattedNumber)
-    }
-  }, [])
+  useDefault({
+    defaultValue,
+    currentResponse,
+    parameters,
+    onChange: (defaultNumber) => {
+      setTextValue(String(defaultNumber))
+      handleLoseFocus(String(defaultNumber))
+    },
+  })
 
   useEffect(() => {
     if (!textValue) return
     handleLoseFocus()
   }, [locale, minValue, maxValue, currency, prefix, suffix, maxSignificantDigits, type])
 
-  function handleChange(e: any) {
-    const text = e.target.value
+  function handleChange(text: string) {
     const { number } = parseInput(text, numberFormatter, simple, prefix, suffix, suffixPlural)
     setInternalValidation(customValidate(number, type, minValue, maxValue))
     onUpdate(text)
     setTextValue(text)
   }
 
-  function handleLoseFocus() {
-    if (!textValue) return
+  function handleLoseFocus(value: string | null | undefined = textValue) {
+    if (!value) return
     const { number, formattedNumber, fullText } = parseInput(
-      textValue,
+      value,
       numberFormatter,
       simple,
       prefix,
@@ -124,22 +118,22 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     minValue: number = -Infinity,
     maxValue: number = Infinity
   ): { isValid: boolean; validationMessage?: string } => {
-    if (number === NaN || number === null)
-      return { isValid: false, validationMessage: strings.ERROR_NOT_NUMBER }
+    if (Number.isNaN(number) || number === null)
+      return { isValid: false, validationMessage: t('ERROR_NOT_NUMBER') }
     if (type === NumberType.INTEGER && !Number.isInteger(number))
       return {
         isValid: false,
-        validationMessage: strings.ERROR_NOT_INTEGER,
+        validationMessage: t('ERROR_NOT_INTEGER'),
       }
     if ((number as number) < minValue)
       return {
         isValid: false,
-        validationMessage: strings.ERROR_TOO_SMALL,
+        validationMessage: t('ERROR_TOO_SMALL'),
       }
     if ((number as number) > maxValue)
       return {
         isValid: false,
-        validationMessage: strings.ERROR_TOO_BIG,
+        validationMessage: t('ERROR_TOO_BIG'),
       }
     return { isValid: true }
   }
@@ -162,9 +156,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             max={maxValue}
             step={step}
             placeholder={placeholder}
-            onChange={handleChange}
-            onBlur={handleLoseFocus}
-            onClick={handleLoseFocus} // To capture changes via stepper
+            onChange={(e) => handleChange(e.target.value)}
+            onBlur={(e: any) => handleLoseFocus(e.target.value)}
+            onClick={(e: any) => handleLoseFocus(e.target.value)} // To capture changes via stepper
             onFocus={setIsActive}
             value={textValue ? textValue : ''}
             disabled={!isEditable}

@@ -21,7 +21,7 @@ export const DataViewTextSearchFilter: React.FC<TextSearchFilterProps> = ({
   onRemove,
   currentValue,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [searchText, setSearchText] = useState<string>(currentValue)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
 
@@ -49,7 +49,7 @@ export const DataViewTextSearchFilter: React.FC<TextSearchFilterProps> = ({
       <Input
         ref={inputRef}
         icon="search"
-        placeholder={strings.FILTER_START_TYPING}
+        placeholder={t('FILTER_START_TYPING')}
         iconPosition="left"
         className="search"
         value={searchText}

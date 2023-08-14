@@ -58,7 +58,7 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
       return
     }
 
-    const { id, code, name, version } = template
+    const { id, code, name, versionId } = template
     const templateSections = template.templateSections.nodes as TemplateSection[]
     const sections = getTemplateSections(templateSections)
     const elementsIds: number[] = []
@@ -69,10 +69,10 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
       templateElementsBySectionId.nodes.forEach((element) => {
         if (
           element?.id &&
-          (element.category === TemplateElementCategory.Question || element?.defaultValue !== null)
+          (element.category === TemplateElementCategory.Question || element?.initialValue !== null)
         ) {
           elementsIds.push(element.id)
-          elementsDefaults.push(element.defaultValue)
+          elementsDefaults.push(element.initialValue)
         }
       })
     })
@@ -88,7 +88,7 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
         id,
         code,
         name: String(name),
-        version: Number(version),
+        versionId,
         elementsIds,
         elementsDefaults,
         sections,

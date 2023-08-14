@@ -37,7 +37,7 @@ type ElementUpdateState = {
   validationMessage: string | null
   helpText: string | null
   parameters: ParametersType
-  defaultValue: EvaluatorNode
+  initialValue: EvaluatorNode
   reviewability: Reviewability | null
   id: number
 }
@@ -56,7 +56,7 @@ const getState: GetState = (element: TemplateElement) => ({
   helpText: element.helpText || null,
   validationMessage: element.validationMessage || '',
   parameters: element.parameters || {},
-  defaultValue: element.defaultValue || null,
+  initialValue: element.initialValue || null,
   reviewability: element.reviewability || null,
   id: element.id,
 })
@@ -71,21 +71,21 @@ const evaluations: Evaluations = [
   { key: 'isRequired', title: 'Is Required' },
   { key: 'validation', title: 'Is Valid' },
   { key: 'visibilityCondition', title: 'Is Visible' },
-  { key: 'defaultValue', title: 'Default Value' },
+  { key: 'initialValue', title: 'Initial Value' },
 ]
 
 const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } =
     useConfirmationModal({
-      title: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE,
-      message: strings.TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT,
-      confirmText: strings.BUTTON_CONFIRM,
+      title: t('TEMPLATE_MESSAGE_REMOVE_ELEMENT_TITLE'),
+      message: t('TEMPLATE_MESSAGE_REMOVE_ELEMENT_CONTENT'),
+      confirmText: t('BUTTON_CONFIRM'),
     })
 
   const { structure } = useFullApplicationState()
   const {
-    template: { isDraft },
+    template: { canEdit },
   } = useTemplateState()
   const { selectedSectionId } = useFormState()
   const { updateApplication, updateTemplateSection } = useOperationState()
@@ -156,6 +156,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <DropdownIO
               title="Type"
               value={state.elementTypePluginCode}
+              disabled={!canEdit}
+              disabledMessage={disabledMessage}
               getKey={'code'}
               getValue={'code'}
               getText={'displayName'}
@@ -168,13 +170,15 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               labelNegative
               minLabelWidth={50}
             />
-            <FromExistingElement
-              pluginCode={state.elementTypePluginCode}
-              setTemplateElement={(existingElement) => {
-                setState({ ...state, ...existingElement })
-                markNeedsUpdate()
-              }}
-            />
+            {canEdit && (
+              <FromExistingElement
+                pluginCode={state.elementTypePluginCode}
+                setTemplateElement={(existingElement) => {
+                  setState({ ...state, ...existingElement })
+                  markNeedsUpdate()
+                }}
+              />
+            )}
           </div>
         </div>
         <Label
@@ -190,7 +194,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           </a>
         </Label>
         <div className="config-modal-info">
-          {!isDraft && <Label color="red">Template form only editable on draft templates</Label>}
+          {!canEdit && <Label color="red">Template form only editable on draft templates</Label>}
           <div className="spacer-10" />
           <div className="config-container-outline" style={{ maxWidth: 600 }}>
             <div className="flex-row-start-start">
@@ -201,6 +205,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   setText={(text) => {
                     setState({ ...state, title: text })
                   }}
+                  disabled={!canEdit}
+                  disabledMessage={disabledMessage}
                   markNeedsUpdate={markNeedsUpdate}
                   isPropUpdated={true}
                   minLabelWidth={60}
@@ -215,6 +221,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 setText={(text) => {
                   setState({ ...state, code: text ?? '' })
                 }}
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={60}
@@ -223,6 +231,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               <DropdownIO
                 title="Category"
                 value={state.category}
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
                 getKey={'category'}
                 getValue={'category'}
                 getText={'title'}
@@ -241,6 +251,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               <DropdownIO
                 title="Is Reviewable"
                 value={state.reviewability || 'default'}
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
                 getKey={'value'}
                 getValue={'value'}
                 getText={'text'}
@@ -270,6 +282,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 <TextIO
                   text={state?.validationMessage || ''}
                   title="Validation Message"
+                  disabled={!canEdit}
+                  disabledMessage={disabledMessage}
                   isTextArea={true}
                   setText={(text) => {
                     setState({ ...state, validationMessage: text || null })
@@ -289,6 +303,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   text={state?.helpText || ''}
                   isTextArea={true}
                   title="Help Text"
+                  disabled={!canEdit}
+                  disabledMessage={disabledMessage}
                   setText={(text) => {
                     setState({ ...state, helpText: text || null })
                   }}
@@ -329,43 +345,44 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               setState({ ...state, parameters })
               markNeedsUpdate()
             }}
+            canEdit={canEdit}
             type="FormElement"
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
-              title={strings.BUTTON_SAVE}
-              disabled={!isDraft || !shouldUpdate}
-              disabledMessage={!isDraft ? disabledMessage : strings.TEMPLATE_MESSAGE_SAVE_DISABLED}
+              title={t('BUTTON_SAVE')}
+              disabled={!canEdit || !shouldUpdate}
+              disabledMessage={!canEdit ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
               onClick={updateElement}
             />
             <ButtonWithFallback
-              disabled={!isDraft}
+              disabled={!canEdit}
               disabledMessage={disabledMessage}
-              title={strings.BUTTON_REMOVE}
+              title={t('BUTTON_REMOVE')}
               onClick={() => showRemoveElementModal({ onConfirm: () => removeElement() })}
             />
             <ButtonWithFallback
-              title={strings.BUTTON_CLOSE}
-              onClick={() => (shouldUpdate ? setOpen(true) : onClose())}
+              title={t('BUTTON_CLOSE')}
+              onClick={() => (shouldUpdate && canEdit ? setOpen(true) : onClose())}
             />
             <Modal
               basic
               size="small"
               icon="save"
-              header={strings.TEMPLATE_MESSAGE_SAVE_AND_CLOSE}
+              header={t('TEMPLATE_MESSAGE_SAVE_AND_CLOSE')}
               open={open}
               onClose={() => setOpen(false)}
               actions={[
                 {
                   key: 'save',
-                  content: strings.BUTTON_SAVE,
+                  content: t('BUTTON_SAVE'),
                   positive: true,
                   onClick: saveAndClose,
                 },
                 {
                   key: 'close',
-                  content: strings.BUTTON_CLOSE,
+                  content: t('BUTTON_CLOSE'),
                   positive: false,
                   onClick: onClose,
                 },
@@ -379,7 +396,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         className="alert-success"
         success
         icon={<Icon name="check circle outline" />}
-        header={strings.TEMPLATE_MESSAGE_SAVE_SUCCESS}
+        header={t('TEMPLATE_MESSAGE_SAVE_SUCCESS')}
         hidden={!showSaveAlert}
         onClick={() => setShowSaveAlert(false)}
       />

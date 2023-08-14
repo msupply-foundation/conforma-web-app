@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ReactJson from 'react-json-view'
+import ReactJson from 'json-edit-react'
 import { Accordion, Icon } from 'semantic-ui-react'
 import { PermissionPolicy, PostgresRowLevel } from '../../../../../utils/generated/graphql'
 import TextIO from '../../../shared/TextIO'
@@ -89,7 +89,7 @@ const RowLevelPolicyInfo: React.FC<PolicyRulesProps> = ({ rules }) => (
       <div key={tableName} className="config-container-alternate">
         <TextIO title="Table name" text={tableName} />
         <div className="spacer-10" />
-        <ReactJson src={rules || {}} collapsed={2} />
+        <ReactJson data={rules || {}} collapse={2} />
       </div>
     ))}
   </div>

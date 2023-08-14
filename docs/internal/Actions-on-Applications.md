@@ -1,5 +1,3 @@
-# Actions on Applications
-
 Actions define what a user can do related to an existing application. The actions take in account the current user own permissions to `apply` and the application template_permission to `review` or `assign` based on the current `level` and `stage` of the review.
 So basically we will define actions related to user roles of: **Applicant**, **Assigner**, **Reviewer** and **Consolidator** (basically actions are the same as Reviewer).
 
@@ -86,7 +84,7 @@ Actions generated for **reviewer** user will check which of the count (of owned 
 
 Actions generated for **assigner** user will check which of the count (of ALL review/assignment) field is above 0 or `true`,
 
-- `Assign` -> assign_count
-- `Re-assign` -> assign_count & is_fully_assigned_level_1
+- `Assign` -> assigned_questions_count (application_id, $1, level_number) < reviewable_questions_count
+- `Re-assign` -> (assigned_questions_count >= reviewable_questions_count (application_id)) AND (submitted_assigned_questions_count < reviewable_questions_count (application_id))
 
-**Note**: If user is both an Assigner and Reviewer for the current application the actions for _both_ will be displayed — one for Reviewer and one for Assigner.
+**Note**: If user is both an Assigner and Reviewer for the current application only the action for reviewer is displayed.

@@ -18,12 +18,11 @@ const Sections: React.FC = () => {
   const { updateTemplate } = useOperationState()
   const { structure } = useFullApplicationState()
   const { setSelectedSectionId, selectedSectionId, setSelectedPageNumber } = useFormState()
-  const {
-    template: { isDraft, id: templateId },
-  } = useTemplateState()
+  const { template } = useTemplateState()
+  const { isDraft } = template
 
   const createNewSection = () =>
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateSectionsUsingId: {
         create: [
           {
@@ -84,10 +83,8 @@ const Section: React.FC = () => {
   const { updateTemplate, updateTemplateSection, updateApplication } = useOperationState()
   const { askForConfirmation } = useConfirmationState()
   const { structure } = useFullApplicationState()
-  const {
-    template: { isDraft, id: templateId },
-    sections,
-  } = useTemplateState()
+  const { template, sections } = useTemplateState()
+  const { canEdit } = template
   const { moveStructure } = useFormStructureState()
 
   if (selectedSectionId === -1) return null
@@ -113,7 +110,7 @@ const Section: React.FC = () => {
       id: toId,
     }
 
-    updateTemplate(templateId, {
+    updateTemplate(template, {
       templateSectionsUsingId: { updateById: [currentUpdateById, previousUpdateById] },
     })
   }
@@ -171,7 +168,7 @@ const Section: React.FC = () => {
       if (!result) return
     }
 
-    await updateTemplate(templateId, {
+    await updateTemplate(template, {
       templateSectionsUsingId: {
         deleteById: [{ id: currentSection.id || 0 }],
       },
@@ -182,7 +179,7 @@ const Section: React.FC = () => {
   return (
     <div key={selectedSectionId} className="flex-row-start-center-wrap">
       <IconButton
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         name="angle up"
         onClick={moveSectionForward}
@@ -190,7 +187,7 @@ const Section: React.FC = () => {
         toolTip="Move up"
       />
       <IconButton
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         name="angle down"
         onClick={moveSectionBackward}
@@ -202,10 +199,10 @@ const Section: React.FC = () => {
         <TextIO
           title="title"
           text={selectedSection.details.title}
-          disabled={!isDraft}
+          disabled={!canEdit}
           disabledMessage={disabledMessage}
           setText={(text) => {
-            updateTemplate(templateId, {
+            updateTemplate(template, {
               templateSectionsUsingId: {
                 updateById: [{ id: selectedSectionId, patch: { title: text } }],
               },
@@ -216,10 +213,10 @@ const Section: React.FC = () => {
       <TextIO
         title="code"
         text={selectedSection.details.code}
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         setText={(text) => {
-          updateTemplate(templateId, {
+          updateTemplate(template, {
             templateSectionsUsingId: {
               updateById: [{ id: selectedSectionId, patch: { code: text } }],
             },
@@ -227,7 +224,7 @@ const Section: React.FC = () => {
         }}
       />
       <IconButton
-        disabled={!isDraft}
+        disabled={!canEdit}
         disabledMessage={disabledMessage}
         name="window close"
         onClick={deleteSection}

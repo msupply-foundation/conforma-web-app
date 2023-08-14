@@ -1,5 +1,4 @@
-import { LanguageStrings, useLanguageProvider } from '../../../contexts/Localisation'
-import { ActivityLog, EventType, useGetActivityLogQuery } from '../../generated/graphql'
+import { ActivityLog, EventType } from '../../generated/graphql'
 
 type GenericObject = { [key: string]: any }
 

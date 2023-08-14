@@ -18,7 +18,7 @@ import { USER_ROLES } from '../../data'
 import { usePrefs } from '../../../contexts/SystemPrefs'
 
 export const useGetFilterDefinitions = () => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const { preferences } = usePrefs()
 
@@ -30,43 +30,43 @@ export const useGetFilterDefinitions = () => {
   ]
 
   const NAMED_DATE_RANGES: NamedDates = {
-    today: { getDates: () => [today(), today()], title: strings.FILTER_NAMED_DATE_TODAY },
+    today: { getDates: () => [today(), today()], title: t('FILTER_NAMED_DATE_TODAY') },
     yesterday: {
       getDates: () => getDateRangeForUnit('day', -1),
-      title: strings.FILTER_NAMED_DATE_YESTERDAY,
+      title: t('FILTER_NAMED_DATE_YESTERDAY'),
     },
     'this-week': {
       getDates: () => getDateRangeForUnit('week'),
-      title: strings.FILTER_NAMED_DATE_THIS_WEEK,
+      title: t('FILTER_NAMED_DATE_THIS_WEEK'),
     },
     'last-week': {
       getDates: () => getDateRangeForUnit('week', -1),
-      title: strings.FILTER_NAMED_DATE_LAST_WEEK,
+      title: t('FILTER_NAMED_DATE_LAST_WEEK'),
     },
     'this-month': {
       getDates: () => getDateRangeForUnit('month'),
-      title: strings.FILTER_NAMED_DATE_THIS_MONTH,
+      title: t('FILTER_NAMED_DATE_THIS_MONTH'),
     },
     'last-month': {
       getDates: () => getDateRangeForUnit('month', -1),
 
-      title: strings.FILTER_NAMED_DATE_LAST_MONTH,
+      title: t('FILTER_NAMED_DATE_LAST_MONTH'),
     },
     'next-month': {
       getDates: () => getDateRangeForUnit('month', 1),
-      title: strings.FILTER_NAMED_DATE_NEXT_MONTH,
+      title: t('FILTER_NAMED_DATE_NEXT_MONTH'),
     },
     'this-year': {
       getDates: () => getDateRangeForUnit('year'),
-      title: strings.FILTER_NAMED_DATE_THIS_YEAR,
+      title: t('FILTER_NAMED_DATE_THIS_YEAR'),
     },
     'last-year': {
       getDates: () => getDateRangeForUnit('year', -1),
-      title: strings.FILTER_NAMED_DATE_LAST_YEAR,
+      title: t('FILTER_NAMED_DATE_LAST_YEAR'),
     },
     'next-year': {
       getDates: () => getDateRangeForUnit('year', 1),
-      title: strings.FILTER_NAMED_DATE_NEXT_YEAR,
+      title: t('FILTER_NAMED_DATE_NEXT_YEAR'),
     },
   }
 
@@ -75,14 +75,14 @@ export const useGetFilterDefinitions = () => {
       type: 'date',
       default: defaultFilters.some((filter) => filter === 'lastActiveDate'),
       visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
-      title: strings.FILTER_LAST_ACTIVE,
+      title: t('FILTER_LAST_ACTIVE'),
       options: { namedDates: NAMED_DATE_RANGES },
     },
     applicantDeadline: {
       type: 'date',
       default: defaultFilters.some((filter) => filter === 'applicantDeadline'),
       visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
-      title: strings.FILTER_APPLICANT_DEADLINE,
+      title: t('FILTER_APPLICANT_DEADLINE'),
       options: { namedDates: NAMED_DATE_RANGES },
     },
     type: {
@@ -95,21 +95,21 @@ export const useGetFilterDefinitions = () => {
       type: 'enumList',
       default: defaultFilters.some((filter) => filter === 'status'),
       visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
-      title: strings.FILTER_STATUS,
+      title: t('FILTER_STATUS'),
       options: { enumList: Object.values(ApplicationStatus) },
     },
     outcome: {
       type: 'enumList',
       default: defaultFilters.some((filter) => filter === 'outcome'),
       visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
-      title: strings.FILTER_OUTCOME,
+      title: t('FILTER_OUTCOME'),
       options: { enumList: Object.values(ApplicationOutcome) },
     },
     orgName: {
       type: 'searchableListIn',
       default: defaultFilters.some((filter) => filter === 'org'),
       visibleTo: [USER_ROLES.REVIEWER],
-      title: strings.FILTER_ORGANISATION,
+      title: t('FILTER_ORGANISATION'),
       options: {
         getListQuery: constructFilterListQuery(
           getOrganisationFilterList,
@@ -121,7 +121,7 @@ export const useGetFilterDefinitions = () => {
       type: 'staticList',
       default: defaultFilters.some((filter) => filter === 'stage'),
       visibleTo: [USER_ROLES.REVIEWER],
-      title: strings.FILTER_STAGE,
+      title: t('FILTER_STAGE'),
       options: {
         getListQuery: constructFilterListQuery(getStageFilterList, 'applicationListFilterStage'),
       },
@@ -138,7 +138,7 @@ export const useGetFilterDefinitions = () => {
       type: 'searchableListIn',
       default: defaultFilters.some((filter) => filter === 'applicant'),
       visibleTo: [USER_ROLES.APPLICANT, USER_ROLES.REVIEWER],
-      title: strings.FILTER_APPLICANT,
+      title: t('FILTER_APPLICANT'),
       options: {
         getListQuery: constructFilterListQuery(
           getApplicantFilterList,
@@ -150,7 +150,7 @@ export const useGetFilterDefinitions = () => {
       type: 'searchableListInArray',
       default: defaultFilters.some((filter) => filter === 'assigner'),
       visibleTo: [USER_ROLES.REVIEWER],
-      title: strings.FILTER_ASSIGNER,
+      title: t('FILTER_ASSIGNER'),
       options: {
         getListQuery: constructFilterListQuery(
           getAssignerFilterList,
@@ -162,7 +162,7 @@ export const useGetFilterDefinitions = () => {
       type: 'searchableListInArray',
       default: defaultFilters.some((filter) => filter === 'reviewers'),
       visibleTo: [USER_ROLES.REVIEWER],
-      title: strings.FILTER_REVIEWER,
+      title: t('FILTER_REVIEWER'),
       options: {
         getListQuery: constructFilterListQuery(
           getReviewersFilterList,
@@ -173,24 +173,24 @@ export const useGetFilterDefinitions = () => {
     assignerAction: {
       type: 'enumList',
       default: defaultFilters.some((filter) => filter === 'assignerAction'),
-      visibleTo: [],
-      title: strings.FILTER_ASSIGNER_ACTION,
+      visibleTo: [USER_ROLES.REVIEWER],
+      title: t('FILTER_ASSIGNER_ACTION'),
       options: { enumList: Object.values(AssignerAction) },
     },
     reviewerAction: {
       type: 'enumList',
       default: defaultFilters.some((filter) => filter === 'reviewerAction'),
       visibleTo: [USER_ROLES.REVIEWER],
-      title: strings.FILTER_REVIEWER_ACTION,
+      title: t('FILTER_REVIEWER_ACTION'),
       options: { enumList: Object.values(ReviewerAction) },
     },
     // isFullyAssignedLevel1: {
     //   type: 'boolean',
-    //   title: strings.FILTER_ASSIGNMENT_STATUS,
+    //   title: t('FILTER_ASSIGNMENT_STATUS'),
     //   options: {
     //     booleanMapping: {
-    //       true: strings.FILTER_ASSIGNMENT_STATUS_TRUE,
-    //       false: strings.FILTER_ASSIGNMENT_STATUS_FALSE,
+    //       true: t('FILTER_ASSIGNMENT_STATUS_TRUE'),
+    //       false: t('FILTER_ASSIGNMENT_STATUS_FALSE'),
     //     },
     //   },
     // },

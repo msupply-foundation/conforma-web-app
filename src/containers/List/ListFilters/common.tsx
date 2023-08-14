@@ -23,7 +23,7 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
   trigger,
   setFocus = () => {},
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [isOpen, setIsOpen] = useState(false)
 
   const ref = useOnclickOutside(() => setIsOpen(false))
@@ -53,7 +53,7 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
             <Dropdown.Divider />
             <Dropdown.Item className="remove-filter" key="removeFilter" onClick={() => onRemove()}>
               <Icon name="remove circle" />
-              {strings.FILTER_REMOVE}
+              {t('FILTER_REMOVE')}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>

@@ -34,6 +34,7 @@ const config = {
     dataViews: '/data-views',
     previewActions: '/preview-actions',
     extendApplication: '/extend-application',
+    lookupTable: '/lookup-table',
     // Admin
     admin: '/admin',
     // updateRowPolicies: '/admin/updateRowPolicies', //-- not currently called by front-end
@@ -42,8 +43,10 @@ const config = {
     allLanguages: '/admin/all-languages',
     removeLanguage: '/admin/remove-language',
     snapshot: '/admin/snapshot',
-    lookupTable: '/admin/lookup-table',
     getApplicationData: '/admin/get-application-data',
+    getAllPrefs: '/admin/get-all-prefs',
+    setPrefs: '/admin/set-prefs',
+    archiveFiles: '/admin/archive-files',
   },
   version,
   pluginsFolder: 'formElementPlugins',
@@ -51,7 +54,9 @@ const config = {
   localStorageJWTKey: 'persistJWT',
   applicantDeadlineCode: 'applicantDeadline',
   isProductionBuild,
-  debounceTimeout: 350, // milliseconds
+  debounceTimeout: 350, // milliseconds,
+  // These are the only system tables that we allow to have Data View configuration, plus any "data_table" tables.
+  dataViewAllowedTableNames: ['user', 'organisation', 'file'],
 }
 
 export default config

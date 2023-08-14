@@ -14,7 +14,7 @@ const DownloadButton = ({
   name = 'lookup_table',
   ...props
 }: any) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [open, setOpen] = useState(openPopup)
   const [error, setError]: any = useState('')
 
@@ -65,7 +65,7 @@ const DownloadButton = ({
       open={open}
       content={
         error ? (
-          <Message negative header={strings.LABEL_FILE_DOWNLOAD_ERROR} content={error} />
+          <Message negative header={t('LABEL_FILE_DOWNLOAD_ERROR')} content={error} />
         ) : (
           popUpContent
         )

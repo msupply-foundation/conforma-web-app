@@ -26,15 +26,15 @@ const useConfirmationModal = ({
   awaitAction = true,
   ...modalProps
 }: Partial<ConfirmModalState> = {}) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
   const [open, setOpen] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
   const [modalState, setModalState] = useState<ConfirmModalState>({
     type: type ?? 'confirmation',
-    title: title ?? strings.MODAL_CONFIRM_TITLE,
+    title: title ?? t('MODAL_CONFIRM_TITLE'),
     message,
-    confirmText: confirmText ?? strings.OPTION_OK,
-    cancelText: cancelText ?? strings.OPTION_CANCEL,
+    confirmText: confirmText ?? t('OPTION_OK'),
+    cancelText: cancelText ?? t('OPTION_CANCEL'),
     onConfirm: onConfirm ? onConfirm : () => console.log('Clicked OK'),
     onCancel: onCancel ? onCancel : () => {},
     showCancel,
@@ -93,7 +93,11 @@ const useConfirmationModal = ({
           inverted
           icon="checkmark"
           content={modalState.confirmText}
-          onClick={() => handleConfirm(modalState.onConfirm)}
+          // This ensures that the "Confirm" action can only be triggered once.
+          // By default it can still be clicked while "loading". We can achieve
+          // this fix by adding `disabled={buttonLoading}`, but it doesn't look
+          // as nice :)
+          onClick={!buttonLoading ? () => handleConfirm(modalState.onConfirm) : () => {}}
         />
       </Modal.Actions>
     </Modal>

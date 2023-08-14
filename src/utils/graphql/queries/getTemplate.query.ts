@@ -5,7 +5,7 @@ export default gql`
     templates(condition: { code: $code, status: $status }) {
       nodes {
         ...templateFragment
-        templateSections {
+        templateSections(orderBy: INDEX_ASC) {
           nodes {
             ...Section
             templateElementsBySectionId {

@@ -6,6 +6,7 @@ import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -19,8 +20,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   allResponses,
 }) => {
-  const { getPluginStrings } = useLanguageProvider()
-  const strings = getPluginStrings('password')
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('password')
   const { isEditable } = element
   const {
     placeholder,
@@ -62,7 +63,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       if (shouldShowValidation) {
         const JWT = localStorage.getItem(config.localStorageJWTKey)
         const customValidation = await validate(validationInternal, validationMessageInternal, {
-          objects: { responses, currentUser, applicationData },
+          objects: { responses, currentUser, applicationData, functions },
           APIfetch: fetch,
           graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
           headers: { Authorization: 'Bearer ' + JWT },
@@ -80,7 +81,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const responses = { thisResponse: password || '', ...allResponses }
     const JWT = localStorage.getItem(config.localStorageJWTKey)
     const customValidation = await validate(validationInternal, validationMessageInternal, {
-      objects: { responses, currentUser, applicationData },
+      objects: { responses, currentUser, applicationData, functions },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
       headers: { Authorization: 'Bearer ' + JWT },
@@ -107,7 +108,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Form.Input
         name="password"
         fluid
-        placeholder={placeholder ? placeholder : strings.PLACEHOLDER_DEFAULT}
+        placeholder={placeholder ? placeholder : t('PLACEHOLDER_DEFAULT')}
         onChange={handleChange}
         onBlur={handleLoseFocus}
         onFocus={setIsActive}
@@ -127,9 +128,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         <Form.Input
           name="passwordConfirm"
           fluid
-          placeholder={
-            confirmPlaceholder ? confirmPlaceholder : strings.PLACEHOLDER_CONFIRM_DEFAULT
-          }
+          placeholder={confirmPlaceholder ? confirmPlaceholder : t('PLACEHOLDER_CONFIRM_DEFAULT')}
           onChange={handleChange}
           onBlur={handleLoseFocus}
           onFocus={setIsActive}
@@ -139,7 +138,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           error={
             passwordConfirm !== password && passwordConfirm !== '' && !confirmationIsActive
               ? {
-                  content: strings.ALERT_PASSWORDS_DONT_MATCH,
+                  content: t('ALERT_PASSWORDS_DONT_MATCH'),
                   pointing: 'above',
                 }
               : null
@@ -149,7 +148,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Form.Field required={false}>
         {(showPasswordToggle === undefined ? true : showPasswordToggle) && (
           <Checkbox
-            label={strings.LABEL_SHOW_PASSWORD}
+            label={t('LABEL_SHOW_PASSWORD')}
             checked={!masked}
             onClick={() => setMasked(!masked)}
           />

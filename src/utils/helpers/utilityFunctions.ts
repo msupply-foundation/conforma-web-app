@@ -29,7 +29,8 @@ export const substituteValues = (
   // Custom replacement function for regex replace
   const getObjectProperty = (_: string, __: string, property: string) => {
     if (typeof data !== 'object') return data
-    return extractObjectProperty(data, property, `Can't find property: ${property}`)
+    const value = extractObjectProperty(data, property, `Can't find property: ${property}`)
+    return value ?? ''
   }
 
   // Match ${...} using regex and replace ... with property from object
@@ -67,3 +68,13 @@ export const constructOrObjectFilters = (filters: { [key: string]: string }[]) =
     return { [filterKey]: { equalTo: filterValue } }
   }),
 })
+
+// Nicely formatted file sizes, e.g. 1000000 => "1MB"
+export const fileSizeWithUnits = (size: number): string => {
+  const sizeInKb = size / 1000
+  if (sizeInKb < 1000) return `${sizeInKb} kB`
+  const sizeInMB = size / 1_000_000
+  if (sizeInKb < 1_000_000) return `${parseInt(String(sizeInMB * 10)) / 10} MB`
+  const sizeInGB = size / 1_000_000_000
+  return `${parseInt(String(sizeInGB * 100)) / 100} GB`
+}

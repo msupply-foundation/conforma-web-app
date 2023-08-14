@@ -6,6 +6,7 @@ import {
   TemplatePatch,
   TemplateSectionPatch,
   TemplateStagePatch,
+  useDeleteTemplateMutation,
   useDeleteWholeApplicationMutation,
   useRestartApplicationMutation,
   useUpdateTemplateFilterJoinMutation,
@@ -28,7 +29,9 @@ import {
   createApplication,
   updateApplication,
   updateTemplateStage,
+  deleteTemplate,
 } from './OperationContextHelpers'
+import { TemplateState } from '../template/TemplateWrapper'
 
 type Error = { message: string; error: string }
 export type ErrorAndLoadingState = {
@@ -36,10 +39,17 @@ export type ErrorAndLoadingState = {
   isLoading: boolean
 }
 
-export type TemplatesOperationProps = { id: number; snapshotName: string }
+export type TemplateOptions = { resetVersion?: boolean; newCode?: string }
+
+export type TemplatesOperationProps = {
+  id: number
+  snapshotName: string
+  templates?: TemplateOptions
+}
 export type TemplatesOperation = (props: TemplatesOperationProps) => Promise<boolean>
 export type ImportTemplate = (e: any) => Promise<boolean>
-export type UpdateTemplate = (id: number, patch: TemplatePatch) => Promise<boolean>
+export type UpdateTemplate = (template: TemplateState, patch: TemplatePatch) => Promise<boolean>
+export type DeleteTemplate = (id: number) => Promise<boolean>
 export type UpdateTemplateFilterJoin = (
   id: number,
   patch: TemplateFilterJoinPatch
@@ -56,6 +66,7 @@ type OperationContextState = {
   duplicateTemplate: TemplatesOperation
   importTemplate: ImportTemplate
   updateTemplate: UpdateTemplate
+  deleteTemplate: DeleteTemplate
   updateTemplateFilterJoin: UpdateTemplateFilterJoin
   updateTemplateSection: UpdateTemplateSection
   deleteApplication: DeleteApplication
@@ -74,6 +85,7 @@ const defaultOperationContext: OperationContextState = {
   duplicateTemplate: contextNotPresentError,
   importTemplate: contextNotPresentError,
   updateTemplate: contextNotPresentError,
+  deleteTemplate: contextNotPresentError,
   updateTemplateFilterJoin: contextNotPresentError,
   updateTemplateSection: contextNotPresentError,
   deleteApplication: contextNotPresentError,
@@ -88,6 +100,7 @@ const OperationContext: React.FC = ({ children }) => {
   const [updateTemplateMutation] = useUpdateTemplateMutation()
   const [updateTemplateFilterJoinMutation] = useUpdateTemplateFilterJoinMutation()
   const [updateTemplateSectionMutation] = useUpdateTemplateSectionMutation()
+  const [deleteTemplateMutation] = useDeleteTemplateMutation()
   const [deleteApplicationMutation] = useDeleteWholeApplicationMutation()
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
@@ -104,6 +117,7 @@ const OperationContext: React.FC = ({ children }) => {
       setInnerState,
       updateTemplateFilterJoinMutation
     ),
+    deleteTemplate: deleteTemplate(setInnerState, deleteTemplateMutation),
     updateTemplateSection: updateTemplateSection(setInnerState, updateTemplateSectionMutation),
     deleteApplication: deleteApplication(setInnerState, deleteApplicationMutation),
     createApplication: createApplication(setInnerState, create, getSerialAsync),
@@ -113,7 +127,7 @@ const OperationContext: React.FC = ({ children }) => {
 
   const { isLoading, error } = innerState
   const renderExtra = () => (
-    <Modal open={!!isLoading || !!error} onClick={resetLoading} onClose={resetLoading}>
+    <Modal open={!!isLoading || !!error} onClose={resetLoading}>
       {error ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Label size="large" color="red">

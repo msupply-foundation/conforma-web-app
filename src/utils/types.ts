@@ -149,12 +149,12 @@ interface AssignmentDetails {
   }
   isCurrentUserAssigner: boolean
   isCurrentUserReviewer: boolean
-  isFinalDecision: boolean
+  isMakeDecision: boolean
   isLastLevel: boolean
   isSelfAssignable: boolean
-  isLocked: boolean
   allowedSections: string[]
   assignedSections: string[]
+  availableSections: string[]
 }
 
 interface AssignmentOptions {
@@ -217,7 +217,7 @@ export type ElementForEvaluation = {
   isRequiredExpression?: EvaluatorNode
   isVisibleExpression?: EvaluatorNode
   validationExpression?: EvaluatorNode
-  defaultValueExpression?: EvaluatorNode
+  initialValueExpression?: EvaluatorNode
   code: string
 }
 
@@ -242,7 +242,7 @@ export type EvaluatedElement = {
   isRequired: boolean
   isVisible: boolean
   isValid: boolean | undefined
-  defaultValue: any
+  initialValue: any
 }
 
 export type EvaluationOptions = (keyof EvaluatedElement)[]
@@ -402,10 +402,9 @@ interface ReviewAssignment {
   assignedSections: string[]
   canSubmitReviewAs?: Decision | null
   isLastLevel: boolean
-  isLocked: boolean
   isSelfAssignable: boolean
-  isFinalDecision: boolean
-  isFinalDecisionOnConsolidation: boolean
+  isMakeDecision: boolean
+  isMakeDecisionOnConsolidation: boolean
 }
 
 type ReviewSectionComponentProps = {
@@ -424,6 +423,7 @@ interface ReviewDetails {
   reviewDecision?: ReviewDecision | null
   reviewer: GraphQLUser
   current: ReviewStageAndStatus
+  isLocked: boolean
 }
 
 interface ReviewQuestion {
@@ -491,7 +491,6 @@ enum ReviewAction {
   canView = 'CAN_VIEW',
   canReReview = 'CAN_RE_REVIEW',
   canSelfAssign = 'CAN_SELF_ASSIGN',
-  canSelfAssignLocked = 'CAN_SELF_ASSIGN_LOCKED',
   canStartReview = 'CAN_START_REVIEW',
   canReStartReview = 'CAN_RE_START_REVIEW', // User for second review (for consolidator)
   canContinueLocked = 'CAN_CONTINUE_LOCKED',
@@ -573,9 +572,11 @@ interface LevelAssignments {
 }
 
 interface TemplateCategoryDetails {
+  code: string
   title: string
   icon: SemanticICONS | undefined
   uiLocation: UiLocation[]
+  isSubmenu: boolean
 }
 
 interface TemplateInList {
@@ -583,13 +584,14 @@ interface TemplateInList {
   name: string
   namePlural?: string
   code: string
-  version: number
+  versionId: string
   icon: string | null | undefined
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean
   hasNonApplyPermissions: boolean
   filters: Filter[]
+  dashboardRestrictions: string[] | null
   totalApplications: number
 }
 
@@ -597,7 +599,7 @@ interface TemplateDetails {
   id: number
   name: string
   code: string
-  version: number
+  versionId: string
   elementsIds?: number[] // TODO: Change to not optional after re-structure
   elementsDefaults?: EvaluatorNode[]
   sections?: SectionDetails[] // TODO: Change to not optional after re-structure
@@ -688,6 +690,8 @@ export type DataViewsResponse = {
   title: string
   code: string
   urlSlug: string
+  submenu: string | null
+  defaultFilter: string | null
 }[]
 
 interface FormatOptions {
@@ -739,6 +743,7 @@ export interface DataViewsTableResponse {
   tableRows: TableRow[]
   searchFields: string[]
   filterDefinitions: DataViewFilterDefinition[]
+  defaultFilterString: string | null
   totalCount: number
   message?: string
 }

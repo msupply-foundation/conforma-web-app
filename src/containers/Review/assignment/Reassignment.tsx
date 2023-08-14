@@ -19,7 +19,7 @@ const Reassignment: React.FC<ReassignmentProps> = ({
   setAssignedSections,
   assignmentOptions,
 }) => {
-  const { strings } = useLanguageProvider()
+  const { t } = useLanguageProvider()
 
   const onReassignment = async (value: number) => {
     const { selected } = assignmentOptions
@@ -46,7 +46,7 @@ const Reassignment: React.FC<ReassignmentProps> = ({
 
   return (
     <Grid.Column className="centered-flex-box-row">
-      <Label className="simple-label" content={strings.LABEL_REASSIGN_TO} />
+      <Label className="simple-label" content={t('LABEL_REASSIGN_TO')} />
       <AssigneeDropdown
         assignmentOptions={assignmentOptions}
         sectionCode={sectionCode}
