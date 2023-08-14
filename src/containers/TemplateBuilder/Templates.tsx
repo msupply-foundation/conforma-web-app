@@ -23,8 +23,8 @@ import { DateTime } from 'luxon'
 import { useToast } from '../../contexts/Toast'
 import { isTemplateUnlocked, getTemplateVersionId, getVersionString } from './template/helpers'
 
-type CellPropsTemplate = Template & { numberOfTemplates?: number }
-type CellProps = { template: CellPropsTemplate; refetch: () => void }
+type CellPropsTemplate = Template & { numberOfVersions?: number; totalApplicationCount?: number }
+type CellProps = { template: CellPropsTemplate; refetch: () => void; isExpanded: boolean }
 
 type Columns = {
   title: string
@@ -64,11 +64,18 @@ const columns: Columns = [
   },
   {
     title: '',
-    render: ({ template: { applicationCount, numberOfTemplates, parentVersionId } }) => (
+    render: ({
+      template: { applicationCount, numberOfVersions, parentVersionId, totalApplicationCount },
+      isExpanded,
+    }) => (
       <React.Fragment key="counts">
-        <TextIO text={String(applicationCount)} title="Applications" minLabelWidth={90} />
-        {numberOfTemplates ? (
-          <TextIO text={String(numberOfTemplates)} title="Versions" minLabelWidth={90} />
+        <TextIO
+          text={String(isExpanded ? applicationCount : totalApplicationCount)}
+          title="Applications"
+          minLabelWidth={90}
+        />
+        {numberOfVersions && !isExpanded ? (
+          <TextIO text={String(numberOfVersions)} title="Versions" minLabelWidth={90} />
         ) : (
           <TextIO text={parentVersionId ?? ''} title="Parent" minLabelWidth={90} />
         )}
@@ -316,7 +323,7 @@ type SortColumn = 'name' | 'code' | 'category' | 'status'
 
 const Templates: React.FC = () => {
   const { t } = useLanguageProvider()
-  const [selectedRow, setSelectedRow] = useState(-1)
+  const [expandedTemplates, setExpandedTemplates] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
   const { importTemplate } = useOperationState()
@@ -365,46 +372,43 @@ const Templates: React.FC = () => {
   const renderTemplate = (
     template: CellPropsTemplate,
     refetch: () => void,
-    rowIndex: number,
-    isInnerRender = false
-  ) => {
-    if (rowIndex === selectedRow && !isInnerRender) return null
+    hasChildren = false
+  ) => (
+    <Table.Row
+      className={hasChildren ? 'clickable' : ''}
+      key={template.id}
+      onClick={(e: React.MouseEvent<HTMLElement>) => {
+        if (!hasChildren) return
+        if (e.getModifierState('Meta') || e.getModifierState('Control')) {
+          setExpandedTemplates([])
+          return
+        }
+        if (expandedTemplates.includes(template.code))
+          setExpandedTemplates(expandedTemplates.filter((el) => el !== template.code))
+        else setExpandedTemplates([...expandedTemplates, template.code])
+      }}
+    >
+      {columns.map(({ render }, cellIndex) => (
+        <Table.Cell key={`selectedcell${cellIndex}`}>
+          {render({ template, refetch, isExpanded: expandedTemplates.includes(template.code) })}
+        </Table.Cell>
+      ))}
+    </Table.Row>
+  )
 
-    return (
-      <Table.Row
-        key={`notselected${rowIndex}`}
-        className="clickable"
-        onClick={() => setSelectedRow(rowIndex)}
+  const renderInnerTemplates = (others: Template[], refetch: () => void) => (
+    <Table.Row>
+      <Table.Cell
+        key={others[0].id}
+        colSpan={7}
+        style={{ background: 'transparent', paddingRight: 0, paddingLeft: 20 }}
       >
-        {columns.map(({ render }, cellIndex) => (
-          <Table.Cell key={`selectedcell${cellIndex}`}>{render({ template, refetch })}</Table.Cell>
-        ))}
-      </Table.Row>
-    )
-  }
-
-  const renderInnerTemplates = (all: Template[], refetch: () => void, rowIndex: number) => {
-    if (rowIndex !== selectedRow) return null
-    return (
-      <>
-        <Table.Row
-          key={`selected_${rowIndex}`}
-          className="clickable collapsed-start-row"
-          onClick={() => setSelectedRow(-1)}
-        >
-          <td colSpan={columns.length}>
-            <Icon name="angle up" />
-          </td>
-        </Table.Row>
-        {all.map((template, innerRowIndex) =>
-          renderTemplate(template, refetch, innerRowIndex, true)
-        )}
-        <Table.Row className="collapsed-end-row" key={`${rowIndex}-end`}>
-          <td colSpan={columns.length}></td>
-        </Table.Row>
-      </>
-    )
-  }
+        <Table style={{ marginTop: -15, marginBottom: 0 }}>
+          <Table.Body>{others.map((template) => renderTemplate(template, refetch))}</Table.Body>
+        </Table>
+      </Table.Cell>
+    </Table.Row>
+  )
 
   const renderImportButton = () => (
     <>
@@ -424,7 +428,6 @@ const Templates: React.FC = () => {
       </Button>
     </>
   )
-
   return (
     <div className="template-builder-templates">
       <div key="top-bar" className="top-bar">
@@ -481,14 +484,14 @@ const Templates: React.FC = () => {
                 filterTemplates(templates, selectedCategories, hideInactive),
                 sortColumn,
                 sortAsc
-              ).map(({ all, main, applicationCount, numberOfTemplates }, rowIndex) => (
+              ).map(({ others, main, totalApplicationCount, numberOfVersions }, rowIndex) => (
                 <React.Fragment key={`fragment_${rowIndex}`}>
                   {renderTemplate(
-                    { ...main, applicationCount, numberOfTemplates },
+                    { ...main, totalApplicationCount: totalApplicationCount, numberOfVersions },
                     refetch,
-                    rowIndex
+                    others.length > 0
                   )}
-                  {renderInnerTemplates(all, refetch, rowIndex)}
+                  {expandedTemplates.includes(main.code) && renderInnerTemplates(others, refetch)}
                 </React.Fragment>
               ))}
             </Table.Body>

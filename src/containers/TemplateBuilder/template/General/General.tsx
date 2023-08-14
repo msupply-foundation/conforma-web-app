@@ -23,7 +23,7 @@ import { DateTime } from 'luxon'
 import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
-import { getVersionString, getTemplateVersionId } from '../helpers'
+import { getVersionString, getTemplateVersionId, isTemplateUnlocked } from '../helpers'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -31,7 +31,7 @@ const General: React.FC = () => {
   const { updateTemplate, deleteTemplate } = useOperationState()
   const { structure } = useApplicationState()
   const { template } = useTemplateState()
-  const { canEdit, isDraft } = template
+  const { canEdit, isDraft, applicationCount } = template
   const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
     variables: { code: template.code },
   })
@@ -43,11 +43,16 @@ const General: React.FC = () => {
   const { ConfirmModal: DeleteConfirm, showModal: confirmDelete } = useConfirmationModal({
     type: 'warning',
   })
+  const { ConfirmModal: MakeAvailableConfirm, showModal: confirmMakeAvailable } =
+    useConfirmationModal({
+      type: 'warning',
+    })
 
   const canSetAvailable = template.status !== TemplateStatus.Available
 
   const canSetDraft =
-    canEdit &&
+    isTemplateUnlocked(template) &&
+    applicationCount === 0 &&
     !isDraft &&
     (template.applicationCount === 0 ||
       // Let us make changes to active templates while in "dev" mode
@@ -57,13 +62,23 @@ const General: React.FC = () => {
 
   return (
     <div className="flex-column-center-start">
+      <MakeAvailableConfirm />
       <div className="flex-row flex-gap-10">
         <ButtonWithFallback
           title={t('TEMPLATE_GEN_BUTTON_AVAILABLE')}
           disabledMessage={t('TEMPLATE_GEN_BUTTON_AVAILABLE_DISABLED')}
           disabled={!canSetAvailable}
           onClick={() => {
-            updateTemplate(template, { status: TemplateStatus.Available })
+            if (isTemplateUnlocked(template))
+              confirmMakeAvailable({
+                title: 'Make template available?',
+                message:
+                  'This will enable a template version that has not yet been committed. This is allowed, but it is recommended that you commit first if you are about to enable it in a production environment.',
+                onConfirm: () => updateTemplate(template, { status: TemplateStatus.Available }),
+                confirmText: 'Make available now',
+                cancelText: 'Go back and commit version',
+              })
+            else updateTemplate(template, { status: TemplateStatus.Available })
           }}
         />
         <ButtonWithFallback
@@ -259,7 +274,7 @@ const General: React.FC = () => {
             </Table.Cell>
             <Table.Cell>
               <div className="flex-row-space-between-center">
-                {canEdit ? (
+                {isTemplateUnlocked(template) ? (
                   <>
                     <em>Not yet committed or exported</em>
                     <Button
