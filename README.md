@@ -1,50 +1,61 @@
 # Conforma — web application
 
-Front end for Conforma. 
+Front end for Conforma.
 
 Built in a React framework with Typescript.
 
-The components style is done using Semantic UI React (SUIR). 
+The components style is done using Semantic UI React (SUIR).
 
 Apollo client for data fetching from a GraphQL server [conforma-server](https://github.com/openmsupply/conforma-server) running Postgraphile.
 
 ### React
+
 16.13.1
+
 ### Typescript
+
 4.0.2
+
 ### Webpack 4
+
 4.44.1
+
 ### Apollo client 3
+
 3.1.4
+
 ### Semantic UI React
+
 1.2.1
+
 ### LESS
+
 3.12.2
 
 ## Usage
 
-* Install dependencies (Using node >=v13.8.0):
+- Install dependencies (Using node >=v13.8.0):
 
 `yarn install`
 
 `cd src/formElementPlugins/ && yarn install`
 
-* Run on development mode:
+- Run on development mode:
 
 `yarn dev`
 
-* Bundle for production:
+- Bundle for production:
 
 `yarn build`
 
-* Serve bundled App:
+- Serve bundled App:
 
 `yarn serve`
 
 ## Development
 
-* `main` branch - only has features which have been released (on a demo-tag)
-* `develop` - to be used for development (to create a feature-branch before making a new PR) and selected as base for PRs
+- `main` branch - only has features which have been released (on a demo-tag)
+- `develop` - to be used for development (to create a feature-branch before making a new PR) and selected as base for PRs
 
 The organisation-team will transfer approved changes from `develop` into the `main` periodically once all new features are stable and tested.
 
@@ -66,3 +77,13 @@ REMOTE_SERVER=https://conforma-demo.msupply.org:50000
 (Only the base url is required -- the full REST and GraphQL server urls will be constructed in `config.ts`)
 
 To disable servers, just comment out the line (with `# `). When they're all disabled, the default `localhost` will be used.
+
+## Authenticating for expression evaluator plugin
+
+To authenticate for expression evaluator plugin, use:
+
+```
+npm-login
+```
+
+More details on github authentication at `https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token`
