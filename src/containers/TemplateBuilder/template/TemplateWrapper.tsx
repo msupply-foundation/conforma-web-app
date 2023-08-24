@@ -36,6 +36,7 @@ import { VersionObject } from '../useGetTemplates'
 import { DateTime } from 'luxon'
 import { isTemplateUnlocked } from './helpers'
 import { getVersionString } from './helpers'
+import EditorWIP from '../FigTreeEditor/Editor'
 
 export type TemplateInfo = GetFullTemplateInfoQuery['template']
 
@@ -44,6 +45,11 @@ const tabs = [
     route: 'general',
     title: 'General',
     render: () => <General />,
+  },
+  {
+    route: 'fig-tree',
+    title: 'Evaluator',
+    render: () => <EditorWIP />,
   },
   {
     route: 'form',
