@@ -549,6 +549,11 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
+"@bundled-es-modules/pdfjs-dist@^2.2.228-alpha1":
+  version "2.16.106"
+  resolved "https://registry.yarnpkg.com/@bundled-es-modules/pdfjs-dist/-/pdfjs-dist-2.16.106.tgz#36a8c57f72d4405cc4c305f224868abb6ba21af6"
+  integrity sha512-+e6NMAZy2pY8QoWZ+Rh6bBOejTQ5KjxPNBP7g/KaFD9A/9JWqqACTiUhgmRHgp0hUk0ffRxKR3XRsvcyHGaAYw==
+
 "@date-fns/upgrade@1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@date-fns/upgrade/-/upgrade-1.0.3.tgz#1e59d8c936f63c5c7daeeca09ec82b0849a1252e"
@@ -916,6 +921,13 @@
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.2"
+
+"@mikecousins/react-pdf@5.5.1":
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/@mikecousins/react-pdf/-/react-pdf-5.5.1.tgz#80ce071d54872b9f4b1888d78932b92a8f6bc91b"
+  integrity sha512-QnR2FdSjNUCl6LaUbajff7OJhj93xCIpdf5h+fBDyx5iahM74jVh0XVG4YOu+ml6rRS/7OE4NOcbVDBBVPzrtg==
+  dependencies:
+    "@bundled-es-modules/pdfjs-dist" "^2.2.228-alpha1"
 
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
