@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader } from 'semantic-ui-react'
-import { PdfModal } from '../../../../components/common/PdfModal/PdfModal'
+import { PdfModal } from '../../../../components/common/DocumentModal/DocumentModal'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FileInfo } from '../ApplicationView'
 import prefs from '../../config.json'
