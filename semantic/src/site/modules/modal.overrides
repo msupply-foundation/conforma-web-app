@@ -7,3 +7,7 @@
   width: 100% !important;
   border-radius: 0;
 }
+
+.ui.page.modals {
+  justify-content: center;
+}

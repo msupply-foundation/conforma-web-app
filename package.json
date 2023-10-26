@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@apollo/client": "^3.1.4",
-    "@mikecousins/react-pdf": "5.5.1",
     "@openmsupply/expression-evaluator": "^1.11.2",
     "apollo3-cache-persist": "^0.8.0",
     "axios": "^0.21.1",
@@ -41,6 +40,7 @@
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
     "react-markdown": "^5.0.3",
+    "react-pdf": "5.x",
     "react-progress-stepper": "^0.2.2",
     "react-router-dom": "^5.3.3",
     "react-semantic-ui-datepickers": "^2.17.2",
@@ -64,6 +64,7 @@
     "@types/pluralize": "^0.0.29",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^18.2.4",
+    "@types/react-pdf": "5.0.9",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",
     "autoprefixer": "^9.8.6",

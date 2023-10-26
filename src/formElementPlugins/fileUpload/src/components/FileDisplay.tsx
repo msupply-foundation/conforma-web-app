@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader } from 'semantic-ui-react'
+import { PdfModal } from '../../../../components/common/PdfModal/PdfModal'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FileInfo } from '../ApplicationView'
 import prefs from '../../config.json'
@@ -12,8 +13,17 @@ export interface FileDisplayProps {
 
 export const FileDisplay = ({ file, onDelete }: FileDisplayProps) => {
   const { key, loading, error, errorMessage, filename, fileData } = file
+  const [open, setOpen] = useState(false)
+
   return (
     <List.Item className="file-item" style={{ position: 'relative', maxWidth: 150 }}>
+      <PdfModal
+        name={filename}
+        file={getServerUrl('file', { fileId: fileData ? fileData.uniqueId : '' })}
+        open={open}
+        setOpen={setOpen}
+      />
+
       <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
         {error && (
           <>
@@ -45,13 +55,18 @@ export const FileDisplay = ({ file, onDelete }: FileDisplayProps) => {
         )}
         {fileData && (
           <>
-            <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-              <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
-                <Image
-                  src={getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })}
-                  style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
-                />
-              </a>
+            <Grid.Row
+              centered
+              style={{ boxShadow: 'none' }}
+              verticalAlign="top"
+              onClick={() => setOpen(true)}
+            >
+              {/* <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank"> */}
+              <Image
+                src={getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })}
+                style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
+              />
+              {/* </a> */}
             </Grid.Row>
             <Grid.Row centered style={{ boxShadow: 'none' }}>
               <p style={{ wordBreak: 'break-word' }}>
