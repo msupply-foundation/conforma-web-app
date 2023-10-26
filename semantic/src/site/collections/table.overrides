@@ -18,12 +18,7 @@
 
   .ui.table tr {
     border: none;
-    height: 52px;
-  }
-
-  .ui.table thead tr {
-    height: 0;
-  }
+  }  
 
   .ui.table thead th {
     padding: 0;

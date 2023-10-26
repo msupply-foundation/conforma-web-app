@@ -1071,13 +1071,15 @@ a:hover {
 ---------------------------------*/
 
 #list-container {
-  padding: 25px 0;
-  width: @applicationListWidth;
+  padding: 25px 0;  
 }
 
 #list-top {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 5px;
+  margin-bottom: 10px;
 }
 
 #list-top .ui.header {
