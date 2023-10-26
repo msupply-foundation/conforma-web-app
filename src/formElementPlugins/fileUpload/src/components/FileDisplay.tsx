@@ -9,7 +9,7 @@ import './styles.css'
 
 export interface FileDisplayProps {
   file: FileInfo
-  onDelete: (key: string) => void
+  onDelete?: (key: string) => void
   shouldUseDocumentModal: boolean
 }
 
@@ -85,16 +85,18 @@ export const FileDisplay = ({ file, onDelete, shouldUseDocumentModal }: FileDisp
           </>
         )}
       </Grid>
-      <Icon
-        link
-        name="delete"
-        circular
-        fitted
-        color="grey"
-        onClick={() => onDelete(key)}
-        className="file-delete-icon"
-        style={{ position: 'absolute', right: 0, top: 0 }}
-      />
+      {onDelete && (
+        <Icon
+          link
+          name="delete"
+          circular
+          fitted
+          color="grey"
+          onClick={() => (onDelete ? onDelete(key) : () => {})}
+          className="file-delete-icon"
+          style={{ position: 'absolute', right: 0, top: 0 }}
+        />
+      )}
     </List.Item>
   )
 }

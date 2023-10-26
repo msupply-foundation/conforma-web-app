@@ -100,7 +100,7 @@ export const FileDisplayWithDescription = ({
             circular
             fitted
             color="grey"
-            onClick={() => onDelete(key)}
+            onClick={() => (onDelete ? onDelete(key) : () => {})}
             className="file-delete-icon"
             style={{ position: 'absolute', right: 0, top: 0 }}
           />
