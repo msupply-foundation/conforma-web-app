@@ -8,6 +8,7 @@ import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FileDisplay, FileDisplayWithDescription } from './components'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import useDefault from '../../useDefault'
+import { usePrefs } from '../../../contexts/SystemPrefs'
 
 export interface FileResponseData {
   uniqueId: string
@@ -42,6 +43,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('fileUpload')
+  const { preferences } = usePrefs()
   const { isEditable } = element
   const {
     label,
@@ -50,6 +52,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     fileExtensions,
     fileSizeLimit,
     default: defaultValue,
+    useDocumentModal = preferences.useDocumentModal,
     showDescription = false,
     showFileRestrictions = true,
     ...fileOptions
@@ -215,9 +218,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 file={file}
                 onDelete={handleDelete}
                 updateDescription={handleUpdateDescription}
+                shouldUseDocumentModal={useDocumentModal}
               />
             ) : (
-              <FileDisplay key={file.key} file={file} onDelete={handleDelete} />
+              <FileDisplay
+                key={file.key}
+                file={file}
+                onDelete={handleDelete}
+                shouldUseDocumentModal={useDocumentModal}
+              />
             )
           )}
         </List>

@@ -4,6 +4,7 @@ import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { FileDisplayProps } from './FileDisplay'
 import prefs from '../../config.json'
+import { DocumentModal } from '../../../../components/common/DocumentModal/DocumentModal'
 
 interface FileDisplayDescriptionProps extends FileDisplayProps {
   description?: string
@@ -14,14 +15,30 @@ export const FileDisplayWithDescription = ({
   file,
   onDelete,
   updateDescription,
+  shouldUseDocumentModal,
 }: FileDisplayDescriptionProps) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('fileUpload')
   const { loading, error, errorMessage, filename, fileData, key } = file
+  const [open, setOpen] = useState(false)
   const [description, setDescription] = useState<string>(fileData?.description ?? '')
+
+  const fileUrl = fileData ? getServerUrl('file', { fileId: fileData.uniqueId }) : ''
+  const thumbnailUrl = fileData
+    ? getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })
+    : ''
+
+  const docOpen = () => {
+    if (shouldUseDocumentModal) setOpen(true)
+    else window.open(fileUrl, '_blank')
+  }
+
   return (
     <List.Item>
       <div style={{ display: 'flex', gap: 20, alignItems: 'center', paddingRight: 20 }}>
+        {shouldUseDocumentModal && (
+          <DocumentModal filename={filename} url={fileUrl} open={open} setOpen={setOpen} />
+        )}
         <Grid
           verticalAlign="top"
           celled
@@ -59,18 +76,20 @@ export const FileDisplayWithDescription = ({
           {fileData && (
             <>
               <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-                <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
-                  <Image
-                    src={getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })}
-                    style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
-                  />
-                </a>
+                <Image
+                  src={thumbnailUrl}
+                  className="clickable"
+                  onClick={docOpen}
+                  style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
+                />
               </Grid.Row>
               <Grid.Row centered style={{ boxShadow: 'none' }}>
-                <p style={{ wordBreak: 'break-word', fontSize: '90%' }}>
-                  <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
-                    {filename}
-                  </a>
+                <p
+                  style={{ wordBreak: 'break-word' }}
+                  className="clickable link-style slightly-smaller-text"
+                  onClick={docOpen}
+                >
+                  {filename}
                 </p>
               </Grid.Row>
             </>

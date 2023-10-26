@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader } from 'semantic-ui-react'
-import { PdfModal } from '../../../../components/common/DocumentModal/DocumentModal'
+import { DocumentModal } from '../../../../components/common/DocumentModal/DocumentModal'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FileInfo } from '../ApplicationView'
 import prefs from '../../config.json'
@@ -9,21 +9,28 @@ import './styles.css'
 export interface FileDisplayProps {
   file: FileInfo
   onDelete: (key: string) => void
+  shouldUseDocumentModal: boolean
 }
 
-export const FileDisplay = ({ file, onDelete }: FileDisplayProps) => {
+export const FileDisplay = ({ file, onDelete, shouldUseDocumentModal }: FileDisplayProps) => {
   const { key, loading, error, errorMessage, filename, fileData } = file
   const [open, setOpen] = useState(false)
 
+  const fileUrl = fileData ? getServerUrl('file', { fileId: fileData.uniqueId }) : ''
+  const thumbnailUrl = fileData
+    ? getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })
+    : ''
+
+  const docOpen = () => {
+    if (shouldUseDocumentModal) setOpen(true)
+    else window.open(fileUrl, '_blank')
+  }
+
   return (
     <List.Item className="file-item" style={{ position: 'relative', maxWidth: 150 }}>
-      <PdfModal
-        name={filename}
-        file={getServerUrl('file', { fileId: fileData ? fileData.uniqueId : '' })}
-        open={open}
-        setOpen={setOpen}
-      />
-
+      {shouldUseDocumentModal && (
+        <DocumentModal filename={filename} url={fileUrl} open={open} setOpen={setOpen} />
+      )}
       <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
         {error && (
           <>
@@ -55,24 +62,21 @@ export const FileDisplay = ({ file, onDelete }: FileDisplayProps) => {
         )}
         {fileData && (
           <>
-            <Grid.Row
-              centered
-              style={{ boxShadow: 'none' }}
-              verticalAlign="top"
-              onClick={() => setOpen(true)}
-            >
-              {/* <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank"> */}
+            <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
               <Image
-                src={getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })}
+                src={thumbnailUrl}
+                className="clickable"
+                onClick={docOpen}
                 style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
               />
-              {/* </a> */}
             </Grid.Row>
             <Grid.Row centered style={{ boxShadow: 'none' }}>
-              <p style={{ wordBreak: 'break-word' }}>
-                <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
-                  {filename}
-                </a>
+              <p
+                style={{ wordBreak: 'break-word' }}
+                className="clickable link-style tiny-bit-smaller-text"
+                onClick={docOpen}
+              >
+                {filename}
               </p>
             </Grid.Row>
           </>
