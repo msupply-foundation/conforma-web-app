@@ -65,7 +65,7 @@ export const FileDisplayWithDescription = ({
             <>
               <Grid.Row centered style={{ boxShadow: 'none', height: 120 }} verticalAlign="middle">
                 <Loader active size="medium">
-                  Uploading
+                  {t('FILE_UPLOADING')}
                 </Loader>
               </Grid.Row>
               <Grid.Row centered style={{ boxShadow: 'none' }}>

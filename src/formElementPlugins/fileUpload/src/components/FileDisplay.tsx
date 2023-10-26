@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader } from 'semantic-ui-react'
 import { DocumentModal } from '../../../../components/common/DocumentModal/DocumentModal'
+import { useLanguageProvider } from '../../../../contexts/Localisation'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FileInfo } from '../ApplicationView'
 import prefs from '../../config.json'
@@ -13,6 +14,8 @@ export interface FileDisplayProps {
 }
 
 export const FileDisplay = ({ file, onDelete, shouldUseDocumentModal }: FileDisplayProps) => {
+  const { getPluginTranslator } = useLanguageProvider()
+  const t = getPluginTranslator('fileUpload')
   const { key, loading, error, errorMessage, filename, fileData } = file
   const [open, setOpen] = useState(false)
 
@@ -52,7 +55,7 @@ export const FileDisplay = ({ file, onDelete, shouldUseDocumentModal }: FileDisp
           <>
             <Grid.Row centered style={{ boxShadow: 'none', height: 120 }} verticalAlign="middle">
               <Loader active size="medium">
-                Uploading
+                {t('FILE_UPLOADING')}
               </Loader>
             </Grid.Row>
             <Grid.Row centered style={{ boxShadow: 'none' }}>

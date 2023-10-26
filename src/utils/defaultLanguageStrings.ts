@@ -156,6 +156,7 @@ export default {
   DATA_VIEW_CONFIG_ADD_COL_MESSAGE: 'Please name the columnName field immediately',
   DEFAULT_TEMPLATE_CATEGORY_TITLE: 'General',
   DEFAULT_TEMPLATE_CATEGORY_ICON: 'globe',
+  DOCUMENT_VIEW_NO_PREVIEW: 'No preview available. Please download to view file.',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
   ERROR_APPLICATION_DELETE: 'Problem deleting application',
   ERROR_APPLICATION_PAGE: 'Problem loading application',

@@ -3,8 +3,9 @@ import { Document, Page } from 'react-pdf/dist/esm/entry.webpack'
 import { useWindowDimensions } from '../../../utils/hooks/useWindowDimensions'
 import { Icon, Modal, ModalContent, Input, Image } from 'semantic-ui-react'
 import { useDebounceCallback } from '../../../utils/hooks/useDebouncedCallback'
+import { useLanguageProvider } from '../../../contexts/Localisation'
 import './styles.css'
-import { unset } from 'lodash'
+import Loading from '../../Loading'
 
 interface DocumentModalProps {
   filename: string
@@ -21,6 +22,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
   open,
   setOpen,
 }: DocumentModalProps) => {
+  const { t } = useLanguageProvider()
   const [numPages, setNumPages] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageInput, setPageInput] = useState(1)
@@ -49,11 +51,15 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      style={{ width: fileType === 'pdf' ? contentWidth : 'unset' }}
+      style={{
+        width: fileType === 'pdf' ? contentWidth : 'unset',
+        marginLeft: 15,
+        marginRight: 15,
+      }}
     >
       <Modal.Header>
-        <div className="flex-row-space-between-center-wrap" style={{ width: '95%' }}>
-          <span style={{ marginBottom: 15, maxWidth: 700 }}>{filename}</span>
+        <div className="flex-row-space-between-center-wrap" style={{ width: '95%', gap: 10 }}>
+          <span style={{ maxWidth: 500 }}>{filename}</span>
           <div className="flex-row-start-center" style={{ gap: 5 }}>
             {fileType === 'pdf' && (
               <div
@@ -89,7 +95,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
       </Modal.Header>
       <ModalContent style={{ maxHeight: '75vh', overflow: 'auto' }}>
         {fileType === 'pdf' && (
-          <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
+          <Document file={url} onLoadSuccess={onDocumentLoadSuccess} loading={<Loading />}>
             {Array.from(new Array(numPages), (_, index) => (
               <>
                 <Page
@@ -114,7 +120,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
         )}
         {fileType === 'other' && (
           <div className="flex-column-center-center" style={{ gap: 20 }}>
-            <p>No preview available. Please download to view file.</p>
+            <p>{t('DOCUMENT_VIEW_NO_PREVIEW')}</p>
             <a href={url} download>
               <Icon size="massive" className="clickable" name="download" />
             </a>
