@@ -12,6 +12,7 @@ interface DocumentModalProps {
   url: string
   open: boolean
   setOpen: (open: boolean) => void
+  cachedFile?: File
 }
 
 type FileType = 'pdf' | 'image' | 'other'
@@ -21,6 +22,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
   url,
   open,
   setOpen,
+  cachedFile,
 }: DocumentModalProps) => {
   const { t } = useLanguageProvider()
   const [numPages, setNumPages] = useState(null)
@@ -98,7 +100,11 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
       </Modal.Header>
       <ModalContent style={{ maxHeight: '75vh', overflow: 'auto' }}>
         {fileType === 'pdf' && (
-          <Document file={url} onLoadSuccess={onDocumentLoadSuccess} loading={<Loading />}>
+          <Document
+            file={cachedFile ?? url}
+            onLoadSuccess={onDocumentLoadSuccess}
+            loading={<Loading />}
+          >
             {Array.from(new Array(numPages), (_, index) => (
               <>
                 <Page

@@ -11,9 +11,15 @@ export interface FileDisplayProps {
   file: FileInfo
   onDelete?: (key: string) => void
   shouldUseDocumentModal: boolean
+  cachedFile?: File
 }
 
-export const FileDisplay = ({ file, onDelete, shouldUseDocumentModal }: FileDisplayProps) => {
+export const FileDisplay = ({
+  file,
+  onDelete,
+  shouldUseDocumentModal,
+  cachedFile,
+}: FileDisplayProps) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('fileUpload')
   const { key, loading, error, errorMessage, filename, fileData } = file
@@ -32,7 +38,13 @@ export const FileDisplay = ({ file, onDelete, shouldUseDocumentModal }: FileDisp
   return (
     <List.Item className="file-item" style={{ position: 'relative', maxWidth: 150 }}>
       {shouldUseDocumentModal && (
-        <DocumentModal filename={filename} url={fileUrl} open={open} setOpen={setOpen} />
+        <DocumentModal
+          filename={filename}
+          url={fileUrl}
+          open={open}
+          setOpen={setOpen}
+          cachedFile={cachedFile}
+        />
       )}
       <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
         {error && (
