@@ -4,7 +4,6 @@ import { useWindowDimensions } from '../../../utils/hooks/useWindowDimensions'
 import { Icon, Modal, ModalContent, Input, Image } from 'semantic-ui-react'
 import { useDebounceCallback } from '../../../utils/hooks/useDebouncedCallback'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import './styles.css'
 import Loading from '../../Loading'
 
 interface DocumentModalProps {
