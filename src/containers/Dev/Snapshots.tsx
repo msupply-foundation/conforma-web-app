@@ -20,7 +20,7 @@ import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../contexts/Toast'
 import { DateTime } from 'luxon'
 import TextIO from '../TemplateBuilder/shared/TextIO'
-import { fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
+import { downloadFile, fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
 import { useRouter } from '../../utils/hooks/useRouter'
 import Tooltip from '../../components/Tooltip'
 
@@ -196,24 +196,6 @@ const Snapshots: React.FC = () => {
     }
   }
 
-  const downloadSnapshot = async (name: string) => {
-    const res = await fetch(
-      getServerUrl('snapshot', {
-        action: 'download',
-        name,
-        archive: displayType === 'archives',
-      }),
-      {
-        headers: { Authorization: `Bearer ${JWT}` },
-      }
-    )
-    const data = await res.blob()
-    var a = document.createElement('a')
-    a.href = window.URL.createObjectURL(data)
-    a.download = `${displayType === 'archives' ? 'ARCHIVE_' : ''}${name}.zip`
-    a.click()
-  }
-
   const renderSingleSnapshot = (
     { name, filename, timestamp, archive, size }: SnapshotData,
     hasChildren = false
@@ -248,7 +230,17 @@ const Snapshots: React.FC = () => {
               className="clickable blue"
               onClick={async () => {
                 showToast({ title: 'Download started...', timeout: 2000 })
-                await downloadSnapshot(filename)
+                await downloadFile(
+                  getServerUrl('snapshot', {
+                    action: 'download',
+                    name: filename,
+                    archive: displayType === 'archives',
+                  }),
+                  `${displayType === 'archives' ? 'ARCHIVE_' : ''}${name}.zip`,
+                  {
+                    headers: { Authorization: `Bearer ${JWT}` },
+                  }
+                )
                 showToast({
                   title: 'Download complete',
                   text: `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}`,

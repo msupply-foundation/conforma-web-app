@@ -3,6 +3,7 @@ import { Document, Page } from 'react-pdf/dist/esm/entry.webpack'
 import { useWindowDimensions } from '../../../utils/hooks/useWindowDimensions'
 import { Icon, Modal, ModalContent, Input, Image } from 'semantic-ui-react'
 import { useDebounceCallback } from '../../../utils/hooks/useDebouncedCallback'
+import { downloadFile } from '../../../utils/helpers/utilityFunctions'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import Loading from '../../Loading'
 
@@ -35,7 +36,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
     setNumPages(numPages)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value)
     if (value > (numPages ?? 1) || value < 0) return
     setPageInput(value || 1) // 0 falls back to 1
@@ -72,7 +73,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   min={1}
                   max={numPages}
                   value={pageInput}
-                  onChange={handleChange}
+                  onChange={handlePageChange}
                   onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
                   style={{ width: 75 }}
                 />
@@ -84,9 +85,12 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                 <a href={url} target="_blank">
                   <Icon className="clickable" name="external alternate" />
                 </a>
-                <a href={url} download>
-                  <Icon className="clickable" name="download" />
-                </a>
+                <Icon
+                  className="clickable link-style"
+                  name="download"
+                  onClick={() => downloadFile(url, filename)}
+                  style={{ height: 'inherit' }}
+                />
               </>
             )}
           </div>
@@ -120,9 +124,12 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
         {fileType === 'other' && (
           <div className="flex-column-center-center" style={{ gap: 20 }}>
             <p>{t('DOCUMENT_VIEW_NO_PREVIEW')}</p>
-            <a href={url} download>
-              <Icon size="massive" className="clickable" name="download" />
-            </a>
+            <Icon
+              size="massive"
+              className="clickable link-style"
+              name="download"
+              onClick={() => downloadFile(url, filename)}
+            />
           </div>
         )}
       </ModalContent>
