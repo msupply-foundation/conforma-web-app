@@ -72,6 +72,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [error, setError] = useState<string>()
   const [errorVisible, setErrorVisible] = useState(false)
   const fileInputRef = useRef<any>(null)
+  // FileCache is to store the actual file contents after uploading, so when the
+  // user previews it again they don't have to wait for it to re-download
+  const [fileCache, setFileCache] = useState<Record<string, File>>({})
 
   useEffect(() => {
     // Set response to null if no files
@@ -153,6 +156,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           loading: false,
           fileData: result?.fileData?.[0],
         }
+        const uniqueId = result?.fileData?.[0]?.uniqueId
+        if (uniqueId) setFileCache((prev) => ({ ...prev, [uniqueId]: file }))
       } else showError(t('ERROR_UPLOAD_PROBLEM'))
 
       setUploadedFiles([...newFileData])
@@ -160,6 +165,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const handleDelete = async (key: string) => {
+    const file = uploadedFiles.find((f) => f.key === key)
+    const uniqueId = file?.fileData?.uniqueId
+    if (uniqueId) {
+      const newCache = { ...fileCache }
+      delete newCache[uniqueId]
+      setFileCache(newCache)
+    }
     setUploadedFiles(uploadedFiles.filter((file) => file.key !== key))
   }
 
@@ -219,6 +231,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 onDelete={handleDelete}
                 updateDescription={handleUpdateDescription}
                 shouldUseDocumentModal={useDocumentModal}
+                cachedFile={
+                  file?.fileData?.uniqueId ? fileCache[file?.fileData?.uniqueId] : undefined
+                }
               />
             ) : (
               <FileDisplay
@@ -226,6 +241,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 file={file}
                 onDelete={handleDelete}
                 shouldUseDocumentModal={useDocumentModal}
+                cachedFile={
+                  file?.fileData?.uniqueId ? fileCache[file?.fileData?.uniqueId] : undefined
+                }
               />
             )
           )}

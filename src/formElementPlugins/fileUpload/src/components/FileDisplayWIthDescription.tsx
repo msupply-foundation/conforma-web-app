@@ -16,6 +16,7 @@ export const FileDisplayWithDescription = ({
   onDelete,
   updateDescription,
   shouldUseDocumentModal,
+  cachedFile,
 }: FileDisplayDescriptionProps) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('fileUpload')
@@ -37,7 +38,13 @@ export const FileDisplayWithDescription = ({
     <List.Item>
       <div style={{ display: 'flex', gap: 20, alignItems: 'center', paddingRight: 20 }}>
         {shouldUseDocumentModal && (
-          <DocumentModal filename={filename} url={fileUrl} open={open} setOpen={setOpen} />
+          <DocumentModal
+            filename={filename}
+            url={fileUrl}
+            open={open}
+            setOpen={setOpen}
+            cachedFile={cachedFile}
+          />
         )}
         <Grid
           verticalAlign="top"

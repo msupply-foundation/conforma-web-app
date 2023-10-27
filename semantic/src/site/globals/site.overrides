@@ -2396,7 +2396,7 @@ a:hover {
 }
 
 /*******************************
-             Document Modal
+        Document Modal
 *******************************/
 
 // These class names provided by the react-pdf package
