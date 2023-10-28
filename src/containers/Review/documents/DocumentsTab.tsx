@@ -5,12 +5,17 @@ import { useGetApplicationDocsQuery } from '../../../utils/generated/graphql'
 import { FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { DateTime } from 'luxon'
+import { usePrefs } from '../../../contexts/SystemPrefs'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { DocumentModal } from '../../../components/common/DocumentModal/DocumentModal'
 
 const DocumentsTab: React.FC<{
   structure: FullStructure
 }> = ({ structure: fullStructure }) => {
   const { t } = useLanguageProvider()
+  const {
+    preferences: { useDocumentModal },
+  } = usePrefs()
 
   const { data, loading, error } = useGetApplicationDocsQuery({
     variables: { applicationSerial: fullStructure.info.serial },

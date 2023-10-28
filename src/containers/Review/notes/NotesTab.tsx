@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Checkbox,
@@ -20,6 +20,8 @@ import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 import NewCommentForm from './NewCommentForm'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { DocumentModal } from '../../../components/common/DocumentModal/DocumentModal'
+import { SimpleCacheReturn, useSimpleCache } from '../../../utils/hooks/useSimpleCache'
 
 const COMMENT_DELETION_LIMIT = 5 // minutes
 
@@ -64,9 +66,16 @@ const NotesTab: React.FC<{
   })
   const { deleteNote, error: noteMutationError } = useNotesMutations(fullStructure.info.id, refetch)
 
+  const fileCache = useSimpleCache<File>()
+
   const { sortDesc, filesOnlyFilter, showForm } = state
 
   const handleDelete = async (noteId: number) => {
+    const note = notes.find((n) => n.id === noteId)
+    const noteFiles = note?.files.nodes
+    if (noteFiles) {
+      noteFiles.forEach((file) => fileCache.removeFromCache(file?.originalFilename ?? ''))
+    }
     await deleteNote(noteId)
     refetch()
   }
@@ -128,7 +137,7 @@ const NotesTab: React.FC<{
                     }}
                   />
                 </div>
-                <FilesDisplay files={note.files.nodes as FileData[]} />
+                <FilesDisplay files={note.files.nodes as FileData[]} fileCache={fileCache} />
                 <div className="note-footer-row">
                   <p className="tiny-bit-smaller-text">
                     <strong>{note.user?.fullName}</strong>
@@ -167,6 +176,7 @@ const NotesTab: React.FC<{
           state={state}
           setState={setState}
           refetchNotes={refetch}
+          fileCache={fileCache}
         />
       )}
     </Container>
@@ -175,16 +185,30 @@ const NotesTab: React.FC<{
 
 export default NotesTab
 
-const FilesDisplay: React.FC<any> = ({ files }) => {
+const FilesDisplay: React.FC<{ files: FileData[]; fileCache: SimpleCacheReturn<File> }> = ({
+  files,
+  fileCache,
+}) => {
   if (files.length === 0) return null
+  const [openFile, setOpenFile] = useState<number>()
 
   return (
     <div className="file-row">
-      {files.map((file: FileData) => (
+      {files.map((file: FileData, index: number) => (
         <div className="file-container" key={file.uniqueId}>
-          <a href={getServerUrl('file', { fileId: file?.uniqueId })} target="_blank">
-            <Image src={getServerUrl('file', { fileId: file?.uniqueId, thumbnail: true })} />
-          </a>
+          <DocumentModal
+            url={getServerUrl('file', { fileId: file.uniqueId })}
+            filename={file.originalFilename}
+            open={index === openFile}
+            setOpen={() => setOpenFile(undefined)}
+            cachedFile={fileCache.getFromCache(file.originalFilename)}
+          />
+          {/* <a href={getServerUrl('file', { fileId: file?.uniqueId })} target="_blank"> */}
+          <Image
+            src={getServerUrl('file', { fileId: file?.uniqueId, thumbnail: true })}
+            onClick={() => setOpenFile(index)}
+          />
+          {/* </a> */}
           <a href={getServerUrl('file', { fileId: file?.uniqueId })} target="_blank">
             {file.originalFilename}
           </a>
