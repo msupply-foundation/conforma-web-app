@@ -99,7 +99,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
           </div>
         </div>
       </Modal.Header>
-      <ModalContent style={{ maxHeight: '75vh', overflow: 'auto' }}>
+      <ModalContent style={{ maxHeight: '80vh', overflow: 'auto' }}>
         {fileType === 'pdf' && (
           <Document
             file={cachedFile ?? url}
