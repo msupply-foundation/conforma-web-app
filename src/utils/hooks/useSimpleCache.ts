@@ -1,3 +1,8 @@
+/**
+ * A very simple key-value store. Currently used to cache recently uploaded
+ * files so they can be retrieved easily without re-downloading them.
+ */
+
 import { useState } from 'react'
 
 type SimpleCache<T> = Record<string, T>
