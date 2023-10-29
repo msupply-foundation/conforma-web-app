@@ -10,7 +10,7 @@ interface Preferences {
   brandLogoFileId?: string
   brandLogoOnDarkFileId?: string
   defaultListFilters?: string[]
-  useDocumentModal: boolean
+  showDocumentModal: boolean
   googleAnalyticsId?: string
   siteHost?: string
   style?: { headerBgColor?: string }
@@ -24,7 +24,7 @@ interface PrefsState {
 }
 
 const defaultPrefs: Preferences = {
-  useDocumentModal: false,
+  showDocumentModal: false,
 }
 
 interface PrefsContext extends PrefsState {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Button,
   Checkbox,
@@ -20,9 +20,8 @@ import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 import NewCommentForm from './NewCommentForm'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
-import { DocumentModal, handleFile } from '../../../components/common/DocumentModal/DocumentModal'
-import { SimpleCacheReturn, useSimpleCache } from '../../../utils/hooks/useSimpleCache'
-import { usePrefs } from '../../../contexts/SystemPrefs'
+import { useSimpleCache } from '../../../utils/hooks/useSimpleCache'
+import { useDocumentModal } from '../../../utils/hooks/useDocumentModal'
 
 const COMMENT_DELETION_LIMIT = 5 // minutes
 
@@ -138,7 +137,15 @@ const NotesTab: React.FC<{
                     }}
                   />
                 </div>
-                <FilesDisplay files={note.files.nodes as FileData[]} fileCache={fileCache} />
+                <div className="file-row">
+                  {note.files.nodes.map((file) => (
+                    <FileDisplay
+                      file={file as FileData}
+                      cachedFile={fileCache.getFromCache(file?.uniqueId ?? '')}
+                      key={file?.uniqueId}
+                    />
+                  ))}
+                </div>
                 <div className="note-footer-row">
                   <p className="tiny-bit-smaller-text">
                     <strong>{note.user?.fullName}</strong>
@@ -186,46 +193,31 @@ const NotesTab: React.FC<{
 
 export default NotesTab
 
-const FilesDisplay: React.FC<{ files: FileData[]; fileCache: SimpleCacheReturn<File> }> = ({
-  files,
-  fileCache,
-}) => {
-  if (files.length === 0) return null
-  const {
-    preferences: { useDocumentModal },
-  } = usePrefs()
-  const [openFile, setOpenFile] = useState<number>()
+const FileDisplay: React.FC<{
+  file: FileData
+  cachedFile?: File
+}> = ({ file, cachedFile }) => {
+  const { uniqueId, originalFilename } = file
+  const fileUrl = getServerUrl('file', { fileId: uniqueId })
+  const thumbnailUrl = getServerUrl('file', { fileId: uniqueId, thumbnail: true })
+
+  const { DocumentModal, handleFile } = useDocumentModal({
+    filename: originalFilename,
+    fileUrl,
+    cachedFile,
+  })
 
   return (
-    <div className="file-row">
-      {files.map((file: FileData, index: number) => {
-        const { uniqueId, originalFilename } = file
-        const fileUrl = getServerUrl('file', { fileId: uniqueId })
-        const thumbnailUrl = getServerUrl('file', { fileId: uniqueId, thumbnail: true })
-        const docOpen = () =>
-          handleFile(useDocumentModal, originalFilename, fileUrl, () => setOpenFile(index))
-        return (
-          <div className="file-container" key={file.uniqueId}>
-            {useDocumentModal && (
-              <DocumentModal
-                url={fileUrl}
-                filename={originalFilename}
-                open={index === openFile}
-                onClose={() => setOpenFile(undefined)}
-                cachedFile={fileCache.getFromCache(originalFilename)}
-              />
-            )}
-            <Image src={thumbnailUrl} className="clickable" onClick={docOpen} />
-            <p
-              style={{ wordBreak: 'break-word' }}
-              className="clickable link-style tiny-bit-smaller-text"
-              onClick={docOpen}
-            >
-              {file.originalFilename}
-            </p>
-          </div>
-        )
-      })}
+    <div className="file-container" key={file.uniqueId}>
+      {DocumentModal}
+      <Image src={thumbnailUrl} className="clickable" onClick={handleFile} />
+      <p
+        style={{ wordBreak: 'break-word' }}
+        className="clickable link-style tiny-bit-smaller-text"
+        onClick={handleFile}
+      >
+        {file.originalFilename}
+      </p>
     </div>
   )
 }

@@ -1,37 +1,40 @@
 import React, { useState } from 'react'
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack'
-import { useWindowDimensions } from '../../../utils/hooks/useWindowDimensions'
+import { useWindowDimensions } from './useWindowDimensions'
 import { Icon, Modal, ModalContent, Input, Image } from 'semantic-ui-react'
-import { useDebounceCallback } from '../../../utils/hooks/useDebouncedCallback'
-import { downloadFile } from '../../../utils/helpers/utilityFunctions'
-import { useLanguageProvider } from '../../../contexts/Localisation'
-import Loading from '../../Loading'
+import { useDebounceCallback } from './useDebouncedCallback'
+import { downloadFile } from '../helpers/utilityFunctions'
+import { useLanguageProvider } from '../../contexts/Localisation'
+import Loading from '../../components/Loading'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 interface DocumentModalProps {
   filename: string
-  url: string
-  open: boolean
-  onClose: () => void
+  fileUrl: string
+  showDocumentModal?: boolean
   cachedFile?: File
   preventDownload?: boolean
 }
 
 type FileType = 'pdf' | 'image' | 'other'
 
-export const DocumentModal: React.FC<DocumentModalProps> = ({
+export const useDocumentModal = ({
   filename,
-  url,
-  open,
-  onClose,
+  fileUrl,
+  showDocumentModal: showDocModalProp,
   cachedFile,
   preventDownload,
 }: DocumentModalProps) => {
+  const [open, setOpen] = useState(false)
   const { t } = useLanguageProvider()
   const [numPages, setNumPages] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageInput, setPageInput] = useState(1)
   const dimensions = useWindowDimensions()
   const debouncePageNum = useDebounceCallback((val: number) => setCurrentPage(val), [], 150)
+  const { preferences } = usePrefs()
+
+  const showDocumentModal = showDocModalProp ?? preferences.showDocumentModal
 
   const contentWidth = Math.min(dimensions.width * 0.9, 960)
   const pdfWidth = contentWidth * 0.9
@@ -47,13 +50,26 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
     debouncePageNum(value || 1)
   }
 
+  // Method for File displays to handle opening the selected file. Considers the
+  // "showDocumentModal" preference and the file type to determine what to do.
+  const handleFile = () => {
+    // Display in Modal
+    if (showDocumentModal) setOpen(true)
+    else {
+      // Force download
+      if (getFileType(filename) === 'other') downloadFile(fileUrl, filename)
+      // Open in new tab
+      else window.open(fileUrl, '_blank')
+    }
+  }
+
   const fileType = getFileType(filename)
 
-  return (
+  const DocumentModal = showDocumentModal ? (
     <Modal
       closeIcon
       open={open}
-      onClose={() => onClose()}
+      onClose={() => setOpen(false)}
       style={{
         width: fileType === 'pdf' ? contentWidth : 'unset',
         marginLeft: 15,
@@ -69,7 +85,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                 className="flex-row-start-center"
                 style={{ gap: 10, fontSize: '1rem', fontWeight: 'normal', marginRight: 15 }}
               >
-                <span className="slightly-smaller-text">Jump to page</span>
+                <span className="slightly-smaller-text">{t('DOCUMENT_VIEW_PAGE_JUMP')}</span>
                 <Input
                   size="small"
                   type="number"
@@ -80,18 +96,20 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                   onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
                   style={{ width: 75 }}
                 />
-                <span className="slightly-smaller-text"> of {numPages}</span>
+                <span className="slightly-smaller-text">
+                  {t('DOCUMENT_VIEW_TOTAL_PAGES', numPages)}
+                </span>
               </div>
             )}
             {fileType !== 'other' && !preventDownload && (
               <>
-                <a href={url} target="_blank">
+                <a href={fileUrl} target="_blank">
                   <Icon className="clickable" name="external alternate" />
                 </a>
                 <Icon
                   className="clickable link-style"
                   name="download"
-                  onClick={() => downloadFile(url, filename)}
+                  onClick={() => downloadFile(fileUrl, filename)}
                   style={{ height: 'inherit' }}
                 />
               </>
@@ -102,30 +120,27 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
       <ModalContent style={{ maxHeight: '80vh', overflow: 'auto' }}>
         {fileType === 'pdf' && (
           <Document
-            file={cachedFile ?? url}
+            file={cachedFile ?? fileUrl}
             onLoadSuccess={onDocumentLoadSuccess}
             loading={<Loading />}
           >
             {Array.from(new Array(numPages), (_, index) => (
-              <>
-                <Page
-                  key={`page_${index + 1}`}
-                  inputRef={(ref) => {
-                    if (ref && currentPage === index + 1) {
-                      ref.scrollIntoView()
-                    }
-                  }}
-                  pageNumber={index + 1}
-                  width={pdfWidth}
-                />
-                <div style={{ marginBottom: 30 }} />
-              </>
+              <Page
+                key={`page_${index + 1}`}
+                inputRef={(ref) => {
+                  if (ref && currentPage === index + 1) {
+                    ref.scrollIntoView()
+                  }
+                }}
+                pageNumber={index + 1}
+                width={pdfWidth}
+              />
             ))}
           </Document>
         )}
         {fileType === 'image' && (
           <div className="flex-row-center-center">
-            <Image src={url} />
+            <Image src={fileUrl} />
           </div>
         )}
         {fileType === 'other' && (
@@ -135,13 +150,15 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
               size="massive"
               className="clickable link-style"
               name="download"
-              onClick={() => downloadFile(url, filename)}
+              onClick={() => downloadFile(fileUrl, filename)}
             />
           </div>
         )}
       </ModalContent>
     </Modal>
-  )
+  ) : null
+
+  return { DocumentModal, handleFile }
 }
 
 const getFileType = (filename: string): FileType => {
@@ -160,23 +177,5 @@ const getFileType = (filename: string): FileType => {
       return 'image'
     default:
       return 'other'
-  }
-}
-
-// Method for File displays to handle opening the selected file. Considers the
-// "useDocumentModal" preference and the file type to determine what to do.
-export const handleFile = (
-  shouldUseDocumentModal: boolean,
-  filename: string,
-  fileUrl: string,
-  modalOpenMethod: () => void
-) => {
-  // Display in Modal
-  if (shouldUseDocumentModal) modalOpenMethod()
-  else {
-    // Force download
-    if (getFileType(filename) === 'other') downloadFile(fileUrl, filename)
-    // Open in new tab
-    else window.open(fileUrl, '_blank')
   }
 }

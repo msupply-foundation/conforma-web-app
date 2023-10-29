@@ -157,6 +157,8 @@ export default {
   DEFAULT_TEMPLATE_CATEGORY_TITLE: 'General',
   DEFAULT_TEMPLATE_CATEGORY_ICON: 'globe',
   DOCUMENT_VIEW_NO_PREVIEW: 'No preview available. Please download to view file.',
+  DOCUMENT_VIEW_PAGE_JUMP: 'Jump to page',
+  DOCUMENT_VIEW_TOTAL_PAGES: 'Total pages: {{numPages}}',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
   ERROR_APPLICATION_DELETE: 'Problem deleting application',
   ERROR_APPLICATION_PAGE: 'Problem loading application',

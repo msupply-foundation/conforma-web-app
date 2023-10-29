@@ -53,7 +53,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     fileExtensions,
     fileSizeLimit,
     default: defaultValue,
-    useDocumentModal = preferences.useDocumentModal,
+    showDocumentModal = preferences.showDocumentModal,
     showDescription = false,
     showFileRestrictions = true,
     ...fileOptions
@@ -227,7 +227,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 file={file}
                 onDelete={handleDelete}
                 updateDescription={handleUpdateDescription}
-                shouldUseDocumentModal={useDocumentModal}
+                showDocumentModal={showDocumentModal}
                 cachedFile={getFromCache(file?.fileData?.uniqueId ?? '')}
               />
             ) : (
@@ -235,7 +235,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 key={file.key}
                 file={file}
                 onDelete={handleDelete}
-                shouldUseDocumentModal={useDocumentModal}
+                showDocumentModal={showDocumentModal}
                 cachedFile={getFromCache(file?.fileData?.uniqueId ?? '')}
               />
             )

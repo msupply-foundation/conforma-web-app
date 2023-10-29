@@ -2400,6 +2400,10 @@ a:hover {
 *******************************/
 
 // These class names provided by the react-pdf package
+.react-pdf__Page {
+  margin-bottom: 30px;
+}
+
 .react-pdf__Page__textContent {
   border: 1px solid darkgrey;
   box-shadow: 5px 5px 5px 1px #ccc;

@@ -440,7 +440,7 @@ _Interface for uploading documents or other files_
 - **subfolder**: `string` -- by default, files are uploaded into a subfolder with the name of the application serial. However, this can be over-ridden by specifying this parameter. This should rarely be required.
 - **showDescription**: `boolean` -- if `true`, an additional text input will be displayed alongside each file to allow the applicant to specify a description for each file. (default `false`)
 - **showFileRestrictions**: `boolean` -- will display the allowed file extensions and maximum size below the upload box (default: `true`)
-- **useDocumentModal**: `boolean` -- if `true`, will display documents (when clicked to view) in a modal overlay rather than opening in a new tab. Will fallback to global system preference.
+- **showDocumentModal**: `boolean` -- if `true`, will display documents (when clicked to view) in a modal overlay rather than opening in a new tab. Will fallback to global system preference.
 
 #### Response type
 

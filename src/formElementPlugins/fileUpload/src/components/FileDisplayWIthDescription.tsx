@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader, Input } from 'semantic-ui-react'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
+import { useDocumentModal } from '../../../../utils/hooks/useDocumentModal'
 import { FileDisplayProps } from './FileDisplay'
 import prefs from '../../config.json'
-import { DocumentModal } from '../../../../components/common/DocumentModal/DocumentModal'
 
 interface FileDisplayDescriptionProps extends FileDisplayProps {
   description?: string
@@ -15,13 +15,12 @@ export const FileDisplayWithDescription = ({
   file,
   onDelete,
   updateDescription,
-  shouldUseDocumentModal,
+  showDocumentModal,
   cachedFile,
 }: FileDisplayDescriptionProps) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('fileUpload')
   const { loading, error, errorMessage, filename, fileData, key } = file
-  const [open, setOpen] = useState(false)
   const [description, setDescription] = useState<string>(fileData?.description ?? '')
 
   const fileUrl = fileData ? getServerUrl('file', { fileId: fileData.uniqueId }) : ''
@@ -29,23 +28,17 @@ export const FileDisplayWithDescription = ({
     ? getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })
     : ''
 
-  const docOpen = () => {
-    if (shouldUseDocumentModal) setOpen(true)
-    else window.open(fileUrl, '_blank')
-  }
+  const { DocumentModal, handleFile } = useDocumentModal({
+    filename,
+    fileUrl,
+    showDocumentModal,
+    cachedFile,
+  })
 
   return (
     <List.Item>
       <div style={{ display: 'flex', gap: 20, alignItems: 'center', paddingRight: 20 }}>
-        {shouldUseDocumentModal && (
-          <DocumentModal
-            filename={filename}
-            url={fileUrl}
-            open={open}
-            onClose={() => setOpen(false)}
-            cachedFile={cachedFile}
-          />
-        )}
+        {DocumentModal}
         <Grid
           verticalAlign="top"
           celled
@@ -86,7 +79,7 @@ export const FileDisplayWithDescription = ({
                 <Image
                   src={thumbnailUrl}
                   className="clickable"
-                  onClick={docOpen}
+                  onClick={handleFile}
                   style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
                 />
               </Grid.Row>
@@ -94,7 +87,7 @@ export const FileDisplayWithDescription = ({
                 <p
                   style={{ wordBreak: 'break-word' }}
                   className="clickable link-style slightly-smaller-text"
-                  onClick={docOpen}
+                  onClick={handleFile}
                 >
                   {filename}
                 </p>

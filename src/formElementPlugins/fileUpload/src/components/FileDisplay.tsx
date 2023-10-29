@@ -1,11 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Icon, Grid, List, Image, Message, Loader } from 'semantic-ui-react'
-import {
-  DocumentModal,
-  handleFile,
-} from '../../../../components/common/DocumentModal/DocumentModal'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { useDocumentModal } from '../../../../utils/hooks/useDocumentModal'
 import { FileInfo } from '../ApplicationView'
 import prefs from '../../config.json'
 import './styles.css'
@@ -13,41 +10,35 @@ import './styles.css'
 export interface FileDisplayProps {
   file: FileInfo
   onDelete?: (key: string) => void
-  shouldUseDocumentModal: boolean
+  showDocumentModal: boolean
   cachedFile?: File
 }
 
 export const FileDisplay = ({
   file,
   onDelete,
-  shouldUseDocumentModal,
+  showDocumentModal,
   cachedFile,
 }: FileDisplayProps) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('fileUpload')
   const { key, loading, error, errorMessage, filename, fileData } = file
-  const [open, setOpen] = useState(false)
 
   const fileUrl = fileData ? getServerUrl('file', { fileId: fileData.uniqueId }) : ''
   const thumbnailUrl = fileData
     ? getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })
     : ''
 
-  const docOpen = () => {
-    handleFile(shouldUseDocumentModal, fileData?.filename ?? '', fileUrl, () => setOpen(true))
-  }
+  const { DocumentModal, handleFile } = useDocumentModal({
+    filename,
+    fileUrl,
+    showDocumentModal,
+    cachedFile,
+  })
 
   return (
     <List.Item className="file-item" style={{ position: 'relative', maxWidth: 150 }}>
-      {shouldUseDocumentModal && (
-        <DocumentModal
-          filename={filename}
-          url={fileUrl}
-          open={open}
-          onClose={() => setOpen(false)}
-          cachedFile={cachedFile}
-        />
-      )}
+      {DocumentModal}
       <Grid verticalAlign="top" celled style={{ boxShadow: 'none' }}>
         {error && (
           <>
@@ -83,7 +74,7 @@ export const FileDisplay = ({
               <Image
                 src={thumbnailUrl}
                 className="clickable"
-                onClick={docOpen}
+                onClick={handleFile}
                 style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
               />
             </Grid.Row>
@@ -91,7 +82,7 @@ export const FileDisplay = ({
               <p
                 style={{ wordBreak: 'break-word' }}
                 className="clickable link-style tiny-bit-smaller-text"
-                onClick={docOpen}
+                onClick={() => handleFile()}
               >
                 {filename}
               </p>
