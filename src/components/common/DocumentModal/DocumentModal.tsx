@@ -13,6 +13,7 @@ interface DocumentModalProps {
   open: boolean
   onClose: () => void
   cachedFile?: File
+  preventDownload?: boolean
 }
 
 type FileType = 'pdf' | 'image' | 'other'
@@ -23,9 +24,10 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
   open,
   onClose,
   cachedFile,
+  preventDownload,
 }: DocumentModalProps) => {
   const { t } = useLanguageProvider()
-  const [numPages, setNumPages] = useState(null)
+  const [numPages, setNumPages] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageInput, setPageInput] = useState(1)
   const dimensions = useWindowDimensions()
@@ -62,7 +64,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
         <div className="flex-row-space-between-center-wrap" style={{ width: '95%', gap: 10 }}>
           <span style={{ maxWidth: 500 }}>{filename}</span>
           <div className="flex-row-start-center" style={{ gap: 5 }}>
-            {fileType === 'pdf' && (
+            {fileType === 'pdf' && numPages > 1 && (
               <div
                 className="flex-row-start-center"
                 style={{ gap: 10, fontSize: '1rem', fontWeight: 'normal', marginRight: 15 }}
@@ -81,7 +83,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
                 <span className="slightly-smaller-text"> of {numPages}</span>
               </div>
             )}
-            {fileType !== 'other' && (
+            {fileType !== 'other' && !preventDownload && (
               <>
                 <a href={url} target="_blank">
                   <Icon className="clickable" name="external alternate" />

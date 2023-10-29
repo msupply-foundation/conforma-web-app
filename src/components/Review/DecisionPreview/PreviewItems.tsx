@@ -4,6 +4,8 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import MarkdownBlock from '../../../utils/helpers/semanticReactMarkdown'
 import { ActionQueueStatus } from '../../../utils/generated/graphql'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { usePrefs } from '../../../contexts/SystemPrefs'
+import { DocumentModal, handleFile } from '../../common/DocumentModal/DocumentModal'
 
 interface ResultCommon {
   status: ActionQueueStatus
@@ -48,18 +50,33 @@ const NotificationPreview = ({ item }: { item: NotificationPreviewData }) => {
 }
 
 const DocumentPreview = ({ item }: { item: DocumentPreviewData }) => {
+  const {
+    preferences: { useDocumentModal },
+  } = usePrefs()
+  const [open, setOpen] = useState(false)
+  const { displayString, fileId } = item
+  const fileUrl = getServerUrl('file', { fileId })
+  const thumbnailUrl = getServerUrl('file', { fileId, thumbnail: true })
+
   return (
-    <div className="item document-preview">
-      <Image
-        src={getServerUrl('file', { fileId: item.fileId, thumbnail: true })}
-        style={{ maxHeight: 50 }}
-      />
-      <p>
-        <a href={getServerUrl('file', { fileId: item.fileId })} target="_blank">
-          {item.displayString}
-        </a>
-      </p>
-    </div>
+    <>
+      {useDocumentModal && (
+        <DocumentModal
+          url={fileUrl}
+          filename={displayString}
+          open={open}
+          onClose={() => setOpen(false)}
+          preventDownload
+        />
+      )}
+      <div
+        className="item document-preview"
+        onClick={() => handleFile(useDocumentModal, fileUrl, displayString, () => setOpen(true))}
+      >
+        <Image src={thumbnailUrl} className="clickable" style={{ maxHeight: 50 }} />
+        <p className="clickable link-style">{displayString}</p>
+      </div>
+    </>
   )
 }
 
