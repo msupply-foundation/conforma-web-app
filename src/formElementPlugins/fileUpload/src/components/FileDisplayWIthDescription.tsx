@@ -42,7 +42,7 @@ export const FileDisplayWithDescription = ({
             filename={filename}
             url={fileUrl}
             open={open}
-            setOpen={setOpen}
+            onClose={() => setOpen(false)}
             cachedFile={cachedFile}
           />
         )}

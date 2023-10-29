@@ -11,7 +11,7 @@ interface DocumentModalProps {
   filename: string
   url: string
   open: boolean
-  setOpen: (open: boolean) => void
+  onClose: () => void
   cachedFile?: File
 }
 
@@ -21,7 +21,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
   filename,
   url,
   open,
-  setOpen,
+  onClose,
   cachedFile,
 }: DocumentModalProps) => {
   const { t } = useLanguageProvider()
@@ -51,8 +51,7 @@ export const DocumentModal: React.FC<DocumentModalProps> = ({
     <Modal
       closeIcon
       open={open}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
+      onClose={() => onClose()}
       style={{
         width: fileType === 'pdf' ? contentWidth : 'unset',
         marginLeft: 15,
@@ -159,5 +158,23 @@ const getFileType = (filename: string): FileType => {
       return 'image'
     default:
       return 'other'
+  }
+}
+
+// Method for File displays to handle opening the selected file. Considers the
+// "useDocumentModal" preference and the file type to determine what to do.
+export const handleFile = (
+  shouldUseDocumentModal: boolean,
+  filename: string,
+  fileUrl: string,
+  modalOpenMethod: () => void
+) => {
+  // Display in Modal
+  if (shouldUseDocumentModal) modalOpenMethod()
+  else {
+    // Force download
+    if (getFileType(filename) === 'other') downloadFile(fileUrl, filename)
+    // Open in new tab
+    else window.open(fileUrl, '_blank')
   }
 }

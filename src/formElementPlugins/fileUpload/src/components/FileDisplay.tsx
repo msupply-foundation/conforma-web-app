@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader } from 'semantic-ui-react'
-import { DocumentModal } from '../../../../components/common/DocumentModal/DocumentModal'
+import {
+  DocumentModal,
+  handleFile,
+} from '../../../../components/common/DocumentModal/DocumentModal'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FileInfo } from '../ApplicationView'
@@ -31,8 +34,7 @@ export const FileDisplay = ({
     : ''
 
   const docOpen = () => {
-    if (shouldUseDocumentModal) setOpen(true)
-    else window.open(fileUrl, '_blank')
+    handleFile(shouldUseDocumentModal, fileData?.filename ?? '', fileUrl, () => setOpen(true))
   }
 
   return (
@@ -42,7 +44,7 @@ export const FileDisplay = ({
           filename={filename}
           url={fileUrl}
           open={open}
-          setOpen={setOpen}
+          onClose={() => setOpen(false)}
           cachedFile={cachedFile}
         />
       )}

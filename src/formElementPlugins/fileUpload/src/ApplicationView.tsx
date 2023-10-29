@@ -75,8 +75,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const fileInputRef = useRef<any>(null)
   // FileCache is to store the actual file contents after uploading, so when the
   // user previews it again they don't have to wait for it to re-download
-  const { cache, addToCache, removeFromCache, getFromCache } = useSimpleCache<File>()
-  // const [fileCache, setFileCache] = useState<Record<string, File>>({})
+  const { addToCache, removeFromCache, getFromCache } = useSimpleCache<File>()
 
   useEffect(() => {
     // Set response to null if no files
