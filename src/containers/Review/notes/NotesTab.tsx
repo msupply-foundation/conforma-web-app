@@ -66,6 +66,9 @@ const NotesTab: React.FC<{
   })
   const { deleteNote, error: noteMutationError } = useNotesMutations(fullStructure.info.id, refetch)
 
+  // FileCache is to store the actual file contents after uploading, so when the
+  // user previews it immediately after, they don't have to wait for it to
+  // re-download
   const fileCache = useSimpleCache<File>()
 
   const { sortDesc, filesOnlyFilter, showForm } = state
