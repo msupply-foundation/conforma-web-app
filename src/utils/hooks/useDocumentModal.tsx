@@ -163,6 +163,7 @@ export const useDocumentModal = ({
 
 const getFileType = (filename: string): FileType => {
   const matches = filename.match(/^.*\.(.+)$/) as RegExpMatchArray
+  if (!matches) return 'other'
   const fileExt = matches[1].toLowerCase()
 
   switch (fileExt) {
