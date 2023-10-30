@@ -331,16 +331,6 @@ a:hover {
   flex-grow: 1;
 }
 
-#menu-bar {
-  font-size: inherit;
-  .list {
-    display: flex;
-    gap: 10px;
-  }
-  .ui .dropdown {
-    display: flex;
-  }
-}
 // Menu bar links
 #user-area {
   a {
@@ -2608,10 +2598,46 @@ h6:first-child {
   .hide-on-desktop {
     display: none !important;
   }
+  #menu-bar {
+    font-size: inherit;
+    .list {
+      display: flex;
+      align-items: start;
+      gap: 10px;    
+    }
+    .ui .dropdown {
+      display: flex;
+    }
+    // These selectors are so we can remove 'horizontal' prop on list in #menu-bar
+    // so that it will work with mobile 
+    .ui.list > .item:first-child,
+    .ui.list > .item:last-child {
+      padding-top: @relative3px;
+      padding-bottom: @relative3px;
+    }
+  }
 }
 // Mobile
 @media only screen and (max-width: @largestMobileScreen) {
   .hide-on-mobile {
     display: none !important;
+  }
+
+  #menu-bar {
+  font-size: inherit;
+    .list {
+      //display: flex;
+      //gap: 10px;
+      z-index: 2000;
+      position: absolute;
+      top: 100px;
+      left: 0px;
+      background: @darkGrey;
+      width: 95%;
+      padding: 5px 30px 20px 30px;
+    }
+    .ui .dropdown {
+      display: flex;
+    }
   }
 }

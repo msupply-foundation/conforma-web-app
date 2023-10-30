@@ -227,7 +227,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
 
   return (
     <div id="menu-bar">
-      <List horizontal>
+      <List>
         <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
           <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
         </List.Item>
