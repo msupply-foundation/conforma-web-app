@@ -1070,10 +1070,6 @@ a:hover {
       Application List
 ---------------------------------*/
 
-#list-container {
-  padding: 25px 0;  
-}
-
 #list-top {
   display: flex;
   align-items: center;

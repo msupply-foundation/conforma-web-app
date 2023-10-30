@@ -2,84 +2,106 @@
          Site Overrides
 *******************************/
 
-// For ApplicationList page
-#list-container,
-#linked-applications-container {
-  .ui.table {
-    border-collapse: separate;
-    border-spacing: 0 10px;
-    background: none;
-    border: none;
-  }
-  .ui.table td {
-    background: @surfacesWhite;
-    padding: 5px;
+// desktop overrides overrides
+
+@media only screen and (min-width: @largestMobileScreen) {
+  // For ApplicationList page
+  
+  #list-container {
+    padding: 25px 0;  
+    width: @applicationListWidth;
   }
 
-  .ui.table tr {
-    border: none;
-  }  
+  #list-container,
+  #linked-applications-container {
+    .ui.table {
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      background: none;
+      border: none;
+    }
+    .ui.table td {
+      background: @surfacesWhite;
+      padding: 5px;
+    }
 
-  .ui.table thead th {
-    padding: 0;
-  }
+    .ui.table tr {
+      border: none;   
+      height: 52px;   
+    }  
 
-  .ui.table td:first-child,
-  .ui.table thead th:first-child {
-    padding-left: @tableRowLeftAndRightPadding;
-  }
+    .ui.table thead tr {
+      height: 0;
+    }
 
-  .ui.table td:last-child,
-  .ui.table thead th:last-child {
-    text-align: right;
-    padding-right: @tableRowLeftAndRightPadding;
-  }
+    .ui.table thead th {
+      padding: 0;
+    }
 
-  // Prevents column headers having different background when selected
-  // and on hover
-  .ui.sortable.table thead th.sorted {
-    background: none;
-  }
-  .ui.sortable.table thead th:hover {
-    background: none;
-    opacity: 0.8;
-  }
+    .ui.table td:first-child,
+    .ui.table thead th:first-child {
+      padding-left: @tableRowLeftAndRightPadding;
+    }
 
-  // Removes the faint background that is visibile behind the list row
-  // when hovering
-  .ui.selectable.table tbody tr:hover,
-  .ui.table tbody tr td.selectable:hover {
-    background: none !important;
-    color: @selectableTextColor !important;
-  }
+    .ui.table td:last-child,
+    .ui.table thead th:last-child {
+      text-align: right;
+      padding-right: @tableRowLeftAndRightPadding;
+    }
 
-  // Column header text
-  .ui.table thead tr th {
-    border: none;
-    background: none;
-    font-weight: @semiboldWeight;
-    font-size: @fontXsmall;
-    letter-spacing: @letterSpacingSmall;
-    text-transform: uppercase;
-    color: @headersInteractiveMed !important;
-  }
+    // Prevents column headers having different background when selected
+    // and on hover
+    .ui.sortable.table thead th.sorted {
+      background: none;
+    }
+    .ui.sortable.table thead th:hover {
+      background: none;
+      opacity: 0.8;
+    }
 
-  .ui.sortable.table thead th {
-    border: none;
-    padding-right: 3px;
-  }
+    // Removes the faint background that is visibile behind the list row
+    // when hovering
+    .ui.selectable.table tbody tr:hover,
+    .ui.table tbody tr td.selectable:hover {
+      background: none !important;
+      color: @selectableTextColor !important;
+    }
 
-  .ui.table tr td {
-    border: none;
-  }
+    // Column header text
+    .ui.table thead tr th {
+      border: none;
+      background: none;
+      font-weight: @semiboldWeight;
+      font-size: @fontXsmall;
+      letter-spacing: @letterSpacingSmall;
+      text-transform: uppercase;
+      color: @headersInteractiveMed !important;
+    }
 
-  .ui.table tr td:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-  }
+    .ui.sortable.table thead th {
+      border: none;
+      padding-right: 3px;
+    }
 
-  .ui.table tr td:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    .ui.table tr td {
+      border: none;
+    }
+
+    .ui.table tr td:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    .ui.table tr td:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
   }
 }
+
+// mobile and small tablet overrides
+@media only screen and (max-width: @largestMobileScreen - 1) {
+
+}
+
+
