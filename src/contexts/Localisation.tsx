@@ -271,8 +271,6 @@ const getTranslation = (
     } else substitutions = {}
   }
 
-  console.log('substitutions', substitutions)
-
   // "{{count}}" is a special replacement, where an alternative string can be
   // provided for certain numbers, usually a single value (1).
   if ('count' in substitutions) {
