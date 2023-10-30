@@ -20,6 +20,7 @@ interface NotificationPreviewData extends ResultCommon {
 interface DocumentPreviewData extends ResultCommon {
   type: 'DOCUMENT'
   fileId: string
+  filename: string
 }
 
 interface GenericPreviewData extends ResultCommon {
@@ -49,10 +50,14 @@ const NotificationPreview = ({ item }: { item: NotificationPreviewData }) => {
 }
 
 const DocumentPreview = ({ item }: { item: DocumentPreviewData }) => {
-  const { displayString, fileId } = item
+  const { displayString, fileId, filename } = item
   const fileUrl = getServerUrl('file', { fileId })
   const thumbnailUrl = getServerUrl('file', { fileId, thumbnail: true })
-  const { DocumentModal, handleFile } = useDocumentModal({ filename: displayString, fileUrl })
+  const { DocumentModal, handleFile } = useDocumentModal({
+    filename,
+    fileUrl,
+    preventDownload: true,
+  })
 
   return (
     <>
