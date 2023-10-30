@@ -2,7 +2,12 @@
          Site Overrides
 *******************************/
 
-// desktop overrides overrides
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// desktop overrides
 
 @media only screen and (min-width: @largestMobileScreen) {
   // For ApplicationList page
@@ -97,9 +102,63 @@
       border-bottom-right-radius: 10px;
     }
   }
+  /*--------------------------------
+      Data views
+  ---------------------------------*/
+
+  #data-view {
+    .flex-column();
+    align-items: center;
+    width: @applicationListWidth;
+
+    .ui.header {
+      padding-top: 30px;
+    }
+
+    .data-view-nav {
+      width: 90%;
+    }
+
+    .data-view-table-container {
+      .flex-column();
+      align-items: center;
+      // Limit size of images in Table (that come from SummaryView elements)
+      .ui.image {
+        width: unset;
+        max-height: 50px;
+      }
+      padding-top: 0;
+      width: clamp(700px, 90%, 1127px);
+    }
+
+    .summary-page-element {
+      margin: 10px;
+      min-width: 200px;
+      max-width: 450px;
+    }
+
+    .data-view-detail-container {
+      .flex-column();
+      align-items: center;
+      // Limit size of images in Table (that come from SummaryView elements)
+      .ui.image {
+        width: unset;
+        max-height: 100px;
+      }
+    }
+
+    .data-view-detail-table {
+      min-width: 500px;
+    }
+
+    #linked-applications-container {
+      margin-top: 45px;
+    }
+  }
 }
 
 // mobile and small tablet overrides
+
 @media only screen and (max-width: @largestMobileScreen - 1) {
 
 }
