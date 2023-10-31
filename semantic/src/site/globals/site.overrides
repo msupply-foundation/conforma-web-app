@@ -304,6 +304,7 @@ a:hover {
   justify-content: space-between;
   z-index: 1000;
   max-width: 100vw !important;
+  min-width: @minimumContainerWidth;
 }
 
 #user-area.ui.container {
@@ -2590,7 +2591,7 @@ h6:first-child {
   }
 
   #content-area {
-    padding-top: @mobileHeaderHeight + 12px;    
+    padding-top: calc(@mobileHeaderHeight + 12px);    
   }
 
   #user-area {

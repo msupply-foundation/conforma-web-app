@@ -176,6 +176,9 @@
 @applicationSummaryContentWidth: 700px;
 @applicationFormContentWidth: clamp(350px, 70%, 480px);
 
+// Minimums
+@minimumContainerWidth: 320px;
+
 // Box shadow -- used in Login form
 @basicBoxShadow: @boxShadowColor 0px -3px 10px 0px;
 
