@@ -186,6 +186,8 @@ interface ColumnDetails {
   headerDetail?: string
   sortName: string
   ColumnComponent: React.FunctionComponent<any>
+  hideMobileLabel?: boolean
+  hideOnMobileIfEmpty?: boolean
 }
 
 interface ContextApplicationState {

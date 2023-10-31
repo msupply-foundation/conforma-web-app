@@ -36,6 +36,7 @@ export const useMapColumnsByRole = () => {
       headerName: t('COLUMN_SERIAL'),
       sortName: 'serial',
       ColumnComponent: SerialNumberCell,
+      hideMobileLabel: true,
     },
     LAST_ACTIVE_DATE: {
       headerName: t('COLUMN_LAST_ACTIVE_DATE'),
@@ -48,16 +49,19 @@ export const useMapColumnsByRole = () => {
       headerDetail: t('COLUMN_DEADLINE_DATE_TOOLTIP'),
       sortName: 'applicant-deadline',
       ColumnComponent: DeadlineCell,
+      hideOnMobileIfEmpty: true,
     },
     APPLICATION_NAME: {
       headerName: t('COLUMN_APPLICATION'),
       sortName: 'name',
       ColumnComponent: ApplicationNameCell,
+      hideMobileLabel: true,
     },
     APPLICATION_NAME_REVIEW_LINK: {
       headerName: t('COLUMN_APPLICATION_REVIEW'),
       sortName: 'name',
       ColumnComponent: ApplicationNameReviewLinkCell,
+      hideMobileLabel: true,
     },
     APPLICANT: {
       headerName: t('COLUMN_APPLICANT'),
@@ -78,26 +82,34 @@ export const useMapColumnsByRole = () => {
       headerName: t('COLUMN_STAGE'),
       sortName: 'stage',
       ColumnComponent: StageCell,
+      hideMobileLabel: true,
     },
     STATUS: {
       headerName: t('COLUMN_STATUS'),
       sortName: 'status',
       ColumnComponent: StatusCell,
+      hideMobileLabel: true,
     },
     OUTCOME: {
       headerName: t('COLUMN_OUTCOME'),
       sortName: 'outcome',
       ColumnComponent: OutcomeCell,
+      hideMobileLabel: true,
+      hideOnMobileIfEmpty: true,
     },
     REVIEWER_ACTION: {
       headerName: t('COLUMN_REVIEWER_ACTION'),
       sortName: 'outcome',
       ColumnComponent: ReviewerActionCell,
+      hideMobileLabel: true,
+      hideOnMobileIfEmpty: true,
     },
     APPLICANT_ACTION: {
       headerName: t('COLUMN_APPLICANT_ACTION'),
       sortName: 'outcome',
       ColumnComponent: ApplicantActionCell,
+      hideMobileLabel: true,
+      hideOnMobileIfEmpty: true,
     },
   }
 

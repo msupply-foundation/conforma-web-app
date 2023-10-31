@@ -4,6 +4,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { useDeleteApplicationMutation } from '../../utils/generated/graphql'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
+import { TableCellMobileLabeller } from '../../utils/tables/TableCellMobileLabeller'
 
 interface ApplicationsListProps {
   columns: Array<ColumnDetails>
@@ -91,9 +92,11 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
 
   return (
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
-      {columns.map(({ ColumnComponent }, index) => (
+      {columns.map(({ ColumnComponent, headerName, hideMobileLabel }, index) => (
         <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
-          <ColumnComponent {...props} />
+          <TableCellMobileLabeller label={headerName} disabled={hideMobileLabel}>
+            <ColumnComponent {...props} />
+          </TableCellMobileLabeller>
         </Table.Cell>
       ))}
     </Table.Row>
