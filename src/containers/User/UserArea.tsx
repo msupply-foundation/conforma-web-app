@@ -35,8 +35,12 @@ const UserArea: React.FC = () => {
   const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser)
   const [active, setActive] = useState(false)
 
-  const hamburgerClickHandler = () => {
-    setActive(!active)
+  const hamburgerClickHandler = (close?: boolean) => {
+    if (close === undefined) {
+      setActive(!active)
+    } else {
+      setActive(close)
+    }
   }
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
@@ -56,7 +60,7 @@ const UserArea: React.FC = () => {
           referenceDocs={{ intReferenceDocs, extReferenceDocs }}
           hamburgerActive={active}
           closeHamburgerMobile={() => {
-            hamburgerClickHandler()
+            hamburgerClickHandler(false)
           }}
         />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
@@ -330,7 +334,7 @@ const Hamburger: React.FC<{ active: Boolean; clickHandler: () => void }> = ({
   clickHandler,
 }) => {
   return (
-    <div className={active ? 'hamburger active' : 'hamburger'} onClick={clickHandler}>
+    <div className={active ? 'hamburger active' : 'hamburger'} onClick={() => clickHandler()}>
       <span className="hamburger-bun"></span>
       <span className="hamburger-patty"></span>
       <span className="hamburger-bun"></span>
