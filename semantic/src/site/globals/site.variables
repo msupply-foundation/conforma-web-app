@@ -55,7 +55,7 @@
 @disabledOpacity: 0.75;
 //
 @boxShadowColor: #d4d4d5;
-@fullyTransperant: rgba(0, 0, 0, 0);
+@fullyTransparent: rgba(0, 0, 0, 0);
 
 // For date filters
 @weekDayHeaderColor: rgba(0, 0, 0, 0.5);

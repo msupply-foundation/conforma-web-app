@@ -11,6 +11,7 @@ import AuthenticatedContent from './AuthenticatedWrapper'
 import { Loading } from '../../components'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { trackerTestMode } from './Tracker'
+import { ViewportStateProvider } from '../../contexts/ViewportState'
 
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()
@@ -38,28 +39,30 @@ const AppWrapper: React.FC = () => {
 
   return (
     <Router>
-      <UserProvider>
-        <Switch>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/register">
-            <NonRegisteredLogin option="register" />
-          </Route>
-          <Route exact path="/reset-password">
-            <NonRegisteredLogin option="reset-password" />
-          </Route>
-          <Route exact path="/verify">
-            <Verify />
-          </Route>
-          <Route exact path="/logout">
-            <Logout />
-          </Route>
-          <Route>
-            <AuthenticatedContent />
-          </Route>
-        </Switch>
-      </UserProvider>
+      <ViewportStateProvider>
+        <UserProvider>
+          <Switch>
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <Route exact path="/register">
+              <NonRegisteredLogin option="register" />
+            </Route>
+            <Route exact path="/reset-password">
+              <NonRegisteredLogin option="reset-password" />
+            </Route>
+            <Route exact path="/verify">
+              <Verify />
+            </Route>
+            <Route exact path="/logout">
+              <Logout />
+            </Route>
+            <Route>
+              <AuthenticatedContent />
+            </Route>
+          </Switch>
+        </UserProvider>
+      </ViewportStateProvider>
     </Router>
   )
 }
