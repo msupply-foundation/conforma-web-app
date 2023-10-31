@@ -75,6 +75,7 @@ export const useDocumentModal = ({
         marginLeft: 15,
         marginRight: 15,
       }}
+      className="document-modal"
     >
       <Modal.Header>
         <div className="flex-row-space-between-center-wrap" style={{ width: '95%', gap: 10 }}>
