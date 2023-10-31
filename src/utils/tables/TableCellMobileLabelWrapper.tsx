@@ -17,20 +17,20 @@ import { HideOnMobileTestMethod } from '../types'
 interface MobileLabelWrapperProps {
   label: string
   rowData: Record<string, unknown>
-  hideIf?: HideOnMobileTestMethod
   hideLabel?: boolean
+  hideCell?: boolean | HideOnMobileTestMethod
 }
 
 export const TableCellMobileLabelWrapper: React.FC<MobileLabelWrapperProps> = ({
   children,
   rowData,
   label,
-  hideIf,
+  hideCell,
   hideLabel = false,
 }) => {
   const { isMobile } = useViewport()
 
-  if (isMobile && hideIf && hideIf(rowData)) return null
+  if (isMobile && ((typeof hideCell === 'function' && hideCell(rowData)) || hideCell)) return null
 
   if (!isMobile || hideLabel) return <>{children}</>
 

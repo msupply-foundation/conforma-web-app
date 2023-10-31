@@ -703,6 +703,8 @@ interface FormatOptions {
   elementParameters?: object
   substitution?: string
   dateFormat?: DateTimeConstant | DateTimeFormatOptions
+  hideLabelOnMobile?: boolean
+  hideCellOnMobile?: boolean
   // Add more as required
 }
 

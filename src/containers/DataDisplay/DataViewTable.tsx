@@ -172,7 +172,7 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {tableRows.map(({ id, rowValues }: { id: number; rowValues: any }) => (
+          {tableRows.map(({ id, rowValues }) => (
             <Table.Row
               key={`row_${id}`}
               className="clickable"
@@ -180,7 +180,14 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
             >
               {rowValues.map((value: any, index: number) => (
                 <Table.Cell key={`value_${index}`}>
-                  <TableCellMobileLabelWrapper label={headerRow[index].title} rowData={{}}>
+                  <TableCellMobileLabelWrapper
+                    label={headerRow[index].title}
+                    // These values are not currently dynamic, hence no rowData
+                    // sent
+                    hideLabel={headerRow[index].formatting?.hideLabelOnMobile}
+                    hideCell={headerRow[index].formatting?.hideCellOnMobile}
+                    rowData={{}}
+                  >
                     {getCellComponent(value, headerRow[index], id)}
                   </TableCellMobileLabelWrapper>
                 </Table.Cell>

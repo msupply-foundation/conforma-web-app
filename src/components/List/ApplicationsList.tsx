@@ -100,7 +100,7 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
               label={headerName}
               rowData={rowData}
               hideLabel={hideMobileLabel}
-              hideIf={hideOnMobileTest}
+              hideCell={hideOnMobileTest}
             >
               <ColumnComponent {...props} />
             </TableCellMobileLabelWrapper>
