@@ -17,6 +17,7 @@ import { LIST_COLUMNS, USER_ROLES } from '../../data'
 import COLUMNS_PER_ROLE from '../../data/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { ApplicationOutcome, ApplicationStatus } from '../../generated/graphql'
 
 /**
  * @function: mapColumnsByRole
@@ -49,7 +50,7 @@ export const useMapColumnsByRole = () => {
       headerDetail: t('COLUMN_DEADLINE_DATE_TOOLTIP'),
       sortName: 'applicant-deadline',
       ColumnComponent: DeadlineCell,
-      hideOnMobileIfEmpty: true,
+      hideOnMobileTest: (application) => !application.applicantDeadline,
     },
     APPLICATION_NAME: {
       headerName: t('COLUMN_APPLICATION'),
@@ -95,26 +96,28 @@ export const useMapColumnsByRole = () => {
       sortName: 'outcome',
       ColumnComponent: OutcomeCell,
       hideMobileLabel: true,
-      hideOnMobileIfEmpty: true,
+      hideOnMobileTest: (application) => application.outcome === ApplicationOutcome.Pending,
     },
     REVIEWER_ACTION: {
       headerName: t('COLUMN_REVIEWER_ACTION'),
       sortName: 'outcome',
       ColumnComponent: ReviewerActionCell,
       hideMobileLabel: true,
-      hideOnMobileIfEmpty: true,
+      hideOnMobileTest: (application) => !application.reviewerAction,
     },
     APPLICANT_ACTION: {
       headerName: t('COLUMN_APPLICANT_ACTION'),
       sortName: 'outcome',
       ColumnComponent: ApplicantActionCell,
       hideMobileLabel: true,
-      hideOnMobileIfEmpty: true,
+      hideOnMobileTest: (application) =>
+        application.status !== ApplicationStatus.ChangesRequired &&
+        application.status !== ApplicationStatus.Draft,
     },
   }
 
-  const mapColumnsByRole = (userRoles: USER_ROLES): Array<ColumnDetails> => {
-    const columns: Array<ColumnDetails> = COLUMNS_PER_ROLE[userRoles].map((key) => allColumns[key])
+  const mapColumnsByRole = (userRoles: USER_ROLES): ColumnDetails[] => {
+    const columns: ColumnDetails[] = COLUMNS_PER_ROLE[userRoles].map((key) => allColumns[key])
     return columns
   }
   return mapColumnsByRole

@@ -4,10 +4,10 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { useDeleteApplicationMutation } from '../../utils/generated/graphql'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
-import { TableCellMobileLabeller } from '../../utils/tables/TableCellMobileLabeller'
+import { TableCellMobileLabelWrapper } from '../../utils/tables/TableCellMobileLabelWrapper'
 
 interface ApplicationsListProps {
-  columns: Array<ColumnDetails>
+  columns: ColumnDetails[]
   applications: ApplicationListRow[]
   sortQuery: SortQuery
   handleSort: Function
@@ -72,7 +72,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
 
 interface ApplicationRowProps {
   refetch: Function
-  columns: Array<ColumnDetails>
+  columns: ColumnDetails[]
   application: ApplicationListRow
 }
 
@@ -92,13 +92,21 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
 
   return (
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
-      {columns.map(({ ColumnComponent, headerName, hideMobileLabel }, index) => (
-        <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
-          <TableCellMobileLabeller label={headerName} disabled={hideMobileLabel}>
-            <ColumnComponent {...props} />
-          </TableCellMobileLabeller>
-        </Table.Cell>
-      ))}
+      {columns.map(({ ColumnComponent, headerName, hideMobileLabel, hideOnMobileTest }, index) => {
+        const rowData = application as Record<string, any>
+        return (
+          <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
+            <TableCellMobileLabelWrapper
+              label={headerName}
+              rowData={rowData}
+              hideLabel={hideMobileLabel}
+              hideIf={hideOnMobileTest}
+            >
+              <ColumnComponent {...props} />
+            </TableCellMobileLabelWrapper>
+          </Table.Cell>
+        )
+      })}
     </Table.Row>
   )
 }

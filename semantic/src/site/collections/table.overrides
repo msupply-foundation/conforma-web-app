@@ -11,9 +11,9 @@
 
 @media only screen and (min-width: @largestMobileScreen) {
   // For ApplicationList page
-  
+
   #list-container {
-    padding: 25px 0;  
+    padding: 25px 0;
     width: @applicationListWidth;
   }
 
@@ -31,9 +31,9 @@
     }
 
     .ui.table tr {
-      border: none;   
-      height: 52px;   
-    }  
+      border: none;
+      height: 52px;
+    }
 
     .ui.table thead tr {
       height: 0;
@@ -109,7 +109,7 @@
   #data-view {
     .flex-column();
     align-items: center;
-    width: @applicationListWidth;    
+    width: @applicationListWidth;
 
     .data-view-nav {
       width: 90%;
@@ -153,10 +153,7 @@
   }
 }
 
-// ********** mobile and small tablet overrides ******************* 
+// ********** mobile and small tablet overrides *******************
 
 @media only screen and (max-width: calc(@largestMobileScreen - 1)) {
-
 }
-
-

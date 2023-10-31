@@ -38,6 +38,7 @@ export {
   AssignmentOption,
   CellProps,
   ChangeRequestsProgress,
+  HideOnMobileTestMethod,
   ColumnDetails,
   ContextApplicationState,
   CurrentPage,
@@ -181,13 +182,14 @@ interface CellProps {
   deleteApplication: Function
 }
 
+type HideOnMobileTestMethod = (rowData: Record<string, unknown>) => boolean
 interface ColumnDetails {
   headerName: string
   headerDetail?: string
   sortName: string
   ColumnComponent: React.FunctionComponent<any>
   hideMobileLabel?: boolean
-  hideOnMobileIfEmpty?: boolean
+  hideOnMobileTest?: HideOnMobileTestMethod
 }
 
 interface ContextApplicationState {

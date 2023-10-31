@@ -20,6 +20,7 @@ import useDebounce from '../../formElementPlugins/search/src/useDebounce'
 import { useToast } from '../../contexts/Toast'
 import ListFilters from '../List/ListFilters/ListFilters'
 import { usePrefs } from '../../contexts/SystemPrefs'
+import { TableCellMobileLabelWrapper } from '../../utils/tables/TableCellMobileLabelWrapper'
 
 export type SortColumn = {
   title: string
@@ -179,7 +180,9 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
             >
               {rowValues.map((value: any, index: number) => (
                 <Table.Cell key={`value_${index}`}>
-                  {getCellComponent(value, headerRow[index], id)}
+                  <TableCellMobileLabelWrapper label={headerRow[index].title} rowData={{}}>
+                    {getCellComponent(value, headerRow[index], id)}
+                  </TableCellMobileLabelWrapper>
                 </Table.Cell>
               ))}
             </Table.Row>
