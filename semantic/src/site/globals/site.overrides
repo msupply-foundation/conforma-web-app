@@ -1847,7 +1847,7 @@ a:hover {
   background-color: @surfacesWhite;
   margin: 5px;
   color: @darkGrey;
-  border: solid 1px @fullyTransperant;
+  border: solid 1px @fullyTransparent;
 
   &.visible {
     border: solid 1px @blue;
