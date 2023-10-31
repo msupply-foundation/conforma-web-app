@@ -21,6 +21,7 @@ import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { UiLocation } from '../../utils/generated/graphql'
 const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
+import { useViewport } from './../../contexts/ViewportState'
 
 const UserArea: React.FC = () => {
   const { preferences } = usePrefs()
@@ -34,6 +35,7 @@ const UserArea: React.FC = () => {
   const { dataViewsList } = useDataViewsList()
   const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser)
   const [active, setActive] = useState(false)
+  const { isMobile } = useViewport()
 
   const hamburgerClickHandler = (close?: boolean) => {
     if (close === undefined) {
@@ -65,13 +67,15 @@ const UserArea: React.FC = () => {
         />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
-      <UserMenu
-        user={currentUser as User}
-        templates={templates.filter(({ templateCategory: { uiLocation } }) =>
-          uiLocation.includes(UiLocation.User)
-        )}
-      />
-      <Hamburger active={active} clickHandler={hamburgerClickHandler} />
+      {!isMobile && (
+        <UserMenu
+          user={currentUser as User}
+          templates={templates.filter(({ templateCategory: { uiLocation } }) =>
+            uiLocation.includes(UiLocation.User)
+          )}
+        />
+      )}
+      {isMobile && <Hamburger active={active} clickHandler={hamburgerClickHandler} />}
     </Container>
   )
 }
@@ -114,7 +118,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   const { push, pathname } = useRouter()
   const {
     userState: { currentUser },
+    logout,
   } = useUserState()
+  const { isMobile } = useViewport()
 
   // Ensures the "selected" state of other dropdowns gets disabled
   useEffect(() => {
@@ -324,6 +330,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             </Dropdown>
           </List.Item>
         )}
+        {isMobile && <List.Item onClick={() => logout()}>{t('MENU_LOGOUT')}</List.Item>}
       </List>
     </div>
   )
