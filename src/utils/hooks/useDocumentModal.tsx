@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack'
-import { useWindowDimensions } from './useWindowDimensions'
 import { Icon, Modal, ModalContent, Input, Image } from 'semantic-ui-react'
 import { useDebounceCallback } from './useDebouncedCallback'
 import { downloadFile } from '../helpers/utilityFunctions'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import { useViewport } from '../../contexts/ViewportState'
 import Loading from '../../components/Loading'
 import { usePrefs } from '../../contexts/SystemPrefs'
+
+const MAX_MODAL_WIDTH = 960
 
 interface DocumentModalProps {
   filename: string
@@ -30,13 +32,13 @@ export const useDocumentModal = ({
   const [numPages, setNumPages] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageInput, setPageInput] = useState(1)
-  const dimensions = useWindowDimensions()
+  const { viewport } = useViewport()
   const debouncePageNum = useDebounceCallback((val: number) => setCurrentPage(val), [], 150)
   const { preferences } = usePrefs()
 
   const showDocumentModal = showDocModalProp ?? preferences.showDocumentModal
 
-  const contentWidth = Math.min(dimensions.width * 0.9, 960)
+  const contentWidth = Math.min(viewport.width * 0.9, MAX_MODAL_WIDTH)
   const pdfWidth = contentWidth * 0.9
 
   const onDocumentLoadSuccess = ({ numPages }: any) => {
