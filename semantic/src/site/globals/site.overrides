@@ -2399,6 +2399,12 @@ a:hover {
         Document Modal
 *******************************/
 
+// This seems to only be required for Firefox - it keeps the Document modal
+// vertically centered
+.ui.page.modals:has(.document-modal) {
+  justify-content: center;
+}
+
 // These class names provided by the react-pdf package
 .react-pdf__Page {
   margin-bottom: 30px;
