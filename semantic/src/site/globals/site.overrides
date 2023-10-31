@@ -1067,6 +1067,18 @@ a:hover {
 }
 
 /*--------------------------------
+      Data views
+---------------------------------*/
+// See table.overrides for more customization
+
+#data-view {
+  .ui.header {
+    padding-top: 30px;
+  }
+}
+
+
+/*--------------------------------
       Application List
 ---------------------------------*/
 
