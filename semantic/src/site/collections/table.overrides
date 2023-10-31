@@ -7,7 +7,7 @@
   flex-direction: column;
 }
 
-// desktop overrides
+// ********** desktop overrides *******************
 
 @media only screen and (min-width: @largestMobileScreen) {
   // For ApplicationList page
@@ -109,11 +109,7 @@
   #data-view {
     .flex-column();
     align-items: center;
-    width: @applicationListWidth;
-
-    .ui.header {
-      padding-top: 30px;
-    }
+    width: @applicationListWidth;    
 
     .data-view-nav {
       width: 90%;
@@ -157,9 +153,9 @@
   }
 }
 
-// mobile and small tablet overrides
+// ********** mobile and small tablet overrides ******************* 
 
-@media only screen and (max-width: @largestMobileScreen - 1) {
+@media only screen and (max-width: calc(@largestMobileScreen - 1)) {
 
 }
 
