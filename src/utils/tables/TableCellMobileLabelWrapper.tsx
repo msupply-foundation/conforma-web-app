@@ -30,7 +30,8 @@ export const TableCellMobileLabelWrapper: React.FC<MobileLabelWrapperProps> = ({
 }) => {
   const { isMobile } = useViewport()
 
-  if (isMobile && ((typeof hideCell === 'function' && hideCell(rowData)) || hideCell)) return null
+  if (isMobile && ((typeof hideCell === 'function' && hideCell(rowData)) || hideCell === true))
+    return null
 
   if (!isMobile || hideLabel) return <>{children}</>
 
