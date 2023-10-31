@@ -33,6 +33,11 @@ const UserArea: React.FC = () => {
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
   const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser)
+  const [active, setActive] = useState(false)
+
+  const hamburgerClickHandler = () => {
+    setActive(!active)
+  }
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
@@ -49,6 +54,10 @@ const UserArea: React.FC = () => {
           templates={templates}
           dataViews={dataViewsList}
           referenceDocs={{ intReferenceDocs, extReferenceDocs }}
+          hamburgerActive={active}
+          closeHamburgerMobile={() => {
+            hamburgerClickHandler()
+          }}
         />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
@@ -58,6 +67,7 @@ const UserArea: React.FC = () => {
           uiLocation.includes(UiLocation.User)
         )}
       />
+      <Hamburger active={active} clickHandler={hamburgerClickHandler} />
     </Container>
   )
 }
@@ -68,6 +78,8 @@ interface MainMenuBarProps {
     intReferenceDocs: { uniqueId: string; description: string }[]
     extReferenceDocs: { uniqueId: string; description: string }[]
   }
+  hamburgerActive: Boolean
+  closeHamburgerMobile: () => void
 }
 interface DropdownsState {
   dashboard: { active: boolean }
@@ -82,6 +94,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   templates,
   dataViews,
   referenceDocs: { intReferenceDocs, extReferenceDocs },
+  hamburgerActive,
+  closeHamburgerMobile,
 }) => {
   const { t } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
@@ -102,6 +116,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   useEffect(() => {
     const basepath = pathname.split('/')?.[1]
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
+    closeHamburgerMobile() //To close menu bar when navigation occurs
   }, [pathname])
 
   const dataViewOptions = constructNestedMenuOptions(dataViews, {
@@ -226,7 +241,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   }
 
   return (
-    <div id="menu-bar">
+    <div id="menu-bar" className={hamburgerActive ? 'open' : ''}>
       <List>
         <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
           <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
@@ -306,6 +321,19 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
           </List.Item>
         )}
       </List>
+    </div>
+  )
+}
+
+const Hamburger: React.FC<{ active: Boolean; clickHandler: () => void }> = ({
+  active,
+  clickHandler,
+}) => {
+  return (
+    <div className={active ? 'hamburger active' : 'hamburger'} onClick={clickHandler}>
+      <span className="hamburger-bun"></span>
+      <span className="hamburger-patty"></span>
+      <span className="hamburger-bun"></span>
     </div>
   )
 }
