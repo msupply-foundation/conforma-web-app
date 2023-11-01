@@ -34,14 +34,14 @@ const UserArea: React.FC = () => {
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
   const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser)
-  const [active, setActive] = useState(false)
+  const [hamburgerActive, setHamburgerActive] = useState(false)
   const { isMobile } = useViewport()
 
   const hamburgerClickHandler = (close?: boolean) => {
     if (close === undefined) {
-      setActive(!active)
+      setHamburgerActive(!hamburgerActive)
     } else {
-      setActive(close)
+      setHamburgerActive(close)
     }
   }
 
@@ -60,7 +60,7 @@ const UserArea: React.FC = () => {
           templates={templates}
           dataViews={dataViewsList}
           referenceDocs={{ intReferenceDocs, extReferenceDocs }}
-          hamburgerActive={active}
+          hamburgerActive={hamburgerActive}
           closeHamburgerMobile={() => {
             hamburgerClickHandler(false)
           }}
@@ -75,7 +75,7 @@ const UserArea: React.FC = () => {
           )}
         />
       )}
-      {isMobile && <Hamburger active={active} clickHandler={hamburgerClickHandler} />}
+      {isMobile && <Hamburger active={hamburgerActive} clickHandler={hamburgerClickHandler} />}
     </Container>
   )
 }
