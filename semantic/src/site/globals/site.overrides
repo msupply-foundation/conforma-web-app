@@ -2650,42 +2650,20 @@ h6:first-child {
 	.hamburger.active .hamburger-bun {
 		margin: 0;
 		-webkit-transform-origin: center center;
-		-moz-transform-origin: center center;
-		-o-transform-origin: center center;
 		transform-origin: center center;
 	}
 			
 	.hamburger.active .hamburger-bun:first-child {
-		-webkit-transform: rotate(45deg);
-	    -moz-transform: rotate(45deg);
-	    -o-transform: rotate(45deg);
-	    -ms-transform: rotate(45deg);
-	    transform: rotate(45deg);
-	    -webkit-transition: all .2s ease-out;
-	    -moz-transition: all .2s ease-out;
-	    -o-transition: all .2s ease-out;
-	    transition: all .2s ease-out;
-	    -webkit-transition: all .2s ease;
-	    -moz-transition: all .2s ease;
-	    -ms-transition: all .2s ease;
-	    -o-transition: all .2s ease;
+		-webkit-transform: rotate(45deg);	    
+	    transform: rotate(45deg);	    
+	    transition: all .2s ease-out;	    
 	    transition: all .2s ease;
 	    margin-top: 3px;
 	}
 	.hamburger.active .hamburger-bun:last-child {
 		-webkit-transform: rotate(-45deg);
-		-moz-transform: rotate(-45deg);
-		-o-transform: rotate(-45deg);
-		-ms-transform: rotate(-45deg);
 		transform: rotate(-45deg);
-		-webkit-transition: all .2s ease-out;
-		-moz-transition: all .2s ease-out;
-		-o-transition: all .2s ease-out;
 		transition: all .2s ease-out;
-		-webkit-transition: all .2s ease;
-		-moz-transition: all .2s ease;
-		-ms-transition: all .2s ease;
-		-o-transition: all .2s ease;
 		transition: all .2s ease;
 		margin-top: -3px;
 	}
