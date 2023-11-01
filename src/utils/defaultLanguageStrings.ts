@@ -1,5 +1,5 @@
 export default {
-  _APP_NAME: 'conforma',
+  _APP_NAME: 'Conforma',
   _APP_NAME_SUBHEADER: 'Application Manager',
   ACTION_AWAITING_RESPONSE: 'Awaiting response',
   ACTION_ASSIGN: 'Assign',
@@ -329,6 +329,8 @@ export default {
   MENU_LANGUAGE_CURRENT: 'current',
   MENU_LOGOUT: 'Log out',
   MENU_USER_OPTIONS: 'User Options',
+  MENU_LOGOUT_WARNING: 'Log out?',
+  MENU_LOGOUT_MESSAGE: 'This will log you out of {{systemName}}',
   NO_MATCH_404_DEFAULT_HEADER: 'Something went wrong',
   NO_MATCH_404_DEFAULT_CONTENT: 'Page not found',
   NO_MATCH_404_GO_BACK: 'Go back',

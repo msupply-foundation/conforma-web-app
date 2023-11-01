@@ -1069,7 +1069,6 @@ a:hover {
   }
 }
 
-
 /*--------------------------------
       Application List
 ---------------------------------*/
@@ -2550,9 +2549,9 @@ h6:first-child {
       Mobile Hamburger
 ------------------------------------------------------*/
 
-  .hamburger {
-    display: none;
-  }
+.hamburger {
+  display: none;
+}
 
 /*-----------------------------------------------------
       Mobile & Desktop
@@ -2569,13 +2568,13 @@ h6:first-child {
     .list {
       display: flex;
       align-items: start;
-      gap: 10px;    
+      gap: 10px;
     }
     .ui .dropdown {
       display: flex;
     }
     // These selectors are so we can remove 'horizontal' prop on list in #menu-bar
-    // so that it will work with mobile 
+    // so that it will work with mobile
     .ui.list > .item:first-child,
     .ui.list > .item:last-child {
       padding-top: @relative3px;
@@ -2591,7 +2590,7 @@ h6:first-child {
   }
 
   #content-area {
-    padding-top: calc(@mobileHeaderHeight + 12px);    
+    padding-top: calc(@mobileHeaderHeight + 12px);
   }
 
   #user-area {
@@ -2599,8 +2598,8 @@ h6:first-child {
   }
 
   #menu-bar {
-  font-size: inherit;
-    .list {      
+    font-size: inherit;
+    .list {
       z-index: 2000;
       position: absolute;
       top: @mobileHeaderHeight;
@@ -2614,70 +2613,71 @@ h6:first-child {
     }
   }
 
+  .menu-divider {
+    margin: 0px 0px 5px 0px !important;
+  }
+
   /***********************
       Mobile Hamburger
   ***********************/
   .hamburger {
-		width: 25px;
-		height: 25px;
-		position: absolute;
-		right: 15px;
-		top: 15px;
-		cursor: pointer;
-		display: block;
-	}
-	.hamburger 	span {
-		display: block;
-		height: 3px;
-		background: @userAreaText;
-		margin: 0 0 3px;
-	}
-	.hamburger:hover {
-		-moz-opacity: 1;
-	    -khtml-opacity: 1;
-	    -webkit-opacity: 1;
-	    opacity: 1;
-	    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=100);
-	    filter: alpha(opacity=100);
-	    -moz-transition-duration: .2s;
-	    -webkit-transition-duration: .2s;
-	    -o-transition-duration: .2s;
-	    transition-duration: .2s;
-	}
-	.hamburger.active {
-				
-	}
-	.hamburger.active .hamburger-bun {
-		margin: 0;
-		-webkit-transform-origin: center center;
-		transform-origin: center center;
-	}
-			
-	.hamburger.active .hamburger-bun:first-child {
-		-webkit-transform: rotate(45deg);	    
-	    transform: rotate(45deg);	    
-	    transition: all .2s ease-out;	    
-	    transition: all .2s ease;
-	    margin-top: 3px;
-	}
-	.hamburger.active .hamburger-bun:last-child {
-		-webkit-transform: rotate(-45deg);
-		transform: rotate(-45deg);
-		transition: all .2s ease-out;
-		transition: all .2s ease;
-		margin-top: -3px;
-	}
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    cursor: pointer;
+    display: block;
+  }
+  .hamburger span {
+    display: block;
+    height: 3px;
+    background: @userAreaText;
+    margin: 0 0 3px;
+  }
+  .hamburger:hover {
+    -moz-opacity: 1;
+    -khtml-opacity: 1;
+    -webkit-opacity: 1;
+    opacity: 1;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=100);
+    filter: alpha(opacity=100);
+    -moz-transition-duration: 0.2s;
+    -webkit-transition-duration: 0.2s;
+    -o-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+  }
+  .hamburger.active {
+  }
+  .hamburger.active .hamburger-bun {
+    margin: 0;
+    -webkit-transform-origin: center center;
+    transform-origin: center center;
+  }
 
-	.hamburger.active .hamburger-patty {
-		display: none;
-	}
+  .hamburger.active .hamburger-bun:first-child {
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    transition: all 0.2s ease-out;
+    transition: all 0.2s ease;
+    margin-top: 3px;
+  }
+  .hamburger.active .hamburger-bun:last-child {
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    transition: all 0.2s ease-out;
+    transition: all 0.2s ease;
+    margin-top: -3px;
+  }
+
+  .hamburger.active .hamburger-patty {
+    display: none;
+  }
   #menu-bar:not(.open) {
-    
-		  display:none;
-	  
+    display: none;
 
     //.open {
-		//  display:block;
-	  //}
+    //  display:block;
+    //}
   }
 }
