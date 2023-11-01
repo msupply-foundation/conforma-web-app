@@ -5,6 +5,7 @@ import { useDeleteApplicationMutation } from '../../utils/generated/graphql'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 import { TableCellMobileLabelWrapper } from '../../utils/tables/TableCellMobileLabelWrapper'
+import { useViewport } from '../../contexts/ViewportState'
 
 interface ApplicationsListProps {
   columns: ColumnDetails[]
@@ -24,27 +25,30 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   refetch,
 }) => {
   const { t } = useLanguageProvider()
+  const { isMobile } = useViewport()
   return (
     <>
       <Table sortable stackable selectable>
-        <Table.Header>
-          <Table.Row>
-            {columns.map(({ headerName, headerDetail, sortName }, index) => (
-              <Table.HeaderCell
-                key={`ApplicationList-header-${headerName}-${index}`}
-                sorted={sortName && sortColumn === sortName ? sortDirection : undefined}
-                onClick={() => handleSort(sortName)}
-                colSpan={index === columns.length - 1 ? 2 : 1} // Set last column to fill last column (expansion)
-              >
-                {headerDetail ? (
-                  <Popup size="tiny" content={headerDetail} trigger={<span>{headerName}</span>} />
-                ) : (
-                  headerName
-                )}
-              </Table.HeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
+        {!isMobile && (
+          <Table.Header>
+            <Table.Row>
+              {columns.map(({ headerName, headerDetail, sortName }, index) => (
+                <Table.HeaderCell
+                  key={`ApplicationList-header-${headerName}-${index}`}
+                  sorted={sortName && sortColumn === sortName ? sortDirection : undefined}
+                  onClick={() => handleSort(sortName)}
+                  colSpan={index === columns.length - 1 ? 2 : 1} // Set last column to fill last column (expansion)
+                >
+                  {headerDetail ? (
+                    <Popup size="tiny" content={headerDetail} trigger={<span>{headerName}</span>} />
+                  ) : (
+                    headerName
+                  )}
+                </Table.HeaderCell>
+              ))}
+            </Table.Row>
+          </Table.Header>
+        )}
         <Table.Body>
           {loading
             ? null

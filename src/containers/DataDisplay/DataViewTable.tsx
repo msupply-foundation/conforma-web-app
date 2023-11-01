@@ -21,6 +21,8 @@ import { useToast } from '../../contexts/Toast'
 import ListFilters from '../List/ListFilters/ListFilters'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { TableCellMobileLabelWrapper } from '../../utils/tables/TableCellMobileLabelWrapper'
+import { useViewport } from '../../contexts/ViewportState'
+import { TableMobileHeader } from '../../utils/tables/TableMobileHeader'
 
 export type SortColumn = {
   title: string
@@ -36,6 +38,7 @@ const DataViewTable: React.FC<{ codeFromLookupTable?: string }> = ({ codeFromLoo
     updateQuery,
     params: { dataViewCode = codeFromLookupTable },
   } = useRouter()
+  const { isMobile } = useViewport()
 
   const [searchText, setSearchText] = useState(query.search)
   const [debounceOutput, setDebounceInput] = useDebounce(searchText)
@@ -93,15 +96,40 @@ const DataViewTable: React.FC<{ codeFromLookupTable?: string }> = ({ codeFromLoo
           </div>
         )}
         <div className="flex-row-space-between-center" style={{ width: '100%' }}>
-          {filterDefinitions && (
-            <ListFilters
-              filterDefinitions={filterDefinitions}
-              filterListParameters={{}}
-              defaultFilterString={dataViewTable?.defaultFilterString ?? null}
-              totalCount={dataViewTable?.totalCount ?? null}
-            />
-          )}
-          {codeFromLookupTable && searchComponent}
+          <div className="flex-column" style={{ gap: 5 }}>
+            {filterDefinitions && (
+              <ListFilters
+                filterDefinitions={filterDefinitions}
+                filterListParameters={{}}
+                defaultFilterString={dataViewTable?.defaultFilterString ?? null}
+                totalCount={dataViewTable?.totalCount ?? null}
+              />
+            )}
+            {codeFromLookupTable && searchComponent}
+            {isMobile && (
+              <TableMobileHeader
+                options={(dataViewTable?.headerRow ?? [])
+                  .filter((col) => col.sortColumn)
+                  .map((col) => ({
+                    key: col.sortColumn as string,
+                    text: col.title,
+                    value: col.sortColumn as string,
+                  }))}
+                sortColumn={apiQueries.orderBy}
+                sortDirection={apiQueries.ascending === 'false' ? 'descending' : 'ascending'}
+                handleSort={(sortColumn: string) => {
+                  if (sortColumn === apiQueries.orderBy && apiQueries.ascending === 'true')
+                    updateQuery({
+                      sortBy: `${sortColumn}:desc`,
+                    })
+                  else
+                    updateQuery({
+                      sortBy: sortColumn,
+                    })
+                }}
+              />
+            )}
+          </div>
         </div>
         {loading && <Loading />}
         {!loading && dataViewTable && (
@@ -130,6 +158,7 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
     params: { lookupTableID },
   } = useRouter()
   const showToast = useToast({ style: 'negative' })
+  const { isMobile } = useViewport()
 
   const { headerRow, tableRows, totalCount } = dataViewTable
   const showDetailsForRow = (id: number) =>
@@ -153,24 +182,25 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
         sortBy: `${sortColumn}:desc`,
       })
   }
-
   return (
     <>
       <Table stackable selectable sortable>
-        <Table.Header>
-          <Table.Row>
-            {headerRow.map(({ title, sortColumn }) => (
-              <Table.HeaderCell
-                key={title}
-                colSpan={1}
-                sorted={isSorted(sortColumn, apiQueries)}
-                onClick={() => sortByColumn(sortColumn, title, apiQueries?.ascending ?? 'true')}
-              >
-                {title}
-              </Table.HeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
+        {!isMobile && (
+          <Table.Header>
+            <Table.Row>
+              {headerRow.map(({ title, sortColumn }) => (
+                <Table.HeaderCell
+                  key={title}
+                  colSpan={1}
+                  sorted={isSorted(sortColumn, apiQueries)}
+                  onClick={() => sortByColumn(sortColumn, title, apiQueries?.ascending ?? 'true')}
+                >
+                  {title}
+                </Table.HeaderCell>
+              ))}
+            </Table.Row>
+          </Table.Header>
+        )}
         <Table.Body>
           {tableRows.map(({ id, rowValues }) => (
             <Table.Row
