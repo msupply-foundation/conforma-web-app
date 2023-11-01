@@ -38,11 +38,8 @@ const UserArea: React.FC = () => {
   const { isMobile } = useViewport()
 
   const hamburgerClickHandler = (close?: boolean) => {
-    if (close === undefined) {
-      setHamburgerActive(!hamburgerActive)
-    } else {
-      setHamburgerActive(close)
-    }
+    if (close === undefined) setHamburgerActive(!hamburgerActive)
+    else setHamburgerActive(close)
   }
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
@@ -61,7 +58,7 @@ const UserArea: React.FC = () => {
           dataViews={dataViewsList}
           referenceDocs={{ intReferenceDocs, extReferenceDocs }}
           hamburgerActive={hamburgerActive}
-          closeHamburgerMobile={() => {
+          closeHamburger={() => {
             hamburgerClickHandler(false)
           }}
         />
@@ -87,7 +84,7 @@ interface MainMenuBarProps {
     extReferenceDocs: { uniqueId: string; description: string }[]
   }
   hamburgerActive: Boolean
-  closeHamburgerMobile: () => void
+  closeHamburger: () => void
 }
 interface DropdownsState {
   dashboard: { active: boolean }
@@ -103,9 +100,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   dataViews,
   referenceDocs: { intReferenceDocs, extReferenceDocs },
   hamburgerActive,
-  closeHamburgerMobile,
+  closeHamburger,
 }) => {
-  const { t } = useLanguageProvider()
+  const { t, selectedLanguage, languageOptions } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     applicationList: { active: false, selection: '' },
@@ -126,7 +123,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   useEffect(() => {
     const basepath = pathname.split('/')?.[1]
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
-    closeHamburgerMobile() //To close menu bar when navigation occurs
+    closeHamburger() //To close menu bar when navigation occurs
   }, [pathname])
 
   const dataViewOptions = constructNestedMenuOptions(dataViews, {
@@ -330,7 +327,30 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             </Dropdown>
           </List.Item>
         )}
-        {isMobile && <List.Item onClick={() => logout()}>{t('MENU_LOGOUT')}</List.Item>}
+        {isMobile && (
+          <List.Item onClick={() => logout()}>
+            <Dropdown text={'User Options'}>
+              <Dropdown.Menu>
+                {templates
+                  .filter(({ templateCategory: { uiLocation } }) => {
+                    return uiLocation.includes(UiLocation.User)
+                  })
+                  .map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
+                    <Dropdown.Item
+                      key={code}
+                      icon={icon || catIcon}
+                      text={name}
+                      onClick={() => push(`/application/new?type=${code}`)}
+                    />
+                  ))}
+                {languageOptions.length > 0 && (
+                  <Dropdown.Item icon="globe" text={t('MENU_CHANGE_LANGUAGE')} onClick={() => {}} />
+                )}
+                <Dropdown.Item icon="log out" text={t('MENU_LOGOUT')} onClick={() => logout()} />
+              </Dropdown.Menu>
+            </Dropdown>
+          </List.Item>
+        )}
       </List>
     </div>
   )
@@ -417,6 +437,7 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
   const { logout } = useUserState()
   const { push } = useRouter()
   const [isOpen, setIsOpen] = useState(false)
+
   return (
     <div id="user-menu">
       <Modal
