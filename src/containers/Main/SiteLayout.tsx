@@ -21,7 +21,7 @@ const SiteLayout: React.FC = () => {
       <Tracker />
       <Container id="main-container" fluid>
         <UserArea />
-        <DevOptions />
+        {/* <DevOptions /> */}
         <Container id="content-area" fluid>
           <Switch>
             <Route exact path="/">

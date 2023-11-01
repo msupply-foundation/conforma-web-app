@@ -8,7 +8,7 @@ import { User } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
-const hardcodedPassword = 'something-more-than-30-char-long'
+const hardcodedPassword = '123456'
 
 const UserSelection: React.FC = () => {
   const [users, setUsers] = useState<Array<string>>([])
