@@ -310,7 +310,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             />
           </List.Item>
         )}
-        {extReferenceDocs.length && (
+        {extReferenceDocs.length > 0 && (
           <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
             <Dropdown text={t('MENU_ITEM_HELP')}>
               <Dropdown.Menu>
@@ -325,7 +325,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             </Dropdown>
           </List.Item>
         )}
-        {intReferenceDocs.length && (
+        {intReferenceDocs.length > 0 && (
           <List.Item className={dropdownsState.intRefDocs.active ? 'selected-link' : ''}>
             <Dropdown text={t('MENU_ITEM_REF_DOCS')}>
               <Dropdown.Menu>
