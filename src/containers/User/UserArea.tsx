@@ -329,7 +329,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         )}
         {isMobile && (
           <List.Item onClick={() => logout()}>
-            <Dropdown text={'User Options'}>
+            <div id="menu-divider" className="ui divider"></div>
+            <Dropdown text={t('MENU_USER_OPTIONS')}>
               <Dropdown.Menu>
                 {templates
                   .filter(({ templateCategory: { uiLocation } }) => {
@@ -343,9 +344,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
                       onClick={() => push(`/application/new?type=${code}`)}
                     />
                   ))}
-                {languageOptions.length > 0 && (
-                  <Dropdown.Item icon="globe" text={t('MENU_CHANGE_LANGUAGE')} onClick={() => {}} />
-                )}
+                {/* TODO: Add language selector for mobile... */}
                 <Dropdown.Item icon="log out" text={t('MENU_LOGOUT')} onClick={() => logout()} />
               </Dropdown.Menu>
             </Dropdown>
