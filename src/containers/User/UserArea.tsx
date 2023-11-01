@@ -22,6 +22,7 @@ import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { UiLocation } from '../../utils/generated/graphql'
 const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
 import { useViewport } from './../../contexts/ViewportState'
+import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 
 const UserArea: React.FC = () => {
   const { preferences } = usePrefs()
@@ -250,6 +251,18 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   return (
     <div id="menu-bar" className={hamburgerActive ? 'open' : ''}>
       <List>
+        {isMobile && (
+          <>
+            <List.Item>
+              {`${selectedLanguage?.flag} ${currentUser?.firstName || ''} ${
+                currentUser?.lastName || ''
+              }`}
+            </List.Item>
+            <List.Item>
+              <div className="ui divider menu-divider"></div>
+            </List.Item>
+          </>
+        )}
         <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
           <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
         </List.Item>
@@ -329,25 +342,13 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
         )}
         {isMobile && (
           <List.Item onClick={() => logout()}>
-            <div id="menu-divider" className="ui divider"></div>
-            <Dropdown text={t('MENU_USER_OPTIONS')}>
-              <Dropdown.Menu>
-                {templates
-                  .filter(({ templateCategory: { uiLocation } }) => {
-                    return uiLocation.includes(UiLocation.User)
-                  })
-                  .map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
-                    <Dropdown.Item
-                      key={code}
-                      icon={icon || catIcon}
-                      text={name}
-                      onClick={() => push(`/application/new?type=${code}`)}
-                    />
-                  ))}
-                {/* TODO: Add language selector for mobile... */}
-                <Dropdown.Item icon="log out" text={t('MENU_LOGOUT')} onClick={() => logout()} />
-              </Dropdown.Menu>
-            </Dropdown>
+            <div className="ui divider menu-divider"></div>
+            <UserMenu
+              user={currentUser as User}
+              templates={templates.filter(({ templateCategory: { uiLocation } }) =>
+                uiLocation.includes(UiLocation.User)
+              )}
+            />
           </List.Item>
         )}
       </List>
@@ -435,10 +436,44 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
   const { t, selectedLanguage, languageOptions } = useLanguageProvider()
   const { logout } = useUserState()
   const { push } = useRouter()
+  const { isMobile } = useViewport()
   const [isOpen, setIsOpen] = useState(false)
 
+  const { ConfirmModal: LogoutModal, showModal: showLogoutModal } = useConfirmationModal({
+    type: 'warning',
+    title: t('MENU_LOGOUT_WARNING'),
+    message: t('MENU_LOGOUT_MESSAGE', t('_APP_NAME')),
+  })
+
+  // Same on both Mobile and Desktop
+  const CommonMenu = (
+    <Dropdown.Menu>
+      <LogoutModal />
+      {templates.map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
+        <Dropdown.Item
+          key={code}
+          icon={icon || catIcon}
+          text={name}
+          onClick={() => push(`/application/new?type=${code}`)}
+        />
+      ))}
+      <Dropdown.Item
+        icon="log out"
+        text={t('MENU_LOGOUT')}
+        onClick={() => showLogoutModal({ onConfirm: logout })}
+      />
+      {languageOptions.length > 1 && (
+        <Dropdown.Item
+          icon="globe"
+          text={t('MENU_CHANGE_LANGUAGE')}
+          onClick={() => setIsOpen(true)}
+        />
+      )}
+    </Dropdown.Menu>
+  )
+
   return (
-    <div id="user-menu">
+    <>
       <Modal
         onClose={() => setIsOpen(false)}
         onOpen={() => setIsOpen(true)}
@@ -447,33 +482,23 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
       >
         <LanguageSelector />
       </Modal>
-      <Button>
-        <Button.Content visible>
-          <Dropdown
-            text={`${selectedLanguage?.flag} ${user?.firstName || ''} ${user?.lastName || ''}`}
-          >
-            <Dropdown.Menu>
-              {templates.map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
-                <Dropdown.Item
-                  key={code}
-                  icon={icon || catIcon}
-                  text={name}
-                  onClick={() => push(`/application/new?type=${code}`)}
-                />
-              ))}
-              <Dropdown.Item icon="log out" text={t('MENU_LOGOUT')} onClick={() => logout()} />
-              {languageOptions.length > 1 && (
-                <Dropdown.Item
-                  icon="globe"
-                  text={t('MENU_CHANGE_LANGUAGE')}
-                  onClick={() => setIsOpen(true)}
-                />
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Button.Content>
-      </Button>
-    </div>
+
+      {isMobile && <Dropdown text={t('MENU_USER_OPTIONS')}>{CommonMenu}</Dropdown>}
+
+      {!isMobile && (
+        <div id="user-menu">
+          <Button>
+            <Button.Content visible>
+              <Dropdown
+                text={`${selectedLanguage?.flag} ${user?.firstName || ''} ${user?.lastName || ''}`}
+              >
+                {CommonMenu}
+              </Dropdown>
+            </Button.Content>
+          </Button>
+        </div>
+      )}
+    </>
   )
 }
 
