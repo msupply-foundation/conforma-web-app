@@ -21,6 +21,7 @@ import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { UiLocation } from '../../utils/generated/graphql'
 const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
+import { useViewport } from './../../contexts/ViewportState'
 
 const UserArea: React.FC = () => {
   const { preferences } = usePrefs()
@@ -33,6 +34,13 @@ const UserArea: React.FC = () => {
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
   const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser)
+  const [hamburgerActive, setHamburgerActive] = useState(false)
+  const { isMobile } = useViewport()
+
+  const hamburgerClickHandler = (close?: boolean) => {
+    if (close === undefined) setHamburgerActive(!hamburgerActive)
+    else setHamburgerActive(close)
+  }
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
@@ -49,15 +57,22 @@ const UserArea: React.FC = () => {
           templates={templates}
           dataViews={dataViewsList}
           referenceDocs={{ intReferenceDocs, extReferenceDocs }}
+          hamburgerActive={hamburgerActive}
+          closeHamburger={() => {
+            hamburgerClickHandler(false)
+          }}
         />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
-      <UserMenu
-        user={currentUser as User}
-        templates={templates.filter(({ templateCategory: { uiLocation } }) =>
-          uiLocation.includes(UiLocation.User)
-        )}
-      />
+      {!isMobile && (
+        <UserMenu
+          user={currentUser as User}
+          templates={templates.filter(({ templateCategory: { uiLocation } }) =>
+            uiLocation.includes(UiLocation.User)
+          )}
+        />
+      )}
+      {isMobile && <Hamburger active={hamburgerActive} clickHandler={hamburgerClickHandler} />}
     </Container>
   )
 }
@@ -68,6 +83,8 @@ interface MainMenuBarProps {
     intReferenceDocs: { uniqueId: string; description: string }[]
     extReferenceDocs: { uniqueId: string; description: string }[]
   }
+  hamburgerActive: Boolean
+  closeHamburger: () => void
 }
 interface DropdownsState {
   dashboard: { active: boolean }
@@ -82,8 +99,10 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   templates,
   dataViews,
   referenceDocs: { intReferenceDocs, extReferenceDocs },
+  hamburgerActive,
+  closeHamburger,
 }) => {
-  const { t } = useLanguageProvider()
+  const { t, selectedLanguage, languageOptions } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     applicationList: { active: false, selection: '' },
@@ -96,12 +115,15 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   const { push, pathname } = useRouter()
   const {
     userState: { currentUser },
+    logout,
   } = useUserState()
+  const { isMobile } = useViewport()
 
   // Ensures the "selected" state of other dropdowns gets disabled
   useEffect(() => {
     const basepath = pathname.split('/')?.[1]
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
+    closeHamburger() //To close menu bar when navigation occurs
   }, [pathname])
 
   const dataViewOptions = constructNestedMenuOptions(dataViews, {
@@ -226,8 +248,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   }
 
   return (
-    <div id="menu-bar">
-      <List horizontal>
+    <div id="menu-bar" className={hamburgerActive ? 'open' : ''}>
+      <List>
         <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
           <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
         </List.Item>
@@ -305,7 +327,43 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
             </Dropdown>
           </List.Item>
         )}
+        {isMobile && (
+          <List.Item onClick={() => logout()}>
+            <div id="menu-divider" className="ui divider"></div>
+            <Dropdown text={t('MENU_USER_OPTIONS')}>
+              <Dropdown.Menu>
+                {templates
+                  .filter(({ templateCategory: { uiLocation } }) => {
+                    return uiLocation.includes(UiLocation.User)
+                  })
+                  .map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
+                    <Dropdown.Item
+                      key={code}
+                      icon={icon || catIcon}
+                      text={name}
+                      onClick={() => push(`/application/new?type=${code}`)}
+                    />
+                  ))}
+                {/* TODO: Add language selector for mobile... */}
+                <Dropdown.Item icon="log out" text={t('MENU_LOGOUT')} onClick={() => logout()} />
+              </Dropdown.Menu>
+            </Dropdown>
+          </List.Item>
+        )}
       </List>
+    </div>
+  )
+}
+
+const Hamburger: React.FC<{ active: Boolean; clickHandler: () => void }> = ({
+  active,
+  clickHandler,
+}) => {
+  return (
+    <div className={active ? 'hamburger active' : 'hamburger'} onClick={() => clickHandler()}>
+      <span className="hamburger-bun"></span>
+      <span className="hamburger-patty"></span>
+      <span className="hamburger-bun"></span>
     </div>
   )
 }
@@ -378,6 +436,7 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
   const { logout } = useUserState()
   const { push } = useRouter()
   const [isOpen, setIsOpen] = useState(false)
+
   return (
     <div id="user-menu">
       <Modal

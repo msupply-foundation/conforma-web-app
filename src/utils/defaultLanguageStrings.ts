@@ -328,6 +328,7 @@ export default {
   MENU_LANGUAGE_SELECT: 'Please select a language',
   MENU_LANGUAGE_CURRENT: 'current',
   MENU_LOGOUT: 'Log out',
+  MENU_USER_OPTIONS: 'User Options',
   NO_MATCH_404_DEFAULT_HEADER: 'Something went wrong',
   NO_MATCH_404_DEFAULT_CONTENT: 'Page not found',
   NO_MATCH_404_GO_BACK: 'Go back',
