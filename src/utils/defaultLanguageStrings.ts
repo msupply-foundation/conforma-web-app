@@ -175,6 +175,8 @@ export default {
   FILTER_START_TYPING: 'Start typing...',
   FILTER_SEARCH_LIST: 'Search list...',
   FILTER_SORT_BY: 'Sort by',
+  FILTER_ASCENDING: 'Ascending',
+  FILTER_DESCENDING: 'Descending',
   FILTER_RESET_SORT: 'Reset column sort',
   FILTER_RESET_PAGINATION: 'Reset pagination',
   FILTER_NAMED_DATE_TODAY: 'Today',
