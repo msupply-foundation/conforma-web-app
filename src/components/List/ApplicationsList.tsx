@@ -82,6 +82,7 @@ interface ApplicationRowProps {
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, application }) => {
   const { t } = useLanguageProvider()
+  const { isMobile } = useViewport()
   const [deleteApplication, { loading, error }] = useDeleteApplicationMutation({
     variables: { id: application.id || 0 },
     onCompleted: () => refetch(),
@@ -98,14 +99,10 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
     <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
       {columns.map(({ ColumnComponent, headerName, hideMobileLabel, hideOnMobileTest }, index) => {
         const rowData = application as Record<string, any>
+        if (isMobile && hideOnMobileTest && hideOnMobileTest(rowData)) return null
         return (
           <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
-            <TableCellMobileLabelWrapper
-              label={headerName}
-              rowData={rowData}
-              hideLabel={hideMobileLabel}
-              hideCell={hideOnMobileTest}
-            >
+            <TableCellMobileLabelWrapper label={headerName} hideLabel={hideMobileLabel}>
               <ColumnComponent {...props} />
             </TableCellMobileLabelWrapper>
           </Table.Cell>
