@@ -1,6 +1,5 @@
 import React from 'react'
 import { useViewport } from '../../contexts/ViewportState'
-import { HideOnMobileTestMethod } from '../types'
 
 /**
  * When displayed on mobile devices, table rows become "stacked", in that each
@@ -16,22 +15,15 @@ import { HideOnMobileTestMethod } from '../types'
 
 interface MobileLabelWrapperProps {
   label: string
-  rowData: Record<string, unknown>
   hideLabel?: boolean
-  hideCell?: boolean | HideOnMobileTestMethod
 }
 
 export const TableCellMobileLabelWrapper: React.FC<MobileLabelWrapperProps> = ({
   children,
-  rowData,
   label,
-  hideCell,
   hideLabel = false,
 }) => {
   const { isMobile } = useViewport()
-
-  if (isMobile && ((typeof hideCell === 'function' && hideCell(rowData)) || hideCell === true))
-    return null
 
   if (!isMobile || hideLabel) return <>{children}</>
 
