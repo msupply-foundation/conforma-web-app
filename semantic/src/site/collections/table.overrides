@@ -169,6 +169,8 @@
   #linked-applications-container {
     .ui.table:not(.unstackable) tr {
       box-shadow: 0px 0px 0px !important;
+      padding-top: .5em;
+      padding-bottom: .5em
     }    
 
     .ui.table tr td:first-child {
