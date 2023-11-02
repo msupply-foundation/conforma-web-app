@@ -1181,6 +1181,7 @@ a:hover {
     padding-right: 20px;
     p {
       font-size: 90%;
+      color: @headersInteractiveLow;
     }
   }
 }
@@ -1305,7 +1306,9 @@ a:hover {
 #app-navigation-content {
   .flex-row();
   flex-wrap: wrap;
-  width: @applicationFormContentWidth;
+  max-width: @applicationFormContentWidth;
+  justify-content: space-between;
+  gap: 10px;
 
   .prev-next-links {
     .flex-row();
@@ -1320,8 +1323,6 @@ a:hover {
 
   .button-container {
     .flex-row();
-    flex-grow: 1;
-    justify-content: flex-end;
     .loader {
       margin-left: 10px;
     }
