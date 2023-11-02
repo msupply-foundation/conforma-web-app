@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Container, Icon, Loader } from 'semantic-ui-react'
+import { Button, Container, Dropdown, Icon, Loader } from 'semantic-ui-react'
 import {
   MethodRevalidate,
   MethodToCallProps,
@@ -85,18 +85,50 @@ const Navigation: React.FC<NavigationProps> = ({
       return
     }
 
-    // Use validationMethod to check if can change to page (on linear application) OR
-    // display current page with strict validation
+    // Use validationMethod to check if can change to page (on linear
+    // application) OR display current page with strict validation
     requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
       if (
         firstStrictInvalidPage !== null &&
         current.sectionCode === firstStrictInvalidPage.sectionCode &&
         current.pageNumber === firstStrictInvalidPage.pageNumber
       ) {
+        console.log('NOPE')
+
         setStrictSectionPage(firstStrictInvalidPage)
       } else {
+        console.log('YEP')
+
         setStrictSectionPage(null)
         sendToPage(nextSectionPage)
+      }
+    })
+  }
+
+  const sectionJumpHandler = (sectionPage: SectionAndPage) => {
+    if (
+      !isLinear ||
+      previousSections.find((section) => section.details.code === sectionPage.sectionCode)
+    ) {
+      sendToPage(sectionPage)
+      return
+    }
+
+    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+      const firstInvalidSectionIndex = Object.values(sections).find(
+        (section) => section.details.code === firstStrictInvalidPage?.sectionCode
+      )?.details.index
+
+      if (
+        firstStrictInvalidPage !== null &&
+        firstInvalidSectionIndex &&
+        firstInvalidSectionIndex > currentSectionDetails.index
+      ) {
+        setStrictSectionPage(firstStrictInvalidPage)
+        sendToPage(firstStrictInvalidPage)
+      } else {
+        setStrictSectionPage(null)
+        sendToPage(sectionPage)
       }
     })
   }
@@ -110,9 +142,26 @@ const Navigation: React.FC<NavigationProps> = ({
     })
   }
 
+  const sectionOptions = Object.values(sections).map(({ details }) => ({
+    key: details.code,
+    text: details.title,
+    value: details.code,
+  }))
+
   return (
     <Container>
       <div id="app-navigation-content">
+        <div className="flex-row-start-center smaller-text" style={{ gap: 5, flexWrap: 'wrap' }}>
+          {t('NAVIGATION_GO_TO')}:
+          <Dropdown
+            selection
+            options={sectionOptions}
+            value={current.sectionCode}
+            onChange={(_, { value }) =>
+              sectionJumpHandler({ sectionCode: value as string, pageNumber: 1 })
+            }
+          />
+        </div>
         <div className="prev-next-links">
           <p className={`clickable nav-button ${isFirstPage ? 'invisible' : ''}`}>
             <a onClick={previousButtonHandler}>

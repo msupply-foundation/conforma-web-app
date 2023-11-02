@@ -66,8 +66,8 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
       return
     }
 
-    // Use validationMethod to check if can change to page (on linear application) OR
-    // display current page with strict validation
+    // Use validationMethod to check if can change to page (on linear
+    // application) OR display current page with strict validation
     requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
       if (!firstStrictInvalidPage) {
         setStrictSectionPage(null)
