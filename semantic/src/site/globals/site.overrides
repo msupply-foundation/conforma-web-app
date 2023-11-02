@@ -234,14 +234,14 @@ a:hover {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
 }
 
 #login-box {
   display: flex;
   flex-direction: column;
   background-color: white;
-  width: clamp(250px, 35%, 450px);
+  width: clamp(360px, 35%, 450px);
   box-shadow: @basicBoxShadow;
   border-radius: @borderRadius;
   padding: 20px;
