@@ -9,6 +9,7 @@ import {
 } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { useViewport } from '../../contexts/ViewportState'
 
 interface NavigationProps {
   current: SectionAndPage
@@ -29,6 +30,7 @@ const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const { t } = useLanguageProvider()
   const { push } = useRouter()
+  const { isMobile } = useViewport()
 
   const currentSectionDetails = sections[current.sectionCode].details
 
@@ -92,13 +94,9 @@ const Navigation: React.FC<NavigationProps> = ({
         firstStrictInvalidPage !== null &&
         current.sectionCode === firstStrictInvalidPage.sectionCode &&
         current.pageNumber === firstStrictInvalidPage.pageNumber
-      ) {
-        console.log('NOPE')
-
+      )
         setStrictSectionPage(firstStrictInvalidPage)
-      } else {
-        console.log('YEP')
-
+      else {
         setStrictSectionPage(null)
         sendToPage(nextSectionPage)
       }
@@ -106,6 +104,11 @@ const Navigation: React.FC<NavigationProps> = ({
   }
 
   const sectionJumpHandler = (sectionPage: SectionAndPage) => {
+    if (sectionPage.sectionCode === '__INTRO__') {
+      push(`/application/${serialNumber}`)
+      return
+    }
+
     if (
       !isLinear ||
       previousSections.find((section) => section.details.code === sectionPage.sectionCode)
@@ -151,17 +154,6 @@ const Navigation: React.FC<NavigationProps> = ({
   return (
     <Container>
       <div id="app-navigation-content">
-        <div className="flex-row-start-center smaller-text" style={{ gap: 5, flexWrap: 'wrap' }}>
-          {t('NAVIGATION_GO_TO')}:
-          <Dropdown
-            selection
-            options={sectionOptions}
-            value={current.sectionCode}
-            onChange={(_, { value }) =>
-              sectionJumpHandler({ sectionCode: value as string, pageNumber: 1 })
-            }
-          />
-        </div>
         <div className="prev-next-links">
           <p className={`clickable nav-button ${isFirstPage ? 'invisible' : ''}`}>
             <a onClick={previousButtonHandler}>
@@ -185,6 +177,25 @@ const Navigation: React.FC<NavigationProps> = ({
             {isValidating && <Loader active inline size="tiny" />}
           </Button>
         </div>
+        {isMobile && sectionOptions.length > 1 && (
+          <div
+            className="flex-row-start-center smaller-text nav-button"
+            style={{ gap: 5, flexWrap: 'wrap', width: '100%', marginLeft: 10 }}
+          >
+            {t('NAVIGATION_GO_TO')}:
+            <Dropdown
+              selection
+              options={[
+                { key: 'intro-page', text: 'Introduction', value: '__INTRO__' },
+                ...sectionOptions,
+              ]}
+              value={current.sectionCode}
+              onChange={(_, { value }) =>
+                sectionJumpHandler({ sectionCode: value as string, pageNumber: 1 })
+              }
+            />
+          </div>
+        )}
       </div>
     </Container>
   )
