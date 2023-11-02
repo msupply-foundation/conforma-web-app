@@ -230,6 +230,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       <React.Suspense fallback="Loading Plugin">
         <Form.Field className={`element-application-view ${extraClasses}`} required={isRequired}>
           {PluginComponent}
+          {element.helpText && (
+            <div className="help-tips-content hide-on-desktop">
+              <Markdown text={element.helpText} />
+            </div>
+          )}
           <ChangesComment reviewerComment={reviewerComment} iconName={iconName} />
         </Form.Field>
       </React.Suspense>

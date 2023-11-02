@@ -13,6 +13,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
+import { useViewport } from '../../contexts/ViewportState'
 
 const ApplicationPage: React.FC<ApplicationProps> = ({
   structure: fullStructure,
@@ -26,6 +27,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
     push,
     replace,
   } = useRouter()
+  const { isMobile } = useViewport()
 
   const { setState: setUpdateTrackerState } = useFormElementUpdateTracker()
   usePageTitle(t('PAGE_TITLE_APPLICATION', serialNumber))
@@ -69,16 +71,18 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   return (
     <Container id="application-form">
       <Grid stackable>
-        <Ref innerRef={contextRef}>
-          <Grid.Column width={4} id="progress-column" className="dev-border">
-            <ProgressArea
-              structure={fullStructure}
-              requestRevalidation={requestRevalidation as MethodRevalidate}
-              strictSectionPage={strictSectionPage as SectionAndPage}
-              context={contextRef}
-            />
-          </Grid.Column>
-        </Ref>
+        {!isMobile && (
+          <Ref innerRef={contextRef}>
+            <Grid.Column width={4} id="progress-column" className="dev-border">
+              <ProgressArea
+                structure={fullStructure}
+                requestRevalidation={requestRevalidation as MethodRevalidate}
+                strictSectionPage={strictSectionPage as SectionAndPage}
+                context={contextRef}
+              />
+            </Grid.Column>
+          </Ref>
+        )}
         <Grid.Column width={12} stretched id="form-column">
           <Segment basic>
             <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
