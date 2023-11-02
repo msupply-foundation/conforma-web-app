@@ -1,10 +1,29 @@
 /*******************************
-         Site Overrides
+         General Site Overrides
 *******************************/
 
 .flex-column {
   display: flex;
   flex-direction: column;
+}
+
+#list-container,
+#linked-applications-container {
+  .ui.table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    background: none;
+    border: none;
+  }
+
+  .ui.table td {
+    background: @surfacesWhite;
+    padding: 5px;
+  }
+
+  .ui.table tr {
+    border: none;
+  }
 }
 
 // ********** desktop overrides *******************
@@ -18,20 +37,9 @@
   }
 
   #list-container,
-  #linked-applications-container {
-    .ui.table {
-      border-collapse: separate;
-      border-spacing: 0 10px;
-      background: none;
-      border: none;
-    }
-    .ui.table td {
-      background: @surfacesWhite;
-      padding: 5px;
-    }
+  #linked-applications-container {    
 
     .ui.table tr {
-      border: none;
       height: 52px;
     }
 
@@ -155,5 +163,26 @@
 
 // ********** mobile and small tablet overrides *******************
 
-@media only screen and (max-width: calc(@largestMobileScreen - 1)) {
+@media only screen and (max-width: @largestMobileScreen) {
+  
+  #list-container,
+  #linked-applications-container {
+    .ui.table:not(.unstackable) tr {
+      box-shadow: 0px 0px 0px !important;
+    }    
+
+    .ui.table tr td:first-child {
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .ui.table tr td:last-child {      
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .ui.table tr {
+      background: none !important;
+    }
+  }
 }
