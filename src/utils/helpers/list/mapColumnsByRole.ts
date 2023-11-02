@@ -17,6 +17,7 @@ import { LIST_COLUMNS, USER_ROLES } from '../../data'
 import COLUMNS_PER_ROLE from '../../data/columnsPerUserRole'
 import { ColumnDetails } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { ApplicationOutcome, ApplicationStatus } from '../../generated/graphql'
 
 /**
  * @function: mapColumnsByRole
@@ -36,6 +37,7 @@ export const useMapColumnsByRole = () => {
       headerName: t('COLUMN_SERIAL'),
       sortName: 'serial',
       ColumnComponent: SerialNumberCell,
+      hideMobileLabel: true,
     },
     LAST_ACTIVE_DATE: {
       headerName: t('COLUMN_LAST_ACTIVE_DATE'),
@@ -48,16 +50,19 @@ export const useMapColumnsByRole = () => {
       headerDetail: t('COLUMN_DEADLINE_DATE_TOOLTIP'),
       sortName: 'applicant-deadline',
       ColumnComponent: DeadlineCell,
+      hideOnMobileTest: (application) => !application.applicantDeadline,
     },
     APPLICATION_NAME: {
       headerName: t('COLUMN_APPLICATION'),
       sortName: 'name',
       ColumnComponent: ApplicationNameCell,
+      hideMobileLabel: true,
     },
     APPLICATION_NAME_REVIEW_LINK: {
       headerName: t('COLUMN_APPLICATION_REVIEW'),
       sortName: 'name',
       ColumnComponent: ApplicationNameReviewLinkCell,
+      hideMobileLabel: true,
     },
     APPLICANT: {
       headerName: t('COLUMN_APPLICANT'),
@@ -78,31 +83,41 @@ export const useMapColumnsByRole = () => {
       headerName: t('COLUMN_STAGE'),
       sortName: 'stage',
       ColumnComponent: StageCell,
+      hideMobileLabel: true,
     },
     STATUS: {
       headerName: t('COLUMN_STATUS'),
       sortName: 'status',
       ColumnComponent: StatusCell,
+      hideMobileLabel: true,
     },
     OUTCOME: {
       headerName: t('COLUMN_OUTCOME'),
       sortName: 'outcome',
       ColumnComponent: OutcomeCell,
+      hideMobileLabel: true,
+      hideOnMobileTest: (application) => application.outcome === ApplicationOutcome.Pending,
     },
     REVIEWER_ACTION: {
       headerName: t('COLUMN_REVIEWER_ACTION'),
-      sortName: 'outcome',
+      sortName: '',
       ColumnComponent: ReviewerActionCell,
+      hideMobileLabel: true,
+      hideOnMobileTest: (application) => !application.reviewerAction,
     },
     APPLICANT_ACTION: {
       headerName: t('COLUMN_APPLICANT_ACTION'),
-      sortName: 'outcome',
+      sortName: '',
       ColumnComponent: ApplicantActionCell,
+      hideMobileLabel: true,
+      hideOnMobileTest: (application) =>
+        application.status !== ApplicationStatus.ChangesRequired &&
+        application.status !== ApplicationStatus.Draft,
     },
   }
 
-  const mapColumnsByRole = (userRoles: USER_ROLES): Array<ColumnDetails> => {
-    const columns: Array<ColumnDetails> = COLUMNS_PER_ROLE[userRoles].map((key) => allColumns[key])
+  const mapColumnsByRole = (userRoles: USER_ROLES): ColumnDetails[] => {
+    const columns: ColumnDetails[] = COLUMNS_PER_ROLE[userRoles].map((key) => allColumns[key])
     return columns
   }
   return mapColumnsByRole

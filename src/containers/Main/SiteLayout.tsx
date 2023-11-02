@@ -7,7 +7,7 @@ import Login from '../User/Login'
 import ListWrapper from '../List/ListWrapper'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
 import { Container } from 'semantic-ui-react'
-import DevOptions from '../Dev/DevOptions'
+// import DevOptions from '../Dev/DevOptions'
 import DevRoutes from '../Dev/DevRoutes'
 import DataViews from '../DataDisplay/DataViews'
 import config from '../../config'
@@ -21,7 +21,7 @@ const SiteLayout: React.FC = () => {
       <Tracker />
       <Container id="main-container" fluid>
         <UserArea />
-        <DevOptions />
+        {/* <DevOptions /> */}
         <Container id="content-area" fluid>
           <Switch>
             <Route exact path="/">
