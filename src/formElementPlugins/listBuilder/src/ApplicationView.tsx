@@ -168,10 +168,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     displayType === DisplayType.TABLE ? (
       <ListTableLayout
         {...listDisplayProps}
+        excludeColumns={tableExcludeColumns}
         hideFromMobileIfEmpty={hideFromMobileTableIfEmpty}
         minMobileLabelWidth={minMobileTableLabelWidth}
         maxMobileLabelWidth={maxMobileTableLabelWidth}
-        excludeColumns={tableExcludeColumns}
       />
     ) : displayType === DisplayType.INLINE ? (
       <ListInlineLayout
