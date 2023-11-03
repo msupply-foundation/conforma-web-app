@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Container, Icon, Loader } from 'semantic-ui-react'
+import { Button, Container, Dropdown, Icon, Loader } from 'semantic-ui-react'
 import {
   MethodRevalidate,
   MethodToCallProps,
@@ -9,6 +9,7 @@ import {
 } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { useViewport } from '../../contexts/ViewportState'
 
 interface NavigationProps {
   current: SectionAndPage
@@ -29,6 +30,7 @@ const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const { t } = useLanguageProvider()
   const { push } = useRouter()
+  const { isMobile } = useViewport()
 
   const currentSectionDetails = sections[current.sectionCode].details
 
@@ -85,18 +87,51 @@ const Navigation: React.FC<NavigationProps> = ({
       return
     }
 
-    // Use validationMethod to check if can change to page (on linear application) OR
-    // display current page with strict validation
+    // Use validationMethod to check if can change to page (on linear
+    // application) OR display current page with strict validation
     requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
       if (
         firstStrictInvalidPage !== null &&
         current.sectionCode === firstStrictInvalidPage.sectionCode &&
         current.pageNumber === firstStrictInvalidPage.pageNumber
-      ) {
+      )
         setStrictSectionPage(firstStrictInvalidPage)
-      } else {
+      else {
         setStrictSectionPage(null)
         sendToPage(nextSectionPage)
+      }
+    })
+  }
+
+  const sectionJumpHandler = (sectionPage: SectionAndPage) => {
+    if (sectionPage.sectionCode === '__INTRO__') {
+      push(`/application/${serialNumber}`)
+      return
+    }
+
+    if (
+      !isLinear ||
+      previousSections.find((section) => section.details.code === sectionPage.sectionCode)
+    ) {
+      sendToPage(sectionPage)
+      return
+    }
+
+    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+      const firstInvalidSectionIndex = Object.values(sections).find(
+        (section) => section.details.code === firstStrictInvalidPage?.sectionCode
+      )?.details.index
+
+      if (
+        firstStrictInvalidPage !== null &&
+        firstInvalidSectionIndex &&
+        firstInvalidSectionIndex > currentSectionDetails.index
+      ) {
+        setStrictSectionPage(firstStrictInvalidPage)
+        sendToPage(firstStrictInvalidPage)
+      } else {
+        setStrictSectionPage(null)
+        sendToPage(sectionPage)
       }
     })
   }
@@ -109,6 +144,12 @@ const Navigation: React.FC<NavigationProps> = ({
       } else push(`/application/${serialNumber}/summary`)
     })
   }
+
+  const sectionOptions = Object.values(sections).map(({ details }) => ({
+    key: details.code,
+    text: details.title,
+    value: details.code,
+  }))
 
   return (
     <Container>
@@ -136,6 +177,25 @@ const Navigation: React.FC<NavigationProps> = ({
             {isValidating && <Loader active inline size="tiny" />}
           </Button>
         </div>
+        {isMobile && sectionOptions.length > 1 && (
+          <div
+            className="flex-row-start-center smaller-text nav-button"
+            style={{ gap: 5, flexWrap: 'wrap', width: '100%' }}
+          >
+            {t('NAVIGATION_GO_TO')}:
+            <Dropdown
+              selection
+              options={[
+                { key: 'intro-page', text: 'Introduction', value: '__INTRO__' },
+                ...sectionOptions,
+              ]}
+              value={current.sectionCode}
+              onChange={(_, { value }) =>
+                sectionJumpHandler({ sectionCode: value as string, pageNumber: 1 })
+              }
+            />
+          </div>
+        )}
       </div>
     </Container>
   )

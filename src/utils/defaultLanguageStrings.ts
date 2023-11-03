@@ -334,6 +334,7 @@ export default {
   MENU_USER_OPTIONS: 'User Options',
   MENU_LOGOUT_WARNING: 'Log out?',
   MENU_LOGOUT_MESSAGE: 'This will log you out of {{systemName}}',
+  NAVIGATION_GO_TO: 'Go to',
   NO_MATCH_404_DEFAULT_HEADER: 'Something went wrong',
   NO_MATCH_404_DEFAULT_CONTENT: 'Page not found',
   NO_MATCH_404_GO_BACK: 'Go back',

@@ -1132,18 +1132,32 @@ a:hover {
   padding-top: 0;
 }
 
-#form-column {
-  padding: 0;
+.ui.stackable.grid {
+  #form-column {
+    padding-top: 0 !important;
+    @media only screen and (max-width: @largestMobileScreen) {
+      .ui.form .field {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
-#form-column .ui.basic.segment {
+#form-column > .ui.basic.segment {
   padding-left: 0;
   padding-right: 0;
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
 
 .form-area {
-  // Seperation between Section title and form elements
+  // Separation between Section title and form elements
   margin-top: 30px;
+  @media only screen and (max-width: @largestMobileScreen) {
+    margin-top: 5px;
+  }
   // When SummaryView elements are displayed in application form
   .summary-page-element-container {
     margin-bottom: @summaryViewElementSpacing !important;
@@ -1172,6 +1186,18 @@ a:hover {
 .help-tips-content {
   font-style: italic;
   padding-left: 20px;
+  position: relative;
+  // On mobile, the help tips appear *below* form elements, not in a sidebar
+  @media only screen and (max-width: @largestMobileScreen) {
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 20px;
+    p {
+      font-size: 90%;
+      color: @headersInteractiveLow;
+    }
+  }
 }
 
 // Vertical accent line for help tips
@@ -1182,6 +1208,10 @@ a:hover {
   position: absolute;
   top: 5px;
   left: 3%;
+  @media only screen and (max-width: @largestMobileScreen) {
+    height: 30px;
+    left: 5px;
+  }
 }
 
 // Progress Bar
@@ -1190,6 +1220,8 @@ a:hover {
   margin-top: -10px;
   margin-bottom: -10px;
   height: 60px;
+  flex-wrap: nowrap;
+  font-size: @slightlySmallerText;
 }
 
 .progress-indicator-column {
@@ -1211,9 +1243,9 @@ a:hover {
 // }
 
 .page-list {
-  font-size: @slightlySmallerText !important;
+  font-size: @smallerText !important;
   padding-left: 30px !important;
-  margin-bottom: -30px !important;
+  margin-bottom: -20px !important;
   margin-top: -20px !important;
 }
 
@@ -1290,14 +1322,17 @@ a:hover {
 #app-navigation-content {
   .flex-row();
   flex-wrap: wrap;
-  width: @applicationFormContentWidth;
+  max-width: @applicationFormContentWidth;
+  justify-content: space-between;
+  gap: 10px;
+  padding-left: 10px;
 
   .prev-next-links {
     .flex-row();
     align-items: center;
+    gap: 10px;
 
     p {
-      margin: 10px;
       margin-top: 0;
       margin-bottom: 0;
     }
@@ -1305,8 +1340,6 @@ a:hover {
 
   .button-container {
     .flex-row();
-    flex-grow: 1;
-    justify-content: flex-end;
     .loader {
       margin-left: 10px;
     }
