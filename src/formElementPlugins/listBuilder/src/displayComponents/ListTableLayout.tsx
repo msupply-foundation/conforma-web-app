@@ -20,12 +20,12 @@ const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> 
     ({ code, title }) => !(excludeColumns.includes(code) || excludeColumns.includes(title ?? ''))
   )
 
-  const hideIfEmptyFields =
-    typeof hideFromMobileIfEmpty === 'boolean' || hideFromMobileIfEmpty === undefined
-      ? hideFromMobileIfEmpty
-        ? displayFields.map((el) => el.code) // i.e applies to all fields
-        : []
-      : (hideFromMobileIfEmpty as string[])
+  const hideIfEmptyFields = (() => {
+    if (typeof hideFromMobileIfEmpty === 'boolean' || hideFromMobileIfEmpty === undefined)
+      return hideFromMobileIfEmpty ? displayFields.map((el) => el.code) : []
+
+    return hideFromMobileIfEmpty
+  })()
 
   return (
     <Table celled={!isMobile} stackable selectable={isEditable}>
@@ -42,7 +42,8 @@ const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> 
         {listItems.map((item, index) => (
           <Table.Row key={`list-row-${index}`} onClick={() => editItem(index)}>
             {displayFields.map(({ code }, cellIndex) => {
-              if (hideIfEmptyFields.includes(code) && !item[code]?.value?.text) return null
+              if (isMobile && hideIfEmptyFields.includes(code) && !item[code]?.value?.text)
+                return null
               return (
                 <TableCell key={`list-cell-${index}-${cellIndex}`}>
                   <TableCellMobileLabelWrapper
