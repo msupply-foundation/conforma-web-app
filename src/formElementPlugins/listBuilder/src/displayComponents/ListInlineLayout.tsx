@@ -7,6 +7,7 @@ import SummaryViewWrapper from '../../../SummaryViewWrapper'
 import { buildElements } from '../helpers'
 import { substituteValues } from '../helpers'
 import '../styles.less'
+import { useViewport } from '../../../../contexts/ViewportState'
 
 interface ListInlineProps extends ListLayoutProps {
   initialOpen: boolean
@@ -60,6 +61,7 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
   const [currentItemElementsState, setItemResponseElementsState] = useState<{
     [key: string]: ElementState
   }>()
+  const { isMobile } = useViewport()
 
   const editItemInline = () => {
     setIsEditing(true)
@@ -89,12 +91,7 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
 
   if (!currentItemElementsState) return null
   return (
-    <Accordion
-      styled
-      fluid={open ? false : true}
-      className="accordion-container fit-content"
-      style={{ maxWidth: open ? 'none' : '100%' }}
-    >
+    <Accordion styled fluid={open ? false : true} className="accordion-container fit-content">
       <Accordion.Title active={open} onClick={() => setOpen(!open)}>
         <Icon name="dropdown" />
         <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
@@ -122,11 +119,13 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
             />
           )
         )}
-        {!isEditing && isEditable && (
-          <Button primary content={editItemText} onClick={editItemInline} />
-        )}
-        {isEditing && <Button primary content={updateButtonText} onClick={updateListInline} />}
-        {isEditable && <Button secondary content={deleteItemText} onClick={deleteItemInline} />}
+        <div className="flex-row-start-center-wrap" style={{ gap: 6 }}>
+          {!isEditing && isEditable && (
+            <Button primary content={editItemText} onClick={editItemInline} />
+          )}
+          {isEditing && <Button primary content={updateButtonText} onClick={updateListInline} />}
+          {isEditable && <Button secondary content={deleteItemText} onClick={deleteItemInline} />}
+        </div>
       </Accordion.Content>
     </Accordion>
   )

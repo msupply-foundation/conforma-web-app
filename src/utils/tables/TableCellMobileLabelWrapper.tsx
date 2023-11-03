@@ -16,12 +16,16 @@ import { useViewport } from '../../contexts/ViewportState'
 interface MobileLabelWrapperProps {
   label: string
   hideLabel?: boolean
+  minLabelWidth?: number
+  contentFontSize?: number | string
 }
 
 export const TableCellMobileLabelWrapper: React.FC<MobileLabelWrapperProps> = ({
   children,
   label,
   hideLabel = false,
+  minLabelWidth,
+  contentFontSize,
 }) => {
   const { isMobile } = useViewport()
 
@@ -29,7 +33,10 @@ export const TableCellMobileLabelWrapper: React.FC<MobileLabelWrapperProps> = ({
 
   return (
     <div className="flex-row" style={{ gap: 5, alignItems: 'flex-end' }}>
-      <strong className="slightly-smaller-text">{label}:</strong> {children}
+      <strong className="slightly-smaller-text" style={{ minWidth: minLabelWidth }}>
+        {label}:
+      </strong>{' '}
+      <span style={{ fontSize: contentFontSize }}>{children}</span>
     </div>
   )
 }
