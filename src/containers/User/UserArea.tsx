@@ -460,7 +460,7 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
       <Dropdown.Item
         icon="log out"
         text={t('MENU_LOGOUT')}
-        onClick={() => showLogoutModal({ onConfirm: logout })}
+        onClick={() => (isMobile ? showLogoutModal({ onConfirm: logout }) : logout())}
       />
       {languageOptions.length > 1 && (
         <Dropdown.Item

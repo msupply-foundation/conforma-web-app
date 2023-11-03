@@ -17,6 +17,7 @@ import ListFilters from './ListFilters/ListFilters'
 import { useGetFilterDefinitions } from '../../utils/helpers/list/useGetFilterDefinitions'
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
 import { TableMobileHeader } from '../../utils/tables/TableMobileHeader'
+import { useViewport } from '../../contexts/ViewportState'
 
 const ListWrapper: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -28,6 +29,7 @@ const ListWrapper: React.FC = () => {
     userState: { templatePermissions, isNonRegistered, currentUser },
     logout,
   } = useUserState()
+  const { isMobile } = useViewport()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [debounceOutput, setDebounceInput] = useDebounce<string>('')
@@ -146,19 +148,21 @@ const ListWrapper: React.FC = () => {
           filterListParameters={{ userId: currentUser?.userId || 0, templateCode: type }}
           totalCount={applicationCount}
         />
-        <TableMobileHeader
-          options={columns
-            .filter((col) => col.sortName !== '')
-            .map((col) => ({
-              key: col.sortName,
-              text: col.headerName || col.sortName,
-              value: col.sortName,
-            }))}
-          sortColumn={sortQuery.sortColumn}
-          sortDirection={sortQuery.sortDirection}
-          handleSort={handleSort}
-          defaultSort="last-active-date"
-        />
+        {isMobile && (
+          <TableMobileHeader
+            options={columns
+              .filter((col) => col.sortName !== '')
+              .map((col) => ({
+                key: col.sortName,
+                text: col.headerName || col.sortName,
+                value: col.sortName,
+              }))}
+            sortColumn={sortQuery.sortColumn}
+            sortDirection={sortQuery.sortDirection}
+            handleSort={handleSort}
+            defaultSort="last-active-date"
+          />
+        )}
       </div>
       {columns && (
         <ApplicationsList

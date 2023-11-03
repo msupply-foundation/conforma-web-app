@@ -90,6 +90,9 @@ export const useMapColumnsByRole = () => {
       sortName: 'status',
       ColumnComponent: StatusCell,
       hideMobileLabel: true,
+      hideOnMobileTest: (application) =>
+        application.status !== ApplicationStatus.ChangesRequired &&
+        application.status !== ApplicationStatus.Draft,
     },
     OUTCOME: {
       headerName: t('COLUMN_OUTCOME'),
@@ -109,10 +112,7 @@ export const useMapColumnsByRole = () => {
       headerName: t('COLUMN_APPLICANT_ACTION'),
       sortName: '',
       ColumnComponent: ApplicantActionCell,
-      hideMobileLabel: true,
-      hideOnMobileTest: (application) =>
-        application.status !== ApplicationStatus.ChangesRequired &&
-        application.status !== ApplicationStatus.Draft,
+      hideOnMobileTest: (_) => true,
     },
   }
 
