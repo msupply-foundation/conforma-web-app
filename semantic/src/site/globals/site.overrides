@@ -1137,7 +1137,7 @@ a:hover {
     padding-top: 0 !important;
     @media only screen and (max-width: @largestMobileScreen) {
       .ui.form .field {
-        margin-bottom: 0;
+        margin-bottom: 0.5em;
       }
     }
   }
