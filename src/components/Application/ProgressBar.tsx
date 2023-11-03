@@ -106,11 +106,11 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
     type = ProgressType.section
   ) => {
     const { completed, valid } = progress
-    const isStrictlylInvalid = !valid || (isStrict && !completed)
+    const isStrictlyInvalid = !valid || (isStrict && !completed)
     const isStarted = progress.doneNonRequired + progress.doneRequired > 0
     const typeIndex = type === ProgressType.section ? 0 : 1
 
-    if (isStrictlylInvalid) return progressIconMap.error[typeIndex]
+    if (isStrictlyInvalid) return progressIconMap.error[typeIndex]
     if (completed && valid) return progressIconMap.completed[typeIndex]
     if (isActive) return progressIconMap.current[typeIndex]
     if (isStarted) return progressIconMap.incomplete[typeIndex]
