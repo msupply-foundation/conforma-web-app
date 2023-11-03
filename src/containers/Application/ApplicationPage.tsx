@@ -85,7 +85,10 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
         )}
         <Grid.Column width={12} stretched id="form-column">
           <Segment basic>
-            <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
+            <div className="flex-row-space-between">
+              <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
+              {isMobile && <p className="xx-small">{`${t('PAGE')} ${pageNumber}`}</p>}
+            </div>
             <PageElements
               canEdit={status === ApplicationStatus.Draft}
               isUpdating={isChangeRequest}
