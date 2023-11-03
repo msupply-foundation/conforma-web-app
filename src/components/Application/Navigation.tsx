@@ -180,7 +180,7 @@ const Navigation: React.FC<NavigationProps> = ({
         {isMobile && sectionOptions.length > 1 && (
           <div
             className="flex-row-start-center smaller-text nav-button"
-            style={{ gap: 5, flexWrap: 'wrap', width: '100%', marginLeft: 10 }}
+            style={{ gap: 5, flexWrap: 'wrap', width: '100%' }}
           >
             {t('NAVIGATION_GO_TO')}:
             <Dropdown

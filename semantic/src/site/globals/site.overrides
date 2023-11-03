@@ -1325,13 +1325,14 @@ a:hover {
   max-width: @applicationFormContentWidth;
   justify-content: space-between;
   gap: 10px;
+  padding-left: 10px;
 
   .prev-next-links {
     .flex-row();
     align-items: center;
+    gap: 10px;
 
     p {
-      margin: 10px;
       margin-top: 0;
       margin-bottom: 0;
     }
