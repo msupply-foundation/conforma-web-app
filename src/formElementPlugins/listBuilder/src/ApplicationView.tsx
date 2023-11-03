@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Segment, Icon } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { User } from '../../../utils/types'
-import { DisplayType, InputResponseField, ListItem, ListLayoutProps } from './types'
+import {
+  DisplayType,
+  InputResponseField,
+  ListBuilderParameters,
+  ListItem,
+  ListLayoutProps,
+} from './types'
 import { TemplateElement } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import {
@@ -22,26 +28,6 @@ import {
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import useDefault from '../../useDefault'
-
-interface ListBuilderParameters {
-  label?: string
-  description?: string
-  createModalButtonText?: string
-  modalText?: string
-  addButtonText?: string
-  updateButtonText?: string
-  deleteItemText?: string
-  inputFields: any
-  displayFormat?: { title: string; subtitle: string; description: string }
-  displayType?: DisplayType
-  default?: any
-  inlineOpen?: boolean
-  tableExcludeColumns?: string[]
-  // These affect mobile viewing only
-  hideFromMobileTableIfEmpty?: true | string[]
-  minMobileTableLabelWidth?: number | string
-  maxMobileTableLabelWidth?: number | string
-}
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -156,7 +142,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const editItem = async (index: number, openPanel = true) => {
     setInputState((prev) => ({
-      ...inputState,
+      ...prev,
       currentResponses: listItems[index],
       selectedListItemIndex: index,
       isOpen: openPanel,
