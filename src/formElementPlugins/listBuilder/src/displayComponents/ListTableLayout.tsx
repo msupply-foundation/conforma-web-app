@@ -1,7 +1,6 @@
 import React from 'react'
 import { Table, TableHeaderCell, TableCell } from 'semantic-ui-react'
 import { ListLayoutProps } from '../types'
-import { TableMobileHeader } from '../../../../utils/tables/TableMobileHeader'
 import { TableCellMobileLabelWrapper } from '../../../../utils/tables/TableCellMobileLabelWrapper'
 import { TemplateElement } from '../../../../utils/generated/graphql'
 import { useViewport } from '../../../../contexts/ViewportState'
@@ -12,11 +11,22 @@ const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> 
   editItem = () => {},
   isEditable = true,
   excludeColumns,
+  hideFromMobileIfEmpty,
+  minMobileLabelWidth,
+  maxMobileLabelWidth,
 }) => {
   const { isMobile } = useViewport()
   const displayFields = (inputFields as TemplateElement[]).filter(
     ({ code, title }) => !(excludeColumns.includes(code) || excludeColumns.includes(title ?? ''))
   )
+
+  const hideIfEmptyFields =
+    typeof hideFromMobileIfEmpty === 'boolean' || hideFromMobileIfEmpty === undefined
+      ? hideFromMobileIfEmpty
+        ? displayFields.map((el) => el.code) // i.e applies to all fields
+        : []
+      : (hideFromMobileIfEmpty as string[])
+
   return (
     <Table celled={!isMobile} stackable selectable={isEditable}>
       {!isMobile && (
@@ -31,13 +41,20 @@ const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> 
       <Table.Body>
         {listItems.map((item, index) => (
           <Table.Row key={`list-row-${index}`} onClick={() => editItem(index)}>
-            {displayFields.map(({ code }, cellIndex) => (
-              <TableCell key={`list-cell-${index}-${cellIndex}`}>
-                <TableCellMobileLabelWrapper label={displayFields[cellIndex].title ?? ''}>
-                  {item[code]?.value?.text}
-                </TableCellMobileLabelWrapper>
-              </TableCell>
-            ))}
+            {displayFields.map(({ code }, cellIndex) => {
+              if (hideIfEmptyFields.includes(code) && !item[code]?.value?.text) return null
+              return (
+                <TableCell key={`list-cell-${index}-${cellIndex}`}>
+                  <TableCellMobileLabelWrapper
+                    label={displayFields[cellIndex].title ?? ''}
+                    minLabelWidth={minMobileLabelWidth}
+                    maxLabelWidth={maxMobileLabelWidth}
+                  >
+                    {item[code]?.value?.text}
+                  </TableCellMobileLabelWrapper>
+                </TableCell>
+              )
+            })}
           </Table.Row>
         ))}
       </Table.Body>

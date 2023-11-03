@@ -32,4 +32,8 @@ export interface ListLayoutProps {
   updateButtonText?: string
   innerElementUpdate?: (code: string) => void
   updateList?: () => void
+  // These properties optional and affect Tables on Mobile
+  hideFromMobileIfEmpty?: boolean | string[]
+  minMobileLabelWidth?: number | string
+  maxMobileLabelWidth?: number | string
 }

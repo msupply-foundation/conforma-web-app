@@ -23,6 +23,26 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import useDefault from '../../useDefault'
 
+interface ListBuilderParameters {
+  label?: string
+  description?: string
+  createModalButtonText?: string
+  modalText?: string
+  addButtonText?: string
+  updateButtonText?: string
+  deleteItemText?: string
+  inputFields: any
+  displayFormat?: { title: string; subtitle: string; description: string }
+  displayType?: DisplayType
+  default?: any
+  inlineOpen?: boolean
+  tableExcludeColumns?: string[]
+  // These affect mobile viewing only
+  hideFromMobileTableIfEmpty?: true | string[]
+  minMobileTableLabelWidth?: number | string
+  maxMobileTableLabelWidth?: number | string
+}
+
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
@@ -52,7 +72,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     default: defaultValue,
     inlineOpen = false,
     tableExcludeColumns = [],
-  } = parameters
+    // These affect viewing tables on Mobile only
+    hideFromMobileTableIfEmpty,
+    minMobileTableLabelWidth,
+    maxMobileTableLabelWidth,
+  } = parameters as ListBuilderParameters
   const {
     userState: { currentUser },
   } = useUserState()
@@ -156,7 +180,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const DisplayComponent =
     displayType === DisplayType.TABLE ? (
-      <ListTableLayout {...listDisplayProps} excludeColumns={tableExcludeColumns} />
+      <ListTableLayout
+        {...listDisplayProps}
+        hideFromMobileIfEmpty={hideFromMobileTableIfEmpty}
+        minMobileLabelWidth={minMobileTableLabelWidth}
+        maxMobileLabelWidth={maxMobileTableLabelWidth}
+        excludeColumns={tableExcludeColumns}
+      />
     ) : displayType === DisplayType.INLINE ? (
       <ListInlineLayout
         {...listDisplayProps}
