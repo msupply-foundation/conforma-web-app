@@ -5291,6 +5291,11 @@ json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
+json-to-css@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/json-to-css/-/json-to-css-0.1.0.tgz#4b3d104e8ed2c81b8a071eb86953d1936b3a08e6"
+  integrity sha512-0A6Xooey9slodt9MX7wWRVNo5G7fujVlBkdyhjNPg3GzoJW7j5EBD/Duw3zK3V132Ma/HTEnBRchl1PmOWiZgg==
+
 json-to-pretty-yaml@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/json-to-pretty-yaml/-/json-to-pretty-yaml-1.2.2.tgz#f4cd0bd0a5e8fe1df25aaf5ba118b099fd992d5b"

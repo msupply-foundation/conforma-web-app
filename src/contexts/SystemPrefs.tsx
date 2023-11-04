@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { LanguageOption } from './Localisation'
 import { getRequest } from '../utils/helpers/fetchMethods'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
+// @ts-ignore -- no types declarations available
+import Css from 'json-to-css'
 
 interface Preferences {
   paginationPresets?: number[]
@@ -57,6 +59,12 @@ export const SystemPrefsProvider = ({ children }: { children: React.ReactNode })
           latestSnapshot,
           loading: false,
         })
+
+        // Install custom CSS into document head
+        if (preferences.style) {
+          const cssString = Css.of(preferences.style)
+          document.head.appendChild(document.createElement('style')).innerHTML = cssString
+        }
       })
       .catch((err) => {
         setPrefsState({ loading: false, error: err, preferences: defaultPrefs })
