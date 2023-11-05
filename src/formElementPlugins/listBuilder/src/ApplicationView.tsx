@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Segment, Icon } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { User } from '../../../utils/types'
-import { DisplayType, InputResponseField, ListItem, ListLayoutProps } from './types'
+import {
+  DisplayType,
+  InputResponseField,
+  ListBuilderParameters,
+  ListItem,
+  ListLayoutProps,
+} from './types'
 import { TemplateElement } from '../../../utils/generated/graphql'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import {
@@ -22,6 +28,7 @@ import {
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import useDefault from '../../useDefault'
+import { useViewport } from '../../../contexts/ViewportState'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -36,6 +43,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('listBuilder')
+  const { isMobile } = useViewport()
 
   const { isEditable } = element
   const {
@@ -52,7 +60,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     default: defaultValue,
     inlineOpen = false,
     tableExcludeColumns = [],
-  } = parameters
+    // These affect viewing tables on Mobile only
+    hideFromMobileTableIfEmpty,
+    minMobileTableLabelWidth,
+    maxMobileTableLabelWidth,
+  } = parameters as ListBuilderParameters
   const {
     userState: { currentUser },
   } = useUserState()
@@ -132,7 +144,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const editItem = async (index: number, openPanel = true) => {
     setInputState((prev) => ({
-      ...inputState,
+      ...prev,
       currentResponses: listItems[index],
       selectedListItemIndex: index,
       isOpen: openPanel,
@@ -156,7 +168,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const DisplayComponent =
     displayType === DisplayType.TABLE ? (
-      <ListTableLayout {...listDisplayProps} excludeColumns={tableExcludeColumns} />
+      <ListTableLayout
+        {...listDisplayProps}
+        excludeColumns={tableExcludeColumns}
+        hideFromMobileIfEmpty={hideFromMobileTableIfEmpty}
+        minMobileLabelWidth={minMobileTableLabelWidth}
+        maxMobileLabelWidth={maxMobileTableLabelWidth}
+      />
     ) : displayType === DisplayType.INLINE ? (
       <ListInlineLayout
         {...listDisplayProps}
@@ -250,10 +268,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           onClose={() => setInputState(defaultInputState)}
           onOpen={() => setInputState({ ...inputState, isOpen: true })}
           open={inputState.isOpen}
+          closeIcon={isMobile}
         >
-          <Segment>
+          <Modal.Content>
             <Form>{ListInputForm}</Form>
-          </Segment>
+          </Modal.Content>
         </Modal>
       )}
       {displayType === DisplayType.INLINE && inputState.isOpen && (

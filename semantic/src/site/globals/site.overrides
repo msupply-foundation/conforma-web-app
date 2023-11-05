@@ -307,10 +307,6 @@ a:hover {
   min-width: @minimumContainerWidth;
 }
 
-#user-area.ui.container {
-  padding-right: 60px;
-}
-
 #brand-area {
   min-width: 100px;
   max-width: 200px;
@@ -325,12 +321,16 @@ a:hover {
     padding-top: 8px;
     padding-bottom: 8px;
   }
+  @media only screen and (max-width: 860px) {
+    display: none;
+  }
 }
 
 #user-area-left {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  justify-content: flex-end;
 }
 
 // Menu bar links
@@ -347,11 +347,33 @@ a:hover {
 }
 
 #user-menu {
-  width: clamp(150px, 20%, 300px);
   text-align: right;
+  display: flex;
+  align-items: center;
+  .button {
+    margin-top: 10px;
+    border-radius: 20px;
+    background-color: @surfacesWhite;
+    color: @darkGrey;
+    min-width: 120px;
+    max-width: 300px;
+  }
+  .ui .dropdown {
+    display: flex;
+  }
+  .ui.dropdown > .text {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+  .ui.dropdown .menu {
+    right: 0;
+    left: unset;
+  }
 }
 
-// Not currently used, but should be appplied to the Link in the menu
+// Not currently used, but should be applied to the Link in the menu
 // bar that reflects the current page
 .selected-link {
   font-weight: bold;
@@ -378,14 +400,6 @@ a:hover {
   margin-right: 20px;
   height: 100%;
   max-width: 300px;
-}
-
-#user-menu .button {
-  margin-top: 10px;
-  border-radius: 20px;
-  background-color: @surfacesWhite;
-  color: @darkGrey;
-  min-width: 120px;
 }
 
 #language-modal {
@@ -1137,7 +1151,7 @@ a:hover {
     padding-top: 0 !important;
     @media only screen and (max-width: @largestMobileScreen) {
       .ui.form .field {
-        margin-bottom: 0;
+        margin-bottom: 0.5em;
       }
     }
   }
@@ -1366,8 +1380,12 @@ a:hover {
   background-color: @surfacesWhite;
   border: 2px solid @surfacesMed;
   border-radius: @borderRadius;
-  padding-left: 20px;
-  padding-right: 20px;
+
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .summary-width {
     max-width: 550px;
   }
@@ -1453,6 +1471,10 @@ a:hover {
   padding-left: 21px;
   padding-top: 0px;
   padding-bottom: 26px;
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 // Background for Active elements changes (Summary/Review/Consolidation)
@@ -1475,6 +1497,11 @@ a:hover {
     border: 2px solid @surfacesMed;
     border-top: none;
     margin: 0px;
+
+    @media only screen and (max-width: @largestMobileScreen) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
 
     &.information {
       > div {
@@ -2618,10 +2645,12 @@ h6:first-child {
   }
   #menu-bar {
     font-size: inherit;
+    position: absolute;
+    top: 5px;
     .list {
       display: flex;
       align-items: start;
-      gap: 10px;
+      gap: 20px;
     }
     .ui .dropdown {
       display: flex;
@@ -2648,6 +2677,25 @@ h6:first-child {
 
   #user-area {
     height: @mobileHeaderHeight;
+    padding-left: 10px;
+  }
+
+  #user-area-left {
+    max-width: 100%;
+    padding-right: 25px;
+    #org-selector {
+      font-size: 100%;
+      letter-spacing: unset;
+      line-height: 1.3em;
+      #org-label {
+        max-width: 700px;
+      }
+    }
+    #org-selector .image {
+      margin-right: 10px;
+      max-width: 100px;
+      height: auto;
+    }
   }
 
   #menu-bar {

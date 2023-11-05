@@ -165,7 +165,7 @@
 -------------------------*/
 
 @headerHeight: 100px;
-@mobileHeaderHeight: 80px;
+@mobileHeaderHeight: 60px;
 @footerHeight: 75px;
 @borderRadius: 8px;
 

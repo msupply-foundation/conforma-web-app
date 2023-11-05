@@ -417,7 +417,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
       {user?.organisation?.logoUrl && (
         <Image src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))} />
       )}
-      <div>
+      <div id="org-label">
         {dropdownOptions.length === 1 ? (
           user?.organisation?.orgName || t('LABEL_NO_ORG')
         ) : (
@@ -490,7 +490,20 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
           <Button>
             <Button.Content visible>
               <Dropdown
-                text={`${selectedLanguage?.flag} ${user?.firstName || ''} ${user?.lastName || ''}`}
+                text={
+                  (
+                    <div
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: '1.2em' }}
+                    >
+                      <span style={{ fontSize: '150%', marginRight: 5 }}>
+                        {selectedLanguage?.flag}
+                      </span>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{`${
+                        user?.firstName || ''
+                      } ${user?.lastName || ''}`}</span>
+                    </div>
+                  ) as any
+                }
               >
                 {CommonMenu}
               </Dropdown>
