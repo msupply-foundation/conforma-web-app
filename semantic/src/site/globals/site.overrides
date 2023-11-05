@@ -307,10 +307,6 @@ a:hover {
   min-width: @minimumContainerWidth;
 }
 
-#user-area.ui.container {
-  padding-right: 60px;
-}
-
 #brand-area {
   min-width: 100px;
   max-width: 200px;
@@ -2616,7 +2612,7 @@ h6:first-child {
     .list {
       display: flex;
       align-items: start;
-      gap: 10px;
+      gap: 20px;
     }
     .ui .dropdown {
       display: flex;
@@ -2643,6 +2639,16 @@ h6:first-child {
 
   #user-area {
     height: @mobileHeaderHeight;
+  }
+
+  #user-area-left {
+    max-width: 100%;
+    padding-right: 20px;
+    #org-selector {
+      font-size: 85%;
+      letter-spacing: unset;
+      line-height: 1.2em;
+    }
   }
 
   #menu-bar {
