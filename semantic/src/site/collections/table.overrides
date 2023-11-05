@@ -220,9 +220,5 @@
     .ui.table tr td {
       padding: 1px !important;
     }
-
-    // .ui.table td p {
-    //   word-wrap: anywhere;
-    // }
   }
 }
