@@ -330,6 +330,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  justify-content: flex-end;
 }
 
 // Menu bar links
@@ -347,6 +348,8 @@ a:hover {
 
 #user-menu {
   text-align: right;
+  display: flex;
+  align-items: center;
   .button {
     margin-top: 10px;
     border-radius: 20px;
@@ -2609,6 +2612,8 @@ h6:first-child {
   }
   #menu-bar {
     font-size: inherit;
+    position: absolute;
+    top: 5px;
     .list {
       display: flex;
       align-items: start;
