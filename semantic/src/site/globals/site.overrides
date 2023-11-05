@@ -2660,6 +2660,8 @@ h6:first-child {
     }
     #org-selector .image {
       margin-right: 10px;
+      max-width: 100px;
+      height: auto;
     }
   }
 
