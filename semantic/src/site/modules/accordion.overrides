@@ -1,3 +1,9 @@
 /*******************************
         User Overrides
 *******************************/
+
+.ui.accordion,
+.ui.styled.accordion,
+.ui.accordion .accordion {
+  max-width: none;
+}
