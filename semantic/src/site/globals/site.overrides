@@ -2644,15 +2644,19 @@ h6:first-child {
 
   #user-area {
     height: @mobileHeaderHeight;
+    padding-left: 10px;
   }
 
   #user-area-left {
     max-width: 100%;
-    padding-right: 20px;
+    padding-right: 25px;
     #org-selector {
-      font-size: 85%;
+      font-size: 100%;
       letter-spacing: unset;
-      line-height: 1.2em;
+      line-height: 1.3em;
+    }
+    #org-selector .image {
+      margin-right: 10px;
     }
   }
 
