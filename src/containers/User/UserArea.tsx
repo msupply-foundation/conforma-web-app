@@ -490,7 +490,6 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
           <Button>
             <Button.Content visible>
               <Dropdown
-                // text={`${selectedLanguage?.flag} ${user?.firstName || ''} ${user?.lastName || ''}`}
                 text={
                   (
                     <div
