@@ -2654,6 +2654,9 @@ h6:first-child {
       font-size: 100%;
       letter-spacing: unset;
       line-height: 1.3em;
+      #org-label {
+        max-width: 700px;
+      }
     }
     #org-selector .image {
       margin-right: 10px;

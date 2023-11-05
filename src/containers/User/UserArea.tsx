@@ -417,7 +417,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
       {user?.organisation?.logoUrl && (
         <Image src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))} />
       )}
-      <div>
+      <div id="org-label">
         {dropdownOptions.length === 1 ? (
           user?.organisation?.orgName || t('LABEL_NO_ORG')
         ) : (
