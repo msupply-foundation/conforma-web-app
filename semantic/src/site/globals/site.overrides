@@ -325,6 +325,9 @@ a:hover {
     padding-top: 8px;
     padding-bottom: 8px;
   }
+  @media only screen and (max-width: 860px) {
+    display: none;
+  }
 }
 
 #user-area-left {
@@ -347,11 +350,31 @@ a:hover {
 }
 
 #user-menu {
-  width: clamp(150px, 20%, 300px);
   text-align: right;
+  .button {
+    margin-top: 10px;
+    border-radius: 20px;
+    background-color: @surfacesWhite;
+    color: @darkGrey;
+    min-width: 120px;
+    max-width: 300px;
+  }
+  .ui .dropdown {
+    display: flex;
+  }
+  .ui.dropdown > .text {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+  .ui.dropdown .menu {
+    right: 0;
+    left: unset;
+  }
 }
 
-// Not currently used, but should be appplied to the Link in the menu
+// Not currently used, but should be applied to the Link in the menu
 // bar that reflects the current page
 .selected-link {
   font-weight: bold;
@@ -378,14 +401,6 @@ a:hover {
   margin-right: 20px;
   height: 100%;
   max-width: 300px;
-}
-
-#user-menu .button {
-  margin-top: 10px;
-  border-radius: 20px;
-  background-color: @surfacesWhite;
-  color: @darkGrey;
-  min-width: 120px;
 }
 
 #language-modal {

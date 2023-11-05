@@ -490,7 +490,21 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
           <Button>
             <Button.Content visible>
               <Dropdown
-                text={`${selectedLanguage?.flag} ${user?.firstName || ''} ${user?.lastName || ''}`}
+                // text={`${selectedLanguage?.flag} ${user?.firstName || ''} ${user?.lastName || ''}`}
+                text={
+                  (
+                    <div
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: '1.2em' }}
+                    >
+                      <span style={{ fontSize: '150%', marginRight: 5 }}>
+                        {selectedLanguage?.flag}
+                      </span>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{`${
+                        user?.firstName || ''
+                      } ${user?.lastName || ''}`}</span>
+                    </div>
+                  ) as any
+                }
               >
                 {CommonMenu}
               </Dropdown>
