@@ -56,12 +56,7 @@ const UserArea: React.FC = () => {
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
   return (
-    <Container
-      id="user-area"
-      fluid
-      // Custom color option (for Angola only currently)
-      style={{ backgroundColor: preferences?.style?.headerBgColor ?? '' }}
-    >
+    <Container id="user-area" fluid>
       <BrandArea />
       <div id="user-area-left">
         <MainMenuBar

@@ -330,6 +330,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  background-color: inherit;
   justify-content: flex-end;
 }
 
@@ -2706,6 +2707,12 @@ h6:first-child {
     .list .item {
       padding-top: 0.3em;
       padding-bottom: 0.3em;
+      position: absolute;
+      top: @mobileHeaderHeight;
+      left: 0px;
+      background-color: inherit;
+      width: 95%;
+      padding: 5px 30px 20px 25px;
     }
     .ui .dropdown {
       display: flex;
