@@ -2717,9 +2717,10 @@ h6:first-child {
     top: @mobileHeaderHeight;
     left: 0px;
     width: 100%;
+    background-color: inherit;
     .list {
       z-index: 2000;
-      background: @darkGrey;
+      background: inherit;
       padding: 5px 30px 10px 25px;
     }
     .list .item {
