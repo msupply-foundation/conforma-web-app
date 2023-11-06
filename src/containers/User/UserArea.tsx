@@ -409,7 +409,13 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   if (!orgs.some(({ isSystemOrg }) => isSystemOrg))
     dropdownOptions.push({
       key: LOGIN_AS_NO_ORG,
-      text: `> ${t('LABEL_NO_ORG_SELECT')}`,
+      text: (
+        <span>
+          <em>{t('LABEL_NO_ORG')}</em>
+          <br />
+          <em>{t('LABEL_USER_ONLY')}</em>
+        </span>
+      ) as any,
       value: LOGIN_AS_NO_ORG,
     })
   return (

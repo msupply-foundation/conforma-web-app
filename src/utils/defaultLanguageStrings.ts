@@ -236,7 +236,7 @@ export default {
   LABEL_FILE_UPLOAD_PLACEHOLDER: 'Use the above bar to browse your file system',
   LABEL_FILE_DOWNLOAD_ERROR: 'Error trying to download',
   LABEL_NO_ORG: 'No organisation',
-  LABEL_NO_ORG_SELECT: 'No organisation (act as user only)',
+  LABEL_USER_ONLY: '(Act as user only)',
   LABEL_NO_ORG_OPTION: 'Log in without organisation',
   LABEL_PROCESSING: 'Processing...',
   LABEL_PREVIOUS_REVIEW: 'Previous review',

@@ -2658,6 +2658,10 @@ h6:first-child {
   #user-area {
     height: @mobileHeaderHeight;
     padding-left: 10px;
+    .visible.menu .item {
+      font-size: 12px;
+      padding: 0.6em !important;
+    }
   }
 
   #user-area-left {
