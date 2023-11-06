@@ -2664,8 +2664,8 @@ h6:first-child {
     height: @mobileHeaderHeight;
     padding-left: 10px;
     .visible.menu .item {
-      font-size: 0.9rem;
-      padding: 0.8em !important;
+      // font-size: 1rem;
+      // padding: 0.8em !important;
       .dropdown {
         padding: 0 !important;
       }
@@ -2701,18 +2701,11 @@ h6:first-child {
     .list {
       background-color: inherit;
       z-index: 2000;
-      background: @darkGrey;
       padding: 5px 30px 10px 25px;
     }
     .list .item {
-      padding-top: 0.3em;
-      padding-bottom: 0.3em;
-      position: absolute;
-      top: @mobileHeaderHeight;
-      left: 0px;
-      background-color: inherit;
-      width: 95%;
-      padding: 5px 30px 20px 25px;
+      padding-top: 0.4em;
+      padding-bottom: 0.4em;
     }
     .ui .dropdown {
       display: flex;
@@ -2720,7 +2713,7 @@ h6:first-child {
   }
 
   .menu-divider {
-    margin: 0px 0px 5px 0px !important;
+    margin: 0 !important;
   }
 
   /***********************
