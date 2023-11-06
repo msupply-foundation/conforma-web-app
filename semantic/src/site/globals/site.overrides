@@ -2675,6 +2675,7 @@ h6:first-child {
       margin-right: 10px;
       max-width: 100px;
       height: auto;
+      max-height: 100%;
     }
   }
 
