@@ -1,3 +1,10 @@
 /*******************************
          Site Overrides
 *******************************/
+
+@media only screen and (min-width: @largestMobileScreen) {
+  // For review page tabs when mobile, but probably good site wide
+  .ui.attached.tabular.menu {
+    flex-wrap: wrap;
+  }
+}
