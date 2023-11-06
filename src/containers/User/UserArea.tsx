@@ -674,7 +674,7 @@ function constructNestedMenuOptions<T>(
       text: submenu,
       content: (
         <Dropdown item text={submenu}>
-          <Dropdown.Menu style={{ transform: 'translateY(-25px)' }}>
+          <Dropdown.Menu style={{ transform: 'translateY(10px)' }}>
             {items.map((item) => {
               const { key, text, value } = item
               return (
