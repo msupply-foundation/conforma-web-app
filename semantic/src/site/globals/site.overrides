@@ -906,8 +906,7 @@ a:hover {
     background-color: @surfacesLight;
     padding: 15px;
     border-radius: @borderRadius;
-    border: 1px solid @surfacesMed;
-    min-width: 400px;
+    border: 1px solid @surfacesMed;    
     h4 {
       max-width: 250px;
       line-height: 1.5em;
