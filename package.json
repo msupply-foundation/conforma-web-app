@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.1.4",
-    "@openmsupply/expression-evaluator": "^1.11.2",
+    "@msupply-foundation/expression-evaluator": "^1.11.2",
     "apollo3-cache-persist": "^0.8.0",
     "axios": "^0.21.1",
     "clone-deep": "^4.0.1",
