@@ -43,18 +43,18 @@ Click the ‘Make Draft’ button in the config builder
 In this tab is possible to change the status of this Template **version** to Make Available, Make Draft or Disable the application (for all end-users).
 ### Displayed options
 
-| option             | template_column            | optional | default    | description                                                                                                                    |
-| ------------------ | -------------------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Name               | name                       | no       | -          | Name of a **single application** displayed to users (in different areas of the App)                                            |
-| Name plural        | name_plural                | no       | -          | Name of the **group of applications** displayed to users (in different areas of the App)                                       |
-| Code               | code                       | no       | -          | Reference to application type. In case a new code is created this template version will be displayd as a new template type!    |
-| Serial Pattern     | serial_pattern              | yes      | **?**      | The pattern to be used when generating a new application - uses [Generate Text String](https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins#generate-text-string)                                             |
-| Linear             | is_linear                  | yes      | **true**   | Determine if user is blocked from moving to the next page before filling all required fields                                   |
-| Interactive        | can_applicant_make_changes | yes      | **true**   | When this option is set to false it means no Reviewer can interact with Applicant, so option for "List of Questions" is hidden |
-| Category           | category                   | no       | -          | Used to group different template types in a category. The category visibility in areas of Conforma is also configurable        |
-| Filters            | -                          | yes      | -          | Selectable filters to display to users applications grouped by action to take in Dashboard                                     |
-| Start Message      | start_message              | yes      | Don't show | The start message display on a Optinal start page before creating the application. An [Evaluator Expression](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) for more complex messages or a simple string message is displayed as defined                                                  |
-| Submission Message | submission_message         | yes      | -      | The submission page always show after the application is submitted. An [Evaluator Expression](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) for more complex messages or a simple string message can be also displayed on the submission page - if defined                                                                 |
+| option             | template_column            | optional | default    | description                                                                                                                                                                                                                                                                           |
+| ------------------ | -------------------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name               | name                       | no       | -          | Name of a **single application** displayed to users (in different areas of the App)                                                                                                                                                                                                   |
+| Name plural        | name_plural                | no       | -          | Name of the **group of applications** displayed to users (in different areas of the App)                                                                                                                                                                                              |
+| Code               | code                       | no       | -          | Reference to application type. In case a new code is created this template version will be displayd as a new template type!                                                                                                                                                           |
+| Serial Pattern     | serial_pattern             | yes      | **?**      | The pattern to be used when generating a new application - uses [Generate Text String](https://github.com/msupply-foundation/conforma-server/wiki/List-of-Action-plugins#generate-text-string)                                                                                        |
+| Linear             | is_linear                  | yes      | **true**   | Determine if user is blocked from moving to the next page before filling all required fields                                                                                                                                                                                          |
+| Interactive        | can_applicant_make_changes | yes      | **true**   | When this option is set to false it means no Reviewer can interact with Applicant, so option for "List of Questions" is hidden                                                                                                                                                        |
+| Category           | category                   | no       | -          | Used to group different template types in a category. The category visibility in areas of Conforma is also configurable                                                                                                                                                               |
+| Filters            | -                          | yes      | -          | Selectable filters to display to users applications grouped by action to take in Dashboard                                                                                                                                                                                            |
+| Start Message      | start_message              | yes      | Don't show | The start message display on a Optinal start page before creating the application. An [Evaluator Expression](https://github.com/msupply-foundation/conforma-server/wiki/Query-Syntax) for more complex messages or a simple string message is displayed as defined                    |
+| Submission Message | submission_message         | yes      | -          | The submission page always show after the application is submitted. An [Evaluator Expression](https://github.com/msupply-foundation/conforma-server/wiki/Query-Syntax) for more complex messages or a simple string message can be also displayed on the submission page - if defined |
 
 ## Form tab
 
@@ -82,7 +82,7 @@ Primary defining the plugin type is required for a field. Other imporatant commo
 
 ![Form field - common properties](/images/Template-builder7.png)
 
-Each plugin will have specific parameters to be passed on. These can be a simple string, number or have more elegant and complex logic, using the [Evaluator Expression](https://github.com/openmsupply/conforma-server/wiki/Query-Syntax) function. To use these a lot of expertise is required, we definitely recommend having TMF support while working on this area of the App.
+Each plugin will have specific parameters to be passed on. These can be a simple string, number or have more elegant and complex logic, using the [Evaluator Expression](https://github.com/msupply-foundation/conforma-server/wiki/Query-Syntax) function. To use these a lot of expertise is required, we definitely recommend having TMF support while working on this area of the App.
 
 There are compulsory and optional parameters depending on each Plugin, which are added to this fields in the Parameters area:
 ![Form field - parameters](/images/Template-builder8.png)
@@ -111,9 +111,9 @@ The reviews configuration on the other hand, have many options available for pro
 
 ## Actions tab
 
-Some of the [Core-actions](https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins#core-actions) will be defined for every reviewable application, and don't show currently in this tab.
+Some of the [Core-actions](https://github.com/msupply-foundation/conforma-server/wiki/List-of-Action-plugins#core-actions) will be defined for every reviewable application, and don't show currently in this tab.
 
-The Actions tab displays (and defines) any action behaviour that is specific to this application type that will run on the specified Trigger events. Please see [Triggers & Actions](https://github.com/openmsupply/conforma-server/wiki/Triggers-and-Actions) for an explanation of how the trigger/action system works. Some common specific actions are: `sendNotification`, `modifyRecord` and `addUserToOrganisation` as showed in the example.
+The Actions tab displays (and defines) any action behaviour that is specific to this application type that will run on the specified Trigger events. Please see [Triggers & Actions](https://github.com/msupply-foundation/conforma-server/wiki/Triggers-and-Actions) for an explanation of how the trigger/action system works. Some common specific actions are: `sendNotification`, `modifyRecord` and `addUserToOrganisation` as showed in the example.
 
 ![Actions tab](/images/Template-builder-actions1.png)
 

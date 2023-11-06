@@ -66,22 +66,27 @@ These fields are common to all element types and have their own field in the `te
 
 ## Element types
 
-- [Short Text Input](#short-text)
-- [Long Text (Multi-line) Input](#long-text)
-- [Password](#password)
-- [Text Information](#text)
-- [Image Display](#image)
-- [Drop-down Selector](#dropdown)
-- [Radio Buttons](#radio)
-- [Checkboxes](#checkbox)
-- [File Upload](#file)
-- [List Builder](#list-builder)
-- [Search](#search)
-- [Date Picker](#date-picker)
-- [Number](#number)
-- [Page Break](#page)
+- [Understand](#understand)
+  - [Sections](#sections)
+  - [Pages](#pages)
+  - [Elements](#elements)
+- [Element types](#element-types)
+  - [Short Text Input](#short-text-input)
+  - [Long Text (Multi-line) Input](#long-text-multi-line-input)
+  - [Password Input](#password-input)
+  - [Text Information](#text-information)
+  - [Image Display](#image-display)
+  - [Drop-down Selector](#drop-down-selector)
+  - [Radio Buttons](#radio-buttons)
+  - [Checkboxes](#checkboxes)
+  - [File Upload](#file-upload)
+  - [List Builder (Ingredients list)](#list-builder-ingredients-list)
+  - [Search (Lookup)](#search-lookup)
+  - [Date Picker](#date-picker)
+  - [Number](#number)
+  - [Page Break](#page-break)
 
-**Note**: all parameter fields can also have a dynamic query object instead of a primitive. The [`evaluateExpression`](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax) function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be _returned_ from a query expression.
+**Note**: all parameter fields can also have a dynamic query object instead of a primitive. The [`evaluateExpression`](https://github.com/msupply-foundation/application-manager-server/wiki/Query-Syntax) function will return literal strings (or numbers, booleans) as is. The types described for the parameters below are the type that is expected to be _returned_ from a query expression.
 
 <a name="short-text"/>
 
