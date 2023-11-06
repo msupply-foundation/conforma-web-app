@@ -930,6 +930,7 @@ a:hover {
       margin-bottom: 5px;
       .ui.label {
         line-height: 1.5;
+        font-size: 0.57;
       }
       .centered-flex-box-row {
         display: flex;
@@ -2756,16 +2757,15 @@ h6:first-child {
   }
   #menu-bar:not(.open) {
     display: none;
-
-    //.open {
-    //  display:block;
-    //}
   }
 
   //Review Page Overview layout for mobile
   #review-tabs {
     .ui.segment {
       padding: 0.5em .5em;
+    }
+    .stage-label {
+      font-size: 0.57rem;
     }    
   }
 }
