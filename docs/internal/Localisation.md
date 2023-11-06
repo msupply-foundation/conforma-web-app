@@ -46,7 +46,7 @@ To access localised strings, just import the `useLanguageProvider` hook from `co
 
 The app comes with a base `defaultLanguageStrings.ts` file which defines all the localisation keys and the base English strings to be used. These are also used as fallbacks if the currently active language is missing some translations.
 
-Defining other languages is usually done by exporting the existing languages and reimporting with the new language's strings (as explained above in **Localisation UI (external users)**). The localisation files are stored in the folder in the server: `./localisation`. They are also exported and imported with [Snapshots](https://github.com/openmsupply/conforma-server/wiki/Snapshots)
+Defining other languages is usually done by exporting the existing languages and reimporting with the new language's strings (as explained above in **Localisation UI (external users)**). The localisation files are stored in the folder in the server: `./localisation`. They are also exported and imported with [Snapshots](https://github.com/msupply-foundation/conforma-server/wiki/Snapshots)
 
 ### Localisations directory
 

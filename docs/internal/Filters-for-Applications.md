@@ -74,7 +74,7 @@ After is converted to Graphql: `templateCode: { equalToInsensitive: user-registr
 
 #### category (_not yet implemented in schema_)
 
-Included: **No** [Epic#82](https://github.com/openmsupply/conforma-web-app/issues/540)  
+Included: **No** [Epic#82](https://github.com/msupply-foundation/conforma-web-app/issues/540)  
 Can have combined values: **No**  
 Examples: `category=company`  
 After is converted to Graphql: **TODO**
