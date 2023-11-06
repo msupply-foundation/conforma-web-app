@@ -16,7 +16,7 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 ### Administration
 
 - [Template Builder](config/Template-Builder.md)
-- [List of Core Actions](https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins#core-actions)
+- [List of Core Actions](https://github.com/msupply-foundation/conforma-server/wiki/List-of-Action-plugins#core-actions)
 - [List of Element Types](config/Element-Type-Specs.md)
 - [Localisation](config/Localisation.md)
 - [Lookup Tables](config/Lookup-Tables.md)
@@ -28,4 +28,4 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 - [Sections Structure](Sections-Structure.md)
 - [Toast Notifications](Toast-Notifications.md)
 - [Styles-Guide](Styles-Guide.md)
-- [Back-end Docs](https://github.com/openmsupply/conforma-server/wiki)
+- [Back-end Docs](https://github.com/msupply-foundation/conforma-server/wiki)
