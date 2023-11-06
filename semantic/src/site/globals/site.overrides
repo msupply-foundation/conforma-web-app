@@ -472,6 +472,7 @@ a:hover {
 #content-area .top-container {
   margin-top: 20px;
   max-width: @applicationFormWidth;
+  width: 100%;
 }
 
 // Back to application list label
