@@ -2761,4 +2761,11 @@ h6:first-child {
     //  display:block;
     //}
   }
+
+  //Review Page Overview layout for mobile
+  #review-tabs {
+    .ui.segment {
+      padding: 0.5em .5em;
+    }    
+  }
 }

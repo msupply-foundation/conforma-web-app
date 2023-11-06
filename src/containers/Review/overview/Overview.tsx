@@ -35,8 +35,8 @@ export const Overview: React.FC<{
   return (
     <div id="overview">
       <Segment basic>
-        <Message info icon={!isMobile}>
-          <Icon name="info circle" color="teal" />
+        <Message info icon>
+          {!isMobile && <Icon name="info circle" color="teal" />}
           <Message.Content>
             <div className="flex-row-center wrap">
               <Header as="h3">
