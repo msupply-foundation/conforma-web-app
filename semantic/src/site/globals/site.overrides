@@ -2759,7 +2759,7 @@ h6:first-child {
     display: none;
   }
 
-  //Review Page Overview layout for mobile
+  //Review Page layout for mobile
   #review-tabs {
     .ui.segment {
       padding: 0.5em .5em;
@@ -2771,5 +2771,11 @@ h6:first-child {
 
   #notes-tab .options-row {
     flex-direction: column;    
+  }
+
+  #assignment-tab {
+    .assigning-row > .column {
+      padding: 0.5rem 0.5rem !important;
+    }
   }
 }
