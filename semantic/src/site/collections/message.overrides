@@ -38,3 +38,9 @@
 .ui.error.message h6 {
   color: @errorHeaderColor;
 }
+
+@media only screen and (max-width: @largestMobileScreen) {
+  .ui.message {
+    padding: 0.5em 0.5em;
+  }
+}
