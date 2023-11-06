@@ -1,5 +1,15 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Button, Container, Image, List, Dropdown, Modal, Header, Form } from 'semantic-ui-react'
+import {
+  Button,
+  Container,
+  Image,
+  List,
+  Dropdown,
+  Modal,
+  Header,
+  Form,
+  Transition,
+} from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
@@ -244,110 +254,115 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   }
 
   return (
-    <div id="menu-bar" className={hamburgerActive ? 'open' : ''}>
-      <List>
-        {isMobile && (
-          <>
-            <List.Item>
-              {`${selectedLanguage?.flag} ${currentUser?.firstName || ''} ${
-                currentUser?.lastName || ''
-              }`}
+    <Transition visible={!!hamburgerActive || !isMobile} animation="slide down" duration={200}>
+      <div id="menu-bar">
+        <List>
+          {isMobile && (
+            <>
+              <List.Item style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <span>{`${currentUser?.firstName || ''} ${currentUser?.lastName || ''}`}</span>
+                <span style={{ fontSize: '130%' }}>{selectedLanguage?.flag} </span>
+              </List.Item>
+              <List.Item>
+                <div className="ui divider menu-divider"></div>
+              </List.Item>
+            </>
+          )}
+          <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
+            <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
+          </List.Item>
+          {applicationListOptions.length > 0 && (
+            <List.Item className={dropdownsState.applicationList.active ? 'selected-link' : ''}>
+              <Dropdown
+                text={t('MENU_ITEM_APPLICATION_LIST')}
+                options={applicationListOptions}
+                onChange={(_, { value }) => handleMenuSelect(value as string, 'List')}
+                value={dropdownsState.applicationList.selection}
+                selectOnBlur={false}
+              />
             </List.Item>
-            <List.Item>
-              <div className="ui divider menu-divider"></div>
+          )}
+          {dataViewOptions.length > 1 && (
+            <List.Item className={dropdownsState.dataViews.active ? 'selected-link' : ''}>
+              <Dropdown
+                text={t('MENU_ITEM_DATA')}
+                options={dataViewOptions}
+                onChange={(_, { value }) => handleMenuSelect(value as string, 'DataView')}
+                value={dropdownsState.dataViews.selection}
+                selectOnBlur={false}
+              />
             </List.Item>
-          </>
-        )}
-        <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
-          <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
-        </List.Item>
-        {applicationListOptions.length > 0 && (
-          <List.Item className={dropdownsState.applicationList.active ? 'selected-link' : ''}>
-            <Dropdown
-              text={t('MENU_ITEM_APPLICATION_LIST')}
-              options={applicationListOptions}
-              onChange={(_, { value }) => handleMenuSelect(value as string, 'List')}
-              value={dropdownsState.applicationList.selection}
-              selectOnBlur={false}
-            />
-          </List.Item>
-        )}
-        {dataViewOptions.length > 1 && (
-          <List.Item className={dropdownsState.dataViews.active ? 'selected-link' : ''}>
-            <Dropdown
-              text={t('MENU_ITEM_DATA')}
-              options={dataViewOptions}
-              onChange={(_, { value }) => handleMenuSelect(value as string, 'DataView')}
-              value={dropdownsState.dataViews.selection}
-              selectOnBlur={false}
-            />
-          </List.Item>
-        )}
-        {managementOptions.length > 0 && (
-          <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
-            <Dropdown
-              text={t('MENU_ITEM_MANAGE')}
-              options={managementOptions}
-              onChange={(_, { value }) => handleMenuSelect(value as string, 'Manage')}
-              value={dropdownsState.manage.selection}
-              selectOnBlur={false}
-            />
-          </List.Item>
-        )}
-        {currentUser?.isAdmin && (
-          <List.Item className={dropdownsState.config.active ? 'selected-link' : ''}>
-            <Dropdown
-              text={t('MENU_ITEM_CONFIG')}
-              options={configOptions}
-              onChange={(_, { value }) => handleMenuSelect(value as string, 'Config')}
-              value={dropdownsState.config.selection}
-              selectOnBlur={false}
-            />
-          </List.Item>
-        )}
-        {extReferenceDocs.length > 0 && (
-          <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
-            <Dropdown text={t('MENU_ITEM_HELP')}>
-              <Dropdown.Menu>
-                {extReferenceDocs.map((doc) => (
-                  <Dropdown.Item
-                    key={doc.uniqueId}
-                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
-                    text={doc.description}
-                  />
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </List.Item>
-        )}
-        {intReferenceDocs.length > 0 && (
-          <List.Item className={dropdownsState.intRefDocs.active ? 'selected-link' : ''}>
-            <Dropdown text={t('MENU_ITEM_REF_DOCS')}>
-              <Dropdown.Menu>
-                {intReferenceDocs.map((doc) => (
-                  <Dropdown.Item
-                    key={doc.uniqueId}
-                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
-                    text={doc.description}
-                  />
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </List.Item>
-        )}
-        {isMobile && (
-          <List.Item onClick={() => logout()}>
-            <div className="ui divider menu-divider"></div>
-            <UserMenu
-              user={currentUser as User}
-              templates={templates.filter(({ templateCategory: { uiLocation } }) =>
-                uiLocation.includes(UiLocation.User)
-              )}
-            />
-          </List.Item>
-        )}
-      </List>
-    </div>
+          )}
+          {managementOptions.length > 0 && !isMobile && (
+            <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
+              <Dropdown
+                text={t('MENU_ITEM_MANAGE')}
+                options={managementOptions}
+                onChange={(_, { value }) => handleMenuSelect(value as string, 'Manage')}
+                value={dropdownsState.manage.selection}
+                selectOnBlur={false}
+              />
+            </List.Item>
+          )}
+          {currentUser?.isAdmin && !isMobile && (
+            <List.Item className={dropdownsState.config.active ? 'selected-link' : ''}>
+              <Dropdown
+                text={t('MENU_ITEM_CONFIG')}
+                options={configOptions}
+                onChange={(_, { value }) => handleMenuSelect(value as string, 'Config')}
+                value={dropdownsState.config.selection}
+                selectOnBlur={false}
+              />
+            </List.Item>
+          )}
+          {extReferenceDocs.length > 0 && (
+            <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
+              <Dropdown text={t('MENU_ITEM_HELP')}>
+                <Dropdown.Menu>
+                  {extReferenceDocs.map((doc) => (
+                    <Dropdown.Item
+                      key={doc.uniqueId}
+                      onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
+                      text={doc.description}
+                    />
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </List.Item>
+          )}
+          {intReferenceDocs.length > 0 && (
+            <List.Item className={dropdownsState.intRefDocs.active ? 'selected-link' : ''}>
+              <Dropdown text={t('MENU_ITEM_REF_DOCS')}>
+                <Dropdown.Menu>
+                  {intReferenceDocs.map((doc) => (
+                    <Dropdown.Item
+                      key={doc.uniqueId}
+                      onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
+                      text={doc.description}
+                    />
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </List.Item>
+          )}
+          {isMobile && (
+            <>
+              <List.Item>
+                <div className="ui divider menu-divider"></div>
+              </List.Item>
+              <List.Item>
+                <UserMenu
+                  user={currentUser as User}
+                  templates={templates.filter(({ templateCategory: { uiLocation } }) =>
+                    uiLocation.includes(UiLocation.User)
+                  )}
+                />
+              </List.Item>
+            </>
+          )}
+        </List>
+      </div>
+    </Transition>
   )
 }
 
@@ -404,7 +419,13 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   if (!orgs.some(({ isSystemOrg }) => isSystemOrg))
     dropdownOptions.push({
       key: LOGIN_AS_NO_ORG,
-      text: `> ${t('LABEL_NO_ORG_SELECT')}`,
+      text: (
+        <span>
+          <em>{t('LABEL_NO_ORG')}</em>
+          <br />
+          <em>{t('LABEL_USER_ONLY')}</em>
+        </span>
+      ) as any,
       value: LOGIN_AS_NO_ORG,
     })
   return (

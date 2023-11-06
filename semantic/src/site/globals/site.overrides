@@ -1836,6 +1836,10 @@ a:hover {
 #data-view-config-panel {
   padding-top: 20px;
   width: 50%;
+  @media only screen and (max-width: @largestMobileScreen) {
+    width: unset;
+    max-width: 100%;
+  }
 
   h2.ui.header {
     padding: 0;
@@ -2679,6 +2683,13 @@ h6:first-child {
   #user-area {
     height: @mobileHeaderHeight;
     padding-left: 10px;
+    .visible.menu .item {
+      font-size: 0.9rem;
+      padding: 0.8em !important;
+      .dropdown {
+        padding: 0 !important;
+      }
+    }
   }
 
   #user-area-left {
@@ -2702,15 +2713,18 @@ h6:first-child {
 
   #menu-bar {
     font-size: inherit;
-    background-color: inherit;
+    position: absolute;
+    top: @mobileHeaderHeight;
+    left: 0px;
+    width: 100%;
     .list {
       z-index: 2000;
-      position: absolute;
-      top: @mobileHeaderHeight;
-      left: 0px;
-      background-color: inherit;
-      width: 95%;
-      padding: 5px 30px 20px 25px;
+      background: @darkGrey;
+      padding: 5px 30px 10px 25px;
+    }
+    .list .item {
+      padding-top: 0.3em;
+      padding-bottom: 0.3em;
     }
     .ui .dropdown {
       display: flex;
@@ -2738,6 +2752,7 @@ h6:first-child {
     height: 3px;
     background: @userAreaText;
     margin: 0 0 3px;
+    transition-duration: 0.1s;
   }
   .hamburger:hover {
     -moz-opacity: 1;
@@ -2776,12 +2791,5 @@ h6:first-child {
 
   .hamburger.active .hamburger-patty {
     display: none;
-  }
-  #menu-bar:not(.open) {
-    display: none;
-
-    //.open {
-    //  display:block;
-    //}
   }
 }
