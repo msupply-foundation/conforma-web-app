@@ -2719,6 +2719,7 @@ h6:first-child {
     width: 100%;
     background-color: inherit;
     .list {
+      background-color: inherit;
       z-index: 2000;
       background: inherit;
       padding: 5px 30px 10px 25px;
