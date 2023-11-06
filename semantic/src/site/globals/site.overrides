@@ -2659,7 +2659,7 @@ h6:first-child {
     height: @mobileHeaderHeight;
     padding-left: 10px;
     .visible.menu .item {
-      font-size: 12px;
+      font-size: 0.9rem;
       padding: 0.8em !important;
       .dropdown {
         padding: 0 !important;
