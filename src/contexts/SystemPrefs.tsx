@@ -14,6 +14,7 @@ interface PrefsState {
     googleAnalyticsId?: string
     siteHost?: string
     style?: { headerBgColor?: string }
+    helpLinks?: { text: string; link: string }[]
   }
   languageOptions?: LanguageOption[]
   latestSnapshot?: string
