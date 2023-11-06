@@ -5,8 +5,8 @@
 @media only screen and (max-width: @largestMobileScreen) {
   // So that the sub menus show properly in mobile for Header menu
   .ui.dropdown .menu .menu {
-    top: 350% !important;
-    left: 0%;
+    top: 150% !important;
+    left: 40%;
   }
 
   // To give drop-downs a bit more vertical height in mobile

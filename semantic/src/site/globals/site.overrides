@@ -2660,7 +2660,10 @@ h6:first-child {
     padding-left: 10px;
     .visible.menu .item {
       font-size: 12px;
-      padding: 0.6em !important;
+      padding: 0.8em !important;
+      .dropdown {
+        padding: 0 !important;
+      }
     }
   }
 
