@@ -2768,4 +2768,8 @@ h6:first-child {
       font-size: 0.57rem;
     }    
   }
+
+  #notes-tab .options-row {
+    flex-direction: column;    
+  }
 }
