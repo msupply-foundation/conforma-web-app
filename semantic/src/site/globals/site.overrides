@@ -1835,6 +1835,10 @@ a:hover {
 #data-view-config-panel {
   padding-top: 20px;
   width: 50%;
+  @media only screen and (max-width: @largestMobileScreen) {
+    width: unset;
+    max-width: 100%;
+  }
 
   h2.ui.header {
     padding: 0;

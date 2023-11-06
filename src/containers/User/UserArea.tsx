@@ -259,7 +259,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   }
 
   return (
-    <Transition visible={!!hamburgerActive} animation="slide down" duration={200}>
+    <Transition visible={!!hamburgerActive || !isMobile} animation="slide down" duration={200}>
       <div id="menu-bar">
         <List>
           {isMobile && (
@@ -298,7 +298,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               />
             </List.Item>
           )}
-          {managementOptions.length > 0 && (
+          {managementOptions.length > 0 && !isMobile && (
             <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
               <Dropdown
                 text={t('MENU_ITEM_MANAGE')}
@@ -309,7 +309,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               />
             </List.Item>
           )}
-          {currentUser?.isAdmin && (
+          {currentUser?.isAdmin && !isMobile && (
             <List.Item className={dropdownsState.config.active ? 'selected-link' : ''}>
               <Dropdown
                 text={t('MENU_ITEM_CONFIG')}
