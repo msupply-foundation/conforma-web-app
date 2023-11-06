@@ -1381,8 +1381,12 @@ a:hover {
   background-color: @surfacesWhite;
   border: 2px solid @surfacesMed;
   border-radius: @borderRadius;
-  padding-left: 20px;
-  padding-right: 20px;
+
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .summary-width {
     max-width: 550px;
   }
@@ -1468,6 +1472,10 @@ a:hover {
   padding-left: 21px;
   padding-top: 0px;
   padding-bottom: 26px;
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 // Background for Active elements changes (Summary/Review/Consolidation)
@@ -1490,6 +1498,11 @@ a:hover {
     border: 2px solid @surfacesMed;
     border-top: none;
     margin: 0px;
+
+    @media only screen and (max-width: @largestMobileScreen) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
 
     &.information {
       > div {
@@ -2681,6 +2694,9 @@ h6:first-child {
     }
     #org-selector .image {
       margin-right: 10px;
+      max-width: 100px;
+      height: auto;
+      max-height: 100%;
     }
   }
 
