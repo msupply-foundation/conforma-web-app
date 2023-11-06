@@ -2696,7 +2696,9 @@ h6:first-child {
     top: @mobileHeaderHeight;
     left: 0px;
     width: 100%;
+    background-color: inherit;
     .list {
+      background-color: inherit;
       z-index: 2000;
       background: @darkGrey;
       padding: 5px 30px 10px 25px;
