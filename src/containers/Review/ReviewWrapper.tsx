@@ -107,7 +107,11 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
             orgName={org?.name as string}
           />
           <div id="review-home-content">
-            {!isMobile && <ReviewProgress structure={structure} />}
+            {isMobile && structure.stages.length <= 2 ? (
+              <ReviewProgress structure={structure} />
+            ) : (
+              !isMobile && <ReviewProgress structure={structure} />
+            )}
             <div id="review-tabs">
               <Tab
                 panes={tabPanes}
