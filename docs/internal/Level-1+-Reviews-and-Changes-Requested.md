@@ -54,7 +54,7 @@ Currently we don't allow submitting directly to Applicant when there is a disagr
 
 ### Back End workflow
 
-- The following changes are done through work of [Actions plugins](https://github.com/openmsupply/conforma-server/wiki/Triggers-and-Actions).
+- The following changes are done through work of [Actions plugins](https://github.com/msupply-foundation/conforma-server/wiki/Triggers-and-Actions).
 
 * After `assignment` or `self-assignment` happens (more details about this in [Assignment Process](Assignment-Process.md))
 * On review level 1 **start**:

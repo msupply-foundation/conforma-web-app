@@ -330,6 +330,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  background-color: inherit;
   justify-content: flex-end;
 }
 
@@ -460,6 +461,10 @@ a:hover {
    Application/Review Wrappers
 ------------------------------------*/
 
+#application-area {
+  .flex-column-center();
+}
+
 // Moves back up if UserArea is not displayed
 #application-area.non-registered {
   margin-top: -@headerHeight;
@@ -467,8 +472,8 @@ a:hover {
 
 #content-area .top-container {
   margin-top: 20px;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  max-width: @applicationFormWidth;
+  width: 100%;
 }
 
 // Back to application list label
@@ -477,14 +482,7 @@ a:hover {
   background-color: transparent;
   font-size: @fontSmall;
   font-weight: @regularWeight;
-  padding-left: 10%;
-}
-
-// Fix for company header on mobile to not clash with 'back to applications'
-@media only screen and (min-width: @tabletBreakpoint) {
-  #content-area .heading-alt {
-    margin-top: -25px;
-  }
+  padding-left: 0;
 }
 
 /*---------------------------------------
@@ -497,6 +495,9 @@ a:hover {
   background-color: @surfacesWhite;
   width: 800px;
   padding: 30px 50px 32px;
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding: 20px;
+  }
 }
 
 // Steps line (vertical box - layout)
@@ -893,8 +894,7 @@ a:hover {
   }
 
   .ui.image {
-    max-height: 100px;
-    // border: 1px solid @surfacesLight;
+    max-height: 100px;    
   }
 
   .ui.list {
@@ -907,7 +907,6 @@ a:hover {
     padding: 15px;
     border-radius: @borderRadius;
     border: 1px solid @surfacesMed;
-    min-width: 400px;
     h4 {
       max-width: 250px;
       line-height: 1.5em;
@@ -930,6 +929,7 @@ a:hover {
       margin-bottom: 5px;
       .ui.label {
         line-height: 1.5;
+        font-size: 0.57;
       }
       .centered-flex-box-row {
         display: flex;
@@ -1034,7 +1034,7 @@ a:hover {
   .ui.form {
     .field {
       margin: 0;
-      flex-basis: 65%;
+      flex-basis: 100%;
     }
     textarea {
       display: block;
@@ -1083,6 +1083,19 @@ a:hover {
   }
 }
 
+@media only screen and (max-width: @largestMobileScreen) {
+  .data-view-detail-container {
+    h2.ui.header {
+      padding-top: 15px !important;
+    }
+  }
+  #linked-applications-container {
+    h4 {
+      margin-bottom: 0;
+      text-align: center;
+    }
+  }
+}
 /*--------------------------------
       Application List
 ---------------------------------*/
@@ -1758,6 +1771,7 @@ a:hover {
   .template {
     margin: 0px 10px 5px 0px;
     width: 330px;
+    max-width: 95vw;
     padding: 10px;
     justify-content: space-between;
     border: 2px solid @surfacesDark;
@@ -1835,6 +1849,10 @@ a:hover {
 #data-view-config-panel {
   padding-top: 20px;
   width: 50%;
+  @media only screen and (max-width: @largestMobileScreen) {
+    width: unset;
+    max-width: 100%;
+  }
 
   h2.ui.header {
     padding: 0;
@@ -2678,6 +2696,13 @@ h6:first-child {
   #user-area {
     height: @mobileHeaderHeight;
     padding-left: 10px;
+    .visible.menu .item {
+      // font-size: 1rem;
+      // padding: 0.8em !important;
+      .dropdown {
+        padding: 0 !important;
+      }
+    }
   }
 
   #user-area-left {
@@ -2695,19 +2720,25 @@ h6:first-child {
       margin-right: 10px;
       max-width: 100px;
       height: auto;
+      max-height: 100%;
     }
   }
 
   #menu-bar {
     font-size: inherit;
+    position: absolute;
+    top: @mobileHeaderHeight;
+    left: 0px;
+    width: 100%;
+    background-color: inherit;
     .list {
+      background-color: inherit;
       z-index: 2000;
-      position: absolute;
-      top: @mobileHeaderHeight;
-      left: 0px;
-      background: @darkGrey;
-      width: 95%;
-      padding: 5px 30px 20px 25px;
+      padding: 5px 30px 10px 25px;
+    }
+    .list .item {
+      padding-top: 0.4em;
+      padding-bottom: 0.4em;
     }
     .ui .dropdown {
       display: flex;
@@ -2715,7 +2746,7 @@ h6:first-child {
   }
 
   .menu-divider {
-    margin: 0px 0px 5px 0px !important;
+    margin: 0 !important;
   }
 
   /***********************
@@ -2735,6 +2766,7 @@ h6:first-child {
     height: 3px;
     background: @userAreaText;
     margin: 0 0 3px;
+    transition-duration: 0.1s;
   }
   .hamburger:hover {
     -moz-opacity: 1;
@@ -2774,11 +2806,55 @@ h6:first-child {
   .hamburger.active .hamburger-patty {
     display: none;
   }
-  #menu-bar:not(.open) {
-    display: none;
 
-    //.open {
-    //  display:block;
-    //}
+  //Review Page layout for mobile
+  #review-tabs {
+    .ui.segment {
+      padding: 0.5em 0.5em;
+    }
+    .stage-label {
+      font-size: 0.7rem;
+    }    
+  }
+  #overview .left-item {
+    min-width: unset;
+  }
+  #timeline {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+  
+  #documents-tab {
+    //smaller icon in Review documents tab
+    .ui.image {
+      max-height: 60px;
+    }
+    .flex-extra {
+      gap: 5px;
+    }
+    .ui.list {
+      margin-top: 0px;
+    }
+    .ui.list > .item {
+      margin-top: 10px;
+      padding: 10px;
+    }
+  }
+
+  #notes-tab .options-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #assignment-tab {
+    .assigning-row > .column {
+      padding: 0.1rem 0.5rem !important;
+    }
+    .stage-label {
+      margin-left: 3px;
+    }
+    .custom-assignment-grid-column {
+      padding: 0.5rem 0.5rem !important;
+    }
   }
 }

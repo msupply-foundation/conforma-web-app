@@ -2,13 +2,18 @@ import React, { useState } from 'react'
 import { Container, Header, Icon, Label } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
-import { TemplateDetails, User } from '../../utils/types'
+import { ApplicationDetails, TemplateDetails, User } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 export interface ApplicationContainerProps {
   template: TemplateDetails
+  applicationInfo?: ApplicationDetails
 }
 
-const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, children }) => {
+const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
+  template,
+  applicationInfo,
+  children,
+}) => {
   const { t } = useLanguageProvider()
   const { push, location } = useRouter()
   const {
@@ -26,12 +31,12 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({ template, c
   return (
     <Container id="application-area" className={isNonRegistered ? 'non-registered' : ''}>
       <div className={`top-container ${isNonRegistered ? 'hidden-element' : ''}`}>
-        {currentUser?.organisation?.orgName && (
+        {applicationInfo?.org?.name && (
           <Header
             as="h2"
             className="heading-alt"
             textAlign="center"
-            content={currentUser?.organisation?.orgName}
+            content={applicationInfo?.org?.name}
           />
         )}
         <Label className="back-label clickable" onClick={() => push(linkBack)}>

@@ -26,6 +26,11 @@
   }
 }
 
+.data-view-detail-container {
+  .flex-column();
+  align-items: center;
+}
+
 // ********** desktop overrides *******************
 
 @media only screen and (min-width: @largestMobileScreen) {
@@ -141,8 +146,6 @@
     }
 
     .data-view-detail-container {
-      .flex-column();
-      align-items: center;
       // Limit size of images in Table (that come from SummaryView elements)
       .ui.image {
         width: unset;
@@ -187,6 +190,19 @@
 
     .ui.table td p {
       word-wrap: anywhere;
+    }
+  }
+
+  // DataView detail page
+  .data-view-detail-container {
+    .ui.table tr {
+      border: none;
+    }
+  }
+  #linked-applications-container {
+    .ui.table {
+      margin-top: 0;
+      border-spacing: 0;
     }
   }
 

@@ -22,12 +22,14 @@ import { ApplicationOutcome } from '../../../utils/generated/graphql'
 import useLoadAssignments from '../../../utils/hooks/useLoadAssignments'
 import AssignmentSectionRow from './AssignmentSectionRow'
 import ReviewSectionRow from './ReviewSectionRow'
+import { useViewport } from '../../../contexts/ViewportState'
 
 const AssignmentTab: React.FC<{
   fullApplicationStructure: FullStructure
 }> = ({ fullApplicationStructure: fullStructure }) => {
   const sectionCodes = Object.keys(fullStructure.sections)
   const { t } = useLanguageProvider()
+  const { isMobile } = useViewport()
   const [enableSubmit, setEnableSubmit] = useState<boolean>(false)
   const [assignedSectionsByLevel, setAssignedSectionsByLevel] = useState<AssignedSectionsByLevel>(
     {}
@@ -135,7 +137,7 @@ const AssignmentTab: React.FC<{
       <div className="flex-row-space-between-center" id="review-filters-container">
         <ReviewLevel filters={filters} setFilters={setFilters} structure={fullStructure} />
         <div className="centered-flex-box-row">
-          <Label className="uppercase-label" content={t('REVIEW_OVERVIEW_STAGE')} />
+          {!isMobile && <Label className="uppercase-label" content={t('REVIEW_OVERVIEW_STAGE')} />}
           <Stage name={stageName} colour={stageColour || ''} />
         </div>
       </div>
