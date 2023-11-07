@@ -894,8 +894,7 @@ a:hover {
   }
 
   .ui.image {
-    max-height: 100px;
-    // border: 1px solid @surfacesLight;
+    max-height: 100px;    
   }
 
   .ui.list {
@@ -2781,6 +2780,23 @@ h6:first-child {
     }
     .stage-label {
       font-size: 0.57rem;
+    }
+  }
+  
+  #documents-tab {
+    //smaller icon in Review documents tab
+    .ui.image {
+      max-height: 60px;
+    }
+    .flex-extra {
+      gap: 5px;
+    }
+    .ui.list {
+      margin-top: 0px;
+    }
+    .ui.list > .item {
+      margin-top: 10px;
+      padding: 10px;
     }
   }
 
