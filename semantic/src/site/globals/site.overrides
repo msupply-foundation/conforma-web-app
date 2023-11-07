@@ -2814,10 +2814,13 @@ h6:first-child {
 
   #assignment-tab {
     .assigning-row > .column {
-      padding: 0.5rem 0.5rem !important;
+      padding: 0.1rem 0.5rem !important;
     }
     .stage-label {
       margin-left: 3px;
-    } 
+    }
+    .custom-assignment-grid-column {
+      padding: 0.5rem 0.5rem !important;
+    }
   }
 }
