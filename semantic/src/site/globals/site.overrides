@@ -1083,6 +1083,19 @@ a:hover {
   }
 }
 
+@media only screen and (max-width: @largestMobileScreen) {
+  .data-view-detail-container {
+    h2.ui.header {
+      padding-top: 15px !important;
+    }
+  }
+  #linked-applications-container {
+    h4 {
+      margin-bottom: 0;
+      text-align: center;
+    }
+  }
+}
 /*--------------------------------
       Application List
 ---------------------------------*/
@@ -1758,6 +1771,7 @@ a:hover {
   .template {
     margin: 0px 10px 5px 0px;
     width: 330px;
+    max-width: 95vw;
     padding: 10px;
     justify-content: space-between;
     border: 2px solid @surfacesDark;
