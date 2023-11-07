@@ -1083,6 +1083,23 @@ a:hover {
   }
 }
 
+@media only screen and (max-width: @largestMobileScreen) {
+  #data-view {
+    .ui.header {
+      text-align: center;
+    }
+  }
+  .data-view-detail-container {
+    h2.ui.header {
+      padding-top: 15px !important;
+    }
+  }
+  #linked-applications-container {
+    h4 {
+      margin-bottom: 0;
+    }
+  }
+}
 /*--------------------------------
       Application List
 ---------------------------------*/

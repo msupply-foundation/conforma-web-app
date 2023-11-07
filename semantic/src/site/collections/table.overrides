@@ -190,6 +190,19 @@
     }
   }
 
+  // DataView detail page
+  .data-view-detail-container {
+    .ui.table tr {
+      border: none;
+    }
+  }
+  #linked-applications-container {
+    .ui.table {
+      margin-top: 0;
+      border-spacing: 0;
+    }
+  }
+
   // For list-builder tables
   .form-element {
     .ui.table {
