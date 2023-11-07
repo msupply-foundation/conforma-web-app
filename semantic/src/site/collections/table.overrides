@@ -190,6 +190,17 @@
     }
   }
 
+  #applications-list {
+    .ui.table tr td:nth-last-child(2).has-mobile-action-cell {
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      padding-bottom: 10px !important;
+    }
+    .ui.table tr td:last-child:not(.has-mobile-action-cell) {
+      padding-bottom: 10px !important;
+    }
+  }
+
   // DataView detail page
   .data-view-detail-container {
     .ui.table tr {
@@ -201,37 +212,37 @@
       margin-top: 0;
       border-spacing: 0;
     }
-  }
 
-  // For list-builder tables
-  .form-element {
-    .ui.table {
-      border-collapse: separate;
-      border-spacing: 0 10px;
-      background: none;
-      border: none;
-      margin: 0;
-    }
+    // For list-builder tables
+    .form-element {
+      .ui.table {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        background: none;
+        border: none;
+        margin: 0;
+      }
 
-    .ui.table td {
-      background: @surfacesWhite;
-      padding: 5px;
-    }
+      .ui.table td {
+        background: @surfacesWhite;
+        padding: 5px;
+      }
 
-    .ui.table tr {
-      border: none;
-    }
+      .ui.table tr {
+        border: none;
+      }
 
-    .ui.table:not(.unstackable) tr {
-      box-shadow: 0px 0px 0px !important;
-      padding: 0.3em 0.6em;
-      margin-bottom: 0.5em;
-      border: 1px solid @surfacesMed;
-      border-radius: 0.3em;
-    }
+      .ui.table:not(.unstackable) tr {
+        box-shadow: 0px 0px 0px !important;
+        padding: 0.3em 0.6em;
+        margin-bottom: 0.5em;
+        border: 1px solid @surfacesMed;
+        border-radius: 0.3em;
+      }
 
-    .ui.table tr td {
-      padding: 1px !important;
+      .ui.table tr td {
+        padding: 1px !important;
+      }
     }
   }
 }

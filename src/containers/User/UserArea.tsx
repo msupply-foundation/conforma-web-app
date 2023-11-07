@@ -35,7 +35,6 @@ import { useViewport } from './../../contexts/ViewportState'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 
 const UserArea: React.FC = () => {
-  const { preferences } = usePrefs()
   const {
     userState: { currentUser, orgList, templatePermissions },
     onLogin,
@@ -108,7 +107,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   hamburgerActive,
   closeHamburger,
 }) => {
-  const { t, selectedLanguage, languageOptions } = useLanguageProvider()
+  const { t, selectedLanguage } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     applicationList: { active: false, selection: '' },
@@ -122,7 +121,6 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   const { push, pathname } = useRouter()
   const {
     userState: { currentUser },
-    logout,
   } = useUserState()
   const { isMobile } = useViewport()
 
@@ -407,6 +405,8 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   onLogin,
 }) => {
   const { t } = useLanguageProvider()
+  const { push } = useRouter()
+  const { viewport } = useViewport()
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
 
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
@@ -434,10 +434,16 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
       ) as any,
       value: LOGIN_AS_NO_ORG,
     })
+
+  const logoIsLink = viewport.width < 860
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
-        <Image src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))} />
+        <Image
+          src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))}
+          onClick={logoIsLink && (() => push('/'))}
+          className={logoIsLink ? 'clickable' : ''}
+        />
       )}
       <div id="org-label">
         {dropdownOptions.length === 1 ? (

@@ -106,7 +106,7 @@ export const useMapColumnsByRole = () => {
       sortName: '',
       ColumnComponent: ReviewerActionCell,
       hideMobileLabel: true,
-      hideOnMobileTest: (application) => !application.reviewerAction,
+      hideOnMobileTest: (_) => true,
     },
     APPLICANT_ACTION: {
       headerName: t('COLUMN_APPLICANT_ACTION'),
