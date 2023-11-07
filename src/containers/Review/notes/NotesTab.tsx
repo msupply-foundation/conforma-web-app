@@ -20,6 +20,8 @@ import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 import NewCommentForm from './NewCommentForm'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { useSimpleCache } from '../../../utils/hooks/useSimpleCache'
+import { useDocumentModal } from '../../../utils/hooks/useDocumentModal'
 
 const COMMENT_DELETION_LIMIT = 5 // minutes
 
@@ -64,9 +66,19 @@ const NotesTab: React.FC<{
   })
   const { deleteNote, error: noteMutationError } = useNotesMutations(fullStructure.info.id, refetch)
 
+  // FileCache is to store the actual file contents after uploading, so when the
+  // user previews it immediately after, they don't have to wait for it to
+  // re-download
+  const fileCache = useSimpleCache<File>()
+
   const { sortDesc, filesOnlyFilter, showForm } = state
 
   const handleDelete = async (noteId: number) => {
+    const note = notes.find((n) => n.id === noteId)
+    const noteFiles = note?.files.nodes
+    if (noteFiles) {
+      noteFiles.forEach((file) => fileCache.removeFromCache(file?.originalFilename ?? ''))
+    }
     await deleteNote(noteId)
     refetch()
   }
@@ -128,7 +140,15 @@ const NotesTab: React.FC<{
                     }}
                   />
                 </div>
-                <FilesDisplay files={note.files.nodes as FileData[]} />
+                <div className="file-row">
+                  {note.files.nodes.map((file) => (
+                    <FileDisplay
+                      file={file as FileData}
+                      cachedFile={fileCache.getFromCache(file?.uniqueId ?? '')}
+                      key={file?.uniqueId}
+                    />
+                  ))}
+                </div>
                 <div className="note-footer-row">
                   <p className="tiny-bit-smaller-text">
                     <strong>{note.user?.fullName}</strong>
@@ -167,6 +187,7 @@ const NotesTab: React.FC<{
           state={state}
           setState={setState}
           refetchNotes={refetch}
+          fileCache={fileCache}
         />
       )}
     </Container>
@@ -175,21 +196,31 @@ const NotesTab: React.FC<{
 
 export default NotesTab
 
-const FilesDisplay: React.FC<any> = ({ files }) => {
-  if (files.length === 0) return null
+const FileDisplay: React.FC<{
+  file: FileData
+  cachedFile?: File
+}> = ({ file, cachedFile }) => {
+  const { uniqueId, originalFilename } = file
+  const fileUrl = getServerUrl('file', { fileId: uniqueId })
+  const thumbnailUrl = getServerUrl('file', { fileId: uniqueId, thumbnail: true })
+
+  const { DocumentModal, handleFile } = useDocumentModal({
+    filename: originalFilename,
+    fileUrl,
+    cachedFile,
+  })
 
   return (
-    <div className="file-row">
-      {files.map((file: FileData) => (
-        <div className="file-container" key={file.uniqueId}>
-          <a href={getServerUrl('file', { fileId: file?.uniqueId })} target="_blank">
-            <Image src={getServerUrl('file', { fileId: file?.uniqueId, thumbnail: true })} />
-          </a>
-          <a href={getServerUrl('file', { fileId: file?.uniqueId })} target="_blank">
-            {file.originalFilename}
-          </a>
-        </div>
-      ))}
+    <div className="file-container" key={file.uniqueId}>
+      {DocumentModal}
+      <Image src={thumbnailUrl} className="clickable" onClick={handleFile} />
+      <p
+        style={{ wordBreak: 'break-word' }}
+        className="clickable link-style tiny-bit-smaller-text"
+        onClick={handleFile}
+      >
+        {file.originalFilename}
+      </p>
     </div>
   )
 }

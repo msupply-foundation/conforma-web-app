@@ -5,33 +5,44 @@ import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 // @ts-ignore -- no types declarations available
 import Css from 'json-to-css'
 
+interface Preferences {
+  paginationPresets?: number[]
+  paginationDefault?: number
+  defaultLanguageCode?: string
+  brandLogoFileId?: string
+  brandLogoOnDarkFileId?: string
+  defaultListFilters?: string[]
+  showDocumentModal: boolean
+  googleAnalyticsId?: string
+  siteHost?: string
+  style?: { headerBgColor?: string }
+}
 interface PrefsState {
-  preferences?: {
-    paginationPresets?: number[]
-    paginationDefault?: number
-    defaultLanguageCode: string
-    brandLogoFileId?: string
-    brandLogoOnDarkFileId?: string
-    defaultListFilters?: string[]
-    googleAnalyticsId?: string
-    siteHost?: string
-    style?: { headerBgColor?: string }
-  }
+  preferences: Preferences
   languageOptions?: LanguageOption[]
   latestSnapshot?: string
   loading: boolean
   error?: Error
 }
 
+const defaultPrefs: Preferences = {
+  showDocumentModal: false,
+}
+
 interface PrefsContext extends PrefsState {
   refetchPrefs: () => void
 }
 
-const SystemPrefsContext = createContext<PrefsContext>({ loading: true, refetchPrefs: () => {} })
+const SystemPrefsContext = createContext<PrefsContext>({
+  loading: true,
+  preferences: defaultPrefs,
+  refetchPrefs: () => {},
+})
 
 export const SystemPrefsProvider = ({ children }: { children: React.ReactNode }) => {
   const [prefsState, setPrefsState] = useState<PrefsState>({
     loading: true,
+    preferences: defaultPrefs,
   })
 
   useEffect(() => {
@@ -44,7 +55,7 @@ export const SystemPrefsProvider = ({ children }: { children: React.ReactNode })
         const { languageOptions, preferences, latestSnapshot } = result
         setPrefsState({
           languageOptions,
-          preferences,
+          preferences: { ...defaultPrefs, ...preferences },
           latestSnapshot,
           loading: false,
         })
@@ -56,7 +67,7 @@ export const SystemPrefsProvider = ({ children }: { children: React.ReactNode })
         }
       })
       .catch((err) => {
-        setPrefsState({ loading: false, error: err })
+        setPrefsState({ loading: false, error: err, preferences: defaultPrefs })
       })
   }
 
