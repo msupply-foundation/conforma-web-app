@@ -26,6 +26,11 @@
   }
 }
 
+.data-view-detail-container {
+  .flex-column();
+  align-items: center;
+}
+
 // ********** desktop overrides *******************
 
 @media only screen and (min-width: @largestMobileScreen) {
@@ -141,8 +146,6 @@
     }
 
     .data-view-detail-container {
-      .flex-column();
-      align-items: center;
       // Limit size of images in Table (that come from SummaryView elements)
       .ui.image {
         width: unset;

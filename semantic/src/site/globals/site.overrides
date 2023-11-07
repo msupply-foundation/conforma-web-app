@@ -1084,11 +1084,6 @@ a:hover {
 }
 
 @media only screen and (max-width: @largestMobileScreen) {
-  #data-view {
-    .ui.header {
-      text-align: center;
-    }
-  }
   .data-view-detail-container {
     h2.ui.header {
       padding-top: 15px !important;
@@ -1097,6 +1092,7 @@ a:hover {
   #linked-applications-container {
     h4 {
       margin-bottom: 0;
+      text-align: center;
     }
   }
 }
