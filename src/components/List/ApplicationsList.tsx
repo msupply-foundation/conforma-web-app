@@ -6,7 +6,9 @@ import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 import { TableCellMobileLabelWrapper } from '../../utils/tables/TableCellMobileLabelWrapper'
 import { useViewport } from '../../contexts/ViewportState'
-import { ReviewerActionCell } from './Cells'
+
+// Which column in the column array is the "Action" cell
+const ACTION_CELL_INDEX = 6
 
 interface ApplicationsListProps {
   columns: ColumnDetails[]
@@ -96,6 +98,8 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
 
   if (error) return <Message error header={t('ERROR_APPLICATION_DELETE')} list={[error]} />
 
+  const MobileActionCell = getMobileActionCell(isMobile, columns[ACTION_CELL_INDEX], application)
+
   return (
     <Table.Row
       key={`ApplicationList-application-${application.id}`}
@@ -103,23 +107,28 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
       style={{ position: 'relative' }}
     >
       {columns.map(({ ColumnComponent, headerName, hideMobileLabel, hideOnMobileTest }, index) => {
-        const rowData = application as Record<string, any>
-        if (isMobile && hideOnMobileTest && hideOnMobileTest(rowData))
+        if (index === ACTION_CELL_INDEX && MobileActionCell)
           return (
-            <MobileListActionCell
-              Component={<ColumnComponent {...props} application={application} />}
-              {...props}
-            />
+            <Table.Cell
+              key={`ApplicationList-row-${application.id}-action`}
+              className="mobile-action-cell"
+              style={{ position: 'absolute', top: '1em', right: '1em' }}
+            >
+              <MobileActionCell {...props} />
+            </Table.Cell>
           )
+
+        const rowData = application as Record<string, any>
+        if (isMobile && hideOnMobileTest && hideOnMobileTest(rowData)) return null
+
         return (
-          <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
+          <Table.Cell
+            key={`ApplicationList-row-${application.id}-${index}`}
+            className={MobileActionCell ? 'has-mobile-action-cell' : ''}
+          >
             <TableCellMobileLabelWrapper label={headerName} hideLabel={hideMobileLabel}>
               <ColumnComponent {...props} />
             </TableCellMobileLabelWrapper>
-            <MobileListActionCell
-              Component={<ColumnComponent {...props} application={application} />}
-              {...props}
-            />
           </Table.Cell>
         )
       })}
@@ -129,20 +138,22 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
 
 export default ApplicationsList
 
-const MobileListActionCell: React.FC<{ Component: any; application: ApplicationListRow }> = ({
-  Component,
-  application,
-}) => {
-  const { isMobile } = useViewport()
+const getMobileActionCell = (
+  isMobile: boolean,
+  actionColumn: ColumnDetails,
+  application: ApplicationListRow
+) => {
   if (!isMobile) return null
 
+  if (actionColumn.ColumnComponent.name === 'ReviewerActionCell' && application.reviewerAction)
+    return actionColumn.ColumnComponent
+
   if (
-    (Component.type.displayName === 'ReviewerActionCell' && application.reviewerAction) ||
-    (Component.type.displayName === 'ApplicantActionCell' &&
-      (application.status === ApplicationStatus.ChangesRequired ||
-        application.status === ApplicationStatus.Draft))
+    actionColumn.ColumnComponent.name === 'ApplicantActionCell' &&
+    (application.status === ApplicationStatus.ChangesRequired ||
+      application.status === ApplicationStatus.Draft)
   )
-    return <div style={{ position: 'absolute', top: '1em', right: '1em' }}>{Component}</div>
+    return actionColumn.ColumnComponent
 
   return null
 }
