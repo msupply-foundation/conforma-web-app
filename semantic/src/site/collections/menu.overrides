@@ -7,4 +7,14 @@
   .ui.attached.tabular.menu {
     flex-wrap: wrap;
   }
+
+  .ui.tabular.menu .item {
+    background-color: #cacaca24;
+    border-left: 0.5px solid @tabularBorderColor;
+    border-right: 0.5px solid @tabularBorderColor;
+    border-top: 1px solid @tabularBorderColor;
+    border-top-left-radius: @borderRadius;
+    border-top-right-radius: @borderRadius;
+  }
 }
+
