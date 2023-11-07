@@ -461,6 +461,10 @@ a:hover {
    Application/Review Wrappers
 ------------------------------------*/
 
+#application-area {
+  .flex-column-center();
+}
+
 // Moves back up if UserArea is not displayed
 #application-area.non-registered {
   margin-top: -@headerHeight;
@@ -468,8 +472,8 @@ a:hover {
 
 #content-area .top-container {
   margin-top: 20px;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  max-width: @applicationFormWidth;
+  width: 100%;
 }
 
 // Back to application list label
@@ -478,14 +482,7 @@ a:hover {
   background-color: transparent;
   font-size: @fontSmall;
   font-weight: @regularWeight;
-  padding-left: 10%;
-}
-
-// Fix for company header on mobile to not clash with 'back to applications'
-@media only screen and (min-width: @tabletBreakpoint) {
-  #content-area .heading-alt {
-    margin-top: -25px;
-  }
+  padding-left: 0;
 }
 
 /*---------------------------------------
@@ -498,6 +495,9 @@ a:hover {
   background-color: @surfacesWhite;
   width: 800px;
   padding: 30px 50px 32px;
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding: 20px;
+  }
 }
 
 // Steps line (vertical box - layout)
@@ -894,8 +894,7 @@ a:hover {
   }
 
   .ui.image {
-    max-height: 100px;
-    // border: 1px solid @surfacesLight;
+    max-height: 100px;    
   }
 
   .ui.list {
@@ -908,7 +907,6 @@ a:hover {
     padding: 15px;
     border-radius: @borderRadius;
     border: 1px solid @surfacesMed;
-    min-width: 400px;
     h4 {
       max-width: 250px;
       line-height: 1.5em;
@@ -931,6 +929,7 @@ a:hover {
       margin-bottom: 5px;
       .ui.label {
         line-height: 1.5;
+        font-size: 0.57;
       }
       .centered-flex-box-row {
         display: flex;
@@ -1035,7 +1034,7 @@ a:hover {
   .ui.form {
     .field {
       margin: 0;
-      flex-basis: 65%;
+      flex-basis: 100%;
     }
     textarea {
       display: block;
@@ -2773,5 +2772,56 @@ h6:first-child {
 
   .hamburger.active .hamburger-patty {
     display: none;
+  }
+
+  //Review Page layout for mobile
+  #review-tabs {
+    .ui.segment {
+      padding: 0.5em 0.5em;
+    }
+    .stage-label {
+      font-size: 0.7rem;
+    }    
+  }
+  #overview .left-item {
+    min-width: unset;
+  }
+  #timeline {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+  
+  #documents-tab {
+    //smaller icon in Review documents tab
+    .ui.image {
+      max-height: 60px;
+    }
+    .flex-extra {
+      gap: 5px;
+    }
+    .ui.list {
+      margin-top: 0px;
+    }
+    .ui.list > .item {
+      margin-top: 10px;
+      padding: 10px;
+    }
+  }
+
+  #notes-tab .options-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #assignment-tab {
+    .assigning-row > .column {
+      padding: 0.1rem 0.5rem !important;
+    }
+    .stage-label {
+      margin-left: 3px;
+    }
+    .custom-assignment-grid-column {
+      padding: 0.5rem 0.5rem !important;
+    }
   }
 }

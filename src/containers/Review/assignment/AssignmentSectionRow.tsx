@@ -117,7 +117,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
       ?.levels.find(({ number }) => reviewLevel === number)?.name || t('ERROR_LEVEL_NOT_FOUND')
 
   return (
-    <Grid columns={2} className="section-single-row-box-container">
+    <Grid stackable columns={2} className="section-single-row-box-container">
       <Grid.Row className="assigning-row">
         <Grid.Column className="review-level" width={5}>
           <Label className="simple-label">

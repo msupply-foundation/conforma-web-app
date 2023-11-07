@@ -1,3 +1,22 @@
 /*******************************
          Site Overrides
 *******************************/
+
+@media only screen and (max-width: @largestMobileScreen) {
+  // For review page tabs when mobile, but probably good site wide
+  .ui.attached.tabular.menu {
+    flex-wrap: wrap-reverse;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+
+  .ui.tabular.menu .item {
+    background-color: #cacaca24;
+    border-left: 0.5px solid @tabularBorderColor;
+    border-right: 0.5px solid @tabularBorderColor;
+    border-top: 1px solid @tabularBorderColor;
+    border-top-left-radius: @borderRadius;
+    border-top-right-radius: @borderRadius;
+  }
+}
+
