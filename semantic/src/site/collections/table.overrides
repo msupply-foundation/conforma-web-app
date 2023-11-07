@@ -193,6 +193,17 @@
     }
   }
 
+  #applications-list {
+    .ui.table tr td:nth-last-child(2).has-mobile-action-cell {
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      padding-bottom: 10px !important;
+    }
+    .ui.table tr td:last-child:not(.has-mobile-action-cell) {
+      padding-bottom: 10px !important;
+    }
+  }
+
   // DataView detail page
   .data-view-detail-container {
     .ui.table tr {

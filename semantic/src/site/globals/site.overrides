@@ -894,7 +894,7 @@ a:hover {
   }
 
   .ui.image {
-    max-height: 100px;    
+    max-height: 100px;
   }
 
   .ui.list {
@@ -2794,7 +2794,7 @@ h6:first-child {
     }
     .stage-label {
       font-size: 0.7rem;
-    }    
+    }
   }
   #overview .left-item {
     min-width: unset;
@@ -2803,7 +2803,7 @@ h6:first-child {
     margin-left: 8px;
     margin-right: 8px;
   }
-  
+
   #documents-tab {
     //smaller icon in Review documents tab
     .ui.image {
