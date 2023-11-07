@@ -114,7 +114,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
             )}
             <div id="review-tabs">
               <Tab
-                panes={tabPanes}
+                panes={isMobile ? tabPanes.reverse() : tabPanes}
                 onTabChange={handleTabChange}
                 activeIndex={getTabFromQuery(tab)}
               />
