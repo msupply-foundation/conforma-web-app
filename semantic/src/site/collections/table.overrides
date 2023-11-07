@@ -190,6 +190,10 @@
     }
   }
 
+  #applications-list .ui.table tr td:last-child {
+    padding-bottom: 10px !important;
+  }
+
   // For list-builder tables
   .form-element {
     .ui.table {

@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react'
 import { Table, Message, Popup } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import { useDeleteApplicationMutation } from '../../utils/generated/graphql'
+import { ApplicationStatus, useDeleteApplicationMutation } from '../../utils/generated/graphql'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
 import Loading from '../Loading'
 import { TableCellMobileLabelWrapper } from '../../utils/tables/TableCellMobileLabelWrapper'
 import { useViewport } from '../../contexts/ViewportState'
+import { ReviewerActionCell } from './Cells'
 
 interface ApplicationsListProps {
   columns: ColumnDetails[]
@@ -27,7 +28,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
   const { t } = useLanguageProvider()
   const { isMobile } = useViewport()
   return (
-    <>
+    <div id="applications-list">
       <Table sortable stackable selectable>
         {!isMobile && (
           <Table.Header>
@@ -70,7 +71,7 @@ const ApplicationsList: React.FC<ApplicationsListProps> = ({
       {applications && applications.length === 0 && !loading && (
         <Message floating color="yellow" header={t('APPLICATIONS_LIST_EMPTY')} />
       )}
-    </>
+    </div>
   )
 }
 
@@ -96,15 +97,29 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
   if (error) return <Message error header={t('ERROR_APPLICATION_DELETE')} list={[error]} />
 
   return (
-    <Table.Row key={`ApplicationList-application-${application.id}`} className="list-row">
+    <Table.Row
+      key={`ApplicationList-application-${application.id}`}
+      className="list-row"
+      style={{ position: 'relative' }}
+    >
       {columns.map(({ ColumnComponent, headerName, hideMobileLabel, hideOnMobileTest }, index) => {
         const rowData = application as Record<string, any>
-        if (isMobile && hideOnMobileTest && hideOnMobileTest(rowData)) return null
+        if (isMobile && hideOnMobileTest && hideOnMobileTest(rowData))
+          return (
+            <MobileListActionCell
+              Component={<ColumnComponent {...props} application={application} />}
+              {...props}
+            />
+          )
         return (
           <Table.Cell key={`ApplicationList-row-${application.id}-${index}`}>
             <TableCellMobileLabelWrapper label={headerName} hideLabel={hideMobileLabel}>
               <ColumnComponent {...props} />
             </TableCellMobileLabelWrapper>
+            <MobileListActionCell
+              Component={<ColumnComponent {...props} application={application} />}
+              {...props}
+            />
           </Table.Cell>
         )
       })}
@@ -113,3 +128,21 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
 }
 
 export default ApplicationsList
+
+const MobileListActionCell: React.FC<{ Component: any; application: ApplicationListRow }> = ({
+  Component,
+  application,
+}) => {
+  const { isMobile } = useViewport()
+  if (!isMobile) return null
+
+  if (
+    (Component.type.displayName === 'ReviewerActionCell' && application.reviewerAction) ||
+    (Component.type.displayName === 'ApplicantActionCell' &&
+      (application.status === ApplicationStatus.ChangesRequired ||
+        application.status === ApplicationStatus.Draft))
+  )
+    return <div style={{ position: 'absolute', top: '1em', right: '1em' }}>{Component}</div>
+
+  return null
+}
