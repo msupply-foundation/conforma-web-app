@@ -461,6 +461,10 @@ a:hover {
    Application/Review Wrappers
 ------------------------------------*/
 
+#application-area {
+  .flex-column-center();
+}
+
 // Moves back up if UserArea is not displayed
 #application-area.non-registered {
   margin-top: -@headerHeight;
@@ -468,8 +472,8 @@ a:hover {
 
 #content-area .top-container {
   margin-top: 20px;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  max-width: @applicationFormWidth;
+  width: 100%;
 }
 
 // Back to application list label
@@ -478,14 +482,7 @@ a:hover {
   background-color: transparent;
   font-size: @fontSmall;
   font-weight: @regularWeight;
-  padding-left: 10%;
-}
-
-// Fix for company header on mobile to not clash with 'back to applications'
-@media only screen and (min-width: @tabletBreakpoint) {
-  #content-area .heading-alt {
-    margin-top: -25px;
-  }
+  padding-left: 0;
 }
 
 /*---------------------------------------
@@ -498,6 +495,9 @@ a:hover {
   background-color: @surfacesWhite;
   width: 800px;
   padding: 30px 50px 32px;
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding: 20px;
+  }
 }
 
 // Steps line (vertical box - layout)
