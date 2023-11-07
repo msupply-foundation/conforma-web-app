@@ -43,4 +43,7 @@
   .ui.message {
     padding: 0.5em 0.5em;
   }
+  .ui.info.message {
+    border-left: unset;
+  }
 }

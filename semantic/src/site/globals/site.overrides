@@ -2780,7 +2780,14 @@ h6:first-child {
     }
     .stage-label {
       font-size: 0.57rem;
-    }
+    }    
+  }
+  #overview .left-item {
+    min-width: unset;
+  }
+  #timeline {
+    margin-left: 8px;
+    margin-right: 8px;
   }
   
   #documents-tab {
