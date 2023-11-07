@@ -2779,7 +2779,7 @@ h6:first-child {
       padding: 0.5em 0.5em;
     }
     .stage-label {
-      font-size: 0.57rem;
+      font-size: 0.7rem;
     }    
   }
   #overview .left-item {
@@ -2816,5 +2816,8 @@ h6:first-child {
     .assigning-row > .column {
       padding: 0.5rem 0.5rem !important;
     }
+    .stage-label {
+      margin-left: 3px;
+    } 
   }
 }
