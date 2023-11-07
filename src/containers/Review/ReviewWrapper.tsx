@@ -10,6 +10,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import ReviewPageWrapper from './ReviewPageWrapper'
 import { OverviewTab, AssignmentTab, NotesTab, DocumentsTab, ReviewProgress } from './'
 import { NotesState } from './notes/NotesTab'
+import { useViewport } from '../../contexts/ViewportState'
 
 interface ReviewWrapperProps {
   structure: FullStructure
@@ -19,6 +20,7 @@ const tabIdentifiers = ['overview', 'assignment', 'notes', 'documents']
 
 const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   const { t } = useLanguageProvider()
+  const { isMobile } = useViewport()
   const {
     match: { path },
     query: { tab },
@@ -105,10 +107,14 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
             orgName={org?.name as string}
           />
           <div id="review-home-content">
-            <ReviewProgress structure={structure} />
+            {isMobile && structure.stages.length <= 2 ? (
+              <ReviewProgress structure={structure} />
+            ) : (
+              !isMobile && <ReviewProgress structure={structure} />
+            )}
             <div id="review-tabs">
               <Tab
-                panes={tabPanes}
+                panes={isMobile ? tabPanes.reverse() : tabPanes}
                 onTabChange={handleTabChange}
                 activeIndex={getTabFromQuery(tab)}
               />
