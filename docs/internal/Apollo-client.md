@@ -6,7 +6,7 @@ Install Graphql-codegen tutorial: https://medium.com/make-it-heady/part-2-buildi
 
 ## Run the Back-end server
 
-[Repo documentation](https://github.com/openmsupply/conforma-server/pull/1)
+[Repo documentation](https://github.com/msupply-foundation/conforma-server/pull/1)
 
 ## Create a App config file
 
