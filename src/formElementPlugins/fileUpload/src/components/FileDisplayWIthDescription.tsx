@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader, Input } from 'semantic-ui-react'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
+import { useDocumentModal } from '../../../../utils/hooks/useDocumentModal'
 import { FileDisplayProps } from './FileDisplay'
 import prefs from '../../config.json'
 
@@ -14,14 +15,30 @@ export const FileDisplayWithDescription = ({
   file,
   onDelete,
   updateDescription,
+  showDocumentModal,
+  cachedFile,
 }: FileDisplayDescriptionProps) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('fileUpload')
   const { loading, error, errorMessage, filename, fileData, key } = file
   const [description, setDescription] = useState<string>(fileData?.description ?? '')
+
+  const fileUrl = fileData ? getServerUrl('file', { fileId: fileData.uniqueId }) : ''
+  const thumbnailUrl = fileData
+    ? getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })
+    : ''
+
+  const { DocumentModal, handleFile } = useDocumentModal({
+    filename,
+    fileUrl,
+    showDocumentModal,
+    cachedFile,
+  })
+
   return (
     <List.Item>
       <div style={{ display: 'flex', gap: 20, alignItems: 'center', paddingRight: 20 }}>
+        {DocumentModal}
         <Grid
           verticalAlign="top"
           celled
@@ -48,7 +65,7 @@ export const FileDisplayWithDescription = ({
             <>
               <Grid.Row centered style={{ boxShadow: 'none', height: 120 }} verticalAlign="middle">
                 <Loader active size="medium">
-                  Uploading
+                  {t('FILE_UPLOADING')}
                 </Loader>
               </Grid.Row>
               <Grid.Row centered style={{ boxShadow: 'none' }}>
@@ -59,18 +76,20 @@ export const FileDisplayWithDescription = ({
           {fileData && (
             <>
               <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-                <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
-                  <Image
-                    src={getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })}
-                    style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
-                  />
-                </a>
+                <Image
+                  src={thumbnailUrl}
+                  className="clickable"
+                  onClick={handleFile}
+                  style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
+                />
               </Grid.Row>
               <Grid.Row centered style={{ boxShadow: 'none' }}>
-                <p style={{ wordBreak: 'break-word', fontSize: '90%' }}>
-                  <a href={getServerUrl('file', { fileId: fileData.uniqueId })} target="_blank">
-                    {filename}
-                  </a>
+                <p
+                  style={{ wordBreak: 'break-word' }}
+                  className="clickable link-style slightly-smaller-text"
+                  onClick={handleFile}
+                >
+                  {filename}
                 </p>
               </Grid.Row>
             </>
@@ -81,7 +100,7 @@ export const FileDisplayWithDescription = ({
             circular
             fitted
             color="grey"
-            onClick={() => onDelete(key)}
+            onClick={() => (onDelete ? onDelete(key) : () => {})}
             className="file-delete-icon"
             style={{ position: 'absolute', right: 0, top: 0 }}
           />

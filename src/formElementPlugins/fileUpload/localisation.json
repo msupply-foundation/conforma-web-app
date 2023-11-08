@@ -6,6 +6,7 @@
   "ERROR_UPLOAD_PROBLEM": "Problem uploading file",
   "BUTTON_CLICK_TO_UPLOAD": "Click to upload",
   "BUTTON_UPLOAD_ANOTHER": "Upload another",
+  "FILE_UPLOADING": "Uploading...",
   "ADD_DESCRIPTION": "Add description",
   "ALLOWED_FORMATS": "Allowed file formats:",
   "MAX_SIZE": "Max size:"
