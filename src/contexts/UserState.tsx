@@ -1,8 +1,12 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import React, { createContext, useContext, useReducer, useRef } from 'react'
 import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import config from '../config'
+import IdleTracker from 'idle-tracker'
+import { usePrefs } from './SystemPrefs'
+
+const setTimeout = window.setTimeout // To ensure return type is number
 
 type UserState = {
   currentUser: User | null
@@ -94,13 +98,26 @@ export function UserProvider({ children }: UserProviderProps) {
   const userState = state
   const setUserState = dispatch
   const client = useApolloClient()
+  const { preferences } = usePrefs()
+  const timerId = useRef(0)
+  const idleTracker = useRef(
+    new IdleTracker({
+      timeout: preferences.logoutAfterInactivity * 60_000,
+      onIdleCallback: (event) => {
+        console.log(event)
+        localStorage.setItem('isIdle', String(event.idle))
+      },
+    })
+  )
 
   const logout = () => {
+    idleTracker.current.end()
     // Delete everything EXCEPT language preference in localStorage
     const language = localStorage.getItem('language')
     localStorage.clear()
     if (language) localStorage.setItem('language', language)
     client.clearStore()
+    clearTimeout(timerId.current)
     window.location.href = '/login'
   }
 
@@ -121,10 +138,23 @@ export function UserProvider({ children }: UserProviderProps) {
       })
       dispatch({ type: 'setLoading', isLoading: false })
     }
+    idleTracker.current.start()
+    timerId.current = setTimeout(refreshJWT, (preferences.logoutAfterInactivity - 1) * 60_000)
   }
 
   const refreshJWT = () => {
-    fetchUserInfo({ dispatch: setUserState }, logout)
+    clearTimeout(timerId.current) // in case refresh called early
+    console.log('Refreshing...')
+    const isIdle = localStorage.getItem('isIdle') === 'true'
+    console.log('Local storage says IDLE', isIdle)
+    if (isIdle) {
+      console.log('Idle, logging out')
+      logout()
+    } else {
+      console.log('Not idle, refreshing token')
+      fetchUserInfo({ dispatch: setUserState }, logout)
+      timerId.current = setTimeout(refreshJWT, (preferences.logoutAfterInactivity - 1) * 60_000)
+    }
   }
 
   // Initial check for persisted user in local storage
