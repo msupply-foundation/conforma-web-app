@@ -54,7 +54,11 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   } = fullStructure
 
   const getTabFromQuery = (tabQuery: string | undefined) => {
-    const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
+    // If mobile, we reverse array to improve "wrapping" of tab elements.
+    // So reverse array to make 'overview' the default tab
+    const index = isMobile
+      ? tabIdentifiers.reverse().findIndex((tabName) => tabName === tabQuery)
+      : tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
     return index === -1 ? 0 : index
   }
 
