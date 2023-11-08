@@ -117,6 +117,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     intRefDocs: { active: false },
     extRefDocs: { active: false },
   })
+  const { preferences } = usePrefs()
   const { push, pathname } = useRouter()
   const {
     userState: { currentUser },
@@ -146,6 +147,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
 
   const getTemplateSubmenu = (template: TemplateInList) =>
     template.templateCategory.isSubmenu ? template.templateCategory.title : null
+
+  const helpLinks = preferences?.helpLinks ?? []
 
   const applicationListOptions = constructNestedMenuOptions(templates, {
     filterMethod: ({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List),
@@ -313,10 +316,13 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               />
             </List.Item>
           )}
-          {extReferenceDocs.length > 0 && (
+          {helpLinks.length + extReferenceDocs.length > 0 && (
             <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
               <Dropdown text={t('MENU_ITEM_HELP')}>
                 <Dropdown.Menu>
+                  {helpLinks.map(({ text, link }) => (
+                    <Dropdown.Item key={link} onClick={() => window.open(link)} text={text} />
+                  ))}
                   {extReferenceDocs.map((doc) => (
                     <Dropdown.Item
                       key={doc.uniqueId}

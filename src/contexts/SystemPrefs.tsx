@@ -16,6 +16,7 @@ interface Preferences {
   googleAnalyticsId?: string
   siteHost?: string
   style?: { headerBgColor?: string }
+  helpLinks?: { text: string; link: string }[]
 }
 interface PrefsState {
   preferences: Preferences
