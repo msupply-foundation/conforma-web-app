@@ -54,11 +54,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   } = fullStructure
 
   const getTabFromQuery = (tabQuery: string | undefined) => {
-    // If mobile, we reverse array to improve "wrapping" of tab elements.
-    // So reverse array to make 'overview' the default tab
-    const index = isMobile
-      ? tabIdentifiers.reverse().findIndex((tabName) => tabName === tabQuery)
-      : tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
+    const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
     return index === -1 ? 0 : index
   }
 
@@ -147,6 +143,7 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
   applicationName,
   orgName,
 }) => {
+  const { isMobile } = useViewport()
   const {
     push,
     query: { tab },
@@ -159,7 +156,9 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
   const [prevQueryString] = useState(location?.state?.prevQuery)
 
   if (!tab) {
-    updateQuery({ tab: tabIdentifiers[0] })
+    !isMobile
+      ? updateQuery({ tab: tabIdentifiers[0] })
+      : updateQuery({ tab: tabIdentifiers[tabIdentifiers.length - 1] })
   }
 
   const linkBack = prevQueryString
