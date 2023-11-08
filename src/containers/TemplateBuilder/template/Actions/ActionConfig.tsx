@@ -50,7 +50,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const { allActionsByCode, applicationData } = useActionState()
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
-  const showToast = useToast({
+  const { showToast } = useToast({
     title: t('TEMPLATE_MESSAGE_SAVE_SUCCESS'),
     style: 'success',
   })

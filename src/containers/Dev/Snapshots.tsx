@@ -67,7 +67,7 @@ const Snapshots: React.FC = () => {
   const [data, setData] = useState<ListData | null>(null)
 
   const { ConfirmModal, showModal } = useConfirmationModal({ type: 'warning', awaitAction: false })
-  const showToast = useToast({ style: 'success' })
+  const { showToast } = useToast({ style: 'success' })
 
   const JWT = localStorage.getItem(config.localStorageJWTKey)
   const isProductionBuild = config.isProductionBuild
@@ -244,7 +244,7 @@ const Snapshots: React.FC = () => {
                 showToast({
                   title: 'Download complete',
                   text: `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}`,
-                  timeout: 30000,
+                  timeout: 0,
                 })
               }}
             />

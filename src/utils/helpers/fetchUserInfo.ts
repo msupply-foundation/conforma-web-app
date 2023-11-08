@@ -10,7 +10,7 @@ interface SetUserInfoProps {
 
 const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
   getRequest(getServerUrl('userInfo'))
-    .then(({ templatePermissions, JWT, user, success, orgList, tokenExpiry }) => {
+    .then(({ templatePermissions, JWT, user, success, orgList }) => {
       if (!success) logout()
       localStorage.setItem(config.localStorageJWTKey, JWT)
       // Set userinfo to context after receiving it from endpoint
@@ -20,9 +20,7 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
           newUser: user,
           newPermissions: templatePermissions || {},
           newOrgList: orgList || [],
-          newTokenExpiryTime: tokenExpiry,
         })
-        console.log('New Expiry', new Date(tokenExpiry * 1000))
       }
 
       dispatch({ type: 'setLoading', isLoading: false })
@@ -30,6 +28,8 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
     .catch((error) => {
       // TODO handle this properly
       console.log(error)
+      console.log('Problem fetching user info')
+      logout()
     })
 }
 

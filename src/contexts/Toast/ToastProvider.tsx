@@ -10,11 +10,17 @@ const setTimeout = window.setTimeout // To ensure return type is number
 interface ToastProviderValue {
   showToast: (...state: Partial<ToastProps>[]) => void
   updateDefaults: (state: Partial<ToastProps>) => void
+  clearAllToasts: () => void
+  toasts: ToastProps[]
 }
+
+type ToastState = ToastProps & { close: () => void }
 
 const ToastProviderContext = createContext<ToastProviderValue>({
   showToast: () => {},
   updateDefaults: () => {},
+  clearAllToasts: () => {},
+  toasts: [],
 })
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -28,25 +34,32 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     position: bottomLeft,
     uid: '',
   })
-  const [toasts, setToasts] = useState<ToastProps[]>([])
+  const [toasts, setToasts] = useState<ToastState[]>([])
 
   const updateDefaults = (newDefaults: Partial<ToastProps>) => {
     setToastDefaults((prevDefaults) => ({ ...prevDefaults, ...newDefaults }))
   }
 
   const showToast = (newToast: Partial<ToastProps> = {}) => {
-    setToasts((prevState) => [...prevState, { ...toastDefaults, ...newToast, uid: nanoid(8) }])
+    setToasts((prevState) => [
+      ...prevState,
+      { ...toastDefaults, ...newToast, uid: nanoid(8), close: () => {} },
+    ])
   }
 
   const removeToast = (uid: string) => {
     setToasts((prevState) => prevState.filter((toast) => toast.uid !== uid))
   }
 
+  const clearAllToasts = () => toasts.forEach((toast) => toast.close())
+
   return (
     <ToastProviderContext.Provider
       value={{
         showToast,
+        clearAllToasts,
         updateDefaults,
+        toasts,
       }}
     >
       <div id="toast-container">
@@ -66,15 +79,15 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useToast = (toastSettings: Partial<ToastProps> = {}) => {
-  const { showToast, updateDefaults } = useContext(ToastProviderContext)
+  const { showToast, clearAllToasts, updateDefaults, toasts } = useContext(ToastProviderContext)
   useEffect(() => {
     updateDefaults(toastSettings)
   }, [])
 
-  return showToast
+  return { showToast, clearAllToasts, toasts }
 }
 
-export const Toast = ({ toast, removeToast }: { toast: ToastProps; removeToast: () => void }) => {
+export const Toast = ({ toast, removeToast }: { toast: ToastState; removeToast: () => void }) => {
   const [visible, setVisible] = useState(false)
   const timerId = useRef<number>(0)
   const { timeout } = toast
@@ -97,6 +110,8 @@ export const Toast = ({ toast, removeToast }: { toast: ToastProps; removeToast: 
       removeToast()
     }, TRANSITION_DURATION + 50)
   }
+
+  toast.close = closeToast // Mutate state directly
 
   const messageState: MessageProps = {
     header: toast.title,

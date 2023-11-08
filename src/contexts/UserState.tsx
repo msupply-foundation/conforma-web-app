@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useReducer, useRef } from 'react'
 import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
+import { Position, useToast } from './Toast'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import config from '../config'
 import IdleTracker from 'idle-tracker'
 import { usePrefs } from './SystemPrefs'
-
-const setTimeout = window.setTimeout // To ensure return type is number
+import { useRouter } from '../utils/hooks/useRouter'
+import { useLanguageProvider } from './Localisation'
 
 type UserState = {
   currentUser: User | null
@@ -14,7 +15,6 @@ type UserState = {
   orgList: OrganisationSimple[]
   isLoading: boolean
   isNonRegistered: boolean | null
-  tokenExpiryTime: number // Unix timestamp
 }
 
 type OnLogin = (
@@ -33,7 +33,6 @@ export type UserActions =
       newUser: User
       newPermissions: TemplatePermissions
       newOrgList: OrganisationSimple[]
-      newTokenExpiryTime: number
     }
   | {
       type: 'setLoading'
@@ -47,14 +46,14 @@ const reducer = (state: UserState, action: UserActions) => {
     case 'resetCurrentUser':
       return initialState
     case 'setCurrentUser':
-      const { newUser, newPermissions, newOrgList, newTokenExpiryTime } = action
+      const { newUser, newPermissions, newOrgList } = action
       return {
         ...state,
         currentUser: newUser,
         templatePermissions: newPermissions,
         orgList: newOrgList,
         isNonRegistered: newUser.username === config.nonRegisteredUser,
-        tokenExpiryTime: newTokenExpiryTime,
+        // tokenExpiryTime: newTokenExpiryTime,
       }
     case 'setLoading':
       const { isLoading } = action
@@ -73,7 +72,7 @@ const initialState: UserState = {
   orgList: [],
   isLoading: false,
   isNonRegistered: null,
-  tokenExpiryTime: 9999999999,
+  // tokenExpiryTime: 9999999999,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
@@ -94,11 +93,15 @@ const initialUserContext: {
 const UserContext = createContext(initialUserContext)
 
 export function UserProvider({ children }: UserProviderProps) {
+  const { t } = useLanguageProvider()
   const [state, dispatch] = useReducer(reducer, initialState)
   const userState = state
   const setUserState = dispatch
   const client = useApolloClient()
+  const { push } = useRouter()
   const { preferences } = usePrefs()
+  const { showToast, clearAllToasts } = useToast()
+
   const timerId = useRef(0)
   const idleTracker = useRef(
     new IdleTracker({
@@ -110,7 +113,7 @@ export function UserProvider({ children }: UserProviderProps) {
     })
   )
 
-  const logout = () => {
+  const logout = (forced: boolean = false) => {
     idleTracker.current.end()
     // Delete everything EXCEPT language preference in localStorage
     const language = localStorage.getItem('language')
@@ -118,11 +121,20 @@ export function UserProvider({ children }: UserProviderProps) {
     if (language) localStorage.setItem('language', language)
     client.clearStore()
     clearTimeout(timerId.current)
-    window.location.href = '/login'
+    push('/login')
+    if (forced)
+      showToast({
+        title: t('MENU_LOGOUT'),
+        text: t('LOGOUT_INACTIVITY_ALERT'),
+        style: 'negative',
+        position: Position.bottomLeft,
+        timeout: 0,
+      })
   }
 
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
+    clearAllToasts()
     if (JWT == 'undefined' || JWT == undefined) logout()
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
@@ -134,12 +146,15 @@ export function UserProvider({ children }: UserProviderProps) {
         newUser: user,
         newPermissions: templatePermissions || {},
         newOrgList: orgList || [],
-        newTokenExpiryTime: 0,
       })
       dispatch({ type: 'setLoading', isLoading: false })
     }
+
     idleTracker.current.start()
-    timerId.current = setTimeout(refreshJWT, (preferences.logoutAfterInactivity - 1) * 60_000)
+    timerId.current = window.setTimeout(
+      refreshJWT,
+      (preferences.logoutAfterInactivity - 1) * 60_000
+    )
   }
 
   const refreshJWT = () => {
@@ -149,11 +164,14 @@ export function UserProvider({ children }: UserProviderProps) {
     console.log('Local storage says IDLE', isIdle)
     if (isIdle) {
       console.log('Idle, logging out')
-      logout()
+      logout(true)
     } else {
       console.log('Not idle, refreshing token')
       fetchUserInfo({ dispatch: setUserState }, logout)
-      timerId.current = setTimeout(refreshJWT, (preferences.logoutAfterInactivity - 1) * 60_000)
+      timerId.current = window.setTimeout(
+        refreshJWT,
+        (preferences.logoutAfterInactivity - 1) * 60_000
+      )
     }
   }
 
