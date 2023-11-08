@@ -33,6 +33,17 @@ const Dashboard: React.FC = () => {
 
   usePageTitle(t('PAGE_TITLE_HOME'))
 
+  // The login page auto-zooms the viewport when entering the form, which makes
+  // the Dashboard page too zoomed-in on load. This just resets that.
+  const viewport = document.querySelector('meta[name=viewport]')
+  if (viewport)
+    viewport.setAttribute('content', 'initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0')
+
+  setTimeout(() => {
+    if (viewport)
+      viewport.setAttribute('content', 'initial-scale=1.0, minimum-scale=1.0, maximum-scale=10')
+  }, 2000)
+
   const dashboardCategories = templatesByCategory.filter(({ templateCategory: { uiLocation } }) =>
     uiLocation.includes(UiLocation.Dashboard)
   )
