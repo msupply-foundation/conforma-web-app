@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Container, Header } from 'semantic-ui-react'
+import { Container, Header } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { FullStructure } from '../../../utils/types'

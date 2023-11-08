@@ -20,8 +20,9 @@ import { constructOrObjectFilters } from '../utils/helpers/utilityFunctions'
 const Dashboard: React.FC = () => {
   const { t } = useLanguageProvider()
   const {
-    userState: { templatePermissions, isNonRegistered },
+    userState: { templatePermissions, isNonRegistered, tokenExpiryTime },
     logout,
+    refreshJWT,
   } = useUserState()
   const {
     templatesData: { templatesByCategory },
@@ -40,6 +41,14 @@ const Dashboard: React.FC = () => {
   return (
     <div id="dashboard">
       <Header as="h2" content={t('MENU_ITEM_DASHBOARD')} />
+      <p
+        onClick={() => {
+          console.log('Expiry', new Date(tokenExpiryTime * 1000))
+          refreshJWT()
+        }}
+      >
+        Click to refresh token
+      </p>
       {dashboardCategories.map(({ templates, templateCategory: { icon, title, code } }) => (
         <CategoryComponent
           key={code}

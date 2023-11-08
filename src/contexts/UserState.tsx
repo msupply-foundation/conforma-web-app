@@ -10,6 +10,7 @@ type UserState = {
   orgList: OrganisationSimple[]
   isLoading: boolean
   isNonRegistered: boolean | null
+  tokenExpiryTime: number // Unix timestamp
 }
 
 type OnLogin = (
@@ -28,6 +29,7 @@ export type UserActions =
       newUser: User
       newPermissions: TemplatePermissions
       newOrgList: OrganisationSimple[]
+      newTokenExpiryTime: number
     }
   | {
       type: 'setLoading'
@@ -41,13 +43,14 @@ const reducer = (state: UserState, action: UserActions) => {
     case 'resetCurrentUser':
       return initialState
     case 'setCurrentUser':
-      const { newUser, newPermissions, newOrgList } = action
+      const { newUser, newPermissions, newOrgList, newTokenExpiryTime } = action
       return {
         ...state,
         currentUser: newUser,
         templatePermissions: newPermissions,
         orgList: newOrgList,
         isNonRegistered: newUser.username === config.nonRegisteredUser,
+        tokenExpiryTime: newTokenExpiryTime,
       }
     case 'setLoading':
       const { isLoading } = action
@@ -66,6 +69,7 @@ const initialState: UserState = {
   orgList: [],
   isLoading: false,
   isNonRegistered: null,
+  tokenExpiryTime: 9999999999,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
@@ -74,11 +78,13 @@ const initialUserContext: {
   setUserState: React.Dispatch<UserActions>
   onLogin: OnLogin
   logout: () => void
+  refreshJWT: () => void
 } = {
   userState: initialState,
   setUserState: () => {},
   onLogin: () => {},
   logout: () => {},
+  refreshJWT: () => {},
 }
 
 const UserContext = createContext(initialUserContext)
@@ -111,9 +117,14 @@ export function UserProvider({ children }: UserProviderProps) {
         newUser: user,
         newPermissions: templatePermissions || {},
         newOrgList: orgList || [],
+        newTokenExpiryTime: 0,
       })
       dispatch({ type: 'setLoading', isLoading: false })
     }
+  }
+
+  const refreshJWT = () => {
+    fetchUserInfo({ dispatch: setUserState }, logout)
   }
 
   // Initial check for persisted user in local storage
@@ -126,7 +137,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   // Return the state and reducer to the context (wrap around the children)
   return (
-    <UserContext.Provider value={{ userState, setUserState, onLogin, logout }}>
+    <UserContext.Provider value={{ userState, setUserState, onLogin, logout, refreshJWT }}>
       {children}
     </UserContext.Provider>
   )
