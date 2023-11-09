@@ -291,6 +291,9 @@ export default {
   LOGIN_ORG_SELECT: 'Please select an organisation',
   LOGIN_REDIRECT_TO_REGISTRATION: 'Re-directing to user registration application...',
   LOGOUT_INACTIVITY_ALERT: 'You have been automatically logged out due to inactivity',
+  LOGOUT_ON_NETWORK_ERROR: 'Connection problem',
+  LOGOUT_ON_NETWORK_ERROR_MESSAGE:
+    'We are unable to maintain contact with the server. You will be logged out in {{count}} seconds',
   LOOKUP_ERROR_NOT_FOUND: 'No lookup-table found!',
   LOOKUP_ERROR_TITLE: 'Error loading lookup-table',
   LOOKUP_TABLE_HEADER_NAME: 'Name',

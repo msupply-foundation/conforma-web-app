@@ -101,7 +101,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const { preferences } = usePrefs()
   const { showToast, clearAllToasts } = useToast()
 
-  let refreshTokenTimer = useRef(0).current
+  let refreshTokenTimer = useRef(0)
   const idleTracker = useRef(
     new IdleTracker({
       timeout: preferences.logoutAfterInactivity * 60_000,
@@ -111,16 +111,18 @@ export function UserProvider({ children }: UserProviderProps) {
         if (event.idle) logout(true) // Forced
       },
     })
-  ).current
+  )
 
   const logout = (forced: boolean = false) => {
-    idleTracker.end()
+    console.log('Logout')
+    console.log('Token?', refreshTokenTimer.current)
+    idleTracker.current.end()
+    clearInterval(refreshTokenTimer.current)
     // Delete everything EXCEPT language preference in localStorage
     const language = localStorage.getItem('language')
     localStorage.clear()
     if (language) localStorage.setItem('language', language)
     client.clearStore()
-    clearInterval(refreshTokenTimer)
     setUserState({ type: 'resetCurrentUser' })
     push('/login')
     if (forced)
@@ -133,14 +135,21 @@ export function UserProvider({ children }: UserProviderProps) {
       })
   }
 
+  const delayedLogout = () => {
+    const delay = 10 // seconds
+    showToast({
+      title: t('LOGOUT_ON_NETWORK_ERROR'),
+      text: t('LOGOUT_ON_NETWORK_ERROR_MESSAGE', delay),
+      style: 'error',
+      timeout: delay * 1000,
+    })
+    setTimeout(logout, delay * 1000)
+  }
+
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
-    console.log('ON LOGIN')
     console.log(user)
-    console.log('refreshTokenTimer', refreshTokenTimer)
-    console.log('Idle', idleTracker.isIdle())
-    console.log('Idle', idleTracker.events)
-    if (refreshTokenTimer !== 0) {
-      console.log('Timer already running!')
+    if (refreshTokenTimer.current !== 0) {
+      console.error('Timer already running!')
       return
     }
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
@@ -149,7 +158,7 @@ export function UserProvider({ children }: UserProviderProps) {
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
     if (!user || !templatePermissions || !user.permissionNames)
-      fetchUserInfo({ dispatch: setUserState }, logout)
+      fetchUserInfo({ dispatch: setUserState }, delayedLogout)
     else {
       dispatch({
         type: 'setCurrentUser',
@@ -159,17 +168,18 @@ export function UserProvider({ children }: UserProviderProps) {
       })
       dispatch({ type: 'setLoading', isLoading: false })
     }
-    console.log('Starting idle timer,', new Date())
-    idleTracker.start()
-    refreshTokenTimer = window.setInterval(
+
+    idleTracker.current.start()
+    refreshTokenTimer.current = window.setInterval(
       refreshJWT,
-      (preferences.logoutAfterInactivity - 1) * 60_000
+      // Min prevents timer starting with negative or 0 value
+      Math.min((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
     )
   }
 
   const refreshJWT = () => {
-    console.log('Refreshing auth token...', new Date())
-    fetchUserInfo({ dispatch: setUserState }, logout)
+    console.log(new Date(), 'Refreshing auth token...')
+    fetchUserInfo({ dispatch: setUserState }, delayedLogout)
   }
 
   // Initial check for persisted user in local storage

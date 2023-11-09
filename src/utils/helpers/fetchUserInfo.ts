@@ -9,7 +9,6 @@ interface SetUserInfoProps {
 }
 
 const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
-  console.log('Fetching user info....')
   getRequest(getServerUrl('userInfo'))
     .then(({ templatePermissions, JWT, user, success, orgList }) => {
       if (!success) logout()
@@ -29,7 +28,7 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
     .catch((error) => {
       // TODO handle this properly
       console.log(error)
-      console.log('Problem fetching user info')
+      console.error('Problem fetching user info')
       logout()
     })
 }
