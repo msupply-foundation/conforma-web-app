@@ -2820,6 +2820,7 @@ h6:first-child {
   }
   #overview .left-item {
     min-width: unset;
+    padding-right: 5px;
   }
   #timeline {
     margin-left: 8px;
