@@ -617,6 +617,8 @@ a:hover {
   color: @headersInteractiveMed;
   font-size: @fontSmall;
   font-weight: @semiboldWeight;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 #review-home-header {
