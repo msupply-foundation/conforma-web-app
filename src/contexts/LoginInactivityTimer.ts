@@ -2,99 +2,96 @@ import IdleTracker from 'idle-tracker'
 
 const LOCAL_STORAGE_KEY = 'expiryTime'
 
+const IDLE_DETECT_TIME = 3000 // ms
+
 interface TimerProps {
-  idleTime: number // minutes
+  idleTimeout: number // minutes
   onLogout: () => void
 }
 
 type IdleTimerEvent = { idle: boolean; event?: Event } // from IdleTracker
 
 export class LoginInactivityTimer {
-  idleTime: number // minutes
+  idleTimeout: number // minutes
   onLogout: () => void
   idleTimer: IdleTracker
-  waitTillExpiryTimer: number
-  keepAliveLooper: number
-  previousExpiryTime: number
+  logoutTimer: number
 
-  constructor({ idleTime, onLogout }: TimerProps) {
-    this.idleTime = idleTime
-    this.waitTillExpiryTimer = 0
-    this.keepAliveLooper = 0
-    this.previousExpiryTime = 0
+  constructor({ idleTimeout, onLogout }: TimerProps) {
+    this.idleTimeout = idleTimeout
     this.idleTimer = new IdleTracker({
-      timeout: idleTime * 60_000,
-      onIdleCallback: this.handleIdleTimeout,
+      timeout: IDLE_DETECT_TIME,
+      onIdleCallback: this.handleIdleStateChange,
     })
     this.onLogout = onLogout
+    this.logoutTimer = 0
   }
 
-  private handleIdleTimeout = (event: IdleTimerEvent) => {
-    console.log('Handling idle timeout')
+  private handleIdleStateChange = (event: IdleTimerEvent) => {
+    console.log('Idle state changed, Idle:', event.idle)
     switch (event.idle) {
-      // When user becomes idle
       case true:
-        console.log('Gone idle', new Date())
-        const expiryTime = getExpiryTime()
-        console.log('expiryTime', new Date(expiryTime))
-
-        const now = Date.now()
-        console.log('expiry', expiryTime)
-        console.log('now', now)
-        if (expiryTime < now) this.onLogout()
-        else {
-          console.log('Now waiting till', new Date(expiryTime))
-          console.log('Thats', (expiryTime - now) / 1000)
-          this.waitTillExpiryTimer = window.setTimeout(() => this.recheckExpiry(), expiryTime - now)
-          this.previousExpiryTime = expiryTime
-        }
+        console.log('Cueing logout')
+        clearTimeout(this.logoutTimer)
+        this.cueLogout()
         break
-      // When user resumes from idle
       case false:
-        console.log('Alive again', new Date())
-        clearTimeout(this.waitTillExpiryTimer)
-        break
+        console.log('Clearing timer and expiry')
+        clearTimeout(this.logoutTimer)
+        setExpiry(null)
     }
   }
 
-  private recheckExpiry = () => {
-    console.log('Rechecking expiry', new Date())
-    const expiryTime = getExpiryTime()
-    console.log('expiryTime', new Date(expiryTime))
-    if (expiryTime === this.previousExpiryTime) {
-      this.onLogout()
-    } else {
-      // Set timer and check again
-      this.previousExpiryTime = expiryTime
-      console.log('Now waiting till', new Date(expiryTime - Date.now()))
-      console.log('Thats', (expiryTime - Date.now()) / 1000)
-      window.setTimeout(() => this.recheckExpiry(), expiryTime - Date.now())
-    }
+  private cueLogout = () => {
+    console.log(new Date(), 'Cueing logout:', this.idleTimeout)
+    setExpiry(this.idleTimeout)
+    this.logoutTimer = window.setTimeout(this.atExpiryTime, this.idleTimeout * 60_000)
   }
 
-  private keepAlive = () => {
-    if (!this.idleTimer.isIdle()) {
-      console.log('Keep alive', new Date(), 'idle', this.idleTimer.isIdle())
-      setExpiryTime(this.idleTime)
+  private atExpiryTime = () => {
+    console.log('Checking expiry')
+    const expiryTime = getExpiry()
+    const now = Date.now()
+
+    if (expiryTime === 0) {
+      console.log('Expiry deleted, still active, start timer from beginning')
+      this.logoutTimer = window.setTimeout(this.atExpiryTime, this.idleTimeout * 60_000)
+      return
     }
+
+    if (expiryTime > now) {
+      // Reset timer to expiry time
+      console.log('Resetting logout to new expiry:', new Date(expiryTime))
+      clearTimeout(this.logoutTimer)
+      this.logoutTimer = window.setTimeout(this.atExpiryTime, expiryTime - now)
+      return
+    }
+
+    this.onLogout()
   }
+
+  private onWindowUnload = () => setExpiry(this.idleTimeout)
 
   public start = () => {
     console.log('Starting timer', new Date())
+    setExpiry(null)
     this.idleTimer.start()
-    this.keepAliveLooper = window.setInterval(() => this.keepAlive(), 10000)
+    window.addEventListener('beforeunload', this.onWindowUnload)
   }
 
   public end = () => {
     console.log('Stopping timers', new Date())
     this.idleTimer.end()
-    clearTimeout(this.waitTillExpiryTimer)
-    clearTimeout(this.keepAliveLooper)
+    clearTimeout(this.logoutTimer)
+    this.logoutTimer = 0
+    window.removeEventListener('beforeunload', this.onWindowUnload)
   }
 }
 
 // Helpers
-const setExpiryTime = (idleTime: number) =>
-  localStorage.setItem(LOCAL_STORAGE_KEY, String(Date.now() + idleTime * 60_000 - 500))
+const setExpiry = (idleTime: number | null) => {
+  if (idleTime === null) localStorage.removeItem(LOCAL_STORAGE_KEY)
+  else localStorage.setItem(LOCAL_STORAGE_KEY, String(Date.now() + idleTime * 60_000 - 500))
+}
 
-const getExpiryTime = () => Number(localStorage.getItem(LOCAL_STORAGE_KEY) ?? 0)
+const getExpiry = () => Number(localStorage.getItem(LOCAL_STORAGE_KEY) ?? 0)

@@ -106,7 +106,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const loginTimer = useMemo(
     () =>
       new LoginInactivityTimer({
-        idleTime: preferences.logoutAfterInactivity,
+        idleTimeout: preferences.logoutAfterInactivity,
         onLogout: () => {
           logout()
           showToast({
@@ -126,7 +126,8 @@ export function UserProvider({ children }: UserProviderProps) {
     refreshTokenTimer.current = 0
     // Delete everything EXCEPT language preference in localStorage
     const language = localStorage.getItem('language')
-    localStorage.clear()
+    // localStorage.clear()
+    localStorage.removeItem(config.localStorageJWTKey)
     if (language) localStorage.setItem('language', language)
     client.clearStore()
     setUserState({ type: 'resetCurrentUser' })
