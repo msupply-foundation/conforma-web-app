@@ -106,8 +106,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const loginTimer = useMemo(
     () =>
       new LoginInactivityTimer({
-        idleTime: 1,
-        // preferences.logoutAfterInactivity,
+        idleTime: preferences.logoutAfterInactivity,
         onLogout: () => {
           logout()
           showToast({
@@ -131,6 +130,7 @@ export function UserProvider({ children }: UserProviderProps) {
     if (language) localStorage.setItem('language', language)
     client.clearStore()
     setUserState({ type: 'resetCurrentUser' })
+    loginTimer.end()
     push('/login')
   }
 
@@ -146,6 +146,7 @@ export function UserProvider({ children }: UserProviderProps) {
   }
 
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
+    console.log('On login...')
     if (refreshTokenTimer.current !== 0) {
       console.error('Timer already running!')
       return
@@ -156,11 +157,14 @@ export function UserProvider({ children }: UserProviderProps) {
       delayedLogout()
       return
     }
+    console.log('JWT ok')
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
-    if (!user || !templatePermissions || !user.permissionNames)
+    if (!user || !templatePermissions || !user.permissionNames) {
+      console.log('Fetching user info...')
       fetchUserInfo({ dispatch: setUserState }, delayedLogout)
-    else {
+    } else {
+      console.log('User exists, dispatching')
       dispatch({
         type: 'setCurrentUser',
         newUser: user,

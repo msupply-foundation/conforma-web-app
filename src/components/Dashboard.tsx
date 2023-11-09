@@ -31,6 +31,8 @@ const Dashboard: React.FC = () => {
     return null
   }
 
+  console.log('templatePermissions', templatePermissions)
+
   usePageTitle(t('PAGE_TITLE_HOME'))
 
   const dashboardCategories = templatesByCategory.filter(({ templateCategory: { uiLocation } }) =>

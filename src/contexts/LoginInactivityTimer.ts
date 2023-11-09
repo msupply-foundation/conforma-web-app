@@ -26,11 +26,7 @@ export class LoginInactivityTimer {
       timeout: idleTime * 60_000,
       onIdleCallback: this.handleIdleTimeout,
     })
-    this.onLogout = () => {
-      this.end()
-      onLogout()
-    }
-    console.log('Idletime', idleTime * 60_000)
+    this.onLogout = onLogout
   }
 
   private handleIdleTimeout = (event: IdleTimerEvent) => {
@@ -86,7 +82,7 @@ export class LoginInactivityTimer {
   public start = () => {
     console.log('Starting timer', new Date())
     this.idleTimer.start()
-    this.keepAliveLooper = window.setInterval(() => this.keepAlive(), 5000)
+    this.keepAliveLooper = window.setInterval(() => this.keepAlive(), 10000)
   }
 
   public end = () => {
