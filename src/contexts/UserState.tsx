@@ -114,10 +114,9 @@ export function UserProvider({ children }: UserProviderProps) {
   )
 
   const logout = (forced: boolean = false) => {
-    console.log('Logout')
-    console.log('Token?', refreshTokenTimer.current)
     idleTracker.current.end()
     clearInterval(refreshTokenTimer.current)
+    refreshTokenTimer.current = 0
     // Delete everything EXCEPT language preference in localStorage
     const language = localStorage.getItem('language')
     localStorage.clear()
@@ -147,7 +146,6 @@ export function UserProvider({ children }: UserProviderProps) {
   }
 
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
-    console.log(user)
     if (refreshTokenTimer.current !== 0) {
       console.error('Timer already running!')
       return
