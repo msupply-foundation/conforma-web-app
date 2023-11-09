@@ -31,7 +31,6 @@ export const Overview: React.FC<{
   const { started, completed } = getDates(activityLog)
   const stage = current.stage.name
   const { isMobile } = useViewport()
-  const wrapDivGapStyle = isMobile ? { gap: 5 } : {}
 
   return (
     <div id="overview">
@@ -44,7 +43,7 @@ export const Overview: React.FC<{
                 <strong>{template.name}</strong>
               </Header>
             </div>
-            <div className="flex-row wrap" style={wrapDivGapStyle}>
+            <div className="flex-row wrap">
               <p className="left-item">
                 <strong>{t('REVIEW_OVERVIEW_APPLICANT')}: </strong>
                 {applicant}
@@ -54,7 +53,7 @@ export const Overview: React.FC<{
                 {organisation || <em>{t('LABEL_NO_ORG')}</em>}
               </p>
             </div>
-            <div className="flex-row wrap" style={wrapDivGapStyle}>
+            <div className="flex-row wrap">
               <p className="left-item">
                 <strong>{t('REVIEW_OVERVIEW_STARTED')}: </strong>
                 {DateTime.fromISO(started).toLocaleString()}
@@ -64,7 +63,7 @@ export const Overview: React.FC<{
                 {(completed && DateTime.fromISO(completed).toLocaleString()) || '...'}
               </p>
             </div>
-            <div className="flex-row wrap" style={wrapDivGapStyle}>
+            <div className="flex-row wrap">
               <p className="left-item">
                 <strong>{t('REVIEW_OVERVIEW_STAGE')}: </strong>
                 {stage}
@@ -74,7 +73,7 @@ export const Overview: React.FC<{
                 {Outcome[outcome as ApplicationOutcome]}
               </p>
             </div>
-            <div className="flex-row wrap" style={wrapDivGapStyle}>
+            <div className="flex-row wrap">
               <p className="left-item">
                 <strong>{t('REVIEW_OVERVIEW_SERIAL')}: </strong>
                 {serial}
