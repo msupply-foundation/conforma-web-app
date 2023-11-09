@@ -9,6 +9,7 @@ interface SetUserInfoProps {
 }
 
 const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
+  console.log('Fetching user info....')
   getRequest(getServerUrl('userInfo'))
     .then(({ templatePermissions, JWT, user, success, orgList }) => {
       if (!success) logout()

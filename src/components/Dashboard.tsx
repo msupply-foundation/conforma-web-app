@@ -22,7 +22,6 @@ const Dashboard: React.FC = () => {
   const {
     userState: { templatePermissions, isNonRegistered },
     logout,
-    refreshJWT,
   } = useUserState()
   const {
     templatesData: { templatesByCategory },
@@ -113,9 +112,9 @@ const TemplateComponent: React.FC<{
       <div className="content">
         <div className="filters">
           <Label className="strong-label clickable">
-            <a href={`/applications?type=${code}&user-role=${userRole}`}>
+            <Link to={`/applications?type=${code}&user-role=${userRole}`}>
               {template?.namePlural || t('LABEL_APPLICATIONS', name)}
-            </a>
+            </Link>
             <Icon name="chevron right" />
           </Label>
           {filters.map((filter) => (

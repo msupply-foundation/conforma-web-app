@@ -72,7 +72,6 @@ const initialState: UserState = {
   orgList: [],
   isLoading: false,
   isNonRegistered: null,
-  // tokenExpiryTime: 9999999999,
 }
 
 // By setting the typings here, we ensure we get intellisense in VS Code
@@ -102,25 +101,27 @@ export function UserProvider({ children }: UserProviderProps) {
   const { preferences } = usePrefs()
   const { showToast, clearAllToasts } = useToast()
 
-  const timerId = useRef(0)
+  let refreshTokenTimer = useRef(0).current
   const idleTracker = useRef(
     new IdleTracker({
       timeout: preferences.logoutAfterInactivity * 60_000,
       onIdleCallback: (event) => {
+        console.log("You're idle!", new Date())
         console.log(event)
-        localStorage.setItem('isIdle', String(event.idle))
+        if (event.idle) logout(true) // Forced
       },
     })
-  )
+  ).current
 
   const logout = (forced: boolean = false) => {
-    idleTracker.current.end()
+    idleTracker.end()
     // Delete everything EXCEPT language preference in localStorage
     const language = localStorage.getItem('language')
     localStorage.clear()
     if (language) localStorage.setItem('language', language)
     client.clearStore()
-    clearTimeout(timerId.current)
+    clearInterval(refreshTokenTimer)
+    setUserState({ type: 'resetCurrentUser' })
     push('/login')
     if (forced)
       showToast({
@@ -133,6 +134,15 @@ export function UserProvider({ children }: UserProviderProps) {
   }
 
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
+    console.log('ON LOGIN')
+    console.log(user)
+    console.log('refreshTokenTimer', refreshTokenTimer)
+    console.log('Idle', idleTracker.isIdle())
+    console.log('Idle', idleTracker.events)
+    if (refreshTokenTimer !== 0) {
+      console.log('Timer already running!')
+      return
+    }
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
     clearAllToasts()
     if (JWT == 'undefined' || JWT == undefined) logout()
@@ -149,30 +159,17 @@ export function UserProvider({ children }: UserProviderProps) {
       })
       dispatch({ type: 'setLoading', isLoading: false })
     }
-
-    idleTracker.current.start()
-    timerId.current = window.setTimeout(
+    console.log('Starting idle timer,', new Date())
+    idleTracker.start()
+    refreshTokenTimer = window.setInterval(
       refreshJWT,
       (preferences.logoutAfterInactivity - 1) * 60_000
     )
   }
 
   const refreshJWT = () => {
-    clearTimeout(timerId.current) // in case refresh called early
-    console.log('Refreshing...')
-    const isIdle = localStorage.getItem('isIdle') === 'true'
-    console.log('Local storage says IDLE', isIdle)
-    if (isIdle) {
-      console.log('Idle, logging out')
-      logout(true)
-    } else {
-      console.log('Not idle, refreshing token')
-      fetchUserInfo({ dispatch: setUserState }, logout)
-      timerId.current = window.setTimeout(
-        refreshJWT,
-        (preferences.logoutAfterInactivity - 1) * 60_000
-      )
-    }
+    console.log('Refreshing auth token...', new Date())
+    fetchUserInfo({ dispatch: setUserState }, logout)
   }
 
   // Initial check for persisted user in local storage
