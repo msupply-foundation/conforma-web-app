@@ -143,8 +143,8 @@ export function UserProvider({ children }: UserProviderProps) {
   }
 
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
-    console.log('On login...')
     if (refreshTokenTimer.current !== 0) {
+      // This shouldn't really happen
       console.error('Timer already running!')
       return
     }
@@ -154,14 +154,11 @@ export function UserProvider({ children }: UserProviderProps) {
       delayedLogout()
       return
     }
-    console.log('JWT ok')
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
     if (!user || !templatePermissions || !user.permissionNames) {
-      console.log('Fetching user info...')
       fetchUserInfo({ dispatch: setUserState }, delayedLogout)
     } else {
-      console.log('User exists, dispatching')
       dispatch({
         type: 'setCurrentUser',
         newUser: user,

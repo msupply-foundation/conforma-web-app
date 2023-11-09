@@ -18,9 +18,7 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
       if (!success) logout()
       localStorage.setItem(config.localStorageJWTKey, JWT)
       // Set userinfo to context after receiving it from endpoint
-      console.log('Fetched okay!')
       if (user && templatePermissions) {
-        console.log('Setting user...')
         dispatch({
           type: 'setCurrentUser',
           newUser: user,
