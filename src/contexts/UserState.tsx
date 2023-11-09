@@ -106,8 +106,6 @@ export function UserProvider({ children }: UserProviderProps) {
     new IdleTracker({
       timeout: preferences.logoutAfterInactivity * 60_000,
       onIdleCallback: (event) => {
-        console.log("You're idle!", new Date())
-        console.log(event)
         if (event.idle) logout(true) // Forced
       },
     })
@@ -152,7 +150,10 @@ export function UserProvider({ children }: UserProviderProps) {
     }
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
     clearAllToasts()
-    if (JWT == 'undefined' || JWT == undefined) logout()
+    if (JWT == 'undefined' || JWT == undefined) {
+      delayedLogout()
+      return
+    }
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
     if (!user || !templatePermissions || !user.permissionNames)
@@ -170,8 +171,8 @@ export function UserProvider({ children }: UserProviderProps) {
     idleTracker.current.start()
     refreshTokenTimer.current = window.setInterval(
       refreshJWT,
-      // Min prevents timer starting with negative or 0 value
-      Math.min((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
+      // Max prevents timer starting with negative or 0 value
+      Math.max((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
     )
   }
 

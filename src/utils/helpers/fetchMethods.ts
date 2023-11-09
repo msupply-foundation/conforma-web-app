@@ -29,6 +29,7 @@ export async function postRequest({
     })
     return response.json()
   } catch (err) {
+    console.log(err)
     throw err
   }
 }
@@ -49,6 +50,7 @@ export async function getRequest(endpointUrl: string, headers: object = {}) {
     })
     return response.json()
   } catch (err) {
+    console.log(err)
     throw err
   }
 }
