@@ -2,6 +2,7 @@ import React from 'react'
 import { Grid } from 'semantic-ui-react'
 import { ReviewAction, ReviewSectionComponentProps } from '../../utils/types'
 import { ConsolidationSectionProgressBar, ReviewSectionProgressBar } from '../'
+import { useViewport } from '../../contexts/ViewportState'
 
 const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
   action,
@@ -9,6 +10,8 @@ const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
   isAssignedToCurrentUser,
   isConsolidation,
 }) => {
+  const { isMobile } = useViewport()
+
   const getContent = () => {
     switch (action) {
       case ReviewAction.canStartReview:
@@ -44,7 +47,21 @@ const ReviewSectionRowProgress: React.FC<ReviewSectionComponentProps> = ({
     }
   }
 
-  return <Grid.Column width={5}>{getContent()}</Grid.Column>
+  const content = getContent()
+
+  if (isMobile && !content) {
+    return null
+  }
+
+  if (!isMobile && !content) {
+    return <Grid.Column width={5} className="custom-assignment-grid-column"></Grid.Column>
+  }
+
+  return (
+    <Grid.Column width={5} className="custom-assignment-grid-column">
+      {content}
+    </Grid.Column>
+  )
 }
 
 export default ReviewSectionRowProgress

@@ -2863,7 +2863,8 @@ h6:first-child {
       margin-left: 3px;
     }
     .custom-assignment-grid-column {
-      padding: 0.5rem 0.5rem !important;
+      padding: 0.3rem 0.5rem !important;
+      text-align: left;
     }
   }
 }
