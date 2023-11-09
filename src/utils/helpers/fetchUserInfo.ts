@@ -9,6 +9,10 @@ interface SetUserInfoProps {
 }
 
 const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
+  if (!localStorage.getItem(config.localStorageJWTKey)) {
+    console.error("Missing JWT token, can't fetch user info or refresh token")
+    return
+  }
   getRequest(getServerUrl('userInfo'))
     .then(({ templatePermissions, JWT, user, success, orgList }) => {
       if (!success) logout()

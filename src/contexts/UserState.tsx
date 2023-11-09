@@ -124,11 +124,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const logout = () => {
     clearInterval(refreshTokenTimer.current)
     refreshTokenTimer.current = 0
-    // Delete everything EXCEPT language preference in localStorage
-    const language = localStorage.getItem('language')
-    // localStorage.clear()
     localStorage.removeItem(config.localStorageJWTKey)
-    if (language) localStorage.setItem('language', language)
     client.clearStore()
     setUserState({ type: 'resetCurrentUser' })
     loginTimer.end()
