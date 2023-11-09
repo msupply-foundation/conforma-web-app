@@ -2843,9 +2843,15 @@ h6:first-child {
     }
   }
 
-  #notes-tab .options-row {
-    flex-direction: column;
-    align-items: flex-start;
+  #notes-tab {
+    padding: 5px 0px 0px 5px;
+    .options-row {
+      flex-direction: column;
+      align-items: flex-start;      
+    }
+    .item-container {
+      width: 100%;
+    }
   }
 
   #assignment-tab {
