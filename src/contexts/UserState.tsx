@@ -1,13 +1,13 @@
-import React, { createContext, useContext, useReducer, useRef } from 'react'
+import React, { createContext, useContext, useReducer, useRef, useMemo } from 'react'
 import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../utils/helpers/fetchUserInfo'
 import { Position, useToast } from './Toast'
 import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
 import config from '../config'
-import IdleTracker from 'idle-tracker'
 import { usePrefs } from './SystemPrefs'
 import { useRouter } from '../utils/hooks/useRouter'
 import { useLanguageProvider } from './Localisation'
+import { LoginInactivityTimer } from './LoginInactivityTimer'
 
 type UserState = {
   currentUser: User | null
@@ -89,8 +89,6 @@ const initialUserContext: {
   refreshJWT: () => {},
 }
 
-document.addEventListener('blur', () => console.log('Not in focus'))
-
 const UserContext = createContext(initialUserContext)
 
 export function UserProvider({ children }: UserProviderProps) {
@@ -105,20 +103,12 @@ export function UserProvider({ children }: UserProviderProps) {
 
   let refreshTokenTimer = useRef(0)
 
-  const handleIdleTimeout = (event: { idle: boolean; event?: Event }) => {
-    const lastLogin = Number(localStorage.getItem('mostRecentTimerStart') ?? 0)
-
-    console.log('Idle timer', event)
-    console.log('lastLogin', new Date(lastLogin))
-    switch (event.idle) {
-      case true:
-        if (Date.now() < lastLogin + preferences.logoutAfterInactivity * 60_000) {
-          // Do nothing, must've been set by another tab
-          console.log('Not logging out, local storage later...')
-          localStorage.setItem('mostRecentTimerStart', String(Date.now()))
-          idleTracker.current.end()
-          setTimeout(() => idleTracker.current.start(), 1000)
-        } else {
+  const loginTimer = useMemo(
+    () =>
+      new LoginInactivityTimer({
+        idleTime: 1,
+        // preferences.logoutAfterInactivity,
+        onLogout: () => {
           logout()
           showToast({
             title: t('MENU_LOGOUT'),
@@ -127,30 +117,12 @@ export function UserProvider({ children }: UserProviderProps) {
             position: Position.bottomLeft,
             timeout: 0,
           })
-        }
-        break
-      case false:
-        console.log('Alive again')
-        localStorage.setItem('mostRecentTimerStart', String(Date.now()))
-    }
-  }
-
-  const idleTracker = useRef(
-    new IdleTracker({
-      timeout: 30_000,
-      // preferences.logoutAfterInactivity * 60_000,
-      onIdleCallback: handleIdleTimeout,
-    })
+        },
+      }),
+    []
   )
 
-  document.addEventListener('focus', () => {
-    console.log('Focus')
-    localStorage.setItem('mostRecentTimerStart', String(Date.now()))
-    idleTracker.current.resetTimer()
-  })
-
   const logout = () => {
-    idleTracker.current.end()
     clearInterval(refreshTokenTimer.current)
     refreshTokenTimer.current = 0
     // Delete everything EXCEPT language preference in localStorage
@@ -198,9 +170,7 @@ export function UserProvider({ children }: UserProviderProps) {
       dispatch({ type: 'setLoading', isLoading: false })
     }
 
-    localStorage.setItem('mostRecentTimerStart', String(Date.now()))
-    idleTracker.current.start()
-    console.log('Starting idle timer', new Date())
+    loginTimer.start()
     refreshTokenTimer.current = window.setInterval(
       refreshJWT,
       // Max prevents timer starting with negative or 0 value
