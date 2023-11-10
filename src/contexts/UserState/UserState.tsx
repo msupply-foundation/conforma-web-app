@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useReducer, useRef, useMemo } from 'react'
 import { useApolloClient } from '@apollo/client'
-import fetchUserInfo from '../utils/helpers/fetchUserInfo'
-import { Position, useToast } from './Toast'
-import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
-import config from '../config'
-import { usePrefs } from './SystemPrefs'
-import { useRouter } from '../utils/hooks/useRouter'
-import { useLanguageProvider } from './Localisation'
+import fetchUserInfo from '../../utils/helpers/fetchUserInfo'
+import { Position, useToast } from '../Toast'
+import { OrganisationSimple, TemplatePermissions, User } from '../../utils/types'
+import config from '../../config'
+import { usePrefs } from '../SystemPrefs'
+import { useRouter } from '../../utils/hooks/useRouter'
+import { useLanguageProvider } from '../Localisation'
 import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
-import { clearLocalStorageExcept } from '../utils/helpers/utilityFunctions'
+import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
 
 type UserState = {
   currentUser: User | null

@@ -22,7 +22,7 @@
  */
 
 import IdleTracker from 'idle-tracker'
-import config from '../config'
+import config from '../../config'
 
 const DEBUG_LOGGING = false
 
