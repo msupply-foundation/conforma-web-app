@@ -23,7 +23,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   const [isDirty, setIsDirty] = useState(false)
   const [{ present: currentData }, { set: setData, reset, undo, redo, canUndo, canRedo }] =
     useUndo(data)
-  const showToast = useToast({ position: topLeft })
+  const { showToast } = useToast({ position: topLeft })
 
   useEffect(() => {
     reset(data)

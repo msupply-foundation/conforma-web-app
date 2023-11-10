@@ -14,6 +14,7 @@ import { LoginPayload, OrganisationSimple } from '../../utils/types'
 const defaultLogo = require('../../../images/logos/conforma_logo_wide_1024.png').default
 import config from '../../config'
 import { Tracker } from '../Main/Tracker'
+import usePageTitle from '../../utils/hooks/usePageTitle'
 
 const LOGIN_AS_NO_ORG = 0
 const NO_ORG_SELECTED = -1
@@ -30,6 +31,8 @@ const Login: React.FC = () => {
   const client = useApolloClient()
   const { t, languageOptions } = useLanguageProvider()
   const { preferences } = usePrefs()
+
+  usePageTitle(t('LABEL_LOG_IN'))
 
   const noOrgOption: OrganisationSimple = {
     orgId: LOGIN_AS_NO_ORG,
