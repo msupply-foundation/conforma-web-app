@@ -111,7 +111,7 @@ export function UserProvider({ children }: UserProviderProps) {
             title: t('MENU_LOGOUT'),
             text: t('LOGOUT_INACTIVITY_ALERT'),
             style: 'negative',
-            position: Position.bottomLeft,
+            position: Position.topMiddle,
             timeout: 0,
           })
         },
