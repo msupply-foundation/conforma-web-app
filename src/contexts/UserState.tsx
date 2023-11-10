@@ -74,7 +74,6 @@ const initialState: UserState = {
   isNonRegistered: null,
 }
 
-// By setting the typings here, we ensure we get intellisense in VS Code
 const initialUserContext: {
   userState: UserState
   setUserState: React.Dispatch<UserActions>
@@ -103,6 +102,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   const loginTimer = useMemo(
     () =>
+      // Using useMemo to ensure only one instance created
       new LoginInactivityTimer({
         idleTimeout: preferences.logoutAfterInactivity,
         onLogout: () => {
