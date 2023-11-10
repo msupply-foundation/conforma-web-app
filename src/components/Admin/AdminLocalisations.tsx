@@ -15,7 +15,7 @@ export const AdminLocalisations: React.FC = () => {
   const fileInputRef = useRef<any>(null)
   const [exportDisabled, setExportDisabled] = useState(true)
   const [importDisabled, setImportDisabled] = useState(true)
-  const showToast = useToast({ position: topLeft })
+  const { showToast } = useToast({ position: topLeft })
   const { ConfirmModal: WarningModal, showModal: showWarningModal } = useConfirmationModal({
     type: 'warning',
     title: t('LOCALISATION_DELETE_WARNING_TITLE'),

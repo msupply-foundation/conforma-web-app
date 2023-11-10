@@ -3,13 +3,17 @@ import config from '../../config'
 import { UserActions } from '../../contexts/UserState'
 import { getRequest } from './fetchMethods'
 import getServerUrl from './endpoints/endpointUrlBuilder'
-import { usePrefs } from '../../contexts/SystemPrefs'
 
 interface SetUserInfoProps {
   dispatch: Dispatch<UserActions>
 }
 
 const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
+  if (!localStorage.getItem(config.localStorageJWTKey)) {
+    console.error("Missing JWT token, can't fetch user info or refresh token")
+    logout()
+    return
+  }
   getRequest(getServerUrl('userInfo'))
     .then(({ templatePermissions, JWT, user, success, orgList }) => {
       if (!success) logout()
@@ -29,6 +33,8 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
     .catch((error) => {
       // TODO handle this properly
       console.log(error)
+      console.error('Problem fetching user info')
+      logout()
     })
 }
 

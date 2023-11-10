@@ -35,7 +35,7 @@ const General: React.FC = () => {
   const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
     variables: { code: template.code },
   })
-  const showToast = useToast({ style: 'success' })
+  const { showToast } = useToast({ style: 'success' })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
   const [commitConfirmOpen, setCommitConfirmOpen] = useState(false)
   const [commitMessage, setCommitMessage] = useState('')
