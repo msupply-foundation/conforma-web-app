@@ -7,7 +7,8 @@ import config from '../config'
 import { usePrefs } from './SystemPrefs'
 import { useRouter } from '../utils/hooks/useRouter'
 import { useLanguageProvider } from './Localisation'
-import { LoginInactivityTimer } from './LoginInactivityTimer'
+import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
+import { clearLocalStorageExcept } from '../utils/helpers/utilityFunctions'
 
 type UserState = {
   currentUser: User | null
@@ -124,7 +125,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const logout = () => {
     clearInterval(refreshTokenTimer.current)
     refreshTokenTimer.current = 0
-    localStorage.removeItem(config.localStorageJWTKey)
+    clearLocalStorageExcept(['language', LOCAL_STORAGE_EXPIRY_KEY])
     client.clearStore()
     setUserState({ type: 'resetCurrentUser' })
     loginTimer.end()
