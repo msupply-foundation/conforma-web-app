@@ -100,6 +100,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   let refreshTokenTimer = useRef(0)
 
+  const disableAutoLogout = preferences.logoutAfterInactivity === 0
   const loginTimer = useMemo(
     () =>
       // Using useMemo to ensure only one instance created
@@ -166,12 +167,14 @@ export function UserProvider({ children }: UserProviderProps) {
       dispatch({ type: 'setLoading', isLoading: false })
     }
 
-    loginTimer.start()
-    refreshTokenTimer.current = window.setInterval(
-      refreshJWT,
-      // Max prevents timer starting with negative or 0 value
-      Math.max((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
-    )
+    if (!disableAutoLogout) {
+      loginTimer.start()
+      refreshTokenTimer.current = window.setInterval(
+        refreshJWT,
+        // Max prevents timer starting with negative or 0 value
+        Math.max((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
+      )
+    }
   }
 
   const refreshJWT = () => {
