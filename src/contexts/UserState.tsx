@@ -54,7 +54,6 @@ const reducer = (state: UserState, action: UserActions) => {
         templatePermissions: newPermissions,
         orgList: newOrgList,
         isNonRegistered: newUser.username === config.nonRegisteredUser,
-        // tokenExpiryTime: newTokenExpiryTime,
       }
     case 'setLoading':
       const { isLoading } = action
@@ -81,13 +80,11 @@ const initialUserContext: {
   setUserState: React.Dispatch<UserActions>
   onLogin: OnLogin
   logout: () => void
-  refreshJWT: () => void
 } = {
   userState: initialState,
   setUserState: () => {},
   onLogin: () => {},
   logout: () => {},
-  refreshJWT: () => {},
 }
 
 const UserContext = createContext(initialUserContext)
@@ -192,7 +189,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   // Return the state and reducer to the context (wrap around the children)
   return (
-    <UserContext.Provider value={{ userState, setUserState, onLogin, logout, refreshJWT }}>
+    <UserContext.Provider value={{ userState, setUserState, onLogin, logout }}>
       {children}
     </UserContext.Provider>
   )

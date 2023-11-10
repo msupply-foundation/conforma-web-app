@@ -6,8 +6,7 @@
  * the auth credentials of the active tab too.
  *
  * To achieve this, we used a shared "expiry" value in localStorage. This is
- * loosely based on an idea presented in
- * https://medium.com/tinyso/how-to-detect-inactive-user-to-auto-logout-by-using-idle-timeout-in-javascript-react-angular-and-b6279663acf2
+ * loosely based on an idea presented in https://medium.com/tinyso/b6279663acf2
  *
  * The basic operation is:
  * - The "idleTracker" detects whenever a user goes idle for more than 3
@@ -27,9 +26,9 @@
  *   - If the expiry time is less than/equal to the current time, we know no
  *     other tabs have been active, so we can log out.
  *
- * There is one more case to consider: if a user is active in one tab and
- * closes that tab before "idle" begins, there won't be any expiry time written
- * to local storage. And then when another (inactive) tab reaches the end of its
+ * There is one more case to consider: if a user is active in one tab and closes
+ * that tab before "idle" begins, there won't be any expiry time written to
+ * local storage. And then when another (inactive) tab reaches the end of its
  * logout time, it will think another tab is still active and remain in that
  * cycle indefinitely (i.e. never log out. To handle this case, we add an event
  * listener to the window to capture tab/window closing and write the expiry
