@@ -157,7 +157,7 @@ const DataViewTableContent: React.FC<DataViewTableContentProps> = ({
     updateQuery,
     params: { lookupTableID },
   } = useRouter()
-  const showToast = useToast({ style: 'negative' })
+  const { showToast } = useToast({ style: 'negative' })
   const { isMobile } = useViewport()
 
   const { headerRow, tableRows, totalCount } = dataViewTable

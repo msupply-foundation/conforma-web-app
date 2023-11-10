@@ -1,5 +1,4 @@
 import { postRequest } from './fetchMethods'
-import config from '../../config'
 import { LoginPayload } from '../types'
 import getServerUrl from './endpoints/endpointUrlBuilder'
 

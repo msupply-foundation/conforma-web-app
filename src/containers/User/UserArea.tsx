@@ -441,7 +441,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
       {user?.organisation?.logoUrl && (
         <Image
           src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))}
-          onClick={logoIsLink && (() => push('/'))}
+          onClick={logoIsLink ? () => push('/') : undefined}
           className={logoIsLink ? 'clickable' : ''}
         />
       )}

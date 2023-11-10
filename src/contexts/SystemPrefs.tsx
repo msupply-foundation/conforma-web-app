@@ -17,6 +17,7 @@ interface Preferences {
   siteHost?: string
   style?: { headerBgColor?: string }
   helpLinks?: { text: string; link: string }[]
+  logoutAfterInactivity: number
 }
 interface PrefsState {
   preferences: Preferences
@@ -28,6 +29,7 @@ interface PrefsState {
 
 const defaultPrefs: Preferences = {
   showDocumentModal: false,
+  logoutAfterInactivity: 60,
 }
 
 interface PrefsContext extends PrefsState {

@@ -15,7 +15,7 @@ export const AdminPreferences: React.FC = () => {
   usePageTitle(t('PAGE_TITLE_PREFS'))
   const { isMobile } = useViewport()
 
-  const showToast = useToast({ position: topLeft })
+  const { showToast } = useToast({ position: topLeft })
   const { ConfirmModal: WarningModal, showModal: showWarningModal } = useConfirmationModal({
     type: 'warning',
     title: t('PREFERENCES_SAVE_WARNING'),
