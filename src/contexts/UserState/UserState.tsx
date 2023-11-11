@@ -130,17 +130,6 @@ export function UserProvider({ children }: UserProviderProps) {
     push('/login')
   }
 
-  const delayedLogout = () => {
-    const delay = 10 // seconds
-    showToast({
-      title: t('LOGOUT_ON_NETWORK_ERROR'),
-      text: t('LOGOUT_ON_NETWORK_ERROR_MESSAGE', delay),
-      style: 'error',
-      timeout: delay * 1000,
-    })
-    setTimeout(logout, delay * 1000)
-  }
-
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
     if (refreshTokenTimer.current !== 0) {
       // This shouldn't really happen
@@ -150,13 +139,13 @@ export function UserProvider({ children }: UserProviderProps) {
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
     clearAllToasts()
     if (JWT == 'undefined' || JWT == undefined) {
-      delayedLogout()
+      logout()
       return
     }
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
     if (!user || !templatePermissions || !user.permissionNames) {
-      fetchUserInfo({ dispatch: setUserState }, delayedLogout)
+      fetchUserInfo({ dispatch: setUserState }, logout)
     } else {
       dispatch({
         type: 'setCurrentUser',
@@ -179,7 +168,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   const refreshJWT = () => {
     console.log(new Date(), 'Refreshing auth token...')
-    fetchUserInfo({ dispatch: setUserState }, delayedLogout)
+    fetchUserInfo({ dispatch: setUserState }, logout)
   }
 
   // Initial check for persisted user in local storage
