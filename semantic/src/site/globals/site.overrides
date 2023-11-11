@@ -2508,6 +2508,7 @@ a:hover {
   }
   .toast-message {
     width: fit-content !important;
+    min-width: 300px;
     max-width: 350px;
     p {
       word-wrap: break-word;
