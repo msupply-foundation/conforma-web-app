@@ -54,12 +54,14 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   } = fullStructure
 
   const getTabFromQuery = (tabQuery: string | undefined) => {
-    const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
+    const tabIds = isMobile ? [...tabIdentifiers].reverse() : tabIdentifiers
+    const index = tabIds.findIndex((tabName) => tabName === tabQuery)
     return index === -1 ? 0 : index
   }
 
   const handleTabChange = (_: SyntheticEvent, data: StrictTabProps) => {
-    updateQuery({ tab: tabIdentifiers[data.activeIndex as number] })
+    const tabIndex = data.activeIndex as number
+    updateQuery({ tab: tabIdentifiers[isMobile ? tabIdentifiers.length - 1 - tabIndex : tabIndex] })
   }
 
   const tabPanes = [
@@ -97,6 +99,8 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     },
   ]
 
+  if (isMobile) tabPanes.reverse()
+
   return (
     <Container id="review-area">
       <Switch>
@@ -110,7 +114,7 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
             {!isMobile && <ReviewProgress structure={structure} />}
             <div id="review-tabs">
               <Tab
-                panes={isMobile ? tabPanes.reverse() : tabPanes}
+                panes={tabPanes}
                 onTabChange={handleTabChange}
                 activeIndex={getTabFromQuery(tab)}
               />
@@ -151,11 +155,7 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
   // re-renders
   const [prevQueryString] = useState(location?.state?.prevQuery)
 
-  if (!tab) {
-    !isMobile
-      ? updateQuery({ tab: tabIdentifiers[0] })
-      : updateQuery({ tab: tabIdentifiers[tabIdentifiers.length - 1] })
-  }
+  if (!tab) updateQuery({ tab: tabIdentifiers[0] })
 
   const linkBack = prevQueryString
     ? `/applications${prevQueryString}`
