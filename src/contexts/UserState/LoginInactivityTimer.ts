@@ -6,7 +6,7 @@
  * log out if there's another tab still active, as that will clear the auth
  * credentials of the active tab too.
  *
- * To achieve this, we used a shared "expiry" value in localStorage. This is
+ * To achieve this, we use a shared "expiry" value in localStorage. This is
  * loosely based on an idea presented in https://medium.com/tinyso/b6279663acf2
  *
  * The basic operation is:
