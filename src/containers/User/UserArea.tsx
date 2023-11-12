@@ -393,7 +393,7 @@ const BrandArea: React.FC = () => {
   return (
     <div id="brand-area" className="hide-on-mobile">
       <Link to="/">
-        <Image src={logoUrl} />
+        <Image src={logoUrl} className="clickable" />
       </Link>
     </div>
   )
