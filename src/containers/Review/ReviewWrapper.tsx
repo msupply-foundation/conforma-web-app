@@ -54,12 +54,14 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
   } = fullStructure
 
   const getTabFromQuery = (tabQuery: string | undefined) => {
-    const index = tabIdentifiers.findIndex((tabName) => tabName === tabQuery)
+    const tabIds = isMobile ? [...tabIdentifiers].reverse() : tabIdentifiers
+    const index = tabIds.findIndex((tabName) => tabName === tabQuery)
     return index === -1 ? 0 : index
   }
 
   const handleTabChange = (_: SyntheticEvent, data: StrictTabProps) => {
-    updateQuery({ tab: tabIdentifiers[data.activeIndex as number] })
+    const tabIndex = data.activeIndex as number
+    updateQuery({ tab: tabIdentifiers[isMobile ? tabIdentifiers.length - 1 - tabIndex : tabIndex] })
   }
 
   const tabPanes = [
@@ -97,6 +99,8 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
     },
   ]
 
+  if (isMobile) tabPanes.reverse()
+
   return (
     <Container id="review-area">
       <Switch>
@@ -107,14 +111,10 @@ const ReviewWrapper: React.FC<ReviewWrapperProps> = ({ structure }) => {
             orgName={org?.name as string}
           />
           <div id="review-home-content">
-            {isMobile && structure.stages.length <= 2 ? (
-              <ReviewProgress structure={structure} />
-            ) : (
-              !isMobile && <ReviewProgress structure={structure} />
-            )}
+            {!isMobile && <ReviewProgress structure={structure} />}
             <div id="review-tabs">
               <Tab
-                panes={isMobile ? tabPanes.reverse() : tabPanes}
+                panes={tabPanes}
                 onTabChange={handleTabChange}
                 activeIndex={getTabFromQuery(tab)}
               />
@@ -143,6 +143,7 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
   applicationName,
   orgName,
 }) => {
+  const { isMobile } = useViewport()
   const {
     push,
     query: { tab },
@@ -154,9 +155,7 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
   // re-renders
   const [prevQueryString] = useState(location?.state?.prevQuery)
 
-  if (!tab) {
-    updateQuery({ tab: tabIdentifiers[0] })
-  }
+  if (!tab) updateQuery({ tab: tabIdentifiers[0] })
 
   const linkBack = prevQueryString
     ? `/applications${prevQueryString}`

@@ -92,7 +92,10 @@ export const Overview: React.FC<{
                 // EXPIRED, so cancelled deadlines don't cause the button to show.
                 ((applicantDeadline.isActive && outcome === ApplicationOutcome.Pending) ||
                   (!applicantDeadline.isActive && outcome === ApplicationOutcome.Expired)) && (
-                  <div className="flex-row-start-center" style={{ gap: 10, marginTop: 30 }}>
+                  <div
+                    className="flex-row-start-center wrap"
+                    style={{ gap: 15, marginTop: isMobile ? 15 : 30 }}
+                  >
                     {t('REVIEW_OVERVIEW_EXTEND_BY')}
                     <Form.Input
                       size="mini"

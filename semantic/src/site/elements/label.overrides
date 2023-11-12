@@ -13,6 +13,7 @@
 .uppercase-label {
   background-color: transparent !important;
   text-transform: uppercase !important;
+  flex: 1;
 }
 
 // Class for coloured "Stage" labels
