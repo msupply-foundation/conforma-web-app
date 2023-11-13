@@ -16,7 +16,7 @@ interface DateSaved {
 // local "value" here
 type SelectedDateRange = Date[] | Date | null
 
-type DateFormats = 'short' | 'med' | 'medWeekday' | 'full' | 'huge'
+type DateFormat = 'short' | 'med' | 'medWeekday' | 'full' | 'huge'
 const dateFormats = {
   short: DateTime.DATE_SHORT,
   med: DateTime.DATE_MED,
@@ -139,18 +139,22 @@ const fromDateSaved = (date: DateSaved | null): SelectedDateRange | null => {
 const toDisplayString = (
   date: SelectedDateRange,
   locale: string,
-  format: DateFormats
+  format: DateFormat
 ): string | null => {
   if (!date) return null
+
+  const formatDate = (date: DateTime) => {
+    if (format in dateFormats) {
+      const localeFormat = dateFormats[format as DateFormat]
+      return date.setLocale(locale).toLocaleString(localeFormat)
+    }
+    return date.toFormat(format)
+  }
+
   // Single date
-  if (!Array.isArray(date))
-    return DateTime.fromJSDate(date).setLocale(locale).toLocaleString(dateFormats[format])
+  if (!Array.isArray(date)) return formatDate(DateTime.fromJSDate(date))
   // Date range
-  return `${DateTime.fromJSDate(date[0])
-    .setLocale(locale)
-    .toLocaleString(dateFormats[format])} – ${DateTime.fromJSDate(date[1])
-    .setLocale(locale)
-    .toLocaleString(dateFormats[format])}`
+  return `${formatDate(DateTime.fromJSDate(date[0]))} – ${DateTime.fromJSDate(date[1])}`
 }
 
 const dateFromDefault = (defaultDate: string | string[]): SelectedDateRange => {
