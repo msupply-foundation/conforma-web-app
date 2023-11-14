@@ -236,7 +236,7 @@ const Snapshots: React.FC = () => {
                     name: filename,
                     archive: displayType === 'archives',
                   }),
-                  `${displayType === 'archives' ? 'ARCHIVE_' : ''}${name}.zip`,
+                  `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}.zip`,
                   {
                     headers: { Authorization: `Bearer ${JWT}` },
                   }
