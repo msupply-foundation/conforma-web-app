@@ -427,16 +427,22 @@ a:hover {
 }
 
 #footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: white;
   margin-top: 20px;
   padding: 10px;
-  padding-left: 50px;
+  padding-left: 30px;
+  @media only screen and (max-width: @largestMobileScreen) {
+    padding-left: 15px;
+  }
   height: @footerHeight;
   position: absolute;
   bottom: 0;
 }
 
-#footer-content {
+#footer-content-left {
   // border: 1px solid black;
   display: flex;
   flex-direction: row;
@@ -444,16 +450,31 @@ a:hover {
   align-items: center;
 }
 
-#footer-content .ui.image {
+#footer-content-left .ui.image {
   max-height: @footerHeight - 20px;
 }
 
-#footer-content p {
+#footer-content-left p {
   font-size: @fontXXsmall;
   color: @surfacesDark;
   margin-left: 10px;
   .name {
     font-size: @fontXsmall;
+  }
+}
+
+#footer-content-center {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 60%;
+  p {
+    font-size: @smallerText;
+  }
+  @media only screen and (max-width: 860px) {
+    display: none;
   }
 }
 
@@ -2849,7 +2870,7 @@ h6:first-child {
     padding: 5px 0px 0px 5px;
     .options-row {
       flex-direction: column;
-      align-items: flex-start;      
+      align-items: flex-start;
     }
     .item-container {
       width: 100%;

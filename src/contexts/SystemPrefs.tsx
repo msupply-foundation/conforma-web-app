@@ -17,6 +17,8 @@ interface Preferences {
   siteHost?: string
   style?: { headerBgColor?: string }
   helpLinks?: { text: string; link: string }[]
+  footerText?: string
+  footerLogoId?: string
   logoutAfterInactivity: number
 }
 interface PrefsState {
