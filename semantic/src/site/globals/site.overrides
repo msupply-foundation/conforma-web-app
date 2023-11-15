@@ -257,6 +257,7 @@ a:hover {
 .login-header {
   margin: 20px 0 0 0 !important;
   letter-spacing: @letterSpacingRegular !important;
+  text-align: center;
 }
 
 .image-icon {
