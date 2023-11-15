@@ -1323,6 +1323,9 @@ a:hover {
 
 .element-application-view {
   margin-bottom: @applicationViewElementSpacing !important;
+  p {
+    margin-bottom: 0.4em;
+  }
   .reviewer-comment {
     font-size: 0.9em;
     display: none;
