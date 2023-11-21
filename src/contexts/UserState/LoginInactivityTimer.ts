@@ -26,7 +26,7 @@ import config from '../../config'
 
 const DEBUG_LOGGING = false
 
-// How long user needs to have been active before being considered "idle"
+// How long user needs to have been inactive before being considered "idle"
 const IDLE_DETECT_TIME = 5000 // ms
 
 // How often to check the saved expiry time and act accordingly (e.g. logout, or

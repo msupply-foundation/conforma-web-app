@@ -131,11 +131,6 @@ export function UserProvider({ children }: UserProviderProps) {
   }
 
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
-    if (refreshTokenTimer.current !== 0) {
-      // This shouldn't really happen
-      console.error('Timer already running!')
-      return
-    }
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
     clearAllToasts()
     if (JWT == 'undefined' || JWT == undefined) {
@@ -157,12 +152,15 @@ export function UserProvider({ children }: UserProviderProps) {
     }
 
     if (!disableAutoLogout) {
-      loginTimer.start()
-      refreshTokenTimer.current = window.setInterval(
-        refreshJWT,
-        // Max prevents timer starting with negative or 0 value
-        Math.max((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
-      )
+      if (refreshTokenTimer.current === 0) loginTimer.start()
+
+      if (refreshTokenTimer.current === 0) {
+        refreshTokenTimer.current = window.setInterval(
+          refreshJWT,
+          // Max prevents timer starting with negative or 0 value
+          Math.max((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
+        )
+      }
     }
   }
 
