@@ -145,7 +145,10 @@ const getMobileActionCell = (
 ) => {
   if (!isMobile) return null
 
-  if (actionColumn.ColumnComponent.name === 'ReviewerActionCell' && application.reviewerAction)
+  if (
+    actionColumn.ColumnComponent.name === 'ReviewerActionCell' &&
+    (application.reviewerAction || application.assignerAction)
+  )
     return actionColumn.ColumnComponent
 
   if (
