@@ -15,6 +15,7 @@ interface Preferences {
   showDocumentModal: boolean
   googleAnalyticsId?: string
   siteHost?: string
+  userRegistrationCode?: string
   style?: { headerBgColor?: string }
   helpLinks?: { text: string; link: string }[]
   footerText?: string
@@ -32,6 +33,7 @@ interface PrefsState {
 const defaultPrefs: Preferences = {
   showDocumentModal: false,
   logoutAfterInactivity: 60,
+  userRegistrationCode: 'UserRegistration',
 }
 
 interface PrefsContext extends PrefsState {
