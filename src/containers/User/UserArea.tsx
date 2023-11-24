@@ -283,7 +283,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
               />
             </List.Item>
           )}
-          {dataViewOptions.length > 1 && (
+          {dataViewOptions.length > 0 && (
             <List.Item className={dropdownsState.dataViews.active ? 'selected-link' : ''}>
               <Dropdown
                 text={t('MENU_ITEM_DATA')}
