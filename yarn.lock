@@ -5257,15 +5257,15 @@ json-buffer@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.0.tgz#5b1f397afc75d677bde8bcfc0e47e1f9a3d9a898"
 
-json-edit-react@^0.9.6:
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-0.9.6.tgz#f5da24c25064c51264fad02be39e33351666da38"
-  integrity sha512-D21IbROEDKpHOXHXuFgPGZEIlsRYmYW4X4ad6p4llNxqeV1wDSInjR+KyFWbmPP7DkLsY3QzHde3WQ1UAvX1kg==
+json-edit-react@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-1.1.1.tgz#be31a749de1be76baeaea8ed59f642675dad7c59"
+  integrity sha512-eZLPNpZQiNqUvW0w9go/wj8/uoUs+Xw/OPUJKNhdkYyXrC9aWAZTvh/5IJHwvgN54haM+2CGavuY2xUnirnbAQ==
   dependencies:
     just-clone "^6.2.0"
     object-property-assigner "^1.0.1"
-    object-property-extractor "^1.0.6"
-    react-icons "^4.8.0"
+    object-property-extractor "^1.0.7"
+    react-icons "^4.12.0"
 
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"
@@ -6281,10 +6281,10 @@ object-property-assigner@^1.0.1:
   resolved "https://registry.yarnpkg.com/object-property-assigner/-/object-property-assigner-1.0.1.tgz#0ce00a72877fc995e1504e04cf1509833c0f6147"
   integrity sha512-B+5FhEnpTg4XCf7931AbPTQ1PAm56K+cxWmu/QIG8mqCrfuOLnMw+87vjZfIYP7j8wV5e3E9dYh0uMdqEbmzyw==
 
-object-property-extractor@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.6.tgz#823dabe27e646fd6922db5874191a4bd9962f886"
-  integrity sha512-75926oo0hL87mquCqKHLgWTBW2fOEXIZy3CuHl3hgpruBRJvCMUMGuowm+ipOiDNHV+85pcR7xpOrTutNe4G5Q==
+object-property-extractor@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.7.tgz#5b80d6bc2109ca7f49239359b3762adf332cbb41"
+  integrity sha512-JiJtcIdSp7dTOTT5Ssztr/ZarFlruJAx11VEESgLPx6BTqjPzRgpg1KEqZjtnXlrf9MWc1Qcv1zaNMa1/3qLMA==
 
 object-visit@^1.0.0:
   version "1.0.1"
@@ -7267,10 +7267,10 @@ react-hot-loader@^4.12.21:
     shallowequal "^1.1.0"
     source-map "^0.7.3"
 
-react-icons@^4.8.0:
-  version "4.9.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.9.0.tgz#ba44f436a053393adb1bdcafbc5c158b7b70d2a3"
-  integrity sha512-ijUnFr//ycebOqujtqtV9PFS7JjhWg0QU6ykURVHuL4cbofvRCf3f6GMn9+fBktEFQOIVZnuAYLZdiyadRQRFg==
+react-icons@^4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.12.0.tgz#54806159a966961bfd5cdb26e492f4dafd6a8d78"
+  integrity sha512-IBaDuHiShdZqmfc/TwHu6+d6k2ltNCf3AszxNmjJc1KUfXdEeRJOKyNvLmAHaarhzGmTSVygNdyu8/opXv2gaw==
 
 react-imported-component@^6.3.11:
   version "6.3.13"

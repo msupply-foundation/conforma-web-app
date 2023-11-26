@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ReactJson from 'json-edit-react'
+import { JsonEditor as ReactJson } from 'json-edit-react'
 import { Accordion, Icon } from 'semantic-ui-react'
 import { PermissionPolicy, PostgresRowLevel } from '../../../../../utils/generated/graphql'
 import TextIO from '../../../shared/TextIO'
