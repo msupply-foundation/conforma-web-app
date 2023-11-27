@@ -97,7 +97,7 @@ const DataViewTable: React.FC<{ codeFromLookupTable?: string }> = ({ codeFromLoo
               filterDefinitions={filterDefinitions}
               filterListParameters={{}}
               defaultFilterString={dataViewTable?.defaultFilterString ?? null}
-              totalCount={dataViewTable?.totalCount ?? null}
+              totalCount={dataViewTable?.totalCount ?? 'loading'}
             />
           )}
           {codeFromLookupTable && searchComponent}

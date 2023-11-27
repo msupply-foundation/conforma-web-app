@@ -38,8 +38,8 @@ const ListFilters: React.FC<{
   filterDefinitions: FilterDefinitions
   filterListParameters: any
   defaultFilterString?: string | null
-  totalCount: number | null
-}> = ({ filterDefinitions, filterListParameters, defaultFilterString, totalCount = null }) => {
+  totalCount: number | 'loading'
+}> = ({ filterDefinitions, filterListParameters, defaultFilterString, totalCount = 'null' }) => {
   const { t } = useLanguageProvider()
   const { query, updateQuery, location, setQuery } = useRouter()
 
@@ -271,9 +271,9 @@ const ListFilters: React.FC<{
             return null
         }
       })}
-      {totalCount ? (
+      {totalCount !== 'loading' && (
         <p className="result-count">{t('APPLICATIONS_LIST_TOTAL_RESULTS', totalCount)}</p>
-      ) : null}
+      )}
     </div>
   )
 }
