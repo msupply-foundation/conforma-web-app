@@ -187,7 +187,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           style={{ borderTopRightRadius: 8 }}
         >
           <a
-            href="https://github.com/openmsupply/conforma-web-app/wiki/Element-Type-Specs"
+            href="https://github.com/msupply-foundation/conforma-web-app/wiki/Element-Type-Specs"
             target="_blank"
           >
             <Icon name="info circle" size="big" color="blue" />

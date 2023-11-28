@@ -37,17 +37,17 @@ const ApplicationWrapper: React.FC = () => {
         <ReviewWrapper structure={structure} />
       </Route>
       <Route exact path={path}>
-        <ApplicationContainer template={structure.info.template}>
+        <ApplicationContainer template={structure.info.template} applicationInfo={structure.info}>
           <ApplicationHome structure={structure} template={structure.info.template} />
         </ApplicationContainer>
       </Route>
       <Route exact path={`${path}/submission`}>
-        <ApplicationContainer template={structure.info.template}>
+        <ApplicationContainer template={structure.info.template} applicationInfo={structure.info}>
           <ApplicationSubmission structure={structure} />
         </ApplicationContainer>
       </Route>
       <Route>
-        <ApplicationContainer template={structure.info.template}>
+        <ApplicationContainer template={structure.info.template} applicationInfo={structure.info}>
           <ApplicationPageWrapper structure={structure} />
         </ApplicationContainer>
       </Route>

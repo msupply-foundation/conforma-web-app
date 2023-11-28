@@ -440,6 +440,7 @@ _Interface for uploading documents or other files_
 - **subfolder**: `string` -- by default, files are uploaded into a subfolder with the name of the application serial. However, this can be over-ridden by specifying this parameter. This should rarely be required.
 - **showDescription**: `boolean` -- if `true`, an additional text input will be displayed alongside each file to allow the applicant to specify a description for each file. (default `false`)
 - **showFileRestrictions**: `boolean` -- will display the allowed file extensions and maximum size below the upload box (default: `true`)
+- **showDocumentModal**: `boolean` -- if `true`, will display documents (when clicked to view) in a modal overlay rather than opening in a new tab. Will fallback to global system preference.
 
 #### Response type
 
@@ -534,7 +535,12 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 
   If a `displayFormat` parameter is not specified, the card view will just show a simplified list of fields representing `title: value` for each input.
 - **inlineOpen** `boolean` (only relevant for **inline** view) -- if `true`, all elements will be displayed "open" (i.e. not collapsed) on initial load (default `false`)
-- **tableExcludeColumns** `string[]` (only relevant for **table** view) -- an array of fields to exclude from the table view, which can be useful when there are a lot of fields being collected which can make the table overly cluttered. The values correspond to *either* the **title** or the **code** fields of the individual elements.
+- **tableExcludeColumns** `string[]` (only relevant for **table** view) -- an array of Input Field (aboves) `code`s to exclude from the table view, which can be useful when there are a lot of fields being collected which can make the table overly cluttered.  
+  
+  *The following properties only apply to **Table** view and only when viewing on a Mobile display. When displaying on a mobile device, tables get "collapsed" so that each row becomes a "cell", with a stack of labels and values. This makes it possible to view table data on a narrow display without arduous side-scrolling.*
+- **hideFromMobileIfEmpty** `boolean | string[]` -- to save space, if a particular field has no value, we can hide it completely. Put the `code` of any input field that should be treated like this into an array. Or, if the parameter is just set to `true`, the rule will be applied to *all* fields (default `false`)
+- **minMobileLabelWidth** `number | string` -- set a minimum width for the labels within the mobile table. This can help with alignment the values visually. (Can be any valid CSS value, e.g. `150`, `"200px"`, `"50%"`)
+- **maxMobileLabelWidth** `number | string` -- same as above, but a max label width. Labels will wrap onto a new line if they exceed this width.
 
 #### Response type
 
@@ -650,7 +656,7 @@ Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semanti
 - **minDate**/**maxDate**: `(ISO) string` -- specifies how far into the future or past the selector can go
 - **minAge**/**maxAge**: `(ISO) string` -- same as above, but a number (in years) relative to the _current_ date. For example, if an applicant was required to be over 18 years old, you'd set `minAge` to `18`.
 - **locale**: `string` -- specifies the international "locale" code (e.g `'ja-JP'`) for displaying the calendar in local format. Default is `'en-US'`.
-- **displayFormat**: `string` -- how to present the date when written as text (e.g. in Summary view). Uses [Luxon](https://moment.github.io/luxon/#/formatting) shorthand -- options are: `short`, `med`, `medWeekday`, `full`, `huge`. Will format according to the international stanard specified in `locale`. Default: `short`
+- **displayFormat**: `string` -- how to present the date when written as text (e.g. in Summary view). Uses [Luxon](https://moment.github.io/luxon/#/formatting) shorthand -- options are: `short`, `med`, `medWeekday`, `full`, `huge` *or* you can specify a tokenised string for more specificity (e.g. `'yyyy LLL dd'`). Will format according to the international standard specified in `locale`. Default: `short`
 - **entryFormat**: `string` -- date format to expect when user enters a date manually (rather then selecting from the picker) in [date-fns](https://date-fns.org/v1.29.0/docs/format) format. Default is `YYYY-MM-DD`
 - **firstDayOfWeek**: `string` -- self explanatory, default is "Sunday"
 
@@ -660,8 +666,9 @@ Uses [React Semantic-UI Datepickers](https://www.npmjs.com/package/react-semanti
 {
 text: <text format of date (range) as specified in "displayFormat">
 date: {
-  start: <ISO YYYY-MM-DD date>
-  end?:  <ISO YYYY-MM-DD date>
+    start: <ISO YYYY-MM-DD date>
+    end?:  <ISO YYYY-MM-DD date>
+  }
 }
 ```
 

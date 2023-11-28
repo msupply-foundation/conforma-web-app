@@ -114,7 +114,7 @@ const ViewEditButton: React.FC<CellProps> = ({ template: { id } }) => {
 
 const ExportButton: React.FC<CellProps> = ({ template }) => {
   const { exportTemplate, updateTemplate } = useOperationState()
-  const showToast = useToast({
+  const { showToast } = useToast({
     style: 'success',
     title: 'Template exported',
     text: `${template.code} - ${getVersionString(template)}`,
@@ -205,7 +205,7 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
   const [codeError, setCodeError] = useState(false)
   const [commitCurrent, setCommitCurrent] = useState(isTemplateUnlocked(template))
   const [commitMessage, setCommitMessage] = useState('')
-  const showToast = useToast({ style: 'success' })
+  const { showToast } = useToast({ style: 'success' })
 
   const { code, versionId } = template
   const snapshotName = `${code}-${versionId}`

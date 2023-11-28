@@ -3,6 +3,7 @@ import { Pagination, Dropdown, Grid } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { TranslateMethod } from '../../contexts/Localisation'
 import { usePrefs } from '../../contexts/SystemPrefs'
+import { useViewport } from '../../contexts/ViewportState'
 
 interface PaginationProps {
   totalCount: number
@@ -28,42 +29,38 @@ const PaginationBar: React.FC<PaginationProps> = ({
   const handlePerPageChange = (_: any, { value }: any) =>
     updateQuery({ page: calculateNewPage(page, perPage, totalCount, value), perPage: value })
 
+  const { isMobile, viewport } = useViewport()
+
   return (
-    <Grid container>
-      <Grid.Row>
-        <Grid.Column width={5} floated="right">
-          {totalCount > perPage && (
-            <Pagination
-              // totalPages={15} // Enable this to test more pages
-              totalPages={Math.ceil(totalCount / perPage)}
-              activePage={page}
-              onPageChange={handlePageChange}
-              floated="right"
-            />
-          )}
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row>
-        <Grid.Column textAlign="right" width={6} floated="right">
-          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-            <span style={{ padding: 5 }}>{`${perPageText}:`}</span>
-            <Dropdown
-              selection
-              compact
-              floated="right"
-              options={paginationPresets.map((value: number) => ({
-                key: value,
-                text: String(value),
-                value,
-              }))}
-              value={perPage}
-              onChange={handlePerPageChange}
-              style={{ minWidth: 20 }}
-            />
-          </div>
-        </Grid.Column>
-      </Grid.Row>
-    </Grid>
+    <div className="flex-column" style={{ width: '100%', alignItems: 'flex-end', gap: 10 }}>
+      {totalCount > perPage && (
+        <Pagination
+          // totalPages={100} // Enable this to test more pages
+          totalPages={Math.ceil(totalCount / perPage)}
+          activePage={page}
+          onPageChange={handlePageChange}
+          floated="right"
+          siblingRange={isMobile ? 0 : 1}
+          boundaryRange={viewport.width < 410 ? 0 : 1}
+        />
+      )}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <span style={{ padding: 5 }}>{`${perPageText}:`}</span>
+        <Dropdown
+          selection
+          compact
+          floated="right"
+          options={paginationPresets.map((value: number) => ({
+            key: value,
+            text: String(value),
+            value,
+          }))}
+          value={perPage}
+          onChange={handlePerPageChange}
+          style={{ minWidth: 20 }}
+        />
+      </div>
+    </div>
   )
 }
 

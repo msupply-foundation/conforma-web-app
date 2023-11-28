@@ -4,6 +4,8 @@ import { Header, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { ApplicationDisplayField, LinkedApplication } from '../../utils/types'
 import { formatCellText } from './helpers'
+import { useViewport } from '../../contexts/ViewportState'
+import { TableCellMobileLabelWrapper } from '../../utils/tables/TableCellMobileLabelWrapper'
 
 // These can be modified if we want more/different columns in linked application
 // list
@@ -46,33 +48,38 @@ const ApplicationLinks: React.FC<{ linkedApplications: LinkedApplication[] }> = 
 }) => {
   const { t } = useLanguageProvider()
   const displayFields = useDisplayFields()
+  const { isMobile } = useViewport()
   return (
     <div id="linked-applications-container">
       <Header as="h4">{t('APP_LINK_LINKED_APPLICATIONS')}</Header>
       <Table stackable selectable>
-        <Table.Header>
-          <Table.Row>
-            {displayFields.map(({ field, displayName }, index) => (
-              <Table.HeaderCell key={`${field}_${index}`} colSpan={1}>
-                {displayName}
-              </Table.HeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
+        {!isMobile && (
+          <Table.Header>
+            <Table.Row>
+              {displayFields.map(({ field, displayName }, index) => (
+                <Table.HeaderCell key={`${field}_${index}`} colSpan={1}>
+                  {displayName}
+                </Table.HeaderCell>
+              ))}
+            </Table.Row>
+          </Table.Header>
+        )}
         <Table.Body>
           {linkedApplications.map((application) => {
             const { id, templateCode } = application
             return (
               <Table.Row key={`${templateCode}_${id}`}>
-                {displayFields.map(({ field, dataType, link, linkVar }, index) => (
+                {displayFields.map(({ field, dataType, link, linkVar, displayName }, index) => (
                   <Table.Cell key={`${id}_${field}_${index}`}>
-                    {link && linkVar ? (
-                      <Link to={link + application[linkVar]}>
-                        {formatCellText(application[field], { dataType, formatting: {} })}
-                      </Link>
-                    ) : (
-                      formatCellText(application[field], { dataType, formatting: {} })
-                    )}
+                    <TableCellMobileLabelWrapper minLabelWidth={110} label={displayName}>
+                      {link && linkVar ? (
+                        <Link to={link + application[linkVar]}>
+                          {formatCellText(application[field], { dataType, formatting: {} })}
+                        </Link>
+                      ) : (
+                        formatCellText(application[field], { dataType, formatting: {} })
+                      )}
+                    </TableCellMobileLabelWrapper>
                   </Table.Cell>
                 ))}
               </Table.Row>

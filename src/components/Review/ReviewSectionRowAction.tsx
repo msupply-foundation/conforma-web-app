@@ -70,7 +70,12 @@ const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) =>
   }
 
   return (
-    <Grid.Column textAlign="right" width={3} style={{ width: '100%' }}>
+    <Grid.Column
+      textAlign="right"
+      width={3}
+      className="custom-assignment-grid-column"
+      style={{ width: '100%' }}
+    >
       {getContent()}
     </Grid.Column>
   )

@@ -78,3 +78,24 @@ export const fileSizeWithUnits = (size: number): string => {
   const sizeInGB = size / 1_000_000_000
   return `${parseInt(String(sizeInGB * 100)) / 100} GB`
 }
+
+// Force a file download
+export const downloadFile = async (url: string, filename: string, fetchOptions: object = {}) => {
+  const res = await fetch(url, fetchOptions)
+  const data = await res.blob()
+  var a = document.createElement('a')
+  a.href = window.URL.createObjectURL(data)
+  a.download = filename
+  a.click()
+}
+
+// LOCAL STORAGE
+
+// Clear all local storage *except* those keys specified in the input array
+export const clearLocalStorageExcept = (input: string | string[]) => {
+  const keys = typeof input === 'string' ? [input] : input
+  const currentLocalStorageKeys = Object.keys(localStorage)
+  currentLocalStorageKeys.forEach((key) => {
+    if (!keys.includes(key)) localStorage.removeItem(key)
+  })
+}

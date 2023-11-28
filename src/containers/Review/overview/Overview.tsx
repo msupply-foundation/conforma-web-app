@@ -9,6 +9,7 @@ import { FullStructure } from '../../../utils/types'
 import { ActivityLog, ApplicationOutcome } from '../../../utils/generated/graphql'
 import config from '../../../config'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { useViewport } from './../../../contexts/ViewportState'
 
 export const Overview: React.FC<{
   structure: FullStructure
@@ -29,12 +30,13 @@ export const Overview: React.FC<{
   const organisation = org?.name
   const { started, completed } = getDates(activityLog)
   const stage = current.stage.name
+  const { isMobile } = useViewport()
 
   return (
     <div id="overview">
       <Segment basic>
         <Message info icon>
-          <Icon name="info circle" color="teal" />
+          {!isMobile && <Icon name="info circle" color="teal" />}
           <Message.Content>
             <div className="flex-row-center wrap">
               <Header as="h3">
@@ -90,7 +92,10 @@ export const Overview: React.FC<{
                 // EXPIRED, so cancelled deadlines don't cause the button to show.
                 ((applicantDeadline.isActive && outcome === ApplicationOutcome.Pending) ||
                   (!applicantDeadline.isActive && outcome === ApplicationOutcome.Expired)) && (
-                  <div className="flex-row-start-center" style={{ gap: 10, marginTop: 30 }}>
+                  <div
+                    className="flex-row-start-center wrap"
+                    style={{ gap: 15, marginTop: isMobile ? 15 : 30 }}
+                  >
                     {t('REVIEW_OVERVIEW_EXTEND_BY')}
                     <Form.Input
                       size="mini"

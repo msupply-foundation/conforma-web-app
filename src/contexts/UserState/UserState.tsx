@@ -1,8 +1,14 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import React, { createContext, useContext, useReducer, useRef, useMemo } from 'react'
 import { useApolloClient } from '@apollo/client'
-import fetchUserInfo from '../utils/helpers/fetchUserInfo'
-import { OrganisationSimple, TemplatePermissions, User } from '../utils/types'
-import config from '../config'
+import fetchUserInfo from '../../utils/helpers/fetchUserInfo'
+import { Position, useToast } from '../Toast'
+import { OrganisationSimple, TemplatePermissions, User } from '../../utils/types'
+import config from '../../config'
+import { usePrefs } from '../SystemPrefs'
+import { useRouter } from '../../utils/hooks/useRouter'
+import { useLanguageProvider } from '../Localisation'
+import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
+import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
 
 type UserState = {
   currentUser: User | null
@@ -68,7 +74,6 @@ const initialState: UserState = {
   isNonRegistered: null,
 }
 
-// By setting the typings here, we ensure we get intellisense in VS Code
 const initialUserContext: {
   userState: UserState
   setUserState: React.Dispatch<UserActions>
@@ -84,28 +89,59 @@ const initialUserContext: {
 const UserContext = createContext(initialUserContext)
 
 export function UserProvider({ children }: UserProviderProps) {
+  const { t } = useLanguageProvider()
   const [state, dispatch] = useReducer(reducer, initialState)
   const userState = state
   const setUserState = dispatch
   const client = useApolloClient()
+  const { push } = useRouter()
+  const { preferences } = usePrefs()
+  const { showToast, clearAllToasts } = useToast()
+
+  let refreshTokenTimer = useRef(0)
+
+  const disableAutoLogout = preferences.logoutAfterInactivity === 0
+  const loginTimer = useMemo(
+    () =>
+      // Using useMemo to ensure only one instance created
+      new LoginInactivityTimer({
+        idleTimeout: preferences.logoutAfterInactivity,
+        onLogout: () => {
+          logout()
+          showToast({
+            title: t('MENU_LOGOUT'),
+            text: t('LOGOUT_INACTIVITY_ALERT'),
+            style: 'negative',
+            position: Position.topMiddle,
+            timeout: 0,
+          })
+        },
+      }),
+    []
+  )
 
   const logout = () => {
-    // Delete everything EXCEPT language preference in localStorage
-    const language = localStorage.getItem('language')
-    localStorage.clear()
-    if (language) localStorage.setItem('language', language)
+    clearInterval(refreshTokenTimer.current)
+    refreshTokenTimer.current = 0
+    clearLocalStorageExcept(['language', LOCAL_STORAGE_EXPIRY_KEY])
     client.clearStore()
-    window.location.href = '/login'
+    setUserState({ type: 'resetCurrentUser' })
+    loginTimer.end()
+    push('/login')
   }
 
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
     // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
-    if (JWT == 'undefined' || JWT == undefined) logout()
+    clearAllToasts()
+    if (JWT == 'undefined' || JWT == undefined) {
+      logout()
+      return
+    }
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageJWTKey, JWT)
-    if (!user || !templatePermissions || !user.permissionNames)
+    if (!user || !templatePermissions || !user.permissionNames) {
       fetchUserInfo({ dispatch: setUserState }, logout)
-    else {
+    } else {
       dispatch({
         type: 'setCurrentUser',
         newUser: user,
@@ -114,6 +150,23 @@ export function UserProvider({ children }: UserProviderProps) {
       })
       dispatch({ type: 'setLoading', isLoading: false })
     }
+
+    if (!disableAutoLogout) {
+      if (refreshTokenTimer.current === 0) loginTimer.start()
+
+      if (refreshTokenTimer.current === 0) {
+        refreshTokenTimer.current = window.setInterval(
+          refreshJWT,
+          // Max prevents timer starting with negative or 0 value
+          Math.max((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
+        )
+      }
+    }
+  }
+
+  const refreshJWT = () => {
+    console.log(new Date(), 'Refreshing auth token...')
+    fetchUserInfo({ dispatch: setUserState }, logout)
   }
 
   // Initial check for persisted user in local storage

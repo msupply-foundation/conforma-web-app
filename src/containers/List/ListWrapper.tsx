@@ -16,6 +16,8 @@ import PaginationBar from '../../components/List/Pagination'
 import ListFilters from './ListFilters/ListFilters'
 import { useGetFilterDefinitions } from '../../utils/helpers/list/useGetFilterDefinitions'
 import useDebounce from '../../formElementPlugins/search/src/useDebounce'
+import { TableMobileHeader } from '../../utils/tables/TableMobileHeader'
+import { useViewport } from '../../contexts/ViewportState'
 
 const ListWrapper: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -27,6 +29,7 @@ const ListWrapper: React.FC = () => {
     userState: { templatePermissions, isNonRegistered, currentUser },
     logout,
   } = useUserState()
+  const { isMobile } = useViewport()
   const [columns, setColumns] = useState<ColumnDetails[]>([])
   const [searchText, setSearchText] = useState<string>(query?.search)
   const [debounceOutput, setDebounceInput] = useDebounce<string>('')
@@ -94,18 +97,21 @@ const ListWrapper: React.FC = () => {
 
   const handleSort = (sortName: string) => {
     const { sortColumn, sortDirection } = sortQuery
-    switch (true) {
-      case sortName === sortColumn && sortDirection === 'descending':
-        setSortQuery({ sortColumn: sortName, sortDirection: 'ascending' })
-        break
-      case sortName === sortColumn && sortDirection === 'ascending':
-        setSortQuery({})
-        break
-      default:
-        // Clicked on a new column
-        setSortQuery({ sortColumn: sortName, sortDirection: 'descending' })
-        break
+
+    if (sortColumn === '') {
+      console.log('Column not sortable')
+      return
     }
+
+    if (sortName === sortColumn) {
+      setSortQuery({
+        sortColumn,
+        sortDirection: sortDirection === 'ascending' ? 'descending' : 'ascending',
+      })
+      return
+    }
+
+    setSortQuery({ sortColumn: sortName })
   }
 
   const visibleFilters = Object.fromEntries(
@@ -136,11 +142,28 @@ const ListWrapper: React.FC = () => {
           </Button>
         ) : null}
       </div>
-      <ListFilters
-        filterDefinitions={visibleFilters}
-        filterListParameters={{ userId: currentUser?.userId || 0, templateCode: type }}
-        totalCount={applicationCount}
-      />
+      <div className="flex-column" style={{ gap: 5 }}>
+        <ListFilters
+          filterDefinitions={visibleFilters}
+          filterListParameters={{ userId: currentUser?.userId || 0, templateCode: type }}
+          totalCount={applicationCount}
+        />
+        {isMobile && (
+          <TableMobileHeader
+            options={columns
+              .filter((col) => col.sortName !== '')
+              .map((col) => ({
+                key: col.sortName,
+                text: col.headerName || col.sortName,
+                value: col.sortName,
+              }))}
+            sortColumn={sortQuery.sortColumn}
+            sortDirection={sortQuery.sortDirection}
+            handleSort={handleSort}
+            defaultSort="last-active-date"
+          />
+        )}
+      </div>
       {columns && (
         <ApplicationsList
           columns={columns}

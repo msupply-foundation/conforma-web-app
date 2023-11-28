@@ -87,13 +87,11 @@ const ReviewSectionRow: React.FC<ReviewSectionRowProps> = ({
   return (
     <div key={`section_${sectionCode}_assignment_${assignmentId}`}>
       {canRenderRow && (
-        <Grid className="flex-row" verticalAlign="middle">
-          <Grid.Row columns={4} className="reviewer-row">
-            <ReviewSectionRowAssigned {...props} />
-            <ReviewSectionRowLastActionDate {...props} />
-            <ReviewSectionRowProgress {...props} />
-            <ReviewSectionRowAction {...props} />
-          </Grid.Row>
+        <Grid stackable columns={4} verticalAlign="middle">
+          <ReviewSectionRowAssigned {...props} />
+          <ReviewSectionRowLastActionDate {...props} />
+          <ReviewSectionRowProgress {...props} />
+          <ReviewSectionRowAction {...props} />
         </Grid>
       )}
     </div>

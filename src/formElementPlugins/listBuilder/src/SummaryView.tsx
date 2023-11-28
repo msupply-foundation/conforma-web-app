@@ -8,7 +8,7 @@ import {
   ListListLayout,
 } from './displayComponents'
 import { getDefaultDisplayFormat } from './helpers'
-import { DisplayType, ListLayoutProps } from './types'
+import { DisplayType, ListBuilderParameters, ListLayoutProps } from './types'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
   const {
@@ -18,7 +18,11 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
     displayFormat = getDefaultDisplayFormat(inputFields),
     inlineOpen = false,
     tableExcludeColumns = [],
-  } = parameters
+    // These affect viewing tables on Mobile only
+    hideFromMobileTableIfEmpty,
+    minMobileTableLabelWidth,
+    maxMobileTableLabelWidth,
+  } = parameters as ListBuilderParameters
 
   const listDisplayProps: ListLayoutProps = {
     listItems: response?.list ?? [],
@@ -30,7 +34,13 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
 
   const DisplayComponent =
     displayType === DisplayType.TABLE ? (
-      <ListTableLayout {...listDisplayProps} excludeColumns={tableExcludeColumns} />
+      <ListTableLayout
+        {...listDisplayProps}
+        excludeColumns={tableExcludeColumns}
+        hideFromMobileIfEmpty={hideFromMobileTableIfEmpty}
+        minMobileLabelWidth={minMobileTableLabelWidth}
+        maxMobileLabelWidth={maxMobileTableLabelWidth}
+      />
     ) : displayType === DisplayType.INLINE ? (
       <ListInlineLayout {...listDisplayProps} initialOpen={inlineOpen} />
     ) : displayType === DisplayType.LIST ? (
