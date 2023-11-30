@@ -125,6 +125,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         console.error('Search error:', err.message)
         setDebounceInput('')
         setLoading(false)
+        setResults([])
       })
   }
 
