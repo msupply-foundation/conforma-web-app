@@ -19,13 +19,9 @@ const useListApplications = (
 ) => {
   const FILTER_DEFINITIONS = useGetFilterDefinitions()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
-  // Since totalCount is fetched after application (for performance), we get
-  // a slight flicker because 'loading' will dissapear after application list
-  // is loaded, but pagination bar and total count in filter list is still to be updated
-  // thus we need a two prone loading status
-  const [applicationCountState, setApplicationCountState] = useState<
-    'loadingApplications' | 'loadingCounts' | 'ready'
-  >('loadingApplications')
+  // Manually keep track of loading state, due to interval between loading application
+  // and loading counts that causes flicker
+  const [isLoadingCount, setIsLoadingCount] = useState(true)
   const [templateType, setTemplateType] = useState<TemplateType>()
   const [error, setError] = useState('')
   const { updateQuery } = useRouter()
@@ -64,16 +60,27 @@ const useListApplications = (
     fetchPolicy: 'network-only',
   })
 
-  const [getListCount, { loading: loadingCount, data: countData }] =
-    useGetFilteredApplicationCountLazyQuery({
-      fetchPolicy: 'network-only',
-    })
+  const [getListCount, { data: countData }] = useGetFilteredApplicationCountLazyQuery({
+    fetchPolicy: 'network-only',
+    onCompleted: () => setIsLoadingCount(false),
+  })
 
   useEffect(() => {
+    if (loading) {
+      setIsLoadingCount(true)
+      return
+    }
+
     if (applicationsError) {
       setError(applicationsError.message)
       return
     }
+
+    if (data?.templates?.nodes && data?.templates?.nodes.length > 0) {
+      const { code, name, namePlural } = data?.templates?.nodes?.[0] as TemplateType
+      setTemplateType({ code, name, namePlural })
+    }
+
     if (data?.applicationList) {
       const applicationsList = data?.applicationList?.nodes
       setApplications(applicationsList as ApplicationListShape[])
@@ -84,36 +91,12 @@ const useListApplications = (
       if (applicationsList.length === 0 && pageNumber !== 1) {
         updateQuery({ page: 1 })
       } else {
-        // Fetch counts
         getListCount({
           variables: { filter: filters, userId: currentUser?.userId as number },
         })
       }
     }
-    if (data?.templates?.nodes && data?.templates?.nodes.length > 0) {
-      const { code, name, namePlural } = data?.templates?.nodes?.[0] as TemplateType
-      setTemplateType({ code, name, namePlural })
-    }
-  }, [data, applicationsError])
-
-  useEffect(() => {
-    if (loading) {
-      setApplicationCountState('loadingApplications')
-      return
-    }
-
-    if (loadingCount) {
-      setApplicationCountState('loadingCounts')
-      return
-    }
-
-    if (!loadingCount && applicationCountState == 'loadingCounts') setApplicationCountState('ready')
-  }, [loadingCount, loading])
-
-  const applicationCount = () => {
-    if (applicationCountState !== 'ready') return null
-    return countData?.applicationList?.totalCount ?? null
-  }
+  }, [applicationsError, loading])
 
   return {
     error,
@@ -121,7 +104,7 @@ const useListApplications = (
     refetch,
     templateType,
     applications,
-    applicationCount: applicationCount(),
+    applicationCount: !isLoadingCount ? countData?.applicationList?.totalCount ?? null : null,
   }
 }
 
