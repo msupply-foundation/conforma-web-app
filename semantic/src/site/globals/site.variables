@@ -76,10 +76,10 @@
 //
 @h1Mob: 20px;
 @h2Mob: 16px;
-@h3Mob: 14px;
-@h4Mob: 12px;
-@h5Mob: 15px;
-@h6Mob: 11px;
+@h3Mob: 15px;
+@h4Mob: 14px;
+@h5Mob: 13px;
+@h6Mob: 12px;
 
 // line-height
 @lineHeightSmall: 20px;
