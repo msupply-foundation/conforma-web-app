@@ -19,7 +19,13 @@ const useListApplications = (
 ) => {
   const FILTER_DEFINITIONS = useGetFilterDefinitions()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
-  const [applicationCount, setApplicationCount] = useState<'loading' | number>('loading')
+  // Since totalCount is fetched after application (for performance), we get
+  // a slight flicker because 'loading' will dissapear after application list
+  // is loaded, but pagination bar and total count in filter list is still to be updated
+  // thus we need a two prone loading status
+  const [applicationCountState, setApplicationCountState] = useState<
+    'loadingApplications' | 'loadingCounts' | 'ready'
+  >('loadingApplications')
   const [templateType, setTemplateType] = useState<TemplateType>()
   const [error, setError] = useState('')
   const { updateQuery } = useRouter()
@@ -27,7 +33,6 @@ const useListApplications = (
     userState: { currentUser },
   } = useUserState()
   const { preferences } = usePrefs()
-
   // The "filters" object is either passed in already constructed
   // (graphQLFilterObject), OR we'll need to "buildFilters" from url query key-values.
   const filters = graphQLFilterObject
@@ -36,8 +41,10 @@ const useListApplications = (
   const sortFields = sortBy
     ? buildSortFields(sortBy)
     : [ApplicationListShapesOrderBy.LastActiveDateDesc]
+
+  const pageNumber = page ? Number(page) : 1
   const { paginationOffset, numberToFetch } = getPaginationVariables(
-    page ? Number(page) : 1,
+    pageNumber,
     perPage ? Number(perPage) : preferences?.paginationDefault ?? 20
   )
   const {
@@ -62,17 +69,6 @@ const useListApplications = (
       fetchPolicy: 'network-only',
     })
 
-  // Ensures that query doesn't request a page beyond the available total
-  useEffect(() => {
-    if (applicationCount == 'loading') {
-      return
-    }
-    const pageNum = Number(page) || 1
-    const perPageNum = Number(perPage) || 20
-    const totalPages = Math.ceil(applicationCount / perPageNum)
-    if (pageNum > (totalPages > 0 ? totalPages : 1)) updateQuery({ page: totalPages })
-  }, [applicationCount])
-
   useEffect(() => {
     if (applicationsError) {
       setError(applicationsError.message)
@@ -81,10 +77,18 @@ const useListApplications = (
     if (data?.applicationList) {
       const applicationsList = data?.applicationList?.nodes
       setApplications(applicationsList as ApplicationListShape[])
-      // Fetch counts
-      getListCount({
-        variables: { filter: filters, userId: currentUser?.userId as number },
-      })
+      // If there is no records and we are not on first page, go to first page
+      // This happens when filter is changed while not on first page
+      // May cause a small period where 'no applications' appears, but that should be quick
+      // And small compromise for the simplicity
+      if (applicationsList.length === 0 && pageNumber !== 1) {
+        updateQuery({ page: 1 })
+      } else {
+        // Fetch counts
+        getListCount({
+          variables: { filter: filters, userId: currentUser?.userId as number },
+        })
+      }
     }
     if (data?.templates?.nodes && data?.templates?.nodes.length > 0) {
       const { code, name, namePlural } = data?.templates?.nodes?.[0] as TemplateType
@@ -93,14 +97,23 @@ const useListApplications = (
   }, [data, applicationsError])
 
   useEffect(() => {
-    if (loadingCount) {
-      setApplicationCount('loading')
+    if (loading) {
+      setApplicationCountState('loadingApplications')
       return
     }
-    if (countData?.applicationList) {
-      setApplicationCount(countData.applicationList.totalCount)
+
+    if (loadingCount) {
+      setApplicationCountState('loadingCounts')
+      return
     }
-  }, [loadingCount, countData])
+
+    if (!loadingCount && applicationCountState == 'loadingCounts') setApplicationCountState('ready')
+  }, [loadingCount, loading])
+
+  const applicationCount = () => {
+    if (applicationCountState !== 'ready') return null
+    return countData?.applicationList?.totalCount ?? null
+  }
 
   return {
     error,
@@ -108,7 +121,7 @@ const useListApplications = (
     refetch,
     templateType,
     applications,
-    applicationCount,
+    applicationCount: applicationCount(),
   }
 }
 
