@@ -14,8 +14,9 @@ import { usePrefs } from './contexts/SystemPrefs'
 import { Loading } from './components'
 import getServerUrl from './utils/helpers/endpoints/endpointUrlBuilder'
 
-// Adds authorisation header with token from local storage (to be used on every request)
-// see https://www.apollographql.com/docs/react/networking/authentication/#header
+// Adds authorisation header with token from local storage (to be used on every
+// request) see
+// https://www.apollographql.com/docs/react/networking/authentication/#header
 const authLink = setContext((_, { headers }) => {
   const JWT = localStorage.getItem(config.localStorageJWTKey)
   return {
@@ -26,13 +27,24 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
-// Needed to link or 'chain' commands in Apollo Clients (so that headers can be added to every apollo request)
-// see https://www.apollographql.com/docs/react/networking/authentication/#header
+// Needed to link or 'chain' commands in Apollo Clients (so that headers can be
+// added to every apollo request) see
+// https://www.apollographql.com/docs/react/networking/authentication/#header
 const httpLink = createHttpLink({
   uri: ({ operationName }) => {
     return `${getServerUrl('graphQL')}?dev=${operationName}`
   },
 })
+
+// On iPhone, focusing on input fields causes the viewport to auto-zoom in. We
+// can prevent this by setting `maximum-scale=1`, but this makes Android devices
+// not be able to manually zoom at all, hence we need to conditionally apply it.
+// See https://weblog.west-wind.com/posts/2023/Apr/17/Preventing-iOS-Safari-Textbox-Zooming
+if (navigator.userAgent.indexOf('iPhone') > -1) {
+  document
+    .querySelector('[name=viewport]')
+    ?.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1')
+}
 
 const App: React.FC = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
