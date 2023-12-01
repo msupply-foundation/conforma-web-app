@@ -174,7 +174,7 @@ const ListWrapper: React.FC = () => {
           refetch={refetch}
         />
       )}
-      <PaginationBar totalCount={applicationCount} translate={t} />
+      {applicationCount !== null && <PaginationBar totalCount={applicationCount} translate={t} />}
     </div>
   )
 }
