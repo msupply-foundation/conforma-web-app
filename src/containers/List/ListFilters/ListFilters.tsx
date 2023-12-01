@@ -39,7 +39,7 @@ const ListFilters: React.FC<{
   filterListParameters: any
   defaultFilterString?: string | null
   totalCount: number | null
-}> = ({ filterDefinitions, filterListParameters, defaultFilterString, totalCount = 'null' }) => {
+}> = ({ filterDefinitions, filterListParameters, defaultFilterString, totalCount = null }) => {
   const { t } = useLanguageProvider()
   const { query, updateQuery, location, setQuery } = useRouter()
 
