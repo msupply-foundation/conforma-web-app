@@ -68,6 +68,7 @@ const useListApplications = (
   useEffect(() => {
     if (loading) {
       setIsLoadingCount(true)
+      setApplications([])
       return
     }
 
