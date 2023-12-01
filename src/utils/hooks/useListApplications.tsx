@@ -86,8 +86,8 @@ const useListApplications = (
       const applicationsList = data?.applicationList?.nodes
       setApplications(applicationsList as ApplicationListShape[])
       // If there is no records and we are not on first page, go to first page
-      // This happens when filter is changed while not on first page
-      // May cause a small period where 'no applications' appears, but that should be quick
+      // This happens when filter is changed while not on first page May cause a
+      // small period where 'no applications' appears, but that should be quick
       // And small compromise for the simplicity
       if (applicationsList.length === 0 && pageNumber !== 1) {
         updateQuery({ page: 1 })
