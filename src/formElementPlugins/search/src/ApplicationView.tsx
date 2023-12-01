@@ -137,7 +137,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const text = e.target.value
     setSearchText(text)
     if (text.length < minCharacters) return
-    setDebounceInput(text)
+    setDebounceInput(text.trim())
     setLoading(true)
   }
 
