@@ -160,6 +160,7 @@ const FilterComponent: React.FC<{
       filter: gqlFilter,
       userId,
     },
+    fetchPolicy: 'network-only',
   })
 
   const appCount = data?.applicationList?.totalCount
