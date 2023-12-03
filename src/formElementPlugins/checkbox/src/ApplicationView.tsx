@@ -25,7 +25,7 @@ export const CheckboxDisplay: React.FC<{
   onChange: (e: any, data: any) => void
   onOtherChange: (value: string) => void
   otherPlaceholder?: string
-}> = ({ checkboxes, disabled, type, layout, onChange, onOtherChange }) => {
+}> = ({ checkboxes, disabled, type, layout, onChange, onOtherChange, otherPlaceholder }) => {
   const [otherText, setOtherText] = useState(checkboxes[checkboxes.length - 1].text)
   const styles =
     layout === 'inline'
@@ -49,7 +49,7 @@ export const CheckboxDisplay: React.FC<{
           />
           {cb.key === 'other' && (
             <Input
-              placeholder="Enter other value"
+              placeholder={otherPlaceholder}
               disabled={!cb.selected}
               onBlur={(e: any) => onOtherChange(e.target.value)}
               onChange={(e) => setOtherText(e.target.value)}
