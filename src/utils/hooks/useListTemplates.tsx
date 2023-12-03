@@ -31,7 +31,7 @@ const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: b
 
   const { data, error: apolloError } = useGetTemplatesQuery({
     skip: isLoading,
-    // fetchPolicy: 'network-only',
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
