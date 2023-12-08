@@ -77,7 +77,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     label,
     description,
-    checkboxes,
+    checkboxes = [],
     type,
     layout,
     resetButton = false,
