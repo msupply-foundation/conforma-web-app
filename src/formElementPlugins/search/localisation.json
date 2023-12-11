@@ -1,5 +1,7 @@
 {
   "MESSAGE_NO_RESULTS": "Nothing found",
   "DEFAULT_PLACEHOLDER": "Search...",
-  "MESSAGE_LOADING": "Loading..."
+  "MESSAGE_LOADING": "Loading...",
+  "INPUT_ERROR": "Invalid input pattern",
+  "VALIDATION_ERROR": "Invalid or missing selection"
 }
