@@ -12,12 +12,30 @@ import useDebounce from './useDebounce'
 import './styles.css'
 import useDefault from '../../useDefault'
 import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import { partialMatch } from './partialMatch'
+import { EvaluatorNode } from '../../../utils/types'
+import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
 
 interface DisplayFormat {
   title?: string
   subtitle?: string
   description?: string
   simple?: boolean
+}
+
+interface SearchParameters {
+  label?: string
+  description?: string
+  placeholder: string
+  source: EvaluatorNode
+  icon: SemanticICONS
+  multiSelect: boolean
+  minCharacters: number
+  displayFormat: { title: string; subtitle: string; description: string }
+  resultFormat: { title: string; description: string }
+  textFormat: string
+  displayType: 'card' | 'list' | 'input'
+  default: Response | Response[]
 }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -40,12 +58,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     icon = 'search',
     multiSelect = false,
     minCharacters = 1,
-    displayFormat = {},
+    displayFormat = { title: '', subtitle: '', description: '' },
     resultFormat = displayFormat,
     textFormat,
     displayType = 'card',
     default: defaultValue,
-  } = parameters
+  } = parameters as SearchParameters
 
   const {
     userState: { currentUser },
@@ -135,6 +153,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     if (displayType === 'input') setSelection([])
 
     const text = e.target.value
+    console.log('Match?', partialMatch(/[0-9]{9}[A-Z]{2}[0-9]{3}/, text))
+
     setSearchText(text)
     if (text.length < minCharacters) return
     setDebounceInput(text.trim())
