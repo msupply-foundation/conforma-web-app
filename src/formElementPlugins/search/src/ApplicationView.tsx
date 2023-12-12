@@ -63,7 +63,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     minCharacters = 1,
     restrictCase,
     inputPattern,
-    inputExample,
+    inputExample = 'a',
     inputErrorMessage = t('INPUT_ERROR'),
     displayFormat = { title: '', subtitle: '', description: '' },
     resultFormat = displayFormat,
@@ -167,7 +167,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     if (restrictCase === 'upper') text = text.toUpperCase()
     if (restrictCase === 'lower') text = text.toUpperCase()
 
-    const inputValid = partialMatch(text, inputRegex, inputExample)
+    const inputValid = partialMatch(text, inputExample, inputRegex)
 
     if (!inputValid) {
       setInputError(true)
@@ -191,6 +191,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         ? substituteValues(displayFormat.title ?? displayFormat.description, selectedResult)
         : ''
     )
+    setInputError(false)
   }
 
   const handleFocus = (e: any) => {
@@ -258,7 +259,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           onFocus={handleFocus}
           onSearchChange={handleChange}
           onResultSelect={handleSelect}
-          minCharacters={minCharacters}
+          // This prevents the "results" list appearing when in an error state
+          minCharacters={isError ? Infinity : minCharacters}
           placeholder={placeholder}
           results={
             loading ? [{ title: t('MESSAGE_LOADING') }] : createResultsArray(results, resultFormat)
@@ -407,8 +409,8 @@ const getDefaultString = (
   }
 }
 
-const partialMatch = (text: string, pattern?: RegExp, example?: string) => {
-  if (!pattern || !example) return true
+const partialMatch = (text: string, example: string, pattern?: RegExp) => {
+  if (!pattern) return true
   const fullString = text + example.slice(text.length)
   console.log(fullString)
 
