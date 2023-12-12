@@ -406,7 +406,8 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
 }) => {
   const { t } = useLanguageProvider()
   const { push } = useRouter()
-  const { viewport } = useViewport()
+  const { viewport, isMobile } = useViewport()
+
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
 
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
@@ -453,6 +454,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
             text={user?.organisation?.orgName || t('LABEL_NO_ORG')}
             options={dropdownOptions}
             onChange={handleChange}
+            direction={isMobile ? 'left' : undefined}
           ></Dropdown>
         )}
       </div>

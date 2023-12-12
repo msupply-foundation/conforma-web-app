@@ -2,6 +2,13 @@
         User Overrides
 *******************************/
 
+// This is supposed to be the default behaviour, but for some reason setting
+// "direction=left" doesn't work properly without this:
+.ui.dropdown > .left.menu {
+  left: 0 !important;
+  right: auto !important;
+}
+
 @media only screen and (max-width: @largestMobileScreen) {
   // So that the sub menus show properly in mobile for Header menu
   .ui.dropdown .menu .menu {
