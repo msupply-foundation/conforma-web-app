@@ -412,6 +412,9 @@ const getDefaultString = (
   }
 }
 
+// In order to check that user input is consistent with regex pattern, even when
+// it's only partially completed (and therefore won't match the regex), we
+// combine it with a known correct example and then test it against the pattern.
 const partialMatch = (text: string, example: string, pattern?: RegExp) => {
   if (!pattern) return true
   const fullString = text + example.slice(text.length)
