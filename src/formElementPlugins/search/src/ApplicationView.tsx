@@ -98,6 +98,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       : []
   )
   const [inputError, setInputError] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
   const { isEditable } = element
 
   const [debounceOutput, setDebounceInput] = useDebounce<string>('', DEBOUNCE_TIMEOUT)
@@ -195,6 +196,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const handleFocus = (e: any) => {
+    setIsFocused(true)
     // This makes the component perform a new search when re-focusing (if no
     // selection already), as changes in other elements may have changed some of
     // the dynamic parameters in this element
@@ -259,8 +261,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           onFocus={handleFocus}
           onSearchChange={handleChange}
           onResultSelect={handleSelect}
-          // This prevents the "results" list appearing when in an error state
-          minCharacters={isError ? Infinity : minCharacters}
+          minCharacters={minCharacters}
           placeholder={placeholder}
           results={
             loading ? [{ title: t('MESSAGE_LOADING') }] : createResultsArray(results, resultFormat)
@@ -268,6 +269,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           disabled={!isEditable}
           input={{ icon, iconPosition: 'left' }}
           noResultsMessage={t('MESSAGE_NO_RESULTS')}
+          onBlur={() => setIsFocused(false)}
+          open={isFocused && !inputError && searchText.length >= minCharacters && !loading}
         />
         {!errorMessage ? null : <Label pointing prompt content={errorMessage} />}
       </Form.Field>
@@ -412,7 +415,6 @@ const getDefaultString = (
 const partialMatch = (text: string, example: string, pattern?: RegExp) => {
   if (!pattern) return true
   const fullString = text + example.slice(text.length)
-  console.log(fullString)
 
   return pattern.test(fullString)
 }
