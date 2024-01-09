@@ -605,6 +605,7 @@ Once selected, items are displayed in a "card" view:
 - **icon**: `string` -- the name of the icon shown in the search box, from Semantic-UI icons. (default: "search" : 🔍 )
 - **multiSelect**: `boolean` -- whether or not the user can select multiple items for their response (default: `false`)
 - **minCharacters**: `number` -- the minimum number of characters the user must type before the search query executes (default: 1). This is useful in situations where need the user to look up a specific item without being able to freely browse through the entire results list. For example, to look up organisation in our system using "registration" code, we set `minCharacters = 6`, so the user will need to know an exact code rather than being able to try characters one at a time.
+- **restrictCase**: `"upper" | "lower"` -- if specified, all user input will be automatically converted to the specified text case.
 - **displayFormat**: `object` -- defines how to display the search results and the user's selection cards. See `displayFormat` for the [List Builder](#list-builder) (above) for detailed explanation. In this case, however, instead of a `code` substitution, the display string should contain property names from the result object. For example:
   ```
   displayFormat: {
@@ -619,6 +620,9 @@ Once selected, items are displayed in a "card" view:
 - **resultFormat**: `object` -- same as `displayFormat`, but used when specifying a format for the "result" display that is different to the selection card display. If not specified, `resultFormat` will just be the same as `displayFormat`.
   Note that for the "result" display, only the `title` and `description` fields are used (`subtitle` is not shown).
 - **textFormat** `string` -- a formatting substitution string like the above, to be generate the "text" value in the response. Note: currently the only place this text value is ever seen by the user is if it's used inside a listBuilder table (optional)
+- **inputPattern**: `string (regex)` -- if specified, the user search input must conform to this Regex pattern. For example `^[0-9]{9}[A-Z]{2}[0-9]{3}$` would require user to enter 9 digits followed by 2 uppercase letters, then 3 more digits. If the user deviates from this, an error message will be displayed.
+- **inputExample**: `string` -- one problem with the above `inputPattern` is that we need to make sure that we don't show an input error while the user is in the process of entering text, even though their partial input (probably) won't yet comply with the required pattern. As a workaround for this, we supply an `inputExample` here, which is a valid example that matches the pattern. For the above example pattern, a valid value could be `"123456789XY666"`. The element then internally uses a combination of the user input this example to validate against the regex pattern.
+- **inputErrorMessage**: `string` -- if user input doesn't match the specified `inputPattern` this message will displayed as the error. If not provided, we use a generic default ("Invalid input pattern").
 
 #### Response type
 
