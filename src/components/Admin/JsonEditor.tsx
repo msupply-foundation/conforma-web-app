@@ -44,12 +44,8 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     setData(newData)
     if (showSaveButton) setIsDirty(true)
     // If we don't have an explicit save button, we run "onSave" after every
-    // update
-    else {
-      await onSave(newData)
-      reset(newData)
-      setIsDirty(false)
-    }
+    // update, but keep the Undo queue alive
+    else await onSave(newData)
   }
 
   const handleCopy: CopyFunction = ({ key, value, type, stringValue }) => {
@@ -72,6 +68,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
       <ReactJson
         data={currentData}
         onUpdate={({ newData }) => {
+          console.log(newData)
           onUpdate(newData)
         }}
         enableClipboard={handleCopy}

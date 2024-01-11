@@ -1,11 +1,9 @@
-import { JsonEditorProps } from 'json-edit-react'
+import { FilterFunction, JsonEditorProps } from 'json-edit-react'
 import React, { useState } from 'react'
 import { JsonEditor } from '../../../components/Admin/JsonEditor'
 import { ApplicationViewProps } from '../../types'
 
 import useDefault from '../../useDefault'
-
-interface FilterConfig {}
 
 interface Parameters extends Omit<JsonEditorProps, 'data'> {
   label?: string
@@ -23,14 +21,11 @@ interface Parameters extends Omit<JsonEditorProps, 'data'> {
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
-  onUpdate,
-  setIsActive,
   currentResponse,
-  validationState,
   onSave,
   Markdown,
 }) => {
-  const [value, setValue] = useState<Record<string, any>>(currentResponse?.data ?? {})
+  const [value, setValue] = useState(currentResponse?.data ?? {})
 
   const { isEditable } = element
   const {
@@ -38,7 +33,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     description,
     maxWidth,
     default: defaultValue,
+    overflow,
+    preventEditFields,
+    allowEditDepth,
+    allowAddDepth = allowEditDepth,
+    allowDeleteDepth = allowEditDepth,
     collapse = 1,
+    canChangeType = false,
     ...jsonProps
   } = parameters as Parameters
 
@@ -52,7 +53,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     },
   })
 
-  console.log('value', value)
+  const handleChange = (data: Record<string, any>) => {
+    setValue(value)
+    onSave({ text: JSON.stringify(data), data })
+  }
 
   // const styles = maxWidth
   //   ? {
@@ -60,8 +64,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   //     }
   //   : {}
 
+  const restrictEdit = getRestrictionFunction(isEditable, allowEditDepth, preventEditFields)
+  const restrictAdd = getRestrictionFunction(isEditable, allowAddDepth, preventEditFields)
+  const restrictDelete = getRestrictionFunction(isEditable, allowDeleteDepth, preventEditFields)
+  const restrictTypeSelection = canChangeType
+    ? false
+    : // If type can't be changed, we still allow changing a null value
+      ({ value }: any) => (value === null ? false : [])
+
   const jsonEditProps = {
     collapse,
+    restrictEdit,
+    restrictAdd,
+    restrictDelete,
+    restrictTypeSelection,
     ...jsonProps,
   }
 
@@ -73,16 +89,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      <JsonEditor
-        data={value}
-        onSave={(data) => {
-          onSave({ text: JSON.stringify(data), data })
-        }}
-        showSaveButton={false}
-        {...jsonEditProps}
-      />
+      <JsonEditor data={value} onSave={handleChange} showSaveButton={false} {...jsonEditProps} />
     </>
   )
 }
 
 export default ApplicationView
+
+const getRestrictionFunction = (
+  isEditable: boolean,
+  depth: number = 0,
+  preventFields: (string | number)[] = []
+): FilterFunction | boolean => {
+  if (!isEditable) return true
+
+  return ({ key, level }) => preventFields.includes(key) || level < depth
+}
