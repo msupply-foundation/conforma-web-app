@@ -11,12 +11,14 @@ interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   onSave: (data: object) => void
   isSaving?: boolean
   data: object
+  showSaveButton?: boolean
 }
 
 export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   onSave,
   isSaving = false,
   data,
+  showSaveButton = true,
   ...jsonViewProps
 }) => {
   const { t } = useLanguageProvider()
@@ -34,6 +36,18 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     if (currentData !== undefined) {
       await onSave(currentData)
       reset(currentData)
+      setIsDirty(false)
+    }
+  }
+
+  const onUpdate = async (newData: object) => {
+    setData(newData)
+    if (showSaveButton) setIsDirty(true)
+    // If we don't have an explicit save button, we run "onSave" after every
+    // update
+    else {
+      await onSave(newData)
+      reset(newData)
       setIsDirty(false)
     }
   }
@@ -58,8 +72,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
       <ReactJson
         data={currentData}
         onUpdate={({ newData }) => {
-          setData(newData)
-          setIsDirty(true)
+          onUpdate(newData)
         }}
         enableClipboard={handleCopy}
         theme={{ input: { fontFamily: 'monospace' }, container: '#f9f9f9' }}
@@ -78,13 +91,15 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
             <Icon name="arrow alternate circle right" />
           </a>
         </p>
-        <Button
-          primary
-          disabled={!isDirty}
-          loading={isSaving}
-          content={t('BUTTON_SAVE')}
-          onClick={handleSave}
-        />
+        {showSaveButton && (
+          <Button
+            primary
+            disabled={!isDirty}
+            loading={isSaving}
+            content={t('BUTTON_SAVE')}
+            onClick={handleSave}
+          />
+        )}
       </div>
     </div>
   )

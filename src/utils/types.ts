@@ -381,6 +381,7 @@ interface ResponseFull {
   list?: any // Used in ListBuilder
   date?: any // Used in DatePicker
   number?: number | null // Used in Number plugin
+  data?: Record<string, any> // Used in JSON Editor
   // Next 5 used in Checkbox Summary view
   textUnselected?: string
   textMarkdownList?: string
