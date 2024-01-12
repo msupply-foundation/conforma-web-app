@@ -6,3 +6,11 @@
   max-width: 500px;
   font-family: @fontName;
 }
+
+// Prevents styling on json-edit-react component, which has its own styling
+.ui.form .json-editor textarea {
+  border: unset;
+  padding: unset;
+  resize: unset;
+  font-family: unset;
+}

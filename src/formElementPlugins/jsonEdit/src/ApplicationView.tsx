@@ -2,15 +2,15 @@ import { FilterFunction, JsonEditorProps } from 'json-edit-react'
 import React, { useState } from 'react'
 import { JsonEditor } from '../../../components/Admin/JsonEditor'
 import { ApplicationViewProps } from '../../types'
+import { useViewport } from '../../../contexts/ViewportState'
 
 import useDefault from '../../useDefault'
 
-interface Parameters extends Omit<JsonEditorProps, 'data'> {
+export interface Parameters extends Omit<JsonEditorProps, 'data'> {
   label?: string
   description?: string
-  maxWidth?: number
   default?: Record<string, any>
-  overflow?: boolean
+  width?: number
   preventEditFields?: string[]
   allowEditDepth?: number
   allowAddDepth?: number
@@ -26,14 +26,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
 }) => {
   const [value, setValue] = useState(currentResponse?.data ?? {})
+  const { viewport } = useViewport()
 
   const { isEditable } = element
   const {
     label,
     description,
-    maxWidth,
     default: defaultValue,
-    overflow,
+    width,
     preventEditFields,
     allowEditDepth,
     allowAddDepth = allowEditDepth,
@@ -58,12 +58,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     onSave({ text: JSON.stringify(data), data })
   }
 
-  // const styles = maxWidth
-  //   ? {
-  //       maxWidth,
-  //     }
-  //   : {}
-
   const restrictEdit = getRestrictionFunction(isEditable, allowEditDepth, preventEditFields)
   const restrictAdd = getRestrictionFunction(isEditable, allowAddDepth, preventEditFields)
   const restrictDelete = getRestrictionFunction(isEditable, allowDeleteDepth, preventEditFields)
@@ -81,6 +75,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     ...jsonProps,
   }
 
+  const widthProps = width ? { theme: { container: { width: `${width}px` } } } : {}
+
   return (
     <>
       {label && (
@@ -89,7 +85,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      <JsonEditor data={value} onSave={handleChange} showSaveButton={false} {...jsonEditProps} />
+      <JsonEditor
+        data={value}
+        onSave={handleChange}
+        showSaveButton={false}
+        {...jsonEditProps}
+        maxWidth={viewport.width - 70}
+        {...widthProps}
+      />
     </>
   )
 }
