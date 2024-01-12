@@ -78,7 +78,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
             thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
           },
           currentUser,
-          applicationData: fullStructure?.info,
+          applicationData: { ...fullStructure?.info, currentPage: 'application' },
           functions,
         }
       : undefined
