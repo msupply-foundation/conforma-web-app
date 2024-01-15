@@ -4,6 +4,7 @@ import {
   ApplicationDetails,
   ElementState,
   PageElement,
+  PageType,
   ResponsesByCode,
   ReviewDetails,
   SectionAndPage,
@@ -28,7 +29,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 interface PageElementProps {
   elements: PageElement[]
   responsesByCode: ResponsesByCode
-  applicationData: ApplicationDetails
+  applicationData: ApplicationDetails & { currentPage: PageType }
   stages: StageDetails[]
   canEdit: boolean
   isConsolidation?: boolean
