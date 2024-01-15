@@ -60,7 +60,6 @@ export {
   MethodToCallProps,
   Page,
   PageElement,
-  PageType,
   ApplicationProgress,
   ResponseFull,
   ResponsesByCode,
@@ -113,8 +112,6 @@ interface ApplicationDetails {
   org?: GraphQLOrg
   config?: any
 }
-
-type PageType = 'application' | 'summary'
 
 interface ApplicationElementStates {
   [key: string]: ElementState

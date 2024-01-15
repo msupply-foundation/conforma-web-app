@@ -95,7 +95,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
               elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
               responsesByCode={fullStructure.responsesByCode}
               stages={fullStructure.stages.map(({ stage }) => stage)}
-              applicationData={{ ...fullStructure.info, currentPage: 'application' }}
+              applicationData={fullStructure.info}
               isStrictPage={
                 sectionCode === strictSectionPage?.sectionCode &&
                 pageNumber === strictSectionPage?.pageNumber
