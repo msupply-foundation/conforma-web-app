@@ -24,6 +24,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   onSave,
   Markdown,
+  validationState,
 }) => {
   const [value, setValue] = useState(currentResponse?.data ?? {})
   const { viewport } = useViewport()
@@ -52,6 +53,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       onSave({ text: JSON.stringify(data), data })
     },
   })
+
+  console.log(validationState)
 
   const handleChange = (data: Record<string, any>) => {
     setValue(value)
