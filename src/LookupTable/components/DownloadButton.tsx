@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Papa from 'papaparse'
 import config from '../../config'
 import React, { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
@@ -47,9 +48,12 @@ const DownloadButton = ({
         },
       })
       .then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const csvContent =
+          'data:text/csv;charset=utf-8,' + Papa.unparse(response.data, { header: true })
+        const encodedUri = encodeURI(csvContent)
+        console.log(csvContent)
         const link = document.createElement('a')
-        link.href = url
+        link.href = encodedUri
         link.setAttribute('download', `${name}_${DateTime.now().toISODate()}.csv`)
         document.body.appendChild(link)
         link.click()
