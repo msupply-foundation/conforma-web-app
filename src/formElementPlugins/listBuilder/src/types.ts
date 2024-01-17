@@ -22,6 +22,7 @@ export interface ListBuilderParameters {
   default?: ResponseFull
   inlineOpen?: boolean
   tableExcludeColumns?: string[]
+  maxItems?: number
   // These affect mobile viewing only
   hideFromMobileTableIfEmpty?: true | string[]
   minMobileTableLabelWidth?: number | string
