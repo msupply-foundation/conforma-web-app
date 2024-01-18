@@ -89,9 +89,9 @@ const extractNumber = (input: string) => {
 // Also returns true if null
 const isExpired = (date: Date | string | null) => {
   if (date === null) return true
-  const testDate = typeof date === 'string' ? DateTime.fromISO(date) : DateTime.fromJSDate(date)
+  const testDate = typeof date === 'string' ? new Date(date) : date
 
-  return testDate.toMillis() <= DateTime.now().toMillis()
+  return testDate.getTime() <= Date.now()
 }
 
 // Remove diacritics (accented characters) from strings
