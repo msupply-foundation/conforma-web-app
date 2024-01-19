@@ -60,6 +60,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     default: defaultValue,
     inlineOpen = false,
     tableExcludeColumns = [],
+    maxItems = Infinity,
     // These affect viewing tables on Mobile only
     hideFromMobileTableIfEmpty,
     minMobileTableLabelWidth,
@@ -248,7 +249,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      {displayType !== DisplayType.LIST && (
+      {displayType !== DisplayType.LIST && listItems.length < maxItems && (
         <Button
           primary
           content={createModalButtonText}
@@ -280,7 +281,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       )}
       {DisplayComponent}
       {/* In LIST view, show the Button below the list */}
-      {displayType === DisplayType.LIST && (
+      {displayType === DisplayType.LIST && listItems.length < maxItems && (
         <Button
           primary
           size="small"
