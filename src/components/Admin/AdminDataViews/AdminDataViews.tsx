@@ -20,7 +20,7 @@ import {
   useGetDataTablesQuery,
 } from '../../../utils/generated/graphql'
 import { toCamelCase } from '../../../LookupTable/utils'
-import { JsonEditor } from '../JsonEditor'
+import { JsonEditor } from '../JsonEditor/JsonEditor'
 import { pickBy } from 'lodash'
 import { nanoid } from 'nanoid'
 import { useAdminDataViewConfig } from './useAdminDataViewConfig'

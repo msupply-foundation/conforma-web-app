@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon } from 'semantic-ui-react'
 import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction } from 'json-edit-react'
-import { useToast, topLeft, Position } from '../../contexts/Toast'
-import { useLanguageProvider } from '../../contexts/Localisation'
-import Loading from '../Loading'
+import { useToast, topLeft, Position } from '../../../contexts/Toast'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import Loading from '../../Loading'
 import useUndo from 'use-undo'
-import { truncateString } from '../../utils/helpers/utilityFunctions'
+import { truncateString } from '../../../utils/helpers/utilityFunctions'
+import './styles.css'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   onSave: (data: object) => void

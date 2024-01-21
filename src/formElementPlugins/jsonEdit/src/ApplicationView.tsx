@@ -1,6 +1,6 @@
 import { FilterFunction, JsonEditorProps } from 'json-edit-react'
 import React, { useState } from 'react'
-import { JsonEditor } from '../../../components/Admin/JsonEditor'
+import { JsonEditor } from '../../../components/Admin/JsonEditor/JsonEditor'
 import { ApplicationViewProps } from '../../types'
 import { useViewport } from '../../../contexts/ViewportState'
 

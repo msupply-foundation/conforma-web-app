@@ -1,5 +1,5 @@
 import React from 'react'
-import { JsonEditor } from '../../../components/Admin/JsonEditor'
+import { JsonEditor } from '../../../components/Admin/JsonEditor/JsonEditor'
 import { SummaryViewProps } from '../../types'
 import { useViewport } from '../../../contexts/ViewportState'
 import { Parameters } from './ApplicationView'
