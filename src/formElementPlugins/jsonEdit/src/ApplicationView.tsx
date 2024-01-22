@@ -54,8 +54,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     },
   })
 
-  console.log(validationState)
-
   const handleChange = (data: Record<string, any>) => {
     setValue(value)
     onSave({ text: JSON.stringify(data), data })

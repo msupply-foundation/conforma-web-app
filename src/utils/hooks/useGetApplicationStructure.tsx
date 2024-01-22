@@ -16,6 +16,7 @@ import {
   generateApplicantChangesRequestedProgress,
   generateApplicantResponsesProgress,
 } from '../helpers/structure'
+import { useRouter } from './useRouter'
 
 interface UseGetApplicationStructureProps {
   structure: FullStructure
@@ -46,6 +47,8 @@ const useGetApplicationStructure = ({
   const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
     firstRunValidation && structure.info.current?.status === ApplicationStatus.Draft
   )
+
+  const { currentPageType } = useRouter()
 
   const [lastRefetchedTimestamp, setLastRefetchedTimestamp] = useState<number>(0)
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState<number>(0)
@@ -92,6 +95,7 @@ const useGetApplicationStructure = ({
       structure,
       applicationResponses,
       currentUser,
+      currentPageType,
       evaluationOptions,
     }).then((newStructure: FullStructure) => {
       if (shouldDoValidation) {
@@ -116,6 +120,8 @@ const useGetApplicationStructure = ({
         newStructure.info.isLinear =
           newStructure.info.isLinear && !newStructure.info.isChangeRequest
       }
+
+      newStructure.info.currentPageType = currentPageType
 
       setLastProcessedTimestamp(Date.now())
       setFirstRunProcessValidation(false)

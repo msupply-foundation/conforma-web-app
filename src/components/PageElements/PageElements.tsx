@@ -29,7 +29,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 interface PageElementProps {
   elements: PageElement[]
   responsesByCode: ResponsesByCode
-  applicationData: ApplicationDetails & { currentPage: PageType }
+  applicationData: ApplicationDetails
   stages: StageDetails[]
   canEdit: boolean
   isConsolidation?: boolean

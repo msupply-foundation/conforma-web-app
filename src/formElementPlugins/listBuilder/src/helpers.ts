@@ -99,6 +99,7 @@ export const buildElements = async (
     applicationData,
     functions,
   }
+
   const evaluatedElements = await evaluateElements(elements, evaluationOptions, evaluationObjects)
   const outputElements: { [key: string]: ElementState } = {}
   for (let i = 0; i < elements.length; i++) {

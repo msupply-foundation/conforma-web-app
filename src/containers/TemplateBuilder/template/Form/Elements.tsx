@@ -71,7 +71,7 @@ const Elements: React.FC = () => {
         )}
         elements={selectedPage.state}
         responsesByCode={structure.responsesByCode || {}}
-        applicationData={{ ...structure.info, currentPage: 'application' }}
+        applicationData={structure.info}
       />
       <ButtonWithFallback
         disabled={!canEdit}

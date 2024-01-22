@@ -112,9 +112,10 @@ interface ApplicationDetails {
   user?: GraphQLUser
   org?: GraphQLOrg
   config?: any
+  currentPageType?: PageType
 }
 
-type PageType = 'application' | 'summary'
+type PageType = 'application' | 'summary' | 'review' | 'data' | 'dashboard' | 'admin'
 
 interface ApplicationElementStates {
   [key: string]: ElementState
