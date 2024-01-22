@@ -52,9 +52,8 @@ const General: React.FC = () => {
 
   const canSetDraft =
     isTemplateUnlocked(template) &&
-    applicationCount === 0 &&
     !isDraft &&
-    (template.applicationCount === 0 ||
+    (applicationCount === 0 ||
       // Let us make changes to active templates while in "dev" mode
       !config.isProductionBuild)
 
