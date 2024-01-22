@@ -4,7 +4,6 @@ import {
   ApplicationDetails,
   ElementState,
   PageElement,
-  PageType,
   ResponsesByCode,
   ReviewDetails,
   SectionAndPage,
@@ -149,7 +148,8 @@ const PageElements: React.FC<PageElementProps> = ({
             const canApplicantEdit =
               canEdit &&
               !canApplicantAddNew &&
-              (isUpdating ? isResponseUpdated : !!latestApplicationResponse?.value)
+              (isUpdating ? isResponseUpdated : !!latestApplicationResponse?.value) &&
+              element.isEditable
 
             const reviewResponse = previousApplicationResponse?.reviewResponses.nodes[0]
             const summaryViewProps = getSummaryViewProps(element)

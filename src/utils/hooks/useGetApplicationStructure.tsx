@@ -81,7 +81,8 @@ const useGetApplicationStructure = ({
       minRefetchTimestampForRevalidation > lastRefetchedTimestamp
     const shouldRevalidateThisRun = shouldRevalidate && !shouldRevalidationWaitForRefetech
 
-    if (isDataUpToDate && !shouldRevalidateThisRun && !forceRun) return
+    if (isDataUpToDate && !shouldRevalidateThisRun && !forceRun && currentPageType !== 'summary')
+      return
 
     const shouldDoValidation = shouldRevalidateThisRun || firstRunProcessValidation
     const applicationResponses = data?.applicationBySerial?.applicationResponses
@@ -133,6 +134,7 @@ const useGetApplicationStructure = ({
     minRefetchTimestampForRevalidation,
     error,
     structure,
+    currentPageType,
   ])
 
   return {
