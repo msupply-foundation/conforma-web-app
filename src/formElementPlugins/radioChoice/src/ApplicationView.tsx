@@ -51,7 +51,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       const optionIndex = getDefaultIndex(defaultOption, options)
       if (optionIndex >= 0) handleChange(optionIndex)
       else {
-        if (!hasOther) return
+        if (!hasOther || !defaultOption) return
         handleChange(allOptions.length - 1, defaultOption)
       }
     },
