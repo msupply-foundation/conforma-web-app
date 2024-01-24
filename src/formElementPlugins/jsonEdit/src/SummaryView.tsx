@@ -28,7 +28,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, response, Markdow
       )}
       <Markdown text={description} />
       <JsonEditor
-        data={response?.data ?? {}}
+        data={response?.data ?? response ?? {}}
         onSave={() => {}}
         showSaveButton={false}
         {...jsonEditProps}
