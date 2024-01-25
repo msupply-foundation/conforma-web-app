@@ -115,7 +115,7 @@ const ImportCsvModal: React.FC<any> = ({
           <Message
             positive
             header={
-              tableLabel
+              !tableStructureID
                 ? t('LOOKUP_TABLE_SUCCESS_CREATED', tableLabel)
                 : t('LOOKUP_TABLE_SUCCESS_UPDATED', tableLabel)
             }
