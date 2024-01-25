@@ -69,7 +69,6 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
       <ReactJson
         data={currentData}
         onUpdate={({ newData }) => {
-          console.log(newData)
           onUpdate(newData)
         }}
         enableClipboard={handleCopy}
