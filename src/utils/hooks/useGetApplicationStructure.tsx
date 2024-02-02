@@ -16,6 +16,7 @@ import {
   generateApplicantChangesRequestedProgress,
   generateApplicantResponsesProgress,
 } from '../helpers/structure'
+import { useRouter } from './useRouter'
 
 interface UseGetApplicationStructureProps {
   structure: FullStructure
@@ -46,6 +47,8 @@ const useGetApplicationStructure = ({
   const [firstRunProcessValidation, setFirstRunProcessValidation] = useState(
     firstRunValidation && structure.info.current?.status === ApplicationStatus.Draft
   )
+
+  const { currentPageType } = useRouter()
 
   const [lastRefetchedTimestamp, setLastRefetchedTimestamp] = useState<number>(0)
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState<number>(0)
@@ -78,7 +81,8 @@ const useGetApplicationStructure = ({
       minRefetchTimestampForRevalidation > lastRefetchedTimestamp
     const shouldRevalidateThisRun = shouldRevalidate && !shouldRevalidationWaitForRefetech
 
-    if (isDataUpToDate && !shouldRevalidateThisRun && !forceRun) return
+    if (isDataUpToDate && !shouldRevalidateThisRun && !forceRun && currentPageType !== 'summary')
+      return
 
     const shouldDoValidation = shouldRevalidateThisRun || firstRunProcessValidation
     const applicationResponses = data?.applicationBySerial?.applicationResponses
@@ -92,6 +96,7 @@ const useGetApplicationStructure = ({
       structure,
       applicationResponses,
       currentUser,
+      currentPageType,
       evaluationOptions,
     }).then((newStructure: FullStructure) => {
       if (shouldDoValidation) {
@@ -117,6 +122,8 @@ const useGetApplicationStructure = ({
           newStructure.info.isLinear && !newStructure.info.isChangeRequest
       }
 
+      newStructure.info.currentPageType = currentPageType
+
       setLastProcessedTimestamp(Date.now())
       setFirstRunProcessValidation(false)
       setFullStructure(newStructure)
@@ -127,6 +134,7 @@ const useGetApplicationStructure = ({
     minRefetchTimestampForRevalidation,
     error,
     structure,
+    currentPageType,
   ])
 
   return {

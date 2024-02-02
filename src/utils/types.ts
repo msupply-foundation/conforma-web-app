@@ -60,6 +60,7 @@ export {
   MethodToCallProps,
   Page,
   PageElement,
+  PageType,
   ApplicationProgress,
   ResponseFull,
   ResponsesByCode,
@@ -111,7 +112,10 @@ interface ApplicationDetails {
   user?: GraphQLUser
   org?: GraphQLOrg
   config?: any
+  currentPageType?: PageType
 }
+
+type PageType = 'application' | 'summary' | 'review' | 'data' | 'dashboard' | 'admin'
 
 interface ApplicationElementStates {
   [key: string]: ElementState
@@ -381,6 +385,7 @@ interface ResponseFull {
   list?: any // Used in ListBuilder
   date?: any // Used in DatePicker
   number?: number | null // Used in Number plugin
+  data?: Record<string, any> // Used in JSON Editor
   // Next 5 used in Checkbox Summary view
   textUnselected?: string
   textMarkdownList?: string

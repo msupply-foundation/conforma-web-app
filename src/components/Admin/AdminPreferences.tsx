@@ -6,7 +6,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useToast, topLeft } from '../../contexts/Toast'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
-import { JsonEditor } from './JsonEditor'
+import { JsonEditor } from './JsonEditor/JsonEditor'
 import Loading from '../Loading'
 import { useViewport } from '../../contexts/ViewportState'
 

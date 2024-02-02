@@ -19,6 +19,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Search (Lookup)](#search-lookup)
   - [Date Picker](#date-picker)
   - [Number](#number)
+  - [JSON Editor](#json-editor)
   - [Page Break](#page-break)
 
 <!-- tocstop -->
@@ -58,6 +59,7 @@ Example for `shortText` plugin element:
   _TO-DO: Handle multiple validation criteria with different messages (eg. "Not a valid email", "Email is not unique")_
 - **parameters**: `JSON` -- the parameters specific to each question/element type. See individual plugins below for parameter breakdown
 - **is_reviewable**: `enum` -- either "ALWAYS", "NEVER" or `null`. If set to "ALWAYS", a review response will be created (i.e. a reviewer can review the question) even if there is no applicant response. If set to "NEVER", there will no review response created. This is useful (for example) for questions that are just used as logical conditions for other questions (e.g. "Is your postal address different"), and it can save the reviewer a lot of unnecessary clicking on content that is irrelevant to their actual review. The default for this field is `null`, in which case a review response is created whenever an application response is present.
+- **showLiveParameters**: `boolean` (default `false`) -- Usually, when an application form is being edited, we store the result of any dynamic parameter values in the database, so that when viewed on the Summary page or in Review, subsequent users see the application as it looked when the applicant entered it. For example, if the application form displays user details of the applicant, we wouldn't want this to show the reviewer's details when they review it. So the current value of any dynamic parameters is saved along with the application responses. Then, in Summary and Review pages, we display these values rather than whatever they would evaluate to at the time. In the case where we *don't* want this (i.e the user should see up-to-date "live" values), set `showLiveParameters` to `true`.
 
   <a name="types"/>
 
@@ -721,6 +723,45 @@ _Input for numeric fields_
   prefix: <string> (from parameters, only stored if defined)
   suffix: <string> (from parameters, only stored if defined)
   suffixPlural: <string> (from parameters, only stored if defined)
+}
+```
+
+---
+
+<a name="json-editor"/>
+
+### JSON Editor
+
+- **type/code**: `jsonEdit`
+- **category**: `Question`
+
+_Editor/Viewer for raw JSON data_
+
+Uses [json-edit-react](https://carlosnz.github.io/json-edit-react/)
+
+![JSON Editor](images/Json-Editor.png)
+
+#### Input parameters
+
+- **label** / **description** `string` -- as above
+- **default**: `string`/`number` -- default value (JSON object)
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
+- **width**: `number` -- sets the max width (in pixels) for the editor. (It will also be limited by the size of the container, so won't extend of the screen in mobile)
+- **preventEditFields**: `string[]` -- a list of field names that should be editable by the user. For example, if editing a database record, the `id` field should probably not be editable.
+- **allowEditDepth**: `number` -- how deep in the JSON structure to allow editing. If this is `1`, then only the top-level fields can be modified. To prevent *all* editing (i.e. just for viewing), set this to `0`
+- **allowAddDepth**: `number` -- same as `allowEditDepth`, but for *adding* new properties
+- **allowDeleteDepth**: `number` -- same as `allowEditDepth`, but for *deleting*  properties
+- **collapse**: `number` (default `1`) -- the depth at which the JSON view will be "opened" to on first loading. If set to `0`, the whole thing will start in a "closed" state.
+- **canChangeType**: `boolean` (default `false`). This prevents the user from changing the data type of a field, which could cause problems if trying to update the database with it. Note that `null` values can still be changed to other types, so be careful with this.
+- **...jsonProps**: all the properties for configuring the Json editor component can also be provided for additional customisation. See [json-edit-react docs](https://github.com/CarlosNZ/json-edit-react#props-overview) for details.
+
+
+#### Response type
+
+```
+{
+  text: <Stringified version of the data object>
+  data: { ...JsonData }
 }
 ```
 

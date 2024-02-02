@@ -1,0 +1,24 @@
+/* Prevent Semantic-UI from over-riding some json-edit-react styles for
+"textarea" and "select" elements (when placed inside a form) */
+.ui.form .json-editor textarea {
+  border: unset;
+  padding: unset;
+  resize: unset;
+  font-family: unset;
+}
+
+.ui.form .json-editor select {
+  padding: unset;
+  border: unset;
+}
+
+/* Same as original json-edit-react style, but added !important to counteract
+the effect of the above */
+.jer-input-text {
+  resize: none !important;
+  margin: 0 !important;
+  height: 1.4em !important;
+  padding-left: 0.5em !important;
+  padding-right: 0.5em !important;
+  padding-bottom: 0 !important;
+}

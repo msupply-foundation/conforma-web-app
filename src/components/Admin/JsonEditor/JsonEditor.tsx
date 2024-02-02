@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon } from 'semantic-ui-react'
 import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction } from 'json-edit-react'
-import { useToast, topLeft, Position } from '../../contexts/Toast'
-import { useLanguageProvider } from '../../contexts/Localisation'
-import Loading from '../Loading'
+import { useToast, topLeft, Position } from '../../../contexts/Toast'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import Loading from '../../Loading'
 import useUndo from 'use-undo'
-import { truncateString } from '../../utils/helpers/utilityFunctions'
+import { truncateString } from '../../../utils/helpers/utilityFunctions'
+import './styles.css'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   onSave: (data: object) => void
   isSaving?: boolean
   data: object
+  showSaveButton?: boolean
 }
 
 export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   onSave,
   isSaving = false,
   data,
+  showSaveButton = true,
   ...jsonViewProps
 }) => {
   const { t } = useLanguageProvider()
@@ -36,6 +39,14 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
       reset(currentData)
       setIsDirty(false)
     }
+  }
+
+  const onUpdate = async (newData: object) => {
+    setData(newData)
+    if (showSaveButton) setIsDirty(true)
+    // If we don't have an explicit save button, we run "onSave" after every
+    // update, but keep the Undo queue alive
+    else await onSave(newData)
   }
 
   const handleCopy: CopyFunction = ({ key, value, type, stringValue }) => {
@@ -58,8 +69,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
       <ReactJson
         data={currentData}
         onUpdate={({ newData }) => {
-          setData(newData)
-          setIsDirty(true)
+          onUpdate(newData)
         }}
         enableClipboard={handleCopy}
         theme={{ input: { fontFamily: 'monospace' }, container: '#f9f9f9' }}
@@ -78,13 +88,15 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
             <Icon name="arrow alternate circle right" />
           </a>
         </p>
-        <Button
-          primary
-          disabled={!isDirty}
-          loading={isSaving}
-          content={t('BUTTON_SAVE')}
-          onClick={handleSave}
-        />
+        {showSaveButton && (
+          <Button
+            primary
+            disabled={!isDirty}
+            loading={isSaving}
+            content={t('BUTTON_SAVE')}
+            onClick={handleSave}
+          />
+        )}
       </div>
     </div>
   )
