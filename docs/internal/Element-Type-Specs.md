@@ -609,6 +609,7 @@ Once selected, items are displayed in a "card" view:
 - **multiSelect**: `boolean` -- whether or not the user can select multiple items for their response (default: `false`)
 - **minCharacters**: `number` -- the minimum number of characters the user must type before the search query executes (default: 1). This is useful in situations where need the user to look up a specific item without being able to freely browse through the entire results list. For example, to look up organisation in our system using "registration" code, we set `minCharacters = 6`, so the user will need to know an exact code rather than being able to try characters one at a time.
 - **restrictCase**: `"upper" | "lower"` -- if specified, all user input will be automatically converted to the specified text case.
+- **trimWhiteSpace**: `boolean` -- if `true`, user won't be able to enter spaces in search query (default: `false`)
 - **displayFormat**: `object` -- defines how to display the search results and the user's selection cards. See `displayFormat` for the [List Builder](#list-builder) (above) for detailed explanation. In this case, however, instead of a `code` substitution, the display string should contain property names from the result object. For example:
   ```
   displayFormat: {
