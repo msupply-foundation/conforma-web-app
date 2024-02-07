@@ -246,6 +246,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     ? validationState?.validationMessage ?? t('VALIDATION_ERROR')
     : undefined
 
+  const resultsOpen = isFocused && !inputError && searchText.length >= minCharacters && !loading
+
   return (
     <>
       {label && (
@@ -270,7 +272,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           input={{ icon, iconPosition: 'left' }}
           noResultsMessage={t('MESSAGE_NO_RESULTS')}
           onBlur={() => setIsFocused(false)}
-          open={isFocused && !inputError && searchText.length >= minCharacters && !loading}
+          open={resultsOpen}
         />
         {!errorMessage ? null : <Label pointing prompt content={errorMessage} />}
       </Form.Field>

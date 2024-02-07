@@ -58,7 +58,12 @@ const DataViewDetail: React.FC = () => {
         />
       </div>
       <div className="data-view-detail-container">
-        <Header as="h2">{header.value}</Header>
+        <Header as="h2">
+          {formatCellText(header.value, {
+            dataType: header.dataType,
+            formatting: header.formatting,
+          })}
+        </Header>
         <div className="data-view-detail-table">
           <Table celled stackable striped>
             <Table.Body>
