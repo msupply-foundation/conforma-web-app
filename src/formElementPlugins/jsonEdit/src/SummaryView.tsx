@@ -7,7 +7,15 @@ import { Parameters } from './ApplicationView'
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, response, Markdown }) => {
   const { viewport } = useViewport()
 
-  const { label, description, width, collapse = 1, ...jsonProps } = parameters as Parameters
+  const {
+    label,
+    description,
+    width,
+    collapse = 1,
+    showSearch = false,
+    searchPlaceholder,
+    ...jsonProps
+  } = parameters as Parameters
 
   const jsonEditProps = {
     collapse,
@@ -34,6 +42,8 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, response, Markdow
         {...jsonEditProps}
         maxWidth={viewport.width - 70}
         {...widthProps}
+        showSearch={showSearch}
+        searchPlaceholder={searchPlaceholder}
       />
     </>
   )

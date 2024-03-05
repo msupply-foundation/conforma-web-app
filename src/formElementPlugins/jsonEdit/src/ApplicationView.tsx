@@ -16,6 +16,8 @@ export interface Parameters extends Omit<JsonEditorProps, 'data'> {
   allowAddDepth?: number
   allowDeleteDepth?: number
   canChangeType?: boolean
+  showSearch?: boolean
+  searchPlaceholder?: string
 }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -41,6 +43,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     allowDeleteDepth = allowEditDepth,
     collapse = 1,
     canChangeType = false,
+    showSearch = false,
+    searchPlaceholder,
     ...jsonProps
   } = parameters as Parameters
 
@@ -93,6 +97,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         {...jsonEditProps}
         maxWidth={viewport.width - 70}
         {...widthProps}
+        showSearch={showSearch}
+        searchPlaceholder={searchPlaceholder}
       />
     </>
   )
