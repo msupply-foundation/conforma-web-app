@@ -754,6 +754,7 @@ Uses [json-edit-react](https://carlosnz.github.io/json-edit-react/)
 - **allowDeleteDepth**: `number` -- same as `allowEditDepth`, but for *deleting*  properties
 - **collapse**: `number` (default `1`) -- the depth at which the JSON view will be "opened" to on first loading. If set to `0`, the whole thing will start in a "closed" state.
 - **canChangeType**: `boolean` (default `false`). This prevents the user from changing the data type of a field, which could cause problems if trying to update the database with it. Note that `null` values can still be changed to other types, so be careful with this.
+- **showSearch**: `boolean` (default `false`). If `true`, a "search" input will be visible on the editor for narrowing down the list of properties visible.
 - **...jsonProps**: all the properties for configuring the Json editor component can also be provided for additional customisation. See [json-edit-react docs](https://github.com/CarlosNZ/json-edit-react#props-overview) for details.
 
 
