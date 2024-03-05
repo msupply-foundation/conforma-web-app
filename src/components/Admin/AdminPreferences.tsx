@@ -68,7 +68,7 @@ export const AdminPreferences: React.FC = () => {
           maxWidth={650}
           restrictDelete={({ level }) => level === 1}
           restrictAdd={({ level }) => level === 0}
-          indent={isMobile ? 2 : 4}
+          indent={isMobile ? 1 : 2}
         />
       ) : (
         <Loading />

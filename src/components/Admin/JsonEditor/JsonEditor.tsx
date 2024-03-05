@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Icon } from 'semantic-ui-react'
+import { Button, Icon, Search } from 'semantic-ui-react'
 import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction } from 'json-edit-react'
 import { useToast, topLeft, Position } from '../../../contexts/Toast'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -13,6 +13,8 @@ interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   isSaving?: boolean
   data: object
   showSaveButton?: boolean
+  showSearch?: boolean
+  searchPlaceholder?: string
 }
 
 export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
@@ -20,10 +22,14 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   isSaving = false,
   data,
   showSaveButton = true,
+  showSearch = true,
+  searchPlaceholder,
+  searchFilter,
   ...jsonViewProps
 }) => {
   const { t } = useLanguageProvider()
   const [isDirty, setIsDirty] = useState(false)
+  const [searchText, setSearchText] = useState('')
   const [{ present: currentData }, { set: setData, reset, undo, redo, canUndo, canRedo }] =
     useUndo(data)
   const { showToast } = useToast({ position: topLeft })
@@ -65,14 +71,34 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   if (currentData === undefined) return <Loading />
 
   return (
-    <div className="json-editor">
+    <div className="json-editor" style={{ position: 'relative', maxWidth: jsonViewProps.maxWidth }}>
+      {showSearch && (
+        <Search
+          size="mini"
+          value={searchText}
+          open={false}
+          placeholder={searchPlaceholder ?? t('JSON_EDIT_SEARCH_PLACEHOLDER')}
+          onSearchChange={(_, { value = '' }) => setSearchText(value)}
+          style={{ position: 'absolute', right: 8, top: 8, zIndex: 999 }}
+        />
+      )}
       <ReactJson
         data={currentData}
         onUpdate={({ newData }) => {
           onUpdate(newData)
         }}
         enableClipboard={handleCopy}
-        theme={{ input: { fontFamily: 'monospace' }, container: '#f9f9f9' }}
+        theme={{
+          input: { fontFamily: 'monospace' },
+          container: {
+            backgroundColor: '#f9f9f9',
+            paddingTop: '1em',
+            marginTop: '1em',
+            marginBottom: '1em',
+          },
+        }}
+        searchFilter={searchFilter ?? 'key'}
+        searchText={searchText}
         {...jsonViewProps}
       />
       <div className="flex-row-space-between" style={{ maxWidth: 500 }}>
