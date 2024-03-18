@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Icon, Label } from 'semantic-ui-react'
+import { substituteValues } from '../../../../utils/helpers/utilityFunctions'
 import { ListLayoutProps } from '../types'
-import { substituteValues } from '../helpers'
 
 const ListCardLayout: React.FC<ListLayoutProps> = ({
   listItems,
