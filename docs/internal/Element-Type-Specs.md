@@ -537,6 +537,33 @@ _Allows user to build a list of items, such as an **Ingredients List**_
   where `LB1`...`LB6` are the element codes from the template. (Note, also, the additional escape `\` characters required if used inside a GraphQL query string)
 
   If a `displayFormat` parameter is not specified, the card view will just show a simplified list of fields representing `title: value` for each input.
+- **textFormat** `string` -- (optional) a formatting substitution string like the above, to be generate the "text" value in the response. This substitution string is *per item* and will generate a single string broken up by line breaks for each item. For example, if you have a list (of items with the above fields), you could define a `textFormat` like so:  
+  `${LB4.value.text} mg`  
+  And the output text string (with a 3-item list) would be something like:  
+  `"12 mg\n65 mg\n10mg"`
+  
+  Note that the `text` display for list builders is rarely required, perhaps only useful for display in a [Data View](https://github.com/msupply-foundation/conforma-server/wiki/Data-View) or similar output. The default formatting (comma-separated list of `<title>: <text value>`) is probably fine for most purposes.
+- **dataFormat** `string | EvaluatorExpression` (optional) The array of responses (each listBuilder item) can be converted to a more easily-digestible set of values (as opposed to the full `list` object -- see [Response](#response-type-7) below). This can make it easier for outputting to a data table, perhaps, or be more easily displayed in a [Data View](https://github.com/msupply-foundation/conforma-server/wiki/Data-View). The `dataFormat` value uses the `textFormat` value by default -- the difference is it creates an array of formatted strings rather than a single concatenated string for the text value. If you wish to specify something different to the `textFormat`, you can provide another substitution string, or a complete [evaluator expression](https://github.com/msupply-foundation/conforma-server/wiki/Query-Syntax) for something more complex. The `objects` property for the evaluator consists of the usual `currentUser`, `applicationData`, `responses`, `functions` objects, as well as an `item` object which changes with each item in the list builder.  
+  The example substitution string from `textFormat` (above) would yield a data object of:  
+  `[ "12 mg", "65 mg", "10mg" ]`
+
+  This is the equivalent of the full evaluator expression:
+  ```
+  {
+    "operator": "stringSubstitution",
+    "children": [
+      "%1 mg",
+      {
+        "operator": "objectProperties",
+        "children": [
+          "item.LB4.value.text",
+          null
+        ]
+      }
+    ]
+  }
+  ```
+  A simple text substitution string is probably adequate for most purposes. An evaluator expression would be useful when you want to save your `data` as something other than `string`s, or for very fine-grained control over the construction of each response item.
 - **inlineOpen** `boolean` (only relevant for **inline** view) -- if `true`, all elements will be displayed "open" (i.e. not collapsed) on initial load (default `false`)
 - **tableExcludeColumns** `string[]` (only relevant for **table** view) -- an array of Input Field (aboves) `code`s to exclude from the table view, which can be useful when there are a lot of fields being collected which can make the table overly cluttered.  
   
@@ -560,8 +587,9 @@ _Allows user to build a list of items, such as an **Ingredients List**_
     },
     ...
   ],
-  text: <simple text representation of a list of comma-seperated
-        "title: value" rows>
+  text: <simple text representation of a list of comma-separated
+        "title: value" rows>,
+  data: [ <array of response values as specified in "dataFormat" parameter> ]
 }
 
 ```
@@ -569,7 +597,7 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 **Notes**:
 
 - the `text` value is never actually presented to the user.
-- the `isValid` field should always be `true` when the response is saved, since items won't be permitted to be added to the list if all input fields are not valid. There is currently no additional validity checking of the reponses after they've been entered into the list, although this might be improved in future.
+- the `isValid` field should always be `true` when the response is saved, since items won't be permitted to be added to the list if all input fields are not valid. There is currently no additional validity checking of the responses after they've been entered into the list, although this might be improved in future.
 
 ---
 

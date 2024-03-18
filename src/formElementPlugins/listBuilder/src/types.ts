@@ -1,5 +1,5 @@
 import { TemplateElement } from '../../../utils/generated/graphql'
-import { ApplicationDetails, ResponseFull, User } from '../../../utils/types'
+import { ApplicationDetails, EvaluatorNode, ResponseFull, User } from '../../../utils/types'
 
 export enum DisplayType {
   CARDS = 'cards',
@@ -19,6 +19,8 @@ export interface ListBuilderParameters {
   inputFields: TemplateElement[]
   displayFormat?: { title: string; subtitle: string; description: string }
   displayType?: DisplayType
+  textFormat?: string
+  dataFormat?: string | EvaluatorNode
   default?: ResponseFull
   inlineOpen?: boolean
   tableExcludeColumns?: string[]
