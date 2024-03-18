@@ -597,7 +597,7 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 **Notes**:
 
 - the `text` value is never actually presented to the user.
-- the `isValid` field should always be `true` when the response is saved, since items won't be permitted to be added to the list if all input fields are not valid. There is currently no additional validity checking of the reponses after they've been entered into the list, although this might be improved in future.
+- the `isValid` field should always be `true` when the response is saved, since items won't be permitted to be added to the list if all input fields are not valid. There is currently no additional validity checking of the responses after they've been entered into the list, although this might be improved in future.
 
 ---
 
