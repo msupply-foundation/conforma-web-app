@@ -538,7 +538,7 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 
   If a `displayFormat` parameter is not specified, the card view will just show a simplified list of fields representing `title: value` for each input.
 - **textFormat** `string` -- (optional) a formatting substitution string like the above, to be generate the "text" value in the response. This substitution string is *per item* and will generate a single string broken up by line breaks for each item. For example, if you have a list (of items with the above fields), you could define a `textFormat` like so:  
-  `${LB4.value.text} mg`  
+  `${LB4} mg`  
   And the output text string (with a 3-item list) would be something like:  
   `"12 mg\n65 mg\n10mg"`
   
@@ -556,7 +556,7 @@ _Allows user to build a list of items, such as an **Ingredients List**_
       {
         "operator": "objectProperties",
         "children": [
-          "item.LB4.value.text",
+          "item.LB4",
           null
         ]
       }

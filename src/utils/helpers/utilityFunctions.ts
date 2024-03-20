@@ -8,6 +8,9 @@ export const isArraySorted = (array: any[], ascending = true) => {
     )
 }
 
+export const isObject = (element: unknown) =>
+  typeof element === 'object' && !Array.isArray(element) && element !== null
+
 /*
 Checks if a URL string is an external URL or a local/relative one
 If local/relative, it prepends it with a specified host, else it
@@ -20,7 +23,10 @@ export const getFullUrl = (baseUrl: string | undefined, host: string) => {
 /*
 Replaces substrings identified as ${"property"} with values from "data".
 "property" can be a nested object property e.g "user.name".
-Note: If substring contains no property name (i.e. '${}') and "data" is not an Object, the whole item will be inserted.
+Note: If substring contains no property name (i.e. '${}') and "data" is not an
+Object, the whole item will be inserted.
+Also, if the extracted property is an object, we'll try [property].value.text
+(which makes the substitutions simpler in many form elements)
 */
 export const substituteValues = (
   parameterisedString: string,
@@ -29,7 +35,13 @@ export const substituteValues = (
   // Custom replacement function for regex replace
   const getObjectProperty = (_: string, __: string, property: string) => {
     if (typeof data !== 'object') return data
-    const value = extractObjectProperty(data, property, `Can't find property: ${property}`)
+    let value = extractObjectProperty(data, property, `Can't find property: ${property}`)
+    if (isObject(value))
+      value = extractObjectProperty(
+        data,
+        `${property}.value.text`,
+        `Can't find property: ${property}`
+      )
     return value ?? ''
   }
 
