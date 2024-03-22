@@ -34,7 +34,17 @@ type Columns = {
 const columns: Columns = [
   {
     title: 'code',
-    render: ({ template: { code } }) => code,
+    render: ({ template: { code, priority } }) => (
+      <>
+        <span>{code}</span>
+        {priority && (
+          <>
+            <br />
+            <Label content={`Priority: ${priority}`} size="mini" />
+          </>
+        )}
+      </>
+    ),
   },
   {
     title: 'name',
@@ -56,7 +66,17 @@ const columns: Columns = [
   },
   {
     title: 'category',
-    render: ({ template: { category } }) => category,
+    render: ({ template: { category, categoryPriority } }) => (
+      <>
+        <span>{category}</span>
+        {categoryPriority && (
+          <>
+            <br />
+            <Label content={`Priority: ${categoryPriority}`} size="mini" />
+          </>
+        )}
+      </>
+    ),
   },
   {
     title: 'status',
@@ -82,7 +102,6 @@ const columns: Columns = [
       </React.Fragment>
     ),
   },
-
   {
     title: '',
     render: (cellProps) => (
@@ -319,7 +338,7 @@ const TemplatesWrapper: React.FC = () => (
   </OperationContext>
 )
 
-type SortColumn = 'name' | 'code' | 'category' | 'status'
+type SortColumn = 'name' | 'code' | 'category' | 'status' | 'dashboard'
 
 const Templates: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -332,8 +351,8 @@ const Templates: React.FC = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     query.categories ? query.categories.split(',').map((cat) => (cat === 'none' ? '' : cat)) : []
   )
-  const [sortColumn, setSortColumn] = useState<SortColumn>()
-  const [sortAsc, setSortAsc] = useState<1 | -1>(1)
+  const [sortColumn, setSortColumn] = useState<SortColumn | undefined>(query.sort as SortColumn)
+  const [sortAsc, setSortAsc] = useState<1 | -1>(query.desc === 'true' ? -1 : 1)
 
   const categoryOptions = Array.from(new Set(templates.map((template) => template.main.category)))
     .sort()
@@ -428,6 +447,13 @@ const Templates: React.FC = () => {
       </Button>
     </>
   )
+
+  const sortedTemplates = sortTemplates(
+    filterTemplates(templates, selectedCategories, hideInactive),
+    sortColumn,
+    sortAsc
+  )
+
   return (
     <div className="template-builder-templates">
       <div key="top-bar" className="top-bar">
@@ -451,6 +477,20 @@ const Templates: React.FC = () => {
       <div className="flex-column-center">
         <div key="listContainer" id="list-container" className="outcome-table-container">
           <div className="flex-row-end" style={{ alignItems: 'center', gap: 20 }}>
+            <Checkbox
+              label="Show in Dashboard order"
+              checked={sortColumn === 'dashboard'}
+              toggle
+              onChange={() => {
+                if (sortColumn === 'dashboard') {
+                  updateQuery({ sort: undefined })
+                  setSortColumn(undefined)
+                } else {
+                  updateQuery({ sort: 'dashboard', desc: false })
+                  setSortColumn('dashboard')
+                }
+              }}
+            />
             <Checkbox
               label="Hide Inactive"
               checked={hideInactive}
@@ -480,20 +520,18 @@ const Templates: React.FC = () => {
           <Table sortable stackable selectable>
             {renderHeader()}
             <Table.Body key="body">
-              {sortTemplates(
-                filterTemplates(templates, selectedCategories, hideInactive),
-                sortColumn,
-                sortAsc
-              ).map(({ others, main, totalApplicationCount, numberOfVersions }, rowIndex) => (
-                <React.Fragment key={`fragment_${rowIndex}`}>
-                  {renderTemplate(
-                    { ...main, totalApplicationCount: totalApplicationCount, numberOfVersions },
-                    refetch,
-                    others.length > 0
-                  )}
-                  {expandedTemplates.includes(main.code) && renderInnerTemplates(others, refetch)}
-                </React.Fragment>
-              ))}
+              {sortedTemplates.map(
+                ({ others, main, totalApplicationCount, numberOfVersions }, rowIndex) => (
+                  <React.Fragment key={`fragment_${rowIndex}`}>
+                    {renderTemplate(
+                      { ...main, totalApplicationCount: totalApplicationCount, numberOfVersions },
+                      refetch,
+                      others.length > 0
+                    )}
+                    {expandedTemplates.includes(main.code) && renderInnerTemplates(others, refetch)}
+                  </React.Fragment>
+                )
+              )}
             </Table.Body>
           </Table>
         </div>
@@ -520,7 +558,26 @@ const sortTemplates = (
   sortAsc: 1 | -1
 ) => {
   if (!sortColumn) return templates
-  return templates.sort((a, b) => {
+
+  if (sortColumn === 'dashboard') {
+    const templatesByCategory: { [categoryTitle: string]: Templates } = {}
+    templates.forEach((template) => {
+      const category = template.main.category
+      if (templatesByCategory[category]) templatesByCategory[category].push(template)
+      else templatesByCategory[category] = [template]
+    })
+    const categoryArray = Object.values(templatesByCategory)
+    categoryArray.forEach((category) =>
+      category.sort((a, b) => (b.main.priority ?? -Infinity) - (a.main.priority ?? -Infinity))
+    )
+    categoryArray.sort(
+      (a, b) =>
+        (b[0].main.categoryPriority ?? -Infinity) - (a[0].main.categoryPriority ?? -Infinity)
+    )
+    return categoryArray.flat()
+  }
+
+  return [...templates].sort((a, b) => {
     const aVal = a.main[sortColumn]
     const bVal = b.main[sortColumn]
     if (aVal === bVal) return 0

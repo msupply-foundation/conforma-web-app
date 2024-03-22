@@ -48022,10 +48022,10 @@ export type GetAllTemplatesQuery = (
     { __typename?: 'TemplatesConnection' }
     & { nodes: Array<Maybe<(
       { __typename?: 'Template' }
-      & Pick<Template, 'code' | 'status' | 'id' | 'versionId' | 'versionTimestamp' | 'parentVersionId' | 'versionComment' | 'versionHistory' | 'name'>
+      & Pick<Template, 'code' | 'status' | 'id' | 'versionId' | 'versionTimestamp' | 'parentVersionId' | 'versionComment' | 'versionHistory' | 'name' | 'priority'>
       & { templateCategory?: Maybe<(
         { __typename?: 'TemplateCategory' }
-        & Pick<TemplateCategory, 'title'>
+        & Pick<TemplateCategory, 'title' | 'priority'>
       )>, applications: (
         { __typename?: 'ApplicationsConnection' }
         & Pick<ApplicationsConnection, 'totalCount'>
@@ -50964,8 +50964,10 @@ export const GetAllTemplatesDocument = gql`
       versionHistory
       name
       status
+      priority
       templateCategory {
         title
+        priority
       }
       applications(filter: {isConfig: {equalTo: false}}) {
         totalCount
