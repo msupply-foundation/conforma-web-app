@@ -15,6 +15,7 @@ export default gql`
     serialPattern
     icon
     dashboardRestrictions
+    priority
     templateCategory {
       id
       code
@@ -22,6 +23,7 @@ export default gql`
       icon
       uiLocation
       isSubmenu
+      priority
     }
     templateFilterJoins {
       nodes {

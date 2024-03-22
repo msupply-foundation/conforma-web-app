@@ -77,17 +77,19 @@ const getTemplatesByCategory = (templates: TemplateInList[]) => {
     templatesByCategoryObject[title].push(template)
   })
 
-  return Object.values(templatesByCategoryObject).map((templates) => ({
-    templates,
-    templateCategory: templates[0].templateCategory as TemplateCategoryDetails,
-  }))
+  return Object.values(templatesByCategoryObject)
+    .map((templates) => ({
+      templates,
+      templateCategory: templates[0].templateCategory as TemplateCategoryDetails,
+    }))
+    .sort((a, b) => a.templateCategory.priority - b.templateCategory.priority)
 }
 
 const convertFromTemplateToTemplateDetails = (
   template: Template,
   templatePermissions: TemplatePermissions
 ) => {
-  const { id, code, versionId, name, namePlural, icon } = template
+  const { id, code, versionId, name, namePlural, icon, priority } = template
   const permissions = templatePermissions[code] || []
 
   const totalApplications = template?.applications.totalCount || 0
@@ -99,6 +101,7 @@ const convertFromTemplateToTemplateDetails = (
   const categoryUILocation: UiLocation[] =
     (template?.templateCategory?.uiLocation as UiLocation[]) || []
   const categoryIsSubmenu = template?.templateCategory?.isSubmenu || false
+  const categoryPriority = template?.templateCategory?.priority || Infinity
 
   const hasApplyPermission = permissions.includes(PermissionPolicyType.Apply)
   // This is already checked (permission.length > 0), but added to avoid confusion
@@ -119,12 +122,14 @@ const convertFromTemplateToTemplateDetails = (
     dashboardRestrictions,
     hasApplyPermission,
     hasNonApplyPermissions,
+    priority: priority ?? Infinity,
     templateCategory: {
       code: categoryCode,
       icon: categoryIcon,
       title: categoryTitle,
       uiLocation: categoryUILocation,
       isSubmenu: categoryIsSubmenu,
+      priority: categoryPriority,
     },
     totalApplications,
   }

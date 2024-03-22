@@ -586,6 +586,7 @@ interface TemplateCategoryDetails {
   icon: SemanticICONS | undefined
   uiLocation: UiLocation[]
   isSubmenu: boolean
+  priority: number
 }
 
 interface TemplateInList {
@@ -595,6 +596,7 @@ interface TemplateInList {
   code: string
   versionId: string
   icon: string | null | undefined
+  priority: number
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean
