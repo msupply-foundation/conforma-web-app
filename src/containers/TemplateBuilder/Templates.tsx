@@ -557,21 +557,17 @@ const sortTemplates = (
   if (!sortColumn) return templates
 
   if (sortColumn === 'dashboard') {
-    const templatesByCategory: { [categoryTitle: string]: Templates } = {}
-    templates.forEach((template) => {
-      const category = template.main.category
-      if (templatesByCategory[category]) templatesByCategory[category].push(template)
-      else templatesByCategory[category] = [template]
+    return [...templates].sort((a, b) => {
+      if (a.main.category === b.main.category) {
+        if (!a.main.priority && !b.main.priority) return b.main.name > a.main.name ? -1 : 1
+        return (b.main.priority ?? -Infinity) - (a.main.priority ?? -Infinity)
+      }
+      if (!a.main.categoryPriority && !b.main.categoryPriority) {
+        if (a.main.category === b.main.category) return 0
+        return b.main.category > a.main.category ? -1 : 1
+      }
+      return (b.main.categoryPriority ?? -Infinity) - (a.main.categoryPriority ?? -Infinity)
     })
-    const categoryArray = Object.values(templatesByCategory)
-    categoryArray.forEach((category) =>
-      category.sort((a, b) => (b.main.priority ?? -Infinity) - (a.main.priority ?? -Infinity))
-    )
-    categoryArray.sort(
-      (a, b) =>
-        (b[0].main.categoryPriority ?? -Infinity) - (a[0].main.categoryPriority ?? -Infinity)
-    )
-    return categoryArray.flat()
   }
 
   return [...templates].sort((a, b) => {
