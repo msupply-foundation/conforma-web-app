@@ -174,8 +174,9 @@ const General: React.FC = () => {
         labelTextAlign="right"
       />
       <NumberIO
-        title="Dashboard priority"
+        title="Sort priority"
         number={template.priority}
+        minLabelWidth={100}
         setNumber={(number) => updateTemplate(template, { priority: number })}
       />
       <Category />

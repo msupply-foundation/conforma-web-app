@@ -169,14 +169,14 @@ const Category: React.FC<{}> = () => {
             title={t('TEMPLATE_CODE')}
             disabled={!template.canEdit}
             setText={(text) => setUpdateState({ ...updateState, code: text ?? '' })}
-            minLabelWidth={80}
+            minLabelWidth={100}
             labelTextAlign="right"
           />
           <TextIO
             text={updateState?.title || ''}
             title={t('TEMPLATE_TITLE')}
             setText={(value: string | null) => setUpdateState({ ...updateState, title: value })}
-            minLabelWidth={80}
+            minLabelWidth={100}
             labelTextAlign="right"
           />
           <TextIO
@@ -187,7 +187,7 @@ const Category: React.FC<{}> = () => {
             setText={(value: string | null) =>
               setUpdateState({ ...updateState, icon: value || null })
             }
-            minLabelWidth={80}
+            minLabelWidth={100}
             labelTextAlign="right"
           />
           <CheckboxIO
@@ -199,12 +199,13 @@ const Category: React.FC<{}> = () => {
                 isSubmenu: value,
               })
             }
-            minLabelWidth={80}
+            minLabelWidth={100}
             labelTextAlign="right"
           />
           <NumberIO
             number={category?.priority}
-            title="Dashboard priority"
+            title="Sort priority"
+            minLabelWidth={100}
             setNumber={(num) => setUpdateState({ ...updateState, priority: num })}
           />
           <div>
