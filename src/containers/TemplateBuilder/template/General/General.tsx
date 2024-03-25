@@ -24,6 +24,7 @@ import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
 import { getVersionString, getTemplateVersionId, isTemplateUnlocked } from '../helpers'
+import NumberIO from '../../shared/NumberIO'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -161,7 +162,6 @@ const General: React.FC = () => {
         minLabelWidth={100}
         labelTextAlign="right"
       />
-
       <CheckboxIO
         title="Interactive"
         value={!!template?.canApplicantMakeChanges}
@@ -173,7 +173,11 @@ const General: React.FC = () => {
         minLabelWidth={100}
         labelTextAlign="right"
       />
-
+      <NumberIO
+        title="Dashboard priority"
+        number={template.priority}
+        setNumber={(number) => updateTemplate(template, { priority: number })}
+      />
       <Category />
 
       <Filters />

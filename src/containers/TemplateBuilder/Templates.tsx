@@ -38,10 +38,7 @@ const columns: Columns = [
       <>
         <span>{code}</span>
         {priority && (
-          <>
-            <br />
-            <Label content={`Priority: ${priority}`} size="mini" />
-          </>
+          <Label content={`Priority: ${priority}`} size="mini" style={{ marginLeft: 5 }} />
         )}
       </>
     ),

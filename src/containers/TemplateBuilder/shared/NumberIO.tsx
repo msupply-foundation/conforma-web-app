@@ -1,40 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Icon, Input, Popup, SemanticICONS, TextArea } from 'semantic-ui-react'
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic'
+import { TextIOprops } from './TextIO'
 
 const iconLink = 'https://react.semantic-ui.com/elements/icon/'
 const colourLink = 'https://htmlcolorcodes.com/'
 
-export type TextIOprops = {
-  text?: string
-  title?: string
-  setText?: (text: string | null, resetValue: (text: string) => void) => void
-  markNeedsUpdate?: () => void
-  disabled?: boolean
-  disabledMessage?: string
-  icon?: string
-  color?: string
-  labelNegative?: boolean
-  link?: string
-  isTextArea?: boolean
-  isPropUpdated?: boolean
-  textAreaDefaultRows?: number
-  iconColor?: SemanticCOLORS
-  minLabelWidth?: number
-  maxLabelWidth?: number
-  labelTextAlign?: string
-  onIconClick?: () => void
-  additionalStyles?: object
+type NumberIOprops = Omit<
+  TextIOprops,
+  'text' | 'setText' | 'isTextArea' | 'textAreaDefaultRows'
+> & {
+  number?: number | null
+  setNumber?: (number: number | null, resetValue: (textValue: string) => void) => void
+  inputWidth?: number
 }
 
-const getDefaultRows = (text: string, textAreaDefaulRows: number) => {
-  const rowsInText = text.match(/[\n]/g)?.length || 0
-  return rowsInText === 0 ? textAreaDefaulRows : rowsInText + 2
-}
-
-const TextIO: React.FC<TextIOprops> = ({
-  text = '',
-  setText,
+const NumberIO: React.FC<NumberIOprops> = ({
+  number,
+  setNumber,
   markNeedsUpdate = () => {},
   disabled = false,
   title = '',
@@ -43,8 +26,6 @@ const TextIO: React.FC<TextIOprops> = ({
   color,
   labelNegative = false,
   link,
-  isTextArea = false,
-  textAreaDefaultRows = 4,
   isPropUpdated = false,
   iconColor,
   minLabelWidth = 50,
@@ -52,48 +33,24 @@ const TextIO: React.FC<TextIOprops> = ({
   labelTextAlign = 'center',
   additionalStyles = {},
   onIconClick,
+  inputWidth = 80,
 }) => {
-  const [defaultRows] = useState(getDefaultRows(text ?? '', textAreaDefaultRows))
-  const [innerValue, setInnerValue] = useState(text)
+  const [innerValue, setInnerValue] = useState(number === null ? '' : String(number))
   const style: any = { minWidth: minLabelWidth, maxWidth: maxLabelWidth, textAlign: labelTextAlign }
   if (color) style.color = color
   const ioCSS = labelNegative ? 'io-component-negative' : 'io-component'
 
   useEffect(() => {
-    if (isPropUpdated) setInnerValue(text)
-  }, [text])
+    if (isPropUpdated) setInnerValue(String(number))
+  }, [number])
 
   const renderText = () => {
-    if (setText) return null
-
-    return (
-      <div className={ioCSS + ' value'} style={{ whiteSpace: isTextArea ? 'normal' : 'nowrap' }}>
-        {text}
-      </div>
-    )
+    if (setNumber) return null
+    return <div className={ioCSS + ' value'}>{number}</div>
   }
 
   const renderInput = () => {
-    if (!setText) return null
-
-    if (isTextArea) {
-      return (
-        <div className={ioCSS + ' value'}>
-          <Form>
-            <TextArea
-              disabled={disabled}
-              value={innerValue ?? ''}
-              rows={defaultRows}
-              onBlur={() => setText(innerValue === '' ? null : innerValue, setInnerValue)}
-              onChange={(_, { value }) => {
-                setInnerValue(String(value))
-                markNeedsUpdate()
-              }}
-            />
-          </Form>
-        </div>
-      )
-    }
+    if (!setNumber) return null
 
     return (
       <Input
@@ -102,11 +59,13 @@ const TextIO: React.FC<TextIOprops> = ({
         className={ioCSS + ' value'}
         size="small"
         onChange={(_, { value }) => {
+          if (!value.match(/^-?[\d\.]*$/)) return
           setInnerValue(value)
           markNeedsUpdate()
         }}
         // Dont' want to try and query api on every key change of query text
-        onBlur={() => setText(innerValue === '' ? null : innerValue, setInnerValue)}
+        onBlur={() => setNumber(innerValue === '' ? null : Number(innerValue), setInnerValue)}
+        style={{ width: inputWidth }}
       />
     )
   }
@@ -157,5 +116,5 @@ const TextIO: React.FC<TextIOprops> = ({
   )
 }
 
-export default TextIO
+export default NumberIO
 export { iconLink, colourLink }
