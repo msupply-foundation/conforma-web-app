@@ -560,13 +560,13 @@ const sortTemplates = (
     return [...templates].sort((a, b) => {
       if (a.main.category === b.main.category) {
         if (!a.main.priority && !b.main.priority) return b.main.name > a.main.name ? -1 : 1
-        return (b.main.priority ?? -Infinity) - (a.main.priority ?? -Infinity)
+        return (b.main.priority ?? 0) - (a.main.priority ?? 0)
       }
       if (!a.main.categoryPriority && !b.main.categoryPriority) {
         if (a.main.category === b.main.category) return 0
         return b.main.category > a.main.category ? -1 : 1
       }
-      return (b.main.categoryPriority ?? -Infinity) - (a.main.categoryPriority ?? -Infinity)
+      return (b.main.categoryPriority ?? 0) - (a.main.categoryPriority ?? 0)
     })
   }
 

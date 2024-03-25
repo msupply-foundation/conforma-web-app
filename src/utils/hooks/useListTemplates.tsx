@@ -54,15 +54,13 @@ const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: b
         .sort((a, b) => {
           if (a.templateCategory === b.templateCategory) {
             if (!a.priority && !b.priority) return b.name > a.name ? -1 : 1
-            return (b.priority ?? -Infinity) - (a.priority ?? -Infinity)
+            return (b.priority ?? 0) - (a.priority ?? 0)
           }
           if (!a.templateCategory.priority && !b.templateCategory.priority) {
             if (a.templateCategory.title === b.templateCategory.title) return 0
             return b.templateCategory.title > a.templateCategory.title ? -1 : 1
           }
-          return (
-            (b.templateCategory.priority ?? -Infinity) - (a.templateCategory.priority ?? -Infinity)
-          )
+          return (b.templateCategory.priority ?? 0) - (a.templateCategory.priority ?? 0)
         })
 
       setTemplatesData({
@@ -95,7 +93,7 @@ const getTemplatesByCategory = (templates: TemplateInList[]) => {
         if (!a.priority && !b.priority) {
           return b.name > a.name ? -1 : 1
         }
-        return (b.priority ?? -Infinity) - (a.priority ?? -Infinity)
+        return (b.priority ?? 0) - (a.priority ?? 0)
       }),
       templateCategory: templates[0].templateCategory as TemplateCategoryDetails,
     }))
@@ -104,7 +102,7 @@ const getTemplatesByCategory = (templates: TemplateInList[]) => {
         if (a.templateCategory.title === b.templateCategory.title) return 0
         return b.templateCategory.title > a.templateCategory.title ? -1 : 1
       }
-      return (b.templateCategory.priority ?? -Infinity) - (a.templateCategory.priority ?? -Infinity)
+      return (b.templateCategory.priority ?? 0) - (a.templateCategory.priority ?? 0)
     })
 }
 
