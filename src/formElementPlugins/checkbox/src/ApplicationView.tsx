@@ -26,7 +26,9 @@ export const CheckboxDisplay: React.FC<{
   onOtherChange: (value: string) => void
   otherPlaceholder?: string
 }> = ({ checkboxes, disabled, type, layout, onChange, onOtherChange, otherPlaceholder }) => {
-  const [otherText, setOtherText] = useState(checkboxes[checkboxes.length - 1].text)
+  const [otherText, setOtherText] = useState(
+    checkboxes.length >= 1 ? checkboxes[checkboxes.length - 1].text : ''
+  )
   const styles =
     layout === 'inline'
       ? {
