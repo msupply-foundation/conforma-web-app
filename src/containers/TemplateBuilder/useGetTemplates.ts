@@ -15,7 +15,9 @@ export type Template = {
   status: TemplateStatus
   id: number
   code: string
+  priority: number | null
   category: string
+  categoryPriority: number | null
   versionId: string
   versionComment: string | null
   versionTimestamp: DateTime
@@ -62,6 +64,7 @@ const useGetTemplates = () => {
           versionTimestamp,
           versionComment = null,
           versionHistory = [],
+          priority = null,
           templateCategory,
           applications,
         } = template
@@ -72,7 +75,9 @@ const useGetTemplates = () => {
           status,
           id,
           code,
+          priority,
           category: templateCategory?.title || '',
+          categoryPriority: templateCategory?.priority ?? null,
           versionId,
           parentVersionId,
           versionComment,

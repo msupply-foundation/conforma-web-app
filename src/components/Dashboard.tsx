@@ -37,17 +37,34 @@ const Dashboard: React.FC = () => {
     uiLocation.includes(UiLocation.Dashboard)
   )
 
+  const onlyOneTemplatePerCategory = dashboardCategories.every((cat) => cat.templates.length <= 1)
+
   return (
     <div id="dashboard">
       <Header as="h2" content={t('MENU_ITEM_DASHBOARD')} />
-      {dashboardCategories.map(({ templates, templateCategory: { icon, title, code } }) => (
-        <CategoryComponent
-          key={code}
-          templates={templates}
-          icon={icon as SemanticICONS}
-          title={title}
-        />
-      ))}
+      {onlyOneTemplatePerCategory ? (
+        // If only one category per template, we allow 2 categories in a row so
+        // the Dashboard doesn't appear as one long, skinny column
+        <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: 20, maxWidth: 700 }}>
+          {dashboardCategories.map(({ templates, templateCategory: { icon, title, code } }) => (
+            <CategoryComponent
+              key={code}
+              templates={templates}
+              icon={icon as SemanticICONS}
+              title={title}
+            />
+          ))}
+        </div>
+      ) : (
+        dashboardCategories.map(({ templates, templateCategory: { icon, title, code } }) => (
+          <CategoryComponent
+            key={code}
+            templates={templates}
+            icon={icon as SemanticICONS}
+            title={title}
+          />
+        ))
+      )}
     </div>
   )
 }
