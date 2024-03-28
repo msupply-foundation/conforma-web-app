@@ -220,7 +220,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   const lookUpTableOption = {
     key: 'lookup_tables',
     text: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
-    value: '/admin/lookup-tables',
+    value: currentUser?.isManager ? '/manage/lookup-tables' : '/admin/lookup-tables',
   }
   if (currentUser?.isManager) {
     managementOptions.push(lookUpTableOption)
