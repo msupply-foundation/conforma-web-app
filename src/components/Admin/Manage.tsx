@@ -3,18 +3,12 @@ import { Link, Route, Switch } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
 import { Loading, NoMatch } from '..'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import Snapshots from '../../containers/Dev/Snapshots'
 import TemplateWrapper from '../../containers/TemplateBuilder/template/TemplateWrapper'
-import Templates from '../../containers/TemplateBuilder/Templates'
 import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { AdminLocalisations } from './AdminLocalisations'
-import { AdminPreferences } from './AdminPreferences'
-import { AdminDataViews } from './AdminDataViews/AdminDataViews'
-// import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
-const Admin: React.FC = () => {
+const Manage: React.FC = () => {
   const { t } = useLanguageProvider()
   const {
     match: { path },
@@ -25,38 +19,13 @@ const Admin: React.FC = () => {
 
   if (isLoading) return <Loading />
 
-  if (!currentUser?.isAdmin) return <NoMatch />
+  if (!currentUser?.isManager) return <NoMatch />
 
-  const adminOption = [
-    {
-      route: 'templates',
-      header: t('MENU_ITEM_ADMIN_TEMPLATES'),
-      Element: <Templates />,
-    },
+  const manageOption = [
     {
       route: 'lookup-tables',
       header: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
       Element: <LookupTableRoutes />,
-    },
-    {
-      route: 'data-views',
-      header: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
-      Element: <AdminDataViews />,
-    },
-    {
-      route: 'localisations',
-      header: t('MENU_ITEM_ADMIN_LOCALISATION'),
-      Element: <AdminLocalisations />,
-    },
-    {
-      route: 'preferences',
-      header: t('MENU_ITEM_ADMIN_PREFS'),
-      Element: <AdminPreferences />,
-    },
-    {
-      route: 'snapshots',
-      header: 'Snapshots',
-      Element: <Snapshots />,
     },
   ]
 
@@ -65,7 +34,7 @@ const Admin: React.FC = () => {
       <Route path={`${path}/template/:templateId`}>
         <TemplateWrapper />
       </Route>
-      {adminOption.map(({ route, Element }) => (
+      {manageOption.map(({ route, Element }) => (
         <Route key={route} path={`${path}/${route}`}>
           {Element}
         </Route>
@@ -73,9 +42,9 @@ const Admin: React.FC = () => {
 
       <Route exact path={`${path}`}>
         <div id="admin-display">
-          <Header as="h4">Admin</Header>
+          <Header as="h4">Manage</Header>
           <div className="admin-options-container">
-            {adminOption.map(({ route, header }) => (
+            {manageOption.map(({ route, header }) => (
               <Link className="clickable" key={route} to={`${path}/${route}`}>
                 <div className="admin-option">
                   <Header as="h3" className="clickable">
@@ -94,4 +63,4 @@ const Admin: React.FC = () => {
   )
 }
 
-export default Admin
+export default Manage

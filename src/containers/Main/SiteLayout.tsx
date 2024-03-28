@@ -13,6 +13,7 @@ import DataViews from '../DataDisplay/DataViews'
 import config from '../../config'
 const { isProductionBuild } = config
 import { Tracker } from './Tracker'
+import Manage from '../../components/Admin/Manage'
 
 const SiteLayout: React.FC = () => {
   return (
@@ -43,6 +44,9 @@ const SiteLayout: React.FC = () => {
             </Route>
             <Route path="/admin">
               <Admin />
+            </Route>
+            <Route path="/manage">
+              <Manage />
             </Route>
             <Route path="/data">
               <DataViews />
