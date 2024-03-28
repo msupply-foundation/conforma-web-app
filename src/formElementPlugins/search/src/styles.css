@@ -2,9 +2,15 @@
 whole list item */
 
 .search-list-item-icon {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 .search-list-item:hover .search-list-item-icon {
-    visibility: visible;
+  visibility: visible;
+}
+
+/* Permits line-breaks in results text */
+.search .title,
+.search .description {
+  white-space: pre-wrap;
 }
