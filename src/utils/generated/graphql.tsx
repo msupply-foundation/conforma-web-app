@@ -4485,6 +4485,8 @@ export type TemplateFilter = {
   versionHistory?: Maybe<JsonFilter>;
   /** Filter by the object’s `priority` field. */
   priority?: Maybe<IntFilter>;
+  /** Filter by the object’s `hideIfNull` field. */
+  hideIfNull?: Maybe<BooleanFilter>;
   /** Filter by the object’s `applications` relation. */
   applications?: Maybe<TemplateToManyApplicationFilter>;
   /** Some related `applications` exist. */
@@ -6391,8 +6393,6 @@ export type DataTableManufacturerRepresentativeFilter = {
   gmpByWhoCertificate?: Maybe<JsonFilter>;
   /** Filter by the object’s `gmpDetails` field. */
   gmpDetails?: Maybe<JsonFilter>;
-  /** Filter by the object’s `additionalCertifications` field. */
-  additionalCertifications?: Maybe<JsonFilter>;
   /** Filter by the object’s `gmpExpiry1` field. */
   gmpExpiry1?: Maybe<DateFilter>;
   /** Filter by the object’s `gmpExpiry2` field. */
@@ -6401,6 +6401,8 @@ export type DataTableManufacturerRepresentativeFilter = {
   gmpCountry1?: Maybe<StringFilter>;
   /** Filter by the object’s `gmpCountry2` field. */
   gmpCountry2?: Maybe<StringFilter>;
+  /** Filter by the object’s `gmpExpiry3` field. */
+  gmpExpiry3?: Maybe<DateFilter>;
   /** Filter by the object’s `gmpCountry3` field. */
   gmpCountry3?: Maybe<StringFilter>;
   /** Filter by the object’s `dataTableManufacturerRepresentativeApplicationJoins` relation. */
@@ -6693,10 +6695,6 @@ export type DataTableProvisionalProductFilter = {
   loaSource?: Maybe<StringFilter>;
   /** Filter by the object’s `letterOfAuthorisation` field. */
   letterOfAuthorisation?: Maybe<JsonFilter>;
-  /** Filter by the object’s `loaAuthoriserName` field. */
-  loaAuthoriserName?: Maybe<StringFilter>;
-  /** Filter by the object’s `packagingSizesForm` field. */
-  packagingSizesForm?: Maybe<JsonFilter>;
   /** Filter by the object’s `packagingSizesFilterData` field. */
   packagingSizesFilterData?: Maybe<StringFilter>;
   /** Filter by the object’s `manufacturersFilterData` field. */
@@ -7243,6 +7241,7 @@ export type Template = Node & {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   /** Reads a single `TemplateCategory` that is related to this `Template`. */
   templateCategory?: Maybe<TemplateCategory>;
   /** Reads and enables pagination through a set of `Application`. */
@@ -7455,6 +7454,8 @@ export enum TemplatesOrderBy {
   VersionHistoryDesc = 'VERSION_HISTORY_DESC',
   PriorityAsc = 'PRIORITY_ASC',
   PriorityDesc = 'PRIORITY_DESC',
+  HideIfNullAsc = 'HIDE_IF_NULL_ASC',
+  HideIfNullDesc = 'HIDE_IF_NULL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -7499,6 +7500,8 @@ export type TemplateCondition = {
   versionHistory?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `priority` field. */
   priority?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `hideIfNull` field. */
+  hideIfNull?: Maybe<Scalars['Boolean']>;
 };
 
 /** A connection to a list of `Template` values. */
@@ -10780,11 +10783,11 @@ export type DataTableManufacturerRepresentative = Node & {
   evaluationNotes?: Maybe<Scalars['String']>;
   gmpByWhoCertificate?: Maybe<Scalars['JSON']>;
   gmpDetails?: Maybe<Scalars['JSON']>;
-  additionalCertifications?: Maybe<Scalars['JSON']>;
   gmpExpiry1?: Maybe<Scalars['Date']>;
   gmpExpiry2?: Maybe<Scalars['Date']>;
   gmpCountry1?: Maybe<Scalars['String']>;
   gmpCountry2?: Maybe<Scalars['String']>;
+  gmpExpiry3?: Maybe<Scalars['Date']>;
   gmpCountry3?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `DataTableManufacturerRepresentativeApplicationJoin`. */
   dataTableManufacturerRepresentativeApplicationJoins: DataTableManufacturerRepresentativeApplicationJoinsConnection;
@@ -11126,8 +11129,6 @@ export type DataTableProvisionalProduct = Node & {
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
   loaSource?: Maybe<Scalars['String']>;
   letterOfAuthorisation?: Maybe<Scalars['JSON']>;
-  loaAuthoriserName?: Maybe<Scalars['String']>;
-  packagingSizesForm?: Maybe<Scalars['JSON']>;
   packagingSizesFilterData?: Maybe<Scalars['String']>;
   manufacturersFilterData?: Maybe<Scalars['String']>;
   activeIngredientsFilterData?: Maybe<Scalars['String']>;
@@ -13424,8 +13425,6 @@ export enum DataTableManufacturerRepresentativesOrderBy {
   GmpByWhoCertificateDesc = 'GMP_BY_WHO_CERTIFICATE_DESC',
   GmpDetailsAsc = 'GMP_DETAILS_ASC',
   GmpDetailsDesc = 'GMP_DETAILS_DESC',
-  AdditionalCertificationsAsc = 'ADDITIONAL_CERTIFICATIONS_ASC',
-  AdditionalCertificationsDesc = 'ADDITIONAL_CERTIFICATIONS_DESC',
   GmpExpiry_1Asc = 'GMP_EXPIRY_1_ASC',
   GmpExpiry_1Desc = 'GMP_EXPIRY_1_DESC',
   GmpExpiry_2Asc = 'GMP_EXPIRY_2_ASC',
@@ -13434,6 +13433,8 @@ export enum DataTableManufacturerRepresentativesOrderBy {
   GmpCountry_1Desc = 'GMP_COUNTRY_1_DESC',
   GmpCountry_2Asc = 'GMP_COUNTRY_2_ASC',
   GmpCountry_2Desc = 'GMP_COUNTRY_2_DESC',
+  GmpExpiry_3Asc = 'GMP_EXPIRY_3_ASC',
+  GmpExpiry_3Desc = 'GMP_EXPIRY_3_DESC',
   GmpCountry_3Asc = 'GMP_COUNTRY_3_ASC',
   GmpCountry_3Desc = 'GMP_COUNTRY_3_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -13480,8 +13481,6 @@ export type DataTableManufacturerRepresentativeCondition = {
   gmpByWhoCertificate?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `gmpDetails` field. */
   gmpDetails?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `additionalCertifications` field. */
-  additionalCertifications?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `gmpExpiry1` field. */
   gmpExpiry1?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `gmpExpiry2` field. */
@@ -13490,6 +13489,8 @@ export type DataTableManufacturerRepresentativeCondition = {
   gmpCountry1?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `gmpCountry2` field. */
   gmpCountry2?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `gmpExpiry3` field. */
+  gmpExpiry3?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `gmpCountry3` field. */
   gmpCountry3?: Maybe<Scalars['String']>;
 };
@@ -14257,10 +14258,6 @@ export enum DataTableProvisionalProductsOrderBy {
   LoaSourceDesc = 'LOA_SOURCE_DESC',
   LetterOfAuthorisationAsc = 'LETTER_OF_AUTHORISATION_ASC',
   LetterOfAuthorisationDesc = 'LETTER_OF_AUTHORISATION_DESC',
-  LoaAuthoriserNameAsc = 'LOA_AUTHORISER_NAME_ASC',
-  LoaAuthoriserNameDesc = 'LOA_AUTHORISER_NAME_DESC',
-  PackagingSizesFormAsc = 'PACKAGING_SIZES_FORM_ASC',
-  PackagingSizesFormDesc = 'PACKAGING_SIZES_FORM_DESC',
   PackagingSizesFilterDataAsc = 'PACKAGING_SIZES_FILTER_DATA_ASC',
   PackagingSizesFilterDataDesc = 'PACKAGING_SIZES_FILTER_DATA_DESC',
   ManufacturersFilterDataAsc = 'MANUFACTURERS_FILTER_DATA_ASC',
@@ -14333,10 +14330,6 @@ export type DataTableProvisionalProductCondition = {
   loaSource?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `letterOfAuthorisation` field. */
   letterOfAuthorisation?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `loaAuthoriserName` field. */
-  loaAuthoriserName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `packagingSizesForm` field. */
-  packagingSizesForm?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `packagingSizesFilterData` field. */
   packagingSizesFilterData?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `manufacturersFilterData` field. */
@@ -14448,10 +14441,6 @@ export enum DataTableStorageConditionsOrderBy {
   LongDescriptionDesc = 'LONG_DESCRIPTION_DESC',
   ShortDescriptionAsc = 'SHORT_DESCRIPTION_ASC',
   ShortDescriptionDesc = 'SHORT_DESCRIPTION_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  PortugueseNameAsc = 'PORTUGUESE_NAME_ASC',
-  PortugueseNameDesc = 'PORTUGUESE_NAME_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -14466,10 +14455,6 @@ export type DataTableStorageConditionCondition = {
   longDescription?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `shortDescription` field. */
   shortDescription?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `portugueseName` field. */
-  portugueseName?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataTableStorageCondition` object types. All fields are combined with a logical ‘and.’ */
@@ -14482,10 +14467,6 @@ export type DataTableStorageConditionFilter = {
   longDescription?: Maybe<StringFilter>;
   /** Filter by the object’s `shortDescription` field. */
   shortDescription?: Maybe<StringFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `portugueseName` field. */
-  portugueseName?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataTableStorageConditionFilter>>;
   /** Checks for any expressions in this list. */
@@ -14515,8 +14496,6 @@ export type DataTableStorageCondition = Node & {
   code?: Maybe<Scalars['String']>;
   longDescription?: Maybe<Scalars['String']>;
   shortDescription?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  portugueseName?: Maybe<Scalars['String']>;
 };
 
 /** A `DataTableStorageCondition` edge in the connection. */
@@ -14898,6 +14877,8 @@ export enum DataViewColumnDefinitionsOrderBy {
   FilterExpressionDesc = 'FILTER_EXPRESSION_DESC',
   FilterDataTypeAsc = 'FILTER_DATA_TYPE_ASC',
   FilterDataTypeDesc = 'FILTER_DATA_TYPE_DESC',
+  HideIfNullAsc = 'HIDE_IF_NULL_ASC',
+  HideIfNullDesc = 'HIDE_IF_NULL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -14928,6 +14909,8 @@ export type DataViewColumnDefinitionCondition = {
   filterExpression?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `filterDataType` field. */
   filterDataType?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `hideIfNull` field. */
+  hideIfNull?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `DataViewColumnDefinition` object types. All fields are combined with a logical ‘and.’ */
@@ -14956,6 +14939,8 @@ export type DataViewColumnDefinitionFilter = {
   filterExpression?: Maybe<JsonFilter>;
   /** Filter by the object’s `filterDataType` field. */
   filterDataType?: Maybe<StringFilter>;
+  /** Filter by the object’s `hideIfNull` field. */
+  hideIfNull?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewColumnDefinitionFilter>>;
   /** Checks for any expressions in this list. */
@@ -14993,6 +14978,7 @@ export type DataViewColumnDefinition = Node & {
   filterParameters?: Maybe<Scalars['JSON']>;
   filterExpression?: Maybe<Scalars['JSON']>;
   filterDataType?: Maybe<Scalars['String']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
 };
 
 /** A `DataViewColumnDefinition` edge in the connection. */
@@ -20482,6 +20468,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -20623,6 +20610,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -21639,6 +21627,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -21984,6 +21973,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -22112,6 +22102,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -22247,6 +22238,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -23282,6 +23274,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -24767,6 +24760,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -26994,6 +26988,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -27116,6 +27111,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -28324,6 +28320,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -29054,6 +29051,7 @@ export type TemplatePatch = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -29088,6 +29086,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31179,6 +31178,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31413,6 +31413,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -31949,8 +31950,6 @@ export type UpdateDataTableProvisionalProductOnDataTableProvisionalProductApplic
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
   loaSource?: Maybe<Scalars['String']>;
   letterOfAuthorisation?: Maybe<Scalars['JSON']>;
-  loaAuthoriserName?: Maybe<Scalars['String']>;
-  packagingSizesForm?: Maybe<Scalars['JSON']>;
   packagingSizesFilterData?: Maybe<Scalars['String']>;
   manufacturersFilterData?: Maybe<Scalars['String']>;
   activeIngredientsFilterData?: Maybe<Scalars['String']>;
@@ -32057,8 +32056,6 @@ export type DataTableProvisionalProductPatch = {
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
   loaSource?: Maybe<Scalars['String']>;
   letterOfAuthorisation?: Maybe<Scalars['JSON']>;
-  loaAuthoriserName?: Maybe<Scalars['String']>;
-  packagingSizesForm?: Maybe<Scalars['JSON']>;
   packagingSizesFilterData?: Maybe<Scalars['String']>;
   manufacturersFilterData?: Maybe<Scalars['String']>;
   activeIngredientsFilterData?: Maybe<Scalars['String']>;
@@ -32097,8 +32094,6 @@ export type DataTableProvisionalProducDataTableProvisionalProduFkeyDataTableProv
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
   loaSource?: Maybe<Scalars['String']>;
   letterOfAuthorisation?: Maybe<Scalars['JSON']>;
-  loaAuthoriserName?: Maybe<Scalars['String']>;
-  packagingSizesForm?: Maybe<Scalars['JSON']>;
   packagingSizesFilterData?: Maybe<Scalars['String']>;
   manufacturersFilterData?: Maybe<Scalars['String']>;
   activeIngredientsFilterData?: Maybe<Scalars['String']>;
@@ -32812,11 +32807,11 @@ export type UpdateDataTableManufacturerRepresentativeOnDataTableManufacturerRepr
   evaluationNotes?: Maybe<Scalars['String']>;
   gmpByWhoCertificate?: Maybe<Scalars['JSON']>;
   gmpDetails?: Maybe<Scalars['JSON']>;
-  additionalCertifications?: Maybe<Scalars['JSON']>;
   gmpExpiry1?: Maybe<Scalars['Date']>;
   gmpExpiry2?: Maybe<Scalars['Date']>;
   gmpCountry1?: Maybe<Scalars['String']>;
   gmpCountry2?: Maybe<Scalars['String']>;
+  gmpExpiry3?: Maybe<Scalars['Date']>;
   gmpCountry3?: Maybe<Scalars['String']>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: Maybe<DataTableManufacturerRepreDataTableManufacturerReprFkeyInverseInput>;
 };
@@ -32910,11 +32905,11 @@ export type DataTableManufacturerRepresentativePatch = {
   evaluationNotes?: Maybe<Scalars['String']>;
   gmpByWhoCertificate?: Maybe<Scalars['JSON']>;
   gmpDetails?: Maybe<Scalars['JSON']>;
-  additionalCertifications?: Maybe<Scalars['JSON']>;
   gmpExpiry1?: Maybe<Scalars['Date']>;
   gmpExpiry2?: Maybe<Scalars['Date']>;
   gmpCountry1?: Maybe<Scalars['String']>;
   gmpCountry2?: Maybe<Scalars['String']>;
+  gmpExpiry3?: Maybe<Scalars['Date']>;
   gmpCountry3?: Maybe<Scalars['String']>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: Maybe<DataTableManufacturerRepreDataTableManufacturerReprFkeyInverseInput>;
 };
@@ -32940,11 +32935,11 @@ export type DataTableManufacturerRepreDataTableManufacturerReprFkeyDataTableManu
   evaluationNotes?: Maybe<Scalars['String']>;
   gmpByWhoCertificate?: Maybe<Scalars['JSON']>;
   gmpDetails?: Maybe<Scalars['JSON']>;
-  additionalCertifications?: Maybe<Scalars['JSON']>;
   gmpExpiry1?: Maybe<Scalars['Date']>;
   gmpExpiry2?: Maybe<Scalars['Date']>;
   gmpCountry1?: Maybe<Scalars['String']>;
   gmpCountry2?: Maybe<Scalars['String']>;
+  gmpExpiry3?: Maybe<Scalars['Date']>;
   gmpCountry3?: Maybe<Scalars['String']>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: Maybe<DataTableManufacturerRepreDataTableManufacturerReprFkeyInverseInput>;
 };
@@ -33733,6 +33728,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -35072,6 +35068,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -35669,6 +35666,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -35748,6 +35746,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -35835,6 +35834,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -36064,6 +36064,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -36724,6 +36725,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -36813,6 +36815,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -37928,11 +37931,11 @@ export type DataTableManufacturerRepresentativeInput = {
   evaluationNotes?: Maybe<Scalars['String']>;
   gmpByWhoCertificate?: Maybe<Scalars['JSON']>;
   gmpDetails?: Maybe<Scalars['JSON']>;
-  additionalCertifications?: Maybe<Scalars['JSON']>;
   gmpExpiry1?: Maybe<Scalars['Date']>;
   gmpExpiry2?: Maybe<Scalars['Date']>;
   gmpCountry1?: Maybe<Scalars['String']>;
   gmpCountry2?: Maybe<Scalars['String']>;
+  gmpExpiry3?: Maybe<Scalars['Date']>;
   gmpCountry3?: Maybe<Scalars['String']>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: Maybe<DataTableManufacturerRepreDataTableManufacturerReprFkeyInverseInput>;
 };
@@ -38385,8 +38388,6 @@ export type DataTableProvisionalProductInput = {
   manufacturerPrequalified?: Maybe<Scalars['JSON']>;
   loaSource?: Maybe<Scalars['String']>;
   letterOfAuthorisation?: Maybe<Scalars['JSON']>;
-  loaAuthoriserName?: Maybe<Scalars['String']>;
-  packagingSizesForm?: Maybe<Scalars['JSON']>;
   packagingSizesFilterData?: Maybe<Scalars['String']>;
   manufacturersFilterData?: Maybe<Scalars['String']>;
   activeIngredientsFilterData?: Maybe<Scalars['String']>;
@@ -38500,8 +38501,6 @@ export type DataTableStorageConditionInput = {
   code?: Maybe<Scalars['String']>;
   longDescription?: Maybe<Scalars['String']>;
   shortDescription?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  portugueseName?: Maybe<Scalars['String']>;
 };
 
 /** The output of our create `DataTableStorageCondition` mutation. */
@@ -38666,6 +38665,7 @@ export type DataViewColumnDefinitionInput = {
   filterParameters?: Maybe<Scalars['JSON']>;
   filterExpression?: Maybe<Scalars['JSON']>;
   filterDataType?: Maybe<Scalars['String']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
 };
 
 /** The output of our create `DataViewColumnDefinition` mutation. */
@@ -39555,6 +39555,7 @@ export type TemplateInput = {
   versionComment?: Maybe<Scalars['String']>;
   versionHistory?: Maybe<Scalars['JSON']>;
   priority?: Maybe<Scalars['Int']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
@@ -41927,8 +41928,6 @@ export type DataTableStorageConditionPatch = {
   code?: Maybe<Scalars['String']>;
   longDescription?: Maybe<Scalars['String']>;
   shortDescription?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  portugueseName?: Maybe<Scalars['String']>;
 };
 
 /** The output of our update `DataTableStorageCondition` mutation. */
@@ -42146,6 +42145,7 @@ export type DataViewColumnDefinitionPatch = {
   filterParameters?: Maybe<Scalars['JSON']>;
   filterExpression?: Maybe<Scalars['JSON']>;
   filterDataType?: Maybe<Scalars['String']>;
+  hideIfNull?: Maybe<Scalars['Boolean']>;
 };
 
 /** The output of our update `DataViewColumnDefinition` mutation. */
@@ -46610,7 +46610,7 @@ export type DataViewFragmentFragment = (
 
 export type DataViewColumnDefinitionFragmentFragment = (
   { __typename?: 'DataViewColumnDefinition' }
-  & Pick<DataViewColumnDefinition, 'id' | 'tableName' | 'columnName' | 'title' | 'elementTypePluginCode' | 'elementParameters' | 'additionalFormatting' | 'valueExpression' | 'sortColumn' | 'filterParameters' | 'filterExpression' | 'filterDataType'>
+  & Pick<DataViewColumnDefinition, 'id' | 'tableName' | 'columnName' | 'title' | 'elementTypePluginCode' | 'elementParameters' | 'additionalFormatting' | 'valueExpression' | 'sortColumn' | 'filterParameters' | 'filterExpression' | 'filterDataType' | 'hideIfNull'>
 );
 
 export type ElementFragmentFragment = (
@@ -48272,6 +48272,7 @@ export const DataViewColumnDefinitionFragmentFragmentDoc = gql`
   filterParameters
   filterExpression
   filterDataType
+  hideIfNull
 }
     `;
 export const TemplateFragmentFragmentDoc = gql`

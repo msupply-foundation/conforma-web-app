@@ -726,6 +726,7 @@ export interface DisplayDefinition {
   dataType?: string
   sortColumn?: string
   formatting: FormatOptions
+  hideIfNull: boolean
 }
 export interface HeaderRow extends DisplayDefinition {
   columnName: string
