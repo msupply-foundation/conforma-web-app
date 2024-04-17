@@ -65,13 +65,6 @@ export type UploadEndpoint = [
   }
 ]
 
-// export type EnableLanguageEndpoint = [
-//   endpoint: 'enableLanguage',
-//   options: { code: string; enabled?: boolean }
-// ]
-
-// export type RemoveLanguageEndpoint = [endpoint: 'removeLanguage']
-
 export type SnapshotEndpoint = [
   endpoint: 'snapshot',
   options:
