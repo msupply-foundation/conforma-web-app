@@ -7,6 +7,7 @@ import TemplateWrapper from '../../containers/TemplateBuilder/template/TemplateW
 import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
+import { AdminLocalisations } from './AdminLocalisations'
 
 const Manage: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -26,6 +27,11 @@ const Manage: React.FC = () => {
       route: 'lookup-tables',
       header: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
       Element: <LookupTableRoutes />,
+    },
+    {
+      route: 'localisations',
+      header: t('MENU_ITEM_ADMIN_LOCALISATION'),
+      Element: <AdminLocalisations />,
     },
   ]
 
