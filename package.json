@@ -1,6 +1,6 @@
 {
   "name": "conforma-web-app",
-  "version": "0.7.9-21",
+  "version": "0.7.9-23",
   "main": "index.tsx",
   "license": "MIT",
   "repository": {
