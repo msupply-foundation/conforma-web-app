@@ -35,13 +35,14 @@ const config = {
     previewActions: '/preview-actions',
     extendApplication: '/extend-application',
     lookupTable: '/lookup-table',
+    localisation: '/localisation',
+    // enableLanguage: '/admin/enable-language',
+    // installLanguage: '/admin/install-language',
+    // allLanguages: '/admin/all-languages',
+    // removeLanguage: '/admin/remove-language',
     // Admin
     admin: '/admin',
     // updateRowPolicies: '/admin/updateRowPolicies', //-- not currently called by front-end
-    enableLanguage: '/admin/enable-language',
-    installLanguage: '/admin/install-language',
-    allLanguages: '/admin/all-languages',
-    removeLanguage: '/admin/remove-language',
     snapshot: '/admin/snapshot',
     getApplicationData: '/admin/get-application-data',
     getAllPrefs: '/admin/get-all-prefs',
