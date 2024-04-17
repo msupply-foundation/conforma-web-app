@@ -26,7 +26,7 @@ export const AdminLocalisations: React.FC = () => {
   const handleSelect = async (language: LanguageOption) => {
     const enabled = !language.enabled
     const result = await postRequest({
-      url: getServerUrl('enableLanguage', { code: language.code, enabled }),
+      url: getServerUrl('localisation', { action: 'enable', code: language.code, enabled }),
     })
     if (result.success) {
       console.log(`Language updated: ${language.code}`)
@@ -39,7 +39,7 @@ export const AdminLocalisations: React.FC = () => {
 
   const handleRemove = async (language: LanguageOption) => {
     const result = await postRequest({
-      url: getServerUrl('removeLanguage', { code: language.code }),
+      url: getServerUrl('localisation', { action: 'remove', code: language.code }),
     })
     if (result.success) {
       console.log(`Language removed: ${language.code}`)

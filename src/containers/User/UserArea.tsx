@@ -171,11 +171,6 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     // { key: 'permissions', text: t('MENU_ITEM_ADMIN_PERMISSIONS'), value: '/admin/permissions' },
     // { key: 'plugins', text: t('MENU_ITEM_ADMIN_PLUGINS'), value: '/admin/plugins' },
     {
-      key: 'localisations',
-      text: t('MENU_ITEM_ADMIN_LOCALISATION'),
-      value: '/admin/localisations',
-    },
-    {
       key: 'prefs',
       text: t('MENU_ITEM_ADMIN_PREFS'),
       value: '/admin/preferences',
@@ -215,17 +210,25 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     onClick: (value) => handleMenuSelect(value, 'Manage'),
   })
 
-  // Lookup table menu item goes in "Manage" menu, unless the user is Admin and
-  // NOT Manager, in which case it goes in "Config" menu
+  // Lookup tables & Localisations menu item goes in "Manage" menu, unless the
+  // user is Admin and NOT Manager, in which case it goes in "Config" menu
   const lookUpTableOption = {
     key: 'lookup_tables',
     text: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
-    value: currentUser?.isManager ? '/manage/lookup-tables' : '/admin/lookup-tables',
+    value: `/${currentUser?.isManager ? 'manage' : 'admin'}/lookup-tables`,
   }
+  const localisationOption = {
+    key: 'localisations',
+    text: t('MENU_ITEM_ADMIN_LOCALISATION'),
+    value: `/${currentUser?.isManager ? 'manage' : 'admin'}/localisations`,
+  }
+
   if (currentUser?.isManager) {
     managementOptions.push(lookUpTableOption)
+    managementOptions.push(localisationOption)
   } else if (currentUser?.isAdmin) {
     configOptions.push(lookUpTableOption)
+    configOptions.push(localisationOption)
   }
 
   const handleMenuSelect = (value: string, menu: 'List' | 'DataView' | 'Manage' | 'Config') => {
