@@ -68,9 +68,14 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
   })
   if (!assignmentOptions) return null
 
+  const isLastLevel = assignments.length > 0 && assignments[0].isLastLevel
+
+  const isSingleReviewerLevel = assignments.length > 0 && assignments[0].isSingleReviewerLevel
+
   const onAssigneeSelection = async (assignee: number) => {
-    // When review isLastLevel then all sections are assigned to same user (similar to consolidation)
-    if (isLastLevel()) {
+    // When review isLastLevel or if explicitly set to single reviewer, then all
+    // sections are assigned to same user (similar to consolidation)
+    if (isLastLevel || isSingleReviewerLevel) {
       let allSectionsToUserId: SectionAssignee = {}
       Object.keys(assignedSections).forEach(
         (sectionCode) => (allSectionsToUserId[sectionCode] = { newAssignee: assignee as number })
@@ -82,8 +87,6 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
         [sectionCode]: { newAssignee: assignee as number },
       })
   }
-
-  const isLastLevel = (): boolean => assignments.length > 0 && assignments[0].isLastLevel
 
   const unassignAssignee = async () => {
     const unassignment = assignments.find(
@@ -163,7 +166,7 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
         <Grid.Row>
           <Reassignment
             sectionCode={sectionCode}
-            isLastLevel={isLastLevel()}
+            isLastLevel={isLastLevel}
             assignedSections={assignedSections}
             setAssignedSections={setAssignedSections}
             assignmentOptions={assignmentOptions}

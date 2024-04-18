@@ -13,6 +13,9 @@ export default gql`
         }
         timeStageCreated
         trigger
+        level {
+          singleReviewerAllSections
+        }
         reviewer {
           id
           firstName

@@ -157,6 +157,7 @@ interface AssignmentDetails {
   isMakeDecision: boolean
   isLastLevel: boolean
   isSelfAssignable: boolean
+  isSingleReviewerLevel: boolean
   allowedSections: string[]
   assignedSections: string[]
   availableSections: string[]

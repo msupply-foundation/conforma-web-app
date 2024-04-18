@@ -1,5 +1,10 @@
 import React, { useState } from 'react'
-import { PermissionName, PermissionPolicyType } from '../../../../utils/generated/graphql'
+import {
+  PermissionName,
+  PermissionPolicyType,
+  TemplateStage,
+  TemplateStageReviewLevel,
+} from '../../../../utils/generated/graphql'
 
 import { IconButton } from '../../shared/IconButton'
 import { useOperationState } from '../../shared/OperationContext'
@@ -14,17 +19,24 @@ type PermissionNameListProps = {
   type: PermissionPolicyType
   stageNumber?: number
   levelNumber?: number
+  stage?: TemplateStage
+  reviewLevel?: TemplateStageReviewLevel
 }
 
 const PermissionNameList: React.FC<PermissionNameListProps> = ({
   type,
-  stageNumber,
-  levelNumber,
+  // stageNumber,
+  // levelNumber,
+  stage,
+  reviewLevel,
 }) => {
-  const { template, templatePermissions } = useTemplateState()
+  const { template, templatePermissions, templateStages } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [permissionNameInfo, setPermissionNameInfo] = useState<PermissionName | null>(null)
   const { canEdit } = template
+
+  const stageNumber = stage?.number ?? 1
+  const levelNumber = reviewLevel?.number
 
   const removeTemplatePermission = (id: number) => {
     updateTemplate(template, { templatePermissionsUsingId: { deleteById: [{ id }] } })
@@ -58,8 +70,10 @@ const PermissionNameList: React.FC<PermissionNameListProps> = ({
             {type === PermissionPolicyType.Review && levelNumber && (
               <ReviewTemplatePermission
                 templatePermission={templatePermission}
-                stageNumber={stageNumber}
+                stage={stage}
                 levelNumber={levelNumber}
+                isLastLevel={levelNumber === stage?.templateStageReviewLevelsByStageId.nodes.length}
+                singleReviewerAllSections={reviewLevel?.singleReviewerAllSections ?? false}
               />
             )}
           </div>
