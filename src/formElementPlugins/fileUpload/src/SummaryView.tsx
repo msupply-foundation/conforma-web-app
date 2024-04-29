@@ -7,7 +7,8 @@ import { FileInfo } from './ApplicationView'
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, response }) => {
   const { preferences } = usePrefs()
-  const { label, description, useDocumentModal = preferences.showDocumentModal } = parameters
+  const { label, description, showDocumentModal = preferences.showDocumentModal } = parameters
+
   return (
     <Form.Field required={parameters.isRequired}>
       {label && (
@@ -22,7 +23,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
             <FileDisplay
               key={file.uniqueId}
               file={{ filename: file.filename, fileData: file } as FileInfo}
-              showDocumentModal={useDocumentModal}
+              showDocumentModal={showDocumentModal}
             />
           ))}
       </List>

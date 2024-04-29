@@ -94,7 +94,7 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
     <Accordion styled fluid={open ? false : true} className="accordion-container fit-content">
       <Accordion.Title active={open} onClick={() => setOpen(!open)}>
         <Icon name="dropdown" />
-        <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
+        <Markdown text={substituteValues(header, item, index)} semanticComponent="noParagraph" />
       </Accordion.Title>
       <Accordion.Content active={open}>
         {inputFields.map(({ code }, cellIndex: number) =>

@@ -24,18 +24,24 @@ const ListCardLayout: React.FC<ListLayoutProps> = ({
             )}
             {title && (
               <Card.Header onClick={() => editItem(index)}>
-                <Markdown text={substituteValues(title, item)} semanticComponent="noParagraph" />
+                <Markdown
+                  text={substituteValues(title, item, index)}
+                  semanticComponent="noParagraph"
+                />
               </Card.Header>
             )}
             {subtitle && (
               <Card.Meta onClick={() => editItem(index)}>
-                <Markdown text={substituteValues(subtitle, item)} semanticComponent="noParagraph" />
+                <Markdown
+                  text={substituteValues(subtitle, item, index)}
+                  semanticComponent="noParagraph"
+                />
               </Card.Meta>
             )}
             {description && (
               <Card.Description onClick={() => editItem(index)}>
                 <Markdown
-                  text={substituteValues(description, item)}
+                  text={substituteValues(description, item, index)}
                   semanticComponent="noParagraph"
                 />
               </Card.Description>

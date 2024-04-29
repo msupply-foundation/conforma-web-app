@@ -27,13 +27,16 @@ Note: If substring contains no property name (i.e. '${}') and "data" is not an
 Object, the whole item will be inserted.
 Also, if the extracted property is an object, we'll try [property].value.text
 (which makes the substitutions simpler in many form elements)
+If an "index" value is passed in, that can be accessed by '${0}'
 */
 export const substituteValues = (
   parameterisedString: string,
-  data: { [key: string]: any | string }
+  data: { [key: string]: any | string },
+  index?: number
 ): string => {
   // Custom replacement function for regex replace
   const getObjectProperty = (_: string, __: string, property: string) => {
+    if (property === '0' && index !== undefined) return String(index + 1)
     if (typeof data !== 'object') return data
     let value = extractObjectProperty(data, property, `Can't find property: ${property}`)
     if (isObject(value))
