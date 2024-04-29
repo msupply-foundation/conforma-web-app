@@ -18,10 +18,13 @@ const ListListLayout: React.FC<ListLayoutProps> = ({
         <ListItem key={JSON.stringify(item)} className="list-list-item" style={{ marginTop: 5 }}>
           <div className="flex-row-start">
             {title ? (
-              <Markdown text={substituteValues(title, item)} semanticComponent="noParagraph" />
+              <Markdown
+                text={substituteValues(title, item, index)}
+                semanticComponent="noParagraph"
+              />
             ) : description ? (
               <Markdown
-                text={substituteValues(description, item)}
+                text={substituteValues(description, item, index)}
                 semanticComponent="noParagraph"
               />
             ) : (

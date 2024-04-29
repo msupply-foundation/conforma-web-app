@@ -34,8 +34,8 @@ export const createTextString = (
   inputFields: TemplateElement[],
   textFormat?: string
 ) => {
-  const textStrings = listItems.map((item) =>
-    textFormat ? substituteValues(textFormat, item) : getDefaultTextValue(item, inputFields)
+  const textStrings = listItems.map((item, index) =>
+    textFormat ? substituteValues(textFormat, item, index) : getDefaultTextValue(item, inputFields)
   )
   return textStrings.join('\n')
 }
@@ -47,8 +47,10 @@ export const buildDataArray = async (
   dataFormat?: string | EvaluatorNode
 ) => {
   if (typeof dataFormat === 'string' || dataFormat === undefined) {
-    return listItems.map((item) =>
-      dataFormat ? substituteValues(dataFormat, item) : getDefaultTextValue(item, inputFields)
+    return listItems.map((item, index) =>
+      dataFormat
+        ? substituteValues(dataFormat, item, index)
+        : getDefaultTextValue(item, inputFields)
     )
   }
 
