@@ -17,7 +17,7 @@ const Pages: React.FC = () => {
   const { updateTemplateSection } = useOperationState()
 
   const {
-    template: { canEdit },
+    template: { canEdit, code, versionId },
   } = useTemplateState()
 
   if (selectedSectionId === -1) return null
@@ -35,6 +35,8 @@ const Pages: React.FC = () => {
             category: TemplateElementCategory.Information,
             elementTypePluginCode: 'pageBreak',
             title: 'Page Break',
+            templateCode: code,
+            templateVersion: versionId,
           },
           {
             code: `placeholderElement_${getRandomNumber()}`,
@@ -45,6 +47,8 @@ const Pages: React.FC = () => {
             },
             elementTypePluginCode: 'textInfo',
             title: 'Placeholder Element',
+            templateCode: code,
+            templateVersion: versionId,
           },
         ],
       },
@@ -150,7 +154,7 @@ const Page: React.FC = () => {
 const PageMove: React.FC = () => {
   const { selectedPageNumber, selectedSectionId, setSelectedPageNumber } = useFormState()
   const {
-    template: { canEdit },
+    template: { canEdit, code, versionId },
   } = useTemplateState()
   const { updateTemplateSection } = useOperationState()
   const { moveStructure } = useFormStructureState()
@@ -228,6 +232,8 @@ const PageMove: React.FC = () => {
             category: TemplateElementCategory.Information,
             elementTypePluginCode: 'pageBreak',
             title: 'Page Break',
+            templateCode: code,
+            templateVersion: versionId,
           },
         ],
         connectById: pageElements.map(({ id }) => ({

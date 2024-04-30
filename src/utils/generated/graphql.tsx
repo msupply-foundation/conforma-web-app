@@ -293,30 +293,19 @@ export type Query = Node & {
   applicationListFilterOrganisation?: Maybe<ApplicationListFilterOrganisationConnection>;
   applicationListFilterReviewer?: Maybe<ApplicationListFilterReviewerConnection>;
   applicationListFilterStage?: Maybe<ApplicationListFilterStageConnection>;
-  applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   assignableQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignedQuestions?: Maybe<AssignedQuestionsConnection>;
   assignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignerList?: Maybe<AssignerListConnection>;
   assignmentList?: Maybe<AssignmentListConnection>;
-  getTemplateCode?: Maybe<Scalars['String']>;
-  getTemplateVersion?: Maybe<Scalars['String']>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
   jwtGetText?: Maybe<Scalars['String']>;
-  reviewApplicationId?: Maybe<Scalars['Int']>;
   /** Reads and enables pagination through a set of `ReviewAssignmentAssignedSectionsShape`. */
   reviewAssignmentAssignedSections?: Maybe<ReviewAssignmentAssignedSectionsShapesConnection>;
   reviewAssignmentTemplateId?: Maybe<Scalars['Int']>;
-  reviewIsFinalDecision?: Maybe<Scalars['Boolean']>;
-  reviewIsLastLevel?: Maybe<Scalars['Boolean']>;
-  reviewIsLastStage?: Maybe<Scalars['Boolean']>;
-  reviewLevel?: Maybe<Scalars['Int']>;
   reviewList?: Maybe<ReviewListConnection>;
   reviewResponseStageNumber?: Maybe<Scalars['Int']>;
-  reviewReviewerId?: Maybe<Scalars['Int']>;
-  reviewStage?: Maybe<Scalars['Int']>;
-  reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
   reviewableQuestions?: Maybe<ReviewableQuestionsConnection>;
   reviewableQuestionsCount?: Maybe<Scalars['BigInt']>;
   submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']>;
@@ -2148,12 +2137,6 @@ export type QueryApplicationListFilterStageArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryApplicationStatusHistoryApplicationIdArgs = {
-  applicationStageHistoryId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryAssignableQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
 };
@@ -2207,18 +2190,6 @@ export type QueryAssignmentListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryGetTemplateCodeArgs = {
-  sectionId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryGetTemplateVersionArgs = {
-  sectionId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryJwtGetBigintArgs = {
   jwtKey?: Maybe<Scalars['String']>;
 };
@@ -2233,12 +2204,6 @@ export type QueryJwtGetBooleanArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryJwtGetTextArgs = {
   jwtKey?: Maybe<Scalars['String']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewApplicationIdArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -2261,30 +2226,6 @@ export type QueryReviewAssignmentTemplateIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewIsFinalDecisionArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewIsLastLevelArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewIsLastStageArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewLevelArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryReviewListArgs = {
   stageid?: Maybe<Scalars['Int']>;
   reviewerid?: Maybe<Scalars['Int']>;
@@ -2301,24 +2242,6 @@ export type QueryReviewListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewResponseStageNumberArgs = {
   reviewId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewReviewerIdArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewStageArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewTimeStageCreatedArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -4954,6 +4877,8 @@ export type DataChangelogFilter = {
   username?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `comment` field. */
+  comment?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -8104,8 +8029,8 @@ export type TemplateElement = Node & {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability: Reviewability;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -8805,6 +8730,8 @@ export enum DataChangelogsOrderBy {
   UsernameDesc = 'USERNAME_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  CommentAsc = 'COMMENT_ASC',
+  CommentDesc = 'COMMENT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -8833,6 +8760,8 @@ export type DataChangelogCondition = {
   username?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `comment` field. */
+  comment?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `DataChangelog` values. */
@@ -8863,6 +8792,7 @@ export type DataChangelog = Node & {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `DataChangelog`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `DataChangelog`. */
@@ -9715,7 +9645,7 @@ export type ApplicationStatusHistory = Node & {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   /** Reads a single `ApplicationStageHistory` that is related to this `ApplicationStatusHistory`. */
   applicationStageHistory?: Maybe<ApplicationStageHistory>;
 };
@@ -22594,6 +22524,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogUserIdFkeyPatch = 
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -22704,6 +22635,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogUsernameFkeyPatch 
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -23033,6 +22965,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   userId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -24020,6 +23953,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyP
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -28705,8 +28639,8 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -29447,8 +29381,8 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -30529,6 +30463,7 @@ export type DataChangelogPatch = {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -30547,6 +30482,7 @@ export type DataChangelogApplicationIdFkeyDataChangelogCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -31119,6 +31055,7 @@ export type DataChangelogOrgIdFkeyDataChangelogCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -31544,6 +31481,7 @@ export type DataChangelogUsernameFkeyDataChangelogCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -31619,6 +31557,7 @@ export type DataChangelogUserIdFkeyDataChangelogCreateInput = {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -32107,7 +32046,7 @@ export type ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStat
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -32429,8 +32368,8 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -34550,7 +34489,7 @@ export type ApplicationStatusHistoryInput = {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -34630,6 +34569,7 @@ export type DataChangelogInput = {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -36610,8 +36550,8 @@ export type TemplateElementInput = {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;

@@ -251,6 +251,8 @@ const getNewElement = (applicationId: number, index: number) => ({
   applicationResponsesUsingId: {
     create: [{ applicationId }],
   },
+  templateCode: '__Temp',
+  templateVersion: '__Temp',
 })
 
 export default Elements
