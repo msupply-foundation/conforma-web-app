@@ -14,8 +14,10 @@ export default gql`
         versionHistory
         name
         status
+        priority
         templateCategory {
           title
+          priority
         }
         applications(filter: { isConfig: { equalTo: false } }) {
           totalCount

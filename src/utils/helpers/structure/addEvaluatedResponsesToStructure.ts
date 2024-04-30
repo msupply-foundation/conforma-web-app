@@ -5,6 +5,7 @@ import {
   User,
   ElementForEvaluation,
   EvaluationOptions,
+  PageType,
 } from '../../types'
 import { evaluateElements } from '../evaluateElements'
 
@@ -12,11 +13,13 @@ const addEvaluatedResponsesToStructure = async ({
   structure,
   applicationResponses,
   currentUser,
+  currentPageType,
   evaluationOptions,
 }: {
   structure: FullStructure
   applicationResponses: ApplicationResponse[]
   currentUser: User | null
+  currentPageType: PageType
   evaluationOptions: EvaluationOptions
 }) => {
   const newStructure = { ...structure } // This MIGHT need to be deep-copied
@@ -63,7 +66,7 @@ const addEvaluatedResponsesToStructure = async ({
     {
       responses,
       currentUser,
-      applicationData: structure.info,
+      applicationData: { ...structure.info, currentPageType },
     }
   )
 

@@ -2,14 +2,18 @@ import {
   ApplicationDetails,
   ElementState,
   EvaluationOptions,
+  EvaluatorNode,
   ResponsesByCode,
   User,
 } from '../../../utils/types'
 import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
+import evaluateExpression from '@openmsupply/expression-evaluator'
+import { IParameters, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
 import { evaluateElements } from '../../../utils/helpers/evaluateElements'
 import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
 import { ListItem } from './types'
 import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import { substituteValues } from '../../../utils/helpers/utilityFunctions'
 
 // Formatting and Text manipulation
 export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
@@ -20,23 +24,45 @@ export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
   return { title: '', subtitle: '', description: displayString }
 }
 
-export const substituteValues = (parameterisedString: string, item: ListItem) => {
-  const getValueFromCode = (_: string, $: string, code: string) => item[code]?.value?.text || ''
-  // Replaces ${ } formatted substitutions with their values
-  return parameterisedString.replace(/(\${)(.*?)(})/gm, getValueFromCode)
+const getDefaultTextValue = (item: ListItem, inputFields: TemplateElement[]) => {
+  const parts = inputFields.map((field) => `${field.title}: ${item[field.code]?.value?.text}`)
+  return parts.join(', ')
 }
 
-export const createTextString = (listItems: ListItem[], inputFields: TemplateElement[]) =>
-  listItems.reduce(
-    (outputAcc, item) =>
-      outputAcc +
-      inputFields.reduce(
-        (innerAcc, field) => innerAcc + `${field.title}: ${item[field.code]?.value?.text}, `,
-        ''
-      ) +
-      '\n',
-    ''
+export const createTextString = (
+  listItems: ListItem[],
+  inputFields: TemplateElement[],
+  textFormat?: string
+) => {
+  const textStrings = listItems.map((item, index) =>
+    textFormat ? substituteValues(textFormat, item, index) : getDefaultTextValue(item, inputFields)
   )
+  return textStrings.join('\n')
+}
+
+export const buildDataArray = async (
+  listItems: ListItem[],
+  inputFields: TemplateElement[],
+  evaluatorConfig: IParameters,
+  dataFormat?: string | EvaluatorNode
+) => {
+  if (typeof dataFormat === 'string' || dataFormat === undefined) {
+    return listItems.map((item, index) =>
+      dataFormat
+        ? substituteValues(dataFormat, item, index)
+        : getDefaultTextValue(item, inputFields)
+    )
+  }
+
+  // dataFormat is a full evaluator expression
+  const evaluatedItems = listItems.map((item) =>
+    evaluateExpression(dataFormat, {
+      ...evaluatorConfig,
+      objects: { ...evaluatorConfig.objects, item },
+    })
+  )
+  return Promise.all(evaluatedItems)
+}
 
 // Data validation and state reset
 export const resetCurrentResponses = (inputFields: TemplateElement[]) =>
@@ -99,6 +125,7 @@ export const buildElements = async (
     applicationData,
     functions,
   }
+
   const evaluatedElements = await evaluateElements(elements, evaluationOptions, evaluationObjects)
   const outputElements: { [key: string]: ElementState } = {}
   for (let i = 0; i < elements.length; i++) {

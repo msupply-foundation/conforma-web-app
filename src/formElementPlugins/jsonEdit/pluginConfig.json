@@ -1,12 +1,11 @@
 {
   "isCore": true,
-  "code": "listBuilder",
-  "displayName": "List Builder",
+  "code": "jsonEdit",
+  "displayName": "JSON Editor",
   "parameterLoadingValues": {
     "label": "Loading...",
     "description": ""
   },
-  "internalParameters": ["dataFormat"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
 }

@@ -2,6 +2,6 @@
          Site Overrides
 *******************************/
 
-.ui.input > input {
+.form-element .ui.input > input {
   border-color: @darkGrey;
 }

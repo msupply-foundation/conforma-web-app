@@ -19,6 +19,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Search (Lookup)](#search-lookup)
   - [Date Picker](#date-picker)
   - [Number](#number)
+  - [JSON Editor](#json-editor)
   - [Page Break](#page-break)
 
 <!-- tocstop -->
@@ -58,6 +59,7 @@ Example for `shortText` plugin element:
   _TO-DO: Handle multiple validation criteria with different messages (eg. "Not a valid email", "Email is not unique")_
 - **parameters**: `JSON` -- the parameters specific to each question/element type. See individual plugins below for parameter breakdown
 - **is_reviewable**: `enum` -- either "ALWAYS", "NEVER" or `null`. If set to "ALWAYS", a review response will be created (i.e. a reviewer can review the question) even if there is no applicant response. If set to "NEVER", there will no review response created. This is useful (for example) for questions that are just used as logical conditions for other questions (e.g. "Is your postal address different"), and it can save the reviewer a lot of unnecessary clicking on content that is irrelevant to their actual review. The default for this field is `null`, in which case a review response is created whenever an application response is present.
+- **showLiveParameters**: `boolean` (default `false`) -- Usually, when an application form is being edited, we store the result of any dynamic parameter values in the database, so that when viewed on the Summary page or in Review, subsequent users see the application as it looked when the applicant entered it. For example, if the application form displays user details of the applicant, we wouldn't want this to show the reviewer's details when they review it. So the current value of any dynamic parameters is saved along with the application responses. Then, in Summary and Review pages, we display these values rather than whatever they would evaluate to at the time. In the case where we *don't* want this (i.e the user should see up-to-date "live" values), set `showLiveParameters` to `true`.
 
   <a name="types"/>
 
@@ -492,6 +494,7 @@ _Allows user to build a list of items, such as an **Ingredients List**_
   - `visibility_condition` / `is_editable` -- not required, always `true` (for now, may be implemented later)
   - `parameters`, `title`, and `code` are essential
 
+- **maxItems** `number` -- if specified, the maximum number of items that can be added to the list (once this number is reached, the "Add" button will no longer appear)
 - **displayType** `'table' | 'cards' | 'inline' | 'list'` (default: `cards`) -- how to present the list of items, as shown here:
 
   - **table** view:
@@ -534,6 +537,33 @@ _Allows user to build a list of items, such as an **Ingredients List**_
   where `LB1`...`LB6` are the element codes from the template. (Note, also, the additional escape `\` characters required if used inside a GraphQL query string)
 
   If a `displayFormat` parameter is not specified, the card view will just show a simplified list of fields representing `title: value` for each input.
+- **textFormat** `string` -- (optional) a formatting substitution string like the above, to be generate the "text" value in the response. This substitution string is *per item* and will generate a single string broken up by line breaks for each item. For example, if you have a list (of items with the above fields), you could define a `textFormat` like so:  
+  `${LB4} mg`  
+  And the output text string (with a 3-item list) would be something like:  
+  `"12 mg\n65 mg\n10mg"`
+  
+  Note that the `text` display for list builders is rarely required, perhaps only useful for display in a [Data View](https://github.com/msupply-foundation/conforma-server/wiki/Data-View) or similar output. The default formatting (comma-separated list of `<title>: <text value>`) is probably fine for most purposes.
+- **dataFormat** `string | EvaluatorExpression` (optional) The array of responses (each listBuilder item) can be converted to a more easily-digestible set of values (as opposed to the full `list` object -- see [Response](#response-type-7) below). This can make it easier for outputting to a data table, perhaps, or be more easily displayed in a [Data View](https://github.com/msupply-foundation/conforma-server/wiki/Data-View). The `dataFormat` value uses the `textFormat` value by default -- the difference is it creates an array of formatted strings rather than a single concatenated string for the text value. If you wish to specify something different to the `textFormat`, you can provide another substitution string, or a complete [evaluator expression](https://github.com/msupply-foundation/conforma-server/wiki/Query-Syntax) for something more complex. The `objects` property for the evaluator consists of the usual `currentUser`, `applicationData`, `responses`, `functions` objects, as well as an `item` object which changes with each item in the list builder.  
+  The example substitution string from `textFormat` (above) would yield a data object of:  
+  `[ "12 mg", "65 mg", "10mg" ]`
+
+  This is the equivalent of the full evaluator expression:
+  ```
+  {
+    "operator": "stringSubstitution",
+    "children": [
+      "%1 mg",
+      {
+        "operator": "objectProperties",
+        "children": [
+          "item.LB4",
+          null
+        ]
+      }
+    ]
+  }
+  ```
+  A simple text substitution string is probably adequate for most purposes. An evaluator expression would be useful when you want to save your `data` as something other than `string`s, or for very fine-grained control over the construction of each response item.
 - **inlineOpen** `boolean` (only relevant for **inline** view) -- if `true`, all elements will be displayed "open" (i.e. not collapsed) on initial load (default `false`)
 - **tableExcludeColumns** `string[]` (only relevant for **table** view) -- an array of Input Field (aboves) `code`s to exclude from the table view, which can be useful when there are a lot of fields being collected which can make the table overly cluttered.  
   
@@ -557,8 +587,9 @@ _Allows user to build a list of items, such as an **Ingredients List**_
     },
     ...
   ],
-  text: <simple text representation of a list of comma-seperated
-        "title: value" rows>
+  text: <simple text representation of a list of comma-separated
+        "title: value" rows>,
+  data: [ <array of response values as specified in "dataFormat" parameter> ]
 }
 
 ```
@@ -566,7 +597,7 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 **Notes**:
 
 - the `text` value is never actually presented to the user.
-- the `isValid` field should always be `true` when the response is saved, since items won't be permitted to be added to the list if all input fields are not valid. There is currently no additional validity checking of the reponses after they've been entered into the list, although this might be improved in future.
+- the `isValid` field should always be `true` when the response is saved, since items won't be permitted to be added to the list if all input fields are not valid. There is currently no additional validity checking of the responses after they've been entered into the list, although this might be improved in future.
 
 ---
 
@@ -606,6 +637,7 @@ Once selected, items are displayed in a "card" view:
 - **multiSelect**: `boolean` -- whether or not the user can select multiple items for their response (default: `false`)
 - **minCharacters**: `number` -- the minimum number of characters the user must type before the search query executes (default: 1). This is useful in situations where need the user to look up a specific item without being able to freely browse through the entire results list. For example, to look up organisation in our system using "registration" code, we set `minCharacters = 6`, so the user will need to know an exact code rather than being able to try characters one at a time.
 - **restrictCase**: `"upper" | "lower"` -- if specified, all user input will be automatically converted to the specified text case.
+- **trimWhiteSpace**: `boolean` -- if `true`, user won't be able to enter spaces in search query (default: `false`)
 - **displayFormat**: `object` -- defines how to display the search results and the user's selection cards. See `displayFormat` for the [List Builder](#list-builder) (above) for detailed explanation. In this case, however, instead of a `code` substitution, the display string should contain property names from the result object. For example:
   ```
   displayFormat: {
@@ -720,6 +752,46 @@ _Input for numeric fields_
   prefix: <string> (from parameters, only stored if defined)
   suffix: <string> (from parameters, only stored if defined)
   suffixPlural: <string> (from parameters, only stored if defined)
+}
+```
+
+---
+
+<a name="json-editor"/>
+
+### JSON Editor
+
+- **type/code**: `jsonEdit`
+- **category**: `Question`
+
+_Editor/Viewer for raw JSON data_
+
+Uses [json-edit-react](https://carlosnz.github.io/json-edit-react/)
+
+![JSON Editor](images/Json-Editor.png)
+
+#### Input parameters
+
+- **label** / **description** `string` -- as above
+- **default**: `string`/`number` -- default value (JSON object)
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
+- **width**: `number` -- sets the max width (in pixels) for the editor. (It will also be limited by the size of the container, so won't extend of the screen in mobile)
+- **preventEditFields**: `string[]` -- a list of field names that should be editable by the user. For example, if editing a database record, the `id` field should probably not be editable.
+- **allowEditDepth**: `number` -- how deep in the JSON structure to allow editing. If this is `1`, then only the top-level fields can be modified. To prevent *all* editing (i.e. just for viewing), set this to `0`
+- **allowAddDepth**: `number` -- same as `allowEditDepth`, but for *adding* new properties
+- **allowDeleteDepth**: `number` -- same as `allowEditDepth`, but for *deleting*  properties
+- **collapse**: `number` (default `1`) -- the depth at which the JSON view will be "opened" to on first loading. If set to `0`, the whole thing will start in a "closed" state.
+- **canChangeType**: `boolean` (default `false`). This prevents the user from changing the data type of a field, which could cause problems if trying to update the database with it. Note that `null` values can still be changed to other types, so be careful with this.
+- **showSearch**: `boolean` (default `false`). If `true`, a "search" input will be visible on the editor for narrowing down the list of properties visible.
+- **...jsonProps**: all the properties for configuring the Json editor component can also be provided for additional customisation. See [json-edit-react docs](https://github.com/CarlosNZ/json-edit-react#props-overview) for details.
+
+
+#### Response type
+
+```
+{
+  text: <Stringified version of the data object>
+  data: { ...JsonData }
 }
 ```
 

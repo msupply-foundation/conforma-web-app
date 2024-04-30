@@ -115,6 +115,13 @@ class pluginProvider {
         folderName: 'datePicker',
         category: 'Input',
       },
+      jsonEdit: {
+        code: 'jsonEdit',
+        displayName: 'JSON Editor',
+        isCore: true,
+        folderName: 'jsonEdit',
+        category: 'Input',
+      },
     }
   }
 

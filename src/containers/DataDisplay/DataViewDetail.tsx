@@ -58,24 +58,35 @@ const DataViewDetail: React.FC = () => {
         />
       </div>
       <div className="data-view-detail-container">
-        <Header as="h2">{header.value}</Header>
+        <Header as="h2">
+          {formatCellText(header.value, {
+            dataType: header.dataType,
+            formatting: header.formatting,
+          })}
+        </Header>
         <div className="data-view-detail-table">
           <Table celled stackable striped>
             <Table.Body>
-              {columns.map((columnName, index) => (
-                <Table.Row key={`row_${columnName}`}>
-                  {!isMobile && (
-                    <Table.Cell key={`${columnName}_${index}_key`} textAlign="right">
-                      <strong>{displayDefinitions[columnName].title}</strong>
+              {columns
+                .filter((col) => !(displayDefinitions[col].hideIfNull && item[col] === null))
+                .map((columnName, index) => (
+                  <Table.Row key={`row_${columnName}`}>
+                    {!isMobile && (
+                      <Table.Cell key={`${columnName}_${index}_key`} textAlign="right">
+                        <strong>{displayDefinitions[columnName].title}</strong>
+                      </Table.Cell>
+                    )}
+                    <Table.Cell key={`${columnName}_${index}_val`}>
+                      <TableCellMobileLabelWrapper label={displayDefinitions[columnName].title}>
+                        {getCellComponent(
+                          item[columnName],
+                          displayDefinitions[columnName],
+                          item.id
+                        )}
+                      </TableCellMobileLabelWrapper>
                     </Table.Cell>
-                  )}
-                  <Table.Cell key={`${columnName}_${index}_val`}>
-                    <TableCellMobileLabelWrapper label={displayDefinitions[columnName].title}>
-                      {getCellComponent(item[columnName], displayDefinitions[columnName], item.id)}
-                    </TableCellMobileLabelWrapper>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+                  </Table.Row>
+                ))}
             </Table.Body>
           </Table>
         </div>

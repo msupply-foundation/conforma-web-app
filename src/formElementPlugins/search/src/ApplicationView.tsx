@@ -31,6 +31,7 @@ interface SearchParameters {
   multiSelect: boolean
   minCharacters: number
   restrictCase?: 'upper' | 'lower'
+  trimWhiteSpace?: boolean
   inputPattern?: string
   inputExample?: string
   inputErrorMessage?: string
@@ -62,6 +63,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     multiSelect = false,
     minCharacters = 1,
     restrictCase,
+    trimWhiteSpace = false,
     inputPattern,
     inputExample = 'a',
     inputErrorMessage = t('INPUT_ERROR'),
@@ -99,6 +101,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   )
   const [inputError, setInputError] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
+  const [resultsOpen, setResultsOpen] = useState(false)
   const { isEditable } = element
 
   const [debounceOutput, setDebounceInput] = useDebounce<string>('', DEBOUNCE_TIMEOUT)
@@ -149,6 +152,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         else setResults(results)
         setDebounceInput('')
         setLoading(false)
+        setResultsOpen(true)
       })
       .catch((err) => {
         console.error('Search error:', err.message)
@@ -163,7 +167,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     // string (otherwise it remains even though it's not displayed anywhere)
     if (displayType === 'input') setSelection([])
 
-    let text = (e.target.value as string).trim()
+    let text = trimWhiteSpace ? e.target.value.trim() : e.target.value
 
     if (restrictCase === 'upper') text = text.toUpperCase()
     if (restrictCase === 'lower') text = text.toUpperCase()
@@ -179,10 +183,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
     if (text.length < minCharacters) return
     setDebounceInput(text)
-    if (inputValid) setLoading(true)
+    if (inputValid) {
+      setLoading(true)
+      setResultsOpen(false)
+    }
   }
 
   const handleSelect = (_: any, data: any) => {
+    setResultsOpen(false)
     const selectedResult = results[data.result.index]
     if (!selectedResult) return // Don't select "Loading" item
     if (!multiSelect) setSelection([selectedResult])
@@ -197,6 +205,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const handleFocus = (e: any) => {
     setIsFocused(true)
+    if (displayType === 'input' && !loading && !inputError && searchText.length >= minCharacters)
+      setResultsOpen(true)
     // This makes the component perform a new search when re-focusing (if no
     // selection already), as changes in other elements may have changed some of
     // the dynamic parameters in this element
@@ -270,7 +280,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           input={{ icon, iconPosition: 'left' }}
           noResultsMessage={t('MESSAGE_NO_RESULTS')}
           onBlur={() => setIsFocused(false)}
-          open={isFocused && !inputError && searchText.length >= minCharacters && !loading}
+          open={resultsOpen}
         />
         {!errorMessage ? null : <Label pointing prompt content={errorMessage} />}
       </Form.Field>

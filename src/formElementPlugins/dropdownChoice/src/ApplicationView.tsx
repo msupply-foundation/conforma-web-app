@@ -5,6 +5,7 @@ import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { substituteValues } from '../../../utils/helpers/utilityFunctions'
 import useDefault from '../../useDefault'
+import './styles.css'
 
 // From
 // https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-certificates/requireatleastone

@@ -6,7 +6,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useToast, topLeft } from '../../contexts/Toast'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
-import { JsonEditor } from './JsonEditor'
+import { JsonEditor } from './JsonEditor/JsonEditor'
 import Loading from '../Loading'
 import { useViewport } from '../../contexts/ViewportState'
 
@@ -68,7 +68,7 @@ export const AdminPreferences: React.FC = () => {
           maxWidth={650}
           restrictDelete={({ level }) => level === 1}
           restrictAdd={({ level }) => level === 0}
-          indent={isMobile ? 2 : 4}
+          indent={isMobile ? 1 : 2}
         />
       ) : (
         <Loading />

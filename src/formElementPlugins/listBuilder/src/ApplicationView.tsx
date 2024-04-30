@@ -10,6 +10,8 @@ import {
   ListLayoutProps,
 } from './types'
 import { TemplateElement } from '../../../utils/generated/graphql'
+import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import config from '../../../config'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import {
   buildElements,
@@ -18,6 +20,7 @@ import {
   anyErrorItems,
   createTextString,
   combineResponses,
+  buildDataArray,
 } from './helpers'
 import {
   ListCardLayout,
@@ -58,8 +61,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
     default: defaultValue,
+    textFormat,
+    dataFormat = textFormat,
     inlineOpen = false,
     tableExcludeColumns = [],
+    maxItems = Infinity,
     // These affect viewing tables on Mobile only
     hideFromMobileTableIfEmpty,
     minMobileTableLabelWidth,
@@ -87,6 +93,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [inputState, setInputState] = useState<InputState>(defaultInputState)
   const [listItems, setListItems] = useState<ListItem[]>(currentResponse?.list ?? [])
 
+  const graphQLEndpoint = applicationData.config.getServerUrl('graphQL')
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
+  const evaluatorConfig = {
+    objects: { currentUser, applicationData, responses: allResponses, functions },
+    APIfetch: fetch,
+    graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+    headers: { Authorization: 'Bearer ' + JWT },
+  }
+
   useEffect(() => {
     buildElements(
       inputFields,
@@ -107,10 +122,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   })
 
   useEffect(() => {
-    onSave({
-      text: listItems.length > 0 ? createTextString(listItems, inputFields) : undefined,
-      list: listItems,
-    })
+    buildDataArray(listItems, inputFields, evaluatorConfig, dataFormat).then((data) =>
+      onSave({
+        text:
+          listItems.length > 0 ? createTextString(listItems, inputFields, textFormat) : undefined,
+        list: listItems,
+        data,
+      })
+    )
   }, [listItems])
 
   // This is sent to ApplicationViewWrapper and runs instead of the default responseMutation
@@ -248,7 +267,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      {displayType !== DisplayType.LIST && (
+      {displayType !== DisplayType.LIST && listItems.length < maxItems && (
         <Button
           primary
           content={createModalButtonText}
@@ -280,7 +299,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       )}
       {DisplayComponent}
       {/* In LIST view, show the Button below the list */}
-      {displayType === DisplayType.LIST && (
+      {displayType === DisplayType.LIST && listItems.length < maxItems && (
         <Button
           primary
           size="small"

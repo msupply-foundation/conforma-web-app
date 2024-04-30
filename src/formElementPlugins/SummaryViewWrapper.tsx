@@ -3,7 +3,7 @@ import { ErrorBoundary, pluginProvider } from '.'
 import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import { EvaluatorNode } from '../utils/types'
+import { EvaluatorNode, ResponseFull } from '../utils/types'
 import { buildParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
@@ -60,11 +60,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   if (!pluginCode || !isVisible) return null
 
   const DefaultSummaryView: React.FC = () => {
-    const combinedParams = {
-      ...simpleParameters,
-      ...evaluatedParameters,
-      ...response?.evaluatedParameters,
-    }
+    const combinedParams = getCombinedParams(simpleParameters, evaluatedParameters, response)
     return (
       <Form.Field
         className="element-summary-view"
@@ -85,7 +81,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   const PluginComponent = (
     <SummaryView
-      parameters={{ ...simpleParameters, ...evaluatedParameters, ...response?.evaluatedParameters }}
+      parameters={getCombinedParams(simpleParameters, evaluatedParameters, response)}
       response={response}
       Markdown={Markdown}
       DefaultSummaryView={DefaultSummaryView}
@@ -99,6 +95,23 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
       </React.Suspense>
     </ErrorBoundary>
   )
+}
+
+const getCombinedParams = (
+  simpleParams: Record<string, any>,
+  evaluatedParams: Record<string, any>,
+  response: ResponseFull | null
+) => {
+  const showLiveParameters =
+    evaluatedParams?.showLiveParameters ?? simpleParams?.showLiveParameters ?? false
+
+  // If "showLiveParameters" is true, we always show the current, dynamic values
+  // of the parameters (which may change at any time) instead of being fixed at
+  // what they were when the application was submitted
+
+  return showLiveParameters
+    ? { ...simpleParams, ...evaluatedParams }
+    : { ...simpleParams, ...evaluatedParams, ...response?.evaluatedParameters }
 }
 
 export default SummaryViewWrapper

@@ -5,7 +5,7 @@ import { ListItem, ListLayoutProps } from '../types'
 import ApplicationViewWrapper from '../../../ApplicationViewWrapper'
 import SummaryViewWrapper from '../../../SummaryViewWrapper'
 import { buildElements } from '../helpers'
-import { substituteValues } from '../helpers'
+import { substituteValues } from '../../../../utils/helpers/utilityFunctions'
 import '../styles.less'
 import { useViewport } from '../../../../contexts/ViewportState'
 
@@ -94,7 +94,7 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
     <Accordion styled fluid={open ? false : true} className="accordion-container fit-content">
       <Accordion.Title active={open} onClick={() => setOpen(!open)}>
         <Icon name="dropdown" />
-        <Markdown text={substituteValues(header, item)} semanticComponent="noParagraph" />
+        <Markdown text={substituteValues(header, item, index)} semanticComponent="noParagraph" />
       </Accordion.Title>
       <Accordion.Content active={open}>
         {inputFields.map(({ code }, cellIndex: number) =>

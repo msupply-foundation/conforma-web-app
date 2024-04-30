@@ -16,7 +16,7 @@ export const exportLanguages = async (
   try {
     // Fetch all languages
     const allLanguageStrings: { [key: string]: LanguageStrings } = await getRequest(
-      getServerUrl('allLanguages')
+      getServerUrl('localisation', { action: 'getAll' })
     )
 
     // Combine language options with their translations

@@ -9,6 +9,7 @@ import { useOperationState } from '../../shared/OperationContext'
 import TextIO, { iconLink } from '../../shared/TextIO'
 import { useTemplateState } from '../TemplateWrapper'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
+import NumberIO from '../../shared/NumberIO'
 
 const useCategoryInfo = () => {
   const { t } = useLanguageProvider()
@@ -20,6 +21,7 @@ const useCategoryInfo = () => {
     icon: '',
     uiLocation: [],
     isSubmenu: false,
+    priority: null,
   }
 
   const newCategory = {
@@ -28,6 +30,7 @@ const useCategoryInfo = () => {
     title: t('TEMPLATE_NEW_TITLE'),
     uiLocation: [UiLocation.List],
     isSubmenu: false,
+    priority: null,
   }
 
   const uiLocationOptions: { key: UiLocation; locationName: string }[] = [
@@ -48,6 +51,7 @@ type CategoryUpdate = {
   title: string | null
   uiLocation: UiLocation[]
   isSubmenu: boolean
+  priority: number | null
 }
 
 const Category: React.FC<{}> = () => {
@@ -70,10 +74,16 @@ const Category: React.FC<{}> = () => {
   const renderAddEdit = () => {
     if (updateState) return null
     const canRenderEdit = selectedCategory.id !== noCategory.id
-    if (!template.canEdit) return null
+
     return (
       <>
-        <Icon className="clickable" name="add square" onClick={() => setUpdateState(newCategory)} />
+        {template.canEdit && (
+          <Icon
+            className="clickable"
+            name="add square"
+            onClick={() => setUpdateState(newCategory)}
+          />
+        )}
         {canRenderEdit && (
           <Icon
             className="clickable"
@@ -86,6 +96,7 @@ const Category: React.FC<{}> = () => {
                 title: selectedCategory?.title || '',
                 uiLocation: (selectedCategory?.uiLocation || []) as UiLocation[],
                 isSubmenu: selectedCategory?.isSubmenu || false,
+                priority: null,
               })
             }}
           />
@@ -156,15 +167,16 @@ const Category: React.FC<{}> = () => {
           <TextIO
             text={updateState.code}
             title={t('TEMPLATE_CODE')}
+            disabled={!template.canEdit}
             setText={(text) => setUpdateState({ ...updateState, code: text ?? '' })}
-            minLabelWidth={80}
+            minLabelWidth={100}
             labelTextAlign="right"
           />
           <TextIO
             text={updateState?.title || ''}
             title={t('TEMPLATE_TITLE')}
             setText={(value: string | null) => setUpdateState({ ...updateState, title: value })}
-            minLabelWidth={80}
+            minLabelWidth={100}
             labelTextAlign="right"
           />
           <TextIO
@@ -175,7 +187,7 @@ const Category: React.FC<{}> = () => {
             setText={(value: string | null) =>
               setUpdateState({ ...updateState, icon: value || null })
             }
-            minLabelWidth={80}
+            minLabelWidth={100}
             labelTextAlign="right"
           />
           <CheckboxIO
@@ -187,8 +199,14 @@ const Category: React.FC<{}> = () => {
                 isSubmenu: value,
               })
             }
-            minLabelWidth={80}
+            minLabelWidth={100}
             labelTextAlign="right"
+          />
+          <NumberIO
+            number={category?.priority}
+            title="Sort priority"
+            minLabelWidth={100}
+            setNumber={(num) => setUpdateState({ ...updateState, priority: num })}
           />
           <div>
             <p>
