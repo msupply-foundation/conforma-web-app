@@ -15,6 +15,7 @@ export default gql`
             id
             name
             number
+            singleReviewerAllSections
           }
         }
       }
