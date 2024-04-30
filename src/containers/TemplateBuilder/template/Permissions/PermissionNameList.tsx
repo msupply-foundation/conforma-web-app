@@ -23,14 +23,8 @@ type PermissionNameListProps = {
   reviewLevel?: TemplateStageReviewLevel
 }
 
-const PermissionNameList: React.FC<PermissionNameListProps> = ({
-  type,
-  // stageNumber,
-  // levelNumber,
-  stage,
-  reviewLevel,
-}) => {
-  const { template, templatePermissions, templateStages } = useTemplateState()
+const PermissionNameList: React.FC<PermissionNameListProps> = ({ type, stage, reviewLevel }) => {
+  const { template, templatePermissions } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const [permissionNameInfo, setPermissionNameInfo] = useState<PermissionName | null>(null)
   const { canEdit } = template
