@@ -27,7 +27,7 @@ const Login: React.FC = () => {
   const [loginPayload, setLoginPayload] = useState<LoginPayload>()
   const [selectedOrgId, setSelectedOrgId] = useState<number>(NO_ORG_SELECTED)
   const { push, history } = useRouter()
-  const { onLogin } = useUserState()
+  const { onLogin, userState } = useUserState()
   const client = useApolloClient()
   const { t, languageOptions } = useLanguageProvider()
   const { preferences } = usePrefs()
@@ -72,6 +72,7 @@ const Login: React.FC = () => {
   const finishLogin = async (loginPayload: LoginPayload) => {
     const { JWT, user, templatePermissions, orgList } = loginPayload
     await onLogin(JWT, user, templatePermissions, orgList)
+    localStorage.setItem(config.localStorageJWTKey, JWT)
     if (history.location?.state?.from) push(history.location.state.from)
     else push('/')
   }
@@ -237,6 +238,18 @@ const LanguageSelector: React.FC = () => {
       />
     </div>
   )
+}
+
+// For when Admin needs to logged in and site is in Maintenance mode
+export const AdminLogin: React.FC = () => {
+  const { maintenanceMode } = usePrefs()
+  const { push } = useRouter()
+  if (!maintenanceMode.enabled) {
+    push('/')
+    return null
+  }
+  localStorage.removeItem(config.localStorageJWTKey)
+  return <Login />
 }
 
 export default Login

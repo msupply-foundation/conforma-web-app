@@ -14,7 +14,7 @@ import { usePrefs } from './contexts/SystemPrefs'
 // import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
 import getServerUrl from './utils/helpers/endpoints/endpointUrlBuilder'
-import Login from './containers/User/Login'
+import { AdminLogin } from './containers/User/Login'
 
 // Adds authorisation header with token from local storage (to be used on every
 // request) see
@@ -104,7 +104,7 @@ const App: React.FC = () => {
             <Switch>
               {maintenanceMode.enabled && (
                 <Route exact path="/admin-login">
-                  <Login />
+                  <AdminLogin />
                 </Route>
               )}
               <Route>

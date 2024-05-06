@@ -6,7 +6,6 @@
 
 import React, { useEffect } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
-import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { Position, useToast } from '../../contexts/Toast'
 import { usePrefs } from '../../contexts/SystemPrefs'
@@ -19,7 +18,6 @@ export const ServerStatusListener: React.FC = ({ children }) => {
   const { maintenanceMode: prefsMaintenanceMode } = usePrefs()
   const { lastMessage, readyState } = useWebSocket('ws://localhost:8080/server-status')
   const { showToast } = useToast({ style: 'negative', position: Position.topLeft })
-  const { pathname, push } = useRouter()
 
   const goMaintenanceMode = (redirect: string, serverDown = false) => {
     // Admin is allowed to keep using the site in Maintenance mode
@@ -52,14 +50,14 @@ export const ServerStatusListener: React.FC = ({ children }) => {
   }
 
   useEffect(() => {
-    // if (pathname === '/admin-login') {
-    //   localStorage.removeItem('persistJWT')
-    //   push('/login')
-    // }
-
+    console.log('User', currentUser)
+    console.log('Mode from prefs', prefsMaintenanceMode)
+    console.log('Message', lastMessage?.data)
+    console.log('Logged in', isLoggedIn())
     if (isLoggedIn() && !currentUser) return
 
     if (prefsMaintenanceMode.enabled) {
+      console.log('Admin', currentUser?.isAdmin)
       if (!currentUser?.isAdmin)
         prefsMaintenanceMode.redirect && (window.location.href = prefsMaintenanceMode.redirect)
     }
