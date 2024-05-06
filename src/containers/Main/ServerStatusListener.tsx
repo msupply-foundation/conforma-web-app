@@ -6,21 +6,20 @@
 
 import React, { useEffect } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
+import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
 import { Position, useToast } from '../../contexts/Toast'
 import { usePrefs } from '../../contexts/SystemPrefs'
+import isLoggedIn from '../../utils/helpers/loginCheck'
 
 export const ServerStatusListener: React.FC = ({ children }) => {
   const {
     userState: { currentUser },
   } = useUserState()
-  const { maintenanceMode } = usePrefs()
+  const { maintenanceMode: prefsMaintenanceMode } = usePrefs()
   const { lastMessage, readyState } = useWebSocket('ws://localhost:8080/server-status')
   const { showToast } = useToast({ style: 'negative', position: Position.topLeft })
-
-  console.log('User', currentUser)
-  console.log('Mode from prefs', maintenanceMode)
-  console.log('Message', lastMessage?.data)
+  const { pathname, push } = useRouter()
 
   const goMaintenanceMode = (redirect: string, serverDown = false) => {
     // Admin is allowed to keep using the site in Maintenance mode
@@ -52,16 +51,19 @@ export const ServerStatusListener: React.FC = ({ children }) => {
     }, 10_000)
   }
 
-  if (maintenanceMode.enabled) {
-    console.log(currentUser)
-    // On initial load, if server in maintenance mode, re-direct immediately so
-    // user never sees site
-    if (!currentUser?.isAdmin)
-      maintenanceMode.redirect && (window.location.href = maintenanceMode.redirect)
-    return null
-  }
-
   useEffect(() => {
+    // if (pathname === '/admin-login') {
+    //   localStorage.removeItem('persistJWT')
+    //   push('/login')
+    // }
+
+    if (isLoggedIn() && !currentUser) return
+
+    if (prefsMaintenanceMode.enabled) {
+      if (!currentUser?.isAdmin)
+        prefsMaintenanceMode.redirect && (window.location.href = prefsMaintenanceMode.redirect)
+    }
+
     if (!lastMessage) return
     const { maintenanceMode, redirect } = JSON.parse(lastMessage.data)
     localStorage.setItem('redirectLocation', redirect)
@@ -69,6 +71,7 @@ export const ServerStatusListener: React.FC = ({ children }) => {
     if (readyState === ReadyState.CLOSED) goMaintenanceMode(redirect, true)
 
     if (maintenanceMode) goMaintenanceMode(redirect)
-  }, [lastMessage, readyState])
+  }, [lastMessage, readyState, prefsMaintenanceMode, currentUser])
+
   return <>{children}</>
 }
