@@ -12,7 +12,7 @@ import { Loading } from '../../components'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { trackerTestMode } from './Tracker'
 import { ViewportStateProvider } from '../../contexts/ViewportState'
-import { WebSocketListener } from './WebsocketListener'
+import { ServerStatusListener } from './WebsocketListener'
 
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()
@@ -42,7 +42,7 @@ const AppWrapper: React.FC = () => {
     <Router>
       <ViewportStateProvider>
         <UserProvider>
-          <WebSocketListener>
+          <ServerStatusListener>
             <Switch>
               <Route exact path="/login">
                 <Login />
@@ -63,7 +63,7 @@ const AppWrapper: React.FC = () => {
                 <AuthenticatedContent />
               </Route>
             </Switch>
-          </WebSocketListener>
+          </ServerStatusListener>
         </UserProvider>
       </ViewportStateProvider>
     </Router>

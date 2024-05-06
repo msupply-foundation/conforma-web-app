@@ -27,6 +27,7 @@ interface PrefsState {
   languageOptions?: LanguageOption[]
   latestSnapshot?: string
   loading: boolean
+  maintenanceMode: { enabled: boolean; redirect?: string }
   error?: Error
 }
 
@@ -44,12 +45,14 @@ const SystemPrefsContext = createContext<PrefsContext>({
   loading: true,
   preferences: defaultPrefs,
   refetchPrefs: () => {},
+  maintenanceMode: { enabled: false },
 })
 
 export const SystemPrefsProvider = ({ children }: { children: React.ReactNode }) => {
   const [prefsState, setPrefsState] = useState<PrefsState>({
     loading: true,
     preferences: defaultPrefs,
+    maintenanceMode: { enabled: false },
   })
 
   useEffect(() => {
@@ -59,11 +62,12 @@ export const SystemPrefsProvider = ({ children }: { children: React.ReactNode })
   const fetchPrefs = async () => {
     getRequest(getServerUrl('prefs'))
       .then((result) => {
-        const { languageOptions, preferences, latestSnapshot } = result
+        const { languageOptions, preferences, latestSnapshot, maintenanceMode } = result
         setPrefsState({
           languageOptions,
           preferences: { ...defaultPrefs, ...preferences },
           latestSnapshot,
+          maintenanceMode,
           loading: false,
         })
 
@@ -74,7 +78,12 @@ export const SystemPrefsProvider = ({ children }: { children: React.ReactNode })
         }
       })
       .catch((err) => {
-        setPrefsState({ loading: false, error: err, preferences: defaultPrefs })
+        setPrefsState({
+          loading: false,
+          error: err,
+          preferences: defaultPrefs,
+          maintenanceMode: { enabled: false },
+        })
       })
   }
 

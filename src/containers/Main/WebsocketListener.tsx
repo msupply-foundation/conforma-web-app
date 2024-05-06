@@ -8,23 +8,27 @@ import React, { useEffect } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { useUserState } from '../../contexts/UserState'
 import { Position, useToast } from '../../contexts/Toast'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
-export const WebSocketListener: React.FC = ({ children }) => {
+export const ServerStatusListener: React.FC = ({ children }) => {
   const {
     userState: { currentUser },
   } = useUserState()
+  const { maintenanceMode, error: prefsError } = usePrefs()
   const { lastMessage, readyState } = useWebSocket('ws://localhost:8080/server-status')
   const { showToast } = useToast({ style: 'negative', position: Position.topLeft })
 
   const goMaintenanceMode = (redirect: string, serverDown = false) => {
     // Admin is allowed to keep using the site in Maintenance mode
     if (currentUser?.isAdmin && !serverDown) {
-      showToast({
-        title: 'Maintenance mode enabled',
-        text: "If you weren't the person who enabled this, you should stop what you're doing and log out until maintenance is complete",
-        timeout: 10_000,
-        style: 'warning',
-      })
+      window.setTimeout(() => {
+        showToast({
+          title: 'Maintenance mode enabled',
+          text: "If you weren't the person who enabled this, you should stop what you're doing and log out until maintenance is complete",
+          timeout: 10_000,
+          style: 'warning',
+        })
+      }, 500)
       return
     }
 
@@ -44,9 +48,19 @@ export const WebSocketListener: React.FC = ({ children }) => {
     }, 10_000)
   }
 
+  if (maintenanceMode.enabled) {
+    console.log(currentUser)
+    // On initial load, if server in maintenance mode, re-direct immediately so
+    // user never sees site
+    if (!currentUser?.isAdmin)
+      maintenanceMode.redirect && (window.location.href = maintenanceMode.redirect)
+    return null
+  }
+
   useEffect(() => {
     if (!lastMessage) return
     const { maintenanceMode, redirect } = JSON.parse(lastMessage.data)
+    localStorage.setItem('redirectLocation', redirect)
 
     if (readyState === ReadyState.CLOSED) goMaintenanceMode(redirect, true)
 

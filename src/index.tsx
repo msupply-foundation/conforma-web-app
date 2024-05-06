@@ -83,7 +83,11 @@ const App: React.FC = () => {
 
   if (error) {
     console.error(error)
-    return <p>Can't load preferences. {error?.message}</p>
+    const redirect = localStorage.getItem('redirectLocation')
+    if (redirect) {
+      window.location.href = redirect
+      return null
+    } else return <p>Can't load preferences. {error?.message}</p>
   }
 
   return client && !loading ? (
