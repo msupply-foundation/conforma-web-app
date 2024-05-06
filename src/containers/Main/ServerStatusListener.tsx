@@ -61,6 +61,8 @@ export const ServerStatusListener: React.FC = ({ children }) => {
     if (!lastMessage) return
     const { maintenanceMode, redirect } = JSON.parse(lastMessage.data)
     localStorage.setItem('redirectLocation', redirect)
+    if (maintenanceMode) localStorage.setItem('maintenanceMode', 'ON')
+    else localStorage.removeItem('maintenanceMode')
 
     if (readyState === ReadyState.CLOSED) goMaintenanceMode(redirect, true)
 

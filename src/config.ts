@@ -44,7 +44,7 @@ const config = {
     getAllPrefs: '/admin/get-all-prefs',
     setPrefs: '/admin/set-prefs',
     archiveFiles: '/admin/archive-files',
-    setMaintenanceMode: 'admin/set-maintenance-mode',
+    setMaintenanceMode: '/admin/set-maintenance-mode',
     // WebSocket
     serverStatus: 'server-status',
   },
