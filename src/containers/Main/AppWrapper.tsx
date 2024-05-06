@@ -12,7 +12,7 @@ import { Loading } from '../../components'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { trackerTestMode } from './Tracker'
 import { ViewportStateProvider } from '../../contexts/ViewportState'
-import { ServerStatusListener } from './WebsocketListener'
+import { ServerStatusListener } from './ServerStatusListener'
 
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()

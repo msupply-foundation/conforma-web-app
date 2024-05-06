@@ -14,9 +14,13 @@ export const ServerStatusListener: React.FC = ({ children }) => {
   const {
     userState: { currentUser },
   } = useUserState()
-  const { maintenanceMode, error: prefsError } = usePrefs()
+  const { maintenanceMode } = usePrefs()
   const { lastMessage, readyState } = useWebSocket('ws://localhost:8080/server-status')
   const { showToast } = useToast({ style: 'negative', position: Position.topLeft })
+
+  console.log('User', currentUser)
+  console.log('Mode from prefs', maintenanceMode)
+  console.log('Message', lastMessage?.data)
 
   const goMaintenanceMode = (redirect: string, serverDown = false) => {
     // Admin is allowed to keep using the site in Maintenance mode
