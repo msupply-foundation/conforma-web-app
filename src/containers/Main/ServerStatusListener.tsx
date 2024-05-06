@@ -10,13 +10,14 @@ import { useUserState } from '../../contexts/UserState'
 import { Position, useToast } from '../../contexts/Toast'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import isLoggedIn from '../../utils/helpers/loginCheck'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 export const ServerStatusListener: React.FC = ({ children }) => {
   const {
     userState: { currentUser },
   } = useUserState()
   const { maintenanceMode: prefsMaintenanceMode } = usePrefs()
-  const { lastMessage, readyState } = useWebSocket('ws://localhost:8080/server-status')
+  const { lastMessage, readyState } = useWebSocket(getServerUrl('serverStatus'))
   const { showToast } = useToast({ style: 'negative', position: Position.topLeft })
 
   const goMaintenanceMode = (redirect: string, serverDown = false) => {
@@ -50,14 +51,9 @@ export const ServerStatusListener: React.FC = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log('User', currentUser)
-    console.log('Mode from prefs', prefsMaintenanceMode)
-    console.log('Message', lastMessage?.data)
-    console.log('Logged in', isLoggedIn())
     if (isLoggedIn() && !currentUser) return
 
     if (prefsMaintenanceMode.enabled) {
-      console.log('Admin', currentUser?.isAdmin)
       if (!currentUser?.isAdmin)
         prefsMaintenanceMode.redirect && (window.location.href = prefsMaintenanceMode.redirect)
     }

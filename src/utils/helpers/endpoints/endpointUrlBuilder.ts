@@ -29,6 +29,7 @@ export const serverREST = isProductionBuild ? getProductionUrl(productionPathRES
 export const serverGraphQL = isProductionBuild
   ? getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
+const serverWebSocket = serverREST.replace('http', 'ws').replace('api', '')
 
 const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): string => {
   // "as" here ensures we must have types/cases for ALL keys of
@@ -52,6 +53,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'extendApplication':
     case 'getAllPrefs':
     case 'setPrefs':
+    case 'setMaintenanceMode':
       return serverREST + endpointPath
 
     case 'userPermissions':
@@ -180,6 +182,9 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'archiveFiles':
       const { days } = options as ArchiveEndpoint[1]
       return `${serverREST}${endpointPath}?days=${days}`
+
+    case 'serverStatus':
+      return `${serverWebSocket}${endpointPath}`
 
     default:
       // "never" type ensures we will get a *compile-time* error if we are

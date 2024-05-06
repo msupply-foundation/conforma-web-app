@@ -15,6 +15,8 @@ export type BasicEndpoint = [
     | 'admin'
     | 'getAllPrefs'
     | 'setPrefs'
+    | 'setMaintenanceMode'
+    | 'serverStatus'
 ]
 
 export type LanguageEndpoint = [endpoint: 'language', options: { code: string }]
