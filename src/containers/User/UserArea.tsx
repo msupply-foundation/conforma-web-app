@@ -523,19 +523,26 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
           <Button>
             <Button.Content visible>
               <Dropdown
-                text={
-                  (
-                    <div
-                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: '1.2em' }}
-                    >
-                      <span style={{ fontSize: '150%', marginRight: 5 }}>
-                        {selectedLanguage?.flag}
-                      </span>
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{`${
-                        user?.firstName || ''
-                      } ${user?.lastName || ''}`}</span>
-                    </div>
-                  ) as any
+                trigger={
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      lineHeight: '1.2em',
+                      // @ts-ignore
+                      textWrap: 'nowrap',
+                      maxWidth: 200,
+                    }}
+                  >
+                    <span style={{ fontSize: '150%', marginRight: 5 }}>
+                      {selectedLanguage?.flag}
+                    </span>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{`${
+                      user?.firstName || ''
+                    } ${user?.lastName || ''}`}</span>
+                  </div>
                 }
               >
                 {CommonMenu}
