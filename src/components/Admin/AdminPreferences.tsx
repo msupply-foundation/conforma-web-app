@@ -56,6 +56,7 @@ export const AdminPreferences: React.FC = () => {
 
   const handleSetMaintenanceMode = async () => {
     const value = !maintenanceMode
+
     setMaintenanceMode(value)
     const { success, enabled } = await postRequest({
       url: getServerUrl('setMaintenanceMode'),
@@ -96,8 +97,8 @@ export const AdminPreferences: React.FC = () => {
       <div style={{ marginTop: 40, width: '100%' }}>
         <Header as="h2">Maintenance Mode</Header>
         <Message
-          header="Careful!"
-          content="Enabling maintenance mode will disconnect all active users and re-direct them to a temporary page"
+          header={t('PREFERENCES_MAINTENANCE_WARNING')}
+          content={t('PREFERENCES_MAINTENANCE_WARNING_TEXT')}
           warning
         />
         <Checkbox
@@ -105,7 +106,18 @@ export const AdminPreferences: React.FC = () => {
           label="Enable"
           checked={maintenanceMode}
           toggle
-          onChange={handleSetMaintenanceMode}
+          onChange={() => {
+            if (!maintenanceMode)
+              showWarningModal({
+                type: 'warning',
+                title: t('PREFERENCES_ENABLE_MAINTENANCE_MODE'),
+                message: t('PREFERENCES_ENABLE_MAINTENANCE_TEXT'),
+                confirmText: t('BUTTON_CONFIRM'),
+                awaitAction: false,
+                onConfirm: handleSetMaintenanceMode,
+              })
+            else handleSetMaintenanceMode()
+          }}
         />
       </div>
     </div>

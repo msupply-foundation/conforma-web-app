@@ -371,6 +371,12 @@ export default {
     'Are you sure?  This will overwrite core settings and can break the system if misconfigured',
   PREFERENCES_SAVED: 'Preferences saved',
   PREFERENCES_SAVE_PROBLEM: 'Problem saving preferences!',
+  PREFERENCES_MAINTENANCE_WARNING: 'Caution!',
+  PREFERENCES_MAINTENANCE_WARNING_TEXT:
+    'Enabling maintenance mode will disconnect all active users and re-direct them to a temporary page',
+  PREFERENCES_ENABLE_MAINTENANCE_MODE: 'Enable Maintenance mode?',
+  PREFERENCES_ENABLE_MAINTENANCE_TEXT:
+    'Use with caution — any currently active users will be disconnected',
   REVIEW_OVERVIEW_ACTIVITY: 'Activity',
   REVIEW_OVERVIEW_APPLICANT: 'Applicant',
   REVIEW_OVERVIEW_ORG: 'Organisation',
