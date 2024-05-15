@@ -64,12 +64,8 @@ export const AdminPreferences: React.FC = () => {
     })
     if (success) {
       if (enabled) localStorage.setItem('maintenanceMode', 'ON')
-      // No need for turning on toast as should get notification from websocket
+      // No need for toast here as should get notification from websocket
       // listener
-      else {
-        localStorage.removeItem('maintenanceMode')
-        showToast({ title: `Maintenance mode: OFF`, style: 'success' })
-      }
     } else {
       setMaintenanceMode(!value)
       showToast({ title: `Problem changing Maintenance mode`, style: 'error' })

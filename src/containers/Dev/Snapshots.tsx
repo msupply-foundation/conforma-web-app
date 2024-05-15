@@ -132,12 +132,6 @@ const Snapshots: React.FC = () => {
 
   const useSnapshot = async (name: string) => {
     setIsLoading(true)
-    console.log('Enabling maintenance mode...')
-    await postRequest({
-      url: getServerUrl('setMaintenanceMode'),
-      jsonBody: { enabled: true },
-      headers: { 'Content-Type': 'application/json' },
-    })
     try {
       const resultJson = await postRequest({
         url: getServerUrl('snapshot', { action: 'use', name }),
@@ -145,12 +139,6 @@ const Snapshots: React.FC = () => {
 
       if (resultJson.success) {
         setIsLoading(false)
-        console.log('Disabling maintenance mode...')
-        await postRequest({
-          url: getServerUrl('setMaintenanceMode'),
-          jsonBody: { enabled: false },
-          headers: { 'Content-Type': 'application/json' },
-        })
         location.reload()
         return
       }

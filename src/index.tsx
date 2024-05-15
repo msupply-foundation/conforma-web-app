@@ -85,8 +85,10 @@ const App: React.FC = () => {
 
   if (error) {
     console.error(error)
+    // Redirect to a previously stored "downtime" site
     const redirect = localStorage.getItem('redirectLocation')
     if (redirect) {
+      console.log("Can't load preferences, re-directing to downtime site")
       window.location.href = redirect
       return null
     } else return <p>Can't load preferences. {error?.message}</p>

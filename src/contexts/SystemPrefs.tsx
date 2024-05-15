@@ -76,6 +76,11 @@ export const SystemPrefsProvider = ({ children }: { children: React.ReactNode })
           const cssString = Css.of(preferences.style)
           document.head.appendChild(document.createElement('style')).innerHTML = cssString
         }
+
+        // Save the offline-redirect destination to localStorage so we can
+        // redirect there if the server is down on a later visit
+        if (maintenanceMode?.redirect)
+          localStorage.setItem('redirectLocation', maintenanceMode.redirect)
       })
       .catch((err) => {
         setPrefsState({
