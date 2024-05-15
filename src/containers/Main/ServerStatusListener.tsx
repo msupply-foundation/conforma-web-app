@@ -11,6 +11,7 @@ import { Position, useToast } from '../../contexts/Toast'
 import isLoggedIn from '../../utils/helpers/loginCheck'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { usePrefs } from '../../contexts/SystemPrefs'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 interface RedirectStatus {
   destination: string | null
@@ -23,6 +24,7 @@ interface RedirectStatus {
 // immediately before user even sees the site
 
 export const ServerStatusListener: React.FC = ({ children }) => {
+  const { t } = useLanguageProvider()
   const {
     userState: { currentUser },
   } = useUserState()
@@ -38,8 +40,8 @@ export const ServerStatusListener: React.FC = ({ children }) => {
         setServerDisconnected(false)
         clearAllToasts()
         showToast({
-          title: 'Server re-connected!',
-          text: 'We apologise fo the interruption',
+          title: t('SERVER_RECONNECTED'),
+          text: t('SERVER_RECONNECTED_TEXT'),
           style: 'success',
         })
       }
@@ -57,8 +59,8 @@ export const ServerStatusListener: React.FC = ({ children }) => {
       if (typeof data !== 'object') return
       if (data.maintenanceMode === false) {
         showToast({
-          title: 'Maintenance mode: OFF',
-          text: 'Normal server functionality restored',
+          title: t('SERVER_MAINTENANCE_OFF'),
+          text: t('SERVER_MAINTENANCE_OFF_TEXT'),
           style: 'positive',
         })
         localStorage.removeItem('maintenanceMode')
@@ -92,8 +94,8 @@ export const ServerStatusListener: React.FC = ({ children }) => {
       if (redirectStatus.state === 'delayed')
         window.setTimeout(() => {
           showToast({
-            title: 'Maintenance mode enabled',
-            text: "If you weren't the person who enabled this, you should stop what you're doing and log out until maintenance is complete",
+            title: t('SERVER_MAINTENANCE_ON'),
+            text: t('SERVER_MAINTENANCE_ON_TEXT'),
             timeout: 10_000,
             style: 'warning',
           })
@@ -107,8 +109,8 @@ export const ServerStatusListener: React.FC = ({ children }) => {
     }
 
     showToast({
-      title: 'Server unavailable',
-      text: 'The server is now under maintenance. You will be re-directed to a holding page in 10 seconds',
+      title: t('SERVER_UNAVAILABLE'),
+      text: t('SERVER_UNAVAILABLE_TEXT'),
       timeout: 9_000,
     })
     window.setTimeout(() => {
@@ -120,8 +122,8 @@ export const ServerStatusListener: React.FC = ({ children }) => {
   useEffect(() => {
     if (serverDisconnected) {
       showToast({
-        title: 'Server offline!',
-        text: 'Conforma has lost connection with the server. We will attempt to re-connect, but you will be re-directed to a holding page in 30 seconds if not successful.',
+        title: t('SERVER_OFFLINE'),
+        text: t('SERVER_OFFLINE_TEXT'),
         timeout: 60_000,
         style: 'error',
       })

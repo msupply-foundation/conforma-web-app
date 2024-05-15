@@ -460,6 +460,19 @@ export default {
   REVIEW_NOTES_DELETE_MESSAGE:
     'Clicking "Confirm" will permanently delete your comment, including any associated files. Close this dialog to go back.',
   REVIEW_HISTORY_NO_RESPONSE: 'No response',
+  SERVER_RECONNECTED: 'Server re-connected',
+  SERVER_RECONNECTED_TEXT: 'We apologise for the interruption',
+  SERVER_MAINTENANCE_ON: 'Maintenance mode enabled',
+  SERVER_MAINTENANCE_ON_TEXT:
+    "If you weren't the person who enabled this, you should stop what you're doing and log out until maintenance is complete",
+  SERVER_MAINTENANCE_OFF: 'Maintenance mode: OFF',
+  SERVER_MAINTENANCE_OFF_TEXT: 'Normal server functionality restored',
+  SERVER_UNAVAILABLE: 'Server unavailable',
+  SERVER_UNAVAILABLE_TEXT:
+    'The server is undergoing maintenance. You will be re-directed to a holding page in 10 seconds',
+  SERVER_OFFLINE: 'Server offline!',
+  SERVER_OFFLINE_TEXT:
+    'Server connection has been unexpectedly interrupted. We will attempt to re-connect, but you will be re-directed to a holding page in 30 seconds if not successful.',
   STATUS_SUBMITTED: 'Submitted',
   STATUS_DRAFT: 'Draft',
   STATUS_CHANGES_REQUIRED: 'Changes required',
