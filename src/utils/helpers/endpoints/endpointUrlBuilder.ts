@@ -29,7 +29,10 @@ export const serverREST = isProductionBuild ? getProductionUrl(productionPathRES
 export const serverGraphQL = isProductionBuild
   ? getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
-const serverWebSocket = serverREST.replace('http', 'ws').replace('api', '')
+const serverWebSocket = serverREST
+  .replace('http', 'ws')
+  .replace('api', '')
+  .replace('server', 'websocket')
 
 const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): string => {
   // "as" here ensures we must have types/cases for ALL keys of
