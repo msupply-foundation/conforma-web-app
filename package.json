@@ -1,6 +1,6 @@
 {
   "name": "conforma-web-app",
-  "version": "0.7.9-32",
+  "version": "0.7.9-34",
   "main": "index.tsx",
   "license": "MIT",
   "repository": {
@@ -29,7 +29,7 @@
     "dotenv": "^16.0.1",
     "graphql": "^15.3.0",
     "idle-tracker": "^0.1.3",
-    "json-edit-react": "^1.10.2",
+    "json-edit-react": "^1.11.0",
     "json-to-css": "^0.1.0",
     "lodash": "^4.17.21",
     "luxon": "^1.27.0",

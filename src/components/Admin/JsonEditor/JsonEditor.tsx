@@ -6,7 +6,6 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import Loading from '../../Loading'
 import useUndo from 'use-undo'
 import { truncateString } from '../../../utils/helpers/utilityFunctions'
-import './styles.css'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   onSave: (data: object) => void
@@ -89,7 +88,6 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         }}
         enableClipboard={handleCopy}
         theme={{
-          input: { fontFamily: 'monospace' },
           container: {
             backgroundColor: '#f9f9f9',
             paddingTop: '1em',
