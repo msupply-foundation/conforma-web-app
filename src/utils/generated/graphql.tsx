@@ -293,30 +293,17 @@ export type Query = Node & {
   applicationListFilterOrganisation?: Maybe<ApplicationListFilterOrganisationConnection>;
   applicationListFilterReviewer?: Maybe<ApplicationListFilterReviewerConnection>;
   applicationListFilterStage?: Maybe<ApplicationListFilterStageConnection>;
-  applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   assignableQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignedQuestions?: Maybe<AssignedQuestionsConnection>;
   assignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignerList?: Maybe<AssignerListConnection>;
   assignmentList?: Maybe<AssignmentListConnection>;
-  getTemplateCode?: Maybe<Scalars['String']>;
-  getTemplateVersion?: Maybe<Scalars['String']>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
   jwtGetText?: Maybe<Scalars['String']>;
-  reviewApplicationId?: Maybe<Scalars['Int']>;
   /** Reads and enables pagination through a set of `ReviewAssignmentAssignedSectionsShape`. */
   reviewAssignmentAssignedSections?: Maybe<ReviewAssignmentAssignedSectionsShapesConnection>;
-  reviewAssignmentTemplateId?: Maybe<Scalars['Int']>;
-  reviewIsFinalDecision?: Maybe<Scalars['Boolean']>;
-  reviewIsLastLevel?: Maybe<Scalars['Boolean']>;
-  reviewIsLastStage?: Maybe<Scalars['Boolean']>;
-  reviewLevel?: Maybe<Scalars['Int']>;
   reviewList?: Maybe<ReviewListConnection>;
-  reviewResponseStageNumber?: Maybe<Scalars['Int']>;
-  reviewReviewerId?: Maybe<Scalars['Int']>;
-  reviewStage?: Maybe<Scalars['Int']>;
-  reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
   reviewableQuestions?: Maybe<ReviewableQuestionsConnection>;
   reviewableQuestionsCount?: Maybe<Scalars['BigInt']>;
   submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']>;
@@ -2148,12 +2135,6 @@ export type QueryApplicationListFilterStageArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryApplicationStatusHistoryApplicationIdArgs = {
-  applicationStageHistoryId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryAssignableQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
 };
@@ -2207,18 +2188,6 @@ export type QueryAssignmentListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryGetTemplateCodeArgs = {
-  sectionId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryGetTemplateVersionArgs = {
-  sectionId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryJwtGetBigintArgs = {
   jwtKey?: Maybe<Scalars['String']>;
 };
@@ -2237,12 +2206,6 @@ export type QueryJwtGetTextArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewApplicationIdArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryReviewAssignmentAssignedSectionsArgs = {
   userid?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -2251,36 +2214,6 @@ export type QueryReviewAssignmentAssignedSectionsArgs = {
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
   filter?: Maybe<ReviewAssignmentAssignedSectionsShapeFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewAssignmentTemplateIdArgs = {
-  applicationId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewIsFinalDecisionArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewIsLastLevelArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewIsLastStageArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewLevelArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -2295,30 +2228,6 @@ export type QueryReviewListArgs = {
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
   filter?: Maybe<ReviewListRecordFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewResponseStageNumberArgs = {
-  reviewId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewReviewerIdArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewStageArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewTimeStageCreatedArgs = {
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -3619,8 +3528,6 @@ export type ReviewAssignmentFilter = {
   status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateId` field. */
-  templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `allowedSections` field. */
   allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `assignedSections` field. */
@@ -3641,6 +3548,8 @@ export type ReviewAssignmentFilter = {
   isFinalDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isSelfAssignable` field. */
   isSelfAssignable?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `availableSections` field. */
   availableSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `review` relation. */
@@ -3665,14 +3574,12 @@ export type ReviewAssignmentFilter = {
   stage?: Maybe<TemplateStageFilter>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** Filter by the object’s `template` relation. */
-  template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `level` relation. */
   level?: Maybe<TemplateStageReviewLevelFilter>;
   /** A related `level` exists. */
   levelExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewAssignmentFilter>>;
   /** Checks for any expressions in this list. */
@@ -4954,6 +4861,8 @@ export type DataChangelogFilter = {
   username?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `comment` field. */
+  comment?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -7124,8 +7033,6 @@ export enum ReviewAssignmentsOrderBy {
   StatusDesc = 'STATUS_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  TemplateIdAsc = 'TEMPLATE_ID_ASC',
-  TemplateIdDesc = 'TEMPLATE_ID_DESC',
   AllowedSectionsAsc = 'ALLOWED_SECTIONS_ASC',
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   AssignedSectionsAsc = 'ASSIGNED_SECTIONS_ASC',
@@ -7146,6 +7053,8 @@ export enum ReviewAssignmentsOrderBy {
   IsFinalDecisionDesc = 'IS_FINAL_DECISION_DESC',
   IsSelfAssignableAsc = 'IS_SELF_ASSIGNABLE_ASC',
   IsSelfAssignableDesc = 'IS_SELF_ASSIGNABLE_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -7170,8 +7079,6 @@ export type ReviewAssignmentCondition = {
   status?: Maybe<ReviewAssignmentStatus>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateId` field. */
-  templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `allowedSections` field. */
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `assignedSections` field. */
@@ -7192,6 +7099,8 @@ export type ReviewAssignmentCondition = {
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `isSelfAssignable` field. */
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
 };
 
 /** A connection to a list of `ReviewAssignment` values. */
@@ -7220,7 +7129,6 @@ export type ReviewAssignment = Node & {
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections: Array<Maybe<Scalars['String']>>;
   trigger?: Maybe<Trigger>;
@@ -7231,6 +7139,7 @@ export type ReviewAssignment = Node & {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId: Scalars['Int'];
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
   assigner?: Maybe<User>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
@@ -7241,10 +7150,10 @@ export type ReviewAssignment = Node & {
   stage?: Maybe<TemplateStage>;
   /** Reads a single `Application` that is related to this `ReviewAssignment`. */
   application?: Maybe<Application>;
-  /** Reads a single `Template` that is related to this `ReviewAssignment`. */
-  template?: Maybe<Template>;
   /** Reads a single `TemplateStageReviewLevel` that is related to this `ReviewAssignment`. */
   level?: Maybe<TemplateStageReviewLevel>;
+  /** Reads a single `Template` that is related to this `ReviewAssignment`. */
+  template?: Maybe<Template>;
   /** Reads a single `Review` that is related to this `ReviewAssignment`. */
   review?: Maybe<Review>;
   /**
@@ -8104,8 +8013,8 @@ export type TemplateElement = Node & {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability: Reviewability;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -8805,6 +8714,8 @@ export enum DataChangelogsOrderBy {
   UsernameDesc = 'USERNAME_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  CommentAsc = 'COMMENT_ASC',
+  CommentDesc = 'COMMENT_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -8833,6 +8744,8 @@ export type DataChangelogCondition = {
   username?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `comment` field. */
+  comment?: Maybe<Scalars['String']>;
 };
 
 /** A connection to a list of `DataChangelog` values. */
@@ -8863,6 +8776,7 @@ export type DataChangelog = Node & {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `DataChangelog`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `DataChangelog`. */
@@ -9715,7 +9629,7 @@ export type ApplicationStatusHistory = Node & {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   /** Reads a single `ApplicationStageHistory` that is related to this `ApplicationStatusHistory`. */
   applicationStageHistory?: Maybe<ApplicationStageHistory>;
 };
@@ -19572,7 +19486,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -19583,13 +19496,14 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -19696,7 +19610,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -19707,13 +19620,14 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -19820,7 +19734,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -19831,13 +19744,14 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -19948,7 +19862,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -19959,13 +19872,14 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -20149,8 +20063,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateI
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -20351,7 +20265,6 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -20362,13 +20275,171 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
+  reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `templateStageReviewLevel` in the `ReviewAssignmentInput` mutation. */
+export type ReviewAssignmentLevelIdFkeyInput = {
+  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
+  connectById?: Maybe<TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect>;
+  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateStageReviewLevelNodeIdConnect>;
+  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete>;
+  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateStageReviewLevelNodeIdDelete>;
+  /** The primary key(s) and patch data for `templateStageReviewLevel` for the far side of the relationship. */
+  updateById?: Maybe<TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingTemplateStageReviewLevelPkeyUpdate>;
+  /** The primary key(s) and patch data for `templateStageReviewLevel` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate>;
+  /** A `TemplateStageReviewLevelInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewAssignmentLevelIdFkeyTemplateStageReviewLevelCreateInput>;
+};
+
+/** The fields on `templateStageReviewLevel` to look up the row to connect. */
+export type TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type TemplateStageReviewLevelNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `templateStageReviewLevel` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `templateStageReviewLevel` to look up the row to delete. */
+export type TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type TemplateStageReviewLevelNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `templateStageReviewLevel` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `templateStageReviewLevel` to look up the row to update. */
+export type TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingTemplateStageReviewLevelPkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateStageReviewLevel` being updated. */
+  patch: UpdateTemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `templateStageReviewLevel` being updated. */
+export type UpdateTemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  number?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  singleReviewerAllSections?: Maybe<Scalars['Boolean']>;
+  templateStageToStageId?: Maybe<TemplateStageReviewLevelStageIdFkeyInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentLevelIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `templateStage` in the `TemplateStageReviewLevelInput` mutation. */
+export type TemplateStageReviewLevelStageIdFkeyInput = {
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  connectById?: Maybe<TemplateStageTemplateStagePkeyConnect>;
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateStageNodeIdConnect>;
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateStageTemplateStagePkeyDelete>;
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateStageNodeIdDelete>;
+  /** The primary key(s) and patch data for `templateStage` for the far side of the relationship. */
+  updateById?: Maybe<TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate>;
+  /** The primary key(s) and patch data for `templateStage` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate>;
+  /** A `TemplateStageInput` object that will be created and connected to this object. */
+  create?: Maybe<TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput>;
+};
+
+/** The fields on `templateStage` to look up the row to update. */
+export type TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateStage` being updated. */
+  patch: UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `templateStage` being updated. */
+export type UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  number?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `reviewAssignment` in the `TemplateStageInput` mutation. */
+export type ReviewAssignmentStageIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewAssignment` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewAssignmentNodeIdConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyDelete>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewAssignmentNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate>>;
+  /** A `ReviewAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput>>;
+};
+
+/** The fields on `reviewAssignment` to look up the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
+  status?: Maybe<ReviewAssignmentStatus>;
+  applicationId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  trigger?: Maybe<Trigger>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
+  levelNumber?: Maybe<Scalars['Int']>;
+  levelId?: Maybe<Scalars['Int']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
+  isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -20735,163 +20806,6 @@ export type UpdateTemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyPatc
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   colour?: Maybe<Scalars['String']>;
-  templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
-  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `reviewAssignment` in the `TemplateStageInput` mutation. */
-export type ReviewAssignmentStageIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewAssignment` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyConnect>>;
-  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewAssignmentNodeIdConnect>>;
-  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyDelete>>;
-  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewAssignmentNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate>>;
-  /** A `ReviewAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput>>;
-};
-
-/** The fields on `reviewAssignment` to look up the row to update. */
-export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
-  patch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `reviewAssignment` being updated. */
-export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  timeStageCreated?: Maybe<Scalars['Datetime']>;
-  status?: Maybe<ReviewAssignmentStatus>;
-  applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  trigger?: Maybe<Trigger>;
-  timeUpdated?: Maybe<Scalars['Datetime']>;
-  levelNumber?: Maybe<Scalars['Int']>;
-  levelId?: Maybe<Scalars['Int']>;
-  isLastLevel?: Maybe<Scalars['Boolean']>;
-  isLastStage?: Maybe<Scalars['Boolean']>;
-  isFinalDecision?: Maybe<Scalars['Boolean']>;
-  isSelfAssignable?: Maybe<Scalars['Boolean']>;
-  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
-  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
-  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
-  templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
-  reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `templateStageReviewLevel` in the `ReviewAssignmentInput` mutation. */
-export type ReviewAssignmentLevelIdFkeyInput = {
-  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
-  connectById?: Maybe<TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect>;
-  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
-  connectByNodeId?: Maybe<TemplateStageReviewLevelNodeIdConnect>;
-  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
-  deleteById?: Maybe<TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete>;
-  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<TemplateStageReviewLevelNodeIdDelete>;
-  /** The primary key(s) and patch data for `templateStageReviewLevel` for the far side of the relationship. */
-  updateById?: Maybe<TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingTemplateStageReviewLevelPkeyUpdate>;
-  /** The primary key(s) and patch data for `templateStageReviewLevel` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate>;
-  /** A `TemplateStageReviewLevelInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewAssignmentLevelIdFkeyTemplateStageReviewLevelCreateInput>;
-};
-
-/** The fields on `templateStageReviewLevel` to look up the row to connect. */
-export type TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type TemplateStageReviewLevelNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `templateStageReviewLevel` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `templateStageReviewLevel` to look up the row to delete. */
-export type TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type TemplateStageReviewLevelNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `templateStageReviewLevel` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `templateStageReviewLevel` to look up the row to update. */
-export type TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingTemplateStageReviewLevelPkeyUpdate = {
-  /** An object where the defined keys will be set on the `templateStageReviewLevel` being updated. */
-  patch: UpdateTemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `templateStageReviewLevel` being updated. */
-export type UpdateTemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  number?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  singleReviewerAllSections?: Maybe<Scalars['Boolean']>;
-  templateStageToStageId?: Maybe<TemplateStageReviewLevelStageIdFkeyInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentLevelIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `templateStage` in the `TemplateStageReviewLevelInput` mutation. */
-export type TemplateStageReviewLevelStageIdFkeyInput = {
-  /** The primary key(s) for `templateStage` for the far side of the relationship. */
-  connectById?: Maybe<TemplateStageTemplateStagePkeyConnect>;
-  /** The primary key(s) for `templateStage` for the far side of the relationship. */
-  connectByNodeId?: Maybe<TemplateStageNodeIdConnect>;
-  /** The primary key(s) for `templateStage` for the far side of the relationship. */
-  deleteById?: Maybe<TemplateStageTemplateStagePkeyDelete>;
-  /** The primary key(s) for `templateStage` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<TemplateStageNodeIdDelete>;
-  /** The primary key(s) and patch data for `templateStage` for the far side of the relationship. */
-  updateById?: Maybe<TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate>;
-  /** The primary key(s) and patch data for `templateStage` for the far side of the relationship. */
-  updateByNodeId?: Maybe<TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate>;
-  /** A `TemplateStageInput` object that will be created and connected to this object. */
-  create?: Maybe<TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput>;
-};
-
-/** The fields on `templateStage` to look up the row to update. */
-export type TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate = {
-  /** An object where the defined keys will be set on the `templateStage` being updated. */
-  patch: UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `templateStage` being updated. */
-export type UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  number?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  colour?: Maybe<Scalars['String']>;
-  templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -22164,7 +22078,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -22174,13 +22087,14 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -22594,6 +22508,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogUserIdFkeyPatch = 
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -22704,6 +22619,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogUsernameFkeyPatch 
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -23033,6 +22949,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   userId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -24020,6 +23937,7 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogApplicationIdFkeyP
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -28705,8 +28623,8 @@ export type ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput = {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -29447,8 +29365,8 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -30529,6 +30447,7 @@ export type DataChangelogPatch = {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -30547,6 +30466,7 @@ export type DataChangelogApplicationIdFkeyDataChangelogCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -31119,6 +31039,7 @@ export type DataChangelogOrgIdFkeyDataChangelogCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -31215,7 +31136,6 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -31226,13 +31146,14 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -31322,7 +31243,6 @@ export type ReviewAssignmentPatch = {
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -31333,13 +31253,14 @@ export type ReviewAssignmentPatch = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -31355,7 +31276,6 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -31366,13 +31286,14 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -31544,6 +31465,7 @@ export type DataChangelogUsernameFkeyDataChangelogCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -31619,6 +31541,7 @@ export type DataChangelogUserIdFkeyDataChangelogCreateInput = {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -31866,7 +31789,6 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -31876,13 +31798,14 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -32107,7 +32030,7 @@ export type ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStat
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -32429,8 +32352,8 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -32801,88 +32724,6 @@ export type ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `templateStage` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `templateStage` being updated. */
-  patch: TemplateStagePatch;
-};
-
-/** The `templateStage` to be created by this mutation. */
-export type TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  number?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  colour?: Maybe<Scalars['String']>;
-  templateId?: Maybe<Scalars['Int']>;
-  templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
-  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `templateStageReviewLevel` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `templateStageReviewLevel` being updated. */
-  patch: TemplateStageReviewLevelPatch;
-};
-
-/** The `templateStageReviewLevel` to be created by this mutation. */
-export type ReviewAssignmentLevelIdFkeyTemplateStageReviewLevelCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  number: Scalars['Int'];
-  name: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  singleReviewerAllSections?: Maybe<Scalars['Boolean']>;
-  templateStageToStageId?: Maybe<TemplateStageReviewLevelStageIdFkeyInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentLevelIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
-  patch: ReviewAssignmentPatch;
-};
-
-/** The `reviewAssignment` to be created by this mutation. */
-export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  timeStageCreated?: Maybe<Scalars['Datetime']>;
-  status: ReviewAssignmentStatus;
-  applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  trigger?: Maybe<Trigger>;
-  timeUpdated?: Maybe<Scalars['Datetime']>;
-  levelNumber?: Maybe<Scalars['Int']>;
-  levelId?: Maybe<Scalars['Int']>;
-  isLastLevel?: Maybe<Scalars['Boolean']>;
-  isLastStage?: Maybe<Scalars['Boolean']>;
-  isFinalDecision?: Maybe<Scalars['Boolean']>;
-  isSelfAssignable?: Maybe<Scalars['Boolean']>;
-  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
-  organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
-  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
-  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
-  templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
-  reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
-  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to update. */
 export type TemplateOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `templateStage` to be connected. */
   nodeId: Scalars['ID'];
@@ -33120,6 +32961,88 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: ReviewAssignmentPatch;
+};
+
+/** The `reviewAssignment` to be created by this mutation. */
+export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  timeStageCreated?: Maybe<Scalars['Datetime']>;
+  status: ReviewAssignmentStatus;
+  applicationId?: Maybe<Scalars['Int']>;
+  allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
+  trigger?: Maybe<Trigger>;
+  timeUpdated?: Maybe<Scalars['Datetime']>;
+  levelNumber?: Maybe<Scalars['Int']>;
+  levelId?: Maybe<Scalars['Int']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
+  isFinalDecision?: Maybe<Scalars['Boolean']>;
+  isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
+  reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateStage` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateStage` being updated. */
+  patch: TemplateStagePatch;
+};
+
+/** The `templateStage` to be created by this mutation. */
+export type TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  number?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  colour?: Maybe<Scalars['String']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateStageReviewLevel` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateStageReviewLevel` being updated. */
+  patch: TemplateStageReviewLevelPatch;
+};
+
+/** The `templateStageReviewLevel` to be created by this mutation. */
+export type ReviewAssignmentLevelIdFkeyTemplateStageReviewLevelCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  number: Scalars['Int'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  singleReviewerAllSections?: Maybe<Scalars['Boolean']>;
+  templateStageToStageId?: Maybe<TemplateStageReviewLevelStageIdFkeyInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentLevelIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
   nodeId: Scalars['ID'];
@@ -33138,7 +33061,6 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -33149,13 +33071,14 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -33289,8 +33212,8 @@ export type ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput = {
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -33385,7 +33308,6 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -33396,13 +33318,14 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -33479,7 +33402,6 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -33490,13 +33412,14 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -33568,7 +33491,6 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -33579,13 +33501,14 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -33657,7 +33580,6 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -33668,13 +33590,14 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -34550,7 +34473,7 @@ export type ApplicationStatusHistoryInput = {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -34630,6 +34553,7 @@ export type DataChangelogInput = {
   orgId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<DataChangelogUserIdFkeyInput>;
   organisationToOrgId?: Maybe<DataChangelogOrgIdFkeyInput>;
   userToUsername?: Maybe<DataChangelogUsernameFkeyInput>;
@@ -36131,7 +36055,6 @@ export type ReviewAssignmentInput = {
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
   applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -36142,13 +36065,14 @@ export type ReviewAssignmentInput = {
   isLastStage?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   isSelfAssignable?: Maybe<Scalars['Boolean']>;
+  templateId?: Maybe<Scalars['Int']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   organisationToOrganisationId?: Maybe<ReviewAssignmentOrganisationIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   templateStageReviewLevelToLevelId?: Maybe<ReviewAssignmentLevelIdFkeyInput>;
+  templateToTemplateId?: Maybe<ReviewAssignmentTemplateIdFkeyInput>;
   reviewUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
 };
@@ -36172,10 +36096,10 @@ export type CreateReviewAssignmentPayload = {
   stage?: Maybe<TemplateStage>;
   /** Reads a single `Application` that is related to this `ReviewAssignment`. */
   application?: Maybe<Application>;
-  /** Reads a single `Template` that is related to this `ReviewAssignment`. */
-  template?: Maybe<Template>;
   /** Reads a single `TemplateStageReviewLevel` that is related to this `ReviewAssignment`. */
   level?: Maybe<TemplateStageReviewLevel>;
+  /** Reads a single `Template` that is related to this `ReviewAssignment`. */
+  template?: Maybe<Template>;
   /** An edge for our `ReviewAssignment`. May be used by Relay 1. */
   reviewAssignmentEdge?: Maybe<ReviewAssignmentsEdge>;
 };
@@ -36610,8 +36534,8 @@ export type TemplateElementInput = {
   helpText?: Maybe<Scalars['String']>;
   parameters?: Maybe<Scalars['JSON']>;
   reviewability?: Maybe<Reviewability>;
-  templateCode?: Maybe<Scalars['String']>;
-  templateVersion?: Maybe<Scalars['String']>;
+  templateCode: Scalars['String'];
+  templateVersion: Scalars['String'];
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseTemplateElementIdFkeyInverseInput>;
@@ -39396,10 +39320,10 @@ export type UpdateReviewAssignmentPayload = {
   stage?: Maybe<TemplateStage>;
   /** Reads a single `Application` that is related to this `ReviewAssignment`. */
   application?: Maybe<Application>;
-  /** Reads a single `Template` that is related to this `ReviewAssignment`. */
-  template?: Maybe<Template>;
   /** Reads a single `TemplateStageReviewLevel` that is related to this `ReviewAssignment`. */
   level?: Maybe<TemplateStageReviewLevel>;
+  /** Reads a single `Template` that is related to this `ReviewAssignment`. */
+  template?: Maybe<Template>;
   /** An edge for our `ReviewAssignment`. May be used by Relay 1. */
   reviewAssignmentEdge?: Maybe<ReviewAssignmentsEdge>;
 };
@@ -42170,10 +42094,10 @@ export type DeleteReviewAssignmentPayload = {
   stage?: Maybe<TemplateStage>;
   /** Reads a single `Application` that is related to this `ReviewAssignment`. */
   application?: Maybe<Application>;
-  /** Reads a single `Template` that is related to this `ReviewAssignment`. */
-  template?: Maybe<Template>;
   /** Reads a single `TemplateStageReviewLevel` that is related to this `ReviewAssignment`. */
   level?: Maybe<TemplateStageReviewLevel>;
+  /** Reads a single `Template` that is related to this `ReviewAssignment`. */
+  template?: Maybe<Template>;
   /** An edge for our `ReviewAssignment`. May be used by Relay 1. */
   reviewAssignmentEdge?: Maybe<ReviewAssignmentsEdge>;
 };
