@@ -21,8 +21,7 @@ const useListApplications = (
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
   // Manually keep track of loading state, due to interval between loading application
   // and loading counts that causes flicker
-  const [isLoadingCount, setIsLoadingCount] = useState(true)
-  const [templateType, setTemplateType] = useState<TemplateType>()
+  // const [isLoadingCount, setIsLoadingCount] = useState(true)
   const [error, setError] = useState('')
   const { updateQuery } = useRouter()
   const {
@@ -60,14 +59,14 @@ const useListApplications = (
     fetchPolicy: 'network-only',
   })
 
-  const [getListCount, { data: countData }] = useGetFilteredApplicationCountLazyQuery({
-    fetchPolicy: 'network-only',
-    onCompleted: () => setIsLoadingCount(false),
-  })
+  // const [getListCount, { data: countData }] = useGetFilteredApplicationCountLazyQuery({
+  //   fetchPolicy: 'network-only',
+  //   onCompleted: () => setIsLoadingCount(false),
+  // })
 
   useEffect(() => {
     if (loading) {
-      setIsLoadingCount(true)
+      // setIsLoadingCount(true)
       setApplications([])
       return
     }
@@ -75,11 +74,6 @@ const useListApplications = (
     if (applicationsError) {
       setError(applicationsError.message)
       return
-    }
-
-    if (data?.templates?.nodes && data?.templates?.nodes.length > 0) {
-      const { code, name, namePlural } = data?.templates?.nodes?.[0] as TemplateType
-      setTemplateType({ code, name, namePlural })
     }
 
     if (data?.applicationList) {
@@ -91,13 +85,16 @@ const useListApplications = (
       // And small compromise for the simplicity
       if (applicationsList.length === 0 && pageNumber !== 1) {
         updateQuery({ page: 1 })
-      } else {
-        getListCount({
-          variables: { filter: filters, userId: currentUser?.userId as number },
-        })
       }
+      //  else {
+      //   getListCount({
+      //     variables: { filter: filters, userId: currentUser?.userId as number },
+      //   })
+      // }
     }
   }, [applicationsError, loading])
+
+  const templateType = data?.templates?.nodes?.[0]
 
   return {
     error,
@@ -105,7 +102,7 @@ const useListApplications = (
     refetch,
     templateType,
     applications,
-    applicationCount: !isLoadingCount ? countData?.applicationList?.totalCount ?? null : null,
+    applicationCount: data?.applicationList?.totalCount ?? null,
   }
 }
 

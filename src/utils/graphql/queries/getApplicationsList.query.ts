@@ -35,6 +35,7 @@ export default gql`
         assigners
         reviewers
       }
+      totalCount
     }
     templates(condition: { status: AVAILABLE, code: $templateCode }) {
       nodes {
