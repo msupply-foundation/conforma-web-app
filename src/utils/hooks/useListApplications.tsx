@@ -7,9 +7,8 @@ import {
   useGetApplicationListQuery,
   ApplicationListShape,
   ApplicationListShapesOrderBy,
-  useGetFilteredApplicationCountLazyQuery,
 } from '../../utils/generated/graphql'
-import { BasicStringObject, TemplateType } from '../types'
+import { BasicStringObject } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useGetFilterDefinitions } from '../helpers/list/useGetFilterDefinitions'
 
@@ -19,9 +18,6 @@ const useListApplications = (
 ) => {
   const FILTER_DEFINITIONS = useGetFilterDefinitions()
   const [applications, setApplications] = useState<ApplicationListShape[]>([])
-  // Manually keep track of loading state, due to interval between loading application
-  // and loading counts that causes flicker
-  // const [isLoadingCount, setIsLoadingCount] = useState(true)
   const [error, setError] = useState('')
   const { updateQuery } = useRouter()
   const {
@@ -59,11 +55,6 @@ const useListApplications = (
     fetchPolicy: 'network-only',
   })
 
-  // const [getListCount, { data: countData }] = useGetFilteredApplicationCountLazyQuery({
-  //   fetchPolicy: 'network-only',
-  //   onCompleted: () => setIsLoadingCount(false),
-  // })
-
   useEffect(() => {
     if (loading) {
       // setIsLoadingCount(true)
@@ -86,11 +77,6 @@ const useListApplications = (
       if (applicationsList.length === 0 && pageNumber !== 1) {
         updateQuery({ page: 1 })
       }
-      //  else {
-      //   getListCount({
-      //     variables: { filter: filters, userId: currentUser?.userId as number },
-      //   })
-      // }
     }
   }, [applicationsError, loading])
 
