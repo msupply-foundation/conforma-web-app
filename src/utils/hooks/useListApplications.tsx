@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react'
 import { useRouter } from '../hooks/useRouter'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import buildFilter from '../helpers/list/buildQueryFilters'
 import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQueryVariables'
 import {
   useGetApplicationListQuery,
-  ApplicationListShape,
   ApplicationListShapesOrderBy,
 } from '../../utils/generated/graphql'
 import { BasicStringObject } from '../types'
@@ -17,8 +15,6 @@ const useListApplications = (
   graphQLFilterObject?: object
 ) => {
   const FILTER_DEFINITIONS = useGetFilterDefinitions()
-  const [applications, setApplications] = useState<ApplicationListShape[]>([])
-  const [error, setError] = useState('')
   const { updateQuery } = useRouter()
   const {
     userState: { currentUser },
@@ -38,12 +34,8 @@ const useListApplications = (
     pageNumber,
     perPage ? Number(perPage) : preferences?.paginationDefault ?? 20
   )
-  const {
-    data,
-    loading,
-    refetch,
-    error: applicationsError,
-  } = useGetApplicationListQuery({
+
+  const { data, loading, refetch, error } = useGetApplicationListQuery({
     variables: {
       filters,
       sortFields,
@@ -52,39 +44,26 @@ const useListApplications = (
       userId: currentUser?.userId as number,
       templateCode: type || '',
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   })
 
-  useEffect(() => {
-    if (loading) {
-      // setIsLoadingCount(true)
-      setApplications([])
-      return
-    }
+  const applications = data?.applicationList?.nodes ?? []
 
-    if (applicationsError) {
-      setError(applicationsError.message)
-      return
-    }
-
-    if (data?.applicationList) {
-      const applicationsList = data?.applicationList?.nodes
-      setApplications(applicationsList as ApplicationListShape[])
-      // If there is no records and we are not on first page, go to first page
-      // This happens when filter is changed while not on first page May cause a
-      // small period where 'no applications' appears, but that should be quick
-      // And small compromise for the simplicity
-      if (applicationsList.length === 0 && pageNumber !== 1) {
-        updateQuery({ page: 1 })
-      }
-    }
-  }, [applicationsError, loading])
+  // If there is no records and we are not on first page, go to first page. This
+  // happens when changing a filter results in a smaller result set than the
+  // current page would reach.
+  if (!loading && applications.length === 0 && pageNumber !== 1) {
+    updateQuery({ page: 1 })
+  }
 
   const templateType = data?.templates?.nodes?.[0]
 
   return {
-    error,
-    loading,
+    error: error?.message ?? '',
+    // "loading" needs the data check, as it displays loading instead of cached
+    // result when doing background network fetch (with "cache-and-network"
+    // policy)
+    loading: loading && !data,
     refetch,
     templateType,
     applications,
