@@ -30,14 +30,14 @@ const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: b
     fetchPolicy: 'cache-and-network',
   })
 
-  const templateData = emptyTemplateData
+  const templatesData = emptyTemplateData
 
   if (data?.templates?.nodes) {
     const filteredTemplates = (data?.templates?.nodes || []).filter(
       (template) => templatePermissions[String(template?.code)]
     ) as Template[]
     if (filteredTemplates.length > 0) {
-      templateData.templates = filteredTemplates
+      templatesData.templates = filteredTemplates
         .map((template) => convertFromTemplateToTemplateDetails(template, templatePermissions))
         .sort((a, b) => {
           if (a.templateCategory === b.templateCategory) {
@@ -51,14 +51,14 @@ const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: b
           return (b.templateCategory.priority ?? 0) - (a.templateCategory.priority ?? 0)
         })
 
-      templateData.templatesByCategory = getTemplatesByCategory(templateData.templates)
+      templatesData.templatesByCategory = getTemplatesByCategory(templatesData.templates)
     }
   }
 
   return {
     error: error?.message ?? '',
     loading: loading && !data,
-    templatesData: templateData,
+    templatesData,
   }
 }
 
