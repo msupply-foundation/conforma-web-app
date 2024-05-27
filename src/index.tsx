@@ -66,7 +66,7 @@ const App: React.FC = () => {
       // Maximum size of cache to persist (in bytes).
       // Defaults to 1048576 (1 MB). For unlimited cache size, provide false.
       // If exceeded, persistence will pause and app will start up cold on next launch.
-      maxSize: false,
+      // maxSize: false,
 
       /**
        * Debugging options.

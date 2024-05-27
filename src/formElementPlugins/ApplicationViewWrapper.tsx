@@ -218,7 +218,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       }
     if (isChangeRequest && !isChanged)
       return { extraClasses: 'changes change-request-unchanged', iconName: 'exclamation circle' }
-    // Updated withouth change request
+    // Updated without change request
     if (isChanged) return { extraClasses: 'changes updated', iconName: 'info circle' }
     return
   }
