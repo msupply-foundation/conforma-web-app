@@ -1808,7 +1808,7 @@ a:hover {
     max-width: 95vw;
     padding: 10px;
     justify-content: space-between;
-    border: 2px solid @surfacesDark;
+    border: 1px solid @surfacesDark;
     border-radius: @borderRadius;
     background-color: @surfacesWhite;
 
