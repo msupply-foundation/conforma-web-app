@@ -1,0 +1,40 @@
+{
+  "name": "@msupply-foundation/expression-evaluator",
+  "version": "1.11.2",
+  "description": "Module to evaluate dynamic expressions for Conforma",
+  "main": "lib/evaluateExpression.js",
+  "types": "lib/evaluateExpression.d.ts",
+  "author": "Sustainable Solutions",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/msupply-foundation/conforma-server.git",
+    "directory": "packages/expression-evaluator"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.10",
+    "@types/node": "^14.6.0",
+    "@types/node-fetch": "^2.5.7",
+    "@types/pg": "^7.14.4",
+    "jest": "^26.4.0",
+    "node-fetch": "^2.6.1",
+    "pg": "^8.4.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.2.0",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  },
+  "scripts": {
+    "build": "rimraf ./lib && tsc",
+    "test": "jest",
+    "gui": "cd expression-evaluate-gui && yarn start"
+  },
+  "dependencies": {},
+  "files": [
+    "lib/**/*"
+  ]
+}

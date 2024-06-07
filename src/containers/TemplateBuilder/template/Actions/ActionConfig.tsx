@@ -1,4 +1,4 @@
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from '../../../../modules/expression-evaluator'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { Icon, Label, Modal, Header } from 'semantic-ui-react'
