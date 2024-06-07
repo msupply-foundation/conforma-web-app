@@ -918,7 +918,6 @@
     scheduler "^0.20.2"
 
 "@msupply-foundation/expression-evaluator@^1.11.2":
-  name "@openmsupply/expression-evaluator"
   version "1.11.2"
   resolved "https://npm.pkg.github.com/download/@msupply-foundation/expression-evaluator/1.11.2/b7cf84ba7747bad205162597ee8b2b01c6f9271a#b7cf84ba7747bad205162597ee8b2b01c6f9271a"
   integrity sha512-S35MSJMXBJ4F103b78HXVYWnEIa25o+xXzFQOEuOGVa13V0W0bpuHD2qyYsYIqXx1j8I1RV+DF1tKzc1VaVWHw==
@@ -5257,10 +5256,10 @@ json-buffer@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.0.tgz#5b1f397afc75d677bde8bcfc0e47e1f9a3d9a898"
 
-json-edit-react@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-1.11.0.tgz#5d077adcedd199038c7a69171f0cc7cae7bf8a48"
-  integrity sha512-FhADxqEXg8ic0iyIH8FMGcpGBm2yoxZNhzKH8uzMTa2UQdzKVxLEAru1Is1lu1X/LQTVpZ42HMCkf030MZ3llg==
+json-edit-react@^1.11.6:
+  version "1.11.6"
+  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-1.11.6.tgz#cdfe4905afc30bc14cbc06f82c5e6c1ec51e5e66"
+  integrity sha512-5TkPJ5RDKxekbXnq4psD8YxuOuDR29j9j6fEyC6IwduTQFp/b6BzMq9p7pSV48m7GAcUzp47Q9ymn2TM/2ub9Q==
   dependencies:
     json5 "^2.2.3"
     just-clone "^6.2.0"
