@@ -40,7 +40,7 @@ import ReviewSubmit from './ReviewSubmit'
 import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
-import useUpdateReviewResponse from '../../utils/hooks/useUpdateReviewResponse'
+import useUpdateReviewResponses from '../../utils/hooks/useUpdateReviewResponses'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetails
@@ -255,7 +255,7 @@ interface ApproveAllButtonProps {
 
 const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({ isConsolidation, page }) => {
   const { t } = useLanguageProvider()
-  const updateReviewResponse = useUpdateReviewResponse()
+  const { updateMultipleReviewResponses } = useUpdateReviewResponses()
 
   const reviewResponses = page.state.map((element) => element.thisReviewLatestResponse)
 
@@ -268,13 +268,19 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({ isConsolidation, pa
   )
 
   const massApprove = () => {
-    responsesToReview.forEach((reviewResponse) => {
-      if (reviewResponse)
-        updateReviewResponse({
-          ...reviewResponse,
-          decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
-        })
-    })
+    updateMultipleReviewResponses(
+      responsesToReview.map((reviewResponse) => ({
+        ...reviewResponse,
+        decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
+      }))
+    )
+    // responsesToReview.forEach((reviewResponse) => {
+    //   if (reviewResponse)
+    //     updateReviewResponse({
+    //       ...reviewResponse,
+    //       decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
+    //     })
+    // })
   }
 
   if (responsesToReview.length === 0) return null
