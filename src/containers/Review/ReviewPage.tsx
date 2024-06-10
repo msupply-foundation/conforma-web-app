@@ -274,13 +274,6 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({ isConsolidation, pa
         decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
       }))
     )
-    // responsesToReview.forEach((reviewResponse) => {
-    //   if (reviewResponse)
-    //     updateReviewResponse({
-    //       ...reviewResponse,
-    //       decision: isConsolidation ? ReviewResponseDecision.Agree : ReviewResponseDecision.Approve,
-    //     })
-    // })
   }
 
   if (responsesToReview.length === 0) return null
