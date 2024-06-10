@@ -14,6 +14,7 @@ import useCreateReview from '../../utils/hooks/useCreateReview'
 import useRestartReview from '../../utils/hooks/useRestartReview'
 import { ReviewStatus } from '../../utils/generated/graphql'
 import useCreateFinalDecisionReview from '../../utils/hooks/useCreateMakeDecisionReview'
+import LoadingSmall from '../LoadingSmall'
 
 const ReviewSectionRowAction: React.FC<ReviewSectionComponentProps> = (props) => {
   const { t } = useLanguageProvider()
@@ -102,6 +103,7 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
     location: { pathname },
     push,
   } = useRouter()
+  const [loading, setLoading] = useState(false)
 
   const [error, setError] = useState(false)
 
@@ -142,6 +144,7 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
   }
 
   const doAction = async () => {
+    setLoading(true)
     const { isMakeDecision } = reviewStructure.assignment as ReviewAssignment
     let reviewId = reviewStructure.thisReview?.id as number
     if (reviewStructure.thisReview?.current.reviewStatus == ReviewStatus.Draft)
@@ -154,9 +157,11 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
     try {
       if (isMakeDecision) {
         reviewId = (await copyPreviousStageReview()).data?.createReview?.review?.id as number
+        setLoading(false)
         push(`${pathname}/${reviewId}?activeSections=none`)
       } else if (reviewStructure.thisReview) await restartReview()
       else reviewId = (await createReview()).data?.createReview?.review?.id as number
+      setLoading(false)
       push(
         `${pathname}/${reviewId}?activeSections=${
           isMakeDecision ? 'none' : reviewAssignment.assignedSections.join(',')
@@ -164,13 +169,16 @@ const GenerateActionButton: React.FC<ReviewSectionComponentProps> = ({
       )
     } catch (e) {
       console.log(e)
+      setLoading(false)
       return setError(true)
     }
   }
 
   if (error) return <Message error title={t('ERROR_GENERIC')} />
 
-  return (
+  return loading ? (
+    <LoadingSmall />
+  ) : (
     <a className="user-action clickable" onClick={doAction}>
       {getButtonName()}
     </a>
