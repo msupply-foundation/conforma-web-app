@@ -21,7 +21,7 @@ import {
   TemplateStage,
   TemplateStageReviewLevel,
   useGetApplicationQuery,
-  User,
+  UserList as User,
 } from '../generated/graphql'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { buildSectionsStructure } from '../helpers/structure'

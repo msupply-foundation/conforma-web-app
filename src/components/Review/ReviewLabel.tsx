@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { Icon, Label } from 'semantic-ui-react'
 import { TranslateMethod } from '../../contexts/Localisation'
-import { User } from '../../utils/generated/graphql'
+import { UserList as User } from '../../utils/generated/graphql'
 interface ReviewLabelProps {
   reviewer?: User
   message?: string

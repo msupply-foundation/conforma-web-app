@@ -13,7 +13,6 @@ export default gql`
           user {
             firstName
             lastName
-            email
             username
           }
         }
