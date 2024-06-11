@@ -6,7 +6,7 @@ import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 const useGetAllTableStructures = (): AllLookupTableStructuresType => {
   const [allTableStructures, setAllTableStructures] = useState<LookUpTableType[]>()
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState()
+  const [error, setError] = useState<string>()
   const [refetch, setRefetch] = useState(true)
 
   useEffect(() => {
@@ -14,19 +14,20 @@ const useGetAllTableStructures = (): AllLookupTableStructuresType => {
     setLoading(true)
     getRequest(getServerUrl('lookupTable', { action: 'list' }))
       .then((result) => {
-        console.log(result)
         setAllTableStructures(result)
         setLoading(false)
       })
       .catch((err) => {
         setError(err.message)
       })
+      .finally(() => {
+        setRefetch(false)
+      })
   }, [refetch])
 
   return {
-    allTableStructuresLoadState: loading,
+    allTableStructuresLoadState: { loading, error },
     allTableStructures,
-    setAllTableStructures,
     refetchAllTableStructures: () => setRefetch(true),
   }
 }
