@@ -35,7 +35,7 @@ const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) 
       <LookUpTableListTable
         allTableStructures={allTableStructures}
         allTableStructuresLoadState={allTableStructuresLoadState}
-        setAllTableStructures={setAllTableStructures}
+        // setAllTableStructures={setAllTableStructures}
       />
       <ImportCsvModal
         open={pathname === `${basePath}/import`}

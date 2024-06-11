@@ -1,32 +1,33 @@
 import { useEffect, useState } from 'react'
 import { AllLookupTableStructuresType, LookUpTableType } from '../types'
-import { useGetAllLookupTableStructuresQuery } from '../../utils/generated/graphql'
+import { getRequest } from '../../utils/helpers/fetchMethods'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const useGetAllTableStructures = (): AllLookupTableStructuresType => {
   const [allTableStructures, setAllTableStructures] = useState<LookUpTableType[]>()
-
-  const allTableStructuresLoadState = useGetAllLookupTableStructuresQuery({
-    fetchPolicy: 'network-only',
-  })
-
-  const { data, loading, error, refetch: refetchAllTableStructures } = allTableStructuresLoadState
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState()
+  const [refetch, setRefetch] = useState(true)
 
   useEffect(() => {
-    if (!loading && !error && data?.dataTables?.nodes) {
-      setAllTableStructures(
-        data.dataTables.nodes.map((lookupTable: any) => ({
-          ...lookupTable,
-          isExpanded: false,
-        }))
-      )
-    }
-  }, [loading, error, data])
+    if (!refetch) return
+    setLoading(true)
+    getRequest(getServerUrl('lookupTable', { action: 'list' }))
+      .then((result) => {
+        console.log(result)
+        setAllTableStructures(result)
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err.message)
+      })
+  }, [refetch])
 
   return {
-    allTableStructuresLoadState,
+    allTableStructuresLoadState: loading,
     allTableStructures,
     setAllTableStructures,
-    refetchAllTableStructures,
+    refetchAllTableStructures: () => setRefetch(true),
   }
 }
 

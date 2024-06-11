@@ -2,10 +2,10 @@ import { TypedDocumentNode, OperationVariables, ApolloQueryResult } from '@apoll
 import { DocumentNode } from 'graphql'
 
 type AllLookupTableStructuresType = {
-  allTableStructuresLoadState: ApolloQueryResult<any>
+  allTableStructuresLoadState: boolean
   allTableStructures?: LookUpTableType[]
   setAllTableStructures: (rows: any) => void
-  refetchAllTableStructures: (variables: any) => Promise<ApolloQueryResult<any>>
+  refetchAllTableStructures: () => void
 }
 
 type FieldMapType = {

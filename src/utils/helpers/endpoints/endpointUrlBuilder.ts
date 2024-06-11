@@ -156,6 +156,9 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'lookupTable': {
       let { action } = options as LookupTableEndpoint[1]
 
+      // List
+      if (action === 'list') return `${serverREST}${endpointPath}/list`
+
       // Import
       if (action === 'import' && 'name' in options)
         return `${serverREST}${endpointPath}/import?name=${options.name}`

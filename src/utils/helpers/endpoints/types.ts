@@ -80,6 +80,9 @@ export type LookupTableEndpoint = [
   endpoint: 'lookupTable',
   options:
     | {
+        action: 'list'
+      }
+    | {
         action: 'import'
         name: string
       }
