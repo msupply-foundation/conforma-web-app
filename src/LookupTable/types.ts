@@ -18,7 +18,6 @@ type LookUpTableType = {
   tableName: string
   fieldMap: Array<FieldMapType>
   dataViewCode: string | null
-  isExpanded?: boolean
 }
 
 type TableStructureType = {
@@ -37,6 +36,7 @@ enum LookUpTableImportCsvActions {
   UploadModalClose = 'CLOSE_MODAL',
   ImportCSV = 'SET_FILE',
   SetTableName = 'SET_TABLE_NAME',
+  SetCode = 'SET_CODE',
   submittable = 'SUBMITTABLE',
   submitting = 'SUBMITTING',
   setErrorMessages = 'SET_ERROR_MESSAGES',
@@ -47,6 +47,7 @@ type LookUpTableImportCsvType = {
   uploadModalOpen: boolean
   file: File | null
   tableName: string
+  dataViewCode: string
   submittable: boolean
   submitting: boolean
   errors: []
@@ -58,6 +59,7 @@ type LookUpTableImportCsvActionType =
   | { type: 'CLOSE_MODAL' }
   | { type: 'SET_FILE'; payload: File }
   | { type: 'SET_TABLE_NAME'; payload: string }
+  | { type: 'SET_CODE'; payload: string }
   | { type: 'SUBMITTABLE'; payload: boolean }
   | { type: 'SUBMITTING'; payload: boolean }
   | { type: 'SET_ERROR_MESSAGES'; payload: [] }

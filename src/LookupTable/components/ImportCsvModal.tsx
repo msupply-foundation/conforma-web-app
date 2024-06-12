@@ -21,20 +21,32 @@ const ImportCsvModal: React.FC<any> = ({
   onClose,
   open = false,
   tableLabel = '',
+  dataViewCode = '',
   tableStructureID = 0,
 }: any) => {
   const { t } = useLanguageProvider()
   const { state, dispatch } = React.useContext(LookUpTableImportCsvContext)
-  const { uploadModalOpen, file, tableName: name, submittable, submitting, errors, success } = state
+  const {
+    uploadModalOpen,
+    file,
+    tableName: name,
+    dataViewCode: code,
+    submittable,
+    submitting,
+    errors,
+    success,
+  } = state
 
   useEffect(() => {
     dispatch({ type: open ? 'OPEN_MODAL' : 'CLOSE_MODAL' })
+    if (open && dataViewCode !== '') dispatch({ type: 'SET_CODE', payload: dataViewCode })
   }, [open])
 
   useEffect(() => {
     dispatch({
       type: 'SUBMITTABLE',
-      payload: uploadModalOpen && file !== null && (tableStructureID ? true : name !== ''),
+      payload:
+        uploadModalOpen && file !== null && (tableStructureID ? true : name !== '' && code !== ''),
     })
   }, [uploadModalOpen, file, name])
 
@@ -47,19 +59,21 @@ const ImportCsvModal: React.FC<any> = ({
   const onImportCSV = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     dispatch({ type: 'SUBMITTING', payload: true })
 
-    let formData: any = new FormData()
+    const formData: any = new FormData()
     formData.append('file', file)
 
-    if (!tableStructureID) formData.append('name', name)
+    // if (!tableStructureID) formData.append('name', name)
 
     const JWT = localStorage.getItem(config.localStorageJWTKey || '')
     const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
 
+    console.log(formData)
+
     await axios
       .post(
         tableStructureID
-          ? getServerUrl('lookupTable', { action: 'update', id: tableStructureID })
-          : getServerUrl('lookupTable', { action: 'import', name }),
+          ? getServerUrl('lookupTable', { action: 'update', id: tableStructureID, code })
+          : getServerUrl('lookupTable', { action: 'import', name, code }),
         formData,
         {
           headers: {
@@ -135,6 +149,14 @@ const ImportCsvModal: React.FC<any> = ({
                 />
               </Form.Field>
             )}
+            <Form.Field>
+              <label>{t('LOOKUP_TABLE_CODE')}</label>
+              <input
+                placeholder={t('LOOKUP_TABLE_DV_CODE')}
+                value={code || ''}
+                onChange={(event) => dispatch({ type: 'SET_CODE', payload: event.target.value })}
+              />
+            </Form.Field>
             <Form.Field>
               <label>{t('LABEL_FILE_UPLOAD_TITLE')}</label>
 

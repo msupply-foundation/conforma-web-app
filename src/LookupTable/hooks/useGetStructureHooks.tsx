@@ -3,7 +3,7 @@ import { AllLookupTableStructuresType, LookUpTableType } from '../types'
 import { getRequest } from '../../utils/helpers/fetchMethods'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
-const useGetAllTableStructures = (): AllLookupTableStructuresType => {
+export const useGetAllTableStructures = (): AllLookupTableStructuresType => {
   const [allTableStructures, setAllTableStructures] = useState<LookUpTableType[]>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
@@ -32,4 +32,31 @@ const useGetAllTableStructures = (): AllLookupTableStructuresType => {
   }
 }
 
-export default useGetAllTableStructures
+export const useGetSingleTableStructure = (id: number) => {
+  const [tableStructure, setTableStructure] = useState<LookUpTableType>()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string>()
+  const [refetch, setRefetch] = useState(true)
+
+  useEffect(() => {
+    if (!refetch) return
+    setLoading(true)
+    getRequest(getServerUrl('lookupTable', { action: 'table', id }))
+      .then((result) => {
+        setTableStructure(result)
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err.message)
+      })
+      .finally(() => {
+        setRefetch(false)
+      })
+  }, [refetch])
+
+  return {
+    tableStructureLoadingState: { loading, error },
+    tableStructure,
+    refetchTableStructure: () => setRefetch(true),
+  }
+}

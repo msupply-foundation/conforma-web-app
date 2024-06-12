@@ -23,7 +23,7 @@ const LookUpMainMenu: React.FC<any> = (props) => {
             content={t('BUTTON_BACK')}
             as={NavLink}
             labelPosition="left"
-            to="/admin/lookup-tables"
+            to="../lookup-tables"
           />
           <Button
             icon="upload"
@@ -31,7 +31,7 @@ const LookUpMainMenu: React.FC<any> = (props) => {
             content={t('LABEL_IMPORT')}
             as={NavLink}
             color="green"
-            to={`/admin/lookup-tables/${tableId}/import`}
+            to={`../lookup-tables/${tableId}/import`}
           />
           <DownloadButton
             content={t('LABEL_EXPORT')}
