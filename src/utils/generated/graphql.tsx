@@ -3355,6 +3355,8 @@ export type Application = Node & {
   applicationNotes: ApplicationNotesConnection;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
   applicationResponses: ApplicationResponsesConnection;
+  /** Reads and enables pagination through a set of `ApplicationReviewerAction`. */
+  applicationReviewerActions: ApplicationReviewerActionsConnection;
   /** Reads and enables pagination through a set of `ApplicationStageHistory`. */
   applicationStageHistories: ApplicationStageHistoriesConnection;
   /** Reads and enables pagination through a set of `DataChangelog`. */
@@ -3385,8 +3387,6 @@ export type Application = Node & {
   userApplicationJoins: UserApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `Verification`. */
   verifications: VerificationsConnection;
-  /** Reads and enables pagination through a set of `ApplicationReviewerAction`. */
-  applicationReviewerActions: ApplicationReviewerActionsConnection;
   stage?: Maybe<Scalars['String']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
@@ -3462,6 +3462,18 @@ export type ApplicationApplicationResponsesArgs = {
   orderBy?: Maybe<Array<ApplicationResponsesOrderBy>>;
   condition?: Maybe<ApplicationResponseCondition>;
   filter?: Maybe<ApplicationResponseFilter>;
+};
+
+
+export type ApplicationApplicationReviewerActionsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ApplicationReviewerActionsOrderBy>>;
+  condition?: Maybe<ApplicationReviewerActionCondition>;
+  filter?: Maybe<ApplicationReviewerActionFilter>;
 };
 
 
@@ -3642,18 +3654,6 @@ export type ApplicationVerificationsArgs = {
   orderBy?: Maybe<Array<VerificationsOrderBy>>;
   condition?: Maybe<VerificationCondition>;
   filter?: Maybe<VerificationFilter>;
-};
-
-
-export type ApplicationApplicationReviewerActionsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ApplicationReviewerActionsOrderBy>>;
-  condition?: Maybe<ApplicationReviewerActionCondition>;
-  filter?: Maybe<ApplicationReviewerActionFilter>;
 };
 
 export enum ApplicationOutcome {
@@ -4260,6 +4260,10 @@ export type ApplicationFilter = {
   applicationResponses?: Maybe<ApplicationToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
   applicationResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationReviewerActions` relation. */
+  applicationReviewerActions?: Maybe<ApplicationToManyApplicationReviewerActionFilter>;
+  /** Some related `applicationReviewerActions` exist. */
+  applicationReviewerActionsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `applicationStageHistories` relation. */
   applicationStageHistories?: Maybe<ApplicationToManyApplicationStageHistoryFilter>;
   /** Some related `applicationStageHistories` exist. */
@@ -4320,10 +4324,6 @@ export type ApplicationFilter = {
   verifications?: Maybe<ApplicationToManyVerificationFilter>;
   /** Some related `verifications` exist. */
   verificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `applicationReviewerActions` relation. */
-  applicationReviewerActions?: Maybe<ApplicationToManyApplicationReviewerActionFilter>;
-  /** Some related `applicationReviewerActions` exist. */
-  applicationReviewerActionsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** Filter by the object’s `org` relation. */
@@ -6519,6 +6519,106 @@ export type ApplicationToManyApplicationResponseFilter = {
   none?: Maybe<ApplicationResponseFilter>;
 };
 
+/** A filter to be used against many `ApplicationReviewerAction` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyApplicationReviewerActionFilter = {
+  /** Every related `ApplicationReviewerAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ApplicationReviewerActionFilter>;
+  /** Some related `ApplicationReviewerAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ApplicationReviewerActionFilter>;
+  /** No related `ApplicationReviewerAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ApplicationReviewerActionFilter>;
+};
+
+/** A filter to be used against `ApplicationReviewerAction` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationReviewerActionFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerAction` field. */
+  reviewerAction?: Maybe<ReviewerActionFilter>;
+  /** Filter by the object’s `assignerAction` field. */
+  assignerAction?: Maybe<AssignerActionFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationReviewerActionFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationReviewerActionFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationReviewerActionFilter>;
+};
+
+/** A filter to be used against ReviewerAction fields. All fields are combined with a logical ‘and.’ */
+export type ReviewerActionFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ReviewerAction>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ReviewerAction>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ReviewerAction>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ReviewerAction>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ReviewerAction>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ReviewerAction>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ReviewerAction>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ReviewerAction>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ReviewerAction>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ReviewerAction>;
+};
+
+export enum ReviewerAction {
+  SelfAssign = 'SELF_ASSIGN',
+  StartReview = 'START_REVIEW',
+  ViewReview = 'VIEW_REVIEW',
+  ContinueReview = 'CONTINUE_REVIEW',
+  MakeDecision = 'MAKE_DECISION',
+  RestartReview = 'RESTART_REVIEW',
+  UpdateReview = 'UPDATE_REVIEW',
+  AwaitingResponse = 'AWAITING_RESPONSE'
+}
+
+/** A filter to be used against AssignerAction fields. All fields are combined with a logical ‘and.’ */
+export type AssignerActionFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<AssignerAction>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<AssignerAction>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<AssignerAction>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<AssignerAction>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<AssignerAction>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<AssignerAction>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<AssignerAction>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<AssignerAction>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<AssignerAction>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<AssignerAction>;
+};
+
+export enum AssignerAction {
+  Assign = 'ASSIGN',
+  ReAssign = 'RE_ASSIGN'
+}
+
 /** A filter to be used against many `ApplicationStageHistory` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationToManyApplicationStageHistoryFilter = {
   /** Every related `ApplicationStageHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -7160,106 +7260,6 @@ export type VerificationFilter = {
   /** Negates the expression. */
   not?: Maybe<VerificationFilter>;
 };
-
-/** A filter to be used against many `ApplicationReviewerAction` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationToManyApplicationReviewerActionFilter = {
-  /** Every related `ApplicationReviewerAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ApplicationReviewerActionFilter>;
-  /** Some related `ApplicationReviewerAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ApplicationReviewerActionFilter>;
-  /** No related `ApplicationReviewerAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ApplicationReviewerActionFilter>;
-};
-
-/** A filter to be used against `ApplicationReviewerAction` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationReviewerActionFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerAction` field. */
-  reviewerAction?: Maybe<ReviewerActionFilter>;
-  /** Filter by the object’s `assignerAction` field. */
-  assignerAction?: Maybe<AssignerActionFilter>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationReviewerActionFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationReviewerActionFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ApplicationReviewerActionFilter>;
-};
-
-/** A filter to be used against ReviewerAction fields. All fields are combined with a logical ‘and.’ */
-export type ReviewerActionFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<ReviewerAction>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ReviewerAction>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ReviewerAction>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ReviewerAction>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<ReviewerAction>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<ReviewerAction>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<ReviewerAction>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ReviewerAction>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<ReviewerAction>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ReviewerAction>;
-};
-
-export enum ReviewerAction {
-  SelfAssign = 'SELF_ASSIGN',
-  StartReview = 'START_REVIEW',
-  ViewReview = 'VIEW_REVIEW',
-  ContinueReview = 'CONTINUE_REVIEW',
-  MakeDecision = 'MAKE_DECISION',
-  RestartReview = 'RESTART_REVIEW',
-  UpdateReview = 'UPDATE_REVIEW',
-  AwaitingResponse = 'AWAITING_RESPONSE'
-}
-
-/** A filter to be used against AssignerAction fields. All fields are combined with a logical ‘and.’ */
-export type AssignerActionFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<AssignerAction>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<AssignerAction>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<AssignerAction>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<AssignerAction>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<AssignerAction>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<AssignerAction>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<AssignerAction>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<AssignerAction>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<AssignerAction>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<AssignerAction>;
-};
-
-export enum AssignerAction {
-  Assign = 'ASSIGN',
-  ReAssign = 'RE_ASSIGN'
-}
 
 /** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
 export type TemplateToManyReviewAssignmentFilter = {
@@ -10641,6 +10641,75 @@ export type ActivityLogCondition = {
   details?: Maybe<Scalars['JSON']>;
 };
 
+/** A connection to a list of `ApplicationReviewerAction` values. */
+export type ApplicationReviewerActionsConnection = {
+  __typename?: 'ApplicationReviewerActionsConnection';
+  /** A list of `ApplicationReviewerAction` objects. */
+  nodes: Array<Maybe<ApplicationReviewerAction>>;
+  /** A list of edges which contains the `ApplicationReviewerAction` and cursor to aid in pagination. */
+  edges: Array<ApplicationReviewerActionsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApplicationReviewerAction` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+export type ApplicationReviewerAction = Node & {
+  __typename?: 'ApplicationReviewerAction';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  userId: Scalars['Int'];
+  applicationId: Scalars['Int'];
+  reviewerAction?: Maybe<ReviewerAction>;
+  assignerAction?: Maybe<AssignerAction>;
+  /** Reads a single `Application` that is related to this `ApplicationReviewerAction`. */
+  application?: Maybe<Application>;
+};
+
+/** A `ApplicationReviewerAction` edge in the connection. */
+export type ApplicationReviewerActionsEdge = {
+  __typename?: 'ApplicationReviewerActionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ApplicationReviewerAction` at the end of the edge. */
+  node?: Maybe<ApplicationReviewerAction>;
+};
+
+/** Methods to use when ordering `ApplicationReviewerAction`. */
+export enum ApplicationReviewerActionsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ReviewerActionAsc = 'REVIEWER_ACTION_ASC',
+  ReviewerActionDesc = 'REVIEWER_ACTION_DESC',
+  AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
+  AssignerActionDesc = 'ASSIGNER_ACTION_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `ApplicationReviewerAction` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type ApplicationReviewerActionCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewerAction` field. */
+  reviewerAction?: Maybe<ReviewerAction>;
+  /** Checks for equality with the object’s `assignerAction` field. */
+  assignerAction?: Maybe<AssignerAction>;
+};
+
 /** A connection to a list of `DataTableManufacturerApplicationJoin` values. */
 export type DataTableManufacturerApplicationJoinsConnection = {
   __typename?: 'DataTableManufacturerApplicationJoinsConnection';
@@ -11421,75 +11490,6 @@ export type VerificationCondition = {
   isVerified?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
-};
-
-/** A connection to a list of `ApplicationReviewerAction` values. */
-export type ApplicationReviewerActionsConnection = {
-  __typename?: 'ApplicationReviewerActionsConnection';
-  /** A list of `ApplicationReviewerAction` objects. */
-  nodes: Array<Maybe<ApplicationReviewerAction>>;
-  /** A list of edges which contains the `ApplicationReviewerAction` and cursor to aid in pagination. */
-  edges: Array<ApplicationReviewerActionsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ApplicationReviewerAction` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-export type ApplicationReviewerAction = Node & {
-  __typename?: 'ApplicationReviewerAction';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  userId: Scalars['Int'];
-  applicationId: Scalars['Int'];
-  reviewerAction?: Maybe<ReviewerAction>;
-  assignerAction?: Maybe<AssignerAction>;
-  /** Reads a single `Application` that is related to this `ApplicationReviewerAction`. */
-  application?: Maybe<Application>;
-};
-
-/** A `ApplicationReviewerAction` edge in the connection. */
-export type ApplicationReviewerActionsEdge = {
-  __typename?: 'ApplicationReviewerActionsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ApplicationReviewerAction` at the end of the edge. */
-  node?: Maybe<ApplicationReviewerAction>;
-};
-
-/** Methods to use when ordering `ApplicationReviewerAction`. */
-export enum ApplicationReviewerActionsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  ReviewerActionAsc = 'REVIEWER_ACTION_ASC',
-  ReviewerActionDesc = 'REVIEWER_ACTION_DESC',
-  AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
-  AssignerActionDesc = 'ASSIGNER_ACTION_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/**
- * A condition to be used against `ApplicationReviewerAction` object types. All
- * fields are tested for equality and combined with a logical ‘and.’
- */
-export type ApplicationReviewerActionCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `userId` field. */
-  userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewerAction` field. */
-  reviewerAction?: Maybe<ReviewerAction>;
-  /** Checks for equality with the object’s `assignerAction` field. */
-  assignerAction?: Maybe<AssignerAction>;
 };
 
 /** A `ActionQueue` edge in the connection. */
@@ -15001,6 +15001,7 @@ export type DataView = Node & {
   identifier: Scalars['String'];
   submenu?: Maybe<Scalars['String']>;
   enabled: Scalars['Boolean'];
+  menuName?: Maybe<Scalars['String']>;
 };
 
 /** A `DataView` edge in the connection. */
@@ -15057,6 +15058,8 @@ export enum DataViewsOrderBy {
   SubmenuDesc = 'SUBMENU_DESC',
   EnabledAsc = 'ENABLED_ASC',
   EnabledDesc = 'ENABLED_DESC',
+  MenuNameAsc = 'MENU_NAME_ASC',
+  MenuNameDesc = 'MENU_NAME_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -15108,6 +15111,8 @@ export type DataViewCondition = {
   submenu?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `enabled` field. */
   enabled?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `menuName` field. */
+  menuName?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `DataView` object types. All fields are combined with a logical ‘and.’ */
@@ -15154,6 +15159,8 @@ export type DataViewFilter = {
   submenu?: Maybe<StringFilter>;
   /** Filter by the object’s `enabled` field. */
   enabled?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `menuName` field. */
+  menuName?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<DataViewFilter>>;
   /** Checks for any expressions in this list. */
@@ -20983,6 +20990,7 @@ export type UpdateApplicationOnTriggerQueueForTriggerQueueApplicationIdFkeyPatch
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -20998,7 +21006,6 @@ export type UpdateApplicationOnTriggerQueueForTriggerQueueApplicationIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `template` in the `ApplicationInput` mutation. */
@@ -21304,6 +21311,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -21319,7 +21327,6 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationInput` mutation. */
@@ -21499,6 +21506,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -21514,7 +21522,6 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `userList` in the `ApplicationInput` mutation. */
@@ -21602,6 +21609,7 @@ export type UpdateApplicationOnApplicationForFakePublicApplicationForeignKey0Pat
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -21617,7 +21625,6 @@ export type UpdateApplicationOnApplicationForFakePublicApplicationForeignKey0Pat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `reviewAssignment` in the `ApplicationInput` mutation. */
@@ -22079,6 +22086,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -22094,7 +22102,6 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `review` in the `ApplicationInput` mutation. */
@@ -22888,6 +22895,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -22903,7 +22911,6 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `actionQueue` in the `ApplicationInput` mutation. */
@@ -23016,6 +23023,7 @@ export type UpdateApplicationOnActionQueueForActionQueueApplicationIdFkeyPatch =
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -23031,7 +23039,6 @@ export type UpdateApplicationOnActionQueueForActionQueueApplicationIdFkeyPatch =
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `activityLog` in the `ApplicationInput` mutation. */
@@ -23157,6 +23164,7 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -23172,7 +23180,6 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationNote` in the `ApplicationInput` mutation. */
@@ -23299,6 +23306,7 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -23314,7 +23322,6 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationResponse` in the `ApplicationInput` mutation. */
@@ -24663,6 +24670,7 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -24678,7 +24686,162 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `applicationReviewerAction` in the `ApplicationInput` mutation. */
+export type ApplicationReviewerActionApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `applicationReviewerAction` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
+  connectById?: Maybe<Array<ApplicationReviewerActionApplicationReviewerActionPkeyConnect>>;
+  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
+  connectByUserIdAndApplicationId?: Maybe<Array<ApplicationReviewerActionApplicationReviewerActionUserIdApplicationIdKeyConnect>>;
+  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ApplicationReviewerActionNodeIdConnect>>;
+  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ApplicationReviewerActionApplicationReviewerActionPkeyDelete>>;
+  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
+  deleteByUserIdAndApplicationId?: Maybe<Array<ApplicationReviewerActionApplicationReviewerActionUserIdApplicationIdKeyDelete>>;
+  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ApplicationReviewerActionNodeIdDelete>>;
+  /** The primary key(s) and patch data for `applicationReviewerAction` for the far side of the relationship. */
+  updateById?: Maybe<Array<ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationReviewerActionPkeyUpdate>>;
+  /** The primary key(s) and patch data for `applicationReviewerAction` for the far side of the relationship. */
+  updateByUserIdAndApplicationId?: Maybe<Array<ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationReviewerActionUserIdApplicationIdKeyUpdate>>;
+  /** The primary key(s) and patch data for `applicationReviewerAction` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyNodeIdUpdate>>;
+  /** A `ApplicationReviewerActionInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ApplicationReviewerActionApplicationIdFkeyApplicationReviewerActionCreateInput>>;
+};
+
+/** The fields on `applicationReviewerAction` to look up the row to connect. */
+export type ApplicationReviewerActionApplicationReviewerActionPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `applicationReviewerAction` to look up the row to connect. */
+export type ApplicationReviewerActionApplicationReviewerActionUserIdApplicationIdKeyConnect = {
+  userId: Scalars['Int'];
+  applicationId: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ApplicationReviewerActionNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `applicationReviewerAction` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `applicationReviewerAction` to look up the row to delete. */
+export type ApplicationReviewerActionApplicationReviewerActionPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `applicationReviewerAction` to look up the row to delete. */
+export type ApplicationReviewerActionApplicationReviewerActionUserIdApplicationIdKeyDelete = {
+  userId: Scalars['Int'];
+  applicationId: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ApplicationReviewerActionNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `applicationReviewerAction` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `applicationReviewerAction` to look up the row to update. */
+export type ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationReviewerActionPkeyUpdate = {
+  /** An object where the defined keys will be set on the `applicationReviewerAction` being updated. */
+  patch: UpdateApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `applicationReviewerAction` being updated. */
+export type UpdateApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  reviewerAction?: Maybe<ReviewerAction>;
+  assignerAction?: Maybe<AssignerAction>;
+  applicationToApplicationId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `application` in the `ApplicationReviewerActionInput` mutation. */
+export type ApplicationReviewerActionApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByOutcomeRegistration?: Maybe<ApplicationApplicationOutcomeRegistrationKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByOutcomeRegistration?: Maybe<ApplicationApplicationOutcomeRegistrationKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByOutcomeRegistration?: Maybe<ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<ApplicationReviewerActionApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  outcomeRegistration?: Maybe<Scalars['String']>;
+  reviewerList?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignerList?: Maybe<Array<Maybe<Scalars['String']>>>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  userListToUserId?: Maybe<FakePublicApplicationForeignKey0Input>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: Maybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: Maybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePrequalManufacturerApplicationJoinsUsingId?: Maybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationStageHistory` in the `ApplicationInput` mutation. */
@@ -25455,6 +25618,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -25470,7 +25634,6 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataChangelog` in the `ApplicationInput` mutation. */
@@ -25579,6 +25742,7 @@ export type UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPat
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -25594,7 +25758,6 @@ export type UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableManufacturerApplicationJoin` in the `ApplicationInput` mutation. */
@@ -25716,6 +25879,7 @@ export type UpdateApplicationOnDataTableManufacturerApplicationJoinForDataTableM
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -25731,7 +25895,6 @@ export type UpdateApplicationOnDataTableManufacturerApplicationJoinForDataTableM
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableManufacturerRepresentativeApplicationJoin` in the `ApplicationInput` mutation. */
@@ -25853,6 +26016,7 @@ export type UpdateApplicationOnDataTableManufacturerRepresentativeApplicationJoi
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -25868,7 +26032,6 @@ export type UpdateApplicationOnDataTableManufacturerRepresentativeApplicationJoi
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTablePermitChemicalApplicationJoin` in the `ApplicationInput` mutation. */
@@ -25990,6 +26153,7 @@ export type UpdateApplicationOnDataTablePermitChemicalApplicationJoinForDataTabl
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -26005,7 +26169,6 @@ export type UpdateApplicationOnDataTablePermitChemicalApplicationJoinForDataTabl
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTablePrequalManufacturerApplicationJoin` in the `ApplicationInput` mutation. */
@@ -26127,6 +26290,7 @@ export type UpdateApplicationOnDataTablePrequalManufacturerApplicationJoinForDat
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -26142,7 +26306,6 @@ export type UpdateApplicationOnDataTablePrequalManufacturerApplicationJoinForDat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableProductApplicationJoin` in the `ApplicationInput` mutation. */
@@ -26263,6 +26426,7 @@ export type UpdateApplicationOnDataTableProductApplicationJoinForDataTableProduc
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -26278,7 +26442,6 @@ export type UpdateApplicationOnDataTableProductApplicationJoinForDataTableProduc
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableProvisionalProductApplicationJoin` in the `ApplicationInput` mutation. */
@@ -26400,6 +26563,7 @@ export type UpdateApplicationOnDataTableProvisionalProductApplicationJoinForData
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -26415,7 +26579,6 @@ export type UpdateApplicationOnDataTableProvisionalProductApplicationJoinForData
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `file` in the `ApplicationInput` mutation. */
@@ -26540,6 +26703,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -26555,7 +26719,6 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `notification` in the `ApplicationInput` mutation. */
@@ -26686,6 +26849,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -26701,7 +26865,6 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisationApplicationJoin` in the `ApplicationInput` mutation. */
@@ -26987,6 +27150,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -27002,7 +27166,6 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `triggerQueue` in the `ApplicationInput` mutation. */
@@ -27310,6 +27473,7 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -27325,7 +27489,6 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `userApplicationJoin` in the `ApplicationInput` mutation. */
@@ -27446,6 +27609,7 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -27461,7 +27625,6 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `verification` in the `ApplicationInput` mutation. */
@@ -27605,6 +27768,7 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -27620,181 +27784,24 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `applicationReviewerAction` in the `ApplicationInput` mutation. */
-export type ApplicationReviewerActionApplicationIdFkeyInverseInput = {
-  /** Flag indicating whether all other `applicationReviewerAction` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
-  connectById?: Maybe<Array<ApplicationReviewerActionApplicationReviewerActionPkeyConnect>>;
-  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
-  connectByUserIdAndApplicationId?: Maybe<Array<ApplicationReviewerActionApplicationReviewerActionUserIdApplicationIdKeyConnect>>;
-  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ApplicationReviewerActionNodeIdConnect>>;
-  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ApplicationReviewerActionApplicationReviewerActionPkeyDelete>>;
-  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
-  deleteByUserIdAndApplicationId?: Maybe<Array<ApplicationReviewerActionApplicationReviewerActionUserIdApplicationIdKeyDelete>>;
-  /** The primary key(s) for `applicationReviewerAction` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ApplicationReviewerActionNodeIdDelete>>;
-  /** The primary key(s) and patch data for `applicationReviewerAction` for the far side of the relationship. */
-  updateById?: Maybe<Array<ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationReviewerActionPkeyUpdate>>;
-  /** The primary key(s) and patch data for `applicationReviewerAction` for the far side of the relationship. */
-  updateByUserIdAndApplicationId?: Maybe<Array<ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationReviewerActionUserIdApplicationIdKeyUpdate>>;
-  /** The primary key(s) and patch data for `applicationReviewerAction` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyNodeIdUpdate>>;
-  /** A `ApplicationReviewerActionInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ApplicationReviewerActionApplicationIdFkeyApplicationReviewerActionCreateInput>>;
-};
-
-/** The fields on `applicationReviewerAction` to look up the row to connect. */
-export type ApplicationReviewerActionApplicationReviewerActionPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `applicationReviewerAction` to look up the row to connect. */
-export type ApplicationReviewerActionApplicationReviewerActionUserIdApplicationIdKeyConnect = {
-  userId: Scalars['Int'];
-  applicationId: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type ApplicationReviewerActionNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `applicationReviewerAction` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `applicationReviewerAction` to look up the row to delete. */
-export type ApplicationReviewerActionApplicationReviewerActionPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `applicationReviewerAction` to look up the row to delete. */
-export type ApplicationReviewerActionApplicationReviewerActionUserIdApplicationIdKeyDelete = {
-  userId: Scalars['Int'];
-  applicationId: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type ApplicationReviewerActionNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `applicationReviewerAction` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The fields on `applicationReviewerAction` to look up the row to update. */
-export type ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationReviewerActionPkeyUpdate = {
-  /** An object where the defined keys will be set on the `applicationReviewerAction` being updated. */
-  patch: UpdateApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `applicationReviewerAction` being updated. */
-export type UpdateApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  reviewerAction?: Maybe<ReviewerAction>;
-  assignerAction?: Maybe<AssignerAction>;
-  applicationToApplicationId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `application` in the `ApplicationReviewerActionInput` mutation. */
-export type ApplicationReviewerActionApplicationIdFkeyInput = {
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectByOutcomeRegistration?: Maybe<ApplicationApplicationOutcomeRegistrationKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteByOutcomeRegistration?: Maybe<ApplicationApplicationOutcomeRegistrationKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySerial?: Maybe<ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateByOutcomeRegistration?: Maybe<ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyNodeIdUpdate>;
-  /** A `ApplicationInput` object that will be created and connected to this object. */
-  create?: Maybe<ApplicationReviewerActionApplicationIdFkeyApplicationCreateInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationPkeyUpdate = {
+export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `application` being updated. */
-export type UpdateApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  sessionId?: Maybe<Scalars['String']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  outcomeRegistration?: Maybe<Scalars['String']>;
-  reviewerList?: Maybe<Array<Maybe<Scalars['String']>>>;
-  assignerList?: Maybe<Array<Maybe<Scalars['String']>>>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
-  userListToUserId?: Maybe<FakePublicApplicationForeignKey0Input>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  actionQueuesUsingId?: Maybe<ActionQueueApplicationIdFkeyInverseInput>;
-  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
-  dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: Maybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
-  dataTablePermitChemicalApplicationJoinsUsingId?: Maybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTablePrequalManufacturerApplicationJoinsUsingId?: Maybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
-  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
-  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
-  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
   serial: Scalars['String'];
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
+export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
   outcomeRegistration: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyNodeIdUpdate = {
+export type VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
@@ -27826,6 +27833,7 @@ export type ApplicationPatch = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -27841,107 +27849,6 @@ export type ApplicationPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
-};
-
-/** The `application` to be created by this mutation. */
-export type ApplicationReviewerActionApplicationIdFkeyApplicationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  sessionId?: Maybe<Scalars['String']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  outcomeRegistration?: Maybe<Scalars['String']>;
-  reviewerList?: Maybe<Array<Maybe<Scalars['String']>>>;
-  assignerList?: Maybe<Array<Maybe<Scalars['String']>>>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
-  userListToUserId?: Maybe<FakePublicApplicationForeignKey0Input>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  actionQueuesUsingId?: Maybe<ActionQueueApplicationIdFkeyInverseInput>;
-  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
-  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
-  dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: Maybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
-  dataTablePermitChemicalApplicationJoinsUsingId?: Maybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTablePrequalManufacturerApplicationJoinsUsingId?: Maybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
-  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
-  dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
-  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
-  triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
-  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
-  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
-};
-
-/** The fields on `applicationReviewerAction` to look up the row to update. */
-export type ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationReviewerActionUserIdApplicationIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `applicationReviewerAction` being updated. */
-  patch: UpdateApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
-  userId: Scalars['Int'];
-  applicationId: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `applicationReviewerAction` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `applicationReviewerAction` being updated. */
-  patch: ApplicationReviewerActionPatch;
-};
-
-/** Represents an update to a `ApplicationReviewerAction`. Fields that are set will be updated. */
-export type ApplicationReviewerActionPatch = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewerAction?: Maybe<ReviewerAction>;
-  assignerAction?: Maybe<AssignerAction>;
-  applicationToApplicationId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInput>;
-};
-
-/** The `applicationReviewerAction` to be created by this mutation. */
-export type ApplicationReviewerActionApplicationIdFkeyApplicationReviewerActionCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  userId: Scalars['Int'];
-  reviewerAction?: Maybe<ReviewerAction>;
-  assignerAction?: Maybe<AssignerAction>;
-  applicationToApplicationId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInput>;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
-  serial: Scalars['String'];
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
-  outcomeRegistration: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `application` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: ApplicationPatch;
 };
 
 /** The `application` to be created by this mutation. */
@@ -27969,6 +27876,7 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -27984,7 +27892,6 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `verification` to look up the row to update. */
@@ -28078,6 +27985,7 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -28093,7 +28001,6 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -28166,6 +28073,7 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -28181,7 +28089,6 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `template` in the `TriggerScheduleInput` mutation. */
@@ -28480,6 +28387,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -28495,7 +28403,6 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `userList` in the `ReviewInput` mutation. */
@@ -31324,6 +31231,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -31339,7 +31247,6 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -31414,6 +31321,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -31429,7 +31337,6 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `file` to look up the row to update. */
@@ -31521,6 +31428,7 @@ export type DataTableProvisionalProductApplicationApplicationIdFkeyApplicationCr
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -31536,7 +31444,6 @@ export type DataTableProvisionalProductApplicationApplicationIdFkeyApplicationCr
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableProvisionalProduct` in the `DataTableProvisionalProductApplicationJoinInput` mutation. */
@@ -31834,6 +31741,7 @@ export type DataTableProductApplicationJoinApplicationIdFkeyApplicationCreateInp
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -31849,7 +31757,6 @@ export type DataTableProductApplicationJoinApplicationIdFkeyApplicationCreateInp
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -31922,6 +31829,7 @@ export type DataTablePrequalManufacturerApplicationApplicationIdFkeyApplicationC
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -31937,7 +31845,6 @@ export type DataTablePrequalManufacturerApplicationApplicationIdFkeyApplicationC
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTablePrequalManufacturer` in the `DataTablePrequalManufacturerApplicationJoinInput` mutation. */
@@ -32172,6 +32079,7 @@ export type DataTablePermitChemicalApplicationJoinApplicationIdFkeyApplicationCr
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -32187,7 +32095,6 @@ export type DataTablePermitChemicalApplicationJoinApplicationIdFkeyApplicationCr
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTablePermitChemical` in the `DataTablePermitChemicalApplicationJoinInput` mutation. */
@@ -32404,6 +32311,7 @@ export type DataTableManufacturerRepresentativeApplApplicationIdFkeyApplicationC
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -32419,7 +32327,6 @@ export type DataTableManufacturerRepresentativeApplApplicationIdFkeyApplicationC
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableManufacturerRepresentative` in the `DataTableManufacturerRepresentativeApplicationJoinInput` mutation. */
@@ -32693,6 +32600,7 @@ export type DataTableManufacturerApplicationJoinApplicationIdFkeyApplicationCrea
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -32708,7 +32616,6 @@ export type DataTableManufacturerApplicationJoinApplicationIdFkeyApplicationCrea
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `dataTableManufacturer` in the `DataTableManufacturerApplicationJoinInput` mutation. */
@@ -32919,6 +32826,7 @@ export type DataChangelogApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -32934,7 +32842,6 @@ export type DataChangelogApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -33027,6 +32934,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -33042,7 +32950,6 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -33833,6 +33740,106 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreat
 };
 
 /** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
+  outcomeRegistration: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The `application` to be created by this mutation. */
+export type ApplicationReviewerActionApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  outcomeRegistration?: Maybe<Scalars['String']>;
+  reviewerList?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assignerList?: Maybe<Array<Maybe<Scalars['String']>>>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  userListToUserId?: Maybe<FakePublicApplicationForeignKey0Input>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: Maybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: Maybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePrequalManufacturerApplicationJoinsUsingId?: Maybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: Maybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: Maybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  triggerQueuesUsingId?: Maybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+};
+
+/** The fields on `applicationReviewerAction` to look up the row to update. */
+export type ApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyUsingApplicationReviewerActionUserIdApplicationIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `applicationReviewerAction` being updated. */
+  patch: UpdateApplicationReviewerActionOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyPatch;
+  userId: Scalars['Int'];
+  applicationId: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnApplicationReviewerActionForApplicationReviewerActionApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `applicationReviewerAction` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `applicationReviewerAction` being updated. */
+  patch: ApplicationReviewerActionPatch;
+};
+
+/** Represents an update to a `ApplicationReviewerAction`. Fields that are set will be updated. */
+export type ApplicationReviewerActionPatch = {
+  id?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewerAction?: Maybe<ReviewerAction>;
+  assignerAction?: Maybe<AssignerAction>;
+  applicationToApplicationId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInput>;
+};
+
+/** The `applicationReviewerAction` to be created by this mutation. */
+export type ApplicationReviewerActionApplicationIdFkeyApplicationReviewerActionCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  userId: Scalars['Int'];
+  reviewerAction?: Maybe<ReviewerAction>;
+  assignerAction?: Maybe<AssignerAction>;
+  applicationToApplicationId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInput>;
+};
+
+/** The fields on `application` to look up the row to update. */
 export type ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
@@ -33879,6 +33886,7 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -33894,7 +33902,6 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -34622,6 +34629,7 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -34637,7 +34645,6 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -34708,6 +34715,7 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -34723,7 +34731,6 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -34806,6 +34813,7 @@ export type ActionQueueApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -34821,7 +34829,6 @@ export type ActionQueueApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -34900,6 +34907,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -34915,7 +34923,6 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -35380,6 +35387,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -35395,7 +35403,6 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -35693,6 +35700,7 @@ export type FakePublicApplicationForeignKey0ApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -35708,7 +35716,6 @@ export type FakePublicApplicationForeignKey0ApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `application` to look up the row to update. */
@@ -35757,6 +35764,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -35772,7 +35780,6 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `organisation` to look up the row to update. */
@@ -35878,6 +35885,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -35893,7 +35901,6 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The fields on `template` to look up the row to update. */
@@ -36081,6 +36088,7 @@ export type TriggerQueueApplicationIdFkeyApplicationCreateInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -36096,7 +36104,6 @@ export type TriggerQueueApplicationIdFkeyApplicationCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -36274,6 +36281,7 @@ export type ApplicationInput = {
   activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   dataChangelogsUsingId?: Maybe<DataChangelogApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: Maybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
@@ -36289,7 +36297,6 @@ export type ApplicationInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  applicationReviewerActionsUsingId?: Maybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
 };
 
 /** The output of our create `ApplicationListShape` mutation. */
@@ -38163,6 +38170,7 @@ export type DataViewInput = {
   identifier: Scalars['String'];
   submenu?: Maybe<Scalars['String']>;
   enabled?: Maybe<Scalars['Boolean']>;
+  menuName?: Maybe<Scalars['String']>;
 };
 
 /** The output of our create `DataViewColumnDefinition` mutation. */
@@ -42391,6 +42399,7 @@ export type DataViewPatch = {
   identifier?: Maybe<Scalars['String']>;
   submenu?: Maybe<Scalars['String']>;
   enabled?: Maybe<Scalars['Boolean']>;
+  menuName?: Maybe<Scalars['String']>;
 };
 
 /** All input for the `updateDataView` mutation. */
@@ -47943,7 +47952,7 @@ export type ConsolidatorResponseFragmentFragment = (
 
 export type DataViewFragmentFragment = (
   { __typename?: 'DataView' }
-  & Pick<DataView, 'id' | 'identifier' | 'tableName' | 'title' | 'code' | 'permissionNames' | 'rowRestrictions' | 'tableViewIncludeColumns' | 'tableViewExcludeColumns' | 'tableSearchColumns' | 'detailViewIncludeColumns' | 'detailViewExcludeColumns' | 'detailViewHeaderColumn' | 'filterIncludeColumns' | 'filterExcludeColumns' | 'showLinkedApplications' | 'priority' | 'defaultSortColumn' | 'defaultFilterString' | 'submenu' | 'enabled'>
+  & Pick<DataView, 'id' | 'identifier' | 'tableName' | 'title' | 'code' | 'permissionNames' | 'rowRestrictions' | 'tableViewIncludeColumns' | 'tableViewExcludeColumns' | 'tableSearchColumns' | 'detailViewIncludeColumns' | 'detailViewExcludeColumns' | 'detailViewHeaderColumn' | 'filterIncludeColumns' | 'filterExcludeColumns' | 'showLinkedApplications' | 'priority' | 'defaultSortColumn' | 'defaultFilterString' | 'menuName' | 'submenu' | 'enabled'>
 );
 
 export type DataViewColumnDefinitionFragmentFragment = (
@@ -48767,20 +48776,6 @@ export type GetActivityLogQuery = (
   )> }
 );
 
-export type GetAllLookupTableStructuresQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllLookupTableStructuresQuery = (
-  { __typename?: 'Query' }
-  & { dataTables?: Maybe<(
-    { __typename?: 'DataTablesConnection' }
-    & { nodes: Array<Maybe<(
-      { __typename?: 'DataTable' }
-      & Pick<DataTable, 'id' | 'tableName' | 'displayName' | 'fieldMap'>
-    )>> }
-  )> }
-);
-
 export type GetAllResponsesQueryVariables = Exact<{
   serial: Scalars['String'];
   responseStatuses?: Maybe<Array<ApplicationResponseStatus>>;
@@ -49595,6 +49590,7 @@ export const DataViewFragmentFragmentDoc = gql`
   priority
   defaultSortColumn
   defaultFilterString
+  menuName
   submenu
   enabled
 }
@@ -51177,43 +51173,6 @@ export function useGetActivityLogLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetActivityLogQueryHookResult = ReturnType<typeof useGetActivityLogQuery>;
 export type GetActivityLogLazyQueryHookResult = ReturnType<typeof useGetActivityLogLazyQuery>;
 export type GetActivityLogQueryResult = Apollo.QueryResult<GetActivityLogQuery, GetActivityLogQueryVariables>;
-export const GetAllLookupTableStructuresDocument = gql`
-    query getAllLookupTableStructures {
-  dataTables(condition: {isLookupTable: true}) {
-    nodes {
-      id
-      tableName
-      displayName
-      fieldMap
-    }
-  }
-}
-    `;
-
-/**
- * __useGetAllLookupTableStructuresQuery__
- *
- * To run a query within a React component, call `useGetAllLookupTableStructuresQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllLookupTableStructuresQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllLookupTableStructuresQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetAllLookupTableStructuresQuery(baseOptions?: Apollo.QueryHookOptions<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>) {
-        return Apollo.useQuery<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>(GetAllLookupTableStructuresDocument, baseOptions);
-      }
-export function useGetAllLookupTableStructuresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>) {
-          return Apollo.useLazyQuery<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>(GetAllLookupTableStructuresDocument, baseOptions);
-        }
-export type GetAllLookupTableStructuresQueryHookResult = ReturnType<typeof useGetAllLookupTableStructuresQuery>;
-export type GetAllLookupTableStructuresLazyQueryHookResult = ReturnType<typeof useGetAllLookupTableStructuresLazyQuery>;
-export type GetAllLookupTableStructuresQueryResult = Apollo.QueryResult<GetAllLookupTableStructuresQuery, GetAllLookupTableStructuresQueryVariables>;
 export const GetAllResponsesDocument = gql`
     query getAllResponses($serial: String!, $responseStatuses: [ApplicationResponseStatus!]) {
   applicationBySerial(serial: $serial) {
