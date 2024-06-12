@@ -134,10 +134,10 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   const dataViewOptions = constructNestedMenuOptions(dataViews, {
     filterMethod: () => true,
     mapMethod: (dataView) => {
-      const { code, urlSlug, title, defaultFilter } = dataView
+      const { code, urlSlug, menuName, defaultFilter } = dataView
       return {
         key: code,
-        text: title,
+        text: menuName,
         value: '/data/' + urlSlug + (defaultFilter ? `?${defaultFilter}` : ''),
       }
     },

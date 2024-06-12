@@ -702,6 +702,7 @@ export type DataViewsResponse = {
   title: string
   code: string
   urlSlug: string
+  menuName: string
   submenu: string | null
   defaultFilter: string | null
 }[]
