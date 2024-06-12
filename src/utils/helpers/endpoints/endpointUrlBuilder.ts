@@ -170,9 +170,9 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       }
 
       // "Update" uses /import/tableID route
-      if (action === 'update' && 'id' in options && 'code' in options) {
-        const { id, code } = options
-        return `${serverREST}${endpointPath}/import/${id}?code=${code}`
+      if (action === 'update' && 'id' in options && 'code' in options && 'name' in options) {
+        const { id, name, code } = options
+        return `${serverREST}${endpointPath}/import/${id}?name=${name}&code=${code}`
       }
 
       // Export

@@ -98,6 +98,7 @@ export type LookupTableEndpoint = [
     | {
         action: 'update'
         id: number
+        name: string
         code: string
       }
 ]

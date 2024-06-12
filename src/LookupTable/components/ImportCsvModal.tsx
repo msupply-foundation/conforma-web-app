@@ -39,7 +39,10 @@ const ImportCsvModal: React.FC<any> = ({
 
   useEffect(() => {
     dispatch({ type: open ? 'OPEN_MODAL' : 'CLOSE_MODAL' })
-    if (open && dataViewCode !== '') dispatch({ type: 'SET_CODE', payload: dataViewCode })
+    if (open) {
+      dispatch({ type: 'SET_TABLE_NAME', payload: tableLabel })
+      dispatch({ type: 'SET_CODE', payload: dataViewCode })
+    }
   }, [open])
 
   useEffect(() => {
@@ -72,7 +75,7 @@ const ImportCsvModal: React.FC<any> = ({
     await axios
       .post(
         tableStructureID
-          ? getServerUrl('lookupTable', { action: 'update', id: tableStructureID, code })
+          ? getServerUrl('lookupTable', { action: 'update', id: tableStructureID, name, code })
           : getServerUrl('lookupTable', { action: 'import', name, code }),
         formData,
         {
@@ -137,18 +140,16 @@ const ImportCsvModal: React.FC<any> = ({
           />
         ) : (
           <Form>
-            {!tableLabel && (
-              <Form.Field>
-                <label>{t('LOOKUP_TABLE_NAME')}</label>
-                <input
-                  placeholder={t('LOOKUP_TABLE_NAME')}
-                  value={name || ''}
-                  onChange={(event) =>
-                    dispatch({ type: 'SET_TABLE_NAME', payload: event.target.value })
-                  }
-                />
-              </Form.Field>
-            )}
+            <Form.Field>
+              <label>{t('LOOKUP_TABLE_NAME')}</label>
+              <input
+                placeholder={t('LOOKUP_TABLE_NAME')}
+                value={name || ''}
+                onChange={(event) =>
+                  dispatch({ type: 'SET_TABLE_NAME', payload: event.target.value })
+                }
+              />
+            </Form.Field>
             <Form.Field>
               <label>{t('LOOKUP_TABLE_CODE')}</label>
               <input
