@@ -65,12 +65,8 @@ const ImportCsvModal: React.FC<any> = ({
     const formData: any = new FormData()
     formData.append('file', file)
 
-    // if (!tableStructureID) formData.append('name', name)
-
     const JWT = localStorage.getItem(config.localStorageJWTKey || '')
     const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
-
-    console.log(formData)
 
     await axios
       .post(
