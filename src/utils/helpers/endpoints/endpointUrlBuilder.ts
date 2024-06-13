@@ -1,4 +1,4 @@
-import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject } from '../../../modules/expression-evaluator'
 import config from '../../../config'
 import {
   ComplexEndpoint,
