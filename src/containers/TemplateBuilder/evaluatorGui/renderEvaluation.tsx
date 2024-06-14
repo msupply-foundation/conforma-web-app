@@ -1,5 +1,4 @@
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import { IParameters, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
+import evaluateExpression, { IParameters, ValueNode } from '../../../modules/expression-evaluator'
 import React, { useState } from 'react'
 import { Header, Icon, Modal } from 'semantic-ui-react'
 import { Loading } from '../../../components'

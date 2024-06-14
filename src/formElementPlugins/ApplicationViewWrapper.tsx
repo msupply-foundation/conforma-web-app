@@ -11,7 +11,7 @@ import {
 } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
-import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
+import evaluateExpression, { isEvaluationExpression } from '../modules/expression-evaluator'
 import { isEqual } from 'lodash'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'

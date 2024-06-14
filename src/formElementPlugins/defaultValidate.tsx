@@ -1,4 +1,4 @@
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import evaluateExpression from '../modules/expression-evaluator'
 import { ValidationState } from './types'
 import { EvaluatorNode, EvaluatorParameters } from '../utils/types'
 

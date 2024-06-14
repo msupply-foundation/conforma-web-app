@@ -7,8 +7,8 @@ import {
   User,
 } from '../../../utils/types'
 import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import { IParameters, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
+import evaluateExpression, { IParameters } from '../../../modules/expression-evaluator'
+
 import { evaluateElements } from '../../../utils/helpers/evaluateElements'
 import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
 import { ListItem } from './types'
