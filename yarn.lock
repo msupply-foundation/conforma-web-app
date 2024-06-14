@@ -5251,14 +5251,14 @@ json-buffer@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.0.tgz#5b1f397afc75d677bde8bcfc0e47e1f9a3d9a898"
 
-json-edit-react@^1.11.6:
-  version "1.11.6"
-  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-1.11.6.tgz#cdfe4905afc30bc14cbc06f82c5e6c1ec51e5e66"
-  integrity sha512-5TkPJ5RDKxekbXnq4psD8YxuOuDR29j9j6fEyC6IwduTQFp/b6BzMq9p7pSV48m7GAcUzp47Q9ymn2TM/2ub9Q==
+json-edit-react@^1.11.9:
+  version "1.11.9"
+  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-1.11.9.tgz#9057940f4bc6e50d057238811f80d3beedec532c"
+  integrity sha512-uhRWiJzgf8RGvcc75+lq/LNpTCw6jxM62DHN4xS3JJOuoR6AoECbKsj4xcz5i/aWs6f19OkDn6DJ9syv9VD03w==
   dependencies:
     json5 "^2.2.3"
     just-clone "^6.2.0"
-    object-property-assigner "^1.2.3"
+    object-property-assigner "^1.2.4"
     object-property-extractor "^1.0.11"
 
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
@@ -6275,10 +6275,10 @@ object-keys@^1.0.12, object-keys@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.1.1.tgz#1c47f272df277f3b1daf061677d9c82e2322c60e"
 
-object-property-assigner@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/object-property-assigner/-/object-property-assigner-1.2.3.tgz#73389a071ec5d1bb1117bb02c846727b892e3f9e"
-  integrity sha512-+9sLdS0jr2kjl5HskuX6/Fxvlyt9mfex3TbbjLPRdEXd+zAtAxrzv7fJz/2Q3mag9dclDrgjgwD+uEO1bHNEpA==
+object-property-assigner@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/object-property-assigner/-/object-property-assigner-1.2.4.tgz#1545f55e51b6b3b0eaf83ce2bfd1ea171e3949bb"
+  integrity sha512-wL4Y1ugqycyFu6ihfDM8BPhJR5NbaFXW7RXlt6ROmeAEyuBDI2XDctMUowQYlkj5LxQcxGC7NP6axENyZGge6A==
 
 object-property-extractor@^1.0.11:
   version "1.0.11"
