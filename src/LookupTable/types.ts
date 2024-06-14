@@ -11,6 +11,8 @@ type AllLookupTableStructuresType = {
 type FieldMapType = {
   fieldname: string
   label: string
+  dataType: string
+  gqlName: string
 }
 
 type LookUpTableType = {

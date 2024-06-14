@@ -1,8 +1,4 @@
-import {
-  EvaluatorNode,
-  IParameters,
-  OperatorNode,
-} from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode, IParameters, OperatorNode } from '../../../modules/expression-evaluator'
 import React from 'react'
 
 export type Operator = OperatorNode['operator'] | 'none' | 'buildObject'
