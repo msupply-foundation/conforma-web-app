@@ -33,10 +33,12 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     useUndo(data)
   const { showToast } = useToast({ position: topLeft })
 
-  useEffect(() => {
-    reset(data)
-    setIsDirty(false)
-  }, [data])
+  // useEffect(() => {
+  //   reset(data)
+  //   setIsDirty(false)
+  // }, [data])
+
+  console.log('isDirty', isDirty)
 
   const handleSave = async () => {
     if (currentData !== undefined) {
@@ -47,6 +49,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   }
 
   const onUpdate = async (newData: object) => {
+    console.log('UPDATE')
     setData(newData)
     if (showSaveButton) setIsDirty(true)
     // If we don't have an explicit save button, we run "onSave" after every
@@ -83,9 +86,6 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
       )}
       <ReactJson
         data={currentData}
-        onUpdate={({ newData }) => {
-          onUpdate(newData)
-        }}
         enableClipboard={handleCopy}
         theme={{
           container: {
@@ -96,6 +96,9 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         searchFilter={searchFilter ?? 'key'}
         searchText={searchText}
         {...jsonViewProps}
+        onUpdate={({ newData }) => {
+          onUpdate(newData)
+        }}
       />
       <div className="flex-row-space-between" style={{ maxWidth: 500 }}>
         <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>

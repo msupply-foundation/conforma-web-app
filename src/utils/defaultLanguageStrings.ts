@@ -307,7 +307,7 @@ export default {
   LOOKUP_TABLE_CODE: 'Code (for Data View)',
   LOOKUP_TABLE_DV_CODE: 'Code',
   LOOKUP_TABLE_ADD: 'Add new Lookup-table',
-  LOOKUP_TABLE_TITLE: 'Lookup table:',
+  LOOKUP_TABLE_TITLE: 'Lookup table',
   LOOKUP_TABLE_CONTENTS: 'View individual lookup-table and its contents',
   LOOKUP_TABLE_SUBTITLE: 'This page contains the list of all lookup-tables',
   LOOKUP_TABLE_SUCCESS_CREATED: 'Lookup table {{table}} has been successfully created.',
