@@ -1,4 +1,4 @@
-import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
+import evaluateExpression, { isEvaluationExpression } from '../../modules/expression-evaluator'
 import functions from '../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
 import getServerUrl from './endpoints/endpointUrlBuilder'
 import config from '../../config'

@@ -30,7 +30,7 @@ export const getMatchingTemplatePermission: GetMatchingTemplatePermissions = ({
 }) =>
   templatePermissions.filter((templatePermission) => {
     if (templatePermission.permissionName?.permissionPolicy?.type !== type) return false
-    if (!stageNumber) return true
+    if (!stageNumber || !templatePermission?.stageNumber) return true
     if (templatePermission?.stageNumber !== stageNumber) return false
     if (!levelNumber) return true
     return templatePermission?.levelNumber === levelNumber

@@ -6,7 +6,7 @@ import {
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
-import evaluate from '@openmsupply/expression-evaluator'
+import evaluate from '../../modules/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
