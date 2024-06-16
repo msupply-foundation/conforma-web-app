@@ -19,7 +19,6 @@ import {
   GetDataTablesQuery,
   useGetDataTablesQuery,
 } from '../../../utils/generated/graphql'
-import { toCamelCase } from '../../../LookupTable/utils'
 import { JsonEditor } from '../JsonEditor/JsonEditor'
 import { camelCase, pickBy, startCase } from 'lodash'
 import { nanoid } from 'nanoid'
@@ -38,7 +37,7 @@ export const AdminDataViews: React.FC = () => {
 
   const selectedTable = query.selectedTable
   const isLookupTable =
-    data?.dataTables?.nodes.find((table) => toCamelCase(table?.tableName ?? '') === selectedTable)
+    data?.dataTables?.nodes.find((table) => camelCase(table?.tableName ?? '') === selectedTable)
       ?.isLookupTable ?? false
 
   return (
@@ -337,14 +336,6 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
           maxWidth={650}
           restrictAdd={({ level }) => level === 0}
           restrictDelete={({ level }) => level === 1}
-          onUpdate={({ newData }) => {
-            const updateData: any = { ...newData }
-
-            if ((updateData as DataView).menuName === null && isLookupTable)
-              (updateData as DataView).menuName = updateData.title
-
-            setDataState(updateData)
-          }}
         />
       )}
     </div>
@@ -362,7 +353,7 @@ const getDataTableOptions = (
   const options = (data.dataTables?.nodes as DataTable[])
     .filter(({ isLookupTable }) => (includeLookupTables ? true : !isLookupTable))
     .map(({ id, tableName, isLookupTable }) => {
-      const table = toCamelCase(tableName)
+      const table = camelCase(tableName)
       return {
         key: `${table}_${id}`,
         text: `${table}${isLookupTable ? ` (${t('LOOKUP_TABLE_TITLE')})` : ''}`,
