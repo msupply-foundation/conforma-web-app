@@ -2,35 +2,31 @@ import {
   ReviewResponse,
   ReviewResponseDecision,
   ReviewResponseRecommendedApplicantVisibility,
-  useUpdateReviewMutation,
-  useUpdateReviewResponseMutation,
+  useUpdateReviewResponsesMutation,
 } from '../generated/graphql'
 
-// below lines are used to get return type of the function that is returned by useUpdateReviewResponseMutation
-type UseUpdateReviewMutationReturnType = ReturnType<typeof useUpdateReviewResponseMutation>
-type PromiseReturnType = ReturnType<UseUpdateReviewMutationReturnType[0]>
+const useUpdateReviewResponses = () => {
+  const [updateReviewResponses] = useUpdateReviewResponsesMutation()
 
-// Hook to update review responses. Either updates individual response or a
-// batch via updating review object.
-// Also computes recommendedApplicantVisibility
-type UseUpdateReviewResponse = () => {
-  updateReviewResponse: (reviewResponse: ReviewResponse) => PromiseReturnType
-  updateMultipleReviewResponses: any
-}
-
-const useUpdateReviewResponses: UseUpdateReviewResponse = () => {
-  const [updateReviewResponseMutation] = useUpdateReviewResponseMutation()
-  const [updateMultipleResponsesMutation] = useUpdateReviewMutation()
-
-  const updateReviewResponse = async (reviewResponse: ReviewResponse) =>
-    updateReviewResponseMutation({
-      variables: {
-        id: reviewResponse.id,
-        comment: reviewResponse.comment,
-        decision: reviewResponse.decision,
-        recommendedApplicantVisibility: computeVisibility(reviewResponse),
+  const updateReviewResponse = async (reviewResponse: ReviewResponse) => {
+    const reviewId = reviewResponse.review?.id
+    if (!reviewId) return
+    const reviewPatch = {
+      reviewResponsesUsingId: {
+        updateById: [
+          {
+            id: reviewResponse.id,
+            patch: {
+              comment: reviewResponse.comment,
+              decision: reviewResponse.decision,
+              recommendedApplicantVisibility: computeVisibility(reviewResponse),
+            },
+          },
+        ],
       },
-    })
+    }
+    updateReviewResponses({ variables: { reviewId, reviewPatch } })
+  }
 
   const updateMultipleReviewResponses = async (responses: ReviewResponse[]) => {
     const reviewId = responses[0].review?.id
@@ -47,15 +43,16 @@ const useUpdateReviewResponses: UseUpdateReviewResponse = () => {
         })),
       },
     }
-    updateMultipleResponsesMutation({ variables: { reviewId, reviewPatch } })
+    updateReviewResponses({ variables: { reviewId, reviewPatch } })
   }
 
   return { updateReviewResponse, updateMultipleReviewResponses }
 }
 
-// is_visible_to_applicant is set by an action on back, it uses recomended_application_visibility of the
-// last level review to determine what will be visible to application in LOQ
-// we can add a checkbox in decision modal to determine this (thus logic is placed here)
+// is_visible_to_applicant is set by an action on back, it uses
+// recommended_application_visibility of the last level review to determine what
+// will be visible to application in LOQ we can add a checkbox in decision modal
+// to determine this (thus logic is placed here)
 const computeVisibility = (reviewResponse: ReviewResponse | undefined) => {
   // would rather computer this from actual review level, but dont' want to pass too far as props or rely on context
   if (!reviewResponse)

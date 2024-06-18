@@ -25,6 +25,7 @@ import {
   SectionState,
 } from '../../utils/types'
 import {
+  ReviewResponse,
   ReviewResponseDecision,
   ReviewResponseStatus,
   ReviewStatus,
@@ -265,7 +266,7 @@ const ApproveAllButton: React.FC<ApproveAllButtonProps> = ({ isConsolidation, pa
       !reviewResponse?.decision &&
       // Prevention to count reviewResponse without linked application OR another review
       (!!reviewResponse.applicationResponseId || !!reviewResponse.reviewResponseLinkId)
-  )
+  ) as ReviewResponse[]
 
   const massApprove = () => {
     updateMultipleReviewResponses(
