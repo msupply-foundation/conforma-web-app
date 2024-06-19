@@ -36,27 +36,28 @@ export const useGetSingleTableStructure = (id: number) => {
   const [tableStructure, setTableStructure] = useState<LookUpTableType>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
-  const [refetch, setRefetch] = useState(true)
 
-  useEffect(() => {
-    if (!refetch) return
+  const refetchTableStructure = () => {
     setLoading(true)
     getRequest(getServerUrl('lookupTable', { action: 'table', id }))
       .then((result) => {
         setTableStructure(result)
-        setLoading(false)
       })
       .catch((err) => {
         setError(err.message)
       })
       .finally(() => {
-        setRefetch(false)
+        setLoading(false)
       })
-  }, [refetch])
+  }
+
+  useEffect(() => {
+    refetchTableStructure()
+  }, [])
 
   return {
     tableStructureLoadingState: { loading, error },
     tableStructure,
-    refetchTableStructure: () => setRefetch(true),
+    refetchTableStructure,
   }
 }
