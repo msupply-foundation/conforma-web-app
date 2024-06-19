@@ -277,7 +277,6 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
   isDeleting,
   onAdd,
   isAdding,
-  isLookupTable,
 }) => {
   const [dataState, setDataState] = useState(data ?? {})
   const { t } = useLanguageProvider()
