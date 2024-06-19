@@ -4,6 +4,7 @@ import { Dropdown, Input } from 'semantic-ui-react'
 import { EnumFilterProps, StaticListFilterProps, SearchableListFilterProps } from './types'
 import { FilterContainer, FilterOptions, FilterTitle } from './common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
 
 const EnumFilter: React.FC<EnumFilterProps> = ({
   getActiveOptions,
@@ -44,7 +45,7 @@ const StaticListFilter: React.FC<StaticListFilterProps> = ({
   const { query, resultExtractor, variables } = getFilterListQuery({ filterListParameters })
 
   const { data, error } = useQuery(query, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-first',
     variables,
   })
 
@@ -75,7 +76,7 @@ const SearchableListFilter: React.FC<SearchableListFilterProps> = ({
   onRemove,
 }) => {
   const { t } = useLanguageProvider()
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useDebounce('')
 
   const { query, resultExtractor, variables } = getFilterListQuery({
     searchValue,
@@ -83,7 +84,7 @@ const SearchableListFilter: React.FC<SearchableListFilterProps> = ({
   })
 
   const { data, error } = useQuery(query, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-first',
     variables,
   })
   const activeOptions = getActiveOptions()

@@ -19,37 +19,25 @@ type TemplatesData = {
   templatesByCategory: TemplatesByCategory
 }
 
-const emptyTemplateData = {
+const emptyTemplateData: TemplatesData = {
   templates: [],
   templatesByCategory: [],
 }
 
 const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: boolean) => {
-  const [templatesData, setTemplatesData] = useState<TemplatesData>(emptyTemplateData)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(true)
-
-  const { data, error: apolloError } = useGetTemplatesQuery({
+  const { data, loading, error } = useGetTemplatesQuery({
     skip: isLoading,
-    // fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   })
 
-  useEffect(() => {
-    if (apolloError) {
-      setError(apolloError.message)
-      setLoading(false)
-    }
+  const templatesData = emptyTemplateData
 
-    if (data?.templates?.nodes) {
-      const filteredTemplates = (data?.templates?.nodes || []).filter(
-        (template) => templatePermissions[String(template?.code)]
-      ) as Template[]
-      if (filteredTemplates.length === 0) {
-        setTemplatesData(emptyTemplateData)
-        return setLoading(false)
-      }
-
-      const templates = filteredTemplates
+  if (data?.templates?.nodes) {
+    const filteredTemplates = (data?.templates?.nodes || []).filter(
+      (template) => templatePermissions[String(template?.code)]
+    ) as Template[]
+    if (filteredTemplates.length > 0) {
+      templatesData.templates = filteredTemplates
         .map((template) => convertFromTemplateToTemplateDetails(template, templatePermissions))
         .sort((a, b) => {
           if (a.templateCategory === b.templateCategory) {
@@ -63,18 +51,13 @@ const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: b
           return (b.templateCategory.priority ?? 0) - (a.templateCategory.priority ?? 0)
         })
 
-      setTemplatesData({
-        templates,
-        templatesByCategory: getTemplatesByCategory(templates),
-      })
-
-      setLoading(false)
+      templatesData.templatesByCategory = getTemplatesByCategory(templatesData.templates)
     }
-  }, [data, apolloError, templatePermissions])
+  }
 
   return {
-    error,
-    loading,
+    error: error?.message ?? '',
+    loading: loading && !data,
     templatesData,
   }
 }
