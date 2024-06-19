@@ -50821,21 +50821,25 @@ export type UpdateReviewDecisionCommentMutation = (
   )> }
 );
 
-export type UpdateReviewResponseMutationVariables = Exact<{
-  id: Scalars['Int'];
-  decision?: Maybe<ReviewResponseDecision>;
-  comment?: Maybe<Scalars['String']>;
-  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+export type UpdateReviewResponsesMutationVariables = Exact<{
+  reviewId: Scalars['Int'];
+  reviewPatch: ReviewPatch;
 }>;
 
 
-export type UpdateReviewResponseMutation = (
+export type UpdateReviewResponsesMutation = (
   { __typename?: 'Mutation' }
-  & { updateReviewResponse?: Maybe<(
-    { __typename?: 'UpdateReviewResponsePayload' }
-    & { reviewResponse?: Maybe<(
-      { __typename?: 'ReviewResponse' }
-      & ReviewResponseFragmentFragment
+  & { updateReview?: Maybe<(
+    { __typename?: 'UpdateReviewPayload' }
+    & { review?: Maybe<(
+      { __typename?: 'Review' }
+      & { reviewResponses: (
+        { __typename?: 'ReviewResponsesConnection' }
+        & { nodes: Array<Maybe<(
+          { __typename?: 'ReviewResponse' }
+          & Pick<ReviewResponse, 'id' | 'decision' | 'comment'>
+        )>> }
+      ) }
     )> }
   )> }
 );
@@ -53022,43 +53026,47 @@ export function useUpdateReviewDecisionCommentMutation(baseOptions?: Apollo.Muta
 export type UpdateReviewDecisionCommentMutationHookResult = ReturnType<typeof useUpdateReviewDecisionCommentMutation>;
 export type UpdateReviewDecisionCommentMutationResult = Apollo.MutationResult<UpdateReviewDecisionCommentMutation>;
 export type UpdateReviewDecisionCommentMutationOptions = Apollo.BaseMutationOptions<UpdateReviewDecisionCommentMutation, UpdateReviewDecisionCommentMutationVariables>;
-export const UpdateReviewResponseDocument = gql`
-    mutation updateReviewResponse($id: Int!, $decision: ReviewResponseDecision, $comment: String, $recommendedApplicantVisibility: ReviewResponseRecommendedApplicantVisibility = ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT) {
-  updateReviewResponse(input: {id: $id, patch: {decision: $decision, comment: $comment, recommendedApplicantVisibility: $recommendedApplicantVisibility}}) {
-    reviewResponse {
-      ...reviewResponseFragment
+export const UpdateReviewResponsesDocument = gql`
+    mutation updateReviewResponses($reviewId: Int!, $reviewPatch: ReviewPatch!) {
+  updateReview(input: {id: $reviewId, patch: $reviewPatch}) {
+    review {
+      reviewResponses {
+        nodes {
+          id
+          decision
+          comment
+        }
+      }
     }
   }
 }
-    ${ReviewResponseFragmentFragmentDoc}`;
-export type UpdateReviewResponseMutationFn = Apollo.MutationFunction<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
+    `;
+export type UpdateReviewResponsesMutationFn = Apollo.MutationFunction<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>;
 
 /**
- * __useUpdateReviewResponseMutation__
+ * __useUpdateReviewResponsesMutation__
  *
- * To run a mutation, you first call `useUpdateReviewResponseMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateReviewResponseMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateReviewResponsesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateReviewResponsesMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateReviewResponseMutation, { data, loading, error }] = useUpdateReviewResponseMutation({
+ * const [updateReviewResponsesMutation, { data, loading, error }] = useUpdateReviewResponsesMutation({
  *   variables: {
- *      id: // value for 'id'
- *      decision: // value for 'decision'
- *      comment: // value for 'comment'
- *      recommendedApplicantVisibility: // value for 'recommendedApplicantVisibility'
+ *      reviewId: // value for 'reviewId'
+ *      reviewPatch: // value for 'reviewPatch'
  *   },
  * });
  */
-export function useUpdateReviewResponseMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>) {
-        return Apollo.useMutation<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>(UpdateReviewResponseDocument, baseOptions);
+export function useUpdateReviewResponsesMutation(baseOptions?: Apollo.MutationHookOptions<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>) {
+        return Apollo.useMutation<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>(UpdateReviewResponsesDocument, baseOptions);
       }
-export type UpdateReviewResponseMutationHookResult = ReturnType<typeof useUpdateReviewResponseMutation>;
-export type UpdateReviewResponseMutationResult = Apollo.MutationResult<UpdateReviewResponseMutation>;
-export type UpdateReviewResponseMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponseMutation, UpdateReviewResponseMutationVariables>;
+export type UpdateReviewResponsesMutationHookResult = ReturnType<typeof useUpdateReviewResponsesMutation>;
+export type UpdateReviewResponsesMutationResult = Apollo.MutationResult<UpdateReviewResponsesMutation>;
+export type UpdateReviewResponsesMutationOptions = Apollo.BaseMutationOptions<UpdateReviewResponsesMutation, UpdateReviewResponsesMutationVariables>;
 export const GetAppplicantFilterListDocument = gql`
     query getAppplicantFilterList($searchValue: String!, $templateCode: String!) {
   applicationListFilterApplicant(applicant: $searchValue, templateCode: $templateCode) {

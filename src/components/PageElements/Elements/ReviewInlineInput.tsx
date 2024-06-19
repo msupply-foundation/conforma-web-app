@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Form, Radio, TextArea } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { ReviewResponse, ReviewResponseDecision } from '../../../utils/generated/graphql'
-import useUpdateReviewResponse from '../../../utils/hooks/useUpdateReviewResponse'
+import useUpdateReviewResponses from '../../../utils/hooks/useUpdateReviewResponses'
 
 const useOptionsMap = () => {
   const { t } = useLanguageProvider()
@@ -44,7 +44,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
 }) => {
   const { t } = useLanguageProvider()
   const [reviewResponse, setReviewResponse] = useState(initialReviewResponse)
-  const updateResponse = useUpdateReviewResponse()
+  const { updateReviewResponse } = useUpdateReviewResponses()
 
   const optionsMap = useOptionsMap()
   const options = isConsolidation ? optionsMap.consolidation : optionsMap.review
@@ -52,7 +52,7 @@ const ReviewInlineInput: React.FC<ReviewInlineInputProps> = ({
   const submit = async (e: any) => {
     e.preventDefault()
     // TODO do we need to handle update error ?
-    await updateResponse(reviewResponse)
+    await updateReviewResponse(reviewResponse)
     setIsActiveEdit(false)
   }
 
