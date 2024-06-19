@@ -5,7 +5,7 @@ import {
   ReviewAssignment,
   ReviewStatus,
   useGetReviewInfoQuery,
-  User,
+  UserList as User,
 } from '../generated/graphql'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useUserState } from '../../contexts/UserState'
@@ -100,7 +100,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
 
       const assignment: AssignmentDetails = {
         id,
-        reviewer: reviewer as User,
+        reviewer: reviewer as User & { id: number },
         level: levelNumber || 1,
         current: {
           stage,

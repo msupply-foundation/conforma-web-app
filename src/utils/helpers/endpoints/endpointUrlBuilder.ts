@@ -1,4 +1,4 @@
-import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject } from '../../../modules/expression-evaluator'
 import config from '../../../config'
 import {
   ComplexEndpoint,
@@ -161,13 +161,24 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'lookupTable': {
       let { action } = options as LookupTableEndpoint[1]
 
+      // List structures
+      if (action === 'list') return `${serverREST}${endpointPath}/list`
+
+      // Single table structure
+      if (action === 'table' && 'id' in options)
+        return `${serverREST}${endpointPath}/table/${options.id}`
+
       // Import
-      if (action === 'import' && 'name' in options)
-        return `${serverREST}${endpointPath}/import?name=${options.name}`
+      if (action === 'import' && 'name' in options && 'code' in options) {
+        const { name, code } = options
+        return `${serverREST}${endpointPath}/import?name=${name}&code=${code}`
+      }
 
       // "Update" uses /import/tableID route
-      if (action === 'update' && 'id' in options)
-        return `${serverREST}${endpointPath}/import/${options.id}`
+      if (action === 'update' && 'id' in options && 'code' in options && 'name' in options) {
+        const { id, name, code } = options
+        return `${serverREST}${endpointPath}/import/${id}?name=${name}&code=${code}`
+      }
 
       // Export
       if ('id' in options) return `${serverREST}${endpointPath}/export/${options.id}`

@@ -70,7 +70,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   if (currentData === undefined) return <Loading />
 
   return (
-    <div className="json-editor" style={{ position: 'relative', maxWidth: jsonViewProps.maxWidth }}>
+    <div className="json-editor" style={{ maxWidth: jsonViewProps.maxWidth }}>
       {showSearch && (
         <Search
           size="mini"
@@ -78,7 +78,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
           open={false}
           placeholder={searchPlaceholder ?? t('JSON_EDIT_SEARCH_PLACEHOLDER')}
           onSearchChange={(_, { value = '' }) => setSearchText(value)}
-          style={{ position: 'absolute', right: 8, top: 8, zIndex: 999 }}
+          style={{ marginBottom: '0.5em', alignSelf: 'flex-end' }}
         />
       )}
       <ReactJson
@@ -90,8 +90,6 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         theme={{
           container: {
             backgroundColor: '#f9f9f9',
-            paddingTop: '1em',
-            marginTop: '1em',
             marginBottom: '1em',
           },
         }}

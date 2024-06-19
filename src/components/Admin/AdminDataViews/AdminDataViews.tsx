@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import {
   Header,
@@ -19,9 +19,8 @@ import {
   GetDataTablesQuery,
   useGetDataTablesQuery,
 } from '../../../utils/generated/graphql'
-import { toCamelCase } from '../../../LookupTable/utils'
 import { JsonEditor } from '../JsonEditor/JsonEditor'
-import { pickBy } from 'lodash'
+import { camelCase, pickBy, startCase } from 'lodash'
 import { nanoid } from 'nanoid'
 import { useAdminDataViewConfig } from './useAdminDataViewConfig'
 import config from '../../../config'
@@ -37,6 +36,9 @@ export const AdminDataViews: React.FC = () => {
   const { data, loading } = useGetDataTablesQuery()
 
   const selectedTable = query.selectedTable
+  const isLookupTable =
+    data?.dataTables?.nodes.find((table) => camelCase(table?.tableName ?? '') === selectedTable)
+      ?.isLookupTable ?? false
 
   return (
     <div id="data-view-config-panel" className="flex-column" style={{ gap: 15 }}>
@@ -66,7 +68,7 @@ export const AdminDataViews: React.FC = () => {
       </div>
       {selectedTable && (
         <>
-          <DataViewEditor tableName={selectedTable} />
+          <DataViewEditor tableName={selectedTable} isLookupTable={isLookupTable} />
           <ColumnDefinitionEditor tableName={selectedTable} />
         </>
       )}
@@ -76,9 +78,10 @@ export const AdminDataViews: React.FC = () => {
 
 interface DataViewEditorProps {
   tableName: string
+  isLookupTable: boolean
 }
 
-const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
+const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName, isLookupTable }) => {
   const { t } = useLanguageProvider()
   const { updateQuery } = useRouter()
   const { ConfirmModal, showModal: showConfirmation } = useConfirmationModal({
@@ -150,16 +153,18 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
               tableName,
               code: '__CODE__',
               detailViewHeaderColumn: '__HEADER_COL__',
+              menuName: !isLookupTable ? startCase(tableName) : null,
             },
           })
         }}
         isAdding={isAdding}
+        isLookupTable={isLookupTable}
       />
     </>
   )
 }
 
-const ColumnDefinitionEditor: React.FC<DataViewEditorProps> = ({ tableName }) => {
+const ColumnDefinitionEditor: React.FC<{ tableName: string }> = ({ tableName }) => {
   const { t } = useLanguageProvider()
   const { updateQuery } = useRouter()
   const { ConfirmModal, showModal: showConfirmation } = useConfirmationModal({
@@ -254,6 +259,7 @@ interface DataViewDisplayProps {
   isDeleting: boolean
   onAdd: () => void
   isAdding: boolean
+  isLookupTable?: boolean
 }
 
 const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
@@ -272,11 +278,16 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
   onAdd,
   isAdding,
 }) => {
+  const [dataState, setDataState] = useState(data ?? {})
   const { t } = useLanguageProvider()
   const { ConfirmModal } = useConfirmationModal({
     type: 'warning',
     confirmText: t('BUTTON_CONFIRM'),
   })
+
+  useEffect(() => {
+    setDataState(data ?? {})
+  }, [data])
 
   return (
     <div>
@@ -315,7 +326,7 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
       </div>
       {data && (
         <JsonEditor
-          data={data}
+          data={dataState}
           onSave={onSave}
           isSaving={isSaving}
           rootName={dataName}
@@ -341,7 +352,7 @@ const getDataTableOptions = (
   const options = (data.dataTables?.nodes as DataTable[])
     .filter(({ isLookupTable }) => (includeLookupTables ? true : !isLookupTable))
     .map(({ id, tableName, isLookupTable }) => {
-      const table = toCamelCase(tableName)
+      const table = camelCase(tableName)
       return {
         key: `${table}_${id}`,
         text: `${table}${isLookupTable ? ` (${t('LOOKUP_TABLE_TITLE')})` : ''}`,
@@ -360,11 +371,13 @@ const getDataTableOptions = (
 
   // We also want to include dataViews that have been created, but don't have an
   // actual table in the system yet
+  const allDataTables =
+    data.dataTables?.nodes.map(({ tableName }: any) => camelCase(tableName)) ?? []
   const optionTableNames = options.map(({ value }) => value)
   const additionalDataViews = new Set(
     (data.dataViews?.nodes as { tableName: string }[])
-      .map(({ tableName }) => toCamelCase(tableName))
-      .filter((table) => !optionTableNames.includes(table))
+      .map(({ tableName }) => camelCase(tableName))
+      .filter((table) => !allDataTables.includes(table) && !optionTableNames.includes(table))
   )
 
   options.push(

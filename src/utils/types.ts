@@ -10,7 +10,7 @@ import {
   ReviewResponseDecision,
   ReviewStatus,
   TemplateElementCategory,
-  User as GraphQLUser,
+  UserList as GraphQLUser,
   Organisation as GraphQLOrg,
   Filter,
   UiLocation,
@@ -19,7 +19,7 @@ import {
 
 import { ValidationState } from '../formElementPlugins/types'
 import { Checkbox } from '../formElementPlugins/checkbox/src/ApplicationView'
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from '../modules/expression-evaluator'
 import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
@@ -144,7 +144,7 @@ interface AssignmentDetails {
   level: number
   reviewerId?: number
   review: ReviewDetails | null
-  reviewer: GraphQLUser
+  reviewer: GraphQLUser & { id: number }
   current: {
     stage: StageDetails
     assignmentStatus: ReviewAssignmentStatus | null
@@ -702,6 +702,7 @@ export type DataViewsResponse = {
   title: string
   code: string
   urlSlug: string
+  menuName: string
   submenu: string | null
   defaultFilter: string | null
 }[]

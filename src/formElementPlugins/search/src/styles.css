@@ -14,3 +14,11 @@ whole list item */
 .search .description {
   white-space: pre-wrap;
 }
+
+/* Permits line-breaks in card elements (lines are converted to <span>s, so need
+a block layout rather than pre-formatting as above */
+.ui.card .header,
+.ui.card .description {
+  display: flex !important;
+  flex-direction: column;
+}

@@ -82,8 +82,16 @@ export type LookupTableEndpoint = [
   endpoint: 'lookupTable',
   options:
     | {
+        action: 'list'
+      }
+    | {
+        action: 'table'
+        id: number
+      }
+    | {
         action: 'import'
         name: string
+        code: string
       }
     | {
         action: 'export'
@@ -92,6 +100,8 @@ export type LookupTableEndpoint = [
     | {
         action: 'update'
         id: number
+        name: string
+        code: string
       }
 ]
 

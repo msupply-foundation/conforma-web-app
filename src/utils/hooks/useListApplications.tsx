@@ -1,15 +1,12 @@
-import { useEffect, useState } from 'react'
 import { useRouter } from '../hooks/useRouter'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import buildFilter from '../helpers/list/buildQueryFilters'
 import buildSortFields, { getPaginationVariables } from '../helpers/list/buildQueryVariables'
 import {
   useGetApplicationListQuery,
-  ApplicationListShape,
   ApplicationListShapesOrderBy,
-  useGetFilteredApplicationCountLazyQuery,
 } from '../../utils/generated/graphql'
-import { BasicStringObject, TemplateType } from '../types'
+import { BasicStringObject } from '../types'
 import { useUserState } from '../../contexts/UserState'
 import { useGetFilterDefinitions } from '../helpers/list/useGetFilterDefinitions'
 
@@ -18,12 +15,6 @@ const useListApplications = (
   graphQLFilterObject?: object
 ) => {
   const FILTER_DEFINITIONS = useGetFilterDefinitions()
-  const [applications, setApplications] = useState<ApplicationListShape[]>([])
-  // Manually keep track of loading state, due to interval between loading application
-  // and loading counts that causes flicker
-  const [isLoadingCount, setIsLoadingCount] = useState(true)
-  const [templateType, setTemplateType] = useState<TemplateType>()
-  const [error, setError] = useState('')
   const { updateQuery } = useRouter()
   const {
     userState: { currentUser },
@@ -43,12 +34,8 @@ const useListApplications = (
     pageNumber,
     perPage ? Number(perPage) : preferences?.paginationDefault ?? 20
   )
-  const {
-    data,
-    loading,
-    refetch,
-    error: applicationsError,
-  } = useGetApplicationListQuery({
+
+  const { data, loading, refetch, error } = useGetApplicationListQuery({
     variables: {
       filters,
       sortFields,
@@ -57,55 +44,30 @@ const useListApplications = (
       userId: currentUser?.userId as number,
       templateCode: type || '',
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   })
 
-  const [getListCount, { data: countData }] = useGetFilteredApplicationCountLazyQuery({
-    fetchPolicy: 'network-only',
-    onCompleted: () => setIsLoadingCount(false),
-  })
+  const applications = data?.applicationList?.nodes ?? []
 
-  useEffect(() => {
-    if (loading) {
-      setIsLoadingCount(true)
-      setApplications([])
-      return
-    }
+  // If there is no records and we are not on first page, go to first page. This
+  // happens when changing a filter results in a smaller result set than the
+  // current page would reach.
+  if (!loading && applications.length === 0 && pageNumber !== 1) {
+    updateQuery({ page: 1 })
+  }
 
-    if (applicationsError) {
-      setError(applicationsError.message)
-      return
-    }
-
-    if (data?.templates?.nodes && data?.templates?.nodes.length > 0) {
-      const { code, name, namePlural } = data?.templates?.nodes?.[0] as TemplateType
-      setTemplateType({ code, name, namePlural })
-    }
-
-    if (data?.applicationList) {
-      const applicationsList = data?.applicationList?.nodes
-      setApplications(applicationsList as ApplicationListShape[])
-      // If there is no records and we are not on first page, go to first page
-      // This happens when filter is changed while not on first page May cause a
-      // small period where 'no applications' appears, but that should be quick
-      // And small compromise for the simplicity
-      if (applicationsList.length === 0 && pageNumber !== 1) {
-        updateQuery({ page: 1 })
-      } else {
-        getListCount({
-          variables: { filter: filters, userId: currentUser?.userId as number },
-        })
-      }
-    }
-  }, [applicationsError, loading])
+  const templateType = data?.templates?.nodes?.[0]
 
   return {
-    error,
-    loading,
+    error: error?.message ?? '',
+    // "loading" needs the data check, as it displays loading instead of cached
+    // result when doing background network fetch (with "cache-and-network"
+    // policy)
+    loading: loading && !data,
     refetch,
     templateType,
     applications,
-    applicationCount: !isLoadingCount ? countData?.applicationList?.totalCount ?? null : null,
+    applicationCount: data?.applicationList?.totalCount ?? null,
   }
 }
 

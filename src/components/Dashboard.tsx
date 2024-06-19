@@ -177,19 +177,18 @@ const FilterComponent: React.FC<{
       filter: gqlFilter,
       userId,
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   })
 
   const appCount = data?.applicationList?.totalCount
 
   useEffect(() => {
-    if (!loading && appCount !== undefined)
-      setReadyFilters((prev) => ({ ...prev, [filter.code]: appCount }))
-  }, [loading])
+    if (appCount !== undefined) setReadyFilters((prev) => ({ ...prev, [filter.code]: appCount }))
+  }, [loading, appCount])
 
   if (error) return <span className="error-colour">{t('ERROR_LOADING_FILTER')}</span>
 
-  if (loading || !appCount) return null
+  if (!appCount) return null
 
   return (
     <Link

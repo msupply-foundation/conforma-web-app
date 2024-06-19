@@ -11,7 +11,7 @@ import {
 } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
-import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
+import evaluateExpression, { isEvaluationExpression } from '../modules/expression-evaluator'
 import { isEqual } from 'lodash'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
@@ -218,7 +218,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       }
     if (isChangeRequest && !isChanged)
       return { extraClasses: 'changes change-request-unchanged', iconName: 'exclamation circle' }
-    // Updated withouth change request
+    // Updated without change request
     if (isChanged) return { extraClasses: 'changes updated', iconName: 'info circle' }
     return
   }

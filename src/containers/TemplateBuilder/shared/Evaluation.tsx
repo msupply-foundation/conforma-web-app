@@ -1,4 +1,4 @@
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from '../../../modules/expression-evaluator'
 import { truncate } from 'lodash'
 import React, { useState } from 'react'
 import { JsonEditor as ReactJson } from 'json-edit-react'

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import evaluateExpression from '../modules/expression-evaluator'
 import { EvaluatorNode, ResponseFull } from '../utils/types'
 import { buildParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
@@ -38,23 +38,27 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   )
 
   useEffect(() => {
-    // Update dynamic parameters when responses change
-    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
-    Object.entries(parameterExpressions).forEach(([field, expression]) => {
-      evaluateExpression(expression as EvaluatorNode, {
-        objects: {
-          responses: { ...allResponses, thisResponse: response?.text },
-          currentUser,
-          applicationData,
-          functions,
-        },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-        headers: { Authorization: 'Bearer ' + JWT },
-      }).then((result: any) =>
-        setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
-      )
-    })
+    // Update dynamic parameters when responses change, but only if there's no
+    // saved evaluations (usually INFORMATION type), or "showLiveParameters" has
+    // been explicitly set
+    if (simpleParameters?.showLiveParameters || !response?.evaluatedParameters) {
+      const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
+      Object.entries(parameterExpressions).forEach(([field, expression]) => {
+        evaluateExpression(expression as EvaluatorNode, {
+          objects: {
+            responses: { ...allResponses, thisResponse: response?.text },
+            currentUser,
+            applicationData,
+            functions,
+          },
+          APIfetch: fetch,
+          graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+          headers: { Authorization: 'Bearer ' + JWT },
+        }).then((result: any) =>
+          setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
+        )
+      })
+    }
   }, [allResponses])
 
   if (!pluginCode || !isVisible) return null
