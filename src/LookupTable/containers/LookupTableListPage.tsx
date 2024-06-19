@@ -21,7 +21,6 @@ const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) 
   const {
     allTableStructures,
     allTableStructuresLoadState,
-    setAllTableStructures,
     refetchAllTableStructures,
   }: AllLookupTableStructuresType = useGetAllTableStructures()
 
@@ -35,7 +34,6 @@ const LookupTableListPage: React.FC<{ basePath: string }> = ({ basePath = '' }) 
       <LookUpTableListTable
         allTableStructures={allTableStructures}
         allTableStructuresLoadState={allTableStructuresLoadState}
-        setAllTableStructures={setAllTableStructures}
       />
       <ImportCsvModal
         open={pathname === `${basePath}/import`}

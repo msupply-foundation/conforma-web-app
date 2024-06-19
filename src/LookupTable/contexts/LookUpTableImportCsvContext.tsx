@@ -1,5 +1,4 @@
 import React, { useReducer } from 'react'
-import { singular } from 'pluralize'
 import {
   LookUpTableImportCsvActions,
   LookUpTableImportCsvActionType,
@@ -10,6 +9,7 @@ const initialState: LookUpTableImportCsvType = {
   uploadModalOpen: false,
   file: null,
   tableName: '',
+  dataViewCode: '',
   submittable: false,
   submitting: false,
   errors: [],
@@ -50,6 +50,9 @@ const LookUpTableImportCsvReducer = (
       return { ...state, file: action.payload }
     case LookUpTableImportCsvActions.SetTableName: {
       return { ...state, tableName: action.payload }
+    }
+    case LookUpTableImportCsvActions.SetCode: {
+      return { ...state, dataViewCode: action.payload }
     }
     case LookUpTableImportCsvActions.submittable:
       return { ...state, submittable: action.payload }

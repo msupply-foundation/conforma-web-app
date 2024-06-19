@@ -10,7 +10,7 @@ import {
   ReviewResponseDecision,
   ReviewStatus,
   TemplateElementCategory,
-  User as GraphQLUser,
+  UserList as GraphQLUser,
   Organisation as GraphQLOrg,
   Filter,
   UiLocation,
@@ -144,7 +144,7 @@ interface AssignmentDetails {
   level: number
   reviewerId?: number
   review: ReviewDetails | null
-  reviewer: GraphQLUser
+  reviewer: GraphQLUser & { id: number }
   current: {
     stage: StageDetails
     assignmentStatus: ReviewAssignmentStatus | null
@@ -702,6 +702,7 @@ export type DataViewsResponse = {
   title: string
   code: string
   urlSlug: string
+  menuName: string
   submenu: string | null
   defaultFilter: string | null
 }[]

@@ -3,7 +3,7 @@ import {
   TemplateElement,
   useGetHistoryForApplicantQuery,
   useGetHistoryForReviewerQuery,
-  User,
+  UserList as User,
 } from '../generated/graphql'
 import { HistoryElement } from '../types'
 import { useLanguageProvider } from '../../contexts/Localisation'

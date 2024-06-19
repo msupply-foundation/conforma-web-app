@@ -55,7 +55,7 @@ const DataViewTable: React.FC<{ codeFromLookupTable?: string }> = ({ codeFromLoo
     filtersReady: !filtersLoading,
   })
 
-  const title = location?.state?.title ?? dataViewTable?.title ?? ''
+  const title = dataViewTable?.title ?? location?.state?.title ?? ''
   usePageTitle(title)
 
   useEffect(() => {
