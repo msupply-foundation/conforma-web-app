@@ -27,13 +27,13 @@ interface ContextFormElementUpdateTrackerState {
   // We want to make sure the user can't move ahead while these are in progress,
   // otherwise we can end up with invalid or inconsistent responses slipping
   // through
-  elementCurrentlyProcessing: Set<string>
+  elementsCurrentlyProcessing: Set<string>
 }
 
 const contextStateDefault: ContextFormElementUpdateTrackerState = {
   elementsUpdateState: {},
   latestChangedElementUpdateTimestamp: 0,
-  elementCurrentlyProcessing: new Set(),
+  elementsCurrentlyProcessing: new Set(),
 }
 
 const calculateLatestChangedTimestamp = (elementsUpdateState: {
@@ -102,7 +102,7 @@ const reducer: Reducer = (state, action) => {
             enteredTextValue: action.textValue,
           },
         },
-        elementCurrentlyProcessing: state.elementCurrentlyProcessing,
+        elementsCurrentlyProcessing: state.elementsCurrentlyProcessing,
       }
 
       return newState
@@ -148,23 +148,23 @@ const reducer: Reducer = (state, action) => {
       const newState: ContextFormElementUpdateTrackerState = {
         latestChangedElementUpdateTimestamp,
         elementsUpdateState: newElementsUpdateState,
-        elementCurrentlyProcessing: state.elementCurrentlyProcessing,
+        elementsCurrentlyProcessing: state.elementsCurrentlyProcessing,
       }
 
       return newState
     }
     case 'elementProcessing': {
       const { elementCode } = action
-      const elementCurrentlyProcessing = new Set(state.elementCurrentlyProcessing)
-      elementCurrentlyProcessing.add(elementCode)
-      const newState = { ...state, elementCurrentlyProcessing }
+      const elementsCurrentlyProcessing = new Set(state.elementsCurrentlyProcessing)
+      elementsCurrentlyProcessing.add(elementCode)
+      const newState = { ...state, elementsCurrentlyProcessing }
       return newState
     }
     case 'elementDoneProcessing': {
       const { elementCode } = action
-      const elementCurrentlyProcessing = new Set(state.elementCurrentlyProcessing)
-      elementCurrentlyProcessing.delete(elementCode)
-      const newState = { ...state, elementCurrentlyProcessing }
+      const elementsCurrentlyProcessing = new Set(state.elementsCurrentlyProcessing)
+      elementsCurrentlyProcessing.delete(elementCode)
+      const newState = { ...state, elementsCurrentlyProcessing }
       return newState
     }
     default:

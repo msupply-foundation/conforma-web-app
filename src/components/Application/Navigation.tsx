@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Container, Dropdown, Icon, Loader } from 'semantic-ui-react'
+import { Button, Container, Dropdown, Loader } from 'semantic-ui-react'
 import {
   MethodRevalidate,
   MethodToCallProps,
@@ -33,7 +33,7 @@ const Navigation: React.FC<NavigationProps> = ({
   const { push } = useRouter()
   const { isMobile } = useViewport()
   const {
-    state: { elementCurrentlyProcessing },
+    state: { elementsCurrentlyProcessing },
   } = useFormElementUpdateTracker()
   const [navigateToIfAllOk, setNavigateToIfAllOk] = useState<
     null | 'summary' | 'nextPage' | string
@@ -56,7 +56,7 @@ const Navigation: React.FC<NavigationProps> = ({
     current.pageNumber + 1 > currentSectionDetails.totalPages && nextSection == null
 
   useEffect(() => {
-    if (elementCurrentlyProcessing.size > 0 || !navigateToIfAllOk) return
+    if (elementsCurrentlyProcessing.size > 0 || !navigateToIfAllOk) return
 
     switch (navigateToIfAllOk) {
       case 'summary': {
@@ -120,7 +120,7 @@ const Navigation: React.FC<NavigationProps> = ({
         )
       }
     }
-  }, [elementCurrentlyProcessing, navigateToIfAllOk])
+  }, [elementsCurrentlyProcessing, navigateToIfAllOk])
 
   const getPreviousSectionPage = (): SectionAndPage => {
     const { sectionCode, pageNumber } = current
@@ -187,7 +187,7 @@ const Navigation: React.FC<NavigationProps> = ({
     value: details.code,
   }))
 
-  const showLoader = isValidating || (elementCurrentlyProcessing.size > 0 && !!navigateToIfAllOk)
+  const showLoader = isValidating || (elementsCurrentlyProcessing.size > 0 && !!navigateToIfAllOk)
 
   return (
     <Container>
