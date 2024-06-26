@@ -35,8 +35,9 @@ const Navigation: React.FC<NavigationProps> = ({
   const {
     state: { elementCurrentlyProcessing },
   } = useFormElementUpdateTracker()
-  const [navigateToIfAllOk, setNavigateToIfAllOk] = useState<false | string>(false)
-  const [buttonClicked, setButtonClicked] = useState(false)
+  const [navigateToIfAllOk, setNavigateToIfAllOk] = useState<
+    null | 'summary' | 'nextPage' | string
+  >(null)
 
   const currentSectionDetails = sections[current.sectionCode].details
 
@@ -57,16 +58,68 @@ const Navigation: React.FC<NavigationProps> = ({
   useEffect(() => {
     if (elementCurrentlyProcessing.size > 0 || !navigateToIfAllOk) return
 
-    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
-      if (firstStrictInvalidPage) {
-        setStrictSectionPage(firstStrictInvalidPage)
-        sendToPage(firstStrictInvalidPage)
-        setNavigateToIfAllOk(false)
-      } else {
-        push(navigateToIfAllOk)
-        setNavigateToIfAllOk(false)
+    switch (navigateToIfAllOk) {
+      case 'summary': {
+        requestRevalidation(
+          ({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+            if (firstStrictInvalidPage) {
+              setStrictSectionPage(firstStrictInvalidPage)
+              setNavigateToIfAllOk(null)
+              sendToPage(firstStrictInvalidPage)
+            } else {
+              setNavigateToIfAllOk(null)
+              push(`/application/${serialNumber}/summary`)
+            }
+          }
+        )
+        break
       }
-    })
+      case 'nextPage': {
+        // Use validationMethod to check if can change to page (on linear
+        // application) OR display current page with strict validation
+        requestRevalidation(
+          ({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+            if (
+              firstStrictInvalidPage !== null &&
+              current.sectionCode === firstStrictInvalidPage.sectionCode &&
+              current.pageNumber === firstStrictInvalidPage.pageNumber
+            ) {
+              setNavigateToIfAllOk(null)
+              setStrictSectionPage(firstStrictInvalidPage)
+            } else {
+              setStrictSectionPage(null)
+              setNavigateToIfAllOk(null)
+              sendToPage(getNextSectionPage())
+            }
+          }
+        )
+        break
+      }
+      // Jump to specific section
+      default: {
+        requestRevalidation(
+          ({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+            const firstInvalidSectionIndex = Object.values(sections).find(
+              (section) => section.details.code === firstStrictInvalidPage?.sectionCode
+            )?.details.index
+
+            if (
+              firstStrictInvalidPage !== null &&
+              firstInvalidSectionIndex &&
+              firstInvalidSectionIndex > currentSectionDetails.index
+            ) {
+              setStrictSectionPage(firstStrictInvalidPage)
+              sendToPage(firstStrictInvalidPage)
+            } else {
+              const [sectionCode, pageNumber] = navigateToIfAllOk.split('___')
+              setStrictSectionPage(null)
+              setNavigateToIfAllOk(null)
+              sendToPage({ sectionCode, pageNumber: Number(pageNumber) })
+            }
+          }
+        )
+      }
+    }
   }, [elementCurrentlyProcessing, navigateToIfAllOk])
 
   const getPreviousSectionPage = (): SectionAndPage => {
@@ -101,27 +154,13 @@ const Navigation: React.FC<NavigationProps> = ({
   }
 
   const nextPageButtonHandler = () => {
-    const nextSectionPage = getNextSectionPage()
     if (!isLinear) {
-      sendToPage(nextSectionPage)
+      sendToPage(getNextSectionPage())
       window.scrollTo({ top: 0 })
       return
     }
 
-    // Use validationMethod to check if can change to page (on linear
-    // application) OR display current page with strict validation
-    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
-      if (
-        firstStrictInvalidPage !== null &&
-        current.sectionCode === firstStrictInvalidPage.sectionCode &&
-        current.pageNumber === firstStrictInvalidPage.pageNumber
-      )
-        setStrictSectionPage(firstStrictInvalidPage)
-      else {
-        setStrictSectionPage(null)
-        sendToPage(nextSectionPage)
-      }
-    })
+    setNavigateToIfAllOk('nextPage')
   }
 
   const sectionJumpHandler = (sectionPage: SectionAndPage) => {
@@ -138,33 +177,8 @@ const Navigation: React.FC<NavigationProps> = ({
       return
     }
 
-    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
-      const firstInvalidSectionIndex = Object.values(sections).find(
-        (section) => section.details.code === firstStrictInvalidPage?.sectionCode
-      )?.details.index
-
-      if (
-        firstStrictInvalidPage !== null &&
-        firstInvalidSectionIndex &&
-        firstInvalidSectionIndex > currentSectionDetails.index
-      ) {
-        setStrictSectionPage(firstStrictInvalidPage)
-        sendToPage(firstStrictInvalidPage)
-      } else {
-        setStrictSectionPage(null)
-        sendToPage(sectionPage)
-      }
-    })
-  }
-
-  const summaryButtonHandler = () => {
-    setNavigateToIfAllOk(`/application/${serialNumber}/summary`)
-    // requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
-    //   if (firstStrictInvalidPage) {
-    //     setStrictSectionPage(firstStrictInvalidPage)
-    //     sendToPage(firstStrictInvalidPage)
-    //   } else push(`/application/${serialNumber}/summary`)
-    // })
+    const { sectionCode, pageNumber } = sectionPage
+    setNavigateToIfAllOk(`${sectionCode}___${pageNumber}`)
   }
 
   const sectionOptions = Object.values(sections).map(({ details }) => ({
@@ -195,7 +209,7 @@ const Navigation: React.FC<NavigationProps> = ({
             primary
             inverted={isValidating}
             disabled={showLoader}
-            onClick={summaryButtonHandler}
+            onClick={() => setNavigateToIfAllOk('summary')}
           >
             {showLoader ? t('BUTTON_VALIDATING') : t('BUTTON_SUMMARY')}
             {showLoader && <Loader active inline size="tiny" />}
