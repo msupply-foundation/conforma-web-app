@@ -4,8 +4,9 @@ const PIXELS_PER_PAGE = 27.8
 const TOP_PAD = 5
 const BOTTOM_PAD = 10
 
-import React, { RefObject } from 'react'
+import React, { RefObject, useEffect, useState } from 'react'
 import { Accordion, Container, Grid, Icon, List, Sticky, Progress } from 'semantic-ui-react'
+import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import styleConstants from '../../utils/data/styleConstants'
 import { checkPageIsAccessible } from '../../utils/helpers/structure'
@@ -54,6 +55,46 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
     push,
   } = useRouter()
 
+  const {
+    state: { elementsCurrentlyProcessing },
+  } = useFormElementUpdateTracker()
+
+  const [navigateToIfAllOk, setNavigateToIfAllOk] = useState<null | SectionAndPage>(null)
+
+  useEffect(() => {
+    if (elementsCurrentlyProcessing.size > 0 || !navigateToIfAllOk) return
+
+    const { sectionCode, pageNumber } = navigateToIfAllOk
+
+    // Use validationMethod to check if can change to page (on linear
+    // application) OR display current page with strict validation
+    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+      if (!firstStrictInvalidPage) {
+        setStrictSectionPage(null)
+        setNavigateToIfAllOk(null)
+        push(`/application/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+        return
+      }
+      if (
+        checkPageIsAccessible({
+          fullStructure: structure,
+          firstIncomplete: firstStrictInvalidPage,
+          current: { sectionCode, pageNumber },
+        })
+      ) {
+        setStrictSectionPage(null)
+        setNavigateToIfAllOk(null)
+        push(`/application/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
+      } else {
+        setStrictSectionPage(firstStrictInvalidPage)
+        setNavigateToIfAllOk(null)
+        push(
+          `/application/${structure.info.serial}/${firstStrictInvalidPage.sectionCode}/Page${firstStrictInvalidPage.pageNumber}`
+        )
+      }
+    })
+  }, [elementsCurrentlyProcessing, navigateToIfAllOk])
+
   const activeIndex =
     Object.values(sections)
       .filter(({ details }) => details.active)
@@ -66,30 +107,7 @@ const ProgressArea: React.FC<ProgressAreaProps> = ({
       return
     }
 
-    // Use validationMethod to check if can change to page (on linear
-    // application) OR display current page with strict validation
-    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
-      if (!firstStrictInvalidPage) {
-        setStrictSectionPage(null)
-        push(`/application/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
-        return
-      }
-      if (
-        checkPageIsAccessible({
-          fullStructure: structure,
-          firstIncomplete: firstStrictInvalidPage,
-          current: { sectionCode, pageNumber },
-        })
-      ) {
-        setStrictSectionPage(null)
-        push(`/application/${structure.info.serial}/${sectionCode}/Page${pageNumber}`)
-      } else {
-        setStrictSectionPage(firstStrictInvalidPage)
-        push(
-          `/application/${structure.info.serial}/${firstStrictInvalidPage.sectionCode}/Page${firstStrictInvalidPage.pageNumber}`
-        )
-      }
-    })
+    setNavigateToIfAllOk({ sectionCode, pageNumber })
   }
 
   // We want to be able to show FIVE states:
