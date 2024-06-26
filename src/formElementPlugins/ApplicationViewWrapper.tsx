@@ -74,8 +74,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   // Update dynamic parameters when responses change
   useEffect(() => {
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
-    Object.entries(parameterExpressions).forEach(([field, expression]) => {
-      evaluateExpression(expression as EvaluatorNode, {
+    setUpdateTrackerState({
+      type: 'elementProcessing',
+      elementCode: code,
+    })
+
+    const result = Object.entries(parameterExpressions).map(([field, expression]) => {
+      return evaluateExpression(expression as EvaluatorNode, {
         objects: { responses: allResponses, currentUser, applicationData, functions },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
@@ -89,6 +94,12 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         }
       })
     })
+    Promise.all(result).then(() =>
+      setUpdateTrackerState({
+        type: 'elementDoneProcessing',
+        elementCode: code,
+      })
+    )
   }, [allResponses])
 
   useEffect(() => {
@@ -117,6 +128,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }
 
   const onSave = async (response: ResponseFull) => {
+    setUpdateTrackerState({
+      type: 'elementProcessing',
+      elementCode: code,
+    })
     if (!response?.customValidation) {
       // Validate and Save response -- generic
       const validationResult: ValidationState = await onUpdate(response?.text)
@@ -167,6 +182,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       elementCode: code,
       textValue: textValue || '',
       previousValue: currentResponse?.text || '',
+    })
+    setUpdateTrackerState({
+      type: 'elementDoneProcessing',
+      elementCode: code,
     })
   }
 

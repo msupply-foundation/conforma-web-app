@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Container, Dropdown, Icon, Loader } from 'semantic-ui-react'
 import {
   MethodRevalidate,
@@ -10,6 +10,7 @@ import {
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useViewport } from '../../contexts/ViewportState'
+import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 
 interface NavigationProps {
   current: SectionAndPage
@@ -31,6 +32,11 @@ const Navigation: React.FC<NavigationProps> = ({
   const { t } = useLanguageProvider()
   const { push } = useRouter()
   const { isMobile } = useViewport()
+  const {
+    state: { elementCurrentlyProcessing },
+  } = useFormElementUpdateTracker()
+  const [navigateToIfAllOk, setNavigateToIfAllOk] = useState<false | string>(false)
+  const [buttonClicked, setButtonClicked] = useState(false)
 
   const currentSectionDetails = sections[current.sectionCode].details
 
@@ -47,6 +53,21 @@ const Navigation: React.FC<NavigationProps> = ({
   const isFirstPage = current.pageNumber - 1 === 0 && previousSection == null
   const isLastPage =
     current.pageNumber + 1 > currentSectionDetails.totalPages && nextSection == null
+
+  useEffect(() => {
+    if (elementCurrentlyProcessing.size > 0 || !navigateToIfAllOk) return
+
+    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+      if (firstStrictInvalidPage) {
+        setStrictSectionPage(firstStrictInvalidPage)
+        sendToPage(firstStrictInvalidPage)
+        setNavigateToIfAllOk(false)
+      } else {
+        push(navigateToIfAllOk)
+        setNavigateToIfAllOk(false)
+      }
+    })
+  }, [elementCurrentlyProcessing, navigateToIfAllOk])
 
   const getPreviousSectionPage = (): SectionAndPage => {
     const { sectionCode, pageNumber } = current
@@ -137,12 +158,13 @@ const Navigation: React.FC<NavigationProps> = ({
   }
 
   const summaryButtonHandler = () => {
-    requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
-      if (firstStrictInvalidPage) {
-        setStrictSectionPage(firstStrictInvalidPage)
-        sendToPage(firstStrictInvalidPage)
-      } else push(`/application/${serialNumber}/summary`)
-    })
+    setNavigateToIfAllOk(`/application/${serialNumber}/summary`)
+    // requestRevalidation(({ firstStrictInvalidPage, setStrictSectionPage }: MethodToCallProps) => {
+    //   if (firstStrictInvalidPage) {
+    //     setStrictSectionPage(firstStrictInvalidPage)
+    //     sendToPage(firstStrictInvalidPage)
+    //   } else push(`/application/${serialNumber}/summary`)
+    // })
   }
 
   const sectionOptions = Object.values(sections).map(({ details }) => ({
@@ -150,6 +172,8 @@ const Navigation: React.FC<NavigationProps> = ({
     text: details.title,
     value: details.code,
   }))
+
+  const showLoader = isValidating || (elementCurrentlyProcessing.size > 0 && !!navigateToIfAllOk)
 
   return (
     <Container>
@@ -170,11 +194,11 @@ const Navigation: React.FC<NavigationProps> = ({
           <Button
             primary
             inverted={isValidating}
-            disabled={isValidating}
+            disabled={showLoader}
             onClick={summaryButtonHandler}
           >
-            {isValidating ? t('BUTTON_VALIDATING') : t('BUTTON_SUMMARY')}
-            {isValidating && <Loader active inline size="tiny" />}
+            {showLoader ? t('BUTTON_VALIDATING') : t('BUTTON_SUMMARY')}
+            {showLoader && <Loader active inline size="tiny" />}
           </Button>
         </div>
         {isMobile && sectionOptions.length > 1 && (
