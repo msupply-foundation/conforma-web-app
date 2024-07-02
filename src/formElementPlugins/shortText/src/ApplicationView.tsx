@@ -46,7 +46,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   function handleLoseFocus(e: any) {
-    onSave({ text: value })
+    onSave({ text: value ? value.trim() : value })
   }
 
   const styles = maxWidth

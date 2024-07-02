@@ -5,7 +5,7 @@ import {
   ReviewAssignment,
   ReviewStatus,
   useGetReviewInfoQuery,
-  User,
+  UserList as User,
 } from '../generated/graphql'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useUserState } from '../../contexts/UserState'
@@ -56,15 +56,15 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
 
     if (!data || !triggersReady) return
 
-    const reviewAssigments = data.reviewAssignments?.nodes as ReviewAssignment[]
+    const reviewAssignments = data.reviewAssignments?.nodes as ReviewAssignment[]
 
     // Current user has no assignments
-    if (!reviewAssigments) {
+    if (!reviewAssignments) {
       setIsFetching(false)
       return
     }
 
-    const assignments: AssignmentDetails[] = reviewAssigments.map((reviewAssignment) => {
+    const assignments: AssignmentDetails[] = reviewAssignments.map((reviewAssignment) => {
       // There will always just be one review assignment linked to a review.
       const review = reviewAssignment.reviews.nodes[0] as Review
       if (reviewAssignment.reviews.nodes.length > 1)
@@ -80,6 +80,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
         timeStageCreated,
         timeUpdated: timeStatusUpdated,
         levelNumber,
+        level,
         reviewer,
         reviewAssignmentAssignerJoins,
         allowedSections,
@@ -99,7 +100,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
 
       const assignment: AssignmentDetails = {
         id,
-        reviewer: reviewer as User,
+        reviewer: reviewer as User & { id: number },
         level: levelNumber || 1,
         current: {
           stage,
@@ -112,6 +113,7 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
         isMakeDecision: !!isFinalDecision,
         isLastLevel: !!isLastLevel,
         isSelfAssignable: !!isSelfAssignable,
+        isSingleReviewerLevel: level?.singleReviewerAllSections ?? false,
         allowedSections: (allowedSections as string[]) || [],
         assignedSections: assignedSections as string[],
         availableSections: availableSections as string[],
@@ -133,7 +135,6 @@ const useGetReviewInfo = ({ applicationId, serial, skip = false }: UseGetReviewI
       }
       return assignment
     })
-
     setAssignments(assignments)
     setIsFetching(false)
   }, [data, loading, triggersReady, triggersLoading, triggersError])

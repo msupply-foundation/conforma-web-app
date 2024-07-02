@@ -271,9 +271,9 @@ const ListFilters: React.FC<{
             return null
         }
       })}
-      {totalCount ? (
+      {totalCount !== null && (
         <p className="result-count">{t('APPLICATIONS_LIST_TOTAL_RESULTS', totalCount)}</p>
-      ) : null}
+      )}
     </div>
   )
 }

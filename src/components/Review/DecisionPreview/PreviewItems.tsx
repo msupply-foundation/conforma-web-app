@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Icon, Accordion, Image } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
+import { useDocumentModal } from '../../../utils/hooks/useDocumentModal'
 import MarkdownBlock from '../../../utils/helpers/semanticReactMarkdown'
 import { ActionQueueStatus } from '../../../utils/generated/graphql'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
@@ -19,6 +20,7 @@ interface NotificationPreviewData extends ResultCommon {
 interface DocumentPreviewData extends ResultCommon {
   type: 'DOCUMENT'
   fileId: string
+  filename: string
 }
 
 interface GenericPreviewData extends ResultCommon {
@@ -48,18 +50,23 @@ const NotificationPreview = ({ item }: { item: NotificationPreviewData }) => {
 }
 
 const DocumentPreview = ({ item }: { item: DocumentPreviewData }) => {
+  const { displayString, fileId, filename } = item
+  const fileUrl = getServerUrl('file', { fileId })
+  const thumbnailUrl = getServerUrl('file', { fileId, thumbnail: true })
+  const { DocumentModal, handleFile } = useDocumentModal({
+    filename,
+    fileUrl,
+    preventDownload: true,
+  })
+
   return (
-    <div className="item document-preview">
-      <Image
-        src={getServerUrl('file', { fileId: item.fileId, thumbnail: true })}
-        style={{ maxHeight: 50 }}
-      />
-      <p>
-        <a href={getServerUrl('file', { fileId: item.fileId })} target="_blank">
-          {item.displayString}
-        </a>
-      </p>
-    </div>
+    <>
+      {DocumentModal}
+      <div className="item document-preview" onClick={handleFile}>
+        <Image src={thumbnailUrl} className="clickable" style={{ maxHeight: 50 }} />
+        <p className="clickable link-style">{displayString}</p>
+      </div>
+    </>
   )
 }
 

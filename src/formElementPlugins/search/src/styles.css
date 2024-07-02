@@ -2,9 +2,23 @@
 whole list item */
 
 .search-list-item-icon {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 .search-list-item:hover .search-list-item-icon {
-    visibility: visible;
+  visibility: visible;
+}
+
+/* Permits line-breaks in results text */
+.search .title,
+.search .description {
+  white-space: pre-wrap;
+}
+
+/* Permits line-breaks in card elements (lines are converted to <span>s, so need
+a block layout rather than pre-formatting as above */
+.ui.card .header,
+.ui.card .description {
+  display: flex !important;
+  flex-direction: column;
 }

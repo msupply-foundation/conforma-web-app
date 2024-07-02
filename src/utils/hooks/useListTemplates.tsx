@@ -19,52 +19,45 @@ type TemplatesData = {
   templatesByCategory: TemplatesByCategory
 }
 
-const emptyTemplateData = {
+const emptyTemplateData: TemplatesData = {
   templates: [],
   templatesByCategory: [],
 }
 
 const useListTemplates = (templatePermissions: TemplatePermissions, isLoading: boolean) => {
-  const [templatesData, setTemplatesData] = useState<TemplatesData>(emptyTemplateData)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(true)
-
-  const { data, error: apolloError } = useGetTemplatesQuery({
+  const { data, loading, error } = useGetTemplatesQuery({
     skip: isLoading,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   })
 
-  useEffect(() => {
-    if (apolloError) {
-      setError(apolloError.message)
-      setLoading(false)
+  const templatesData = emptyTemplateData
+
+  if (data?.templates?.nodes) {
+    const filteredTemplates = (data?.templates?.nodes || []).filter(
+      (template) => templatePermissions[String(template?.code)]
+    ) as Template[]
+    if (filteredTemplates.length > 0) {
+      templatesData.templates = filteredTemplates
+        .map((template) => convertFromTemplateToTemplateDetails(template, templatePermissions))
+        .sort((a, b) => {
+          if (a.templateCategory === b.templateCategory) {
+            if (!a.priority && !b.priority) return b.name > a.name ? -1 : 1
+            return (b.priority ?? 0) - (a.priority ?? 0)
+          }
+          if (!a.templateCategory.priority && !b.templateCategory.priority) {
+            if (a.templateCategory.title === b.templateCategory.title) return 0
+            return b.templateCategory.title > a.templateCategory.title ? -1 : 1
+          }
+          return (b.templateCategory.priority ?? 0) - (a.templateCategory.priority ?? 0)
+        })
+
+      templatesData.templatesByCategory = getTemplatesByCategory(templatesData.templates)
     }
-
-    if (data?.templates?.nodes) {
-      const filteredTemplates = (data?.templates?.nodes || []).filter(
-        (template) => templatePermissions[String(template?.code)]
-      ) as Template[]
-      if (filteredTemplates.length === 0) {
-        setTemplatesData(emptyTemplateData)
-        return setLoading(false)
-      }
-
-      const templates = filteredTemplates.map((template) =>
-        convertFromTemplateToTemplateDetails(template, templatePermissions)
-      )
-
-      setTemplatesData({
-        templates,
-        templatesByCategory: getTemplatesByCategory(templates),
-      })
-
-      setLoading(false)
-    }
-  }, [data, apolloError, templatePermissions])
+  }
 
   return {
-    error,
-    loading,
+    error: error?.message ?? '',
+    loading: loading && !data,
     templatesData,
   }
 }
@@ -77,17 +70,30 @@ const getTemplatesByCategory = (templates: TemplateInList[]) => {
     templatesByCategoryObject[title].push(template)
   })
 
-  return Object.values(templatesByCategoryObject).map((templates) => ({
-    templates,
-    templateCategory: templates[0].templateCategory as TemplateCategoryDetails,
-  }))
+  return Object.values(templatesByCategoryObject)
+    .map((templates) => ({
+      templates: templates.sort((a, b) => {
+        if (!a.priority && !b.priority) {
+          return b.name > a.name ? -1 : 1
+        }
+        return (b.priority ?? 0) - (a.priority ?? 0)
+      }),
+      templateCategory: templates[0].templateCategory as TemplateCategoryDetails,
+    }))
+    .sort((a, b) => {
+      if (!a.templateCategory.priority && !b.templateCategory.priority) {
+        if (a.templateCategory.title === b.templateCategory.title) return 0
+        return b.templateCategory.title > a.templateCategory.title ? -1 : 1
+      }
+      return (b.templateCategory.priority ?? 0) - (a.templateCategory.priority ?? 0)
+    })
 }
 
 const convertFromTemplateToTemplateDetails = (
   template: Template,
   templatePermissions: TemplatePermissions
 ) => {
-  const { id, code, versionId, name, namePlural, icon } = template
+  const { id, code, versionId, name, namePlural, icon, priority } = template
   const permissions = templatePermissions[code] || []
 
   const totalApplications = template?.applications.totalCount || 0
@@ -99,6 +105,7 @@ const convertFromTemplateToTemplateDetails = (
   const categoryUILocation: UiLocation[] =
     (template?.templateCategory?.uiLocation as UiLocation[]) || []
   const categoryIsSubmenu = template?.templateCategory?.isSubmenu || false
+  const categoryPriority = template?.templateCategory?.priority
 
   const hasApplyPermission = permissions.includes(PermissionPolicyType.Apply)
   // This is already checked (permission.length > 0), but added to avoid confusion
@@ -119,12 +126,14 @@ const convertFromTemplateToTemplateDetails = (
     dashboardRestrictions,
     hasApplyPermission,
     hasNonApplyPermissions,
+    priority: priority ?? null,
     templateCategory: {
       code: categoryCode,
       icon: categoryIcon,
       title: categoryTitle,
       uiLocation: categoryUILocation,
       isSubmenu: categoryIsSubmenu,
+      priority: categoryPriority ?? null,
     },
     totalApplications,
   }

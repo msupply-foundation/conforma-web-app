@@ -1,11 +1,34 @@
 import { TemplateElement } from '../../../utils/generated/graphql'
-import { ApplicationDetails, ResponseFull, User } from '../../../utils/types'
+import { ApplicationDetails, EvaluatorNode, ResponseFull, User } from '../../../utils/types'
 
 export enum DisplayType {
   CARDS = 'cards',
   TABLE = 'table',
   INLINE = 'inline',
   LIST = 'list',
+}
+
+export interface ListBuilderParameters {
+  label?: string
+  description?: string
+  createModalButtonText?: string
+  modalText?: string
+  addButtonText?: string
+  updateButtonText?: string
+  deleteItemText?: string
+  inputFields: TemplateElement[]
+  displayFormat?: { title: string; subtitle: string; description: string }
+  displayType?: DisplayType
+  textFormat?: string
+  dataFormat?: string | EvaluatorNode
+  default?: ResponseFull
+  inlineOpen?: boolean
+  tableExcludeColumns?: string[]
+  maxItems?: number
+  // These affect mobile viewing only
+  hideFromMobileTableIfEmpty?: true | string[]
+  minMobileTableLabelWidth?: number | string
+  maxMobileTableLabelWidth?: number | string
 }
 
 export interface InputResponseField {
@@ -32,4 +55,8 @@ export interface ListLayoutProps {
   updateButtonText?: string
   innerElementUpdate?: (code: string) => void
   updateList?: () => void
+  // These properties optional and affect Tables on Mobile
+  hideFromMobileIfEmpty?: boolean | string[]
+  minMobileLabelWidth?: number | string
+  maxMobileLabelWidth?: number | string
 }

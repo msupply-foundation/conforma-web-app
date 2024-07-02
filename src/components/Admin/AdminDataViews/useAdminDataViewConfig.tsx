@@ -19,7 +19,7 @@ export const useAdminDataViewConfig = (tableName: string) => {
 
   const { query, updateQuery } = useRouter()
 
-  const showToast = useToast({ position: Position.topLeft })
+  const { showToast } = useToast({ position: Position.topLeft })
 
   // Data Views
 

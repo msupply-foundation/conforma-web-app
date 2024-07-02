@@ -207,4 +207,6 @@ const filterTypeMap: { [key: string]: FilterTypes } = {
   number: 'number',
   boolean: 'dataViewBoolean',
   Date: 'date',
+  // Treat Enum as string for now, as the list of options comes from later query
+  Enum: 'dataViewString',
 }

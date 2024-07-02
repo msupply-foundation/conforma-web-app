@@ -6,14 +6,16 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useToast, topLeft } from '../../contexts/Toast'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
-import { JsonEditor } from './JsonEditor'
+import { JsonEditor } from './JsonEditor/JsonEditor'
 import Loading from '../Loading'
+import { useViewport } from '../../contexts/ViewportState'
 
 export const AdminPreferences: React.FC = () => {
   const { t, tFormat } = useLanguageProvider()
   usePageTitle(t('PAGE_TITLE_PREFS'))
+  const { isMobile } = useViewport()
 
-  const showToast = useToast({ position: topLeft })
+  const { showToast } = useToast({ position: topLeft })
   const { ConfirmModal: WarningModal, showModal: showWarningModal } = useConfirmationModal({
     type: 'warning',
     title: t('PREFERENCES_SAVE_WARNING'),
@@ -66,6 +68,7 @@ export const AdminPreferences: React.FC = () => {
           maxWidth={650}
           restrictDelete={({ level }) => level === 1}
           restrictAdd={({ level }) => level === 0}
+          indent={isMobile ? 1 : 2}
         />
       ) : (
         <Loading />

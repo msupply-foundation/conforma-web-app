@@ -35,11 +35,6 @@ export default gql`
         assigners
         reviewers
       }
-      # Use the page and count info for rendering Pagination UI
-      pageInfo {
-        hasPreviousPage
-        hasNextPage
-      }
       totalCount
     }
     templates(condition: { status: AVAILABLE, code: $templateCode }) {

@@ -1,7 +1,7 @@
 import { useParams, useLocation, useHistory, useRouteMatch, match } from 'react-router-dom'
 import queryString from 'query-string'
 import { useMemo } from 'react'
-import { BasicStringObject } from '../types'
+import { BasicStringObject, PageType } from '../types'
 import { isEqual } from 'lodash'
 
 interface RouterResult {
@@ -16,6 +16,7 @@ interface RouterResult {
   history: any
   params: any
   location: any
+  currentPageType: PageType
 }
 
 /**
@@ -102,6 +103,7 @@ export function useRouter(): RouterResult {
       replace: history.replace,
       goBack: history.goBack,
       pathname: location.pathname,
+      currentPageType: getCurrentPageType(location.pathname),
 
       // Merge params and parsed query string into single "query" object
       // so that they can be used interchangeably.
@@ -121,4 +123,21 @@ export function useRouter(): RouterResult {
       history,
     }
   }, [location])
+}
+
+const getCurrentPageType = (pathname: string) => {
+  switch (true) {
+    case /^\/application\/.+\/review/.test(pathname):
+      return 'review'
+    case /^\/application\/.+\/summary/.test(pathname):
+      return 'summary'
+    case /^\/application/.test(pathname):
+      return 'application'
+    case /^\/admin/.test(pathname):
+      return 'admin'
+    case /^\/data/.test(pathname):
+      return 'data'
+    default:
+      return 'dashboard'
+  }
 }

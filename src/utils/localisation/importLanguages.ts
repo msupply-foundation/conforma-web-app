@@ -80,7 +80,7 @@ export const importLanguages = async (
     for (const language of uploadObjects) {
       results.push(
         await postRequest({
-          url: getServerUrl('installLanguage'),
+          url: getServerUrl('localisation', { action: 'install' }),
           jsonBody: language,
           headers: { 'Content-Type': 'application/json' },
         })

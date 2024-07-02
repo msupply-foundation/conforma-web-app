@@ -107,6 +107,8 @@ const PermissionReviewLevel: React.FC<PemrmissionReviewLevelProps> = ({ stage })
             type={PermissionPolicyType.Review}
             stageNumber={stage?.number || 0}
             levelNumber={level?.number}
+            stage={stage}
+            reviewLevel={level ?? undefined}
           />
         </div>
       ))}

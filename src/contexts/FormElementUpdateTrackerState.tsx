@@ -21,11 +21,19 @@ interface ContextFormElementUpdateTrackerState {
   // if still waiting for element to update (i.e. it's still in focus, then it will be set to 'infinity')
   // if no elements were updated, it will be set to 0
   latestChangedElementUpdateTimestamp: number
+  // This refers to elements that are either:
+  // - having their parameters re-evaluated
+  // - saving to server
+  // We want to make sure the user can't move ahead while these are in progress,
+  // otherwise we can end up with invalid or inconsistent responses slipping
+  // through
+  elementsCurrentlyProcessing: Set<string>
 }
 
 const contextStateDefault: ContextFormElementUpdateTrackerState = {
   elementsUpdateState: {},
   latestChangedElementUpdateTimestamp: 0,
+  elementsCurrentlyProcessing: new Set(),
 }
 
 const calculateLatestChangedTimestamp = (elementsUpdateState: {
@@ -34,7 +42,7 @@ const calculateLatestChangedTimestamp = (elementsUpdateState: {
   Object.values(elementsUpdateState).reduce((latestUpdateTimestamp, singleElementState) => {
     if (latestUpdateTimestamp === Infinity) return Infinity
     const { enteredSequence, updatedSequence, changedTimestamp } = singleElementState
-    // Element is in focus still when entered sequence is higher then updated seqeunce, using sequence to accomodate plugins like password
+    // Element is in focus still when entered sequence is higher then updated sequence, using sequence to accommodate plugins like password
     // which have two fields for the same element, and there is a race condition when second field entered
     // occurs before first field exit (because exit is triggered after mutation)
     if (enteredSequence > updatedSequence) return Infinity
@@ -57,6 +65,14 @@ export type UpdateAction =
       elementCode: string
       textValue: string
       previousValue: string
+    }
+  | {
+      type: 'elementProcessing'
+      elementCode: string
+    }
+  | {
+      type: 'elementDoneProcessing'
+      elementCode: string
     }
 
 type FormElementUpdateTrackerProps = { children: React.ReactNode }
@@ -86,6 +102,7 @@ const reducer: Reducer = (state, action) => {
             enteredTextValue: action.textValue,
           },
         },
+        elementsCurrentlyProcessing: state.elementsCurrentlyProcessing,
       }
 
       return newState
@@ -131,8 +148,23 @@ const reducer: Reducer = (state, action) => {
       const newState: ContextFormElementUpdateTrackerState = {
         latestChangedElementUpdateTimestamp,
         elementsUpdateState: newElementsUpdateState,
+        elementsCurrentlyProcessing: state.elementsCurrentlyProcessing,
       }
 
+      return newState
+    }
+    case 'elementProcessing': {
+      const { elementCode } = action
+      const elementsCurrentlyProcessing = new Set(state.elementsCurrentlyProcessing)
+      elementsCurrentlyProcessing.add(elementCode)
+      const newState = { ...state, elementsCurrentlyProcessing }
+      return newState
+    }
+    case 'elementDoneProcessing': {
+      const { elementCode } = action
+      const elementsCurrentlyProcessing = new Set(state.elementsCurrentlyProcessing)
+      elementsCurrentlyProcessing.delete(elementCode)
+      const newState = { ...state, elementsCurrentlyProcessing }
       return newState
     }
     default:

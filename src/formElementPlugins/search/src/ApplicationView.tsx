@@ -6,18 +6,40 @@ import { ApplicationViewProps } from '../../types'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { substituteValues } from '../../../utils/helpers/utilityFunctions'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import evaluateExpression from '../../../modules/expression-evaluator'
 import config from '../../../config'
 import useDebounce from './useDebounce'
 import './styles.css'
 import useDefault from '../../useDefault'
 import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import { EvaluatorNode } from '../../../utils/types'
+import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
 
 interface DisplayFormat {
   title?: string
   subtitle?: string
   description?: string
   simple?: boolean
+}
+
+interface SearchParameters {
+  label?: string
+  description?: string
+  placeholder: string
+  source: EvaluatorNode
+  icon: SemanticICONS
+  multiSelect: boolean
+  minCharacters: number
+  restrictCase?: 'upper' | 'lower'
+  trimWhiteSpace?: boolean
+  inputPattern?: string
+  inputExample?: string
+  inputErrorMessage?: string
+  displayFormat: { title: string; subtitle: string; description: string }
+  resultFormat: { title: string; description: string }
+  textFormat: string
+  displayType: 'card' | 'list' | 'input'
+  default: Response | Response[]
 }
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
@@ -40,16 +62,23 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     icon = 'search',
     multiSelect = false,
     minCharacters = 1,
-    displayFormat = {},
+    restrictCase,
+    trimWhiteSpace = false,
+    inputPattern,
+    inputExample = 'a',
+    inputErrorMessage = t('INPUT_ERROR'),
+    displayFormat = { title: '', subtitle: '', description: '' },
     resultFormat = displayFormat,
-    textFormat,
+    textFormat = '',
     displayType = 'card',
     default: defaultValue,
-  } = parameters
+  } = parameters as SearchParameters
 
   const {
     userState: { currentUser },
   } = useUserState()
+
+  const inputRegex = inputPattern ? new RegExp(inputPattern) : undefined
 
   const graphQLEndpoint = applicationData.config.getServerUrl('graphQL')
 
@@ -70,6 +99,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         : [currentResponse.selection]
       : []
   )
+  const [inputError, setInputError] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
+  const [resultsOpen, setResultsOpen] = useState(false)
   const { isEditable } = element
 
   const [debounceOutput, setDebounceInput] = useDebounce<string>('', DEBOUNCE_TIMEOUT)
@@ -100,7 +132,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }, [selection])
 
   useEffect(() => {
-    if (!debounceOutput) return
+    if (!debounceOutput || inputError) return
     evaluateSearchQuery(debounceOutput)
   }, [debounceOutput])
 
@@ -120,11 +152,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         else setResults(results)
         setDebounceInput('')
         setLoading(false)
+        setResultsOpen(true)
       })
       .catch((err) => {
         console.error('Search error:', err.message)
         setDebounceInput('')
         setLoading(false)
+        setResults([])
       })
   }
 
@@ -133,14 +167,30 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     // string (otherwise it remains even though it's not displayed anywhere)
     if (displayType === 'input') setSelection([])
 
-    const text = e.target.value
+    let text = trimWhiteSpace ? e.target.value.trim() : e.target.value
+
+    if (restrictCase === 'upper') text = text.toUpperCase()
+    if (restrictCase === 'lower') text = text.toUpperCase()
+
+    const inputValid = partialMatch(text, inputExample, inputRegex)
+
+    if (!inputValid) {
+      setInputError(true)
+      setLoading(false)
+    } else setInputError(false)
+
     setSearchText(text)
+
     if (text.length < minCharacters) return
     setDebounceInput(text)
-    setLoading(true)
+    if (inputValid) {
+      setLoading(true)
+      setResultsOpen(false)
+    }
   }
 
   const handleSelect = (_: any, data: any) => {
+    setResultsOpen(false)
     const selectedResult = results[data.result.index]
     if (!selectedResult) return // Don't select "Loading" item
     if (!multiSelect) setSelection([selectedResult])
@@ -150,9 +200,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         ? substituteValues(displayFormat.title ?? displayFormat.description, selectedResult)
         : ''
     )
+    setInputError(false)
   }
 
   const handleFocus = (e: any) => {
+    setIsFocused(true)
+    if (displayType === 'input' && !loading && !inputError && searchText.length >= minCharacters)
+      setResultsOpen(true)
     // This makes the component perform a new search when re-focusing (if no
     // selection already), as changes in other elements may have changed some of
     // the dynamic parameters in this element
@@ -195,6 +249,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     isEditable,
   }
 
+  const isError = !validationState.isValid || inputError
+  const errorMessage = inputError
+    ? inputErrorMessage
+    : !validationState.isValid
+    ? validationState?.validationMessage ?? t('VALIDATION_ERROR')
+    : undefined
+
   return (
     <>
       {label && (
@@ -203,7 +264,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      <Form.Field key={`search-${label}`} error={!validationState.isValid}>
+      <Form.Field key={`search-${label}`} error={isError}>
         <Search
           value={searchText}
           loading={loading}
@@ -218,10 +279,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           disabled={!isEditable}
           input={{ icon, iconPosition: 'left' }}
           noResultsMessage={t('MESSAGE_NO_RESULTS')}
+          onBlur={() => setIsFocused(false)}
+          open={resultsOpen}
         />
-        {validationState.isValid ? null : (
-          <Label pointing prompt content={validationState?.validationMessage} />
-        )}
+        {!errorMessage ? null : <Label pointing prompt content={errorMessage} />}
       </Form.Field>
       {displayType !== 'input' && <DisplaySelection {...displayProps} />}
     </>
@@ -359,6 +420,16 @@ const getDefaultString = (
         ? `${fields[0]}: ${result[fields[0]]}`
         : `${fields[1]}: ${result[fields[1]]}`
   }
+}
+
+// In order to check that user input is consistent with regex pattern, even when
+// it's only partially completed (and therefore won't match the regex), we
+// combine it with a known correct example and then test it against the pattern.
+const partialMatch = (text: string, example: string, pattern?: RegExp) => {
+  if (!pattern) return true
+  const fullString = text + example.slice(text.length)
+
+  return pattern.test(fullString)
 }
 
 export default ApplicationView

@@ -13,8 +13,6 @@ export type BasicEndpoint = [
     | 'previewActions'
     | 'extendApplication'
     | 'admin'
-    | 'installLanguage'
-    | 'allLanguages'
     | 'getAllPrefs'
     | 'setPrefs'
 ]
@@ -67,13 +65,6 @@ export type UploadEndpoint = [
   }
 ]
 
-export type EnableLanguageEndpoint = [
-  endpoint: 'enableLanguage',
-  options: { code: string; enabled?: boolean }
-]
-
-export type RemoveLanguageEndpoint = [endpoint: 'removeLanguage', options: { code: string }]
-
 export type SnapshotEndpoint = [
   endpoint: 'snapshot',
   options:
@@ -89,8 +80,16 @@ export type LookupTableEndpoint = [
   endpoint: 'lookupTable',
   options:
     | {
+        action: 'list'
+      }
+    | {
+        action: 'table'
+        id: number
+      }
+    | {
         action: 'import'
         name: string
+        code: string
       }
     | {
         action: 'export'
@@ -99,6 +98,28 @@ export type LookupTableEndpoint = [
     | {
         action: 'update'
         id: number
+        name: string
+        code: string
+      }
+]
+
+export type LocalisationEndpoint = [
+  endpoint: 'localisation',
+  options:
+    | {
+        action: 'getAll'
+      }
+    | {
+        action: 'enable'
+        code: string
+        enabled: boolean
+      }
+    | {
+        action: 'remove'
+        code: string
+      }
+    | {
+        action: 'install'
       }
 ]
 
@@ -116,9 +137,8 @@ export type ComplexEndpoint =
   | CheckTriggersEndpoint
   | CheckUniqueEndpoint
   | DataViewEndpoint
-  | EnableLanguageEndpoint
-  | RemoveLanguageEndpoint
   | SnapshotEndpoint
   | ArchiveEndpoint
   | LookupTableEndpoint
+  | LocalisationEndpoint
   | GetApplicationDataEndpoint

@@ -6,6 +6,7 @@ import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { LoginPayload } from '../../utils/types'
 import config from '../../config'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 interface NonRegisteredLoginProps {
   option: 'register' | 'reset-password' | 'redirect'
@@ -14,6 +15,9 @@ interface NonRegisteredLoginProps {
 
 const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirect }) => {
   const { t } = useLanguageProvider()
+  const {
+    preferences: { userRegistrationCode },
+  } = usePrefs()
 
   const [networkError, setNetworkError] = useState('')
   const { push, query } = useRouter()
@@ -44,7 +48,7 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({ option, redirec
   const onLoginSuccess = async (loginResult: LoginPayload) => {
     const { JWT, user, templatePermissions, orgList } = loginResult
     await onLogin(JWT, user, templatePermissions, orgList)
-    if (option === 'register') push('/application/new?type=UserRegistration')
+    if (option === 'register') push(`/application/new?type=${userRegistrationCode}`)
     else if (option === 'reset-password') push('/application/new?type=PasswordReset')
     else if (option === 'redirect' && redirect) push(redirect)
   }

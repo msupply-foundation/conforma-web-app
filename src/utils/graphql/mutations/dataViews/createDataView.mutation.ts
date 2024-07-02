@@ -6,6 +6,7 @@ export default gql`
     $tableName: String!
     $code: String!
     $detailViewHeaderColumn: String!
+    $menuName: String
   ) {
     createDataView(
       input: {
@@ -14,6 +15,7 @@ export default gql`
           tableName: $tableName
           code: $code
           detailViewHeaderColumn: $detailViewHeaderColumn
+          menuName: $menuName
         }
       }
     ) {

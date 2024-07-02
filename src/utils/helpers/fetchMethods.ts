@@ -27,8 +27,10 @@ export async function postRequest({
       },
       body,
     })
-    return response.json()
+    const responseJSON = await response.json()
+    return responseJSON
   } catch (err) {
+    console.log(err)
     throw err
   }
 }
@@ -47,8 +49,10 @@ export async function getRequest(endpointUrl: string, headers: object = {}) {
         ...headers,
       },
     })
-    return response.json()
+    const responseJSON = await response.json()
+    return responseJSON
   } catch (err) {
+    console.log(err)
     throw err
   }
 }

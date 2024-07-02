@@ -43,16 +43,6 @@ const Admin: React.FC = () => {
       header: t('MENU_ITEM_ADMIN_DATA_VIEW_CONFIG'),
       Element: <AdminDataViews />,
     },
-    // {
-    //   route: 'permissions',
-    //   header: t('MENU_ITEM_ADMIN_PERMISSIONS'),
-    //   Element: <AdminPermissions />,
-    // },
-    // {
-    //   route: 'plugins',
-    //   header: 'Plugins',
-    //   Element: <AdminPlugins />,
-    // },
     {
       route: 'localisations',
       header: t('MENU_ITEM_ADMIN_LOCALISATION'),

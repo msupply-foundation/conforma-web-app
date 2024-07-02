@@ -1,0 +1,10 @@
+/* Permits line-breaks in Dropdown selections */
+.search.selection .text {
+  white-space: pre-wrap;
+  line-height: 1.5em;
+}
+
+/* Make divider line a bit darker than the default */
+.search.selection .item {
+  border-top: 1px solid #ececec !important;
+}

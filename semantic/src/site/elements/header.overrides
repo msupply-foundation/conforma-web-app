@@ -44,32 +44,38 @@
   .ui.header:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
     font-size: @h1Mob;
   }
-  h1.ui.header {
+  h1.ui.header,
+  h1 {
     font-size: @h1Mob;
     font-weight: @semiboldWeight;
   }
-  h2.ui.header {
+  h2.ui.header,
+  h2 {
     font-size: @h2Mob;
     font-weight: @semiboldWeight;
   }
-  h3.ui.header {
+  h3.ui.header,
+  h3 {
     font-size: @h3Mob;
     font-weight: @semiboldWeight;
     text-transform: uppercase;
     color: @darkGrey;
   }
-  h4.ui.header {
+  h4.ui.header,
+  h4 {
     font-size: @h4Mob;
     font-weight: @semiboldWeight;
     text-transform: uppercase;
     color: @darkGrey;
   }
-  h5.ui.header {
+  h5.ui.header,
+  h5 {
     font-size: @h5Mob;
     font-weight: @semiboldWeight;
     color: @darkGrey;
   }
-  h6.ui.header {
+  h6.ui.header,
+  h6 {
     font-size: @h6Mob;
     font-weight: @semiboldWeight;
     text-transform: uppercase;

@@ -8,6 +8,9 @@ export const isArraySorted = (array: any[], ascending = true) => {
     )
 }
 
+export const isObject = (element: unknown) =>
+  typeof element === 'object' && !Array.isArray(element) && element !== null
+
 /*
 Checks if a URL string is an external URL or a local/relative one
 If local/relative, it prepends it with a specified host, else it
@@ -20,16 +23,28 @@ export const getFullUrl = (baseUrl: string | undefined, host: string) => {
 /*
 Replaces substrings identified as ${"property"} with values from "data".
 "property" can be a nested object property e.g "user.name".
-Note: If substring contains no property name (i.e. '${}') and "data" is not an Object, the whole item will be inserted.
+Note: If substring contains no property name (i.e. '${}') and "data" is not an
+Object, the whole item will be inserted.
+Also, if the extracted property is an object, we'll try [property].value.text
+(which makes the substitutions simpler in many form elements)
+If an "index" value is passed in, that can be accessed by '${0}'
 */
 export const substituteValues = (
   parameterisedString: string,
-  data: { [key: string]: any | string }
+  data: { [key: string]: any | string },
+  index?: number
 ): string => {
   // Custom replacement function for regex replace
   const getObjectProperty = (_: string, __: string, property: string) => {
+    if (property === '0' && index !== undefined) return String(index + 1)
     if (typeof data !== 'object') return data
-    const value = extractObjectProperty(data, property, `Can't find property: ${property}`)
+    let value = extractObjectProperty(data, property, `Can't find property: ${property}`)
+    if (isObject(value))
+      value = extractObjectProperty(
+        data,
+        `${property}.value.text`,
+        `Can't find property: ${property}`
+      )
     return value ?? ''
   }
 
@@ -77,4 +92,25 @@ export const fileSizeWithUnits = (size: number): string => {
   if (sizeInKb < 1_000_000) return `${parseInt(String(sizeInMB * 10)) / 10} MB`
   const sizeInGB = size / 1_000_000_000
   return `${parseInt(String(sizeInGB * 100)) / 100} GB`
+}
+
+// Force a file download
+export const downloadFile = async (url: string, filename: string, fetchOptions: object = {}) => {
+  const res = await fetch(url, fetchOptions)
+  const data = await res.blob()
+  var a = document.createElement('a')
+  a.href = window.URL.createObjectURL(data)
+  a.download = filename
+  a.click()
+}
+
+// LOCAL STORAGE
+
+// Clear all local storage *except* those keys specified in the input array
+export const clearLocalStorageExcept = (input: string | string[]) => {
+  const keys = typeof input === 'string' ? [input] : input
+  const currentLocalStorageKeys = Object.keys(localStorage)
+  currentLocalStorageKeys.forEach((key) => {
+    if (!keys.includes(key)) localStorage.removeItem(key)
+  })
 }

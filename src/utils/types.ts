@@ -10,7 +10,7 @@ import {
   ReviewResponseDecision,
   ReviewStatus,
   TemplateElementCategory,
-  User as GraphQLUser,
+  UserList as GraphQLUser,
   Organisation as GraphQLOrg,
   Filter,
   UiLocation,
@@ -19,7 +19,7 @@ import {
 
 import { ValidationState } from '../formElementPlugins/types'
 import { Checkbox } from '../formElementPlugins/checkbox/src/ApplicationView'
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from '../modules/expression-evaluator'
 import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
@@ -38,6 +38,7 @@ export {
   AssignmentOption,
   CellProps,
   ChangeRequestsProgress,
+  HideOnMobileTestMethod,
   ColumnDetails,
   ContextApplicationState,
   CurrentPage,
@@ -59,6 +60,7 @@ export {
   MethodToCallProps,
   Page,
   PageElement,
+  PageType,
   ApplicationProgress,
   ResponseFull,
   ResponsesByCode,
@@ -110,7 +112,10 @@ interface ApplicationDetails {
   user?: GraphQLUser
   org?: GraphQLOrg
   config?: any
+  currentPageType?: PageType
 }
+
+type PageType = 'application' | 'summary' | 'review' | 'data' | 'dashboard' | 'admin'
 
 interface ApplicationElementStates {
   [key: string]: ElementState
@@ -139,7 +144,7 @@ interface AssignmentDetails {
   level: number
   reviewerId?: number
   review: ReviewDetails | null
-  reviewer: GraphQLUser
+  reviewer: GraphQLUser & { id: number }
   current: {
     stage: StageDetails
     assignmentStatus: ReviewAssignmentStatus | null
@@ -152,6 +157,7 @@ interface AssignmentDetails {
   isMakeDecision: boolean
   isLastLevel: boolean
   isSelfAssignable: boolean
+  isSingleReviewerLevel: boolean
   allowedSections: string[]
   assignedSections: string[]
   availableSections: string[]
@@ -181,11 +187,14 @@ interface CellProps {
   deleteApplication: Function
 }
 
+type HideOnMobileTestMethod = (rowData: Record<string, unknown>) => boolean
 interface ColumnDetails {
   headerName: string
   headerDetail?: string
   sortName: string
   ColumnComponent: React.FunctionComponent<any>
+  hideMobileLabel?: boolean
+  hideOnMobileTest?: HideOnMobileTestMethod
 }
 
 interface ContextApplicationState {
@@ -377,6 +386,7 @@ interface ResponseFull {
   list?: any // Used in ListBuilder
   date?: any // Used in DatePicker
   number?: number | null // Used in Number plugin
+  data?: Record<string, any> // Used in JSON Editor
   // Next 5 used in Checkbox Summary view
   textUnselected?: string
   textMarkdownList?: string
@@ -577,6 +587,7 @@ interface TemplateCategoryDetails {
   icon: SemanticICONS | undefined
   uiLocation: UiLocation[]
   isSubmenu: boolean
+  priority: number | null
 }
 
 interface TemplateInList {
@@ -586,6 +597,7 @@ interface TemplateInList {
   code: string
   versionId: string
   icon: string | null | undefined
+  priority: number | null
   templateCategory: TemplateCategoryDetails
   permissions: PermissionPolicyType[]
   hasApplyPermission: boolean
@@ -690,6 +702,7 @@ export type DataViewsResponse = {
   title: string
   code: string
   urlSlug: string
+  menuName: string
   submenu: string | null
   defaultFilter: string | null
 }[]
@@ -699,6 +712,8 @@ interface FormatOptions {
   elementParameters?: object
   substitution?: string
   dateFormat?: DateTimeConstant | DateTimeFormatOptions
+  hideLabelOnMobile?: boolean
+  hideCellOnMobile?: boolean
   // Add more as required
 }
 
@@ -713,6 +728,7 @@ export interface DisplayDefinition {
   dataType?: string
   sortColumn?: string
   formatting: FormatOptions
+  hideIfNull: boolean
 }
 export interface HeaderRow extends DisplayDefinition {
   columnName: string

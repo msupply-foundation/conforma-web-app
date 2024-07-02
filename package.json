@@ -1,11 +1,11 @@
 {
   "name": "conforma-web-app",
-  "version": "0.6.0",
+  "version": "1.0.1",
   "main": "index.tsx",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openmsupply/conforma-web-app.git"
+    "url": "https://github.com/msupply-foundation/conforma-web-app.git"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -21,14 +21,15 @@
   },
   "dependencies": {
     "@apollo/client": "^3.1.4",
-    "@openmsupply/expression-evaluator": "^1.11.2",
     "apollo3-cache-persist": "^0.8.0",
     "axios": "^0.21.1",
     "clone-deep": "^4.0.1",
     "deep-equal": "^2.0.5",
     "dotenv": "^16.0.1",
     "graphql": "^15.3.0",
-    "json-edit-react": "^0.9.6",
+    "idle-tracker": "^0.1.3",
+    "json-edit-react": "^1.13.2",
+    "json-to-css": "^0.1.0",
     "lodash": "^4.17.21",
     "luxon": "^1.27.0",
     "nanoid": "^3.1.22",
@@ -40,6 +41,7 @@
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
     "react-markdown": "^5.0.3",
+    "react-pdf": "5.x",
     "react-progress-stepper": "^0.2.2",
     "react-router-dom": "^5.3.3",
     "react-semantic-ui-datepickers": "^2.17.2",
@@ -63,6 +65,7 @@
     "@types/pluralize": "^0.0.29",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^18.2.4",
+    "@types/react-pdf": "5.0.9",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",
     "autoprefixer": "^9.8.6",

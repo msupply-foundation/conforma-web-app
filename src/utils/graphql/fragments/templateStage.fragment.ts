@@ -11,6 +11,8 @@ export default gql`
       nodes {
         name
         number
+        description
+        singleReviewerAllSections
       }
     }
   }

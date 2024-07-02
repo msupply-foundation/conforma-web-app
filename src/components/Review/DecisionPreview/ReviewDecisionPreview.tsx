@@ -22,7 +22,7 @@ export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
   const { t } = useLanguageProvider()
   const { Decision: LocalisedDecision } = useLocalisedEnums()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const toast = useToast()
+  const { showToast: toast } = useToast()
 
   return (
     <>

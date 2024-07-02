@@ -5,7 +5,7 @@ import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic'
 const iconLink = 'https://react.semantic-ui.com/elements/icon/'
 const colourLink = 'https://htmlcolorcodes.com/'
 
-type TextIOprops = {
+export type TextIOprops = {
   text?: string
   title?: string
   setText?: (text: string | null, resetValue: (text: string) => void) => void

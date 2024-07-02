@@ -1,8 +1,12 @@
 /*******************************
-         Site Overrides
+         General Site Overrides
 *******************************/
 
-// For ApplicationList page
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 #list-container,
 #linked-applications-container {
   .ui.table {
@@ -11,6 +15,7 @@
     background: none;
     border: none;
   }
+
   .ui.table td {
     background: @surfacesWhite;
     padding: 5px;
@@ -18,73 +23,229 @@
 
   .ui.table tr {
     border: none;
-    height: 52px;
+  }
+}
+
+.data-view-detail-container {
+  .flex-column();
+  align-items: center;
+}
+
+// ********** desktop overrides *******************
+
+@media only screen and (min-width: @largestMobileScreen) {
+  // For ApplicationList page
+
+  #list-container {
+    padding: 25px 0;
+    width: @applicationListWidth;
   }
 
-  .ui.table thead tr {
-    height: 0;
+  #list-container,
+  #linked-applications-container {
+    .ui.table tr {
+      height: 52px;
+    }
+
+    .ui.table thead tr {
+      height: 0;
+    }
+
+    .ui.table thead th {
+      padding: 0;
+    }
+
+    .ui.table td:first-child,
+    .ui.table thead th:first-child {
+      padding-left: @tableRowLeftAndRightPadding;
+    }
+
+    .ui.table td:last-child,
+    .ui.table thead th:last-child {
+      text-align: right;
+      padding-right: @tableRowLeftAndRightPadding;
+    }
+
+    // Prevents column headers having different background when selected
+    // and on hover
+    .ui.sortable.table thead th.sorted {
+      background: none;
+    }
+    .ui.sortable.table thead th:hover {
+      background: none;
+      opacity: 0.8;
+    }
+
+    // Removes the faint background that is visibile behind the list row
+    // when hovering
+    .ui.selectable.table tbody tr:hover,
+    .ui.table tbody tr td.selectable:hover {
+      background: none !important;
+      color: @selectableTextColor !important;
+    }
+
+    // Column header text
+    .ui.table thead tr th {
+      border: none;
+      background: none;
+      font-weight: @semiboldWeight;
+      font-size: @fontXsmall;
+      letter-spacing: @letterSpacingSmall;
+      text-transform: uppercase;
+      color: @headersInteractiveMed !important;
+    }
+
+    .ui.sortable.table thead th {
+      border: none;
+      padding-right: 3px;
+    }
+
+    .ui.table tr td {
+      border: none;
+    }
+
+    .ui.table tr td:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    .ui.table tr td:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+  }
+  /*--------------------------------
+      Data views
+  ---------------------------------*/
+
+  #data-view {
+    .flex-column();
+    align-items: center;
+    width: @applicationListWidth;
+
+    .data-view-nav {
+      width: 90%;
+    }
+
+    .data-view-table-container {
+      .flex-column();
+      align-items: center;
+      // Limit size of images in Table (that come from SummaryView elements)
+      .ui.image {
+        width: unset;
+        max-height: 50px;
+      }
+      padding-top: 0;
+      width: clamp(700px, 90%, 1127px);
+    }
+
+    .summary-page-element {
+      margin: 10px;
+      min-width: 200px;
+      max-width: 450px;
+    }
+
+    .data-view-detail-container {
+      // Limit size of images in Table (that come from SummaryView elements)
+      .ui.image {
+        width: unset;
+        max-height: 100px;
+      }
+    }
+
+    .data-view-detail-table {
+      min-width: 500px;
+    }
+
+    #linked-applications-container {
+      margin-top: 45px;
+    }
+  }
+}
+
+// ********** mobile and small tablet overrides *******************
+
+@media only screen and (max-width: @largestMobileScreen) {
+  #list-container,
+  #linked-applications-container {
+    .ui.table:not(.unstackable) tr {
+      box-shadow: 0px 0px 0px !important;
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+    }
+
+    .ui.table tr td:first-child {
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .ui.table tr td:last-child {
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .ui.table tr {
+      background: none !important;
+    }
+
+    .ui.table td p {
+      word-wrap: anywhere;
+    }
   }
 
-  .ui.table thead th {
-    padding: 0;
+  #applications-list {
+    .ui.table tr td:nth-last-child(2).has-mobile-action-cell {
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      padding-bottom: 10px !important;
+    }
+    .ui.table tr td:last-child:not(.has-mobile-action-cell) {
+      padding-bottom: 10px !important;
+    }
   }
 
-  .ui.table td:first-child,
-  .ui.table thead th:first-child {
-    padding-left: @tableRowLeftAndRightPadding;
+  // DataView detail page
+  .data-view-detail-container {
+    .ui.table tr {
+      border: none;
+    }
+  }
+  #linked-applications-container {
+    .ui.table {
+      margin-top: 0;
+      border-spacing: 0;
+    }
   }
 
-  .ui.table td:last-child,
-  .ui.table thead th:last-child {
-    text-align: right;
-    padding-right: @tableRowLeftAndRightPadding;
-  }
+  // For list-builder tables
+  .form-element {
+    .ui.table {
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      background: none;
+      border: none;
+      margin: 0;
+    }
 
-  // Prevents column headers having different background when selected
-  // and on hover
-  .ui.sortable.table thead th.sorted {
-    background: none;
-  }
-  .ui.sortable.table thead th:hover {
-    background: none;
-    opacity: 0.8;
-  }
+    .ui.table td {
+      background: @surfacesWhite;
+      padding: 5px;
+    }
 
-  // Removes the faint background that is visibile behind the list row
-  // when hovering
-  .ui.selectable.table tbody tr:hover,
-  .ui.table tbody tr td.selectable:hover {
-    background: none !important;
-    color: @selectableTextColor !important;
-  }
+    .ui.table tr {
+      border: none;
+    }
 
-  // Column header text
-  .ui.table thead tr th {
-    border: none;
-    background: none;
-    font-weight: @semiboldWeight;
-    font-size: @fontXsmall;
-    letter-spacing: @letterSpacingSmall;
-    text-transform: uppercase;
-    color: @headersInteractiveMed !important;
-  }
+    .ui.table:not(.unstackable) tr {
+      box-shadow: 0px 0px 0px !important;
+      padding: 0.3em 0.6em;
+      margin-bottom: 0.5em;
+      border: 1px solid @surfacesMed;
+      border-radius: 0.3em;
+    }
 
-  .ui.sortable.table thead th {
-    border: none;
-    padding-right: 3px;
-  }
-
-  .ui.table tr td {
-    border: none;
-  }
-
-  .ui.table tr td:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-  }
-
-  .ui.table tr td:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    .ui.table tr td {
+      padding: 1px !important;
+    }
   }
 }

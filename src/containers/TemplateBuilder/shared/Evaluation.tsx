@@ -1,7 +1,7 @@
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from '../../../modules/expression-evaluator'
 import { truncate } from 'lodash'
 import React, { useState } from 'react'
-import ReactJson from 'json-edit-react'
+import { JsonEditor as ReactJson } from 'json-edit-react'
 import { Accordion, Icon, Label } from 'semantic-ui-react'
 import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
@@ -78,7 +78,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
             thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
           },
           currentUser,
-          applicationData: fullStructure?.info,
+          applicationData: { ...fullStructure?.info, currentPageType: 'application' },
           functions,
         }
       : undefined

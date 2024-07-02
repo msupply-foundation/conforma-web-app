@@ -81,24 +81,26 @@ export const constructElement = (value: any, displayDefinition: DisplayDefinitio
   }
 
   return (
-    <SummaryViewWrapper
-      element={element}
-      // Only "config" info is available in "applicationData", as we're not
-      // using as part of an application. We need server urls, as some plugin
-      // displays (e.g. imageDisplay) require local server urls.
-      applicationData={
-        {
-          config: {
-            serverGraphQL,
-            serverREST,
-            isProductionBuild: config.isProductionBuild,
-            version: config.version,
-          },
-        } as ApplicationDetails
-      }
-      response={response}
-      allResponses={{}}
-    />
+    <div className="ui form">
+      <SummaryViewWrapper
+        element={element}
+        // Only "config" info is available in "applicationData", as we're not
+        // using as part of an application. We need server urls, as some plugin
+        // displays (e.g. imageDisplay) require local server urls.
+        applicationData={
+          {
+            config: {
+              serverGraphQL,
+              serverREST,
+              isProductionBuild: config.isProductionBuild,
+              version: config.version,
+            },
+          } as ApplicationDetails
+        }
+        response={response}
+        allResponses={{}}
+      />
+    </div>
   )
 }
 

@@ -56,7 +56,8 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
     },
   ]
 
-  const submit = async () => {
+  const submit = async (e: any) => {
+    e.preventDefault()
     await createResponse({
       variables: {
         templateElementId,

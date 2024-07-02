@@ -1,4 +1,4 @@
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { EvaluatorNode } from '../../../../modules/expression-evaluator'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { Icon, Label, Modal, Header } from 'semantic-ui-react'
@@ -50,7 +50,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const { allActionsByCode, applicationData } = useActionState()
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
-  const showToast = useToast({
+  const { showToast } = useToast({
     title: t('TEMPLATE_MESSAGE_SAVE_SUCCESS'),
     style: 'success',
   })
@@ -129,7 +129,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           style={{ borderTopRightRadius: 8 }}
         >
           <a
-            href="https://github.com/openmsupply/conforma-server/wiki/List-of-Action-plugins"
+            href="https://github.com/msupply-foundation/conforma-server/wiki/List-of-Action-plugins"
             target="_blank"
           >
             <Icon name="info circle" size="big" color="blue" />

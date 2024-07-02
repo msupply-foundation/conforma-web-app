@@ -1,4 +1,4 @@
-import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject } from '../../../modules/expression-evaluator'
 import config from '../../../config'
 import {
   ComplexEndpoint,
@@ -8,8 +8,7 @@ import {
   LanguageEndpoint,
   FileEndpoint,
   CheckTriggersEndpoint,
-  EnableLanguageEndpoint,
-  RemoveLanguageEndpoint,
+  LocalisationEndpoint,
   GetApplicationDataEndpoint,
   SnapshotEndpoint,
   ArchiveEndpoint,
@@ -49,8 +48,6 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'createHash':
     case 'generatePDF':
     case 'admin':
-    case 'installLanguage':
-    case 'allLanguages':
     case 'previewActions':
     case 'extendApplication':
     case 'getAllPrefs':
@@ -65,9 +62,10 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     // The "as"s here shouldn't be required, but it's a current limitation of
     // Typescript that it doesn't properly narrow the "case" statements when the
     // variable has been re-assigned. See example: https://bit.ly/3bFhQqX
-    case 'language':
+    case 'language': {
       const { code } = options as LanguageEndpoint[1]
       return `${serverREST}${endpointPath}/${code}`
+    }
 
     case 'file':
       const { fileId, thumbnail = false } = options as FileEndpoint[1]
@@ -101,14 +99,28 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       const { dataViewCode, query } = options
       return `${serverREST}${endpointPath}/${dataViewCode}${buildQueryString(query)}`
 
-    case 'enableLanguage': {
-      const { code, enabled = true } = options as EnableLanguageEndpoint[1]
-      return `${serverREST}${endpointPath}?code=${code}${enabled ? `&enabled=${enabled}` : ''}`
-    }
+    // Localisation management
+    case 'localisation': {
+      let { action } = options as LocalisationEndpoint[1]
 
-    case 'removeLanguage': {
-      const { code } = options as RemoveLanguageEndpoint[1]
-      return `${serverREST}${endpointPath}?code=${code}`
+      // Get all
+      if (action === 'getAll') return `${serverREST}${endpointPath}/get-all`
+
+      // Enable/disable
+      if (action === 'enable' && 'code' in options) {
+        const { code, enabled } = options as { code: string; enabled?: boolean }
+        console.log('Enabled?', enabled)
+        return `${serverREST}${endpointPath}/enable?code=${code}&enabled=${enabled}`
+      }
+
+      // Install
+      if (action === 'install') return `${serverREST}${endpointPath}/install`
+
+      // Remove
+      if (action === 'remove' && 'code' in options)
+        return `${serverREST}${endpointPath}/remove?code=${options.code}`
+
+      throw new Error('Missing options')
     }
 
     case 'snapshot':
@@ -144,13 +156,24 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'lookupTable': {
       let { action } = options as LookupTableEndpoint[1]
 
+      // List structures
+      if (action === 'list') return `${serverREST}${endpointPath}/list`
+
+      // Single table structure
+      if (action === 'table' && 'id' in options)
+        return `${serverREST}${endpointPath}/table/${options.id}`
+
       // Import
-      if (action === 'import' && 'name' in options)
-        return `${serverREST}${endpointPath}/import?name=${options.name}`
+      if (action === 'import' && 'name' in options && 'code' in options) {
+        const { name, code } = options
+        return `${serverREST}${endpointPath}/import?name=${name}&code=${code}`
+      }
 
       // "Update" uses /import/tableID route
-      if (action === 'update' && 'id' in options)
-        return `${serverREST}${endpointPath}/import/${options.id}`
+      if (action === 'update' && 'id' in options && 'code' in options && 'name' in options) {
+        const { id, name, code } = options
+        return `${serverREST}${endpointPath}/import/${id}?name=${name}&code=${code}`
+      }
 
       // Export
       if ('id' in options) return `${serverREST}${endpointPath}/export/${options.id}`

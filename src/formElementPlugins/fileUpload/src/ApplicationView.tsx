@@ -8,6 +8,8 @@ import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FileDisplay, FileDisplayWithDescription } from './components'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import useDefault from '../../useDefault'
+import { usePrefs } from '../../../contexts/SystemPrefs'
+import { useSimpleCache } from '../../../utils/hooks/useSimpleCache'
 
 export interface FileResponseData {
   uniqueId: string
@@ -42,6 +44,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('fileUpload')
+  const { preferences } = usePrefs()
   const { isEditable } = element
   const {
     label,
@@ -50,6 +53,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     fileExtensions,
     fileSizeLimit,
     default: defaultValue,
+    showDocumentModal = preferences.showDocumentModal,
     showDescription = false,
     showFileRestrictions = true,
     ...fileOptions
@@ -69,6 +73,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [error, setError] = useState<string>()
   const [errorVisible, setErrorVisible] = useState(false)
   const fileInputRef = useRef<any>(null)
+  // FileCache is to store the actual file contents after uploading, so when the
+  // user previews it again they don't have to wait for it to re-download
+  const { addToCache, removeFromCache, getFromCache } = useSimpleCache<File>()
 
   useEffect(() => {
     // Set response to null if no files
@@ -150,6 +157,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           loading: false,
           fileData: result?.fileData?.[0],
         }
+        const uniqueId = result?.fileData?.[0]?.uniqueId
+        if (uniqueId) addToCache(uniqueId, file)
       } else showError(t('ERROR_UPLOAD_PROBLEM'))
 
       setUploadedFiles([...newFileData])
@@ -157,6 +166,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   }
 
   const handleDelete = async (key: string) => {
+    const file = uploadedFiles.find((f) => f.key === key)
+    const uniqueId = file?.fileData?.uniqueId
+    if (uniqueId) removeFromCache(uniqueId)
     setUploadedFiles(uploadedFiles.filter((file) => file.key !== key))
   }
 
@@ -215,9 +227,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
                 file={file}
                 onDelete={handleDelete}
                 updateDescription={handleUpdateDescription}
+                showDocumentModal={showDocumentModal}
+                cachedFile={getFromCache(file?.fileData?.uniqueId ?? '')}
               />
             ) : (
-              <FileDisplay key={file.key} file={file} onDelete={handleDelete} />
+              <FileDisplay
+                key={file.key}
+                file={file}
+                onDelete={handleDelete}
+                showDocumentModal={showDocumentModal}
+                cachedFile={getFromCache(file?.fileData?.uniqueId ?? '')}
+              />
             )
           )}
         </List>

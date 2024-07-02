@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Container, Divider, Message } from 'semantic-ui-react'
 import { Loading } from '../../components'
-import { LookUpMainMenu, LookUpTable } from '../components/single'
+import { LookUpMainMenu } from '../components/single'
 import { matchPath } from 'react-router'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { ImportCsvModal } from '../components'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import DataViewTable from '../../containers/DataDisplay/DataViewTable'
-import { useGetLookupTableStructureByIdQuery } from '../../utils/generated/graphql'
-import { LookUpTableType } from '../types'
+import { useGetSingleTableStructure } from '../hooks'
 
 const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
   const { t } = useLanguageProvider()
-
   const { pathname, params, history } = useRouter()
-  const [structure, setStructure] = useState<LookUpTableType>()
 
   const match: any = matchPath(pathname, {
     path: `${basePath}/:lookupTableID/import`,
@@ -24,45 +21,39 @@ const LookupTablePage: React.FC<{ basePath: string }> = ({ basePath = '' }) => {
 
   const { lookupTableID: structureID } = params
 
-  const { data, loading, error, refetch } = useGetLookupTableStructureByIdQuery({
-    variables: { lookupTableID: Number(structureID) },
-    fetchPolicy: 'network-only',
-  })
+  const {
+    tableStructure,
+    tableStructureLoadingState: { error, loading },
+    refetchTableStructure,
+  } = useGetSingleTableStructure(structureID)
 
-  useEffect(() => {
-    if (data?.dataTable) {
-      const lookupTable = data.dataTable as LookUpTableType
-      setStructure(lookupTable)
-    }
-  }, [data])
-
-  const dataViewCode = structure?.dataViewCode
+  const { dataViewCode, displayName, id } = tableStructure ?? {}
 
   return (
     <React.Fragment>
       {error ? (
-        <Message error header={t('LOOKUP_ERROR_TITLE')} list={[error.message]} />
+        <Message error header={t('LOOKUP_ERROR_TITLE')} list={[error]} />
       ) : loading ? (
         <Loading />
-      ) : structure ? (
+      ) : tableStructure ? (
         <Container style={{ padding: '2em 0em' }}>
-          <LookUpMainMenu tableLabel={structure?.displayName} tableId={structure?.id} />
+          <LookUpMainMenu tableLabel={displayName} tableId={id} />
           <Divider />
-          {/* Show data view table if defined, otherwise default table display */}
           {dataViewCode && <DataViewTable codeFromLookupTable={dataViewCode} />}
-          {!structure.dataViewCode && <LookUpTable structure={structure} />}
+          {!dataViewCode && <p>Lookup table has no dataViewCode defined</p>}
         </Container>
       ) : (
         <Message error header={t('LOOKUP_ERROR_NOT_FOUND')} />
       )}
       <ImportCsvModal
-        tableLabel={structure?.displayName}
-        tableStructureID={structure?.id}
+        tableLabel={displayName}
+        dataViewCode={dataViewCode}
+        tableStructureID={tableStructure?.id}
         open={match !== null}
         onClose={() => {
           match && history.replace(`${basePath}/${match.params.lookupTableID}`)
         }}
-        onImportSuccess={refetch}
+        onImportSuccess={refetchTableStructure}
       />
     </React.Fragment>
   )

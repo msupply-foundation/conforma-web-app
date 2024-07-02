@@ -32,7 +32,7 @@ export default function buildQueryFilters(
   return graphQLfilter
 }
 
-// Defines how string filter are transfered to graphQL filter for each type
+// Defines how string filter are transferred to graphQL filter for each type
 const filterTypeDefinitions: FilterTypeDefinitions = {
   number: (filterValue) => {
     const [fromNumber, toNumber] = filterValue.split(':')
@@ -67,6 +67,7 @@ const filterTypeDefinitions: FilterTypeDefinitions = {
   dataViewString: (filterValue, options) => {
     const searchFields = options?.searchFields ?? []
     if (searchFields.length === 1) {
+      if (options?.dataType === 'Enum') return { in: filterValue.split(',') }
       if (!options?.showFilterList) return { includesInsensitive: filterValue }
       if (!options?.delimiter)
         return inList({

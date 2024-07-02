@@ -55,7 +55,7 @@
 @disabledOpacity: 0.75;
 //
 @boxShadowColor: #d4d4d5;
-@fullyTransperant: rgba(0, 0, 0, 0);
+@fullyTransparent: rgba(0, 0, 0, 0);
 
 // For date filters
 @weekDayHeaderColor: rgba(0, 0, 0, 0.5);
@@ -76,10 +76,10 @@
 //
 @h1Mob: 20px;
 @h2Mob: 16px;
-@h3Mob: 14px;
-@h4Mob: 12px;
-@h5Mob: 15px;
-@h6Mob: 11px;
+@h3Mob: 15px;
+@h4Mob: 14px;
+@h5Mob: 13px;
+@h6Mob: 12px;
 
 // line-height
 @lineHeightSmall: 20px;
@@ -165,6 +165,7 @@
 -------------------------*/
 
 @headerHeight: 100px;
+@mobileHeaderHeight: 60px;
 @footerHeight: 75px;
 @borderRadius: 8px;
 
@@ -174,6 +175,9 @@
 @applicationSummaryWidth: 900px;
 @applicationSummaryContentWidth: 700px;
 @applicationFormContentWidth: clamp(350px, 70%, 480px);
+
+// Minimums
+@minimumContainerWidth: 320px;
 
 // Box shadow -- used in Login form
 @basicBoxShadow: @boxShadowColor 0px -3px 10px 0px;

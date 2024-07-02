@@ -1,7 +1,7 @@
 ### [Internal Docs](Home.md)
 
 - [Navigation & URL overview](Overview-of-Navigation-&-URL-structure.md)
-- [Back-end docs](https://github.com/openmsupply/conforma-server/wiki)
+- [Back-end docs](https://github.com/msupply-foundation/conforma-server/wiki)
 
 ### [Setup](setup/Setup.md)
 

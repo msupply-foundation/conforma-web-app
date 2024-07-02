@@ -1,13 +1,15 @@
 import React from 'react'
-import { TemplatePermission } from '../../../../utils/generated/graphql'
+import { TemplatePermission, TemplateStage } from '../../../../utils/generated/graphql'
 import CheckboxIO from '../../shared/CheckboxIO'
 import { useOperationState } from '../../shared/OperationContext'
 import { useTemplateState, disabledMessage } from '../TemplateWrapper'
 
-type ReviewTemplatePermssionProps = {
+type ReviewTemplatePermissionProps = {
   templatePermission: TemplatePermission
-  stageNumber?: number
+  stage?: TemplateStage
   levelNumber: number
+  isLastLevel: boolean
+  singleReviewerAllSections: boolean
 }
 
 type SetAllowedSection = (sectionCode: string, isAllowed: boolean) => boolean
@@ -20,14 +22,18 @@ const sortSections: SortSections = (sections) =>
   sections &&
   [...sections].sort((first, second) => (first === second ? 0 : first > second ? 1 : -1))
 
-const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
+const ReviewTemplatePermission: React.FC<ReviewTemplatePermissionProps> = ({
   templatePermission,
-  stageNumber = 1,
+  stage,
   levelNumber,
+  isLastLevel,
+  singleReviewerAllSections,
 }) => {
-  const { updateTemplate } = useOperationState()
+  const { updateTemplate, updateTemplateStage } = useOperationState()
   const { template, sections } = useTemplateState()
   const { isDraft } = template
+
+  const stageNumber = stage?.number ?? 1
 
   const sectionCodes = sections.map((section) => section?.code || '')
   const selfAssignDisabled = levelNumber > 1
@@ -66,6 +72,19 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
     })
   }
 
+  const setSingleReviewer: SetSelfAssign = (value) => {
+    if (!stage) return
+    const level = stage?.templateStageReviewLevelsByStageId.nodes.find(
+      (l) => l?.number === levelNumber
+    )
+    if (!level) return
+    updateTemplateStage(stage.id, {
+      templateStageReviewLevelsUsingId: {
+        updateById: [{ id: level.id, patch: { singleReviewerAllSections: value } }],
+      },
+    })
+  }
+
   const allowedSectionsDisabledMessage = !isDraft
     ? disabledMessage
     : selfAssignDisabled
@@ -74,7 +93,7 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
     ? 'Self assignable review is for all sections'
     : ''
 
-  const makeDecisionDisbaleMessage = !isDraft
+  const makeDecisionDisableMessage = !isDraft
     ? disabledMessage
     : makeDecisionDisabled
     ? 'Make decision only available for level 1 in stages higher than 1'
@@ -86,6 +105,12 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
     ? 'Level above one is only self assignable'
     : templatePermission?.canMakeFinalDecision
     ? 'Make final decision is always self-assignable'
+    : ''
+
+  const singleReviewerDisabledMessage = !isDraft
+    ? disabledMessage
+    : isLastLevel
+    ? 'Always single reviewer for last level'
     : ''
 
   const setAllowedSection: SetAllowedSection = (sectionCode, isAllowed) => {
@@ -134,10 +159,19 @@ const ReviewTemplatePermission: React.FC<ReviewTemplatePermssionProps> = ({
         <CheckboxIO
           title="Make Decision"
           setValue={(canMakeDecision) => setMakeDecision(canMakeDecision)}
-          disabled={!!makeDecisionDisbaleMessage}
-          disabledMessage={makeDecisionDisbaleMessage}
+          disabled={!!makeDecisionDisableMessage}
+          disabledMessage={makeDecisionDisableMessage}
           value={!!templatePermission?.canMakeFinalDecision}
         />
+        {
+          <CheckboxIO
+            title="Assign single reviewer to all sections"
+            setValue={(singleReviewer) => setSingleReviewer(singleReviewer)}
+            disabled={!!singleReviewerDisabledMessage}
+            disabledMessage={singleReviewerDisabledMessage}
+            value={isLastLevel ? true : singleReviewerAllSections}
+          />
+        }
       </div>
       <div className="flex-row-start-center-wrap">
         {sectionCodes.map((sectionCode) => (

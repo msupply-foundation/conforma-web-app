@@ -6,13 +6,15 @@ import reactStringReplace from 'react-string-replace'
 import { TranslateMethod, useLanguageProvider } from '../../../contexts/Localisation'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import { NotesState } from './NotesTab'
+import { SimpleCacheReturn } from '../../../utils/hooks/useSimpleCache'
 
 const NewCommentForm: React.FC<{
   structure: FullStructure
   state: NotesState
   setState: (state: NotesState) => void
   refetchNotes: Function
-}> = ({ structure, state, setState, refetchNotes }) => {
+  fileCache: SimpleCacheReturn<File>
+}> = ({ structure, state, setState, refetchNotes, fileCache }) => {
   const { t } = useLanguageProvider()
   const {
     userState: { currentUser },
@@ -33,6 +35,7 @@ const NewCommentForm: React.FC<{
     }
     await submit(currentUser as User, structure, comment, files)
     setState({ ...state, showForm: false, comment: '', files: [] })
+    files.forEach((file) => fileCache.addToCache(file.name, file))
   }
 
   const handleFiles = (e: any) => {

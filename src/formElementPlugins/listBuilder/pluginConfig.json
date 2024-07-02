@@ -6,6 +6,7 @@
     "label": "Loading...",
     "description": ""
   },
+  "internalParameters": ["dataFormat"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
 }

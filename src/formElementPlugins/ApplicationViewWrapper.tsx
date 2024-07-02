@@ -11,7 +11,7 @@ import {
 } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
-import evaluateExpression, { isEvaluationExpression } from '@openmsupply/expression-evaluator'
+import evaluateExpression, { isEvaluationExpression } from '../modules/expression-evaluator'
 import { isEqual } from 'lodash'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
@@ -74,8 +74,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   // Update dynamic parameters when responses change
   useEffect(() => {
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
-    Object.entries(parameterExpressions).forEach(([field, expression]) => {
-      evaluateExpression(expression as EvaluatorNode, {
+    setUpdateTrackerState({
+      type: 'elementProcessing',
+      elementCode: code,
+    })
+
+    const result = Object.entries(parameterExpressions).map(([field, expression]) => {
+      return evaluateExpression(expression as EvaluatorNode, {
         objects: { responses: allResponses, currentUser, applicationData, functions },
         APIfetch: fetch,
         graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
@@ -89,6 +94,12 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         }
       })
     })
+    Promise.all(result).then(() =>
+      setUpdateTrackerState({
+        type: 'elementDoneProcessing',
+        elementCode: code,
+      })
+    )
   }, [allResponses])
 
   useEffect(() => {
@@ -117,6 +128,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }
 
   const onSave = async (response: ResponseFull) => {
+    setUpdateTrackerState({
+      type: 'elementProcessing',
+      elementCode: code,
+    })
     if (!response?.customValidation) {
       // Validate and Save response -- generic
       const validationResult: ValidationState = await onUpdate(response?.text)
@@ -168,6 +183,10 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       textValue: textValue || '',
       previousValue: currentResponse?.text || '',
     })
+    setUpdateTrackerState({
+      type: 'elementDoneProcessing',
+      elementCode: code,
+    })
   }
 
   // Tells application state that plugin field is in focus
@@ -218,7 +237,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       }
     if (isChangeRequest && !isChanged)
       return { extraClasses: 'changes change-request-unchanged', iconName: 'exclamation circle' }
-    // Updated withouth change request
+    // Updated without change request
     if (isChanged) return { extraClasses: 'changes updated', iconName: 'info circle' }
     return
   }
@@ -230,6 +249,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       <React.Suspense fallback="Loading Plugin">
         <Form.Field className={`element-application-view ${extraClasses}`} required={isRequired}>
           {PluginComponent}
+          {element.helpText && (
+            <div className="help-tips-content hide-on-desktop">
+              <Markdown text={element.helpText} />
+            </div>
+          )}
           <ChangesComment reviewerComment={reviewerComment} iconName={iconName} />
         </Form.Field>
       </React.Suspense>

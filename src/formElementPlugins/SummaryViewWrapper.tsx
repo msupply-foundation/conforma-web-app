@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { ErrorBoundary, pluginProvider } from '.'
 import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
-import { EvaluatorNode } from '../utils/types'
+import evaluateExpression from '../modules/expression-evaluator'
+import { EvaluatorNode, ResponseFull } from '../utils/types'
 import { buildParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
@@ -38,33 +38,33 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   )
 
   useEffect(() => {
-    // Update dynamic parameters when responses change
-    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
-    Object.entries(parameterExpressions).forEach(([field, expression]) => {
-      evaluateExpression(expression as EvaluatorNode, {
-        objects: {
-          responses: { ...allResponses, thisResponse: response?.text },
-          currentUser,
-          applicationData,
-          functions,
-        },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-        headers: { Authorization: 'Bearer ' + JWT },
-      }).then((result: any) =>
-        setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
-      )
-    })
+    // Update dynamic parameters when responses change, but only if there's no
+    // saved evaluations (usually INFORMATION type), or "showLiveParameters" has
+    // been explicitly set
+    if (simpleParameters?.showLiveParameters || !response?.evaluatedParameters) {
+      const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
+      Object.entries(parameterExpressions).forEach(([field, expression]) => {
+        evaluateExpression(expression as EvaluatorNode, {
+          objects: {
+            responses: { ...allResponses, thisResponse: response?.text },
+            currentUser,
+            applicationData,
+            functions,
+          },
+          APIfetch: fetch,
+          graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+          headers: { Authorization: 'Bearer ' + JWT },
+        }).then((result: any) =>
+          setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
+        )
+      })
+    }
   }, [allResponses])
 
   if (!pluginCode || !isVisible) return null
 
   const DefaultSummaryView: React.FC = () => {
-    const combinedParams = {
-      ...simpleParameters,
-      ...evaluatedParameters,
-      ...response?.evaluatedParameters,
-    }
+    const combinedParams = getCombinedParams(simpleParameters, evaluatedParameters, response)
     return (
       <Form.Field
         className="element-summary-view"
@@ -85,7 +85,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
 
   const PluginComponent = (
     <SummaryView
-      parameters={{ ...simpleParameters, ...evaluatedParameters, ...response?.evaluatedParameters }}
+      parameters={getCombinedParams(simpleParameters, evaluatedParameters, response)}
       response={response}
       Markdown={Markdown}
       DefaultSummaryView={DefaultSummaryView}
@@ -99,6 +99,23 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
       </React.Suspense>
     </ErrorBoundary>
   )
+}
+
+const getCombinedParams = (
+  simpleParams: Record<string, any>,
+  evaluatedParams: Record<string, any>,
+  response: ResponseFull | null
+) => {
+  const showLiveParameters =
+    evaluatedParams?.showLiveParameters ?? simpleParams?.showLiveParameters ?? false
+
+  // If "showLiveParameters" is true, we always show the current, dynamic values
+  // of the parameters (which may change at any time) instead of being fixed at
+  // what they were when the application was submitted
+
+  return showLiveParameters
+    ? { ...simpleParams, ...evaluatedParams }
+    : { ...simpleParams, ...evaluatedParams, ...response?.evaluatedParameters }
 }
 
 export default SummaryViewWrapper

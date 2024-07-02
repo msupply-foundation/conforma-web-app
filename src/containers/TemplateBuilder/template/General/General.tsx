@@ -24,6 +24,7 @@ import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
 import { getVersionString, getTemplateVersionId, isTemplateUnlocked } from '../helpers'
+import NumberIO from '../../shared/NumberIO'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -35,7 +36,7 @@ const General: React.FC = () => {
   const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
     variables: { code: template.code },
   })
-  const showToast = useToast({ style: 'success' })
+  const { showToast } = useToast({ style: 'success' })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
   const [commitConfirmOpen, setCommitConfirmOpen] = useState(false)
   const [commitMessage, setCommitMessage] = useState('')
@@ -52,9 +53,8 @@ const General: React.FC = () => {
 
   const canSetDraft =
     isTemplateUnlocked(template) &&
-    applicationCount === 0 &&
     !isDraft &&
-    (template.applicationCount === 0 ||
+    (applicationCount === 0 ||
       // Let us make changes to active templates while in "dev" mode
       !config.isProductionBuild)
 
@@ -162,7 +162,6 @@ const General: React.FC = () => {
         minLabelWidth={100}
         labelTextAlign="right"
       />
-
       <CheckboxIO
         title="Interactive"
         value={!!template?.canApplicantMakeChanges}
@@ -174,7 +173,12 @@ const General: React.FC = () => {
         minLabelWidth={100}
         labelTextAlign="right"
       />
-
+      <NumberIO
+        title="Sort priority"
+        number={template.priority}
+        minLabelWidth={100}
+        setNumber={(number) => updateTemplate(template, { priority: number })}
+      />
       <Category />
 
       <Filters />

@@ -68,6 +68,39 @@ const getFormattedDate = (formatString: FormatDate, inputDate?: string | Date) =
   return date.toFormat(format, { locale })
 }
 
+// Date formats for "getLocalisedDate"
+const dateFormats = {
+  short: DateTime.DATE_SHORT,
+  med: DateTime.DATE_MED,
+  medWeekday: DateTime.DATE_MED_WITH_WEEKDAY,
+  full: DateTime.DATE_FULL,
+  huge: DateTime.DATE_HUGE,
+  shortDateTime: DateTime.DATETIME_SHORT,
+  medDateTime: DateTime.DATETIME_MED,
+  fullDateTime: DateTime.DATETIME_FULL,
+  hugeDateTime: DateTime.DATETIME_HUGE,
+}
+
+// Returns ISO date string or JS Date as formatted Date (Luxon). Returns current
+// date if date not supplied
+const getLocalisedDateTime = (
+  inputDate: string | Date,
+  format: 'short' | 'med' | 'medWeekday' | 'full' | 'huge' = 'med',
+  locale?: string
+) => {
+  const date = inputDate
+    ? typeof inputDate === 'string'
+      ? DateTime.fromISO(inputDate)
+      : DateTime.fromJSDate(inputDate)
+    : DateTime.now()
+
+  const localisedFormat = dateFormats[format]
+
+  if (locale) date.setLocale(locale)
+
+  return date.toLocaleString(localisedFormat)
+}
+
 // Returns JS Date object from ISO date string. Returns current timestamp if
 // no parameter supplied
 const getJSDate = (date?: string) => (date ? DateTime.fromISO(date).toJSDate() : new Date())
@@ -85,9 +118,20 @@ const extractNumber = (input: string) => {
   return Number(numberMatch[0])
 }
 
+// Returns true if input date is before (or on) the current date
+// Also returns true if null
+const isExpired = (date: Date | string | null) => {
+  if (date === null) return true
+  const testDate = typeof date === 'string' ? new Date(date) : date
+
+  return testDate.getTime() <= Date.now()
+}
+
 // Remove diacritics (accented characters) from strings
 // See https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
 const removeAccents = (input: string) => input.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+const lowerCase = (text: string) => text.toLowerCase()
 
 // Arithmetic
 const multiply = (num1: number, num2: number, decimals: number) => {
@@ -109,10 +153,13 @@ export default {
   generateExpiry,
   getYear,
   getFormattedDate,
+  getLocalisedDateTime,
   getJSDate,
   getISODate,
+  isExpired,
   extractNumber,
   removeAccents,
+  lowerCase,
   multiply,
   split,
 }

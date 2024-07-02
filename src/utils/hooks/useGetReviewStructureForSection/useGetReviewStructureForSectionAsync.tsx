@@ -24,7 +24,7 @@ const useGetReviewStructureForSectionAsync = (props: UseGetReviewStructureForSec
 
   const { data, error } = useGetReviewResponsesQuery({
     variables,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
     skip: !variables || !awaitModeResolver,
   })
 

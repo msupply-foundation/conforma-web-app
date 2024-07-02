@@ -1,5 +1,15 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { Button, Container, Image, List, Dropdown, Modal, Header, Form } from 'semantic-ui-react'
+import {
+  Button,
+  Container,
+  Image,
+  List,
+  Dropdown,
+  Modal,
+  Header,
+  Form,
+  Transition,
+} from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { attemptLoginOrg } from '../../utils/helpers/attemptLogin'
@@ -21,9 +31,10 @@ import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { UiLocation } from '../../utils/generated/graphql'
 const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
+import { useViewport } from './../../contexts/ViewportState'
+import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 
 const UserArea: React.FC = () => {
-  const { preferences } = usePrefs()
   const {
     userState: { currentUser, orgList, templatePermissions },
     onLogin,
@@ -33,31 +44,40 @@ const UserArea: React.FC = () => {
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
   const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser)
+  const [hamburgerActive, setHamburgerActive] = useState(false)
+  const { isMobile } = useViewport()
+
+  const hamburgerClickHandler = (close?: boolean) => {
+    if (close === undefined) setHamburgerActive(!hamburgerActive)
+    else setHamburgerActive(close)
+  }
 
   if (!currentUser || currentUser?.username === config.nonRegisteredUser) return null
 
   return (
-    <Container
-      id="user-area"
-      fluid
-      // Custom color option (for Angola only currently)
-      style={{ backgroundColor: preferences?.style?.headerBgColor ?? '' }}
-    >
+    <Container id="user-area" fluid>
       <BrandArea />
       <div id="user-area-left">
         <MainMenuBar
           templates={templates}
           dataViews={dataViewsList}
           referenceDocs={{ intReferenceDocs, extReferenceDocs }}
+          hamburgerActive={hamburgerActive}
+          closeHamburger={() => {
+            hamburgerClickHandler(false)
+          }}
         />
         {orgList.length > 0 && <OrgSelector user={currentUser} orgs={orgList} onLogin={onLogin} />}
       </div>
-      <UserMenu
-        user={currentUser as User}
-        templates={templates.filter(({ templateCategory: { uiLocation } }) =>
-          uiLocation.includes(UiLocation.User)
-        )}
-      />
+      {!isMobile && (
+        <UserMenu
+          user={currentUser as User}
+          templates={templates.filter(({ templateCategory: { uiLocation } }) =>
+            uiLocation.includes(UiLocation.User)
+          )}
+        />
+      )}
+      {isMobile && <Hamburger active={hamburgerActive} clickHandler={hamburgerClickHandler} />}
     </Container>
   )
 }
@@ -68,6 +88,8 @@ interface MainMenuBarProps {
     intReferenceDocs: { uniqueId: string; description: string }[]
     extReferenceDocs: { uniqueId: string; description: string }[]
   }
+  hamburgerActive: Boolean
+  closeHamburger: () => void
 }
 interface DropdownsState {
   dashboard: { active: boolean }
@@ -82,8 +104,10 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   templates,
   dataViews,
   referenceDocs: { intReferenceDocs, extReferenceDocs },
+  hamburgerActive,
+  closeHamburger,
 }) => {
-  const { t } = useLanguageProvider()
+  const { t, selectedLanguage } = useLanguageProvider()
   const [dropdownsState, setDropDownsState] = useState<DropdownsState>({
     dashboard: { active: false },
     applicationList: { active: false, selection: '' },
@@ -93,24 +117,27 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     intRefDocs: { active: false },
     extRefDocs: { active: false },
   })
+  const { preferences } = usePrefs()
   const { push, pathname } = useRouter()
   const {
     userState: { currentUser },
   } = useUserState()
+  const { isMobile } = useViewport()
 
   // Ensures the "selected" state of other dropdowns gets disabled
   useEffect(() => {
     const basepath = pathname.split('/')?.[1]
     setDropDownsState((currState) => getNewDropdownsState(basepath, currState))
+    closeHamburger() //To close menu bar when navigation occurs
   }, [pathname])
 
   const dataViewOptions = constructNestedMenuOptions(dataViews, {
     filterMethod: () => true,
     mapMethod: (dataView) => {
-      const { code, urlSlug, title, defaultFilter } = dataView
+      const { code, urlSlug, menuName, defaultFilter } = dataView
       return {
         key: code,
-        text: title,
+        text: menuName,
         value: '/data/' + urlSlug + (defaultFilter ? `?${defaultFilter}` : ''),
       }
     },
@@ -120,6 +147,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
 
   const getTemplateSubmenu = (template: TemplateInList) =>
     template.templateCategory.isSubmenu ? template.templateCategory.title : null
+
+  const helpLinks = preferences?.helpLinks ?? []
 
   const applicationListOptions = constructNestedMenuOptions(templates, {
     filterMethod: ({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.List),
@@ -141,11 +170,6 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     },
     // { key: 'permissions', text: t('MENU_ITEM_ADMIN_PERMISSIONS'), value: '/admin/permissions' },
     // { key: 'plugins', text: t('MENU_ITEM_ADMIN_PLUGINS'), value: '/admin/plugins' },
-    {
-      key: 'localisations',
-      text: t('MENU_ITEM_ADMIN_LOCALISATION'),
-      value: '/admin/localisations',
-    },
     {
       key: 'prefs',
       text: t('MENU_ITEM_ADMIN_PREFS'),
@@ -186,17 +210,25 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     onClick: (value) => handleMenuSelect(value, 'Manage'),
   })
 
-  // Lookup table menu item goes in "Manage" menu, unless the user is Admin and
-  // NOT Manager, in which case it goes in "Config" menu
+  // Lookup tables & Localisations menu item goes in "Manage" menu, unless the
+  // user is Admin and NOT Manager, in which case it goes in "Config" menu
   const lookUpTableOption = {
     key: 'lookup_tables',
     text: t('MENU_ITEM_ADMIN_LOOKUP_TABLES'),
-    value: '/admin/lookup-tables',
+    value: `/${currentUser?.isManager ? 'manage' : 'admin'}/lookup-tables`,
   }
+  const localisationOption = {
+    key: 'localisations',
+    text: t('MENU_ITEM_ADMIN_LOCALISATION'),
+    value: `/${currentUser?.isManager ? 'manage' : 'admin'}/localisations`,
+  }
+
   if (currentUser?.isManager) {
     managementOptions.push(lookUpTableOption)
+    managementOptions.push(localisationOption)
   } else if (currentUser?.isAdmin) {
     configOptions.push(lookUpTableOption)
+    configOptions.push(localisationOption)
   }
 
   const handleMenuSelect = (value: string, menu: 'List' | 'DataView' | 'Manage' | 'Config') => {
@@ -226,86 +258,130 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   }
 
   return (
-    <div id="menu-bar">
-      <List horizontal>
-        <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
-          <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
-        </List.Item>
-        {applicationListOptions.length > 0 && (
-          <List.Item className={dropdownsState.applicationList.active ? 'selected-link' : ''}>
-            <Dropdown
-              text={t('MENU_ITEM_APPLICATION_LIST')}
-              options={applicationListOptions}
-              onChange={(_, { value }) => handleMenuSelect(value as string, 'List')}
-              value={dropdownsState.applicationList.selection}
-              selectOnBlur={false}
-            />
+    <Transition visible={!!hamburgerActive || !isMobile} animation="slide down" duration={200}>
+      <div id="menu-bar">
+        <List>
+          {isMobile && (
+            <>
+              <List.Item style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <span>{`${currentUser?.firstName || ''} ${currentUser?.lastName || ''}`}</span>
+                <span style={{ fontSize: '130%' }}>{selectedLanguage?.flag} </span>
+              </List.Item>
+              <List.Item>
+                <div className="ui divider menu-divider"></div>
+              </List.Item>
+            </>
+          )}
+          <List.Item className={dropdownsState.dashboard.active ? 'selected-link' : ''}>
+            <Link to="/">{t('MENU_ITEM_DASHBOARD')}</Link>
           </List.Item>
-        )}
-        {dataViewOptions.length > 1 && (
-          <List.Item className={dropdownsState.dataViews.active ? 'selected-link' : ''}>
-            <Dropdown
-              text={t('MENU_ITEM_DATA')}
-              options={dataViewOptions}
-              onChange={(_, { value }) => handleMenuSelect(value as string, 'DataView')}
-              value={dropdownsState.dataViews.selection}
-              selectOnBlur={false}
-            />
-          </List.Item>
-        )}
-        {managementOptions.length > 0 && (
-          <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
-            <Dropdown
-              text={t('MENU_ITEM_MANAGE')}
-              options={managementOptions}
-              onChange={(_, { value }) => handleMenuSelect(value as string, 'Manage')}
-              value={dropdownsState.manage.selection}
-              selectOnBlur={false}
-            />
-          </List.Item>
-        )}
-        {currentUser?.isAdmin && (
-          <List.Item className={dropdownsState.config.active ? 'selected-link' : ''}>
-            <Dropdown
-              text={t('MENU_ITEM_CONFIG')}
-              options={configOptions}
-              onChange={(_, { value }) => handleMenuSelect(value as string, 'Config')}
-              value={dropdownsState.config.selection}
-              selectOnBlur={false}
-            />
-          </List.Item>
-        )}
-        {extReferenceDocs.length && (
-          <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
-            <Dropdown text={t('MENU_ITEM_HELP')}>
-              <Dropdown.Menu>
-                {extReferenceDocs.map((doc) => (
-                  <Dropdown.Item
-                    key={doc.uniqueId}
-                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
-                    text={doc.description}
-                  />
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </List.Item>
-        )}
-        {intReferenceDocs.length && (
-          <List.Item className={dropdownsState.intRefDocs.active ? 'selected-link' : ''}>
-            <Dropdown text={t('MENU_ITEM_REF_DOCS')}>
-              <Dropdown.Menu>
-                {intReferenceDocs.map((doc) => (
-                  <Dropdown.Item
-                    key={doc.uniqueId}
-                    onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
-                    text={doc.description}
-                  />
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </List.Item>
-        )}
-      </List>
+          {applicationListOptions.length > 0 && (
+            <List.Item className={dropdownsState.applicationList.active ? 'selected-link' : ''}>
+              <Dropdown
+                text={t('MENU_ITEM_APPLICATION_LIST')}
+                options={applicationListOptions}
+                onChange={(_, { value }) => handleMenuSelect(value as string, 'List')}
+                value={dropdownsState.applicationList.selection}
+                selectOnBlur={false}
+              />
+            </List.Item>
+          )}
+          {dataViewOptions.length > 0 && (
+            <List.Item className={dropdownsState.dataViews.active ? 'selected-link' : ''}>
+              <Dropdown
+                text={t('MENU_ITEM_DATA')}
+                options={dataViewOptions}
+                onChange={(_, { value }) => handleMenuSelect(value as string, 'DataView')}
+                value={dropdownsState.dataViews.selection}
+                selectOnBlur={false}
+              />
+            </List.Item>
+          )}
+          {managementOptions.length > 0 && !isMobile && (
+            <List.Item className={dropdownsState.manage.active ? 'selected-link' : ''}>
+              <Dropdown
+                text={t('MENU_ITEM_MANAGE')}
+                options={managementOptions}
+                onChange={(_, { value }) => handleMenuSelect(value as string, 'Manage')}
+                value={dropdownsState.manage.selection}
+                selectOnBlur={false}
+              />
+            </List.Item>
+          )}
+          {currentUser?.isAdmin && !isMobile && (
+            <List.Item className={dropdownsState.config.active ? 'selected-link' : ''}>
+              <Dropdown
+                text={t('MENU_ITEM_CONFIG')}
+                options={configOptions}
+                onChange={(_, { value }) => handleMenuSelect(value as string, 'Config')}
+                value={dropdownsState.config.selection}
+                selectOnBlur={false}
+              />
+            </List.Item>
+          )}
+          {helpLinks.length + extReferenceDocs.length > 0 && (
+            <List.Item className={dropdownsState.extRefDocs.active ? 'selected-link' : ''}>
+              <Dropdown text={t('MENU_ITEM_HELP')}>
+                <Dropdown.Menu>
+                  {helpLinks.map(({ text, link }) => (
+                    <Dropdown.Item key={link} onClick={() => window.open(link)} text={text} />
+                  ))}
+                  {extReferenceDocs.map((doc) => (
+                    <Dropdown.Item
+                      key={doc.uniqueId}
+                      onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
+                      text={doc.description}
+                    />
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </List.Item>
+          )}
+          {intReferenceDocs.length > 0 && (
+            <List.Item className={dropdownsState.intRefDocs.active ? 'selected-link' : ''}>
+              <Dropdown text={t('MENU_ITEM_REF_DOCS')}>
+                <Dropdown.Menu>
+                  {intReferenceDocs.map((doc) => (
+                    <Dropdown.Item
+                      key={doc.uniqueId}
+                      onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
+                      text={doc.description}
+                    />
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </List.Item>
+          )}
+          {isMobile && (
+            <>
+              <List.Item>
+                <div className="ui divider menu-divider"></div>
+              </List.Item>
+              <List.Item>
+                <UserMenu
+                  user={currentUser as User}
+                  templates={templates.filter(({ templateCategory: { uiLocation } }) =>
+                    uiLocation.includes(UiLocation.User)
+                  )}
+                />
+              </List.Item>
+            </>
+          )}
+        </List>
+      </div>
+    </Transition>
+  )
+}
+
+const Hamburger: React.FC<{ active: Boolean; clickHandler: () => void }> = ({
+  active,
+  clickHandler,
+}) => {
+  return (
+    <div className={active ? 'hamburger active' : 'hamburger'} onClick={() => clickHandler()}>
+      <span className="hamburger-bun"></span>
+      <span className="hamburger-patty"></span>
+      <span className="hamburger-bun"></span>
     </div>
   )
 }
@@ -320,7 +396,7 @@ const BrandArea: React.FC = () => {
   return (
     <div id="brand-area" className="hide-on-mobile">
       <Link to="/">
-        <Image src={logoUrl} />
+        <Image src={logoUrl} className="clickable" />
       </Link>
     </div>
   )
@@ -332,6 +408,9 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   onLogin,
 }) => {
   const { t } = useLanguageProvider()
+  const { push } = useRouter()
+  const { viewport, isMobile } = useViewport()
+
   const LOGIN_AS_NO_ORG = 0 // Ensures server returns no organisation
 
   const handleChange = async (_: SyntheticEvent, { value: orgId }: any) => {
@@ -350,15 +429,27 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
   if (!orgs.some(({ isSystemOrg }) => isSystemOrg))
     dropdownOptions.push({
       key: LOGIN_AS_NO_ORG,
-      text: `> ${t('LABEL_NO_ORG_SELECT')}`,
+      text: (
+        <span>
+          <em>{t('LABEL_NO_ORG')}</em>
+          <br />
+          <em>{t('LABEL_USER_ONLY')}</em>
+        </span>
+      ) as any,
       value: LOGIN_AS_NO_ORG,
     })
+
+  const logoIsLink = viewport.width < 860
   return (
     <div id="org-selector">
       {user?.organisation?.logoUrl && (
-        <Image src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))} />
+        <Image
+          src={getFullUrl(user?.organisation?.logoUrl, getServerUrl('public'))}
+          onClick={logoIsLink ? () => push('/') : undefined}
+          className={logoIsLink ? 'clickable' : ''}
+        />
       )}
-      <div>
+      <div id="org-label">
         {dropdownOptions.length === 1 ? (
           user?.organisation?.orgName || t('LABEL_NO_ORG')
         ) : (
@@ -366,6 +457,7 @@ const OrgSelector: React.FC<{ user: User; orgs: OrganisationSimple[]; onLogin: F
             text={user?.organisation?.orgName || t('LABEL_NO_ORG')}
             options={dropdownOptions}
             onChange={handleChange}
+            direction={isMobile ? 'left' : undefined}
           ></Dropdown>
         )}
       </div>
@@ -377,9 +469,44 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
   const { t, selectedLanguage, languageOptions } = useLanguageProvider()
   const { logout } = useUserState()
   const { push } = useRouter()
+  const { isMobile } = useViewport()
   const [isOpen, setIsOpen] = useState(false)
+
+  const { ConfirmModal: LogoutModal, showModal: showLogoutModal } = useConfirmationModal({
+    type: 'warning',
+    title: t('MENU_LOGOUT_WARNING'),
+    message: t('MENU_LOGOUT_MESSAGE', t('_APP_NAME')),
+  })
+
+  // Same on both Mobile and Desktop
+  const CommonMenu = (
+    <Dropdown.Menu>
+      <LogoutModal />
+      {templates.map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
+        <Dropdown.Item
+          key={code}
+          icon={icon || catIcon}
+          text={name}
+          onClick={() => push(`/application/new?type=${code}`)}
+        />
+      ))}
+      <Dropdown.Item
+        icon="log out"
+        text={t('MENU_LOGOUT')}
+        onClick={() => (isMobile ? showLogoutModal({ onConfirm: logout }) : logout())}
+      />
+      {languageOptions.length > 1 && (
+        <Dropdown.Item
+          icon="globe"
+          text={t('MENU_CHANGE_LANGUAGE')}
+          onClick={() => setIsOpen(true)}
+        />
+      )}
+    </Dropdown.Menu>
+  )
+
   return (
-    <div id="user-menu">
+    <>
       <Modal
         onClose={() => setIsOpen(false)}
         onOpen={() => setIsOpen(true)}
@@ -388,33 +515,43 @@ const UserMenu: React.FC<{ user: User; templates: TemplateInList[] }> = ({ user,
       >
         <LanguageSelector />
       </Modal>
-      <Button>
-        <Button.Content visible>
-          <Dropdown
-            text={`${selectedLanguage?.flag} ${user?.firstName || ''} ${user?.lastName || ''}`}
-          >
-            <Dropdown.Menu>
-              {templates.map(({ code, name, icon, templateCategory: { icon: catIcon } }) => (
-                <Dropdown.Item
-                  key={code}
-                  icon={icon || catIcon}
-                  text={name}
-                  onClick={() => push(`/application/new?type=${code}`)}
-                />
-              ))}
-              <Dropdown.Item icon="log out" text={t('MENU_LOGOUT')} onClick={() => logout()} />
-              {languageOptions.length > 1 && (
-                <Dropdown.Item
-                  icon="globe"
-                  text={t('MENU_CHANGE_LANGUAGE')}
-                  onClick={() => setIsOpen(true)}
-                />
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Button.Content>
-      </Button>
-    </div>
+
+      {isMobile && <Dropdown text={t('MENU_USER_OPTIONS')}>{CommonMenu}</Dropdown>}
+
+      {!isMobile && (
+        <div id="user-menu">
+          <Button>
+            <Button.Content visible>
+              <Dropdown
+                trigger={
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      lineHeight: '1.2em',
+                      // @ts-ignore
+                      textWrap: 'nowrap',
+                      maxWidth: 200,
+                    }}
+                  >
+                    <span style={{ fontSize: '150%', marginRight: 5 }}>
+                      {selectedLanguage?.flag}
+                    </span>
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{`${
+                      user?.firstName || ''
+                    } ${user?.lastName || ''}`}</span>
+                  </div>
+                }
+              >
+                {CommonMenu}
+              </Dropdown>
+            </Button.Content>
+          </Button>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -561,7 +698,7 @@ function constructNestedMenuOptions<T>(
       text: submenu,
       content: (
         <Dropdown item text={submenu}>
-          <Dropdown.Menu style={{ transform: 'translateY(-25px)' }}>
+          <Dropdown.Menu style={{ transform: 'translateY(10px)' }}>
             {items.map((item) => {
               const { key, text, value } = item
               return (

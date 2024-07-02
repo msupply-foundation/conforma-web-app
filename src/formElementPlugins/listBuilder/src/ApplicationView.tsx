@@ -2,8 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { Button, Modal, Form, Segment, Icon } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { User } from '../../../utils/types'
-import { DisplayType, InputResponseField, ListItem, ListLayoutProps } from './types'
+import {
+  DisplayType,
+  InputResponseField,
+  ListBuilderParameters,
+  ListItem,
+  ListLayoutProps,
+} from './types'
 import { TemplateElement } from '../../../utils/generated/graphql'
+import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import config from '../../../config'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import {
   buildElements,
@@ -12,6 +20,7 @@ import {
   anyErrorItems,
   createTextString,
   combineResponses,
+  buildDataArray,
 } from './helpers'
 import {
   ListCardLayout,
@@ -22,6 +31,7 @@ import {
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
 import useDefault from '../../useDefault'
+import { useViewport } from '../../../contexts/ViewportState'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -36,6 +46,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 }) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('listBuilder')
+  const { isMobile } = useViewport()
 
   const { isEditable } = element
   const {
@@ -50,9 +61,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     displayFormat = getDefaultDisplayFormat(inputFields),
     displayType = DisplayType.CARDS,
     default: defaultValue,
+    textFormat,
+    dataFormat = textFormat,
     inlineOpen = false,
     tableExcludeColumns = [],
-  } = parameters
+    maxItems = Infinity,
+    // These affect viewing tables on Mobile only
+    hideFromMobileTableIfEmpty,
+    minMobileTableLabelWidth,
+    maxMobileTableLabelWidth,
+  } = parameters as ListBuilderParameters
   const {
     userState: { currentUser },
   } = useUserState()
@@ -75,6 +93,15 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [inputState, setInputState] = useState<InputState>(defaultInputState)
   const [listItems, setListItems] = useState<ListItem[]>(currentResponse?.list ?? [])
 
+  const graphQLEndpoint = applicationData.config.getServerUrl('graphQL')
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
+  const evaluatorConfig = {
+    objects: { currentUser, applicationData, responses: allResponses, functions },
+    APIfetch: fetch,
+    graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
+    headers: { Authorization: 'Bearer ' + JWT },
+  }
+
   useEffect(() => {
     buildElements(
       inputFields,
@@ -95,10 +122,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   })
 
   useEffect(() => {
-    onSave({
-      text: listItems.length > 0 ? createTextString(listItems, inputFields) : undefined,
-      list: listItems,
-    })
+    buildDataArray(listItems, inputFields, evaluatorConfig, dataFormat).then((data) =>
+      onSave({
+        text:
+          listItems.length > 0 ? createTextString(listItems, inputFields, textFormat) : undefined,
+        list: listItems,
+        data,
+      })
+    )
   }, [listItems])
 
   // This is sent to ApplicationViewWrapper and runs instead of the default responseMutation
@@ -132,7 +163,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const editItem = async (index: number, openPanel = true) => {
     setInputState((prev) => ({
-      ...inputState,
+      ...prev,
       currentResponses: listItems[index],
       selectedListItemIndex: index,
       isOpen: openPanel,
@@ -156,7 +187,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const DisplayComponent =
     displayType === DisplayType.TABLE ? (
-      <ListTableLayout {...listDisplayProps} excludeColumns={tableExcludeColumns} />
+      <ListTableLayout
+        {...listDisplayProps}
+        excludeColumns={tableExcludeColumns}
+        hideFromMobileIfEmpty={hideFromMobileTableIfEmpty}
+        minMobileLabelWidth={minMobileTableLabelWidth}
+        maxMobileLabelWidth={maxMobileTableLabelWidth}
+      />
     ) : displayType === DisplayType.INLINE ? (
       <ListInlineLayout
         {...listDisplayProps}
@@ -230,7 +267,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      {displayType !== DisplayType.LIST && (
+      {displayType !== DisplayType.LIST && listItems.length < maxItems && (
         <Button
           primary
           content={createModalButtonText}
@@ -250,10 +287,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           onClose={() => setInputState(defaultInputState)}
           onOpen={() => setInputState({ ...inputState, isOpen: true })}
           open={inputState.isOpen}
+          closeIcon={isMobile}
         >
-          <Segment>
+          <Modal.Content>
             <Form>{ListInputForm}</Form>
-          </Segment>
+          </Modal.Content>
         </Modal>
       )}
       {displayType === DisplayType.INLINE && inputState.isOpen && (
@@ -261,7 +299,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       )}
       {DisplayComponent}
       {/* In LIST view, show the Button below the list */}
-      {displayType === DisplayType.LIST && (
+      {displayType === DisplayType.LIST && listItems.length < maxItems && (
         <Button
           primary
           size="small"

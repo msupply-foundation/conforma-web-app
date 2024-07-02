@@ -37,17 +37,34 @@ const Dashboard: React.FC = () => {
     uiLocation.includes(UiLocation.Dashboard)
   )
 
+  const onlyOneTemplatePerCategory = dashboardCategories.every((cat) => cat.templates.length <= 1)
+
   return (
     <div id="dashboard">
       <Header as="h2" content={t('MENU_ITEM_DASHBOARD')} />
-      {dashboardCategories.map(({ templates, templateCategory: { icon, title, code } }) => (
-        <CategoryComponent
-          key={code}
-          templates={templates}
-          icon={icon as SemanticICONS}
-          title={title}
-        />
-      ))}
+      {onlyOneTemplatePerCategory ? (
+        // If only one category per template, we allow 2 categories in a row so
+        // the Dashboard doesn't appear as one long, skinny column
+        <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: 20, maxWidth: 700 }}>
+          {dashboardCategories.map(({ templates, templateCategory: { icon, title, code } }) => (
+            <CategoryComponent
+              key={code}
+              templates={templates}
+              icon={icon as SemanticICONS}
+              title={title}
+            />
+          ))}
+        </div>
+      ) : (
+        dashboardCategories.map(({ templates, templateCategory: { icon, title, code } }) => (
+          <CategoryComponent
+            key={code}
+            templates={templates}
+            icon={icon as SemanticICONS}
+            title={title}
+          />
+        ))
+      )}
     </div>
   )
 }
@@ -112,9 +129,9 @@ const TemplateComponent: React.FC<{
       <div className="content">
         <div className="filters">
           <Label className="strong-label clickable">
-            <a href={`/applications?type=${code}&user-role=${userRole}`}>
+            <Link to={`/applications?type=${code}&user-role=${userRole}`}>
               {template?.namePlural || t('LABEL_APPLICATIONS', name)}
-            </a>
+            </Link>
             <Icon name="chevron right" />
           </Label>
           {filters.map((filter) => (
@@ -160,18 +177,18 @@ const FilterComponent: React.FC<{
       filter: gqlFilter,
       userId,
     },
+    fetchPolicy: 'cache-and-network',
   })
 
   const appCount = data?.applicationList?.totalCount
 
   useEffect(() => {
-    if (!loading && appCount !== undefined)
-      setReadyFilters((prev) => ({ ...prev, [filter.code]: appCount }))
-  }, [loading])
+    if (appCount !== undefined) setReadyFilters((prev) => ({ ...prev, [filter.code]: appCount }))
+  }, [loading, appCount])
 
   if (error) return <span className="error-colour">{t('ERROR_LOADING_FILTER')}</span>
 
-  if (loading || !appCount) return null
+  if (!appCount) return null
 
   return (
     <Link

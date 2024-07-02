@@ -8,7 +8,7 @@ import {
   TemplateDetails,
   UseGetApplicationProps,
 } from '../types'
-import evaluate from '@openmsupply/expression-evaluator'
+import evaluate from '../../modules/expression-evaluator'
 import { useUserState } from '../../contexts/UserState'
 import { EvaluatorParameters } from '../types'
 import {
@@ -21,7 +21,7 @@ import {
   TemplateStage,
   TemplateStageReviewLevel,
   useGetApplicationQuery,
-  User,
+  UserList as User,
 } from '../generated/graphql'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { buildSectionsStructure } from '../helpers/structure'
