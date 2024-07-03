@@ -470,6 +470,7 @@ export default {
   REVIEW_HISTORY_NO_RESPONSE: 'No response',
   SERVER_RECONNECTED: 'Server re-connected',
   SERVER_RECONNECTED_TEXT: 'We apologise for the interruption',
+  SERVER_MAINTENANCE_MODE_LABEL: 'MAINTENANCE MODE',
   SERVER_MAINTENANCE_ON: 'Maintenance mode enabled',
   SERVER_MAINTENANCE_ON_TEXT:
     "If you weren't the person who enabled this, you should stop what you're doing and log out until maintenance is complete",

@@ -23,6 +23,7 @@ import TextIO from '../TemplateBuilder/shared/TextIO'
 import { downloadFile, fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
 import { useRouter } from '../../utils/hooks/useRouter'
 import Tooltip from '../../components/Tooltip'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
 interface SnapshotData {
@@ -63,6 +64,7 @@ const Snapshots: React.FC = () => {
   const [archive, setArchive] = useState<number | 'full' | 'none'>()
   const [archiveEnd, setArchiveEnd] = useState<number>()
   const [refetchData, setRefetchData] = useState(false)
+  const { maintenanceMode } = usePrefs()
 
   const [data, setData] = useState<ListData | null>(null)
 
@@ -131,6 +133,15 @@ const Snapshots: React.FC = () => {
   }
 
   const useSnapshot = async (name: string) => {
+    const maintenanceModeAlreadyEnabled = maintenanceMode.enabled
+    if (!maintenanceModeAlreadyEnabled) {
+      console.log('Enabling maintenance mode')
+      await postRequest({
+        url: getServerUrl('setMaintenanceMode'),
+        jsonBody: { enabled: true },
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
@@ -139,18 +150,23 @@ const Snapshots: React.FC = () => {
 
       if (resultJson.success) {
         setIsLoading(false)
-        location.reload()
+        window.setTimeout(() => location.reload(), 1000)
         return
       }
       setSnapshotError(resultJson)
     } catch (error) {
       setSnapshotError({ message: 'Front end error while loading snapshot', error })
-      console.log('Disabling maintenance mode...')
-      await postRequest({
-        url: getServerUrl('setMaintenanceMode'),
-        jsonBody: { enabled: false },
-        headers: { 'Content-Type': 'application/json' },
-      })
+    } finally {
+      // Only re-enable maintenance mode if it wasn't already on before
+      // snapshot load
+      if (!maintenanceModeAlreadyEnabled) {
+        console.log('Disabling maintenance mode')
+        await postRequest({
+          url: getServerUrl('setMaintenanceMode'),
+          jsonBody: { enabled: false },
+          headers: { 'Content-Type': 'application/json' },
+        })
+      }
     }
   }
 

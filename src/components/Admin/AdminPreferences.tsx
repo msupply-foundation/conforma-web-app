@@ -9,6 +9,7 @@ import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { JsonEditor } from './JsonEditor/JsonEditor'
 import Loading from '../Loading'
 import { useViewport } from '../../contexts/ViewportState'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 export const AdminPreferences: React.FC = () => {
   const { t, tFormat } = useLanguageProvider()
@@ -28,6 +29,7 @@ export const AdminPreferences: React.FC = () => {
   const [maintenanceMode, setMaintenanceMode] = useState<boolean>(
     localStorage.getItem('maintenanceMode') === 'ON'
   )
+  const { refetchPrefs } = usePrefs()
 
   useEffect(() => {
     getRequest(getServerUrl('getAllPrefs')).then((prefs) => {
@@ -65,6 +67,7 @@ export const AdminPreferences: React.FC = () => {
     })
     if (success) {
       if (enabled) localStorage.setItem('maintenanceMode', 'ON')
+      refetchPrefs()
       // No need for toast here as should get notification from websocket
       // listener
     } else {

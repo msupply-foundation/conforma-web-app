@@ -6,7 +6,7 @@ import UserArea from '../User/UserArea'
 import Login from '../User/Login'
 import ListWrapper from '../List/ListWrapper'
 import { FormElementUpdateTrackerProvider } from '../../contexts/FormElementUpdateTrackerState'
-import { Container } from 'semantic-ui-react'
+import { Container, Label } from 'semantic-ui-react'
 // import DevOptions from '../Dev/DevOptions'
 import DevRoutes from '../Dev/DevRoutes'
 import DataViews from '../DataDisplay/DataViews'
@@ -14,8 +14,12 @@ import config from '../../config'
 const { isProductionBuild } = config
 import { Tracker } from './Tracker'
 import Manage from '../../components/Admin/Manage'
+import { usePrefs } from '../../contexts/SystemPrefs'
+import { useLanguageProvider } from '../../contexts/Localisation'
 
 const SiteLayout: React.FC = () => {
+  const { maintenanceMode } = usePrefs()
+  const { t } = useLanguageProvider()
   return (
     <Router>
       {/* Google Analytics */}
@@ -24,6 +28,13 @@ const SiteLayout: React.FC = () => {
         <UserArea />
         {/* <DevOptions /> */}
         <Container id="content-area" fluid>
+          {maintenanceMode.enabled && (
+            <Label
+              content={t('SERVER_MAINTENANCE_MODE_LABEL')}
+              color="pink"
+              style={{ position: 'fixed', bottom: 10, right: 10, zIndex: 1000 }}
+            />
+          )}
           <Switch>
             <Route exact path="/">
               <Dashboard />
