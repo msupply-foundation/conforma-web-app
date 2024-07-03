@@ -4,7 +4,11 @@
 // In either case, the user will be re-directed to a placeholder "Under
 //   Maintenance" site, as specified in Server preferences
 
-import React, { useEffect, useState } from 'react'
+// Enable TESTING_MODE to see the same behaviour in Development as it would be
+// in Production
+const TESTING_MODE = false
+
+import React, { useEffect, useRef, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
 import { useUserState } from '../../contexts/UserState'
 import { Position, useToast } from '../../contexts/Toast'
@@ -12,6 +16,7 @@ import isLoggedIn from '../../utils/helpers/loginCheck'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import config from '../../config'
 
 interface RedirectStatus {
   destination: string | null
@@ -34,9 +39,14 @@ export const ServerStatusListener: React.FC = ({ children }) => {
     state: null,
   })
   const [serverDisconnected, setServerDisconnected] = useState(false)
+  const { isProductionBuild } = config
+  const timerId = useRef<number | undefined>()
+
+  const productionBehaviour = isProductionBuild || TESTING_MODE
+
   useWebSocket(getServerUrl('serverStatus'), {
     onOpen: () => {
-      if (serverDisconnected) {
+      if (serverDisconnected && productionBehaviour) {
         setServerDisconnected(false)
         clearAllToasts()
         showToast({
@@ -58,6 +68,8 @@ export const ServerStatusListener: React.FC = ({ children }) => {
       console.log('Message', data)
       if (typeof data !== 'object') return
       if (data.maintenanceMode === false) {
+        window.clearTimeout(timerId.current)
+        timerId.current = undefined
         showToast({
           title: t('SERVER_MAINTENANCE_OFF'),
           text: t('SERVER_MAINTENANCE_OFF_TEXT'),
@@ -113,14 +125,14 @@ export const ServerStatusListener: React.FC = ({ children }) => {
       text: t('SERVER_UNAVAILABLE_TEXT'),
       timeout: 9_000,
     })
-    window.setTimeout(() => {
+    timerId.current = window.setTimeout(() => {
       window.location.href = redirectStatus.destination as string
     }, 10_000)
   }, [redirectStatus, currentUser])
 
   // This effect handles the server unexpectedly becoming unavailable
   useEffect(() => {
-    if (serverDisconnected) {
+    if (serverDisconnected && productionBehaviour) {
       showToast({
         title: t('SERVER_OFFLINE'),
         text: t('SERVER_OFFLINE_TEXT'),
