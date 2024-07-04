@@ -92,7 +92,8 @@ export const ServerStatusListener: React.FC = ({ children }) => {
     },
     onReconnectStop: () => {
       console.log('Unable to reconnect, giving up...')
-      if (maintenanceMode.redirect) window.location.href = maintenanceMode.redirect
+      if (maintenanceMode.redirect && productionBehaviour)
+        window.location.href = maintenanceMode.redirect
     },
   })
   const { showToast, clearAllToasts } = useToast({ style: 'negative', position: Position.topLeft })
@@ -114,6 +115,8 @@ export const ServerStatusListener: React.FC = ({ children }) => {
         }, 500)
       return
     }
+
+    if (!productionBehaviour) return
 
     if (redirectStatus.state === 'immediate') {
       window.location.href = redirectStatus.destination as string

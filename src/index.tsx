@@ -87,7 +87,7 @@ const App: React.FC = () => {
     console.error(error)
     // Redirect to a previously stored "downtime" site
     const redirect = localStorage.getItem('redirectLocation')
-    if (redirect) {
+    if (redirect && config.isProductionBuild) {
       console.log("Can't load preferences, re-directing to downtime site")
       window.location.href = redirect
       return null
