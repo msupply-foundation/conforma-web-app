@@ -33,6 +33,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
     props
 
+  const isNestedInListBuilder = element.elementIndex === 0 && element.page === 0
+
   const {
     code,
     pluginCode,
