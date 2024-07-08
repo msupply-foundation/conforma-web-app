@@ -33,6 +33,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
     props
 
+  const isNestedInListBuilder = element.elementIndex === 0 && element.page === 0
+
   const {
     code,
     pluginCode,
@@ -74,10 +76,12 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   // Update dynamic parameters when responses change
   useEffect(() => {
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
-    setUpdateTrackerState({
-      type: 'elementProcessing',
-      elementCode: code,
-    })
+    if (!isNestedInListBuilder)
+      // Don't do this inside listBuilder or we get infinite loop
+      setUpdateTrackerState({
+        type: 'elementProcessing',
+        elementCode: code,
+      })
 
     const result = Object.entries(parameterExpressions).map(([field, expression]) => {
       return evaluateExpression(expression as EvaluatorNode, {
@@ -94,12 +98,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         }
       })
     })
-    Promise.all(result).then(() =>
-      setUpdateTrackerState({
-        type: 'elementDoneProcessing',
-        elementCode: code,
-      })
-    )
+    Promise.all(result).then(() => {
+      if (!isNestedInListBuilder)
+        setUpdateTrackerState({
+          type: 'elementDoneProcessing',
+          elementCode: code,
+        })
+    })
   }, [allResponses])
 
   useEffect(() => {
