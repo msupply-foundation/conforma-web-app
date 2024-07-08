@@ -74,10 +74,12 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   // Update dynamic parameters when responses change
   useEffect(() => {
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
-    setUpdateTrackerState({
-      type: 'elementProcessing',
-      elementCode: code,
-    })
+    if (!isInnerFormElement)
+      // Don't do this inside listBuilder or we get infinite loop
+      setUpdateTrackerState({
+        type: 'elementProcessing',
+        elementCode: code,
+      })
 
     const result = Object.entries(parameterExpressions).map(([field, expression]) => {
       return evaluateExpression(expression as EvaluatorNode, {
@@ -94,12 +96,13 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         }
       })
     })
-    Promise.all(result).then(() =>
-      setUpdateTrackerState({
-        type: 'elementDoneProcessing',
-        elementCode: code,
-      })
-    )
+    Promise.all(result).then(() => {
+      if (!isInnerFormElement)
+        setUpdateTrackerState({
+          type: 'elementDoneProcessing',
+          elementCode: code,
+        })
+    })
   }, [allResponses])
 
   useEffect(() => {
@@ -128,10 +131,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }
 
   const onSave = async (response: ResponseFull) => {
-    setUpdateTrackerState({
-      type: 'elementProcessing',
-      elementCode: code,
-    })
+    if (!isInnerFormElement)
+      setUpdateTrackerState({
+        type: 'elementProcessing',
+        elementCode: code,
+      })
     if (!response?.customValidation) {
       // Validate and Save response -- generic
       const validationResult: ValidationState = await onUpdate(response?.text)
