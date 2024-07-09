@@ -17,6 +17,8 @@ export default gql`
     detailViewHeaderColumn
     filterIncludeColumns
     filterExcludeColumns
+    rawDataIncludeColumns
+    rawDataExcludeColumns
     showLinkedApplications
     priority
     defaultSortColumn
