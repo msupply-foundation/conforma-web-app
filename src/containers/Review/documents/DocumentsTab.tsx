@@ -6,7 +6,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useDocumentModal } from '../../../utils/hooks/useDocumentModal'
 import { DateTime } from 'luxon'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
-import { FileData, useDocumentFiles } from '../../../utils/hooks/useReferenceDocs'
+import { FileData, useDocumentFiles } from '../../../utils/hooks/useDocumentFiles'
 
 const DocumentsTab: React.FC<{
   structure: FullStructure

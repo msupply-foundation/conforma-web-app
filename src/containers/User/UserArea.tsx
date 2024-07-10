@@ -24,7 +24,7 @@ import {
 } from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useDataViewsList } from '../../utils/hooks/useDataViews'
-import { FileData, useDocumentFiles } from '../../utils/hooks/useReferenceDocs'
+import { FileData, useDocumentFiles } from '../../utils/hooks/useDocumentFiles'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import config from '../../config'
