@@ -134,7 +134,7 @@ const Snapshots: React.FC = () => {
 
   const useSnapshot = async (name: string) => {
     const maintenanceModeAlreadyEnabled = maintenanceMode.enabled
-    if (!maintenanceModeAlreadyEnabled) {
+    if (!maintenanceModeAlreadyEnabled && isProductionBuild) {
       console.log('Enabling maintenance mode')
       await postRequest({
         url: getServerUrl('setMaintenanceMode'),
@@ -159,7 +159,7 @@ const Snapshots: React.FC = () => {
     } finally {
       // Only re-enable maintenance mode if it wasn't already on before
       // snapshot load
-      if (!maintenanceModeAlreadyEnabled) {
+      if (!maintenanceModeAlreadyEnabled && isProductionBuild) {
         console.log('Disabling maintenance mode')
         await postRequest({
           url: getServerUrl('setMaintenanceMode'),
