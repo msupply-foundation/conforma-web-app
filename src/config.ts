@@ -36,6 +36,7 @@ const config = {
     extendApplication: '/extend-application',
     lookupTable: '/lookup-table',
     localisation: '/localisation',
+    files: '/files',
     // Admin
     admin: '/admin',
     // updateRowPolicies: '/admin/updateRowPolicies', //-- not currently called by front-end

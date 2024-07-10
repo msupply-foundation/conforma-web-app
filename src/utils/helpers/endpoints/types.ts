@@ -25,6 +25,11 @@ export type VerifyEndpoint = [endpoint: 'verify', options: { uid: string }]
 
 export type FileEndpoint = [endpoint: 'file', options: { fileId: string; thumbnail?: boolean }]
 
+export type FilesEndpoint = [
+  endpoint: 'files',
+  options: { applicationId?: number; outputOnly?: boolean; external?: boolean; internal?: boolean }
+]
+
 export type UserPermissionsEndpoint = [
   endpoint: 'userPermissions',
   options: { username?: string; orgId?: number | null }
@@ -134,6 +139,7 @@ export type ComplexEndpoint =
   | LanguageEndpoint
   | VerifyEndpoint
   | FileEndpoint
+  | FilesEndpoint
   | UserPermissionsEndpoint
   | UploadEndpoint
   | CheckTriggersEndpoint
