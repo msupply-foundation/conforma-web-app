@@ -136,10 +136,17 @@ const Snapshots: React.FC = () => {
         if (document.visibilityState === 'visible' && displayType === 'snapshots') location.reload()
         return
       }
-
       setSnapshotError(resultJson)
+      BrowserNotifications.notify({
+        title: 'Problem taking snapshot',
+        body: name,
+      })
     } catch (error) {
       setSnapshotError({ message: 'Front end error while taking snapshot', error })
+      BrowserNotifications.notify({
+        title: 'Problem taking snapshot',
+        body: name,
+      })
     }
   }
 
@@ -235,11 +242,23 @@ const Snapshots: React.FC = () => {
       if (resultJson.success) {
         await getList(displayType)
         setIsLoading(false)
+        BrowserNotifications.notify({
+          title: 'Snapshot uploaded',
+          body: name,
+        })
         return
       }
       setSnapshotError(resultJson)
+      BrowserNotifications.notify({
+        title: 'Problem uploading snapshot',
+        body: name,
+      })
     } catch (error) {
       setSnapshotError({ message: 'Front end error while uploading snapshot', error })
+      BrowserNotifications.notify({
+        title: 'Problem uploading snapshot',
+        body: name,
+      })
     }
   }
 
