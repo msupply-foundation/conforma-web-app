@@ -24,6 +24,7 @@ import { downloadFile, fileSizeWithUnits } from '../../utils/helpers/utilityFunc
 import { useRouter } from '../../utils/hooks/useRouter'
 import Tooltip from '../../components/Tooltip'
 import { usePrefs } from '../../contexts/SystemPrefs'
+import { BrowserNotifications } from '../../utils/browserNotifications'
 
 type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
 interface SnapshotData {
@@ -74,6 +75,8 @@ const Snapshots: React.FC = () => {
   const JWT = localStorage.getItem(config.localStorageJWTKey)
   const isProductionBuild = config.isProductionBuild
 
+  BrowserNotifications.checkPermission()
+
   useEffect(() => {
     updateQuery({ type: displayType })
     setData(null)
@@ -122,7 +125,15 @@ const Snapshots: React.FC = () => {
       if (resultJson.success) {
         await getList(displayType)
         setIsLoading(false)
-        if (displayType === 'snapshots') location.reload()
+        BrowserNotifications.notify({
+          title: 'Snapshot saved',
+          body: name,
+          onClick: () => {
+            if (document.visibilityState !== 'visible' && displayType === 'snapshots')
+              location.reload()
+          },
+        })
+        if (document.visibilityState === 'visible' && displayType === 'snapshots') location.reload()
         return
       }
 
@@ -150,12 +161,27 @@ const Snapshots: React.FC = () => {
 
       if (resultJson.success) {
         setIsLoading(false)
-        window.setTimeout(() => location.reload(), 1000)
+        BrowserNotifications.notify({
+          title: 'Snapshot loaded',
+          body: name,
+          onClick: () => {
+            if (document.visibilityState !== 'visible') location.reload()
+          },
+        })
+        if (document.visibilityState === 'visible') window.setTimeout(() => location.reload(), 1000)
         return
       }
       setSnapshotError(resultJson)
+      BrowserNotifications.notify({
+        title: 'Problem loading snapshot',
+        body: name,
+      })
     } catch (error) {
       setSnapshotError({ message: 'Front end error while loading snapshot', error })
+      BrowserNotifications.notify({
+        title: 'Problem loading snapshot',
+        body: name,
+      })
     } finally {
       // Only re-enable maintenance mode if it wasn't already on before
       // snapshot load
@@ -267,6 +293,7 @@ const Snapshots: React.FC = () => {
                   text: `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}`,
                   timeout: 0,
                 })
+                BrowserNotifications.notify({ title: 'Snapshot downloaded', body: name })
               }}
             />
 
