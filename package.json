@@ -1,6 +1,6 @@
 {
   "name": "conforma-web-app",
-  "version": "1.0.2",
+  "version": "1.1.0-10",
   "main": "index.tsx",
   "license": "MIT",
   "repository": {
@@ -46,6 +46,7 @@
     "react-router-dom": "^5.3.3",
     "react-semantic-ui-datepickers": "^2.17.2",
     "react-string-replace": "^0.4.4",
+    "react-use-websocket": "^4.8.1",
     "serve": "^11.3.2",
     "use-undo": "^1.1.1"
   },

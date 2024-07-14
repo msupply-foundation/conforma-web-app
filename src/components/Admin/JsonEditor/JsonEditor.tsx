@@ -97,7 +97,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         searchText={searchText}
         {...jsonViewProps}
       />
-      <div className="flex-row-space-between" style={{ maxWidth: 500 }}>
+      <div className="flex-row-space-between">
         <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
           <a onClick={undo}>
             <Icon name="arrow alternate circle left" />

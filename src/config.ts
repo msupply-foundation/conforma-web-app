@@ -36,6 +36,7 @@ const config = {
     extendApplication: '/extend-application',
     lookupTable: '/lookup-table',
     localisation: '/localisation',
+    files: '/files',
     // Admin
     admin: '/admin',
     // updateRowPolicies: '/admin/updateRowPolicies', //-- not currently called by front-end
@@ -44,6 +45,9 @@ const config = {
     getAllPrefs: '/admin/get-all-prefs',
     setPrefs: '/admin/set-prefs',
     archiveFiles: '/admin/archive-files',
+    setMaintenanceMode: '/admin/set-maintenance-mode',
+    // WebSocket
+    serverStatus: 'server-status',
   },
   version,
   pluginsFolder: 'formElementPlugins',

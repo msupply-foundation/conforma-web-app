@@ -9,6 +9,7 @@ import {
   Header,
   Form,
   Transition,
+  Label,
 } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -23,7 +24,7 @@ import {
 } from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useDataViewsList } from '../../utils/hooks/useDataViews'
-import { useReferenceDocs } from '../../utils/hooks/useReferenceDocs'
+import { FileData, useDocumentFiles } from '../../utils/hooks/useDocumentFiles'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import config from '../../config'
@@ -43,7 +44,10 @@ const UserArea: React.FC = () => {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
-  const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser)
+  const { intReferenceDocs, extReferenceDocs } = useDocumentFiles({
+    external: true,
+    internal: true,
+  })
   const [hamburgerActive, setHamburgerActive] = useState(false)
   const { isMobile } = useViewport()
 
@@ -85,8 +89,8 @@ interface MainMenuBarProps {
   templates: TemplateInList[]
   dataViews: DataViewsResponse
   referenceDocs: {
-    intReferenceDocs: { uniqueId: string; description: string }[]
-    extReferenceDocs: { uniqueId: string; description: string }[]
+    intReferenceDocs: FileData[]
+    extReferenceDocs: FileData[]
   }
   hamburgerActive: Boolean
   closeHamburger: () => void

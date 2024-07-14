@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { createRoot } from 'react-dom/client'
 import '../semantic/src/semantic.less'
 import config from './config'
@@ -13,6 +14,7 @@ import { usePrefs } from './contexts/SystemPrefs'
 import { persistCache } from 'apollo3-cache-persist'
 import { Loading } from './components'
 import getServerUrl from './utils/helpers/endpoints/endpointUrlBuilder'
+import { AdminLogin } from './containers/User/Login'
 
 // Adds authorisation header with token from local storage (to be used on every
 // request) see
@@ -48,7 +50,7 @@ if (navigator.userAgent.indexOf('iPhone') > -1) {
 
 const App: React.FC = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
-  const { preferences, languageOptions, error, loading, refetchPrefs } = usePrefs()
+  const { preferences, languageOptions, error, loading, refetchPrefs, maintenanceMode } = usePrefs()
 
   useEffect(() => {
     const client = new ApolloClient({
@@ -83,20 +85,37 @@ const App: React.FC = () => {
 
   if (error) {
     console.error(error)
-    return <p>Can't load preferences. {error?.message}</p>
+    // Redirect to a previously stored "downtime" site
+    const redirect = localStorage.getItem('redirectLocation')
+    if (redirect && config.isProductionBuild) {
+      console.log("Can't load preferences, re-directing to downtime site")
+      window.location.href = redirect
+      return null
+    } else return <p>Can't load preferences. {error?.message}</p>
   }
 
   return client && !loading ? (
     <ApolloProvider client={client}>
-      <ToastProvider>
-        <LanguageProvider
-          languageOptions={languageOptions as LanguageOption[]}
-          defaultLanguageCode={preferences?.defaultLanguageCode as string}
-          refetchPrefs={refetchPrefs}
-        >
-          <AppWrapper />
-        </LanguageProvider>
-      </ToastProvider>
+      <Router>
+        <ToastProvider>
+          <LanguageProvider
+            languageOptions={languageOptions as LanguageOption[]}
+            defaultLanguageCode={preferences?.defaultLanguageCode as string}
+            refetchPrefs={refetchPrefs}
+          >
+            <Switch>
+              {maintenanceMode.enabled && (
+                <Route exact path="/admin-login">
+                  <AdminLogin />
+                </Route>
+              )}
+              <Route>
+                <AppWrapper />
+              </Route>
+            </Switch>
+          </LanguageProvider>
+        </ToastProvider>
+      </Router>
     </ApolloProvider>
   ) : (
     <Loading />
