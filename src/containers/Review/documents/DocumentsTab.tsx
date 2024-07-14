@@ -1,27 +1,25 @@
 import React from 'react'
 import { Container, List, Header, Image } from 'semantic-ui-react'
 import Loading from '../../../components/Loading'
-import { File, useGetApplicationDocsQuery } from '../../../utils/generated/graphql'
 import { FullStructure } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useDocumentModal } from '../../../utils/hooks/useDocumentModal'
 import { DateTime } from 'luxon'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { FileData, useDocumentFiles } from '../../../utils/hooks/useDocumentFiles'
 
 const DocumentsTab: React.FC<{
   structure: FullStructure
 }> = ({ structure: fullStructure }) => {
   const { t } = useLanguageProvider()
 
-  const { data, loading, error } = useGetApplicationDocsQuery({
-    variables: { applicationSerial: fullStructure.info.serial },
-    // fetchPolicy: 'network-only',
+  const { docs, loading, error } = useDocumentFiles({
+    applicationId: fullStructure.info.id,
+    outputOnly: true,
   })
 
-  if (error) return <p>{error.message}</p>
+  if (error) return <p>{error}</p>
   if (loading) return <Loading />
-
-  const docs = data?.files?.nodes as File[]
 
   return docs ? (
     <Container id="documents-tab">
@@ -38,7 +36,7 @@ const DocumentsTab: React.FC<{
   ) : null
 }
 
-const FileDisplay: React.FC<{ doc: File }> = ({ doc }) => {
+const FileDisplay: React.FC<{ doc: FileData }> = ({ doc }) => {
   const { uniqueId, description, originalFilename, timestamp } = doc
   const fileUrl = getServerUrl('file', { fileId: uniqueId })
   const thumbnailUrl = getServerUrl('file', { fileId: uniqueId, thumbnail: true })
