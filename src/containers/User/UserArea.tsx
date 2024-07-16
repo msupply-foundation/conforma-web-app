@@ -30,7 +30,7 @@ import { usePrefs } from '../../contexts/SystemPrefs'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
-import { UiLocation } from '../../utils/generated/graphql'
+import { PermissionPolicyType, UiLocation } from '../../utils/generated/graphql'
 const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
 import { useViewport } from './../../contexts/ViewportState'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
@@ -191,7 +191,8 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   // Add Config/Admin templates to Config menu (requires Admin permission)
   configOptions.push(
     ...constructNestedMenuOptions(templates, {
-      filterMethod: ({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin),
+      filterMethod: ({ templateCategory: { uiLocation }, permissions }) =>
+        uiLocation.includes(UiLocation.Admin) && permissions.includes(PermissionPolicyType.Apply),
       mapMethod: (template) => ({
         key: template.code,
         text: template.name,
@@ -203,8 +204,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   )
 
   const managementOptions = constructNestedMenuOptions(templates, {
-    filterMethod: ({ templateCategory: { uiLocation } }) =>
-      uiLocation.includes(UiLocation.Management),
+    filterMethod: ({ templateCategory: { uiLocation }, permissions }) =>
+      uiLocation.includes(UiLocation.Management) &&
+      permissions.includes(PermissionPolicyType.Apply),
     mapMethod: (template) => ({
       key: template.code,
       text: template.name,
