@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import {
   Header,
@@ -24,6 +24,7 @@ import { camelCase, pickBy, startCase } from 'lodash'
 import { nanoid } from 'nanoid'
 import { useAdminDataViewConfig } from './useAdminDataViewConfig'
 import config from '../../../config'
+import { JsonData } from 'json-edit-react'
 
 export const AdminDataViews: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -132,7 +133,9 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName, isLookupTabl
             title: t('DATA_VIEW_CONFIG_SAVE_WARNING'),
             message: t('DATA_VIEW_CONFIG_SAVE_MESSAGE'),
             onConfirm: () =>
-              updateDataView({ variables: { id: dataViewObject?.id as number, patch: data } }),
+              updateDataView({
+                variables: { id: dataViewObject?.id as number, patch: data as object },
+              }),
             awaitAction: false,
           })
         }}
@@ -216,7 +219,7 @@ const ColumnDefinitionEditor: React.FC<{ tableName: string }> = ({ tableName }) 
             message: t('DATA_VIEW_CONFIG_SAVE_COL_MESSAGE'),
             onConfirm: () =>
               updateColumnDefinition({
-                variables: { id: columnDefinitionObject?.id as number, patch: data },
+                variables: { id: columnDefinitionObject?.id as number, patch: data as object },
               }),
           })
         }}
@@ -253,7 +256,7 @@ interface DataViewDisplayProps {
   onChange: (_: unknown, value: DropdownProps) => void
   data: object | undefined
   dataName: string
-  onSave: (data: object) => void
+  onSave: (data: JsonData) => void
   isSaving: boolean
   onDelete: () => void
   isDeleting: boolean
@@ -278,16 +281,11 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
   onAdd,
   isAdding,
 }) => {
-  const [dataState, setDataState] = useState(data ?? {})
   const { t } = useLanguageProvider()
   const { ConfirmModal } = useConfirmationModal({
     type: 'warning',
     confirmText: t('BUTTON_CONFIRM'),
   })
-
-  useEffect(() => {
-    setDataState(data ?? {})
-  }, [data])
 
   return (
     <div>
@@ -326,7 +324,7 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
       </div>
       {data && (
         <JsonEditor
-          data={dataState}
+          data={data}
           onSave={onSave}
           isSaving={isSaving}
           rootName={dataName}

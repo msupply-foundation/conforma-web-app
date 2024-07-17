@@ -10,6 +10,7 @@ import { JsonEditor } from './JsonEditor/JsonEditor'
 import Loading from '../Loading'
 import { useViewport } from '../../contexts/ViewportState'
 import { usePrefs } from '../../contexts/SystemPrefs'
+import { JsonData } from 'json-edit-react'
 
 export const AdminPreferences: React.FC = () => {
   const { t, tFormat } = useLanguageProvider()
@@ -37,12 +38,12 @@ export const AdminPreferences: React.FC = () => {
     })
   }, [])
 
-  const handleSave = async (data: object) => {
+  const handleSave = async (data: JsonData) => {
     setIsSaving(true)
     try {
       const result = await postRequest({
         url: getServerUrl('setPrefs'),
-        jsonBody: data,
+        jsonBody: data as object,
         headers: { 'Content-Type': 'application/json' },
       })
       if (result.success) {

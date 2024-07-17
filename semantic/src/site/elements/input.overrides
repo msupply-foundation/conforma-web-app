@@ -5,3 +5,21 @@
 .form-element .ui.input > input {
   border-color: @darkGrey;
 }
+
+// Reverts the input field of the JsonEditor to what it should be, rather than
+// being modified by Semantic .ui.form textarea definition
+.ui.form .jer-input-text {
+  resize: none;
+  margin: 0;
+  height: 1.4em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  padding-top: 0.25em;
+  padding-bottom: 0.2em;
+  min-width: 6em;
+  overflow: hidden;
+  line-height: 1.2em;
+  font-family: inherit;
+  font-size: 0.9em;
+  border: var(--jer-form-border);
+}
