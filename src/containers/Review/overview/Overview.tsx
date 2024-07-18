@@ -6,10 +6,15 @@ import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import { FullStructure } from '../../../utils/types'
-import { ActivityLog, ApplicationOutcome } from '../../../utils/generated/graphql'
+import {
+  ActivityLog,
+  ApplicationOutcome,
+  PermissionPolicyType,
+} from '../../../utils/generated/graphql'
 import config from '../../../config'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { useViewport } from './../../../contexts/ViewportState'
+import { useUserState } from '../../../contexts/UserState'
 
 export const Overview: React.FC<{
   structure: FullStructure
@@ -23,6 +28,9 @@ export const Overview: React.FC<{
   activityLog,
 }) => {
   const { t } = useLanguageProvider()
+  const {
+    userState: { templatePermissions },
+  } = useUserState()
   const { Outcome } = useLocalisedEnums()
   const [deadlineDays, setDeadlineDays] = useState(5)
   const { ConfirmModal, showModal } = useConfirmationModal()
@@ -31,6 +39,14 @@ export const Overview: React.FC<{
   const { started, completed } = getDates(activityLog)
   const stage = current.stage.name
   const { isMobile } = useViewport()
+
+  const templateCode = template.code
+
+  // For now, extending deadlines is available to anyone with any "Review"
+  // permissions for this application.
+  const canExtendDeadline =
+    templatePermissions[templateCode] &&
+    templatePermissions[templateCode].includes(PermissionPolicyType.Review)
 
   return (
     <div id="overview">
@@ -87,6 +103,7 @@ export const Overview: React.FC<{
             </div>
             <div className="flex-row-space-between wrap">
               {applicantDeadline &&
+                canExtendDeadline &&
                 // If the deadline is active, then it must be PENDING. If it's
                 // inactive, then we only want to show the button when it's
                 // EXPIRED, so cancelled deadlines don't cause the button to show.
