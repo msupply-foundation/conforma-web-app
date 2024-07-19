@@ -9,17 +9,28 @@ export const BrowserNotifications = {
     title: string
     body: string
     onClick?: () => void
+    onFocus?: () => void
     showIfTabFocused?: boolean
   }) => {
-    const { title, body, onClick, showIfTabFocused = false } = notification
+    const { title, body, onClick, onFocus, showIfTabFocused = false } = notification
     if (Notification.permission === 'default') await Notification.requestPermission()
     if (Notification.permission !== 'granted') return
 
-    const showNotification =
-      (!showIfTabFocused && document.visibilityState !== 'visible') || showIfTabFocused
+    const showNotification = (!showIfTabFocused && !document.hasFocus()) || showIfTabFocused
+
+    if (onFocus && document.hasFocus()) {
+      onFocus()
+    }
 
     if (showNotification) {
       const notification = new Notification(title, { body })
+      if (!document.hasFocus() && onFocus) {
+        window.onfocus = () => {
+          onFocus()
+          window.onfocus = null
+          notification.close()
+        }
+      }
       notification.onclick = () => {
         onClick && onClick()
         window.parent.focus()

@@ -128,12 +128,11 @@ const Snapshots: React.FC = () => {
         BrowserNotifications.notify({
           title: 'Snapshot saved',
           body: name,
-          onClick: () => {
-            if (document.visibilityState !== 'visible' && displayType === 'snapshots')
-              location.reload()
+          onFocus: () => {
+            if (displayType === 'snapshots') location.reload()
           },
         })
-        if (document.visibilityState === 'visible' && displayType === 'snapshots') location.reload()
+        if (document.hasFocus() && displayType === 'snapshots') location.reload()
         return
       }
       setSnapshotError(resultJson)
@@ -171,11 +170,8 @@ const Snapshots: React.FC = () => {
         BrowserNotifications.notify({
           title: 'Snapshot loaded',
           body: name,
-          onClick: () => {
-            if (document.visibilityState !== 'visible') location.reload()
-          },
+          onFocus: () => location.reload(),
         })
-        if (document.visibilityState === 'visible') window.setTimeout(() => location.reload(), 1000)
         return
       }
       setSnapshotError(resultJson)
