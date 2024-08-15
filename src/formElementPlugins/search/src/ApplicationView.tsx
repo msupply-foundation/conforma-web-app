@@ -117,7 +117,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       }
       setSelection(Array.isArray(defaultSelection) ? defaultSelection : [defaultSelection])
       setSearchText(
-        displayType === 'input'
+        displayType === 'input' && !!currentResponse?.selection
           ? substituteValues(displayFormat.title ?? displayFormat.description, defaultSelection)
           : ''
       )
@@ -181,7 +181,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
     setSearchText(text)
 
-    if (text.length < minCharacters) return
+    if (text.length < minCharacters) {
+      setResultsOpen(false)
+      return
+    }
     setDebounceInput(text)
     if (inputValid) {
       setLoading(true)
