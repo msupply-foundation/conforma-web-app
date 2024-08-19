@@ -22,7 +22,7 @@ const OutcomeCell: React.FC<CellProps> = ({ application }) => {
   const outcomeDisplayMap = useOutcomeDisplayMap()
   const { outcome } = application
 
-  if (outcome === ApplicationOutcome.Pending) return null
+  if (outcome === ApplicationOutcome.Pending || outcome === null) return null
   // Only show label if no longer in progress
   else {
     const { icon, color, text } = outcomeDisplayMap[outcome as ApplicationOutcome]
