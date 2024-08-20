@@ -179,14 +179,12 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       text: t('MENU_ITEM_ADMIN_PREFS'),
       value: '/admin/preferences',
     },
-  ]
-  // Only include Snapshots menu item in Dev mode
-  if (process.env.NODE_ENV === 'development')
-    configOptions.splice(1, 0, {
+    {
       key: 'snapshots',
       text: 'Snapshots',
       value: '/admin/snapshots',
-    })
+    },
+  ]
 
   // Add Config/Admin templates to Config menu (requires Admin permission)
   configOptions.push(
