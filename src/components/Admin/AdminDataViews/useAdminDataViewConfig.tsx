@@ -25,6 +25,7 @@ export const useAdminDataViewConfig = (tableName: string) => {
 
   const { data, loading, refetch } = useGetDataViewsQuery({
     variables: { tableName },
+    fetchPolicy: 'cache-and-network',
   })
 
   const selectedDataView = query.dataView
@@ -73,6 +74,7 @@ export const useAdminDataViewConfig = (tableName: string) => {
     refetch: columnsRefetch,
   } = useGetColumnDefinitionsQuery({
     variables: { tableName },
+    fetchPolicy: 'cache-and-network',
   })
 
   const selectedColumn = query.columnDefinition

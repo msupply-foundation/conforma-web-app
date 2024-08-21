@@ -34,7 +34,7 @@ export const AdminDataViews: React.FC = () => {
 
   const { query, updateQuery, setQuery } = useRouter()
 
-  const { data, loading } = useGetDataTablesQuery()
+  const { data, loading } = useGetDataTablesQuery({ fetchPolicy: 'cache-and-network' })
 
   const selectedTable = query.selectedTable
   const isLookupTable =
