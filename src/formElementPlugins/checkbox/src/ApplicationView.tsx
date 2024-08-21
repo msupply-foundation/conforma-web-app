@@ -137,7 +137,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       textMarkdownList,
       textUnselectedMarkdownList,
       textMarkdownPropertyList,
-    } = createTextStrings(checkboxElements, t('LABEL_SUMMMARY_NOTHING_SELECTED'))
+    } = createTextStrings(checkboxElements, t('LABEL_SUMMARY_NOTHING_SELECTED'))
     onSave({
       text,
       textUnselected,
