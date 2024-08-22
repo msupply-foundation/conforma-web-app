@@ -32,6 +32,7 @@ export const ServerStatusListener: React.FC = ({ children }) => {
   const { t } = useLanguageProvider()
   const {
     userState: { currentUser },
+    onLogin,
   } = useUserState()
   const { maintenanceMode } = usePrefs()
   const [redirectStatus, setRedirectStatus] = useState<RedirectStatus>({
@@ -54,6 +55,9 @@ export const ServerStatusListener: React.FC = ({ children }) => {
           text: t('SERVER_RECONNECTED_TEXT'),
           style: 'success',
         })
+        // This will force logout if the server's private key has changed
+        const JWT = localStorage.getItem(config.localStorageJWTKey) ?? ''
+        onLogin(JWT)
       }
     },
     onClose: (event) => {
