@@ -82,23 +82,26 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       return `${serverREST}${endpointPath}/${code}`
     }
 
-    case 'file':
+    case 'file': {
       const { fileId, thumbnail = false } = options as FileEndpoint[1]
       return `${serverREST}${endpointPath}?uid=${fileId}${thumbnail ? '&thumbnail=true' : ''}`
+    }
 
     case 'files': {
       return `${serverREST}${endpointPath}${buildQueryString(options)}`
     }
 
-    case 'verify':
+    case 'verify': {
       const { uid } = options as VerifyEndpoint[1]
       return `${serverREST}${endpointPath}?uid=${uid}`
+    }
 
-    case 'checkTrigger':
+    case 'checkTrigger': {
       const { serial } = options as CheckTriggersEndpoint[1]
       return `${serverREST}${endpointPath}?serial=${serial}`
+    }
 
-    case 'dataViews':
+    case 'dataViews': {
       // List view
       if (!('dataViewCode' in options)) return `${serverREST}${endpointPath}`
 
@@ -117,10 +120,11 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       // Table view
       const { dataViewCode, query } = options
       return `${serverREST}${endpointPath}/${dataViewCode}${buildQueryString(query)}`
+    }
 
     // Localisation management
     case 'localisation': {
-      let { action } = options as LocalisationEndpoint[1]
+      const { action } = options as LocalisationEndpoint[1]
 
       // Get all
       if (action === 'getAll') return `${serverREST}${endpointPath}/get-all`
@@ -142,7 +146,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       throw new Error('Missing options')
     }
 
-    case 'snapshot':
+    case 'snapshot': {
       const { action } = options as SnapshotEndpoint[1]
       const isArchive = 'archive' in options && options.archive
       const isTemplate = 'template' in options && options.template
@@ -171,9 +175,10 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       return `${serverREST}${endpointPath}/${action}?name=${name}${
         optionsName ? `&optionsName=${optionsName}` : ''
       }${isArchive ? '&archive=true' : ''}`
+    }
 
     case 'lookupTable': {
-      let { action } = options as LookupTableEndpoint[1]
+      const { action } = options as LookupTableEndpoint[1]
 
       // List structures
       if (action === 'list') return `${serverREST}${endpointPath}/list`
@@ -208,18 +213,20 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       }`
     }
 
-    case 'archiveFiles':
+    case 'archiveFiles': {
       const { days } = options as ArchiveEndpoint[1]
       return `${serverREST}${endpointPath}?days=${days}`
+    }
 
     case 'serverStatus':
       return `${serverWebSocket}${endpointPath}`
 
-    default:
+    default: {
       // "never" type ensures we will get a *compile-time* error if we are
       // missing a case defined in Endpoints types
       const missingValue: never = endpointKey
       throw new Error('Failed to consider case:' + missingValue)
+    }
   }
 }
 
