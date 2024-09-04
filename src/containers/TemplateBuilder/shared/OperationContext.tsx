@@ -96,7 +96,7 @@ const defaultOperationContext: OperationContextState = {
 
 const Context = createContext(defaultOperationContext)
 
-const OperationContext: React.FC = ({ children }) => {
+const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [updateTemplateMutation] = useUpdateTemplateMutation()
   const [updateTemplateFilterJoinMutation] = useUpdateTemplateFilterJoinMutation()
   const [updateTemplateSectionMutation] = useUpdateTemplateSectionMutation()

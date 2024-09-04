@@ -90,7 +90,7 @@ export const exportLanguages = async (
 
     return { success: true, message: '' }
   } catch (err) {
-    return { success: false, message: err.message }
+    return { success: false, message: (err as Error).message }
   }
 }
 

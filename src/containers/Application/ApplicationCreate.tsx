@@ -63,7 +63,7 @@ const ApplicationCreate: React.FC = () => {
       // The pageNumber starts in 1 when is a new application
       push(`${serial}/${firstSection}/Page1`)
     } catch (e) {
-      setNewApplicationError(e)
+      setNewApplicationError(e as Error)
     }
   }
 

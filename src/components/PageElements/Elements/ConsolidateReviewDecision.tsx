@@ -31,7 +31,6 @@ const ConsolidateReviewDecision: React.FC<ConsolidateReviewDecisionProps> = ({
   isNewReviewResponse,
   isAssigned,
   enableViewHistory,
-  stageNumber,
   reviewResponse,
   previousReviewResponse,
   originalReviewResponse,

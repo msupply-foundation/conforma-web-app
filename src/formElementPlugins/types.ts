@@ -76,10 +76,10 @@ interface TemplateViewProps {
 interface PluginConfig {
   isCore?: boolean
   code: string
-  folderName: string
+  // folderName: string
   displayName: string
   internalParameters?: string[]
-  parameterLoadingValues?: { [key: string]: string | string[] }
+  parameterLoadingValues?: { [key: string]: string | string[] | number | null }
   category: 'Input' | 'Informative'
 }
 
@@ -90,8 +90,9 @@ interface PluginManifest {
 interface PluginComponents {
   ApplicationView: React.FunctionComponent<ApplicationViewProps>
   SummaryView: React.FunctionComponent<SummaryViewProps>
-  TemplateView: React.FunctionComponent<TemplateViewProps>
-  config?: PluginConfig
+  // TemplateView: React.FunctionComponent<TemplateViewProps>
+  config: PluginConfig
+  localisation?: Record<string, string>
 }
 
 interface Plugins {

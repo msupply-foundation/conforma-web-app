@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { hot } from 'react-hot-loader'
 import ReactGA from 'react-ga4'
 import Login from '../User/Login'
 import Verify from '../User/Verification'
@@ -70,8 +69,7 @@ const AppWrapper: React.FC = () => {
   )
 }
 
-declare const module: any
-export default hot(module)(AppWrapper)
+export default AppWrapper
 
 const Logout: React.FC = () => {
   const { logout } = useUserState()

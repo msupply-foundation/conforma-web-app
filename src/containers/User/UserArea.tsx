@@ -9,7 +9,6 @@ import {
   Header,
   Form,
   Transition,
-  Label,
 } from 'semantic-ui-react'
 import { useUserState } from '../../contexts/UserState'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -31,7 +30,7 @@ import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { PermissionPolicyType, UiLocation } from '../../utils/generated/graphql'
-const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
+import defaultBrandLogo from '../../../images/logos/conforma_logo_wide_white_1024.png'
 import { useViewport } from './../../contexts/ViewportState'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 

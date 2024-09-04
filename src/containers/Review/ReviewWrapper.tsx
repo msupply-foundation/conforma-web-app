@@ -143,7 +143,6 @@ const ReviewHomeHeader: React.FC<ReviewHomeProps> = ({
   applicationName,
   orgName,
 }) => {
-  const { isMobile } = useViewport()
   const {
     push,
     query: { tab },

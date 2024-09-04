@@ -5,7 +5,7 @@ import {
   renderDynamicParameters,
   renderSingleChild,
 } from './guiCommon'
-import { addToArray, removeFromArray, setInArray } from './helpers'
+import { addToArray, removeFromArray } from './helpers'
 import { renderEvaluationElement } from './renderEvaluation'
 
 import { getTypedEvaluation } from './typeHelpers'

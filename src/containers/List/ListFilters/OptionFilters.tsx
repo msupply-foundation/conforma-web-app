@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useQuery } from '@apollo/client'
 import { Dropdown, Input } from 'semantic-ui-react'
 import { EnumFilterProps, StaticListFilterProps, SearchableListFilterProps } from './types'

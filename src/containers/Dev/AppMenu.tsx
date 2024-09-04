@@ -12,7 +12,6 @@ interface AppMenuProps extends RouteComponentProps {
 const AppMenu: React.FC<AppMenuProps> = ({ templatePermissions }) => {
   const [isOpen, setIsOpen] = useState(false)
   const {
-    pathname,
     query: { type },
   } = useRouter()
 
@@ -29,7 +28,7 @@ const AppMenu: React.FC<AppMenuProps> = ({ templatePermissions }) => {
       {templatePermissions ? (
         <Grid divided columns="equal">
           <Grid.Column>
-            {templatePermissions.map(({ name, code, permissions }) => (
+            {templatePermissions.map(({ name, code }) => (
               <Grid.Row key={`app_menu_${name}`}>
                 <Button
                   // basic

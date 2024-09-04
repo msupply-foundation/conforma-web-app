@@ -12,7 +12,7 @@ const OverviewTab: React.FC<{
   isActive: boolean
 }> = ({ structure: fullStructure, isActive }) => {
   const { t } = useLanguageProvider()
-  const { timeline, loading, error, refreshTimeline } = useTimeline(fullStructure)
+  const { timeline, loading, refreshTimeline } = useTimeline(fullStructure)
 
   const currentStageNum = fullStructure.info.current.stage.number
 

@@ -141,7 +141,10 @@ const Snapshots: React.FC = () => {
         body: name,
       })
     } catch (error) {
-      setSnapshotError({ message: 'Front end error while taking snapshot', error })
+      setSnapshotError({
+        message: 'Front end error while taking snapshot',
+        error: (error as Error).message,
+      })
       BrowserNotifications.notify({
         title: 'Problem taking snapshot',
         body: name,
@@ -180,7 +183,10 @@ const Snapshots: React.FC = () => {
         body: name,
       })
     } catch (error) {
-      setSnapshotError({ message: 'Front end error while loading snapshot', error })
+      setSnapshotError({
+        message: 'Front end error while loading snapshot',
+        error: (error as Error).message,
+      })
       BrowserNotifications.notify({
         title: 'Problem loading snapshot',
         body: name,
@@ -216,7 +222,10 @@ const Snapshots: React.FC = () => {
       }
       setSnapshotError(resultJson)
     } catch (error) {
-      setSnapshotError({ message: 'Front end error while deleting snapshot', error })
+      setSnapshotError({
+        message: 'Front end error while deleting snapshot',
+        error: (error as Error).message,
+      })
     }
   }
 
@@ -240,20 +249,23 @@ const Snapshots: React.FC = () => {
         setIsLoading(false)
         BrowserNotifications.notify({
           title: 'Snapshot uploaded',
-          body: name,
+          body: file.name,
         })
         return
       }
       setSnapshotError(resultJson)
       BrowserNotifications.notify({
         title: 'Problem uploading snapshot',
-        body: name,
+        body: file.name,
       })
     } catch (error) {
-      setSnapshotError({ message: 'Front end error while uploading snapshot', error })
+      setSnapshotError({
+        message: 'Front end error while uploading snapshot',
+        error: (error as Error).message,
+      })
       BrowserNotifications.notify({
         title: 'Problem uploading snapshot',
-        body: name,
+        body: file.name,
       })
     }
   }

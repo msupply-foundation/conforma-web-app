@@ -10,8 +10,8 @@ import { usePrefs } from '../../contexts/SystemPrefs'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
+import defaultLogo from '../../../images/logos/conforma_logo_wide_1024.png'
 
-const defaultLogo = require('../../../images/logos/conforma_logo_wide_1024.png').default
 import config from '../../config'
 import { Tracker } from '../Main/Tracker'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -27,7 +27,7 @@ const Login: React.FC = () => {
   const [loginPayload, setLoginPayload] = useState<LoginPayload>()
   const [selectedOrgId, setSelectedOrgId] = useState<number>(NO_ORG_SELECTED)
   const { push, history } = useRouter()
-  const { onLogin, userState } = useUserState()
+  const { onLogin } = useUserState()
   const client = useApolloClient()
   const { t, languageOptions } = useLanguageProvider()
   const { preferences } = usePrefs()

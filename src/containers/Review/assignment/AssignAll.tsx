@@ -3,7 +3,7 @@ import { Dropdown, Label } from 'semantic-ui-react'
 import Tooltip from '../../../components/Tooltip'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useUserState } from '../../../contexts/UserState'
-import { AssignmentDetails, User } from '../../../utils/types'
+import { AssignmentDetails } from '../../../utils/types'
 
 interface AssignAllProps {
   assignments: AssignmentDetails[]

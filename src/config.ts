@@ -1,10 +1,12 @@
 // for production we get URL relative to web app
-const isProductionBuild = process.env.NODE_ENV === 'production'
-const { version } = require('../package.json')
+const isProductionBuild = import.meta.env.MODE === 'production'
+// const { version } = require('../package.json')
+import packageData from '../package.json'
 
 // To connect to a remote server, store url(s) in .env file:
 // REMOTE_SERVER=<server-url>
-const remoteServer = process.env.REMOTE_SERVER
+const remoteServer = null
+// process.env.REMOTE_SERVER ?? null
 
 const remoteRestServer = remoteServer ? `${remoteServer}/server/api` : null
 const remoteGraphQLServer = remoteServer ? `${remoteServer}/graphql` : null
@@ -49,7 +51,7 @@ const config = {
     // WebSocket
     serverStatus: 'server-status',
   },
-  version,
+  version: packageData?.version,
   pluginsFolder: 'formElementPlugins',
   nonRegisteredUser: 'nonRegistered',
   localStorageJWTKey: 'persistJWT',

@@ -89,10 +89,7 @@ const ElementConfigOptions: React.FC<{
   isVisible: boolean
   setElementUpdateState: SetElementUpdateState
 }> = ({ elementId, isVisible, setElementUpdateState }) => {
-  const {
-    sections,
-    template: { canEdit },
-  } = useTemplateState()
+  const { sections } = useTemplateState()
   const currentElement =
     sections
       .map((section) => section.templateElementsBySectionId?.nodes || [])

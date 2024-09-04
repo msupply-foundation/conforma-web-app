@@ -7,7 +7,7 @@ import useDefault from '../../useDefault'
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
-  onUpdate,
+  // onUpdate,
   currentResponse,
   validationState,
   onSave,

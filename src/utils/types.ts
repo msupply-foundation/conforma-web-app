@@ -19,7 +19,7 @@ import {
 
 import { ValidationState } from '../formElementPlugins/types'
 import { Checkbox } from '../formElementPlugins/checkbox/src/ApplicationView'
-import { EvaluatorNode } from '../modules/expression-evaluator'
+import { type EvaluatorNode } from '../modules/expression-evaluator/src/types'
 import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
 import { DateTime, DateTimeFormatOptions } from 'luxon'

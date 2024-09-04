@@ -100,7 +100,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       : []
   )
   const [inputError, setInputError] = useState(false)
-  const [isFocused, setIsFocused] = useState(false)
+  const [_, setIsFocused] = useState(false)
   const [resultsOpen, setResultsOpen] = useState(false)
   const { isEditable } = element
 

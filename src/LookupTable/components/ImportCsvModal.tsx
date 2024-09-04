@@ -59,7 +59,7 @@ const ImportCsvModal: React.FC<any> = ({
     dispatch({ type: 'SET_FILE', payload: input.files[0] })
   }
 
-  const onImportCSV = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onImportCSV = async (_: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     dispatch({ type: 'SUBMITTING', payload: true })
 
     const formData: any = new FormData()

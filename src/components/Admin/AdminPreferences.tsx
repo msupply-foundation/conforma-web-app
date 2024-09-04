@@ -52,7 +52,11 @@ export const AdminPreferences: React.FC = () => {
         showToast({ title: t('PREFERENCES_SAVE_PROBLEM'), text: result.message, style: 'error' })
       }
     } catch (err) {
-      showToast({ title: t('PREFERENCES_SAVE_PROBLEM'), text: err.message, style: 'error' })
+      showToast({
+        title: t('PREFERENCES_SAVE_PROBLEM'),
+        text: (err as Error).message,
+        style: 'error',
+      })
     }
     setIsSaving(false)
   }

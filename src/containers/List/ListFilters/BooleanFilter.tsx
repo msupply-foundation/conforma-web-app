@@ -15,7 +15,7 @@ const BooleanFilter: React.FC<BooleanFilterProps> = ({
   const renderOption = (value: boolean) => (
     <Dropdown.Item
       key={`${value}`}
-      onClick={(e) => {
+      onClick={(_) => {
         toggleFilter(value)
       }}
     >

@@ -30,10 +30,10 @@ export type ComponentLibraryType = {
   Label: React.FC<{ title: string }>
   Add: React.FC<{ onClick: () => void; title?: string }>
   Remove: React.FC<{ onClick: () => void }>
-  FlexRow: React.FC
-  FlexColumn: React.FC
+  FlexRow: React.FC<{ children: React.ReactNode }>
+  FlexColumn: React.FC<{ children: React.ReactNode }>
   Step: React.FC
-  OperatorContainer: React.FC
+  OperatorContainer: React.FC<{ children: React.ReactNode }>
   Selector: React.FC<{
     selections: string[]
     selected: string

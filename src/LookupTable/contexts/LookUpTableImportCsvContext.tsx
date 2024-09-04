@@ -24,7 +24,7 @@ const LookUpTableImportCsvContext = React.createContext<{
   dispatch: () => null,
 })
 
-const LookUpTableImportCsvProvider: React.FC = ({ children }) => {
+const LookUpTableImportCsvProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(LookUpTableImportCsvReducer, initialState)
 
   return (

@@ -1,26 +1,25 @@
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { createRoot } from 'react-dom/client'
-import '../semantic/src/semantic.less'
-import config from './config'
-import cache from './cache'
-import { AppWrapper } from './containers/Main'
 import { ApolloClient, ApolloProvider, createHttpLink, NormalizedCacheObject } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { LanguageOption, LanguageProvider } from './contexts/Localisation'
-import { ToastProvider } from './contexts/Toast/ToastProvider'
-import { SystemPrefsProvider } from './contexts/SystemPrefs'
-import { usePrefs } from './contexts/SystemPrefs'
 import { persistCache } from 'apollo3-cache-persist'
-import { Loading } from './components'
+import '../semantic/src/semantic.less'
 import getServerUrl from './utils/helpers/endpoints/endpointUrlBuilder'
+import config from './config'
+import cache from './cache'
+import { usePrefs } from './contexts/SystemPrefs'
+import { ToastProvider } from './contexts/Toast'
+import { LanguageOption, LanguageProvider } from './contexts/Localisation'
 import { AdminLogin } from './containers/User/Login'
+import { AppWrapper } from './containers/Main'
+import { Loading } from './components'
 
 // Adds authorisation header with token from local storage (to be used on every
 // request) see
 // https://www.apollographql.com/docs/react/networking/authentication/#header
 const authLink = setContext((_, { headers }) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
+  const JWT = localStorage.getItem('persistJWT')
+  // const JWT = localStorage.getItem(config.localStorageJWTKey);
   return {
     headers: {
       ...headers,
@@ -34,6 +33,7 @@ const authLink = setContext((_, { headers }) => {
 // https://www.apollographql.com/docs/react/networking/authentication/#header
 const httpLink = createHttpLink({
   uri: ({ operationName }) => {
+    // return `http://localhost:5000/graphql?dev=${operationName}`
     return `${getServerUrl('graphQL')}?dev=${operationName}`
   },
 })
@@ -48,7 +48,7 @@ if (navigator.userAgent.indexOf('iPhone') > -1) {
     ?.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1')
 }
 
-const App: React.FC = () => {
+function App() {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject> | undefined>(undefined)
   const { preferences, languageOptions, error, loading, refetchPrefs, maintenanceMode } = usePrefs()
 
@@ -122,11 +122,4 @@ const App: React.FC = () => {
   )
 }
 
-const container = document.getElementById('root')
-const root = createRoot(container!)
-
-root.render(
-  <SystemPrefsProvider>
-    <App />
-  </SystemPrefsProvider>
-)
+export default App

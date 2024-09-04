@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { ErrorBoundary, pluginProvider } from '.'
-import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
+import { ErrorBoundary } from '.'
+import { PluginProvider } from './pluginProvider'
+import { ApplicationViewWrapperProps, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
   EvaluatorNode,
@@ -61,8 +62,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   })
   const [evaluatedParameters, setEvaluatedParameters] = useState<{ [key: string]: any }>({})
 
-  const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+  const plugin = PluginProvider?.[pluginCode]
 
+  const { ApplicationView, config } = plugin
   const parameterLoadingValues = config?.parameterLoadingValues
   const internalParameters = config?.internalParameters || []
   const [simpleParameters, parameterExpressions] = buildParameters(
@@ -108,6 +110,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   useEffect(() => {
     onUpdate(currentResponse?.text)
   }, [currentResponse, isStrictPage])
+
+  if (!plugin) return null
 
   const onUpdate = async (value: LooseString) => {
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)

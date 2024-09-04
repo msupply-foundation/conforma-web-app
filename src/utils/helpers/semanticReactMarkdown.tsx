@@ -32,7 +32,7 @@ const MarkdownBlock: React.FC<MarkdownBlockProps> = (props) => {
       root: (input: ReactMarkdownProps) => {
         return <Message children={input.children} info={info} error={error} />
       },
-      heading: ({ node: { children }, level }: any) => {
+      heading: ({ node: { children } }: any) => {
         const headingText = children?.[0]?.value
         return (
           <Message.Header>

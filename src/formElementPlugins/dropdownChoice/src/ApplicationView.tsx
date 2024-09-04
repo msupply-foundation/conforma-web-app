@@ -172,7 +172,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         search={search || hasOther}
         allowAdditions={hasOther}
         additionLabel={t('ADD_CUSTOM_OPTION_LABEL')}
-        onAddItem={(e, data) => addItemHandler(data.value as string)}
+        onAddItem={(_, data) => addItemHandler(data.value as string)}
         placeholder={placeholder}
         options={getDropdownOptions(
           options,
@@ -182,7 +182,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           optionsDisplayProperty,
           optionsDisplayExpression
         )}
-        onChange={(e, data) => handleChange(data.value as string | number)}
+        onChange={(_, data) => handleChange(data.value as string | number)}
         value={selectedIndex}
         error={!validationState.isValid ? true : undefined}
       />

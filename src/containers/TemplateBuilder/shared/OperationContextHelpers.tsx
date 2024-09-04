@@ -102,7 +102,10 @@ export const updateTemplate: UpdateTemplateHelper =
       })
       return checkMutationResult(result, setErrorAndLoadingState)
     } catch (e) {
-      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: (e as Error).message },
+      })
       return false
     }
   }
@@ -114,7 +117,10 @@ export const updateTemplateFilterJoin: UpdateTemplateFilterJoinHelper =
       const result = await updateTemplateFilterJoin({ variables: { id, filterJoinPatch: patch } })
       return checkMutationResult(result, setErrorAndLoadingState)
     } catch (e) {
-      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: (e as Error).message },
+      })
       return false
     }
   }
@@ -128,7 +134,10 @@ export const updateTemplateSection: UpdateTemplateSectionHelper =
       })
       return checkMutationResult(result, setErrorAndLoadingState)
     } catch (e) {
-      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: (e as Error).message },
+      })
       return false
     }
   }
@@ -142,7 +151,10 @@ export const updateApplication: UpdateApplicationHelper =
       })
       return checkMutationResult(result, setErrorAndLoadingState)
     } catch (e) {
-      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: (e as Error).message },
+      })
       return false
     }
   }
@@ -156,7 +168,10 @@ export const updateTemplateStage: UpdateTemplateStageHelper =
       })
       return checkMutationResult(result, setErrorAndLoadingState)
     } catch (e) {
-      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: (e as Error).message },
+      })
       return false
     }
   }
@@ -169,7 +184,10 @@ export const deleteApplication: DeleteApplicationHelper =
       })
       return checkMutationResult(result, setErrorAndLoadingState)
     } catch (e) {
-      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: (e as Error).message },
+      })
       return false
     }
   }
@@ -189,7 +207,10 @@ export const createApplication: CreateApplicationHelper =
       })
       return false
     } catch (e) {
-      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: (e as Error).message },
+      })
       return false
     }
   }
@@ -253,7 +274,10 @@ export const deleteTemplate: DeleteTemplateHelper =
       })
       return checkMutationResult(result, setErrorAndLoadingState)
     } catch (e) {
-      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: e.message } })
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: (e as Error).message },
+      })
       return false
     }
   }
@@ -291,7 +315,10 @@ export const importTemplate: ImportTemplateHelper =
 
       return snapshotResult
     } catch (error) {
-      setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: error } })
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { error: 'error', message: (error as Error).message },
+      })
       return false
     }
   }
@@ -329,7 +356,10 @@ const safeFetch = async (
     setErrorAndLoadingState({ isLoading: false, error: resultJson })
     return false
   } catch (error) {
-    setErrorAndLoadingState({ isLoading: false, error: { error: 'error', message: error } })
+    setErrorAndLoadingState({
+      isLoading: false,
+      error: { error: 'error', message: (error as Error).message },
+    })
     return false
   }
 }

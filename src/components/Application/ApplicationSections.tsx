@@ -17,7 +17,6 @@ interface ApplicationSectionsProps {
 }
 
 const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure }) => {
-  const { t } = useLanguageProvider()
   const { push } = useRouter()
 
   const {

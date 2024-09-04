@@ -17,7 +17,7 @@ export const importLanguages = async (
   const rows = Papa.parse(data).data as string[][]
 
   const languageObjects: LanguageObject[] = rows[0].map(
-    (i) =>
+    (_) =>
       // Empty placeholder objects
       ({
         languageName: '',

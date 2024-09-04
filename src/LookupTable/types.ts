@@ -1,4 +1,4 @@
-import { TypedDocumentNode, OperationVariables, ApolloQueryResult } from '@apollo/client'
+import { TypedDocumentNode, OperationVariables } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 
 type AllLookupTableStructuresType = {

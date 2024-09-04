@@ -12,7 +12,6 @@ import {
   GetApplicationDataEndpoint,
   SnapshotEndpoint,
   ArchiveEndpoint,
-  FilesEndpoint,
 } from './types'
 
 const {

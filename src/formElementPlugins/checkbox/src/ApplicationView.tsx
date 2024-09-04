@@ -155,7 +155,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     })
   }, [checkboxElements])
 
-  const toggle = (e: any, data: any) => {
+  const toggle = (_: any, data: any) => {
     const { index } = data
     const changedCheckbox = { ...checkboxElements[index] }
     changedCheckbox.selected = !changedCheckbox.selected

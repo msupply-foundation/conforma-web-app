@@ -273,11 +273,11 @@ const PageElements: React.FC<PageElementProps> = ({
   return null
 }
 
-const RenderElementWrapper: React.FC<{ extraSpacing?: boolean; isVisible?: boolean }> = ({
-  children,
-  extraSpacing,
-  isVisible = true,
-}) => (
+const RenderElementWrapper: React.FC<{
+  children: React.ReactNode
+  extraSpacing?: boolean
+  isVisible?: boolean
+}> = ({ children, isVisible = true }) => (
   <Segment basic className={`summary-page-element-container${isVisible ? '' : ' hidden-element'}`}>
     {children}
   </Segment>

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Papa from 'papaparse'
 import config from '../../config'
-import React, { Fragment, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { DateTime } from 'luxon'

@@ -14,7 +14,7 @@ const defaultContext: ConfirmationContextState = {
 
 const Context = createContext<ConfirmationContextState>(defaultContext)
 
-const ConfirmationContext: React.FC = ({ children }) => {
+const ConfirmationContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [innerState, setInnerState] = useState<InnerState>({ message: '' })
 
   const [state] = useState<ConfirmationContextState>({
