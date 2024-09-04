@@ -16,7 +16,7 @@ interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   searchPlaceholder?: string
 }
 
-export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
+const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   onSave,
   isSaving = false,
   data,
@@ -123,3 +123,5 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     </div>
   )
 }
+
+export default JsonEditor
