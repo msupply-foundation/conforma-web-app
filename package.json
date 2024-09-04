@@ -24,7 +24,6 @@
     "axios": "^1.7.7",
     "clone-deep": "^4.0.1",
     "deep-equal": "^2.2.3",
-    "dotenv": "^16.4.5",
     "fig-tree-builder-react": "/Users/carl/Desktop/fig-tree-builder-react-v0.1.0.tgz",
     "fig-tree-evaluator": "^2.17.0",
     "graphql": "^16.9.0",

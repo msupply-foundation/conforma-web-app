@@ -14,6 +14,8 @@ import {
   ArchiveEndpoint,
 } from './types'
 
+const { VITE_USE_DEV_SERVER } = import.meta.env
+
 const {
   isProductionBuild,
   restEndpoints,
@@ -23,12 +25,19 @@ const {
   productionPathGraphQL,
 } = config
 const { port, hostname, protocol } = window.location
-const getProductionUrl = (path: string) =>
-  `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`
+const getProductionUrl = (path: string) => {
+  return `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`
+}
 
-export const serverREST = isProductionBuild ? getProductionUrl(productionPathREST) : devServerRest
+export const serverREST = isProductionBuild
+  ? VITE_USE_DEV_SERVER
+    ? devServerRest
+    : getProductionUrl(productionPathREST)
+  : devServerRest
 export const serverGraphQL = isProductionBuild
-  ? getProductionUrl(productionPathGraphQL)
+  ? VITE_USE_DEV_SERVER
+    ? devServerGraphQL
+    : getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
 const serverWebSocket = serverREST
   .replace('http', 'ws')
