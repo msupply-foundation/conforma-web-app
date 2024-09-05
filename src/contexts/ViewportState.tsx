@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 
 // From Semantic-UI breakpoints
 const TABLET_BREAKPOINT = 768

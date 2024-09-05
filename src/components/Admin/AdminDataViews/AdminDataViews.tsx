@@ -19,7 +19,7 @@ import {
   GetDataTablesQuery,
   useGetDataTablesQuery,
 } from '../../../utils/generated/graphql'
-import { camelCase, pickBy, startCase } from 'lodash'
+import { camelCase, pickBy, startCase } from 'lodash-es'
 import { nanoid } from 'nanoid'
 import { useAdminDataViewConfig } from './useAdminDataViewConfig'
 import config from '../../../config'

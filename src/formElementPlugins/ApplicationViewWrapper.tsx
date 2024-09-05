@@ -13,7 +13,7 @@ import {
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
 import evaluateExpression, { isEvaluationExpression } from '../modules/expression-evaluator'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'

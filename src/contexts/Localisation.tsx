@@ -3,7 +3,7 @@ import defaultStrings from '../utils/defaultLanguageStrings'
 import { getRequest } from '../utils/helpers/fetchMethods'
 import { PluginProvider } from '../formElementPlugins/pluginProvider'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
-import { mapValues, mapKeys } from 'lodash'
+import { mapValues, mapKeys } from 'lodash-es'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 
 const savedLanguageCode = localStorage.getItem('language')
