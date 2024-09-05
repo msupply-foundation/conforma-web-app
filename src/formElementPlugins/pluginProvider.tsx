@@ -38,8 +38,8 @@ export const PluginProvider: Record<string, PluginComponents> = {
   datePicker: {
     localisation: {},
     config: datePickerConfig as PluginConfig,
-    ApplicationView: React.lazy(() => import('./checkbox/src/ApplicationView')),
-    SummaryView: React.lazy(() => import('./checkbox/src/SummaryView')),
+    ApplicationView: React.lazy(() => import('./datePicker/src/ApplicationView')),
+    SummaryView: React.lazy(() => import('./datePicker/src/SummaryView')),
   },
   dropdownChoice: {
     localisation: dropdownChoiceLocalisation,
