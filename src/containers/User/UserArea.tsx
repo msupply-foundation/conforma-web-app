@@ -234,7 +234,10 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     configOptions.push(localisationOption)
   }
 
-  const handleMenuSelect = (value: string, menu: 'List' | 'DataView' | 'Manage' | 'Config') => {
+  const handleMenuSelect = async (
+    value: string,
+    menu: 'List' | 'DataView' | 'Manage' | 'Config'
+  ) => {
     let changedDropDown
     let linkStateData
     switch (menu) {

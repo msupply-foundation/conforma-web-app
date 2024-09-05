@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Link, Route, Switch } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
 import { Loading, NoMatch } from '..'
@@ -34,7 +34,11 @@ const Admin: React.FC = () => {
     {
       route: 'templates',
       header: t('MENU_ITEM_ADMIN_TEMPLATES'),
-      Element: <Templates />,
+      Element: (
+        <Suspense fallback={<Loading />}>
+          <Templates />
+        </Suspense>
+      ),
     },
     {
       route: 'lookup-tables',
@@ -49,7 +53,11 @@ const Admin: React.FC = () => {
     {
       route: 'localisations',
       header: t('MENU_ITEM_ADMIN_LOCALISATION'),
-      Element: <AdminLocalisations />,
+      Element: (
+        <Suspense fallback={<Loading />}>
+          <AdminLocalisations />
+        </Suspense>
+      ),
     },
     {
       route: 'preferences',
@@ -59,21 +67,26 @@ const Admin: React.FC = () => {
     {
       route: 'snapshots',
       header: 'Snapshots',
-      Element: <Snapshots />,
+      Element: (
+        <Suspense fallback={<Loading />}>
+          <Snapshots />
+        </Suspense>
+      ),
     },
   ]
 
   return (
     <Switch>
       <Route path={`${path}/template/:templateId`}>
-        <TemplateWrapper />
+        <Suspense fallback={<Loading />}>
+          <TemplateWrapper />
+        </Suspense>
       </Route>
       {adminOption.map(({ route, Element }) => (
         <Route key={route} path={`${path}/${route}`}>
           {Element}
         </Route>
       ))}
-
       <Route exact path={`${path}`}>
         <div id="admin-display">
           <Header as="h4">Admin</Header>
