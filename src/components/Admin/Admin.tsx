@@ -3,16 +3,19 @@ import { Link, Route, Switch } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
 import { Loading, NoMatch } from '..'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import Snapshots from '../../containers/Dev/Snapshots'
-import TemplateWrapper from '../../containers/TemplateBuilder/template/TemplateWrapper'
-import Templates from '../../containers/TemplateBuilder/Templates'
 import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { AdminLocalisations } from './AdminLocalisations'
 import { AdminPreferences } from './AdminPreferences'
 import { AdminDataViews } from './AdminDataViews/AdminDataViews'
 // import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
+
+const Templates = React.lazy(() => import('../../containers/TemplateBuilder/Templates'))
+const TemplateWrapper = React.lazy(
+  () => import('../../containers/TemplateBuilder/template/TemplateWrapper')
+)
+const Snapshots = React.lazy(() => import('../../containers/Dev/Snapshots'))
+const AdminLocalisations = React.lazy(() => import('./AdminLocalisations'))
 
 const Admin: React.FC = () => {
   const { t } = useLanguageProvider()

@@ -7,7 +7,8 @@ import TemplateWrapper from '../../containers/TemplateBuilder/template/TemplateW
 import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { AdminLocalisations } from './AdminLocalisations'
+
+const AdminLocalisations = React.lazy(() => import('./AdminLocalisations'))
 
 const Manage: React.FC = () => {
   const { t } = useLanguageProvider()
