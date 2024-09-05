@@ -80,6 +80,7 @@ const CreateApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ chi
 
 type ApplicationContextState = {
   structure: FullStructure
+  reloadApplication: () => void
 }
 
 const ApplicationContext = createContext<ApplicationContextState>({} as ApplicationContextState)
@@ -91,7 +92,7 @@ const ApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ children 
   const [state, setState] = useState<ApplicationContextState | null>(null)
   const { configApplicationSerial } = useFormStructureState()
 
-  const { structure } = useLoadApplication({
+  const { structure, reloadApplication } = useLoadApplication({
     serialNumber: configApplicationSerial,
     currentUser: currentUser as User,
     networkFetch: true,
@@ -99,7 +100,7 @@ const ApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     if (structure) {
-      setState({ structure })
+      setState({ structure, reloadApplication })
     }
   }, [structure])
 
@@ -110,6 +111,7 @@ const ApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ children 
 
 type FullApplicationContextState = {
   structure: FullStructure
+  reloadApplication: () => void
 }
 
 const FullApplicationContext = createContext<FullApplicationContextState>(
@@ -117,7 +119,7 @@ const FullApplicationContext = createContext<FullApplicationContextState>(
 )
 
 const FullApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { structure } = useApplicationState()
+  const { structure, reloadApplication } = useApplicationState()
   const [state, setState] = useState<FullApplicationContextState | null>(null)
   const { fullStructure } = useGetApplicationStructure({
     structure,
@@ -128,7 +130,7 @@ const FullApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ child
 
   useEffect(() => {
     if (fullStructure) {
-      setState({ structure: fullStructure })
+      setState({ structure: fullStructure, reloadApplication })
     }
   }, [fullStructure])
 

@@ -83,7 +83,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
       confirmText: t('BUTTON_CONFIRM'),
     })
 
-  const { structure } = useFullApplicationState()
+  const { structure, reloadApplication } = useFullApplicationState()
   const {
     template: { canEdit },
   } = useTemplateState()
@@ -120,6 +120,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         deleteById: [{ id: state.id }],
       },
     })
+    reloadApplication()
     if (!result) return
 
     onClose()

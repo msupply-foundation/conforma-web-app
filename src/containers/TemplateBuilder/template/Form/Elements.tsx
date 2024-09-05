@@ -19,7 +19,7 @@ type SetElementUpdateState = (elementUpdateState: TemplateElement | null) => voi
 
 const Elements: React.FC = () => {
   const { selectedPageNumber, selectedSectionId } = useFormState()
-  const { structure } = useFullApplicationState()
+  const { structure, reloadApplication } = useFullApplicationState()
   const {
     template: { canEdit },
   } = useTemplateState()
@@ -51,7 +51,7 @@ const Elements: React.FC = () => {
         })),
         create: [getNewElement(structure.info.id, lastElementIndex + 1)],
       },
-    })
+    }).then(() => reloadApplication())
   }
 
   return (
@@ -116,6 +116,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
   const {
     template: { canEdit },
   } = useTemplateState()
+  const { reloadApplication } = useFullApplicationState()
 
   const currentElement = moveStructure.elements[elementId]
 
@@ -137,7 +138,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
           { id: elementId, patch: { index: nextElement.index } },
         ],
       },
-    })
+    }).then(reloadApplication)
   }
 
   const moveToSection = async (section: MoveSection | null) => {
@@ -160,7 +161,7 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
       templateElementsUsingId: {
         connectById: [{ id: elementId }],
       },
-    })
+    }).then(reloadApplication)
   }
 
   const doubleMove = (forward = true) => {
