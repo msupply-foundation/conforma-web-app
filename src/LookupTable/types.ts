@@ -68,12 +68,12 @@ type LookUpTableImportCsvActionType =
   | { type: 'SET_SUCCESS_MESSAGES'; payload: [] }
 
 export {
-  FieldMapType,
-  LookUpTableType,
-  TableStructureType,
-  LookUpTableListMainMenuType,
   LookUpTableImportCsvActions,
-  LookUpTableImportCsvType,
-  LookUpTableImportCsvActionType,
-  AllLookupTableStructuresType,
+  type FieldMapType,
+  type LookUpTableType,
+  type TableStructureType,
+  type LookUpTableListMainMenuType,
+  type LookUpTableImportCsvType,
+  type LookUpTableImportCsvActionType,
+  type AllLookupTableStructuresType,
 }

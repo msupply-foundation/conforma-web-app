@@ -72,11 +72,11 @@ interface Section {
 }
 
 export {
-  GenericObject,
-  TimelineEvent,
-  TimelineStage,
-  Timeline,
+  type GenericObject,
+  type TimelineEvent,
+  type TimelineStage,
+  type Timeline,
   TimelineEventType,
-  EventOutput,
-  Section,
+  type EventOutput,
+  type Section,
 }

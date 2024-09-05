@@ -139,4 +139,4 @@ const getMoveStructure = (templateInfo: FullTemplateFragment) => {
 
 export default getMoveStructure
 
-export { MoveElement, MovePage, MoveSection, MoveStructure }
+export { type MoveElement, type MovePage, type MoveSection, type MoveStructure }
