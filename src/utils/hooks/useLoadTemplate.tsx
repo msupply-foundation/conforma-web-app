@@ -6,16 +6,10 @@ import {
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
-import evaluate from '../../modules/expression-evaluator'
+import FigTree from '../../figTreeEvaluator'
 import { useUserState } from '../../contexts/UserState'
-import { EvaluatorParameters } from '../types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
 import { TemplateDetails } from '../types'
-import config from '../../config'
-import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
-
-const graphQLEndpoint = getServerUrl('graphQL')
-const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 interface UseLoadTemplateProps {
   templateCode?: string
@@ -77,24 +71,20 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
       })
     })
 
-    const evaluatorParams: EvaluatorParameters = {
-      objects: { currentUser },
-      APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-      headers: { Authorization: 'Bearer ' + JWT },
-    }
-    evaluate(template?.startMessage || '', evaluatorParams).then((startMessage: any) => {
-      setTemplate({
-        id,
-        code,
-        name: String(name),
-        versionId,
-        elementsIds,
-        elementsDefaults,
-        sections,
-        startMessage,
-      })
-    })
+    FigTree.evaluate(template?.startMessage || '', { data: { currentUser } }).then(
+      (startMessage: any) => {
+        setTemplate({
+          id,
+          code,
+          name: String(name),
+          versionId,
+          elementsIds,
+          elementsDefaults,
+          sections,
+          startMessage,
+        })
+      }
+    )
   }, [data, currentUser])
 
   return {

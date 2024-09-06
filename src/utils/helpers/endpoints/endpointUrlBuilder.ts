@@ -1,4 +1,3 @@
-import { BasicObject } from '../../../modules/expression-evaluator'
 import config from '../../../config'
 import {
   ComplexEndpoint,
@@ -12,6 +11,7 @@ import {
   GetApplicationDataEndpoint,
   SnapshotEndpoint,
   ArchiveEndpoint,
+  FigTreeFragmentsEndpoint,
 } from './types'
 
 const { VITE_USE_DEV_SERVER } = import.meta.env
@@ -44,11 +44,14 @@ const serverWebSocket = serverREST
   .replace('api', '')
   .replace('server', 'websocket')
 
-const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): string => {
+const getServerUrl = (
+  ...args: ComplexEndpoint | BasicEndpoint | ['graphQL'] | ['REST']
+): string => {
   // "as" here ensures we must have types/cases for ALL keys of
   // config.restEndpoints
-  const endpointKey = args[0] as keyof typeof restEndpoints | 'graphQL'
+  const endpointKey = args[0] as keyof typeof restEndpoints | 'graphQL' | 'REST'
   if (endpointKey === 'graphQL') return serverGraphQL
+  if (endpointKey === 'REST') return serverREST
   const endpointPath = restEndpoints[endpointKey]
 
   const options = (args[1] as ComplexEndpoint[1]) || {}
@@ -206,6 +209,11 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       throw new Error('Missing options')
     }
 
+    case 'figTreeFragments': {
+      const { frontOrBack } = options as FigTreeFragmentsEndpoint[1]
+      return `${serverREST}${endpointPath}/${frontOrBack}`
+    }
+
     case 'getApplicationData': {
       const { applicationId, reviewId } = options as GetApplicationDataEndpoint[1]
       return `${serverREST}${endpointPath}?applicationId=${applicationId}${
@@ -230,7 +238,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
   }
 }
 
-const buildQueryString = (query?: BasicObject): string => {
+const buildQueryString = (query?: Record<string, any>): string => {
   if (!query) return ''
   const keyValStrings = Object.entries(query)
     .filter(([_, value]) => !!value)

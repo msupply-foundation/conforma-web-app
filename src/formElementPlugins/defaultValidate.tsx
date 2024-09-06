@@ -1,15 +1,18 @@
-import evaluateExpression from '../modules/expression-evaluator'
+import { EvaluatorNode, FigTreeOptions } from 'fig-tree-evaluator'
+import FigTree from '../figTreeEvaluator'
 import { ValidationState } from './types'
-import { EvaluatorNode, EvaluatorParameters } from '../utils/types'
 
 const defaultValidate = async (
   validationExpress: EvaluatorNode,
   validationMessage: string,
-  evaluatorParameters: EvaluatorParameters
+  evaluatorParameters: FigTreeOptions
 ): Promise<ValidationState> => {
-  if (!validationExpress || evaluatorParameters?.objects?.responses.thisResponse === undefined)
+  if (
+    !validationExpress ||
+    (evaluatorParameters?.data as any)?.responses.thisResponse === undefined
+  )
     return { isValid: true }
-  const isValid = (await evaluateExpression(validationExpress, evaluatorParameters)) as boolean
+  const isValid = (await FigTree.evaluate(validationExpress, evaluatorParameters)) as boolean
   if (isValid) return { isValid }
   return { isValid, validationMessage }
 }

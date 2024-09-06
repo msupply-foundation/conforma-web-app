@@ -1,9 +1,9 @@
-import { EvaluatorNode } from '../../../../modules/expression-evaluator'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { Dropdown } from 'semantic-ui-react'
 import { useGeTemplateActionByCodeQuery } from '../../../../utils/generated/graphql'
 import { ParametersType } from '../../shared/Parameters'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 type ExistingAction = {
   description: string

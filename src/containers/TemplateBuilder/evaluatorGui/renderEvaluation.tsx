@@ -1,4 +1,4 @@
-import evaluateExpression, { IParameters, ValueNode } from '../../../modules/expression-evaluator'
+import FigTree from '../../../figTreeEvaluator'
 import React, { useState } from 'react'
 import { Header, Icon, Modal } from 'semantic-ui-react'
 import { Loading } from '../../../components'
@@ -12,6 +12,7 @@ import {
 import { EvaluationType, ParseAndRenderEvaluationType, RenderEvaluationElementType } from './types'
 import EvaluationOutputType from './EvaluationOutputType'
 import EvaluationFallback from './EvaluationFallback'
+import { EvaluatorOutput, FigTreeOptions } from 'fig-tree-evaluator'
 
 export const renderEvaluation: ParseAndRenderEvaluationType = (
   evaluation,
@@ -27,13 +28,17 @@ export const renderEvaluation: ParseAndRenderEvaluationType = (
 
 const Evaluate: React.FC<{
   typedEvaluation: EvaluationType
-  evaluatorParameters?: IParameters
+  evaluatorParameters?: FigTreeOptions
 }> = ({ typedEvaluation, evaluatorParameters }) => {
-  const [evaluationResult, setEvaluationResult] = useState<ValueNode | undefined | null>(undefined)
+  const [evaluationResult, setEvaluationResult] = useState<EvaluatorOutput | undefined | null>(
+    undefined
+  )
 
   const evaluateNode = async () => {
+    console.log('typedEvaluation', typedEvaluation)
+    console.log('convert', convertTypedEvaluationToBaseType(typedEvaluation))
     try {
-      const result = await evaluateExpression(
+      const result = await FigTree.evaluate(
         convertTypedEvaluationToBaseType(typedEvaluation),
         evaluatorParameters
       )

@@ -135,6 +135,11 @@ export type GetApplicationDataEndpoint = [
   options: { applicationId: number; reviewId?: number }
 ]
 
+export type FigTreeFragmentsEndpoint = [
+  endpoint: 'figTreeFragments',
+  options: { frontOrBack: 'front' | 'back' }
+]
+
 export type ComplexEndpoint =
   | LanguageEndpoint
   | VerifyEndpoint
@@ -150,3 +155,4 @@ export type ComplexEndpoint =
   | LookupTableEndpoint
   | LocalisationEndpoint
   | GetApplicationDataEndpoint
+  | FigTreeFragmentsEndpoint

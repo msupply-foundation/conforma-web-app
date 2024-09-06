@@ -1,4 +1,3 @@
-import { EvaluatorNode } from '../../../../modules/expression-evaluator'
 import React, { useEffect, useState } from 'react'
 import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
 import { PluginProvider } from '../../../../formElementPlugins/pluginProvider'
@@ -19,6 +18,7 @@ import { useFormState } from './Form'
 import FromExistingElement from './FromExistingElement'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 type ElementConfigProps = {
   element: TemplateElement | null

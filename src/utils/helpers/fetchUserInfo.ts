@@ -1,9 +1,8 @@
 import { Dispatch } from 'react'
 import config from '../../config'
-import { UserActions } from '../../contexts/UserState'
+import { UserActions, updateFigTree } from '../../contexts/UserState'
 import { getRequest } from './fetchMethods'
 import getServerUrl from './endpoints/endpointUrlBuilder'
-import FigTree from '../../figTreeEvaluator'
 
 interface SetUserInfoProps {
   dispatch: Dispatch<UserActions>
@@ -19,11 +18,7 @@ const fetchUserInfo = ({ dispatch }: SetUserInfoProps, logout: Function) => {
     .then(({ templatePermissions, JWT, user, success, orgList }) => {
       if (!success) logout()
       localStorage.setItem(config.localStorageJWTKey, JWT)
-      FigTree.updateOptions({
-        headers: {
-          Authorization: `Bearer ${JWT}`,
-        },
-      })
+      updateFigTree(JWT)
       // Set userinfo to context after receiving it from endpoint
       if (user && templatePermissions) {
         dispatch({

@@ -1,4 +1,3 @@
-import { EvaluatorNode } from '../../../modules/expression-evaluator'
 import { truncate } from 'lodash-es'
 import React, { useState } from 'react'
 import { JsonEditor as ReactJson } from 'json-edit-react'
@@ -14,6 +13,7 @@ import { getTypedEvaluation, getTypedEvaluationAsString } from '../evaluatorGui/
 import CheckboxIO from './CheckboxIO'
 import JsonIO from './JsonIO'
 import TextIO from './TextIO'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 type EvaluationProps = {
   evaluation: EvaluatorNode

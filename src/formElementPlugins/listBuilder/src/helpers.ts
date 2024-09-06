@@ -2,18 +2,18 @@ import {
   ApplicationDetails,
   ElementState,
   EvaluationOptions,
-  EvaluatorNode,
   ResponsesByCode,
   User,
 } from '../../../utils/types'
 import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
-import evaluateExpression, { IParameters } from '../../../modules/expression-evaluator'
+import FigTree from '../../../figTreeEvaluator'
 
 import { evaluateElements } from '../../../utils/helpers/evaluateElements'
 import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
 import { ListItem } from './types'
 import functions from '../../../figTreeEvaluator/functions'
 import { substituteValues } from '../../../utils/helpers/utilityFunctions'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 // Formatting and Text manipulation
 export const getDefaultDisplayFormat = (inputFields: TemplateElement[]) => {
@@ -43,7 +43,7 @@ export const createTextString = (
 export const buildDataArray = async (
   listItems: ListItem[],
   inputFields: TemplateElement[],
-  evaluatorConfig: IParameters,
+  evaluatorData: Record<string, unknown>,
   dataFormat?: string | EvaluatorNode
 ) => {
   if (typeof dataFormat === 'string' || dataFormat === undefined) {
@@ -56,9 +56,8 @@ export const buildDataArray = async (
 
   // dataFormat is a full evaluator expression
   const evaluatedItems = listItems.map((item) =>
-    evaluateExpression(dataFormat, {
-      ...evaluatorConfig,
-      objects: { ...evaluatorConfig.objects, item },
+    FigTree.evaluate(dataFormat, {
+      data: { ...evaluatorData, item },
     })
   )
   return Promise.all(evaluatedItems)

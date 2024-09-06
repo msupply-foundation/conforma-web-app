@@ -6,14 +6,12 @@ import { ApplicationViewProps } from '../../types'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { substituteValues } from '../../../utils/helpers/utilityFunctions'
-import evaluateExpression from '../../../modules/expression-evaluator'
-import config from '../../../config'
+import FigTree from '../../../figTreeEvaluator'
 import useDebounce from './useDebounce'
 import './styles.css'
 import useDefault from '../../useDefault'
-import functions from '../../../figTreeEvaluator/functions'
-import { EvaluatorNode } from '../../../utils/types'
 import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 interface DisplayFormat {
   title?: string
@@ -80,8 +78,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const inputRegex = inputPattern ? new RegExp(inputPattern) : undefined
 
-  const graphQLEndpoint = applicationData.config.getServerUrl('graphQL')
-
   const [searchText, setSearchText] = useState(
     displayType === 'input' && !!currentResponse?.selection
       ? substituteValues(
@@ -138,12 +134,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const evaluateSearchQuery = (text: string) => {
     const search = { text }
-    const JWT = localStorage.getItem(config.localStorageJWTKey)
-    evaluateExpression(source, {
-      objects: { search, currentUser, applicationData, responses: allResponses, functions },
-      APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-      headers: { Authorization: 'Bearer ' + JWT },
+    FigTree.evaluate(source, {
+      data: { search, currentUser, applicationData, responses: allResponses },
     })
       .then((results: any) => {
         if (results == null) {

@@ -1,5 +1,6 @@
+import { EvaluatorNode } from 'fig-tree-evaluator'
 import { TemplateElement } from '../../../utils/generated/graphql'
-import { ApplicationDetails, EvaluatorNode, ResponseFull, User } from '../../../utils/types'
+import { ApplicationDetails, ResponseFull, User } from '../../../utils/types'
 
 export enum DisplayType {
   CARDS = 'cards',

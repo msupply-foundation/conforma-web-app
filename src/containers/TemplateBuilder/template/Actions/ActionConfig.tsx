@@ -1,4 +1,3 @@
-import { EvaluatorNode } from '../../../../modules/expression-evaluator'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { Icon, Label, Modal, Header } from 'semantic-ui-react'
@@ -14,6 +13,7 @@ import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { useToast } from '../../../../contexts/Toast'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 type ActionConfigProps = {
   templateAction: TemplateAction | null

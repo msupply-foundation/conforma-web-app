@@ -1,7 +1,6 @@
-import evaluateExpression, { isEvaluationExpression } from '../../modules/expression-evaluator'
-import functions from '../../figTreeEvaluator/functions'
-import getServerUrl from './endpoints/endpointUrlBuilder'
-import config from '../../config'
+import { EvaluatorNode } from 'fig-tree-evaluator'
+import FigTree from '../../figTreeEvaluator'
+import { isFigTreeExpression } from '../../figTreeEvaluator/FigTree'
 import {
   EvaluatedElement,
   ResponsesByCode,
@@ -9,10 +8,7 @@ import {
   ApplicationDetails,
   ElementForEvaluation,
   EvaluationOptions,
-  EvaluatorNode,
 } from '../types'
-
-const graphQLEndpoint = getServerUrl('graphQL')
 
 type PartialEvaluatedElement = Partial<EvaluatedElement>
 type EvaluationObject = {
@@ -54,17 +50,12 @@ const evaluateSingleElement: EvaluateElement = async (
   evaluationOptions,
   { responses, currentUser, applicationData }
 ) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
   const evaluationParameters = {
-    objects: {
+    data: {
       responses: { ...responses, thisResponse: responses?.[element.code]?.text },
       currentUser,
       applicationData,
-      functions,
     },
-    APIfetch: fetch,
-    graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-    headers: { Authorization: 'Bearer ' + JWT },
   }
 
   const evaluatedElement: PartialEvaluatedElement = {}
@@ -74,8 +65,8 @@ const evaluateSingleElement: EvaluateElement = async (
     elementResultKey: keyof EvaluatedElement
   ) => {
     try {
-      evaluatedElement[elementResultKey] = isEvaluationExpression(expressionOrValue)
-        ? await evaluateExpression(expressionOrValue, evaluationParameters)
+      evaluatedElement[elementResultKey] = isFigTreeExpression(expressionOrValue)
+        ? await FigTree.evaluate(expressionOrValue, evaluationParameters)
         : expressionOrValue
     } catch (e) {
       // console.log(e, expressionOrValue)

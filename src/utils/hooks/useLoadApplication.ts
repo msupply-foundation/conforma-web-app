@@ -8,9 +8,8 @@ import {
   TemplateDetails,
   UseGetApplicationProps,
 } from '../types'
-import evaluate from '../../modules/expression-evaluator'
+import FigTree from '../../figTreeEvaluator'
 import { useUserState } from '../../contexts/UserState'
-import { EvaluatorParameters } from '../types'
 import {
   ApplicationStageStatusAll,
   ApplicationStatus,
@@ -29,9 +28,6 @@ import config from '../../config'
 import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 import useTriggers from './useTriggers'
 import getServerUrl, { serverGraphQL, serverREST } from '../helpers/endpoints/endpointUrlBuilder'
-
-const graphQLEndpoint = getServerUrl('graphQL')
-const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const { t } = useLanguageProvider()
@@ -190,13 +186,6 @@ const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
 
     const templateStages = application.template?.templateStages.nodes as TemplateStage[]
 
-    const evaluatorParams: EvaluatorParameters = {
-      objects: { currentUser, applicationData: applicationDetails },
-      APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-      headers: { Authorization: 'Bearer ' + JWT },
-    }
-
     const getStageAndLevels = (stage: TemplateStage) => {
       const stageLevels =
         (stage.templateStageReviewLevelsByStageId?.nodes as TemplateStageReviewLevel[]) || []
@@ -215,8 +204,10 @@ const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
       }
     }
 
-    evaluate(application.template?.startMessage || '', evaluatorParams).then((startMessage) => {
-      let newStructure: FullStructure = {
+    FigTree.evaluate(application.template?.startMessage || '', {
+      data: { currentUser, applicationData: applicationDetails },
+    }).then((startMessage) => {
+      const newStructure: FullStructure = {
         info: {
           ...applicationDetails,
           submissionMessage: application.template?.submissionMessage,

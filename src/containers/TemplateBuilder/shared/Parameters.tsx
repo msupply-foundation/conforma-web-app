@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { Accordion, Button, Header, Icon } from 'semantic-ui-react'
-import { EvaluatorNode, FullStructure } from '../../../utils/types'
+import { FullStructure } from '../../../utils/types'
 import { useActionState } from '../template/Actions/Actions'
 import CheckboxIO from './CheckboxIO'
 import TextIO from '../shared/TextIO'
 import Evaluation from './Evaluation'
 import JsonIO from './JsonIO'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 export type ParametersType = {
   [key: string]: EvaluatorNode

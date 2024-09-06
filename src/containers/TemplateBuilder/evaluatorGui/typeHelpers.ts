@@ -1,4 +1,4 @@
-import { EvaluatorNode } from '../../../modules/expression-evaluator'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 import {
   ConvertTypedEvaluationToBaseType,
   EvaluationType,
@@ -134,13 +134,14 @@ export const convertTypedEvaluationToBaseType: ConvertTypedEvaluationToBaseType 
       return null
     case 'object':
       return evaluation.asObject
-    case 'array':
+    case 'array': {
       const arrayResult: EvaluatorNode[] = []
       evaluation.asArray.forEach((evaluation) => {
         arrayResult.push(convertTypedEvaluationToBaseType(getTypedEvaluation(evaluation)))
       })
       return arrayResult
-    case 'operator':
+    }
+    case 'operator': {
       const operator = evaluation.asOperator.operator
       if (operator in nonGenericEvaluations) {
         return {
@@ -165,6 +166,7 @@ export const convertTypedEvaluationToBaseType: ConvertTypedEvaluationToBaseType 
         )
       })
       return operatorResult
+    }
     default:
       return ''
   }

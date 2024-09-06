@@ -19,13 +19,13 @@ import {
 
 import { ValidationState } from '../formElementPlugins/types'
 import { Checkbox } from '../formElementPlugins/checkbox/src/ApplicationView'
-import { type EvaluatorNode } from '../modules/expression-evaluator/src/types'
 import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../utils/data/LuxonDateTimeConstants'
 import { ErrorResponse } from './hooks/useDataViews'
 import { USER_ROLES } from './data'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 export {
   type ApplicationDetails,
@@ -48,7 +48,6 @@ export {
   type ElementPluginParameterValue,
   type ElementPluginParameters,
   type ElementState,
-  type EvaluatorNode,
   type EvaluatorParameters,
   type Filters,
   type FullStructure,

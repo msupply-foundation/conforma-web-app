@@ -3,17 +3,13 @@ import { ErrorBoundary } from '.'
 import { PluginProvider } from './pluginProvider'
 import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
-import evaluateExpression from '../modules/expression-evaluator'
-import { EvaluatorNode, ResponseFull } from '../utils/types'
+import FigTree from '../figTreeEvaluator'
+import { ResponseFull } from '../utils/types'
 import { buildParameters } from './ApplicationViewWrapper'
 import { useUserState } from '../contexts/UserState'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
-import globalConfig from '../config'
 import { TemplateElementCategory } from '../utils/generated/graphql'
-import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
-import functions from '../figTreeEvaluator/functions'
-
-const graphQLEndpoint = getServerUrl('graphQL')
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   element,
@@ -45,18 +41,13 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
     // saved evaluations (usually INFORMATION type), or "showLiveParameters" has
     // been explicitly set
     if (simpleParameters?.showLiveParameters || !response?.evaluatedParameters) {
-      const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
       Object.entries(parameterExpressions).forEach(([field, expression]) => {
-        evaluateExpression(expression as EvaluatorNode, {
-          objects: {
+        FigTree.evaluate(expression as EvaluatorNode, {
+          data: {
             responses: { ...allResponses, thisResponse: response?.text },
             currentUser,
             applicationData,
-            functions,
           },
-          APIfetch: fetch,
-          graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-          headers: { Authorization: 'Bearer ' + JWT },
         }).then((result: any) =>
           setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
         )

@@ -3,27 +3,19 @@ import { ErrorBoundary } from '.'
 import { PluginProvider } from './pluginProvider'
 import { ApplicationViewWrapperProps, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
-import {
-  EvaluatorNode,
-  EvaluatorParameters,
-  LooseString,
-  ResponseFull,
-  ElementPluginParameters,
-} from '../utils/types'
+import { LooseString, ResponseFull, ElementPluginParameters } from '../utils/types'
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
-import evaluateExpression, { isEvaluationExpression } from '../modules/expression-evaluator'
+import FigTree from '../figTreeEvaluator'
 import { isEqual } from 'lodash-es'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
 import { useLanguageProvider } from '../contexts/Localisation'
-import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
-import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 import functions from '../figTreeEvaluator/functions'
-
-const graphQLEndpoint = getServerUrl('graphQL')
+import { isFigTreeExpression } from '../figTreeEvaluator/FigTree'
+import { EvaluatorNode, FigTreeOptions } from 'fig-tree-evaluator'
 
 export const DEFAULT_LOADING_VALUE = 'Loading...'
 
@@ -75,7 +67,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
   // Update dynamic parameters when responses change
   useEffect(() => {
-    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     if (!isInnerFormElement)
       // Don't do this inside listBuilder or we get infinite loop
       setUpdateTrackerState({
@@ -84,11 +75,8 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       })
 
     const result = Object.entries(parameterExpressions).map(([field, expression]) => {
-      return evaluateExpression(expression as EvaluatorNode, {
-        objects: { responses: allResponses, currentUser, applicationData, functions },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-        headers: { Authorization: 'Bearer ' + JWT },
+      return FigTree.evaluate(expression as EvaluatorNode, {
+        data: { responses: allResponses, currentUser, applicationData },
       }).then((result: any) => {
         // Need to do our own equality check since React treats 'result' as
         // different object to original and causes a re-render even when not
@@ -114,7 +102,6 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   if (!plugin) return null
 
   const onUpdate = async (value: LooseString) => {
-    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
     const responses = { thisResponse: value, ...allResponses }
     const newValidationState = await calculateValidationState({
       validationExpression,
@@ -123,10 +110,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
       isStrictPage,
       responses,
       evaluationParameters: {
-        objects: { responses, currentUser, applicationData, functions },
-        APIfetch: fetch,
-        graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-        headers: { Authorization: 'Bearer ' + JWT },
+        data: { responses, currentUser, applicationData, functions },
       },
       currentResponse,
     })
@@ -307,7 +291,7 @@ export const buildParameters = (
   const parameterExpressions: any = {}
   for (const [key, value] of Object.entries(parameters)) {
     if (internalParameters.includes(key)) simpleParameters[key] = value
-    else if (isEvaluationExpression(value)) {
+    else if (isFigTreeExpression(value)) {
       parameterExpressions[key] = value
       simpleParameters[key] = parameterLoadingValues?.[key] ?? DEFAULT_LOADING_VALUE
     } else simpleParameters[key] = value
@@ -332,7 +316,7 @@ const useCalculateValidationState = () => {
     isRequired: boolean | undefined
     isStrictPage: boolean | undefined
     responses: any // thisResponse field makes it not "ResponsesByCode"
-    evaluationParameters: EvaluatorParameters
+    evaluationParameters: FigTreeOptions
     currentResponse: ResponseFull | null
   }) => {
     const validationResult = validationExpression

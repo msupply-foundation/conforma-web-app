@@ -10,6 +10,8 @@ import { useLanguageProvider } from '../Localisation'
 import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
 import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
 import FigTree from '../../figTreeEvaluator'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
+import { FragmentNode } from 'fig-tree-evaluator'
 
 type UserState = {
   currentUser: User | null
@@ -157,11 +159,7 @@ export function UserProvider({ children }: UserProviderProps) {
         newOrgList: orgList || [],
       })
       dispatch({ type: 'setLoading', isLoading: false })
-      FigTree.updateOptions({
-        headers: {
-          Authorization: `Bearer ${JWT}`,
-        },
-      })
+      updateFigTree(JWT)
     }
 
     if (!disableAutoLogout) {
@@ -196,6 +194,27 @@ export function UserProvider({ children }: UserProviderProps) {
       {children}
     </UserContext.Provider>
   )
+}
+
+// Updates the global FigTree object with user token and refreshes available
+// Fragments
+export const updateFigTree = async (JWT: string) => {
+  FigTree.updateOptions({
+    headers: {
+      Authorization: `Bearer ${JWT}`,
+    },
+  })
+  try {
+    if (FigTree.getFragments().length === 0) {
+      const fragments = (await FigTree.evaluate({
+        operator: 'GET',
+        url: getServerUrl('figTreeFragments', { frontOrBack: 'front' }),
+      })) as Record<string, FragmentNode>
+      FigTree.updateOptions({ fragments })
+    }
+  } catch (e) {
+    console.error("Couldn't update FigTree fragments", (e as Error).message)
+  }
 }
 
 /**

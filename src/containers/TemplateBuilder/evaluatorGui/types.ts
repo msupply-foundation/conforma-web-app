@@ -1,4 +1,4 @@
-import { EvaluatorNode, IParameters, OperatorNode } from '../../../modules/expression-evaluator'
+import { EvaluatorNode, FigTreeOptions, OperatorNode } from 'fig-tree-evaluator'
 import React from 'react'
 
 export type Operator = OperatorNode['operator'] | 'none' | 'buildObject'
@@ -61,7 +61,7 @@ export type RenderTypedEvaluationType = (
   evaluation: EvaluationType,
   setEvaluation: (evaluation: EvaluationType) => void,
   ComponentLibrary: ComponentLibraryType,
-  evaluatorParameters: IParameters
+  evaluatorParameters: FigTreeOptions
 ) => React.ReactNode
 
 export type EvaluationVariations =
@@ -110,14 +110,14 @@ export type RenderEvaluationElementType = (
   evaluation: any,
   setEvaluation: (evaluation: EvaluationType) => void,
   ComponentLibrary: ComponentLibraryType,
-  evaluatorParameters: IParameters
+  evaluatorParameters: FigTreeOptions
 ) => React.ReactNode
 
 export type ParseAndRenderEvaluationType = (
   evaluation: EvaluatorNode,
   setEvaluation: (evaluation: EvaluatorNode) => void,
   ComponentLibrary: ComponentLibraryType,
-  evaluatorParameters: IParameters
+  evaluatorParameters: FigTreeOptions
 ) => React.ReactNode
 
 export type GetTypedEvaluationAsStringType = (evaluation: EvaluationType) => string
@@ -132,7 +132,7 @@ export type RenderArrayControlType = (props: {
   setEvaluation: (evaluation: EvaluationType) => void
   newValue: EvaluationType
   ComponentLibrary: ComponentLibraryType
-  evaluatorParameters: IParameters
+  evaluatorParameters: FigTreeOptions
 }) => React.ReactNode
 
 export type RenderDynamicParametersType = (props: {
@@ -145,7 +145,7 @@ export type RenderDynamicParametersType = (props: {
   setEvaluation: (evaluation: EvaluationType) => void
   evaluation: EvaluationType
   ComponentLibrary: ComponentLibraryType
-  evaluatorParameters: IParameters
+  evaluatorParameters: FigTreeOptions
 }) => React.ReactNode
 
 export type AddToArrayType = (evaluation: EvaluationType, value: EvaluationType) => EvaluationType
@@ -162,5 +162,5 @@ export type RenderSingleChildType = (
   index: number,
   setEvaluation: (evaluation: EvaluationType) => void,
   ComponentLibrary: ComponentLibraryType,
-  evaluatorParameters: IParameters
+  evaluatorParameters: FigTreeOptions
 ) => React.ReactNode

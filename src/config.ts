@@ -37,6 +37,7 @@ const config = {
     lookupTable: '/lookup-table',
     localisation: '/localisation',
     files: '/files',
+    figTreeFragments: '/fig-tree-fragments',
     // Admin
     admin: '/admin',
     // updateRowPolicies: '/admin/updateRowPolicies', //-- not currently called by front-end
