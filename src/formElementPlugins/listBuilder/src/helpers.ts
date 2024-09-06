@@ -12,7 +12,7 @@ import evaluateExpression, { IParameters } from '../../../modules/expression-eva
 import { evaluateElements } from '../../../utils/helpers/evaluateElements'
 import { defaultEvaluatedElement } from '../../../utils/hooks/useLoadApplication'
 import { ListItem } from './types'
-import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import functions from '../../../figTreeEvaluator/functions'
 import { substituteValues } from '../../../utils/helpers/utilityFunctions'
 
 // Formatting and Text manipulation

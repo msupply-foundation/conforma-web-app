@@ -1,5 +1,5 @@
 import evaluateExpression, { isEvaluationExpression } from '../../modules/expression-evaluator'
-import functions from '../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import functions from '../../figTreeEvaluator/functions'
 import getServerUrl from './endpoints/endpointUrlBuilder'
 import config from '../../config'
 import {

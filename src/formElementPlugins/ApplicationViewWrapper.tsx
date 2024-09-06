@@ -21,7 +21,7 @@ import { useLanguageProvider } from '../contexts/Localisation'
 import globalConfig from '../config'
 import { SemanticICONS } from 'semantic-ui-react'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
-import functions from '../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import functions from '../figTreeEvaluator/functions'
 
 const graphQLEndpoint = getServerUrl('graphQL')
 

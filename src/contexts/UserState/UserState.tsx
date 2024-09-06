@@ -9,6 +9,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { useLanguageProvider } from '../Localisation'
 import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
 import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
+import FigTree from '../../figTreeEvaluator'
 
 type UserState = {
   currentUser: User | null
@@ -46,7 +47,7 @@ const reducer = (state: UserState, action: UserActions) => {
   switch (action.type) {
     case 'resetCurrentUser':
       return initialState
-    case 'setCurrentUser':
+    case 'setCurrentUser': {
       const { newUser, newPermissions, newOrgList } = action
       return {
         ...state,
@@ -55,12 +56,14 @@ const reducer = (state: UserState, action: UserActions) => {
         orgList: newOrgList,
         isNonRegistered: newUser.username === config.nonRegisteredUser,
       }
-    case 'setLoading':
+    }
+    case 'setLoading': {
       const { isLoading } = action
       return {
         ...state,
         isLoading,
       }
+    }
     default:
       return state
   }
@@ -98,7 +101,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const { preferences } = usePrefs()
   const { showToast, clearAllToasts } = useToast()
 
-  let refreshTokenTimer = useRef(0)
+  const refreshTokenTimer = useRef(0)
 
   const disableAutoLogout = preferences.logoutAfterInactivity === 0
   const loginTimer = useMemo(
@@ -154,6 +157,11 @@ export function UserProvider({ children }: UserProviderProps) {
         newOrgList: orgList || [],
       })
       dispatch({ type: 'setLoading', isLoading: false })
+      FigTree.updateOptions({
+        headers: {
+          Authorization: `Bearer ${JWT}`,
+        },
+      })
     }
 
     if (!disableAutoLogout) {

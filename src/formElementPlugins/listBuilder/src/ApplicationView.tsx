@@ -10,7 +10,7 @@ import {
   ListLayoutProps,
 } from './types'
 import { TemplateElement } from '../../../utils/generated/graphql'
-import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
+import functions from '../../../figTreeEvaluator/functions'
 import config from '../../../config'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import {
