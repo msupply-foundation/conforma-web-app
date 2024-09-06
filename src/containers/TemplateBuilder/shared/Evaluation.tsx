@@ -1,15 +1,14 @@
-import { truncate } from 'lodash-es'
 import React, { useState } from 'react'
 import { JsonEditor as ReactJson } from 'json-edit-react'
 import { Accordion, Icon, Label } from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
 import { FullStructure } from '../../../utils/types'
 import functions from '../../../figTreeEvaluator/functions'
-import { getTypedEvaluation, getTypedEvaluationAsString } from '../evaluatorGui/typeHelpers'
 import TextIO from './TextIO'
 import { EvaluatorNode } from 'fig-tree-evaluator'
 import { FigTreeEditor } from 'fig-tree-builder-react'
 import FigTree from '../../../figTreeEvaluator'
+import { getFigTreeSummary } from '../../../figTreeEvaluator/FigTree'
 
 type EvaluationProps = {
   evaluation: EvaluatorNode
@@ -28,21 +27,18 @@ type EvaluationHeaderProps = {
 }
 
 export const EvaluationHeader: React.FC<EvaluationHeaderProps> = ({ evaluation }) => {
-  const typedEvaluation = getTypedEvaluation(evaluation)
+  const figTreeSummary = getFigTreeSummary(evaluation)
 
   return (
     <div className="flex-row-start-center" style={{ marginTop: 6 }}>
-      <TextIO title="Type" text={typedEvaluation.type} />
-      {typedEvaluation.type === 'operator' && (
-        <TextIO title="operator" text={typedEvaluation.asOperator.operator} />
+      <TextIO title="Type" text={figTreeSummary.type} />
+      {figTreeSummary.type === 'Operator' && (
+        <TextIO title="Operator" text={figTreeSummary.operator} />
       )}
-
-      {typedEvaluation.type !== 'operator' && (
-        <TextIO
-          title="Value"
-          text={truncate(getTypedEvaluationAsString(typedEvaluation), { length: 80 })}
-        />
+      {figTreeSummary.type === 'Fragment' && (
+        <TextIO title="Fragment" text={figTreeSummary.fragment} />
       )}
+      {'value' in figTreeSummary && <TextIO title="Value" text={figTreeSummary.value} />}
     </div>
   )
 }
