@@ -2,18 +2,14 @@ import { truncate } from 'lodash-es'
 import React, { useState } from 'react'
 import { JsonEditor as ReactJson } from 'json-edit-react'
 import { Accordion, Icon, Label } from 'semantic-ui-react'
-import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
-import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FullStructure } from '../../../utils/types'
-import { renderEvaluation } from '../evaluatorGui/renderEvaluation'
 import functions from '../../../figTreeEvaluator/functions'
-import semanticComponentLibrary from '../evaluatorGui/semanticComponentLibrary'
 import { getTypedEvaluation, getTypedEvaluationAsString } from '../evaluatorGui/typeHelpers'
-import CheckboxIO from './CheckboxIO'
-import JsonIO from './JsonIO'
 import TextIO from './TextIO'
 import { EvaluatorNode } from 'fig-tree-evaluator'
+import { FigTreeEditor } from 'fig-tree-builder-react'
+import FigTree from '../../../figTreeEvaluator'
 
 type EvaluationProps = {
   evaluation: EvaluatorNode
@@ -66,9 +62,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
     userState: { currentUser },
   } = useUserState()
   const [isActive, setIsActive] = useState(false)
-  const [asGui, setAsGui] = useState(true)
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-  const objects =
+  const data =
     type === 'Action'
       ? { applicationData, functions }
       : type === 'FormElement'
@@ -82,16 +76,6 @@ const Evaluation: React.FC<EvaluationProps> = ({
           functions,
         }
       : undefined
-
-  const evaluationParameters = {
-    objects,
-    APIfetch: fetch,
-    graphQLConnection: {
-      fetch: fetch.bind(window),
-      endpoint: getServerUrl('graphQL'),
-    },
-    headers: { Authorization: 'Bearer ' + JWT },
-  }
 
   return (
     <Accordion className="evaluation-container">
@@ -127,35 +111,22 @@ const Evaluation: React.FC<EvaluationProps> = ({
       {isActive && (
         <Accordion.Content className="evaluation-container-content" active={isActive}>
           <>
-            <div className="flex-column-start-center">
-              <div style={{ marginLeft: 30 }}>
-                <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />
-                <div className="spacer-10" />
-              </div>
-              {!asGui && (
-                <div className="long">
-                  <JsonIO
-                    isPropUpdated={true}
-                    object={asObject(evaluation)}
-                    label="Plugin Parameters"
-                    setObject={(value) => setEvaluation(value)}
-                  />
-                </div>
-              )}
-              {asGui &&
-                renderEvaluation(
-                  evaluation,
-                  (evaluation) => setEvaluation(evaluation),
-                  semanticComponentLibrary,
-                  evaluationParameters
-                )}
-            </div>
-            {objects && (
+            <FigTreeEditor
+              expression={evaluation}
+              figTree={FigTree}
+              objectData={data as object}
+              onUpdate={({ newData }) => {
+                setEvaluation(newData)
+              }}
+              onEvaluate={(result) => console.log('RESULT', result)}
+              rootName="expression"
+            />
+            {data && (
               <div className="object-properties-container">
                 <Label>Object Properties</Label>
                 <ReactJson
-                  data={objects}
-                  rootName="objects"
+                  data={data}
+                  rootName="data"
                   collapse={1}
                   indent={1}
                   maxWidth={450}
