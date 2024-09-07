@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
-import { Message, Transition } from 'semantic-ui-react'
+import { Message, MessageContent, MessageHeader, Transition } from 'semantic-ui-react'
 import { ToastProps, MessageProps, Position, bottomLeft } from './types'
 import { getStyleProps } from './helpers'
 import { nanoid } from 'nanoid'
@@ -122,10 +122,19 @@ export const Toast = ({ toast, removeToast }: { toast: ToastState; removeToast: 
     ...getStyleProps(toast.style),
   }
 
+  if (toast.maxWidth) messageState.style = { maxWidth: toast.maxWidth }
+
   return (
     <div className="toast-wrapper">
       <Transition visible={visible} animation="scale" duration={TRANSITION_DURATION}>
-        <Message className="toast-message" {...messageState} />
+        {toast.html ? (
+          <Message className="toast-message" {...messageState}>
+            {/* {messageState.header && <MessageHeader>{messageState.header}</MessageHeader>} */}
+            <MessageContent>{toast.html}</MessageContent>
+          </Message>
+        ) : (
+          <Message className="toast-message" {...messageState} />
+        )}
       </Transition>
     </div>
   )

@@ -22,6 +22,7 @@ export const FigTree = new FigTreeEvaluator({
   evaluateFullObject: true,
   baseEndpoint: getServerUrl('REST'),
   functions,
+  excludeOperators: ['SQL'],
 
   // Undocumented property to support certain V1 expressions. Remove this once
   // we're sure all evaluator queries have been updated.

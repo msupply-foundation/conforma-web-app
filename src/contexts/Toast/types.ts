@@ -22,13 +22,15 @@ export const { bottomLeft, bottomMiddle, bottomRight, topLeft, topMiddle, topRig
 
 export interface ToastProps {
   title: string
-  text: string
+  text?: string
+  html?: JSX.Element
   style: ToastStyle
   timeout: number
   clickable: boolean
   showCloseIcon: boolean // also makes it close-able
   onClick?: () => void
   position: Position
+  maxWidth?: number
   uid: string
 }
 
@@ -45,8 +47,9 @@ export interface MessageStyleProps {
 
 export interface MessageProps extends MessageStyleProps {
   header: string
-  content: string
+  content?: string
   onDismiss?: () => void
   onClick?: () => void
   floating: boolean
+  style?: React.CSSProperties
 }

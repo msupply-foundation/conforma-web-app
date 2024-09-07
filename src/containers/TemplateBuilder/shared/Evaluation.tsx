@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { JsonEditor as ReactJson } from 'json-edit-react'
 import { Accordion, Icon, Label } from 'semantic-ui-react'
 import { useUserState } from '../../../contexts/UserState'
+import Markdown from '../../../utils/helpers/semanticReactMarkdown'
 import { FullStructure } from '../../../utils/types'
-import functions from '../../../figTreeEvaluator/functions'
 import TextIO from './TextIO'
-import { EvaluatorNode } from 'fig-tree-evaluator'
+import { EvaluatorNode, FigTreeError, isFigTreeError, truncateString } from 'fig-tree-evaluator'
 import { FigTreeEditor } from 'fig-tree-builder-react'
 import FigTree from '../../../figTreeEvaluator'
 import { getFigTreeSummary } from '../../../figTreeEvaluator/FigTree'
+import { topMiddle, useToast } from '../../../contexts/Toast'
 
 type EvaluationProps = {
   evaluation: EvaluatorNode
@@ -25,6 +26,8 @@ type EvaluationProps = {
 type EvaluationHeaderProps = {
   evaluation: EvaluatorNode
 }
+
+const RESULT_STRING_CHAR_LIMIT = 500
 
 export const EvaluationHeader: React.FC<EvaluationHeaderProps> = ({ evaluation }) => {
   const figTreeSummary = getFigTreeSummary(evaluation)
@@ -57,10 +60,11 @@ const Evaluation: React.FC<EvaluationProps> = ({
   const {
     userState: { currentUser },
   } = useUserState()
+  const { showToast } = useToast({ position: topMiddle })
   const [isActive, setIsActive] = useState(false)
   const data =
     type === 'Action'
-      ? { applicationData, functions }
+      ? { applicationData }
       : type === 'FormElement'
       ? {
           responses: {
@@ -69,7 +73,6 @@ const Evaluation: React.FC<EvaluationProps> = ({
           },
           currentUser,
           applicationData: { ...fullStructure?.info, currentPageType: 'application' },
-          functions,
         }
       : undefined
 
@@ -106,7 +109,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
       </Accordion.Title>
       {isActive && (
         <Accordion.Content className="evaluation-container-content" active={isActive}>
-          <>
+          <div className="flex-row-space-between" style={{ gap: '1.5em' }}>
             <FigTreeEditor
               expression={evaluation}
               figTree={FigTree}
@@ -114,17 +117,37 @@ const Evaluation: React.FC<EvaluationProps> = ({
               onUpdate={({ newData }) => {
                 setEvaluation(newData)
               }}
-              onEvaluate={(result) => console.log('RESULT', result)}
+              onEvaluate={(result) =>
+                showToast({
+                  text: truncateString(String(result)),
+                  html: formatResult(result),
+                  style: 'success',
+                  timeout: 10_000,
+                  maxWidth: 650,
+                })
+              }
+              onEvaluateError={(err) => {
+                showToast({
+                  title: 'Evaluation Error',
+                  text: isFigTreeError(err)
+                    ? truncateString(err.prettyPrint, 150)
+                    : (err as Error).message,
+                  style: 'negative',
+                  timeout: 10_000,
+                  maxWidth: 650,
+                })
+              }}
               rootName="expression"
+              rootFontSize="14px"
+              collapse={3}
             />
             {data && (
               <div className="object-properties-container">
-                <Label>Object Properties</Label>
                 <ReactJson
                   data={data}
                   rootName="data"
                   collapse={1}
-                  indent={1}
+                  indent={2}
                   maxWidth={450}
                   restrictEdit={true}
                   restrictDelete={true}
@@ -133,16 +156,29 @@ const Evaluation: React.FC<EvaluationProps> = ({
                 />
               </div>
             )}
-          </>
+          </div>
         </Accordion.Content>
       )}
     </Accordion>
   )
 }
 
-export const asObject = (value: EvaluatorNode) =>
-  typeof value === 'object' && value !== null
-    ? value
-    : { value: value || (value === false ? false : null) }
+const formatResult = (result: unknown) => {
+  switch (typeof result) {
+    case 'boolean':
+    case 'number':
+      return undefined
+    case 'object':
+      if (result === null)
+        return (
+          <code>
+            <strong>NULL</strong>
+          </code>
+        )
+      return <pre>{truncateString(JSON.stringify(result, null, 2), RESULT_STRING_CHAR_LIMIT)}</pre>
+    default:
+      return <Markdown text={truncateString(String(result), RESULT_STRING_CHAR_LIMIT)} />
+  }
+}
 
 export default Evaluation
