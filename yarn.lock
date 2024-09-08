@@ -3069,17 +3069,17 @@ fbjs@^3.0.0:
     setimmediate "^1.0.5"
     ua-parser-js "^1.0.35"
 
-"fig-tree-builder-react@file:../../../Desktop/fig-tree-builder-react-v0.1.0.tgz":
-  version "0.1.0"
-  resolved "file:../../../Desktop/fig-tree-builder-react-v0.1.0.tgz#51f14c14b94b8b86a5074a93cdd3c55a84faab75"
+fig-tree-builder-react@/Users/carl/Desktop/fig-tree-builder-react-v0.1.1.tgz:
+  version "0.1.1"
+  resolved "/Users/carl/Desktop/fig-tree-builder-react-v0.1.1.tgz#440c21aaa09130ea8d8c86febb877b0766999618"
   dependencies:
-    json-edit-react "^1.15.10"
+    json-edit-react "^1.15.12"
     react-select "^5.8.0"
 
-fig-tree-evaluator@^2.17.0:
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.17.0.tgz#a8b29c6671b3dae74857eef511f8d0e681c60740"
-  integrity sha512-mHNtSnIFIJW8sGQFOa8l1psEyYVnCYrJNDihf/AFW0UN3uCj/8C/qvNWo1ZDUjdHKToMdG8r1eUu+ZxLa+9UIQ==
+fig-tree-evaluator@^2.17.1:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.17.1.tgz#e96391f43a71f04b3054959a0618e66bccf5e217"
+  integrity sha512-7dG+0vmRs8LVRxkJ+YmU0exF0T8CAlq+z1xTCL0d2fM2yum5EXw52Fl85f5s9CT1+gb7vX50Se1o0t5ig6Naeg==
   dependencies:
     dequal "^2.0.3"
     object-property-extractor "^1.0.12"
@@ -3888,10 +3888,10 @@ json-buffer@3.0.1:
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.1.tgz#9338802a30d3b6605fbe0613e094008ca8c05a13"
   integrity sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==
 
-json-edit-react@^1.15.10, json-edit-react@^1.15.11:
-  version "1.15.11"
-  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-1.15.11.tgz#c2816695ec043353be1697a9e01460fe20ff749d"
-  integrity sha512-X/6BHbb9rYdqoDlkGRvQEn99YiO8/1ONP1HbriDnZtKfsPkIfDm+d7+OpsA19j8k6bA4qD3RKmqOp89P0kSTKw==
+json-edit-react@^1.15.12:
+  version "1.15.12"
+  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-1.15.12.tgz#4a894e18e14ae8582761bb1be44725b8df9d60f8"
+  integrity sha512-kdWUuo9VPaHrv3trrqjGgmSD0A5znz+0Omo8PdIFCXST+tHJ+4TKFDi902vUQ9Ai9ScTMH21Unt7Y7j6/KUf5Q==
   dependencies:
     object-property-assigner "^1.3.0"
     object-property-extractor "^1.0.11"
