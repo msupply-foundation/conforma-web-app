@@ -118,8 +118,10 @@ const TemplateComponent: React.FC<{
       ? USER_ROLES.APPLICANT
       : USER_ROLES.REVIEWER
 
+  // Only show on Dashboard if any of the designated restriction filters have
+  // applications (or there are no dashboardRestrictions)
   const shouldHide = dashboardRestrictions
-    ? checkRestrictions(dashboardRestrictions, filterCounts)
+    ? !dashboardRestrictions.some((restriction) => filterCounts[restriction] > 0)
     : false
 
   if (!shouldHide) setReady(true)
@@ -215,14 +217,5 @@ const constructLink = (filter: Filter, templateType: string) =>
   `/applications?type=${templateType}&user-role=${userRole(filter)}&${Object.entries(filter.query)
     .map(([key, value]) => `${key}=${value}`)
     .join('&')}`
-
-const checkRestrictions = (restrictions: string[], filterCounts: { [key: string]: number }) => {
-  for (let restriction of restrictions) {
-    if (!(restriction in filterCounts)) return true
-    if (filterCounts[restriction] === 0) return true
-  }
-
-  return false
-}
 
 export default Dashboard
