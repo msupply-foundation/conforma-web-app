@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Checkbox, Header, Message } from 'semantic-ui-react'
+import { Checkbox, Header, Icon, Message } from 'semantic-ui-react'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -26,6 +26,7 @@ export const AdminPreferences: React.FC = () => {
   })
 
   const [prefs, setPrefs] = useState<object>()
+  const [overrides, setOverrides] = useState<object | null>()
   const [isSaving, setIsSaving] = useState(false)
   const [maintenanceMode, setMaintenanceMode] = useState<boolean>(
     localStorage.getItem('maintenanceMode') === 'ON'
@@ -33,8 +34,9 @@ export const AdminPreferences: React.FC = () => {
   const { refetchPrefs } = usePrefs()
 
   useEffect(() => {
-    getRequest(getServerUrl('getAllPrefs')).then((prefs) => {
-      setPrefs(prefs)
+    getRequest(getServerUrl('getAllPrefs')).then((result) => {
+      setPrefs(result.preferences)
+      setOverrides(result.overrides)
     })
   }, [])
 
@@ -98,8 +100,29 @@ export const AdminPreferences: React.FC = () => {
       ) : (
         <Loading />
       )}
-      <div style={{ marginTop: 40, width: '100%' }}>
-        <Header as="h2">Maintenance Mode</Header>
+      {overrides && (
+        <div style={{ maxWidth: 650, marginTop: '3em' }}>
+          <Message info icon style={{ backgroundColor: 'white', marginBottom: 0 }}>
+            <Icon name="info circle" color="teal" />
+            <Message.Content>{t('PREFERENCES_OVERRIDE_INFO')}</Message.Content>
+          </Message>
+          <JsonEditor
+            data={overrides}
+            rootName="overrides"
+            collapse={2}
+            showArrayIndices={false}
+            maxWidth={650}
+            restrictDelete={true}
+            restrictAdd={true}
+            restrictEdit={true}
+            indent={isMobile ? 1 : 2}
+            showSearch={false}
+            showSaveButton={false}
+          />
+        </div>
+      )}
+      <div style={{ marginTop: '2em', maxWidth: 650 }}>
+        <Header as="h2">{t('PREFERENCES_MAINTENANCE_MODE')}</Header>
         <Message
           header={t('PREFERENCES_MAINTENANCE_WARNING')}
           content={t('PREFERENCES_MAINTENANCE_WARNING_TEXT')}
