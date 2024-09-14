@@ -23,19 +23,18 @@ import { DateTime } from 'luxon'
 import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
-import { getVersionString, getTemplateVersionId, isTemplateUnlocked } from '../helpers'
+import { getVersionString, isTemplateUnlocked } from '../helpers'
 import NumberIO from '../../shared/NumberIO'
+import { postRequest } from '../../../../utils/helpers/fetchMethods'
+import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
   const { replace } = useRouter()
   const { updateTemplate, deleteTemplate } = useOperationState()
   const { structure } = useApplicationState()
-  const { template } = useTemplateState()
+  const { template, refetch } = useTemplateState()
   const { canEdit, isDraft, applicationCount } = template
-  const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
-    variables: { code: template.code },
-  })
   const { showToast } = useToast({ style: 'success' })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
   const [commitConfirmOpen, setCommitConfirmOpen] = useState(false)
@@ -85,18 +84,13 @@ const General: React.FC = () => {
           title={t('TEMPLATE_GEN_BUTTON_DRAFT')}
           disabledMessage={t('TEMPLATE_GEN_BUTTON_DRAFT_DISABLED')}
           disabled={!canSetDraft}
-          onClick={async () => {
-            if (await updateTemplate(template, { status: TemplateStatus.Draft })) refetchAvailable()
-          }}
+          onClick={async () => updateTemplate(template, { status: TemplateStatus.Draft })}
         />
         <ButtonWithFallback
           title="Disable"
           disabledMessage="Already disabled"
           disabled={!canSetDisabled}
-          onClick={async () => {
-            if (await updateTemplate(template, { status: TemplateStatus.Disabled }))
-              refetchAvailable()
-          }}
+          onClick={async () => updateTemplate(template, { status: TemplateStatus.Disabled })}
         />
       </div>
       <div className="spacer-10" />
@@ -237,16 +231,25 @@ const General: React.FC = () => {
         }
         onCancel={() => setCommitConfirmOpen(false)}
         onConfirm={async () => {
-          const versionId = getTemplateVersionId()
-          if (
-            await updateTemplate(template as any, {
-              versionId,
-              versionComment: commitMessage,
-              versionTimestamp: DateTime.now().toISO(),
-            })
-          )
-            await refetchAvailable()
           setCommitConfirmOpen(false)
+          try {
+            const { versionId } = await postRequest({
+              url: getServerUrl('templateImportExport', { action: 'commit', id: template.id }),
+              jsonBody: { comment: commitMessage },
+              headers: { 'Content-Type': 'application/json' },
+            })
+            showToast({
+              title: 'Template version committed',
+              text: `Version ID: ${versionId}`,
+            })
+            refetch()
+          } catch (err) {
+            showToast({
+              title: 'Problem committing template',
+              text: (err as Error).message,
+              style: 'error',
+            })
+          }
         }}
       />
       <Header className="no-margin-no-padding" as="h3">

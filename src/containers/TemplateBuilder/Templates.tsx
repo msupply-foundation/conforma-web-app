@@ -23,7 +23,8 @@ import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { DateTime } from 'luxon'
 import { useToast } from '../../contexts/Toast'
-import { isTemplateUnlocked, getTemplateVersionId, getVersionString } from './template/helpers'
+import { isTemplateUnlocked, getVersionString } from './template/helpers'
+import { postRequest } from '../../utils/helpers/fetchMethods'
 
 type CellPropsTemplate = Template & { numberOfVersions?: number; totalApplicationCount?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void; isExpanded: boolean }
@@ -130,8 +131,8 @@ const ViewEditButton: React.FC<CellProps> = ({ template: { id } }) => {
   )
 }
 
-const ExportButton: React.FC<CellProps> = ({ template }) => {
-  const { exportTemplate, updateTemplate } = useOperationState()
+const ExportButton: React.FC<CellProps> = ({ template, refetch }) => {
+  const { exportTemplate } = useOperationState()
   const { showToast } = useToast({
     style: 'success',
     title: 'Template exported',
@@ -152,7 +153,7 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
         }
       )
       const data = await res.blob()
-      var a = document.createElement('a')
+      const a = document.createElement('a')
       a.href = window.URL.createObjectURL(data)
       a.download = `${snapshotName}.zip`
       a.click()
@@ -191,14 +192,30 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
         }
         onCancel={() => setOpen(false)}
         onConfirm={async () => {
-          const versionId = getTemplateVersionId()
-          await updateTemplate(template as any, {
-            versionId,
-            versionComment: commitMessage,
-            versionTimestamp: DateTime.now().toISO(),
-          })
-          setOpen(false)
-          await doExport(versionId)
+          if (commitMessage === '') {
+            showToast({
+              title: 'Hang on!',
+              text: 'Please provide a commit message',
+              style: 'error',
+            })
+            return
+          }
+          try {
+            setOpen(false)
+            const { versionId } = await postRequest({
+              url: getServerUrl('templateImportExport', { action: 'commit', id: template.id }),
+              jsonBody: { comment: commitMessage },
+              headers: { 'Content-Type': 'application/json' },
+            })
+            await doExport(versionId)
+            refetch()
+          } catch (err) {
+            showToast({
+              title: 'Problem exporting template',
+              text: (err as Error).message,
+              style: 'error',
+            })
+          }
         }}
       />
       <div

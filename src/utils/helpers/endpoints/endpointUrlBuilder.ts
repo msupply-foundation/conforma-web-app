@@ -97,7 +97,7 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     }
 
     case 'dataViews': {
-      const dataViewOptions = options as DataViewOptions
+      const dataViewOptions = (options as DataViewOptions) ?? {}
       const { dataViewCode } = dataViewOptions
 
       // List view
