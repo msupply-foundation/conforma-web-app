@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { ReactNode, useRef } from 'react'
 import { useState } from 'react'
 import {
@@ -24,7 +22,7 @@ import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { DateTime } from 'luxon'
 import { useToast } from '../../contexts/Toast'
 import { isTemplateUnlocked, getVersionString } from './template/helpers'
-import { postRequest } from '../../utils/helpers/fetchMethods'
+import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 
 type CellPropsTemplate = Template & { numberOfVersions?: number; totalApplicationCount?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void; isExpanded: boolean }
@@ -145,26 +143,44 @@ const ExportButton: React.FC<CellProps> = ({ template, refetch }) => {
   const doExport = async (versionId = template.versionId) => {
     const { code, versionHistory, id } = template
     const snapshotName = `${code}-${versionId}_v${versionHistory.length + 1}`
-    if (await exportTemplate({ id, snapshotName })) {
-      const res = await fetch(
-        getServerUrl('snapshot', { action: 'download', name: snapshotName }),
-        {
-          headers: { Authorization: `Bearer ${JWT}` },
-        }
+
+    try {
+      const { ready, diff, unconnectedDataViews } = await getRequest(
+        getServerUrl('templateImportExport', { action: 'export', id, type: 'check' })
       )
-      const data = await res.blob()
-      const a = document.createElement('a')
-      a.href = window.URL.createObjectURL(data)
-      a.download = `${snapshotName}.zip`
-      a.click()
-      // Delete the snapshot cos we don't want snapshots page cluttered
-      // with individual templates
-      await fetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${JWT}` },
+      if (ready) {
+        const res = await fetch(
+          getServerUrl('templateImportExport', {
+            action: 'export',
+            id,
+            type: 'dump',
+          }),
+          {
+            headers: { Authorization: `Bearer ${JWT}` },
+          }
+        )
+        const data = await res.blob()
+        const a = document.createElement('a')
+        a.href = window.URL.createObjectURL(data)
+        a.download = `${snapshotName}.zip`
+        a.click()
+      } else {
+        // Show warning to user
+        showToast({
+          style: 'warning',
+          title: 'Something has changed',
+          text: JSON.stringify(unconnectedDataViews),
+        })
+      }
+    } catch (err) {
+      showToast({
+        style: 'error',
+        title: 'Problem exporting template',
+        text: (err as Error).message,
       })
-      showToast()
-    } else showToast({ style: 'error', title: 'Problem exporting template' })
+    }
+
+    return
   }
 
   return (
@@ -316,23 +332,34 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
             return
           }
           if (commitCurrent)
-            await updateTemplate(template as any, {
-              versionId: getTemplateVersionId(),
-              versionComment: commitMessage,
-              versionTimestamp: DateTime.now().toISO(),
-            })
+            try {
+              await postRequest({
+                url: getServerUrl('templateImportExport', { action: 'commit', id: template.id }),
+                jsonBody: { comment: commitMessage },
+                headers: { 'Content-Type': 'application/json' },
+              })
+            } catch (err) {
+              showToast({
+                title: 'Problem committing template',
+                text: (err as Error).message,
+                style: 'error',
+              })
+            }
           setOpen(false)
           const templateOptions: TemplateOptions = {
             resetVersion: commitCurrent || !isTemplateUnlocked(template),
           }
           if (selectedType === 'template') templateOptions.newCode = newCode
-          if (
-            await duplicateTemplate({
-              id: template.id,
-              snapshotName,
-              templates: templateOptions,
+          try {
+            await postRequest({
+              url: getServerUrl('templateImportExport', {
+                action: 'duplicate',
+                id: template.id,
+                type: selectedType === 'template' ? 'new' : 'version',
+              }),
+              jsonBody: { code: newCode },
+              headers: { 'Content-Type': 'application/json' },
             })
-          ) {
             showToast({
               title:
                 selectedType === 'template'
@@ -341,6 +368,12 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
               text: `${selectedType === 'template' ? newCode : template.code}`,
             })
             await refetch()
+          } catch (err) {
+            showToast({
+              title: 'Problem duplicating template',
+              text: (err as Error).message,
+              style: 'error',
+            })
           }
         }}
       />
