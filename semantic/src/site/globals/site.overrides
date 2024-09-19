@@ -2559,6 +2559,7 @@ a:hover {
     p {
       word-wrap: break-word;
       max-width: 250px;
+      white-space: pre-wrap;
     }
   }
   .icon.info {

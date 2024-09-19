@@ -19,7 +19,6 @@ import useCreateApplication, {
 } from '../../../utils/hooks/useCreateApplication'
 import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
 import {
-  importTemplate,
   updateTemplate,
   updateTemplateFilterJoin,
   updateTemplateSection,
@@ -63,9 +62,9 @@ export type UpdateTemplateStage = (id: number, patch: TemplateStagePatch) => Pro
 type OperationContextState = {
   fetch: (something: any) => any
   commitTemplate: (id: number, refetch: () => void) => Promise<void>
-  exportTemplate: (id: number, refetch: () => void) => Promise<void>
+  exportTemplate: (template: Template, refetch: () => void) => Promise<void>
   duplicateTemplate: (template: Template, refetch: () => void) => Promise<void>
-  importTemplate: ImportTemplate
+  importTemplate: (e: React.ChangeEvent<HTMLInputElement>, refetch: () => void) => Promise<void>
   updateTemplate: UpdateTemplate
   deleteTemplate: DeleteTemplate
   updateTemplateFilterJoin: UpdateTemplateFilterJoin
@@ -114,7 +113,7 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
   const [innerState, setInnerState] = useState<ErrorAndLoadingState>({ isLoading: false })
-  const { commitTemplate, duplicateTemplate, exportTemplate, modalState } =
+  const { commitTemplate, duplicateTemplate, exportTemplate, importTemplate, modalState } =
     useTemplateOperations(setInnerState)
   const { create } = useCreateApplication()
   const { getSerialAsync } = useGetApplicationSerial()
@@ -123,7 +122,7 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
     commitTemplate,
     exportTemplate,
     duplicateTemplate,
-    importTemplate: importTemplate(setInnerState),
+    importTemplate,
     updateTemplate: updateTemplate(setInnerState, updateTemplateMutation),
     updateTemplateFilterJoin: updateTemplateFilterJoin(
       setInnerState,

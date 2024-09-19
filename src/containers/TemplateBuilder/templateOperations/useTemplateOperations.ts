@@ -6,6 +6,7 @@ import { Template } from '../useGetTemplates'
 import { downloadFile } from '../../../utils/helpers/utilityFunctions'
 import config from '../../../config'
 import { SetErrorAndLoadingState } from '../shared/OperationContextHelpers'
+import { getVersionString } from '../template/helpers'
 
 export interface ModalState {
   type: 'commit' | 'exportCommit' | 'exportWarning' | 'import' | 'duplicate'
@@ -13,6 +14,16 @@ export interface ModalState {
   onConfirm: (input: unknown) => Promise<void>
   close: () => void
   currentIsCommitted?: boolean
+}
+
+export type InstallDetails = {
+  filters?: Record<string, number>
+  permissions?: Record<string, number>
+  dataViews?: Record<string, number>
+  dataViewColumns?: Record<string, number>
+  dataTables?: Record<string, number>
+  category?: number
+  files?: Record<string, number>
 }
 
 const commit = async (id: number, comment: string) => {
@@ -56,8 +67,9 @@ const duplicate = async (id: number, code?: string) => {
   }
 }
 
-const exportAndDownload = async (id: number) => {
+const exportAndDownload = async ({ id, code, versionId, versionHistory }: Template) => {
   const JWT = localStorage.getItem(config.localStorageJWTKey)
+  const filename = `${code}-${versionId}_v${versionHistory.length + 1}.zip`
   try {
     await downloadFile(
       getServerUrl('templateImportExport', {
@@ -65,11 +77,45 @@ const exportAndDownload = async (id: number) => {
         id,
         type: 'dump',
       }),
-      'test.zip',
+      filename,
       {
         headers: { Authorization: `Bearer ${JWT}` },
       }
     )
+  } catch (err) {
+    return { error: (err as Error).message }
+  }
+}
+
+const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (!e.target?.files) return { error: 'No file selected' }
+  const file = e.target.files[0]
+  try {
+    const data = new FormData()
+    data.append('file', file)
+
+    const result = await postRequest({
+      url: getServerUrl('templateImportExport', { action: 'import', type: 'upload' }),
+      otherBody: data,
+    })
+    return result
+  } catch (err) {
+    return { error: (err as Error).message }
+  }
+}
+
+const install = async (uid: string, installDetails: InstallDetails) => {
+  try {
+    const result = await postRequest({
+      url: getServerUrl('templateImportExport', {
+        action: 'import',
+        uid,
+        type: 'install',
+      }),
+      jsonBody: installDetails,
+      headers: { 'Content-Type': 'application/json' },
+    })
+    return result
   } catch (err) {
     return { error: (err as Error).message }
   }
@@ -200,26 +246,54 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
       // Warn user
     }
 
-    const result = await exportAndDownload(template.id)
+    const result = await exportAndDownload(template)
     if (result?.error) {
       showError('Problem exporting template', result.error)
       return
     }
 
-    showSuccess({ title: 'Template exported', message: template.versionId })
+    showSuccess({
+      title: 'Template exported',
+      message: `${template.code} - ${getVersionString(template)}`,
+    })
     refetch()
   }
 
-  const importTemplate = async () => {
+  const importTemplate = async (e: React.ChangeEvent<HTMLInputElement>, refetch: () => void) => {
     // Upload and analyze
-    // Show modal if necessary, wait for user input
+    setErrorAndLoadingState({ isLoading: true })
+    const { uid, modifiedEntities, ready, error } = await upload(e)
+    if (error) {
+      showError('Problem uploading template', error)
+      return
+    }
+
+    let installDetails = {}
+
+    if (!ready) {
+      // Show modal for user-guided update selection
+    }
     // Install
+    {
+      const { versionId, versionNo, status, code, error } = await install(uid, installDetails)
+      if (error) {
+        showError('Problem installing template', error)
+        return
+      }
+      showSuccess({
+        title: 'Template imported',
+        message: `${code} - v${versionNo} (${versionId})\nStatus: ${status}`,
+      })
+    }
+
+    refetch()
   }
 
   return {
     commitTemplate,
     duplicateTemplate,
     exportTemplate,
+    importTemplate,
     modalState,
   }
 }

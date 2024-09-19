@@ -124,7 +124,7 @@ const ExportButton: React.FC<CellProps> = ({ template, refetch }) => {
         className="clickable"
         onClick={(e) => {
           e.stopPropagation()
-          exportTemplate(template.id, refetch)
+          exportTemplate(template, refetch)
         }}
       >
         <Icon className="clickable" key="export" name="sign-out" />
@@ -256,9 +256,7 @@ const Templates: React.FC = () => {
         hidden
         name="file"
         multiple={false}
-        onChange={async (e) => {
-          if (await importTemplate(e)) refetch()
-        }}
+        onChange={async (e) => importTemplate(e, refetch)}
       />
       <Button inverted primary onClick={() => fileInputRef?.current?.click()}>
         Import
