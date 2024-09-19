@@ -15,6 +15,66 @@ export interface ModalState {
   currentIsCommitted?: boolean
 }
 
+const commit = async (id: number, comment: string) => {
+  try {
+    const { versionId } = await postRequest({
+      url: getServerUrl('templateImportExport', { action: 'commit', id }),
+      jsonBody: { comment },
+      headers: { 'Content-Type': 'application/json' },
+    })
+    return { versionId }
+  } catch (err) {
+    return { error: (err as Error).message }
+  }
+}
+
+const check = async (id: number) => {
+  try {
+    const result = await getRequest(
+      getServerUrl('templateImportExport', { action: 'export', id, type: 'check' })
+    )
+    return result
+  } catch (err) {
+    return { error: (err as Error).message }
+  }
+}
+
+const duplicate = async (id: number, code?: string) => {
+  try {
+    const newId = await postRequest({
+      url: getServerUrl('templateImportExport', {
+        action: 'duplicate',
+        id,
+        type: code ? 'new' : 'version',
+      }),
+      jsonBody: { code },
+      headers: { 'Content-Type': 'application/json' },
+    })
+    return { newId }
+  } catch (err) {
+    return { error: (err as Error).message }
+  }
+}
+
+const exportAndDownload = async (id: number) => {
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
+  try {
+    await downloadFile(
+      getServerUrl('templateImportExport', {
+        action: 'export',
+        id,
+        type: 'dump',
+      }),
+      'test.zip',
+      {
+        headers: { Authorization: `Bearer ${JWT}` },
+      }
+    )
+  } catch (err) {
+    return { error: (err as Error).message }
+  }
+}
+
 export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadingState) => {
   const [modalState, setModalState] = useState<ModalState>({
     type: 'commit',
@@ -25,10 +85,30 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
 
   const { showToast } = useToast()
 
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-
   const updateModalState = (newState: Partial<ModalState>) =>
     setModalState({ ...modalState, ...newState })
+
+  const showError = (title: string, error: string) => {
+    if (error.length > 100)
+      setErrorAndLoadingState({ error: { title, message: error }, isLoading: false })
+    else {
+      showToast({
+        title,
+        text: error,
+        style: 'error',
+      })
+      setErrorAndLoadingState({ isLoading: false })
+    }
+  }
+
+  const showSuccess = ({ title, message }: { title: string; message: string }) => {
+    showToast({
+      title,
+      text: message,
+      style: 'success',
+    })
+    setErrorAndLoadingState({ isLoading: false })
+  }
 
   const commitTemplate = async (id: number, refetch: () => void) => {
     updateModalState({
@@ -37,41 +117,24 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
       onConfirm: async (comment) => {
         updateModalState({ isOpen: false })
         setErrorAndLoadingState({ isLoading: true })
-        try {
-          const { versionId } = await postRequest({
-            url: getServerUrl('templateImportExport', { action: 'commit', id }),
-            jsonBody: { comment },
-            headers: { 'Content-Type': 'application/json' },
-          })
-          showToast({
-            title: 'Template committed',
-            text: `Version ID: ${versionId}`,
-            style: 'success',
-          })
-          setErrorAndLoadingState({ isLoading: false })
-          refetch()
-        } catch (err) {
-          showToast({
-            title: 'Problem committing template',
-            text: (err as Error).message,
-            style: 'error',
-          })
-          setErrorAndLoadingState({
-            isLoading: false,
-            error: { message: (err as Error).message, error: 'Something else' },
-          })
+        const { versionId, error } = await commit(id, comment as string)
+        if (error) {
+          showError('Problem committing template', error)
+          return
         }
+        showSuccess({ title: 'Template committed', message: `Version ID: ${versionId}` })
+        refetch()
       },
     })
   }
 
   const duplicateTemplate = async (template: Template, refetch: () => void) => {
-    console.log('Are we duping?')
     setErrorAndLoadingState({ isLoading: true })
-    const { committed } = await getRequest(
-      getServerUrl('templateImportExport', { action: 'export', id: template.id, type: 'check' })
-    )
-    setErrorAndLoadingState({ isLoading: false })
+    const { committed, error } = await check(template.id)
+    if (error) {
+      showError('Problem committing template', error)
+      return
+    }
 
     updateModalState({
       type: 'duplicate',
@@ -83,59 +146,36 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
         const { newCode, comment } = input as { newCode?: string; comment?: string }
 
         if (comment) {
-          try {
-            await postRequest({
-              url: getServerUrl('templateImportExport', { action: 'commit', id: template.id }),
-              jsonBody: { comment },
-              headers: { 'Content-Type': 'application/json' },
-            })
-          } catch (err) {
-            showToast({
-              title: 'Problem committing template',
-              text: (err as Error).message,
-              style: 'error',
-            })
-            setErrorAndLoadingState({
-              isLoading: false,
-              error: { message: 'Something went wrong', error: 'Something else' },
-            })
+          const { error } = await commit(template.id, comment)
+          if (error) {
+            showError('Problem committing template', error)
             return
           }
         }
 
-        try {
-          await postRequest({
-            url: getServerUrl('templateImportExport', {
-              action: 'duplicate',
-              id: template.id,
-              type: newCode ? 'new' : 'version',
-            }),
-            jsonBody: { code: newCode },
-            headers: { 'Content-Type': 'application/json' },
-          })
-          showToast({
-            title: newCode ? 'New template created' : 'New template version created',
-            text: `${newCode ?? template.code}`,
-            style: 'success',
-          })
-          refetch()
-        } catch (err) {
-          showToast({
-            title: 'Problem duplicating template',
-            text: (err as Error).message,
-            style: 'error',
-          })
+        const { error } = await duplicate(template.id, newCode)
+        if (error) {
+          showError('Problem duplicating template', error)
+          return
         }
-        setErrorAndLoadingState({ isLoading: false })
+
+        showSuccess({
+          title: newCode ? 'New template created' : 'New template version created',
+          message: `${newCode ?? template.code}`,
+        })
+
+        refetch()
       },
     })
   }
 
-  const exportTemplate = async (id: number, refetch: () => void) => {
+  const exportTemplate = async (template: Template, refetch: () => void) => {
     setErrorAndLoadingState({ isLoading: true })
-    const { committed, ready, diff, unconnectedDataViews } = await getRequest(
-      getServerUrl('templateImportExport', { action: 'export', id, type: 'check' })
-    )
+    const { committed, ready, diff, unconnectedDataViews, error } = await check(template.id)
+    if (error) {
+      showError('Problem committing template', error)
+      return
+    }
     setErrorAndLoadingState({ isLoading: false })
 
     if (!committed) {
@@ -145,62 +185,29 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
         onConfirm: async (comment) => {
           updateModalState({ isOpen: false })
           setErrorAndLoadingState({ isLoading: true })
-          try {
-            // First commit
-            const result = await postRequest({
-              url: getServerUrl('templateImportExport', { action: 'commit', id }),
-              jsonBody: { comment },
-              headers: { 'Content-Type': 'application/json' },
-            })
-            if (result.versionId) await exportTemplate(id, refetch)
-            else
-              setErrorAndLoadingState({
-                isLoading: false,
-                error: { message: 'Something went wrong', error: 'Something else' },
-              })
-          } catch (err) {
-            showToast({
-              title: 'Problem committing template',
-              text: (err as Error).message,
-              style: 'error',
-            })
-            setErrorAndLoadingState({
-              isLoading: false,
-              error: { message: (err as Error).message, error: 'Something else' },
-            })
+
+          const { error } = await commit(id, comment as string)
+          if (error) {
+            showError('Problem committing template', error)
+            return
           }
         },
       })
       return
     }
 
-    if (ready) {
-      await downloadFile(
-        getServerUrl('templateImportExport', {
-          action: 'export',
-          id,
-          type: 'dump',
-        }),
-        'test.zip',
-        {
-          headers: { Authorization: `Bearer ${JWT}` },
-        }
-      )
-      showToast({
-        title: 'Template exported',
-        text: 'Something something',
-        style: 'success',
-      })
-      refetch()
-    } else {
-      // Show warning to user
-      showToast({
-        style: 'warning',
-        title: 'Something has changed',
-        text: JSON.stringify(unconnectedDataViews),
-      })
+    if (!ready) {
+      // Warn user
     }
-    setErrorAndLoadingState({ isLoading: false })
+
+    const result = await exportAndDownload(template.id)
+    if (result?.error) {
+      showError('Problem exporting template', result.error)
+      return
+    }
+
+    showSuccess({ title: 'Template exported', message: template.versionId })
+    refetch()
   }
 
   const importTemplate = async () => {

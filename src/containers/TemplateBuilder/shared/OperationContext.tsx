@@ -33,7 +33,7 @@ import { TemplateState } from '../template/TemplateWrapper'
 import { ModalState, useTemplateOperations } from '../templateOperations/useTemplateOperations'
 import { Template } from '../useGetTemplates'
 
-type Error = { message: string; error: string }
+type Error = { title: string; message: string }
 export type ErrorAndLoadingState = {
   error?: Error
   isLoading: boolean
@@ -143,10 +143,10 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
       {error ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Label size="large" color="red">
-            {error.message}
+            {error.title}
             <Icon name="close" onClick={resetLoading} />
           </Label>
-          <div style={{ margin: 20 }}>{error.error}</div>
+          <div style={{ margin: 20 }}>{error.message}</div>
         </div>
       ) : (
         <Loader active>Loading</Loader>

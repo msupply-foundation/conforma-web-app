@@ -84,8 +84,8 @@ const checkMutationResult = async (
     setErrorAndLoadingState({
       isLoading: false,
       error: {
-        message: 'error',
-        error: JSON.stringify(result.errors),
+        title: 'error',
+        message: JSON.stringify(result.errors),
       },
     })
     return false
@@ -104,7 +104,7 @@ export const updateTemplate: UpdateTemplateHelper =
     } catch (e) {
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: (e as Error).message },
+        error: { message: 'error', title: (e as Error).message },
       })
       return false
     }
@@ -119,7 +119,7 @@ export const updateTemplateFilterJoin: UpdateTemplateFilterJoinHelper =
     } catch (e) {
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: (e as Error).message },
+        error: { message: 'error', title: (e as Error).message },
       })
       return false
     }
@@ -136,7 +136,7 @@ export const updateTemplateSection: UpdateTemplateSectionHelper =
     } catch (e) {
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: (e as Error).message },
+        error: { message: 'error', title: (e as Error).message },
       })
       return false
     }
@@ -153,7 +153,7 @@ export const updateApplication: UpdateApplicationHelper =
     } catch (e) {
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: (e as Error).message },
+        error: { message: 'error', title: (e as Error).message },
       })
       return false
     }
@@ -170,7 +170,7 @@ export const updateTemplateStage: UpdateTemplateStageHelper =
     } catch (e) {
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: (e as Error).message },
+        error: { message: 'error', title: (e as Error).message },
       })
       return false
     }
@@ -186,7 +186,7 @@ export const deleteApplication: DeleteApplicationHelper =
     } catch (e) {
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: (e as Error).message },
+        error: { message: 'error', title: (e as Error).message },
       })
       return false
     }
@@ -203,13 +203,13 @@ export const createApplication: CreateApplicationHelper =
 
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: 'cannot get newly created application serial' },
+        error: { message: 'error', title: 'cannot get newly created application serial' },
       })
       return false
     } catch (e) {
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: (e as Error).message },
+        error: { message: 'error', title: (e as Error).message },
       })
       return false
     }
@@ -276,7 +276,7 @@ export const deleteTemplate: DeleteTemplateHelper =
     } catch (e) {
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: (e as Error).message },
+        error: { message: 'error', title: (e as Error).message },
       })
       return false
     }
@@ -317,7 +317,7 @@ export const importTemplate: ImportTemplateHelper =
     } catch (error) {
       setErrorAndLoadingState({
         isLoading: false,
-        error: { error: 'error', message: (error as Error).message },
+        error: { message: 'error', title: (error as Error).message },
       })
       return false
     }
@@ -358,7 +358,7 @@ const safeFetch = async (
   } catch (error) {
     setErrorAndLoadingState({
       isLoading: false,
-      error: { error: 'error', message: (error as Error).message },
+      error: { message: 'error', title: (error as Error).message },
     })
     return false
   }
