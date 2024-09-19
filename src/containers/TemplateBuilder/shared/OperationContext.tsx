@@ -19,8 +19,6 @@ import useCreateApplication, {
 } from '../../../utils/hooks/useCreateApplication'
 import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
 import {
-  exportTemplate,
-  duplicateTemplate,
   importTemplate,
   updateTemplate,
   updateTemplateFilterJoin,
@@ -32,6 +30,7 @@ import {
   deleteTemplate,
 } from './OperationContextHelpers'
 import { TemplateState } from '../template/TemplateWrapper'
+import { ModalState, useTemplateOperations } from '../templateOperations/useTemplateOperations'
 
 type Error = { message: string; error: string }
 export type ErrorAndLoadingState = {
@@ -62,7 +61,8 @@ export type UpdateTemplateStage = (id: number, patch: TemplateStagePatch) => Pro
 
 type OperationContextState = {
   fetch: (something: any) => any
-  exportTemplate: TemplatesOperation
+  commitTemplate: (id: number, comment: string) => Promise<void>
+  exportTemplate: (id: number) => Promise<void>
   duplicateTemplate: TemplatesOperation
   importTemplate: ImportTemplate
   updateTemplate: UpdateTemplate
@@ -73,6 +73,7 @@ type OperationContextState = {
   createApplication: CreateApplication
   updateApplication: UpdateApplication
   updateTemplateStage: UpdateTemplateStage
+  operationModalState: ModalState
 }
 
 const contextNotPresentError = () => {
@@ -81,6 +82,7 @@ const contextNotPresentError = () => {
 
 const defaultOperationContext: OperationContextState = {
   fetch: contextNotPresentError,
+  commitTemplate: contextNotPresentError,
   exportTemplate: contextNotPresentError,
   duplicateTemplate: contextNotPresentError,
   importTemplate: contextNotPresentError,
@@ -92,6 +94,12 @@ const defaultOperationContext: OperationContextState = {
   createApplication: contextNotPresentError,
   updateApplication: contextNotPresentError,
   updateTemplateStage: contextNotPresentError,
+  operationModalState: {
+    type: 'commit',
+    isOpen: true,
+    onConfirm: () => {},
+    close: () => {},
+  },
 }
 
 const Context = createContext(defaultOperationContext)
@@ -105,12 +113,15 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
   const [innerState, setInnerState] = useState<ErrorAndLoadingState>({ isLoading: false })
+  const { commitTemplate, duplicateTemplate, exportTemplate, modalState } =
+    useTemplateOperations(setInnerState)
   const { create } = useCreateApplication()
   const { getSerialAsync } = useGetApplicationSerial()
-  const [contextState] = useState<OperationContextState>({
+  const [contextState] = useState<Omit<OperationContextState, 'operationModalState'>>({
     fetch: () => {},
-    exportTemplate: (props) => exportTemplate(props, setInnerState),
-    duplicateTemplate: (props) => duplicateTemplate(props, setInnerState),
+    commitTemplate,
+    exportTemplate,
+    duplicateTemplate: (props) => duplicateTemplate(props),
     importTemplate: importTemplate(setInnerState),
     updateTemplate: updateTemplate(setInnerState, updateTemplateMutation),
     updateTemplateFilterJoin: updateTemplateFilterJoin(
@@ -147,7 +158,7 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   }
 
   return (
-    <Context.Provider value={contextState}>
+    <Context.Provider value={{ ...contextState, operationModalState: modalState }}>
       {children}
       {renderExtra()}
     </Context.Provider>

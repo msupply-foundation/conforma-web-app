@@ -129,59 +129,10 @@ const ViewEditButton: React.FC<CellProps> = ({ template: { id } }) => {
   )
 }
 
-const ExportButton: React.FC<CellProps> = ({ template, refetch }) => {
+const ExportButton: React.FC<CellProps> = ({ template }) => {
   const { exportTemplate } = useOperationState()
-  const { showToast } = useToast({
-    style: 'success',
-    title: 'Template exported',
-    text: `${template.code} - ${getVersionString(template)}`,
-  })
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
   const [open, setOpen] = useState(false)
   const [commitMessage, setCommitMessage] = useState('')
-
-  const doExport = async (versionId = template.versionId) => {
-    const { code, versionHistory, id } = template
-    const snapshotName = `${code}-${versionId}_v${versionHistory.length + 1}`
-
-    try {
-      const { ready, diff, unconnectedDataViews } = await getRequest(
-        getServerUrl('templateImportExport', { action: 'export', id, type: 'check' })
-      )
-      if (ready) {
-        const res = await fetch(
-          getServerUrl('templateImportExport', {
-            action: 'export',
-            id,
-            type: 'dump',
-          }),
-          {
-            headers: { Authorization: `Bearer ${JWT}` },
-          }
-        )
-        const data = await res.blob()
-        const a = document.createElement('a')
-        a.href = window.URL.createObjectURL(data)
-        a.download = `${snapshotName}.zip`
-        a.click()
-      } else {
-        // Show warning to user
-        showToast({
-          style: 'warning',
-          title: 'Something has changed',
-          text: JSON.stringify(unconnectedDataViews),
-        })
-      }
-    } catch (err) {
-      showToast({
-        style: 'error',
-        title: 'Problem exporting template',
-        text: (err as Error).message,
-      })
-    }
-
-    return
-  }
 
   return (
     <div key="export">
@@ -207,39 +158,14 @@ const ExportButton: React.FC<CellProps> = ({ template, refetch }) => {
           </div>
         }
         onCancel={() => setOpen(false)}
-        onConfirm={async () => {
-          if (commitMessage === '') {
-            showToast({
-              title: 'Hang on!',
-              text: 'Please provide a commit message',
-              style: 'error',
-            })
-            return
-          }
-          try {
-            setOpen(false)
-            const { versionId } = await postRequest({
-              url: getServerUrl('templateImportExport', { action: 'commit', id: template.id }),
-              jsonBody: { comment: commitMessage },
-              headers: { 'Content-Type': 'application/json' },
-            })
-            await doExport(versionId)
-            refetch()
-          } catch (err) {
-            showToast({
-              title: 'Problem exporting template',
-              text: (err as Error).message,
-              style: 'error',
-            })
-          }
-        }}
+        onConfirm={() => exportTemplate(template.id)}
       />
       <div
         className="clickable"
         onClick={async (e) => {
           e.stopPropagation()
           if (isTemplateUnlocked(template)) setOpen(true)
-          else doExport()
+          else exportTemplate(template.id)
         }}
       >
         <Icon className="clickable" key="export" name="sign-out" />
@@ -249,7 +175,7 @@ const ExportButton: React.FC<CellProps> = ({ template, refetch }) => {
 }
 
 const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
-  const { updateTemplate, duplicateTemplate } = useOperationState()
+  const { updateTemplate, duplicateTemplate, commitTemplate } = useOperationState()
   const [open, setOpen] = useState(false)
   const [selectedType, setSelectedType] = useState<'version' | 'template'>('version')
   const [newCode, setNewCode] = useState('')
@@ -331,20 +257,7 @@ const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
             setCodeError(true)
             return
           }
-          if (commitCurrent)
-            try {
-              await postRequest({
-                url: getServerUrl('templateImportExport', { action: 'commit', id: template.id }),
-                jsonBody: { comment: commitMessage },
-                headers: { 'Content-Type': 'application/json' },
-              })
-            } catch (err) {
-              showToast({
-                title: 'Problem committing template',
-                text: (err as Error).message,
-                style: 'error',
-              })
-            }
+          if (commitCurrent) commitTemplate(template.id, commitMessage)
           setOpen(false)
           const templateOptions: TemplateOptions = {
             resetVersion: commitCurrent || !isTemplateUnlocked(template),
@@ -391,6 +304,7 @@ type SortColumn = 'name' | 'code' | 'category' | 'status' | 'dashboard'
 
 const Templates: React.FC = () => {
   const { t } = useLanguageProvider()
+  const { OperationModal } = useOperationState()
   const [expandedTemplates, setExpandedTemplates] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
@@ -505,6 +419,7 @@ const Templates: React.FC = () => {
 
   return (
     <div className="template-builder-templates">
+      {OperationModal}
       <div key="top-bar" className="top-bar">
         <Header as="h3">Templates / Procedures</Header>
         <div className="flex-grow-1" />

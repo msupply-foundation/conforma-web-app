@@ -1,10 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Confirm, Header, Icon, Input, Table } from 'semantic-ui-react'
-
-import {
-  TemplateStatus,
-  useGetTemplatesAvailableForCodeQuery,
-} from '../../../../utils/generated/graphql'
+import { TemplateStatus } from '../../../../utils/generated/graphql'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import Markdown from '../../../../utils/helpers/semanticReactMarkdown'
@@ -25,13 +21,13 @@ import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { useToast } from '../../../../contexts/Toast'
 import { getVersionString, isTemplateUnlocked } from '../helpers'
 import NumberIO from '../../shared/NumberIO'
-import { postRequest } from '../../../../utils/helpers/fetchMethods'
-import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { TemplateOperationsModal } from '../../templateOperations/TemplateOperationsModal'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
   const { replace } = useRouter()
-  const { updateTemplate, deleteTemplate } = useOperationState()
+  const { updateTemplate, deleteTemplate, commitTemplate, operationModalState } =
+    useOperationState()
   const { structure } = useApplicationState()
   const { template, refetch } = useTemplateState()
   const { canEdit, isDraft, applicationCount } = template
@@ -62,6 +58,7 @@ const General: React.FC = () => {
   return (
     <div className="flex-column-center-start">
       <MakeAvailableConfirm />
+      <TemplateOperationsModal {...operationModalState} />
       <div className="flex-row flex-gap-10">
         <ButtonWithFallback
           title={t('TEMPLATE_GEN_BUTTON_AVAILABLE')}
@@ -208,50 +205,6 @@ const General: React.FC = () => {
       {/* VERSION HISTORY */}
       <div className="spacer-20" />
       <div className="spacer-20" />
-      <Confirm
-        open={commitConfirmOpen}
-        // Prevent click in Input from closing modal
-        onClick={(e: any) => e.stopPropagation()}
-        content={
-          <div style={{ padding: 10, gap: 10 }} className="flex-column">
-            <h2>Commit version?</h2>
-            <p>
-              This will create a permanent template version that can no longer be modified. To make
-              any further changes, you will need to duplicate it and create a new version.
-            </p>
-            <div className="flex-row-start-center" style={{ gap: 10 }}>
-              <label>Please provide a commit message:</label>
-              <Input
-                value={commitMessage}
-                onChange={(e) => setCommitMessage(e.target.value)}
-                style={{ width: '60%' }}
-              />
-            </div>
-          </div>
-        }
-        onCancel={() => setCommitConfirmOpen(false)}
-        onConfirm={async () => {
-          setCommitConfirmOpen(false)
-          try {
-            const { versionId } = await postRequest({
-              url: getServerUrl('templateImportExport', { action: 'commit', id: template.id }),
-              jsonBody: { comment: commitMessage },
-              headers: { 'Content-Type': 'application/json' },
-            })
-            showToast({
-              title: 'Template version committed',
-              text: `Version ID: ${versionId}`,
-            })
-            refetch()
-          } catch (err) {
-            showToast({
-              title: 'Problem committing template',
-              text: (err as Error).message,
-              style: 'error',
-            })
-          }
-        }}
-      />
       <Header className="no-margin-no-padding" as="h3">
         Version History
       </Header>
@@ -288,7 +241,10 @@ const General: React.FC = () => {
                       primary
                       inverted
                       size="small"
-                      onClick={() => setCommitConfirmOpen(true)}
+                      onClick={() => {
+                        console.log('CTEST')
+                        commitTemplate(template.id, 'TEST')
+                      }}
                     >
                       Commit now
                     </Button>

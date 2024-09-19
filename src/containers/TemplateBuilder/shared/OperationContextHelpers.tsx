@@ -26,7 +26,7 @@ import {
 
 const templateExportOptionName = 'templateExport'
 
-type SetErrorAndLoadingState = (props: ErrorAndLoadingState) => void
+export type SetErrorAndLoadingState = (props: ErrorAndLoadingState) => void
 
 type TemplateOperationHelper = (
   props: TemplatesOperationProps,
