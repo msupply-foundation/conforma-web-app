@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Confirm, Dropdown, Input } from 'semantic-ui-react'
 import { ModalState } from './useTemplateOperations'
+import { EntitySelectModal } from './EntitySelectModal'
 
 export const TemplateOperationsModal: React.FC<ModalState> = ({ type, ...props }) => {
   switch (type) {
@@ -9,6 +10,8 @@ export const TemplateOperationsModal: React.FC<ModalState> = ({ type, ...props }
       return <CommitConfirm type={type} {...props} />
     case 'duplicate':
       return <DuplicateModal {...props} />
+    case 'import':
+      return <EntitySelectModal {...props} />
     default:
       return null
   }

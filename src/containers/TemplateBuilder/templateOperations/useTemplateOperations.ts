@@ -7,6 +7,7 @@ import { downloadFile } from '../../../utils/helpers/utilityFunctions'
 import config from '../../../config'
 import { SetErrorAndLoadingState } from '../shared/OperationContextHelpers'
 import { getVersionString } from '../template/helpers'
+import { ModifiedEntities } from './EntitySelectModal'
 
 export interface ModalState {
   type: 'commit' | 'exportCommit' | 'exportWarning' | 'import' | 'duplicate'
@@ -14,16 +15,17 @@ export interface ModalState {
   onConfirm: (input: unknown) => Promise<void>
   close: () => void
   currentIsCommitted?: boolean
+  entities?: ModifiedEntities
 }
 
-export type InstallDetails = {
-  filters?: Record<string, number>
-  permissions?: Record<string, number>
-  dataViews?: Record<string, number>
-  dataViewColumns?: Record<string, number>
-  dataTables?: Record<string, number>
-  category?: number
-  files?: Record<string, number>
+export type PreserveExistingEntities = {
+  filters?: Set<string>
+  permissions?: Set<string>
+  dataViews?: Set<string>
+  dataViewColumns?: Set<string>
+  dataTables?: Set<string>
+  category?: string | null
+  files?: Set<string>
 }
 
 const commit = async (id: number, comment: string) => {
@@ -104,7 +106,7 @@ const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
   }
 }
 
-const install = async (uid: string, installDetails: InstallDetails) => {
+const install = async (uid: string, installDetails: PreserveExistingEntities) => {
   try {
     const result = await postRequest({
       url: getServerUrl('templateImportExport', {
@@ -232,7 +234,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
           updateModalState({ isOpen: false })
           setErrorAndLoadingState({ isLoading: true })
 
-          const { error } = await commit(id, comment as string)
+          const { error } = await commit(template.id, comment as string)
           if (error) {
             showError('Problem committing template', error)
             return
@@ -268,14 +270,8 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
       return
     }
 
-    let installDetails = {}
-
-    if (!ready) {
-      // Show modal for user-guided update selection
-    }
-    // Install
-    {
-      const { versionId, versionNo, status, code, error } = await install(uid, installDetails)
+    const installTemplate = async () => {
+      const { versionId, versionNo, status, code, error } = await install(uid, preserveExisting)
       if (error) {
         showError('Problem installing template', error)
         return
@@ -284,9 +280,26 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
         title: 'Template imported',
         message: `${code} - v${versionNo} (${versionId})\nStatus: ${status}`,
       })
+      refetch()
     }
 
-    refetch()
+    let preserveExisting: PreserveExistingEntities = {}
+
+    if (!ready) {
+      updateModalState({
+        type: 'import',
+        isOpen: true,
+        onConfirm: async (result) => {
+          preserveExisting = result as PreserveExistingEntities
+          updateModalState({ isOpen: false })
+          setErrorAndLoadingState({ isLoading: true })
+
+          installTemplate()
+        },
+      })
+    }
+    // Install
+    installTemplate()
   }
 
   return {
