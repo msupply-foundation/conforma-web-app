@@ -1,28 +1,15 @@
 import React, { ReactNode, useRef } from 'react'
 import { useState } from 'react'
-import {
-  Button,
-  Header,
-  Icon,
-  Table,
-  Label,
-  Dropdown,
-  Checkbox,
-  Confirm,
-  Input,
-} from 'semantic-ui-react'
+import { Button, Header, Icon, Table, Label, Dropdown, Checkbox } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
-import OperationContext, { TemplateOptions, useOperationState } from './shared/OperationContext'
+import OperationContext, { useOperationState } from './shared/OperationContext'
 import TextIO from './shared/TextIO'
 import useGetTemplates, { Template, type Templates } from './useGetTemplates'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
-import config from '../../config'
-import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { DateTime } from 'luxon'
-import { useToast } from '../../contexts/Toast'
-import { isTemplateUnlocked, getVersionString } from './template/helpers'
-import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
+import { getVersionString } from './template/helpers'
+import { TemplateOperationsModal } from './templateOperations/TemplateOperationsModal'
 
 type CellPropsTemplate = Template & { numberOfVersions?: number; totalApplicationCount?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void; isExpanded: boolean }
@@ -129,43 +116,15 @@ const ViewEditButton: React.FC<CellProps> = ({ template: { id } }) => {
   )
 }
 
-const ExportButton: React.FC<CellProps> = ({ template }) => {
+const ExportButton: React.FC<CellProps> = ({ template, refetch }) => {
   const { exportTemplate } = useOperationState()
-  const [open, setOpen] = useState(false)
-  const [commitMessage, setCommitMessage] = useState('')
-
   return (
     <div key="export">
-      <Confirm
-        open={open}
-        // Prevent click in Input from closing modal
-        onClick={(e: any) => e.stopPropagation()}
-        content={
-          <div style={{ padding: 10, gap: 10 }} className="flex-column">
-            <h2>Commit and export template?</h2>
-            <p>
-              By exporting this template now, you will be committing the current version. To make
-              any further changes, you will need to duplicate it and start a new template version.
-            </p>
-            <div className="flex-row-start-center" style={{ gap: 10 }}>
-              <label>Please provide a commit message:</label>
-              <Input
-                value={commitMessage}
-                onChange={(e) => setCommitMessage(e.target.value)}
-                style={{ width: '60%' }}
-              />
-            </div>
-          </div>
-        }
-        onCancel={() => setOpen(false)}
-        onConfirm={() => exportTemplate(template.id)}
-      />
       <div
         className="clickable"
-        onClick={async (e) => {
+        onClick={(e) => {
           e.stopPropagation()
-          if (isTemplateUnlocked(template)) setOpen(true)
-          else exportTemplate(template.id)
+          exportTemplate(template.id, refetch)
         }}
       >
         <Icon className="clickable" key="export" name="sign-out" />
@@ -175,121 +134,18 @@ const ExportButton: React.FC<CellProps> = ({ template }) => {
 }
 
 const DuplicateButton: React.FC<CellProps> = ({ template, refetch }) => {
-  const { updateTemplate, duplicateTemplate, commitTemplate } = useOperationState()
-  const [open, setOpen] = useState(false)
-  const [selectedType, setSelectedType] = useState<'version' | 'template'>('version')
-  const [newCode, setNewCode] = useState('')
-  const [codeError, setCodeError] = useState(false)
-  const [commitCurrent, setCommitCurrent] = useState(isTemplateUnlocked(template))
-  const [commitMessage, setCommitMessage] = useState('')
-  const { showToast } = useToast({ style: 'success' })
-
-  const { code, versionId } = template
-  const snapshotName = `${code}-${versionId}`
-
+  const { duplicateTemplate } = useOperationState()
   return (
     <div key="duplicate">
       <div
         className="clickable"
         onClick={async (e) => {
           e.stopPropagation()
-          setOpen(true)
+          duplicateTemplate(template, refetch)
         }}
       >
         <Icon className="clickable" key="export" name="copy" />
       </div>
-      <Confirm
-        open={open}
-        // Prevent click in Input from closing modal
-        onClick={(e: any) => e.stopPropagation()}
-        content={
-          <div style={{ padding: 10, gap: 10 }} className="flex-column">
-            <h2>Duplicate template</h2>
-            <p>
-              Do you want to create a new template version or a whole new template type based on
-              this template?
-            </p>
-            <p>(New template will start with an empty version history)</p>
-            <Dropdown
-              selection
-              options={[
-                { key: 'version', value: 'version', text: 'Version' },
-                { key: 'template', value: 'template', text: 'Template' },
-              ]}
-              value={selectedType}
-              onChange={(_, { value }) => setSelectedType(value as 'version' | 'template')}
-            />
-            {selectedType === 'template' && (
-              <div className="flex-row-start-center" style={{ gap: 10 }}>
-                <label>New template code:</label>
-                <Input
-                  value={newCode}
-                  onChange={(e) => {
-                    setCodeError(false)
-                    setNewCode(e.target.value)
-                  }}
-                  error={codeError}
-                />
-              </div>
-            )}
-            {isTemplateUnlocked(template) && (
-              <Checkbox
-                label="Commit current version?"
-                checked={commitCurrent}
-                onChange={(_) => setCommitCurrent(!commitCurrent)}
-              />
-            )}
-            {commitCurrent && (
-              <div className="flex-row-start-center" style={{ gap: 10 }}>
-                <label>Commit message:</label>
-                <Input
-                  value={commitMessage}
-                  onChange={(e) => setCommitMessage(e.target.value)}
-                  style={{ width: '80%' }}
-                />
-              </div>
-            )}
-          </div>
-        }
-        onCancel={() => setOpen(false)}
-        onConfirm={async () => {
-          if (selectedType === 'template' && newCode === '') {
-            setCodeError(true)
-            return
-          }
-          if (commitCurrent) commitTemplate(template.id, commitMessage)
-          setOpen(false)
-          const templateOptions: TemplateOptions = {
-            resetVersion: commitCurrent || !isTemplateUnlocked(template),
-          }
-          if (selectedType === 'template') templateOptions.newCode = newCode
-          try {
-            await postRequest({
-              url: getServerUrl('templateImportExport', {
-                action: 'duplicate',
-                id: template.id,
-                type: selectedType === 'template' ? 'new' : 'version',
-              }),
-              jsonBody: { code: newCode },
-              headers: { 'Content-Type': 'application/json' },
-            })
-            showToast({
-              title:
-                selectedType === 'template'
-                  ? 'New template created'
-                  : 'New template version created',
-              text: `${selectedType === 'template' ? newCode : template.code}`,
-            })
-            await refetch()
-          } catch (err) {
-            showToast({
-              title: 'Problem duplicating template',
-              text: (err as Error).message,
-              style: 'error',
-            })
-          }
-        }}
-      />
     </div>
   )
 }
@@ -304,11 +160,10 @@ type SortColumn = 'name' | 'code' | 'category' | 'status' | 'dashboard'
 
 const Templates: React.FC = () => {
   const { t } = useLanguageProvider()
-  const { OperationModal } = useOperationState()
   const [expandedTemplates, setExpandedTemplates] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
-  const { importTemplate } = useOperationState()
+  const { importTemplate, operationModalState } = useOperationState()
   const { query, updateQuery } = useRouter()
   const [hideInactive, setHideInactive] = useState(query.hideInactive === 'true')
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
@@ -419,7 +274,7 @@ const Templates: React.FC = () => {
 
   return (
     <div className="template-builder-templates">
-      {OperationModal}
+      <TemplateOperationsModal {...operationModalState} />
       <div key="top-bar" className="top-bar">
         <Header as="h3">Templates / Procedures</Header>
         <div className="flex-grow-1" />

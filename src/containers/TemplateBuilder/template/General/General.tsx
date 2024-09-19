@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Confirm, Header, Icon, Input, Table } from 'semantic-ui-react'
+import { Button, Header, Icon, Table } from 'semantic-ui-react'
 import { TemplateStatus } from '../../../../utils/generated/graphql'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
@@ -33,8 +33,6 @@ const General: React.FC = () => {
   const { canEdit, isDraft, applicationCount } = template
   const { showToast } = useToast({ style: 'success' })
   const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
-  const [commitConfirmOpen, setCommitConfirmOpen] = useState(false)
-  const [commitMessage, setCommitMessage] = useState('')
 
   const { ConfirmModal: DeleteConfirm, showModal: confirmDelete } = useConfirmationModal({
     type: 'warning',
@@ -242,8 +240,7 @@ const General: React.FC = () => {
                       inverted
                       size="small"
                       onClick={() => {
-                        console.log('CTEST')
-                        commitTemplate(template.id, 'TEST')
+                        commitTemplate(template.id, refetch)
                       }}
                     >
                       Commit now

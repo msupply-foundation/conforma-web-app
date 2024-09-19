@@ -31,6 +31,7 @@ import {
 } from './OperationContextHelpers'
 import { TemplateState } from '../template/TemplateWrapper'
 import { ModalState, useTemplateOperations } from '../templateOperations/useTemplateOperations'
+import { Template } from '../useGetTemplates'
 
 type Error = { message: string; error: string }
 export type ErrorAndLoadingState = {
@@ -61,9 +62,9 @@ export type UpdateTemplateStage = (id: number, patch: TemplateStagePatch) => Pro
 
 type OperationContextState = {
   fetch: (something: any) => any
-  commitTemplate: (id: number, comment: string) => Promise<void>
-  exportTemplate: (id: number) => Promise<void>
-  duplicateTemplate: TemplatesOperation
+  commitTemplate: (id: number, refetch: () => void) => Promise<void>
+  exportTemplate: (id: number, refetch: () => void) => Promise<void>
+  duplicateTemplate: (template: Template, refetch: () => void) => Promise<void>
   importTemplate: ImportTemplate
   updateTemplate: UpdateTemplate
   deleteTemplate: DeleteTemplate
@@ -97,7 +98,7 @@ const defaultOperationContext: OperationContextState = {
   operationModalState: {
     type: 'commit',
     isOpen: true,
-    onConfirm: () => {},
+    onConfirm: async () => {},
     close: () => {},
   },
 }
@@ -121,7 +122,7 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
     fetch: () => {},
     commitTemplate,
     exportTemplate,
-    duplicateTemplate: (props) => duplicateTemplate(props),
+    duplicateTemplate,
     importTemplate: importTemplate(setInnerState),
     updateTemplate: updateTemplate(setInnerState, updateTemplateMutation),
     updateTemplateFilterJoin: updateTemplateFilterJoin(
