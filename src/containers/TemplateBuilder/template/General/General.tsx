@@ -22,6 +22,7 @@ import { useToast } from '../../../../contexts/Toast'
 import { getVersionString, isTemplateUnlocked } from '../helpers'
 import NumberIO from '../../shared/NumberIO'
 import { TemplateOperationsModal } from '../../templateOperations/TemplateOperationsModal'
+import { DataViewSelector } from './DataViews/DataViews'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -171,6 +172,8 @@ const General: React.FC = () => {
       <Category />
 
       <Filters />
+
+      <DataViewSelector />
 
       {/* MESSAGES */}
       <div className="spacer-20" />

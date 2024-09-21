@@ -129,9 +129,7 @@ export type TemplateOptions =
   | { action: 'export'; id: number; type: 'check' | 'dump' }
   | { action: 'import'; type: 'upload' }
   | { action: 'import'; type: 'install'; uid: string }
-  | { action: 'getLinks'; type: 'suggested' | 'current'; id: number }
-  | { action: 'getEntities' }
-  | { action: 'link'; id: number }
+  | { action: 'getDataViews'; id: number }
 
 export type ArchiveKey = 'archiveFiles'
 export type ArchiveOptions = { days: number }

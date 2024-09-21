@@ -2391,6 +2391,12 @@ a:hover {
   }
 }
 
+.ext-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 .builder-page-elements-wrapper {
   background: white;
   padding: 10px;

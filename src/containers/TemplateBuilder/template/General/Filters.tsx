@@ -252,21 +252,27 @@ const Filters: React.FC = () => {
           <Icon className="clickable" name="minus square" onClick={removeDashboardRestriction} />
         )}
       </div>
-      <div className="spacer-20" />
-      <div className="filter-joins">
-        {template.dashboardRestrictions &&
-          template.dashboardRestrictions.map((filter) => (
-            <Label
-              key={filter}
-              onClick={() => {
-                setSelectedRestrictFilter(filter)
-              }}
-              className={`clickable ${filter === selectedRestrictFilter ? 'builder-selected' : ''}`}
-            >
-              {filter}
-            </Label>
-          ))}
-      </div>
+      {(template?.dashboardRestrictions?.length ?? 0) > 0 && (
+        <>
+          <div className="spacer-20" />
+          <div className="filter-joins">
+            {template.dashboardRestrictions &&
+              template.dashboardRestrictions.map((filter) => (
+                <Label
+                  key={filter}
+                  onClick={() => {
+                    setSelectedRestrictFilter(filter)
+                  }}
+                  className={`clickable ${
+                    filter === selectedRestrictFilter ? 'builder-selected' : ''
+                  }`}
+                >
+                  {filter}
+                </Label>
+              ))}
+          </div>
+        </>
+      )}
     </>
   )
 }

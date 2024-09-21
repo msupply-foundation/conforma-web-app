@@ -220,14 +220,8 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
           if (type === 'install' && 'uid' in templateOptions)
             return `${serverREST}${endpointPath}/import/${type}/${templateOptions.uid}`
           return `${serverREST}${endpointPath}/import/${type}`
-        case 'getEntities':
-          return `${serverREST}${endpointPath}/get-entities`
-        case 'getLinks':
-          if (type === 'suggested') return `${serverREST}${endpointPath}/get-suggested-links/${id}`
-          return `${serverREST}${endpointPath}/get-links/${id}`
-        case 'link': {
-          return `${serverREST}${endpointPath}/link-entities/${id}`
-        }
+        case 'getDataViews':
+          return `${serverREST}${endpointPath}/get-data-view-details/${id}`
       }
       break
     }

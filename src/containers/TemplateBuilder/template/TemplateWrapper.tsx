@@ -5,6 +5,7 @@ import { Loading, NoMatch } from '../../../components'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
 import {
+  DataView,
   FullTemplateFragment,
   GetFullTemplateInfoQuery,
   TemplateAction,
@@ -155,6 +156,7 @@ type TemplateContextState = {
   templatePermissions: TemplatePermission[]
   templateStages: TemplateStage[]
   actions: TemplateAction[]
+  dataViews: DataView[]
 }
 
 const defaultTemplateContextState: TemplateContextState = {
@@ -185,6 +187,7 @@ const defaultTemplateContextState: TemplateContextState = {
   templatePermissions: [],
   templateStages: [],
   actions: [],
+  dataViews: [],
 }
 
 const Context = createContext<TemplateContextState>(defaultTemplateContextState)
@@ -245,6 +248,8 @@ const TemplateWrapper: React.FC = () => {
         templatePermissions: (template?.templatePermissions?.nodes || []) as TemplatePermission[],
         templateStages: (template?.templateStages?.nodes || []) as TemplateStage[],
         actions: (template?.templateActions?.nodes || []) as TemplateAction[],
+        dataViews: (template?.templateDataViewJoins?.nodes.map((node) => node?.dataView) ||
+          []) as DataView[],
       })
       setFirstLoaded(true)
     }
