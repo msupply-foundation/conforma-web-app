@@ -5,11 +5,11 @@ import { Loading, NoMatch } from '../../../components'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 
 import {
-  DataView,
   FullTemplateFragment,
   GetFullTemplateInfoQuery,
   TemplateAction,
   TemplateCategory,
+  TemplateDataViewJoin,
   TemplateElement,
   TemplateFilterJoin,
   TemplatePermission,
@@ -156,7 +156,7 @@ type TemplateContextState = {
   templatePermissions: TemplatePermission[]
   templateStages: TemplateStage[]
   actions: TemplateAction[]
-  dataViews: DataView[]
+  dataViewJoins: TemplateDataViewJoin[]
 }
 
 const defaultTemplateContextState: TemplateContextState = {
@@ -187,7 +187,7 @@ const defaultTemplateContextState: TemplateContextState = {
   templatePermissions: [],
   templateStages: [],
   actions: [],
-  dataViews: [],
+  dataViewJoins: [],
 }
 
 const Context = createContext<TemplateContextState>(defaultTemplateContextState)
@@ -248,8 +248,7 @@ const TemplateWrapper: React.FC = () => {
         templatePermissions: (template?.templatePermissions?.nodes || []) as TemplatePermission[],
         templateStages: (template?.templateStages?.nodes || []) as TemplateStage[],
         actions: (template?.templateActions?.nodes || []) as TemplateAction[],
-        dataViews: (template?.templateDataViewJoins?.nodes.map((node) => node?.dataView) ||
-          []) as DataView[],
+        dataViewJoins: (template?.templateDataViewJoins?.nodes || []) as TemplateDataViewJoin[],
       })
       setFirstLoaded(true)
     }

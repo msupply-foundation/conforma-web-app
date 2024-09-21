@@ -13,10 +13,17 @@ interface DataViewDetails {
 export type DataViewFilter = 'SUGGESTED' | 'ALL' | 'APPLICANT_ACCESSIBLE'
 
 export const useDataViews = (filter: DataViewFilter) => {
-  const { template, dataViews } = useTemplateState()
+  const { template, dataViewJoins } = useTemplateState()
   const [dataViewDetails, setDataViewDetails] = useState<DataViewDetails[]>([])
   const [menuItems, setMenuItems] = useState<DataView[]>([])
   const [error, setError] = useState<string>('')
+
+  const dataViews = (dataViewJoins.map((node) => ({
+    ...node?.dataView,
+    dataViewJoinId: node.id,
+    suggested: dataViewDetails.find((d) => d.data.id === node?.dataView?.id)?.suggested ?? false,
+  })) ?? []) as (DataView & { dataViewJoinId: number; suggested: boolean })[]
+
   useEffect(() => {
     getRequest(
       getServerUrl('templateImportExport', {
@@ -28,9 +35,9 @@ export const useDataViews = (filter: DataViewFilter) => {
         setDataViewDetails(result)
       })
       .catch((err) => {
-        // To-DO
+        setError('Error: ' + err.message)
       })
-  }, [])
+  }, [dataViewJoins])
 
   useEffect(() => {
     setMenuItems(getDataViewMenuItems(dataViewDetails, dataViews, filter))

@@ -84,6 +84,7 @@ export default gql`
     }
     templateDataViewJoins {
       nodes {
+        id
         dataView {
           identifier
           code

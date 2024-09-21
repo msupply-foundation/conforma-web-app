@@ -10,7 +10,7 @@ export const DataViewSelector: React.FC<{}> = () => {
   const { updateTemplate } = useOperationState()
   const [menuSelection, setMenuSelection] = useState<number>()
   const [menuFilter, setMenuFilter] = useState<DataViewFilter>('SUGGESTED')
-  const [selectedDataView, setSelectedDataView] = useState<string>()
+  const [selectedDataViewJoinId, setSelectedDataViewJoinId] = useState<number>()
   const { current, menuItems } = useDataViews(menuFilter)
 
   const menuOptions = menuItems.map(({ id, code, identifier, title }) => ({
@@ -30,17 +30,22 @@ export const DataViewSelector: React.FC<{}> = () => {
       ),
   }))
 
-  const addDataViewJoin = () => {
+  const addDataViewJoin = async () => {
     if (menuSelection) {
-      updateTemplate(template, {
-        templateDataViewJoinsUsingId: { create: { dataViewId: menuSelection } },
-      })
       setMenuSelection(undefined)
+      await updateTemplate(template, {
+        templateDataViewJoinsUsingId: { create: [{ dataViewId: menuSelection }] },
+      })
     }
   }
 
-  const deleteDataViewJoin = () => {
-    //
+  const deleteDataViewJoin = async () => {
+    if (selectedDataViewJoinId) {
+      await updateTemplate(template, {
+        templateDataViewJoinsUsingId: { deleteById: [{ id: selectedDataViewJoinId }] },
+      })
+      setSelectedDataViewJoinId(undefined)
+    }
   }
 
   return (
@@ -50,6 +55,7 @@ export const DataViewSelector: React.FC<{}> = () => {
         <Dropdown
           placeholder="Search Data Views"
           selection
+          options={menuOptions}
           search={(data, searchText) => {
             const matching = menuItems
               .filter(({ code }) => code.includes(searchText))
@@ -57,29 +63,24 @@ export const DataViewSelector: React.FC<{}> = () => {
             console.log(matching)
             return data.filter((item) => matching.includes(item.value as number))
           }}
-          value={menuSelection}
-          onChange={(_, { value }) => setMenuSelection(value as number)}
-          style={{ minWidth: 400 }}
-          options={menuOptions}
+          value={menuSelection ?? ''}
+          onChange={(_, { value }) => {
+            setMenuSelection(value as number)
+            setSelectedDataViewJoinId(undefined)
+          }}
+          style={{ minWidth: 300 }}
         ></Dropdown>
-        {
-          <Icon
-            className="clickable"
-            name="add square"
-            size="large"
-            onClick={addDataViewJoin}
-            style={{ visibility: menuSelection ? 'visible' : 'hidden' }}
-          />
-        }
-        {
+        {menuSelection ? (
+          <Icon className="clickable" name="add square" size="large" onClick={addDataViewJoin} />
+        ) : (
           <Icon
             className="clickable"
             size="large"
             name="minus square"
             onClick={deleteDataViewJoin}
-            style={{ visibility: selectedDataView ? 'visible' : 'hidden' }}
+            style={{ visibility: selectedDataViewJoinId ? 'visible' : 'hidden' }}
           />
-        }
+        )}
         <DropdownIO
           value={menuFilter}
           title="Filter list"
@@ -91,9 +92,8 @@ export const DataViewSelector: React.FC<{}> = () => {
           getKey={'key'}
           getValue={'value'}
           getText={'text'}
-          setValue={(_, fullValue) => {
-            setMenuFilter(fullValue.value)
-          }}
+          setValue={(_, { value }) => setMenuFilter(value)}
+          minLabelWidth={0}
           additionalStyles={{ marginBottom: 0 }}
         />
       </div>
@@ -101,14 +101,22 @@ export const DataViewSelector: React.FC<{}> = () => {
         {current.map((dv) => (
           <>
             <Label
-              key={dv.id}
+              key={dv.identifier}
               className={`${template.canEdit ? 'clickable' : ''}${
-                dv.identifier === selectedDataView ? ' builder-selected' : ''
+                dv.dataViewJoinId === selectedDataViewJoinId ? ' builder-selected' : ''
               }`}
-              style={{ fontSize: '100%', position: 'relative' }}
+              style={{
+                fontSize: '100%',
+                position: 'relative',
+                // borderLeft: dv.suggested ? '2px solid green' : undefined,
+              }}
               onClick={() => {
-                if (dv.identifier === selectedDataView) setSelectedDataView(undefined)
-                else setSelectedDataView(dv.identifier)
+                if (dv.dataViewJoinId === selectedDataViewJoinId)
+                  setSelectedDataViewJoinId(undefined)
+                else {
+                  setSelectedDataViewJoinId(dv.dataViewJoinId)
+                  setMenuSelection(undefined)
+                }
               }}
             >
               <div
