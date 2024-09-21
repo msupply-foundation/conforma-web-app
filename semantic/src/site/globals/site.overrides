@@ -2397,6 +2397,18 @@ a:hover {
   top: 0;
 }
 
+.dv-suggested {
+  border-left: 3px solid @green !important;
+}
+
+.dv-not-suggested {
+  border-left: 3px solid @yellow !important;
+}
+
+.dv-inaccessible {
+  border-left: 3px solid @red !important;
+}
+
 .builder-page-elements-wrapper {
   background: white;
   padding: 10px;

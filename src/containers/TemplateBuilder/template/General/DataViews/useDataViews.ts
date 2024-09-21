@@ -18,11 +18,21 @@ export const useDataViews = (filter: DataViewFilter) => {
   const [menuItems, setMenuItems] = useState<DataView[]>([])
   const [error, setError] = useState<string>('')
 
-  const dataViews = (dataViewJoins.map((node) => ({
-    ...node?.dataView,
-    dataViewJoinId: node.id,
-    suggested: dataViewDetails.find((d) => d.data.id === node?.dataView?.id)?.suggested ?? false,
-  })) ?? []) as (DataView & { dataViewJoinId: number; suggested: boolean })[]
+  const dataViews = (dataViewJoins.map((node) => {
+    const details = dataViewDetails.find((d) => d.data.id === node?.dataView?.id)
+    return {
+      ...node?.dataView,
+      dataViewJoinId: node.id,
+      suggested: details?.suggested ?? false,
+      applicantAccessible: details?.applicantAccessible ?? false,
+    }
+  }) ?? []) as (DataView & {
+    dataViewJoinId: number
+    suggested: boolean
+    applicantAccessible: boolean
+  })[]
+
+  const currentlyLinkedDataViewIDs = dataViews.map(({ identifier }) => identifier)
 
   useEffect(() => {
     getRequest(
@@ -40,19 +50,24 @@ export const useDataViews = (filter: DataViewFilter) => {
   }, [dataViewJoins])
 
   useEffect(() => {
-    setMenuItems(getDataViewMenuItems(dataViewDetails, dataViews, filter))
+    setMenuItems(getDataViewMenuItems(dataViewDetails, currentlyLinkedDataViewIDs, filter))
   }, [filter, dataViewDetails])
+
+  const unconnectedSuggestions = dataViewDetails
+    .filter((dv) => dv.suggested && !currentlyLinkedDataViewIDs.includes(dv.data.identifier))
+    .map((dv) => dv.data.id)
 
   return {
     current: dataViews,
     menuItems,
+    unconnectedSuggestions,
     error,
   }
 }
 
 const getDataViewMenuItems = (
   dataViewDetails: DataViewDetails[],
-  dataViews: DataView[],
+  currentlyLinkedDataViewIDs: string[],
   filter: DataViewFilter
 ) => {
   let menuDataViews: DataViewDetails[] = []
@@ -67,7 +82,6 @@ const getDataViewMenuItems = (
       menuDataViews = dataViewDetails.filter((dv) => dv.applicantAccessible)
       break
   }
-  const currentlyLinkedDataViewIDs = dataViews.map(({ identifier }) => identifier)
 
   return menuDataViews
     .filter((dv) => !currentlyLinkedDataViewIDs.includes(dv.data.identifier))

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Dropdown, Header, Icon, Label } from 'semantic-ui-react'
+import { Button, Dropdown, Header, Icon, Label } from 'semantic-ui-react'
 import { useTemplateState } from '../../TemplateWrapper'
 import DropdownIO from '../../../shared/DropdownIO'
 import { DataViewFilter, useDataViews } from './useDataViews'
@@ -11,7 +11,7 @@ export const DataViewSelector: React.FC<{}> = () => {
   const [menuSelection, setMenuSelection] = useState<number>()
   const [menuFilter, setMenuFilter] = useState<DataViewFilter>('SUGGESTED')
   const [selectedDataViewJoinId, setSelectedDataViewJoinId] = useState<number>()
-  const { current, menuItems } = useDataViews(menuFilter)
+  const { current, menuItems, unconnectedSuggestions } = useDataViews(menuFilter)
 
   const menuOptions = menuItems.map(({ id, code, identifier, title }) => ({
     key: identifier,
@@ -39,6 +39,14 @@ export const DataViewSelector: React.FC<{}> = () => {
     }
   }
 
+  const addAllSuggested = () => {
+    updateTemplate(template, {
+      templateDataViewJoinsUsingId: {
+        create: unconnectedSuggestions.map((id) => ({ dataViewId: id })),
+      },
+    })
+  }
+
   const deleteDataViewJoin = async () => {
     if (selectedDataViewJoinId) {
       await updateTemplate(template, {
@@ -51,52 +59,57 @@ export const DataViewSelector: React.FC<{}> = () => {
   return (
     <>
       <Header as="h3">Connected Data Views</Header>
-      <div className="flex-row-start-center" style={{ gap: 5, marginBottom: 10 }}>
-        <Dropdown
-          placeholder="Search Data Views"
-          selection
-          options={menuOptions}
-          search={(data, searchText) => {
-            const matching = menuItems
-              .filter(({ code }) => code.includes(searchText))
-              .map(({ id }) => id)
-            console.log(matching)
-            return data.filter((item) => matching.includes(item.value as number))
-          }}
-          value={menuSelection ?? ''}
-          onChange={(_, { value }) => {
-            setMenuSelection(value as number)
-            setSelectedDataViewJoinId(undefined)
-          }}
-          style={{ minWidth: 300 }}
-        ></Dropdown>
-        {menuSelection ? (
-          <Icon className="clickable" name="add square" size="large" onClick={addDataViewJoin} />
-        ) : (
-          <Icon
-            className="clickable"
-            size="large"
-            name="minus square"
-            onClick={deleteDataViewJoin}
-            style={{ visibility: selectedDataViewJoinId ? 'visible' : 'hidden' }}
+      {template.canEdit && (
+        <div className="flex-row-start-center" style={{ gap: 5, marginBottom: 10 }}>
+          <Dropdown
+            placeholder="Search Data Views"
+            selection
+            options={menuOptions}
+            search={(data, searchText) => {
+              const matching = menuItems
+                .filter(({ code }) => code.includes(searchText))
+                .map(({ id }) => id)
+              console.log(matching)
+              return data.filter((item) => matching.includes(item.value as number))
+            }}
+            value={menuSelection ?? ''}
+            onChange={(_, { value }) => {
+              setMenuSelection(value as number)
+              setSelectedDataViewJoinId(undefined)
+            }}
+            style={{ minWidth: 300 }}
+          ></Dropdown>
+          {menuSelection ? (
+            <Icon className="clickable" name="add square" size="large" onClick={addDataViewJoin} />
+          ) : (
+            <Icon
+              className="clickable"
+              size="large"
+              name="minus square"
+              onClick={deleteDataViewJoin}
+              style={{ visibility: selectedDataViewJoinId ? 'visible' : 'hidden' }}
+            />
+          )}
+          <DropdownIO
+            value={menuFilter}
+            title="Filter menu"
+            options={[
+              { key: 'suggested', text: 'Suggested', value: 'SUGGESTED' },
+              { key: 'all', text: 'All', value: 'ALL' },
+              { key: 'applicant', text: 'Accessible to Applicant', value: 'APPLICANT_ACCESSIBLE' },
+            ]}
+            getKey={'key'}
+            getValue={'value'}
+            getText={'text'}
+            setValue={(_, { value }) => setMenuFilter(value)}
+            minLabelWidth={0}
+            additionalStyles={{ marginBottom: 0 }}
           />
-        )}
-        <DropdownIO
-          value={menuFilter}
-          title="Filter list"
-          options={[
-            { key: 'suggested', text: 'Suggested', value: 'SUGGESTED' },
-            { key: 'all', text: 'All', value: 'ALL' },
-            { key: 'applicant', text: 'Accessible to Applicant', value: 'APPLICANT_ACCESSIBLE' },
-          ]}
-          getKey={'key'}
-          getValue={'value'}
-          getText={'text'}
-          setValue={(_, { value }) => setMenuFilter(value)}
-          minLabelWidth={0}
-          additionalStyles={{ marginBottom: 0 }}
-        />
-      </div>
+          {unconnectedSuggestions.length > 0 && (
+            <Button primary size="mini" content="Add all suggested" onClick={addAllSuggested} />
+          )}
+        </div>
+      )}
       <div className="filter-joins">
         {current.map((dv) => (
           <>
@@ -104,13 +117,16 @@ export const DataViewSelector: React.FC<{}> = () => {
               key={dv.identifier}
               className={`${template.canEdit ? 'clickable' : ''}${
                 dv.dataViewJoinId === selectedDataViewJoinId ? ' builder-selected' : ''
+              }${
+                !dv.applicantAccessible
+                  ? ' dv-inaccessible'
+                  : dv.suggested
+                  ? ' dv-suggested'
+                  : ' dv-not-suggested'
               }`}
-              style={{
-                fontSize: '100%',
-                position: 'relative',
-                // borderLeft: dv.suggested ? '2px solid green' : undefined,
-              }}
+              style={{ fontSize: '100%', position: 'relative' }}
               onClick={() => {
+                if (!template.canEdit) return
                 if (dv.dataViewJoinId === selectedDataViewJoinId)
                   setSelectedDataViewJoinId(undefined)
                 else {
