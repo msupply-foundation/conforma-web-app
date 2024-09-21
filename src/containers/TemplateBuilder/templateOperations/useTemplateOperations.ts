@@ -10,7 +10,7 @@ import { getVersionString } from '../template/helpers'
 import { ModifiedEntities } from './EntitySelectModal'
 
 export interface ModalState {
-  type: 'commit' | 'exportCommit' | 'exportWarning' | 'import' | 'duplicate'
+  type: 'commitWarning' | 'commit' | 'exportCommit' | 'exportWarning' | 'import' | 'duplicate'
   isOpen: boolean
   onConfirm: (input: unknown) => Promise<void>
   close: () => void
@@ -158,6 +158,23 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     setErrorAndLoadingState({ isLoading: false })
   }
 
+  // const preCommitCheck = async (id: number) => {
+  //   const { committed, error } = await check(id)
+  //   if (error) {
+  //     showError('Problem checking template details', error)
+  //     return
+  //   }
+  //   if (committed) return true
+
+  //   updateModalState({
+  //     type: 'commitWarning',
+  //     iOpen: true,
+  //     onConfirm: async (result) => {
+  //       return result
+  //     },
+  //   })
+  // }
+
   const commitTemplate = async (id: number, refetch: () => void) => {
     updateModalState({
       type: 'commit',
@@ -180,7 +197,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     setErrorAndLoadingState({ isLoading: true })
     const { committed, error } = await check(template.id)
     if (error) {
-      showError('Problem committing template', error)
+      showError('Problem checking template details', error)
       return
     }
 
