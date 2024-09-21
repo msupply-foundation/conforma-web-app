@@ -5,6 +5,8 @@ import { EntitySelectModal } from './EntitySelectModal'
 
 export const TemplateOperationsModal: React.FC<ModalState> = ({ type, ...props }) => {
   switch (type) {
+    case 'unlinkedDataViewWarning':
+      return <DataViewWarning {...props} />
     case 'commit':
     case 'exportCommit':
       return <CommitConfirm type={type} {...props} />
@@ -15,6 +17,30 @@ export const TemplateOperationsModal: React.FC<ModalState> = ({ type, ...props }
     default:
       return null
   }
+}
+
+const DataViewWarning: React.FC<Omit<ModalState, 'type'>> = ({ isOpen, onConfirm, close }) => {
+  return (
+    <Confirm
+      open={isOpen}
+      // Prevent click in Input from closing modal
+      onClick={(e: any) => e.stopPropagation()}
+      content={
+        <div style={{ padding: 10, gap: 10 }} className="flex-column">
+          <h2>Warning</h2>
+          <p>
+            The following Data Views are used by this template but haven't been properly linked, so
+            won't be exported with the template.
+          </p>
+          <p>Are you sure you want to proceed?</p>
+        </div>
+      }
+      confirmButton="I understand, commit anyway"
+      cancelButton="Let me fix it"
+      onCancel={close}
+      onConfirm={onConfirm}
+    />
+  )
 }
 
 export const CommitConfirm: React.FC<

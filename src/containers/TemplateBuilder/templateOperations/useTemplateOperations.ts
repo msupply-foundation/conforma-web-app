@@ -9,8 +9,16 @@ import { SetErrorAndLoadingState } from '../shared/OperationContextHelpers'
 import { getVersionString } from '../template/helpers'
 import { ModifiedEntities } from './EntitySelectModal'
 
+type ModalType =
+  | 'unlinkedDataViewWarning'
+  | 'commit'
+  | 'exportCommit'
+  | 'exportWarning'
+  | 'import'
+  | 'duplicate'
+
 export interface ModalState {
-  type: 'commitWarning' | 'commit' | 'exportCommit' | 'exportWarning' | 'import' | 'duplicate'
+  type: ModalType
   isOpen: boolean
   onConfirm: (input: unknown) => Promise<void>
   close: () => void
@@ -123,6 +131,11 @@ const install = async (uid: string, installDetails: PreserveExistingEntities) =>
   }
 }
 
+interface ProgressStep {
+  step: number
+  state: unknown
+}
+
 export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadingState) => {
   const [modalState, setModalState] = useState<ModalState>({
     type: 'commit',
@@ -130,11 +143,28 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     onConfirm: async () => {},
     close: () => setModalState({ ...modalState, isOpen: false }),
   })
+  // const [progressStep, setProgressStep] = useState()
 
   const { showToast } = useToast()
 
   const updateModalState = (newState: Partial<ModalState>) =>
     setModalState({ ...modalState, ...newState })
+
+  const showModal = (
+    type: ModalType,
+    onConfirm: (input: unknown) => Promise<void>,
+    loadingOnConfirm: boolean = true
+  ) => {
+    updateModalState({
+      type,
+      isOpen: true,
+      onConfirm: async (input: unknown) => {
+        updateModalState({ isOpen: false })
+        if (loadingOnConfirm) setErrorAndLoadingState({ isLoading: true })
+        await onConfirm(input)
+      },
+    })
+  }
 
   const showError = (title: string, error: string) => {
     if (error.length > 100)
@@ -175,25 +205,48 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
   //   })
   // }
 
-  const commitTemplate = async (id: number, refetch: () => void) => {
-    updateModalState({
-      type: 'commit',
-      isOpen: true,
-      onConfirm: async (comment) => {
-        updateModalState({ isOpen: false })
-        setErrorAndLoadingState({ isLoading: true })
-        const { versionId, error } = await commit(id, comment as string)
-        if (error) {
-          showError('Problem committing template', error)
-          return
-        }
-        showSuccess({ title: 'Template committed', message: `Version ID: ${versionId}` })
-        refetch()
-      },
+  const commitTemplate = async (
+    id: number,
+    refetch: () => void,
+    ignoreUnconnectedDataViews?: boolean
+  ) => {
+    if (!ignoreUnconnectedDataViews) {
+      setErrorAndLoadingState({ isLoading: true })
+      const { unconnectedDataViews, error } = await check(id)
+      if (error) {
+        showError('Problem checking template', error)
+        return
+      }
+      setErrorAndLoadingState({ isLoading: false })
+
+      if (unconnectedDataViews.length > 0) {
+        showModal(
+          'unlinkedDataViewWarning',
+          async () => {
+            commitTemplate(id, refetch, true)
+          },
+          false
+        )
+        return
+      }
+    }
+
+    showModal('commit', async (comment) => {
+      const { versionId, error } = await commit(id, comment as string)
+      if (error) {
+        showError('Problem committing template', error)
+        return
+      }
+      showSuccess({ title: 'Template committed', message: `Version ID: ${versionId}` })
+      refetch()
     })
   }
 
-  const duplicateTemplate = async (template: Template, refetch: () => void) => {
+  const duplicateTemplate = async (
+    template: Template,
+    refetch: () => void,
+    { ignoreUnconnectedDataViews = false }: { ignoreUnconnectedDataViews?: boolean } = {}
+  ) => {
     setErrorAndLoadingState({ isLoading: true })
     const { committed, error } = await check(template.id)
     if (error) {
@@ -234,9 +287,37 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     })
   }
 
-  const exportTemplate = async (template: Template, refetch: () => void) => {
+  const exportTemplate = async (
+    template: Template,
+    refetch: () => void,
+    {
+      ignoreUnconnectedDataViews = false,
+      confirmedReady = false,
+    }: { ignoreUnconnectedDataViews?: boolean; confirmedReady?: boolean } = {}
+  ) => {
+    if (!ignoreUnconnectedDataViews) {
+      setErrorAndLoadingState({ isLoading: true })
+      const { committed, unconnectedDataViews, error } = await check(template.id)
+      if (error) {
+        showError('Problem checking template', error)
+        return
+      }
+      setErrorAndLoadingState({ isLoading: false })
+
+      if (unconnectedDataViews.length > 0) {
+        showModal(
+          'unlinkedDataViewWarning',
+          async () => {
+            exportTemplate(template, refetch, { ignoreUnconnectedDataViews: true })
+          },
+          false
+        )
+        return
+      }
+    }
+
     setErrorAndLoadingState({ isLoading: true })
-    const { committed, ready, diff, unconnectedDataViews, error } = await check(template.id)
+    const { committed, ready, diff, error } = await check(template.id)
     if (error) {
       showError('Problem committing template', error)
       return
@@ -256,12 +337,14 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
             showError('Problem committing template', error)
             return
           }
+          exportTemplate(template, refetch, { ignoreUnconnectedDataViews: true })
         },
       })
+      console.log('Modal opened, returning')
       return
     }
 
-    if (!ready) {
+    if (!ready && !confirmedReady) {
       // Warn user
     }
 
