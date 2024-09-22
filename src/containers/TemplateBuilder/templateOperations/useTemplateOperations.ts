@@ -56,20 +56,17 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
 
   const { showToast } = useToast()
 
-  const updateModalState = (newState: Partial<ModalState>) =>
-    setModalState({ ...modalState, ...newState })
-
   const showModal = (
     type: ModalType,
     onConfirm: (input: unknown) => Promise<void> | void,
     additionalProps: { currentIsCommitted?: boolean } = {}
   ) => {
-    updateModalState({
+    setModalState({
+      ...modalState,
       type,
       isOpen: true,
       onConfirm: async (input: unknown) => {
-        updateModalState({ isOpen: false })
-        // if (loadingOnConfirm) setErrorAndLoadingState({ isLoading: true })
+        setModalState((state) => ({ ...state, isOpen: false }))
         await onConfirm(input)
       },
       ...additionalProps,
