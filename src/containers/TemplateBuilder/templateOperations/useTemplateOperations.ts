@@ -1,13 +1,18 @@
 import { useState } from 'react'
 import { useToast } from '../../../contexts/Toast'
-import { getRequest, postRequest } from '../../../utils/helpers/fetchMethods'
-import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
-import { Template } from '../useGetTemplates'
-import { downloadFile } from '../../../utils/helpers/utilityFunctions'
-import config from '../../../config'
+import { Template, VersionObject } from '../useGetTemplates'
 import { SetErrorAndLoadingState } from '../shared/OperationContextHelpers'
-import { getVersionString } from '../template/helpers'
 import { ModifiedEntities } from './EntitySelectModal'
+import { useMultiStep, WorkflowStep } from './useMultiStep'
+import {
+  commit,
+  check,
+  duplicate,
+  upload,
+  exportAndDownload,
+  install,
+  PreserveExistingEntities,
+} from './apiOperations.ts'
 
 type ModalType =
   | 'unlinkedDataViewWarning'
@@ -26,114 +31,18 @@ export interface ModalState {
   entities?: ModifiedEntities
 }
 
-export type PreserveExistingEntities = {
-  filters?: Set<string>
-  permissions?: Set<string>
-  dataViews?: Set<string>
-  dataViewColumns?: Set<string>
-  dataTables?: Set<string>
-  category?: string | null
-  files?: Set<string>
-}
-
-const commit = async (id: number, comment: string) => {
-  try {
-    const { versionId } = await postRequest({
-      url: getServerUrl('templateImportExport', { action: 'commit', id }),
-      jsonBody: { comment },
-      headers: { 'Content-Type': 'application/json' },
-    })
-    return { versionId }
-  } catch (err) {
-    return { error: (err as Error).message }
-  }
-}
-
-const check = async (id: number) => {
-  try {
-    const result = await getRequest(
-      getServerUrl('templateImportExport', { action: 'export', id, type: 'check' })
-    )
-    return result
-  } catch (err) {
-    return { error: (err as Error).message }
-  }
-}
-
-const duplicate = async (id: number, code?: string) => {
-  try {
-    const newId = await postRequest({
-      url: getServerUrl('templateImportExport', {
-        action: 'duplicate',
-        id,
-        type: code ? 'new' : 'version',
-      }),
-      jsonBody: { code },
-      headers: { 'Content-Type': 'application/json' },
-    })
-    return { newId }
-  } catch (err) {
-    return { error: (err as Error).message }
-  }
-}
-
-const exportAndDownload = async ({ id, code, versionId, versionHistory }: Template) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-  const filename = `${code}-${versionId}_v${versionHistory.length + 1}.zip`
-  try {
-    await downloadFile(
-      getServerUrl('templateImportExport', {
-        action: 'export',
-        id,
-        type: 'dump',
-      }),
-      filename,
-      {
-        headers: { Authorization: `Bearer ${JWT}` },
-      }
-    )
-  } catch (err) {
-    return { error: (err as Error).message }
-  }
-}
-
-const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  if (!e.target?.files) return { error: 'No file selected' }
-  const file = e.target.files[0]
-  try {
-    const data = new FormData()
-    data.append('file', file)
-
-    const result = await postRequest({
-      url: getServerUrl('templateImportExport', { action: 'import', type: 'upload' }),
-      otherBody: data,
-    })
-    return result
-  } catch (err) {
-    return { error: (err as Error).message }
-  }
-}
-
-const install = async (uid: string, installDetails: PreserveExistingEntities) => {
-  try {
-    const result = await postRequest({
-      url: getServerUrl('templateImportExport', {
-        action: 'import',
-        uid,
-        type: 'install',
-      }),
-      jsonBody: installDetails,
-      headers: { 'Content-Type': 'application/json' },
-    })
-    return result
-  } catch (err) {
-    return { error: (err as Error).message }
-  }
-}
-
-interface ProgressStep {
-  step: number
-  state: unknown
+export interface WorkflowState {
+  id: number
+  code: string
+  versionId: string
+  versionHistory: VersionObject[]
+  status: string
+  refetch: () => void
+  committed?: boolean
+  unconnectedDataViews?: unknown[]
+  commitType?: 'commit' | 'exportCommit'
+  uploadEvent?: React.ChangeEvent<HTMLInputElement>
+  installInput?: { uid: string; preserveExisting: PreserveExistingEntities }
 }
 
 export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadingState) => {
@@ -143,7 +52,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     onConfirm: async () => {},
     close: () => setModalState({ ...modalState, isOpen: false }),
   })
-  // const [progressStep, setProgressStep] = useState()
+  const { setWorkflow, nextStep, hasNext, setWorkflowState } = useMultiStep<WorkflowState>()
 
   const { showToast } = useToast()
 
@@ -152,17 +61,18 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
 
   const showModal = (
     type: ModalType,
-    onConfirm: (input: unknown) => Promise<void>,
-    loadingOnConfirm: boolean = true
+    onConfirm: (input: unknown) => Promise<void> | void,
+    additionalProps: { currentIsCommitted?: boolean } = {}
   ) => {
     updateModalState({
       type,
       isOpen: true,
       onConfirm: async (input: unknown) => {
         updateModalState({ isOpen: false })
-        if (loadingOnConfirm) setErrorAndLoadingState({ isLoading: true })
+        // if (loadingOnConfirm) setErrorAndLoadingState({ isLoading: true })
         await onConfirm(input)
       },
+      ...additionalProps,
     })
   }
 
@@ -188,90 +98,124 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     setErrorAndLoadingState({ isLoading: false })
   }
 
-  // const preCommitCheck = async (id: number) => {
-  //   const { committed, error } = await check(id)
-  //   if (error) {
-  //     showError('Problem checking template details', error)
-  //     return
-  //   }
-  //   if (committed) return true
+  // Workflows
+  const commitTemplate = async (template: Template, refetch: () => void) => {
+    console.log('Running commit workflow')
+    setWorkflow([checkStep as WorkflowStep, commitStep as WorkflowStep], {
+      ...template,
+      refetch,
+    })
+    nextStep()
+  }
 
-  //   updateModalState({
-  //     type: 'commitWarning',
-  //     iOpen: true,
-  //     onConfirm: async (result) => {
-  //       return result
-  //     },
-  //   })
-  // }
+  const exportTemplate = async (template: Template, refetch: () => void) => {
+    console.log('Running Export workflow')
+    setWorkflow([checkStep, warnStep, commitStep, exportStep] as WorkflowStep[], {
+      ...template,
+      refetch,
+      commitType: 'exportCommit',
+    })
+    nextStep()
+  }
 
-  const commitTemplate = async (
-    id: number,
-    refetch: () => void,
-    ignoreUnconnectedDataViews?: boolean
-  ) => {
-    if (!ignoreUnconnectedDataViews) {
-      setErrorAndLoadingState({ isLoading: true })
-      const { unconnectedDataViews, error } = await check(id)
-      if (error) {
-        showError('Problem checking template', error)
-        return
-      }
-      setErrorAndLoadingState({ isLoading: false })
+  const duplicateTemplate = async (template: Template, refetch: () => void) => {
+    console.log('Running Export workflow')
+    setWorkflow([checkStep, duplicateStep] as WorkflowStep[], {
+      ...template,
+      refetch,
+    })
+    nextStep()
+  }
 
-      if (unconnectedDataViews.length > 0) {
-        showModal(
-          'unlinkedDataViewWarning',
-          async () => {
-            commitTemplate(id, refetch, true)
-          },
-          false
-        )
-        return
-      }
+  const importTemplate = async (e: React.ChangeEvent<HTMLInputElement>, refetch: () => void) => {
+    console.log('Running Export workflow')
+    setWorkflow([uploadStep, installStep] as WorkflowStep[], {
+      id: 0,
+      code: '',
+      versionId: '',
+      versionHistory: [],
+      status: '',
+      refetch,
+      uploadEvent: e,
+    })
+    nextStep()
+  }
+
+  // Individual Steps called as part of the above workflows
+
+  const checkStep = async (state: WorkflowState) => {
+    const { id } = state
+    console.log('Checking', id)
+    setErrorAndLoadingState({ isLoading: true })
+    const checkResult = await check(id)
+    setErrorAndLoadingState({ isLoading: false })
+
+    if ('error' in checkResult) {
+      showError('Problem checking template details', checkResult.error)
+      return
     }
 
-    showModal('commit', async (comment) => {
+    const { committed, unconnectedDataViews, diff, ready } = checkResult
+    setWorkflowState({ ...state, committed, unconnectedDataViews })
+
+    console.log('committed', committed)
+
+    if (unconnectedDataViews.length === 0) {
+      nextStep()
+      return
+    }
+
+    showModal('unlinkedDataViewWarning', nextStep)
+  }
+
+  const commitStep = async (state: WorkflowState) => {
+    console.log('STATE', state)
+    const { id, refetch, commitType } = state
+    console.log('Committing', id)
+
+    if (state?.committed) {
+      console.log('Already committed, going to next step')
+      if (hasNext()) nextStep()
+      return
+    }
+
+    showModal(commitType ?? 'commit', async (comment) => {
       const { versionId, error } = await commit(id, comment as string)
       if (error) {
         showError('Problem committing template', error)
         return
       }
-      showSuccess({ title: 'Template committed', message: `Version ID: ${versionId}` })
-      refetch()
+      setWorkflowState({ ...state, versionId })
+      if (!hasNext()) {
+        console.log('No next')
+        showSuccess({ title: 'Template committed', message: `Version ID: ${versionId}` })
+        refetch()
+        return
+      }
+
+      console.log('Doing next...')
+      nextStep()
     })
   }
 
-  const duplicateTemplate = async (
-    template: Template,
-    refetch: () => void,
-    { ignoreUnconnectedDataViews = false }: { ignoreUnconnectedDataViews?: boolean } = {}
-  ) => {
-    setErrorAndLoadingState({ isLoading: true })
-    const { committed, error } = await check(template.id)
-    if (error) {
-      showError('Problem checking template details', error)
-      return
-    }
-
-    updateModalState({
-      type: 'duplicate',
-      isOpen: true,
-      currentIsCommitted: committed,
-      onConfirm: async (input) => {
-        updateModalState({ isOpen: false })
+  const duplicateStep = async (state: WorkflowState) => {
+    const { id, code, committed, refetch } = state
+    console.log('Duplicating, committed?', committed)
+    showModal(
+      'duplicate',
+      async (input) => {
         setErrorAndLoadingState({ isLoading: true })
         const { newCode, comment } = input as { newCode?: string; comment?: string }
 
         if (comment) {
-          const { error } = await commit(template.id, comment)
+          const { error } = await commit(id, comment)
           if (error) {
             showError('Problem committing template', error)
             return
           }
         }
 
-        const { error } = await duplicate(template.id, newCode)
+        const { error } = await duplicate(id, newCode)
         if (error) {
           showError('Problem duplicating template', error)
           return
@@ -279,76 +223,26 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
 
         showSuccess({
           title: newCode ? 'New template created' : 'New template version created',
-          message: `${newCode ?? template.code}`,
+          message: `${newCode ?? code}`,
         })
 
         refetch()
       },
-    })
+      { currentIsCommitted: committed ?? false }
+    )
   }
 
-  const exportTemplate = async (
-    template: Template,
-    refetch: () => void,
-    {
-      ignoreUnconnectedDataViews = false,
-      confirmedReady = false,
-    }: { ignoreUnconnectedDataViews?: boolean; confirmedReady?: boolean } = {}
-  ) => {
-    if (!ignoreUnconnectedDataViews) {
-      setErrorAndLoadingState({ isLoading: true })
-      const { committed, unconnectedDataViews, error } = await check(template.id)
-      if (error) {
-        showError('Problem checking template', error)
-        return
-      }
-      setErrorAndLoadingState({ isLoading: false })
+  const warnStep = async (state: WorkflowState) => {
+    console.log('Warning...')
 
-      if (unconnectedDataViews.length > 0) {
-        showModal(
-          'unlinkedDataViewWarning',
-          async () => {
-            exportTemplate(template, refetch, { ignoreUnconnectedDataViews: true })
-          },
-          false
-        )
-        return
-      }
-    }
+    // TO-DO
 
-    setErrorAndLoadingState({ isLoading: true })
-    const { committed, ready, diff, error } = await check(template.id)
-    if (error) {
-      showError('Problem committing template', error)
-      return
-    }
-    setErrorAndLoadingState({ isLoading: false })
+    nextStep()
+  }
 
-    if (!committed) {
-      updateModalState({
-        type: 'exportCommit',
-        isOpen: true,
-        onConfirm: async (comment) => {
-          updateModalState({ isOpen: false })
-          setErrorAndLoadingState({ isLoading: true })
-
-          const { error } = await commit(template.id, comment as string)
-          if (error) {
-            showError('Problem committing template', error)
-            return
-          }
-          exportTemplate(template, refetch, { ignoreUnconnectedDataViews: true })
-        },
-      })
-      console.log('Modal opened, returning')
-      return
-    }
-
-    if (!ready && !confirmedReady) {
-      // Warn user
-    }
-
-    const result = await exportAndDownload(template)
+  const exportStep = async (state: WorkflowState) => {
+    const { id, code, versionId, versionHistory, refetch } = state
+    const result = await exportAndDownload(id, code, versionId, versionHistory)
     if (result?.error) {
       showError('Problem exporting template', result.error)
       return
@@ -356,50 +250,42 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
 
     showSuccess({
       title: 'Template exported',
-      message: `${template.code} - ${getVersionString(template)}`,
+      message: `${code} - $(v${versionHistory.length + 1})`,
     })
-    refetch()
+    refetch() // Maybe can be conditional -- only need if wasn't committed previously
   }
 
-  const importTemplate = async (e: React.ChangeEvent<HTMLInputElement>, refetch: () => void) => {
+  const uploadStep = async (state: WorkflowState) => {
     // Upload and analyze
     setErrorAndLoadingState({ isLoading: true })
-    const { uid, modifiedEntities, ready, error } = await upload(e)
+    const event = state.uploadEvent
+    if (!event) return
+    const { uid, modifiedEntities, ready, error } = await upload(event)
     if (error) {
       showError('Problem uploading template', error)
       return
     }
 
-    const installTemplate = async () => {
-      const { versionId, versionNo, status, code, error } = await install(uid, preserveExisting)
-      if (error) {
-        showError('Problem installing template', error)
-        return
-      }
-      showSuccess({
-        title: 'Template imported',
-        message: `${code} - v${versionNo} (${versionId})\nStatus: ${status}`,
-      })
-      refetch()
+    // TO-DO: Show InspectionModal
+    setWorkflowState({ ...state, installInput: { uid, preserveExisting: {} } })
+    nextStep()
+  }
+
+  const installStep = async (state: WorkflowState) => {
+    const { installInput, refetch } = state
+    if (!installInput) return
+    const { uid, preserveExisting } = installInput
+    const { versionId, versionNo, status, code, error } = await install(uid, preserveExisting)
+
+    if (error) {
+      showError('Problem installing template', error)
+      return
     }
-
-    let preserveExisting: PreserveExistingEntities = {}
-
-    if (!ready) {
-      updateModalState({
-        type: 'import',
-        isOpen: true,
-        onConfirm: async (result) => {
-          preserveExisting = result as PreserveExistingEntities
-          updateModalState({ isOpen: false })
-          setErrorAndLoadingState({ isLoading: true })
-
-          installTemplate()
-        },
-      })
-    }
-    // Install
-    installTemplate()
+    showSuccess({
+      title: 'Template imported',
+      message: `${code} - v${versionNo} (${versionId})\nStatus: ${status}`,
+    })
+    refetch()
   }
 
   return {

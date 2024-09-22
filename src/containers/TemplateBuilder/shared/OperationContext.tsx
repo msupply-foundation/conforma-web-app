@@ -61,8 +61,8 @@ export type UpdateTemplateStage = (id: number, patch: TemplateStagePatch) => Pro
 
 type OperationContextState = {
   fetch: (something: any) => any
-  commitTemplate: (id: number, refetch: () => void) => Promise<void>
-  exportTemplate: (template: Template, refetch: () => void) => Promise<void>
+  commitTemplate: (template: Template | TemplateState, refetch: () => void) => Promise<void>
+  exportTemplate: (template: Template | TemplateState, refetch: () => void) => Promise<void>
   duplicateTemplate: (template: Template, refetch: () => void) => Promise<void>
   importTemplate: (e: React.ChangeEvent<HTMLInputElement>, refetch: () => void) => Promise<void>
   updateTemplate: UpdateTemplate

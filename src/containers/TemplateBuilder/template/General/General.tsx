@@ -243,7 +243,7 @@ const General: React.FC = () => {
                       inverted
                       size="small"
                       onClick={() => {
-                        commitTemplate(template.id, refetch)
+                        commitTemplate(template, refetch)
                       }}
                     >
                       Commit now
