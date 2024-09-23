@@ -123,11 +123,21 @@ export type PreserveExistingEntities = {
   dataViews: Set<string>
   dataViewColumns: Set<string>
   dataTables: Set<string>
-  category: string | null
+  category: Set<string>
   files: Set<string>
 }
 
-export const install = async (uid: string, installDetails: PreserveExistingEntities) => {
+export type PreserveExistingInput = {
+  filters?: string[]
+  permissions?: string[]
+  dataViews?: string[]
+  dataViewColumns?: string[]
+  dataTables?: string[]
+  category?: string
+  files?: string[]
+}
+
+export const install = async (uid: string, installDetails: PreserveExistingInput) => {
   try {
     const result = await postRequest({
       url: getServerUrl('templateImportExport', {

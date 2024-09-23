@@ -11,8 +11,8 @@ import {
   upload,
   exportAndDownload,
   install,
-  PreserveExistingEntities,
   UnconnectedDataViews,
+  PreserveExistingInput,
 } from './apiOperations.ts'
 
 type ModalType =
@@ -47,7 +47,7 @@ export interface WorkflowState {
   commitType?: 'commit' | 'exportCommit'
   uploadEvent?: React.ChangeEvent<HTMLInputElement>
   diff?: ModifiedEntities
-  installInput?: { uid: string; preserveExisting: PreserveExistingEntities }
+  installInput?: { uid: string; preserveExisting: PreserveExistingInput }
 }
 
 export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadingState) => {
@@ -291,12 +291,11 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
       installInput: { uid, preserveExisting: {} },
     })
 
-    console.log('READY?', ready)
     if (!ready) {
       showModal(
         'import',
         async (input) => {
-          const preserveExisting = input as PreserveExistingEntities
+          const preserveExisting = input as PreserveExistingInput
           setWorkflowState({ ...state, installInput: { uid, preserveExisting } })
           nextStep()
         },
@@ -312,7 +311,9 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     const { installInput, refetch } = state
     if (!installInput) return
     const { uid, preserveExisting } = installInput
+    setErrorAndLoadingState({ isLoading: true })
     const { versionId, versionNo, status, code, error } = await install(uid, preserveExisting)
+    setErrorAndLoadingState({ isLoading: false })
 
     if (error) {
       showError('Problem installing template', error)
