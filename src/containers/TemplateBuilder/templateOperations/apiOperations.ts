@@ -118,13 +118,13 @@ export const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 }
 
 export type PreserveExistingEntities = {
-  filters: Set<string>
-  permissions: Set<string>
-  dataViews: Set<string>
-  dataViewColumns: Set<string>
-  dataTables: Set<string>
+  filters: string[]
+  permissions: string[]
+  dataViews: string[]
+  dataViewColumns: string[]
+  dataTables: string[]
   category: string | null
-  files: Set<string>
+  files: string[]
 }
 
 export const install = async (uid: string, installDetails: PreserveExistingEntities) => {

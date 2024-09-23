@@ -46,16 +46,16 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
   // console.log('INIT', init)
   const [preserveCurrentSelections, setPreserveCurrentSelections] =
     useState<PreserveExistingEntities>({
-      filters: new Set(),
-      permissions: new Set(),
-      dataViews: new Set(),
-      dataViewColumns: new Set(),
+      filters: [],
+      permissions: [],
+      dataViews: [],
+      dataViewColumns: [],
       category: 'license',
-      dataTables: new Set(),
-      files: new Set(),
+      dataTables: [],
+      files: [],
     })
 
-  console.log('Filters', preserveCurrentSelections)
+  console.log('Filters', preserveCurrentSelections.filters)
 
   useEffect(() => {
     console.log('Show only run on initial')
@@ -130,7 +130,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
 interface GroupProps {
   title: string
   modified: Record<string, ComparisonObject>
-  currentlySelected: Set<string>
+  currentlySelected: string[]
   setSelected: React.Dispatch<React.SetStateAction<PreserveExistingEntities>>
 }
 const EntityGroup: React.FC<GroupProps> = ({
@@ -154,7 +154,7 @@ const EntityGroup: React.FC<GroupProps> = ({
             <EntitySelect
               title={key}
               entity={value}
-              currentlySelected={currentlySelected.has(key) ? 'current' : 'incoming'}
+              currentlySelected={currentlySelected.includes(key) ? 'current' : 'incoming'}
               setSelected={(selection: SelectionOption) => {
                 const newSet = new Set(currentlySelected)
                 if (selection === 'incoming') newSet.delete(key)
