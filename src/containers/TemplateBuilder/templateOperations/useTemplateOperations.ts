@@ -12,6 +12,7 @@ import {
   exportAndDownload,
   install,
   PreserveExistingEntities,
+  UnconnectedDataViews,
 } from './apiOperations.ts'
 
 type ModalType =
@@ -27,8 +28,10 @@ export interface ModalState {
   isOpen: boolean
   onConfirm: (input: unknown) => Promise<void>
   close: () => void
+  // Optional properties only used in particular cases
   currentIsCommitted?: boolean
-  entities?: ModifiedEntities
+  modifiedEntities?: ModifiedEntities
+  unconnectedDataViews?: UnconnectedDataViews[]
 }
 
 export interface WorkflowState {
@@ -40,8 +43,10 @@ export interface WorkflowState {
   refetch: () => void
   committed?: boolean
   unconnectedDataViews?: unknown[]
+  readyForExport?: boolean
   commitType?: 'commit' | 'exportCommit'
   uploadEvent?: React.ChangeEvent<HTMLInputElement>
+  diff?: ModifiedEntities
   installInput?: { uid: string; preserveExisting: PreserveExistingEntities }
 }
 
@@ -52,14 +57,25 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     onConfirm: async () => {},
     close: () => setModalState({ ...modalState, isOpen: false }),
   })
-  const { setWorkflow, nextStep, hasNext, setWorkflowState } = useMultiStep<WorkflowState>()
+  const { setWorkflow, nextStep, hasNext, setWorkflowState } = useMultiStep<WorkflowState>({
+    id: 0,
+    code: '',
+    versionId: '',
+    versionHistory: [],
+    status: '',
+    refetch: () => {},
+  })
 
   const { showToast } = useToast()
 
   const showModal = (
     type: ModalType,
     onConfirm: (input: unknown) => Promise<void> | void,
-    additionalProps: { currentIsCommitted?: boolean } = {}
+    additionalProps: {
+      currentIsCommitted?: boolean
+      unconnectedDataViews?: UnconnectedDataViews[]
+      modifiedEntities?: ModifiedEntities
+    } = {}
   ) => {
     setModalState({
       ...modalState,
@@ -98,7 +114,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
   // Workflows
   const commitTemplate = async (template: Template, refetch: () => void) => {
     console.log('Running commit workflow')
-    setWorkflow([checkStep as WorkflowStep, commitStep as WorkflowStep], {
+    setWorkflow([checkStep, commitStep] as WorkflowStep[], {
       ...template,
       refetch,
     })
@@ -152,17 +168,19 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
       return
     }
 
-    const { committed, unconnectedDataViews, diff, ready } = checkResult
-    setWorkflowState({ ...state, committed, unconnectedDataViews })
+    const { committed, unconnectedDataViews = [], ready } = checkResult
+    setWorkflowState({ ...state, committed, unconnectedDataViews, readyForExport: ready })
 
     console.log('committed', committed)
 
-    if (unconnectedDataViews.length === 0) {
+    if (unconnectedDataViews.length === 0 || committed) {
       nextStep()
       return
     }
 
-    showModal('unlinkedDataViewWarning', nextStep)
+    showModal('unlinkedDataViewWarning', nextStep, {
+      unconnectedDataViews,
+    })
   }
 
   const commitStep = async (state: WorkflowState) => {
@@ -231,10 +249,12 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
 
   const warnStep = async (state: WorkflowState) => {
     console.log('Warning...')
+    if (state.readyForExport) {
+      nextStep()
+      return
+    }
 
-    // TO-DO
-
-    nextStep()
+    showModal('exportWarning', nextStep)
   }
 
   const exportStep = async (state: WorkflowState) => {
@@ -247,7 +267,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
 
     showSuccess({
       title: 'Template exported',
-      message: `${code} - $(v${versionHistory.length + 1})`,
+      message: `${code} - (v${versionHistory.length + 1})`,
     })
     refetch() // Maybe can be conditional -- only need if wasn't committed previously
   }
@@ -257,14 +277,34 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     setErrorAndLoadingState({ isLoading: true })
     const event = state.uploadEvent
     if (!event) return
-    const { uid, modifiedEntities, ready, error } = await upload(event)
-    if (error) {
-      showError('Problem uploading template', error)
+    const result = await upload(event)
+    setErrorAndLoadingState({ isLoading: false })
+    if ('error' in result) {
+      showError('Problem uploading template', result.error)
+      return
+    }
+    const { uid, modifiedEntities, ready } = result
+
+    setWorkflowState({
+      ...state,
+      diff: modifiedEntities,
+      installInput: { uid, preserveExisting: {} },
+    })
+
+    console.log('READY?', ready)
+    if (!ready) {
+      showModal(
+        'import',
+        async (input) => {
+          const preserveExisting = input as PreserveExistingEntities
+          setWorkflowState({ ...state, installInput: { uid, preserveExisting } })
+          nextStep()
+        },
+        { modifiedEntities }
+      )
       return
     }
 
-    // TO-DO: Show InspectionModal
-    setWorkflowState({ ...state, installInput: { uid, preserveExisting: {} } })
     nextStep()
   }
 

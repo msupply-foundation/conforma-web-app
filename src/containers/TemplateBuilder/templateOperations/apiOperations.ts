@@ -8,6 +8,7 @@ import { downloadFile } from '../../../utils/helpers/utilityFunctions'
 import { TemplateState } from '../template/TemplateWrapper'
 import { Template, VersionObject } from '../useGetTemplates'
 import config from '../../../config'
+import { ModifiedEntities } from './EntitySelectModal'
 
 export const commit = async (id: number, comment: string) => {
   try {
@@ -22,23 +23,27 @@ export const commit = async (id: number, comment: string) => {
   }
 }
 
+export interface UnconnectedDataViews {
+  id: number
+  code: string
+  identifier: string
+  title: string
+}
+
+export interface Diff {
+  filters: {}
+  permissions: {}
+  dataViews: {}
+  dataViewColumns: {}
+  category: {}
+  dataTables: {}
+}
+
 interface CheckResult {
   committed: boolean
-  unconnectedDataViews: {
-    id: number
-    code: string
-    identifier: string
-    title: string
-  }[]
+  unconnectedDataViews: UnconnectedDataViews[]
   ready?: boolean
-  diff?: {
-    filters: {}
-    permissions: {}
-    dataViews: {}
-    dataViewColumns: {}
-    category: {}
-    dataTables: {}
-  }
+  diff?: Diff
 }
 
 export const check = async (id: number) => {
@@ -101,10 +106,11 @@ export const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const data = new FormData()
     data.append('file', file)
 
-    const result = await postRequest({
-      url: getServerUrl('templateImportExport', { action: 'import', type: 'upload' }),
-      otherBody: data,
-    })
+    const result: { uid: string; modifiedEntities: ModifiedEntities; ready: boolean } =
+      await postRequest({
+        url: getServerUrl('templateImportExport', { action: 'import', type: 'upload' }),
+        otherBody: data,
+      })
     return result
   } catch (err) {
     return { error: (err as Error).message }
@@ -112,13 +118,13 @@ export const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 }
 
 export type PreserveExistingEntities = {
-  filters?: Set<string>
-  permissions?: Set<string>
-  dataViews?: Set<string>
-  dataViewColumns?: Set<string>
-  dataTables?: Set<string>
-  category?: string | null
-  files?: Set<string>
+  filters: Set<string>
+  permissions: Set<string>
+  dataViews: Set<string>
+  dataViewColumns: Set<string>
+  dataTables: Set<string>
+  category: string | null
+  files: Set<string>
 }
 
 export const install = async (uid: string, installDetails: PreserveExistingEntities) => {

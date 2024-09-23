@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Confirm, Dropdown, Input } from 'semantic-ui-react'
+import { Confirm, Dropdown, Input, List, ListItem } from 'semantic-ui-react'
 import { ModalState } from './useTemplateOperations'
 import { EntitySelectModal } from './EntitySelectModal'
 
@@ -10,6 +10,8 @@ export const TemplateOperationsModal: React.FC<ModalState> = ({ type, ...props }
     case 'commit':
     case 'exportCommit':
       return <CommitConfirm type={type} {...props} />
+    case 'exportWarning':
+      return <ExportWarning {...props} />
     case 'duplicate':
       return <DuplicateModal {...props} />
     case 'import':
@@ -19,7 +21,12 @@ export const TemplateOperationsModal: React.FC<ModalState> = ({ type, ...props }
   }
 }
 
-const DataViewWarning: React.FC<Omit<ModalState, 'type'>> = ({ isOpen, onConfirm, close }) => {
+const DataViewWarning: React.FC<Omit<ModalState, 'type'>> = ({
+  isOpen,
+  onConfirm,
+  close,
+  unconnectedDataViews = [],
+}) => {
   return (
     <Confirm
       open={isOpen}
@@ -32,6 +39,11 @@ const DataViewWarning: React.FC<Omit<ModalState, 'type'>> = ({ isOpen, onConfirm
             The following Data Views are used by this template but haven't been properly linked, so
             won't be exported with the template.
           </p>
+          <List bulleted>
+            {unconnectedDataViews.map((view) => (
+              <ListItem>{view.code}</ListItem>
+            ))}
+          </List>
           <p>Are you sure you want to proceed?</p>
         </div>
       }
@@ -163,6 +175,31 @@ export const DuplicateModal: React.FC<Omit<ModalState, 'type'>> = ({
           comment: requiresCommit ? commitMessage : undefined,
         })
       }}
+    />
+  )
+}
+
+const ExportWarning: React.FC<Omit<ModalState, 'type'>> = ({ isOpen, onConfirm, close }) => {
+  return (
+    <Confirm
+      open={isOpen}
+      // Prevent click in Input from closing modal
+      onClick={(e: any) => e.stopPropagation()}
+      content={
+        <div style={{ padding: 10, gap: 10 }} className="flex-column">
+          <h2>Warning</h2>
+          <p>
+            This template currently exports data for some linked items (e.g. DataViews, Filters,
+            Permissions) that have changed since this template was committed. You may wish to make a
+            new version of this template and export that to ensure that it includes the current
+            state of the system.
+          </p>
+        </div>
+      }
+      confirmButton="That's okay, export anyway"
+      cancelButton="Let me make a new version"
+      onCancel={close}
+      onConfirm={onConfirm}
     />
   )
 }
