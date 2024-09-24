@@ -218,6 +218,8 @@ const EntitySelect: React.FC<EntityProps> = ({
   labelColor,
 }) => {
   const { incoming, current } = entity
+  const currentIsNewer =
+    new Date(entity.current.lastModified) > new Date(entity.incoming.lastModified)
   return (
     <>
       <TableRow className="import-row import-entity-row">
@@ -226,11 +228,7 @@ const EntitySelect: React.FC<EntityProps> = ({
           <p>
             Last modified: <strong>{new Date(incoming.lastModified).toLocaleString()}</strong>
           </p>
-          <JsonViewer
-            data={incoming.data}
-            title="incoming"
-            newest={currentlySelected === 'incoming'}
-          />
+          <JsonViewer data={incoming.data} title="incoming" newest={!currentIsNewer} />
         </TableCell>
         <TableCell
           className="import-cell import-current"
@@ -240,14 +238,11 @@ const EntitySelect: React.FC<EntityProps> = ({
           <Label color="yellow" style={{ visibility: 'hidden' }}>
             {title}
           </Label>
+          <Button floated="right" primary inverted size="mini" content="Show full data" />
           <p>
             Last modified: <strong>{new Date(current.lastModified).toLocaleString()}</strong>
           </p>
-          <JsonViewer
-            data={current.data}
-            title="current"
-            newest={currentlySelected === 'current'}
-          />
+          <JsonViewer data={current.data} title="current" newest={currentIsNewer} />
         </TableCell>
       </TableRow>
       <TableRow className="import-row import-select-row">
