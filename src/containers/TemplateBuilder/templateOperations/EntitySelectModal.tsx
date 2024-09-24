@@ -14,10 +14,13 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Label,
+  SemanticCOLORS,
 } from 'semantic-ui-react'
 import { ModalState } from './useTemplateOperations'
 import { useState } from 'react'
 import { ModifiedEntitiesToKeep, ModifiedEntitiesToKeepAPIInput } from './apiOperations'
+import { JsonData, JsonEditor } from 'json-edit-react'
 
 interface Entity {
   checksum: string
@@ -79,7 +82,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
             By default, the <em>newest</em> version of each is selected.
           </p>
         </ModalDescription>
-        <Table stackable>
+        <Table stackable className="import-table">
           <TableBody>
             {modifiedEntities?.category && (
               <EntityGroup
@@ -88,15 +91,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 modified={modifiedEntities.category}
                 currentlySelected={new Set(preserveCurrentSelections.category)}
                 updateState={updateState}
-              />
-            )}
-            {Object.keys(modifiedEntities?.filters ?? {}).length > 0 && (
-              <EntityGroup
-                title="Filters"
-                group="filters"
-                modified={modifiedEntities?.filters ?? {}}
-                currentlySelected={preserveCurrentSelections.filters}
-                updateState={updateState}
+                color="blue"
               />
             )}
             {Object.keys(modifiedEntities?.dataViews ?? {}).length > 0 && (
@@ -106,6 +101,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 modified={modifiedEntities?.dataViews ?? {}}
                 currentlySelected={preserveCurrentSelections.dataViews}
                 updateState={updateState}
+                color="orange"
               />
             )}
             {Object.keys(modifiedEntities?.dataViewColumns ?? {}).length > 0 && (
@@ -115,6 +111,17 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 modified={modifiedEntities?.dataViewColumns ?? {}}
                 currentlySelected={preserveCurrentSelections.dataViewColumns}
                 updateState={updateState}
+                color="pink"
+              />
+            )}
+            {Object.keys(modifiedEntities?.filters ?? {}).length > 0 && (
+              <EntityGroup
+                title="Filters"
+                group="filters"
+                modified={modifiedEntities?.filters ?? {}}
+                currentlySelected={preserveCurrentSelections.filters}
+                updateState={updateState}
+                color="green"
               />
             )}
             {Object.keys(modifiedEntities?.permissions ?? {}).length > 0 && (
@@ -124,6 +131,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 modified={modifiedEntities?.permissions ?? {}}
                 currentlySelected={preserveCurrentSelections.permissions}
                 updateState={updateState}
+                color="teal"
               />
             )}
             {Object.keys(modifiedEntities?.dataTables ?? {}).length > 0 && (
@@ -133,6 +141,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 modified={modifiedEntities?.dataTables ?? {}}
                 currentlySelected={preserveCurrentSelections.dataTables}
                 updateState={updateState}
+                color="yellow"
               />
             )}
             {/* WHAT ABOUT FILES??? */}
@@ -161,6 +170,7 @@ interface GroupProps {
     value: string,
     operation?: 'add' | 'remove'
   ) => void
+  color: SemanticCOLORS
 }
 const EntityGroup: React.FC<GroupProps> = ({
   title,
@@ -168,6 +178,7 @@ const EntityGroup: React.FC<GroupProps> = ({
   modified,
   currentlySelected,
   updateState,
+  color,
 }) => {
   return (
     <>
@@ -176,19 +187,15 @@ const EntityGroup: React.FC<GroupProps> = ({
           <Header as="h3">{title}</Header>
         </TableCell>
       </TableRow>
-      <TableRow className="import-column-header-row">
-        <TableCell>Incoming</TableCell>
-        <TableCell>Current</TableCell>
-      </TableRow>
       {Object.entries(modified).map(([key, value]) => (
-        <TableRow key={key} className="import-entity-row">
-          <EntitySelect
-            title={key}
-            entity={value}
-            currentlySelected={currentlySelected.has(key) ? 'current' : 'incoming'}
-            updateState={(item, operation) => updateState(group, item, operation)}
-          />
-        </TableRow>
+        <EntitySelect
+          key={key}
+          title={key}
+          entity={value}
+          currentlySelected={currentlySelected.has(key) ? 'current' : 'incoming'}
+          updateState={(item, operation) => updateState(group, item, operation)}
+          labelColor={color}
+        />
       ))}
     </>
   )
@@ -201,27 +208,95 @@ interface EntityProps {
   entity: ComparisonObject
   currentlySelected: SelectionOption
   updateState: (value: string, operation?: 'add' | 'remove') => void
+  labelColor: SemanticCOLORS
 }
-const EntitySelect: React.FC<EntityProps> = ({ title, entity, currentlySelected, updateState }) => {
+const EntitySelect: React.FC<EntityProps> = ({
+  title,
+  entity,
+  currentlySelected,
+  updateState,
+  labelColor,
+}) => {
   const { incoming, current } = entity
   return (
     <>
-      <TableCell className="import-cell import-incoming">
-        <div>{title}</div>
-        <p>{JSON.stringify(incoming.lastModified)}</p>
-        <Checkbox
-          checked={currentlySelected === 'incoming'}
-          onChange={() => updateState(title, 'remove')}
-        />
-      </TableCell>
-      <TableCell className="import-cell import-current">
-        {/* <div>{title}</div> */}
-        <p>{JSON.stringify(current.lastModified)}</p>
-        <Checkbox checked={currentlySelected === 'current'} onChange={() => updateState(title)} />
-      </TableCell>
+      <TableRow className="import-row import-entity-row">
+        <TableCell className="import-cell import-incoming" verticalAlign="top">
+          <Label color={labelColor}>{title}</Label>
+          <p>
+            Last modified: <strong>{new Date(incoming.lastModified).toLocaleString()}</strong>
+          </p>
+          <JsonViewer
+            data={incoming.data}
+            title="incoming"
+            newest={currentlySelected === 'incoming'}
+          />
+        </TableCell>
+        <TableCell
+          className="import-cell import-current"
+          verticalAlign="top"
+          style={{ backgroundColor: '#FCFFF5 !important' }}
+        >
+          <Label color="yellow" style={{ visibility: 'hidden' }}>
+            {title}
+          </Label>
+          <p>
+            Last modified: <strong>{new Date(current.lastModified).toLocaleString()}</strong>
+          </p>
+          <JsonViewer
+            data={current.data}
+            title="current"
+            newest={currentlySelected === 'current'}
+          />
+        </TableCell>
+      </TableRow>
+      <TableRow className="import-row import-select-row">
+        <TableCell>
+          <div className="flex-row-start-center" style={{ gap: 10 }}>
+            <p>Use this version</p>
+            <Checkbox
+              checked={currentlySelected === 'incoming'}
+              onChange={() => updateState(title, 'remove')}
+            />
+          </div>
+        </TableCell>
+        <TableCell>
+          <div className="flex-row-start-center" style={{ gap: 10 }}>
+            <p>Keep this version</p>
+            <Checkbox
+              checked={currentlySelected === 'current'}
+              onChange={() => updateState(title)}
+            />
+          </div>
+        </TableCell>
+      </TableRow>
     </>
   )
 }
+
+const JsonViewer = ({
+  data,
+  title,
+  newest,
+}: {
+  data: JsonData
+  title: string
+  newest: boolean
+}) => (
+  <JsonEditor
+    rootName={title}
+    rootFontSize={12}
+    data={data}
+    restrictAdd={true}
+    restrictDelete={true}
+    restrictEdit={true}
+    maxWidth="100%"
+    collapse={1}
+    showCollectionCount="when-closed"
+    indent={1}
+    theme={{ container: { backgroundColor: newest ? 'rgb(236, 248, 233)' : '#fff4f4' } }}
+  />
+)
 
 const getInitialSelections = (entities?: ModifiedEntities) => {
   const initialValues: ModifiedEntitiesToKeep = {

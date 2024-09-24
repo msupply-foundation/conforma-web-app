@@ -2477,6 +2477,44 @@ a:hover {
   }
 }
 
+// Template import
+.import-section-header-row {
+  background-color: @headersInteractiveLow;
+  h3.ui.header {
+    color: @surfacesLight;
+  }
+  td {
+    padding-top: 0.4em !important;
+    padding-bottom: 0.4em !important;
+  }
+}
+
+.import-row {
+  p {
+    margin-bottom: 0.2em;
+    margin-top: 0.2em;
+    font-size: @slightlySmallerText;
+  }
+}
+
+.import-entity-row {
+  td {
+    padding-top: 0.4em !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+.import-table {
+  .jer-editor-container {
+    padding-top: 0.4em;
+  }
+}
+.import-select-row td {
+  border: none !important;
+  padding-top: 0.2em !important;
+  padding-bottom: 0.2em !important;
+}
+
 /*******************************
         Document Modal
 *******************************/
