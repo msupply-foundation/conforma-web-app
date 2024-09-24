@@ -117,7 +117,7 @@ export const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
   }
 }
 
-export type PreserveExistingEntities = {
+export type ModifiedEntitiesToKeep = {
   filters: Set<string>
   permissions: Set<string>
   dataViews: Set<string>
@@ -127,7 +127,7 @@ export type PreserveExistingEntities = {
   files: Set<string>
 }
 
-export type PreserveExistingInput = {
+export type ModifiedEntitiesToKeepAPIInput = {
   filters?: string[]
   permissions?: string[]
   dataViews?: string[]
@@ -137,7 +137,7 @@ export type PreserveExistingInput = {
   files?: string[]
 }
 
-export const install = async (uid: string, installDetails: PreserveExistingInput) => {
+export const install = async (uid: string, installDetails: ModifiedEntitiesToKeepAPIInput) => {
   try {
     const result = await postRequest({
       url: getServerUrl('templateImportExport', {

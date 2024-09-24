@@ -12,7 +12,7 @@ import {
   exportAndDownload,
   install,
   UnconnectedDataViews,
-  PreserveExistingInput,
+  ModifiedEntitiesToKeepAPIInput,
 } from './apiOperations.ts'
 
 type ModalType =
@@ -47,7 +47,7 @@ export interface WorkflowState {
   commitType?: 'commit' | 'exportCommit'
   uploadEvent?: React.ChangeEvent<HTMLInputElement>
   diff?: ModifiedEntities
-  installInput?: { uid: string; preserveExisting: PreserveExistingInput }
+  installInput?: { uid: string; existingToKeep: ModifiedEntitiesToKeepAPIInput }
 }
 
 export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadingState) => {
@@ -288,15 +288,15 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     setWorkflowState({
       ...state,
       diff: modifiedEntities,
-      installInput: { uid, preserveExisting: {} },
+      installInput: { uid, existingToKeep: {} },
     })
 
     if (!ready) {
       showModal(
         'import',
         async (input) => {
-          const preserveExisting = input as PreserveExistingInput
-          setWorkflowState({ ...state, installInput: { uid, preserveExisting } })
+          const preserveExisting = input as ModifiedEntitiesToKeepAPIInput
+          setWorkflowState({ ...state, installInput: { uid, existingToKeep: preserveExisting } })
           nextStep()
         },
         { modifiedEntities }
@@ -310,7 +310,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
   const installStep = async (state: WorkflowState) => {
     const { installInput, refetch } = state
     if (!installInput) return
-    const { uid, preserveExisting } = installInput
+    const { uid, existingToKeep: preserveExisting } = installInput
     setErrorAndLoadingState({ isLoading: true })
     const { versionId, versionNo, status, code, error } = await install(uid, preserveExisting)
     setErrorAndLoadingState({ isLoading: false })

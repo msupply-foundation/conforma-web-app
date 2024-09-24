@@ -17,7 +17,7 @@ import {
 } from 'semantic-ui-react'
 import { ModalState } from './useTemplateOperations'
 import { useState } from 'react'
-import { PreserveExistingEntities, PreserveExistingInput } from './apiOperations'
+import { ModifiedEntitiesToKeep, ModifiedEntitiesToKeepAPIInput } from './apiOperations'
 
 interface Entity {
   checksum: string
@@ -46,10 +46,10 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
   close,
 }) => {
   const [preserveCurrentSelections, setPreserveCurrentSelections] =
-    useState<PreserveExistingEntities>(getInitialSelections(modifiedEntities))
+    useState<ModifiedEntitiesToKeep>(getInitialSelections(modifiedEntities))
 
   const updateState = (
-    key: keyof PreserveExistingEntities,
+    key: keyof ModifiedEntitiesToKeep,
     value: string,
     operation: 'add' | 'remove' = 'add'
   ) =>
@@ -153,11 +153,11 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
 
 interface GroupProps {
   title: string
-  group: keyof PreserveExistingEntities
+  group: keyof ModifiedEntitiesToKeep
   modified: Record<string, ComparisonObject>
   currentlySelected: Set<string>
   updateState: (
-    key: keyof PreserveExistingEntities,
+    key: keyof ModifiedEntitiesToKeep,
     value: string,
     operation?: 'add' | 'remove'
   ) => void
@@ -171,17 +171,17 @@ const EntityGroup: React.FC<GroupProps> = ({
 }) => {
   return (
     <>
-      <TableRow>
+      <TableRow className="import-section-header-row">
         <TableCell colspan={2}>
           <Header as="h3">{title}</Header>
         </TableCell>
       </TableRow>
-      <TableRow>
+      <TableRow className="import-column-header-row">
         <TableCell>Incoming</TableCell>
         <TableCell>Current</TableCell>
       </TableRow>
       {Object.entries(modified).map(([key, value]) => (
-        <TableRow key={key}>
+        <TableRow key={key} className="import-entity-row">
           <EntitySelect
             title={key}
             entity={value}
@@ -206,7 +206,7 @@ const EntitySelect: React.FC<EntityProps> = ({ title, entity, currentlySelected,
   const { incoming, current } = entity
   return (
     <>
-      <TableCell>
+      <TableCell className="import-cell import-incoming">
         <div>{title}</div>
         <p>{JSON.stringify(incoming.lastModified)}</p>
         <Checkbox
@@ -214,8 +214,8 @@ const EntitySelect: React.FC<EntityProps> = ({ title, entity, currentlySelected,
           onChange={() => updateState(title, 'remove')}
         />
       </TableCell>
-      <TableCell>
-        <div>{title}</div>
+      <TableCell className="import-cell import-current">
+        {/* <div>{title}</div> */}
         <p>{JSON.stringify(current.lastModified)}</p>
         <Checkbox checked={currentlySelected === 'current'} onChange={() => updateState(title)} />
       </TableCell>
@@ -224,7 +224,7 @@ const EntitySelect: React.FC<EntityProps> = ({ title, entity, currentlySelected,
 }
 
 const getInitialSelections = (entities?: ModifiedEntities) => {
-  const initialValues: PreserveExistingEntities = {
+  const initialValues: ModifiedEntitiesToKeep = {
     filters: new Set<string>(),
     permissions: new Set<string>(),
     dataViews: new Set<string>(),
@@ -246,7 +246,9 @@ const getInitialSelections = (entities?: ModifiedEntities) => {
   return initialValues
 }
 
-const prepareForImport = (preserveCurrent: PreserveExistingEntities): PreserveExistingInput =>
+const prepareForImport = (
+  preserveCurrent: ModifiedEntitiesToKeep
+): ModifiedEntitiesToKeepAPIInput =>
   Object.entries(preserveCurrent).reduce((acc, [key, values]) => {
     const valuesAsArray = Array.from(values)
     if (key === 'category' && valuesAsArray.length > 0)
