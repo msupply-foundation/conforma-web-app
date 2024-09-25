@@ -5,8 +5,7 @@
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { getRequest, postRequest } from '../../../utils/helpers/fetchMethods'
 import { downloadFile } from '../../../utils/helpers/utilityFunctions'
-import { TemplateState } from '../template/TemplateWrapper'
-import { Template, VersionObject } from '../useGetTemplates'
+import { VersionObject } from '../useGetTemplates'
 import config from '../../../config'
 import { ModifiedEntities } from './EntitySelectModal'
 
@@ -111,6 +110,37 @@ export const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         url: getServerUrl('templateImportExport', { action: 'import', type: 'upload' }),
         otherBody: data,
       })
+    return result
+  } catch (err) {
+    return { error: (err as Error).message }
+  }
+}
+
+export const getFullEntityDiff = async (
+  uid: string,
+  type: keyof ModifiedEntities,
+  name: string
+) => {
+  console.log(
+    'URL',
+    getServerUrl('templateImportExport', {
+      action: 'import',
+      type: 'getEntityDetail',
+      uid,
+      group: type,
+      name,
+    })
+  )
+  try {
+    const result = await getRequest(
+      getServerUrl('templateImportExport', {
+        action: 'import',
+        type: 'getEntityDetail',
+        uid,
+        group: type,
+        name,
+      })
+    )
     return result
   } catch (err) {
     return { error: (err as Error).message }

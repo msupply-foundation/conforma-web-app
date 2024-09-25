@@ -128,6 +128,13 @@ export type TemplateOptions =
   | { action: 'duplicate'; id: number; type: 'new' | 'version' }
   | { action: 'export'; id: number; type: 'check' | 'dump' }
   | { action: 'import'; type: 'upload' }
+  | {
+      action: 'import'
+      type: 'getEntityDetail'
+      uid: string
+      group: 'filters' | 'permissions' | 'dataViews' | 'dataViewColumns' | 'category' | 'dataTables'
+      name: string
+    }
   | { action: 'import'; type: 'install'; uid: string }
   | { action: 'getDataViews'; id: number }
 

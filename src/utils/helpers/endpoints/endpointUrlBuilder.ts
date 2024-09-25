@@ -219,6 +219,13 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
         case 'import':
           if (type === 'install' && 'uid' in templateOptions)
             return `${serverREST}${endpointPath}/import/${type}/${templateOptions.uid}`
+          if (
+            type === 'getEntityDetail' &&
+            'uid' in templateOptions &&
+            'group' in templateOptions &&
+            'name' in templateOptions
+          )
+            return `${serverREST}${endpointPath}/import/get-full-entity-diff/${templateOptions.uid}?type=${templateOptions.group}&value=${templateOptions.name}`
           return `${serverREST}${endpointPath}/import/${type}`
         case 'getDataViews':
           return `${serverREST}${endpointPath}/get-data-view-details/${id}`

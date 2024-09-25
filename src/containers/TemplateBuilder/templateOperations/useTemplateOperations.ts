@@ -13,7 +13,9 @@ import {
   install,
   UnconnectedDataViews,
   ModifiedEntitiesToKeepAPIInput,
+  getFullEntityDiff,
 } from './apiOperations.ts'
+import { TemplateState } from '../template/TemplateWrapper.tsx'
 
 type ModalType =
   | 'unlinkedDataViewWarning'
@@ -23,15 +25,19 @@ type ModalType =
   | 'import'
   | 'duplicate'
 
-export interface ModalState {
+export interface ModalState extends AdditionalProps {
   type: ModalType
   isOpen: boolean
   onConfirm: (input: unknown) => Promise<void>
   close: () => void
-  // Optional properties only used in particular cases
+}
+
+// Optional values added to modal state for specific cases
+interface AdditionalProps {
   currentIsCommitted?: boolean
-  modifiedEntities?: ModifiedEntities
   unconnectedDataViews?: UnconnectedDataViews[]
+  modifiedEntities?: ModifiedEntities
+  uid?: string
 }
 
 export interface WorkflowState {
@@ -75,6 +81,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
       currentIsCommitted?: boolean
       unconnectedDataViews?: UnconnectedDataViews[]
       modifiedEntities?: ModifiedEntities
+      uid?: string
     } = {}
   ) => {
     setModalState({
@@ -112,7 +119,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
   }
 
   // Workflows
-  const commitTemplate = async (template: Template, refetch: () => void) => {
+  const commitTemplate = async (template: Template | TemplateState, refetch: () => void) => {
     console.log('Running commit workflow')
     setWorkflow([checkStep, commitStep] as WorkflowStep[], {
       ...template,
@@ -299,7 +306,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
           setWorkflowState({ ...state, installInput: { uid, existingToKeep: preserveExisting } })
           nextStep()
         },
-        { modifiedEntities }
+        { modifiedEntities, uid }
       )
       return
     }
@@ -331,6 +338,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     duplicateTemplate,
     exportTemplate,
     importTemplate,
+    getFullEntityDiff,
     modalState,
   }
 }

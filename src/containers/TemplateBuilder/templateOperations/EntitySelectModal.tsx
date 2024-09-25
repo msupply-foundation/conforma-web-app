@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   ModalHeader,
   ModalDescription,
@@ -6,9 +7,6 @@ import {
   Button,
   Header,
   Modal,
-  Grid,
-  GridRow,
-  GridColumn,
   Checkbox,
   Table,
   TableBody,
@@ -18,7 +16,7 @@ import {
   SemanticCOLORS,
 } from 'semantic-ui-react'
 import { ModalState } from './useTemplateOperations'
-import { useState } from 'react'
+import { useOperationState } from '../shared/OperationContext'
 import { ModifiedEntitiesToKeep, ModifiedEntitiesToKeepAPIInput } from './apiOperations'
 import { JsonData, JsonEditor } from 'json-edit-react'
 
@@ -28,7 +26,7 @@ interface Entity {
   data: Record<string, unknown>
 }
 
-interface ComparisonObject {
+export interface ComparisonObject {
   incoming: Entity
   current: Entity
 }
@@ -45,6 +43,7 @@ export interface ModifiedEntities {
 export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
   isOpen,
   modifiedEntities,
+  uid = '',
   onConfirm,
   close,
 }) => {
@@ -92,6 +91,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 currentlySelected={new Set(preserveCurrentSelections.category)}
                 updateState={updateState}
                 color="blue"
+                uid={uid}
               />
             )}
             {Object.keys(modifiedEntities?.dataViews ?? {}).length > 0 && (
@@ -102,6 +102,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 currentlySelected={preserveCurrentSelections.dataViews}
                 updateState={updateState}
                 color="orange"
+                uid={uid}
               />
             )}
             {Object.keys(modifiedEntities?.dataViewColumns ?? {}).length > 0 && (
@@ -112,6 +113,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 currentlySelected={preserveCurrentSelections.dataViewColumns}
                 updateState={updateState}
                 color="pink"
+                uid={uid}
               />
             )}
             {Object.keys(modifiedEntities?.filters ?? {}).length > 0 && (
@@ -122,6 +124,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 currentlySelected={preserveCurrentSelections.filters}
                 updateState={updateState}
                 color="green"
+                uid={uid}
               />
             )}
             {Object.keys(modifiedEntities?.permissions ?? {}).length > 0 && (
@@ -132,6 +135,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 currentlySelected={preserveCurrentSelections.permissions}
                 updateState={updateState}
                 color="teal"
+                uid={uid}
               />
             )}
             {Object.keys(modifiedEntities?.dataTables ?? {}).length > 0 && (
@@ -142,6 +146,7 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 currentlySelected={preserveCurrentSelections.dataTables}
                 updateState={updateState}
                 color="yellow"
+                uid={uid}
               />
             )}
             {/* WHAT ABOUT FILES??? */}
@@ -171,6 +176,7 @@ interface GroupProps {
     operation?: 'add' | 'remove'
   ) => void
   color: SemanticCOLORS
+  uid: string
 }
 const EntityGroup: React.FC<GroupProps> = ({
   title,
@@ -179,6 +185,7 @@ const EntityGroup: React.FC<GroupProps> = ({
   currentlySelected,
   updateState,
   color,
+  uid,
 }) => {
   return (
     <>
@@ -195,6 +202,8 @@ const EntityGroup: React.FC<GroupProps> = ({
           currentlySelected={currentlySelected.has(key) ? 'current' : 'incoming'}
           updateState={(item, operation) => updateState(group, item, operation)}
           labelColor={color}
+          uid={uid}
+          group={group}
         />
       ))}
     </>
@@ -204,22 +213,51 @@ const EntityGroup: React.FC<GroupProps> = ({
 type SelectionOption = 'incoming' | 'current'
 
 interface EntityProps {
+  group: keyof ModifiedEntities
   title: string
   entity: ComparisonObject
   currentlySelected: SelectionOption
   updateState: (value: string, operation?: 'add' | 'remove') => void
   labelColor: SemanticCOLORS
+  uid: string
 }
 const EntitySelect: React.FC<EntityProps> = ({
+  group,
   title,
   entity,
   currentlySelected,
   updateState,
   labelColor,
+  uid,
 }) => {
+  const { getFullEntityDiff } = useOperationState()
   const { incoming, current } = entity
+  const [showFull, setShowFull] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [fullData, setFullData] = useState<{
+    incoming: Record<string, unknown>
+    current: Record<string, unknown>
+  }>()
   const currentIsNewer =
     new Date(entity.current.lastModified) > new Date(entity.incoming.lastModified)
+
+  const handleClick = async () => {
+    if (showFull) {
+      setShowFull(false)
+      return
+    }
+    if (fullData) {
+      setShowFull(true)
+      return
+    }
+
+    setLoading(true)
+    const result = await getFullEntityDiff(uid, group, title)
+    setFullData(result)
+    setShowFull(true)
+    setLoading(false)
+  }
+
   return (
     <>
       <TableRow className="import-row import-entity-row">
@@ -228,7 +266,11 @@ const EntitySelect: React.FC<EntityProps> = ({
           <p>
             Last modified: <strong>{new Date(incoming.lastModified).toLocaleString()}</strong>
           </p>
-          <JsonViewer data={incoming.data} title="incoming" newest={!currentIsNewer} />
+          <JsonViewer
+            data={showFull ? fullData?.incoming ?? incoming.data : incoming.data}
+            title="incoming"
+            newest={!currentIsNewer}
+          />
         </TableCell>
         <TableCell
           className="import-cell import-current"
@@ -238,11 +280,23 @@ const EntitySelect: React.FC<EntityProps> = ({
           <Label color="yellow" style={{ visibility: 'hidden' }}>
             {title}
           </Label>
-          <Button floated="right" primary inverted size="mini" content="Show full data" />
+          <Button
+            floated="right"
+            primary
+            inverted
+            loading={loading}
+            size="mini"
+            content={showFull && fullData ? 'Show differences' : 'Show full data'}
+            onClick={handleClick}
+          />
           <p>
             Last modified: <strong>{new Date(current.lastModified).toLocaleString()}</strong>
           </p>
-          <JsonViewer data={current.data} title="current" newest={currentIsNewer} />
+          <JsonViewer
+            data={showFull ? fullData?.current ?? current.data : current.data}
+            title="current"
+            newest={currentIsNewer}
+          />
         </TableCell>
       </TableRow>
       <TableRow className="import-row import-select-row">

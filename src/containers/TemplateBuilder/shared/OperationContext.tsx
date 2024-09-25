@@ -31,6 +31,7 @@ import {
 import { TemplateState } from '../template/TemplateWrapper'
 import { ModalState, useTemplateOperations } from '../templateOperations/useTemplateOperations'
 import { Template } from '../useGetTemplates'
+import { ModifiedEntities } from '../templateOperations/EntitySelectModal'
 
 type Error = { title: string; message: string }
 export type ErrorAndLoadingState = {
@@ -62,9 +63,14 @@ export type UpdateTemplateStage = (id: number, patch: TemplateStagePatch) => Pro
 type OperationContextState = {
   fetch: (something: any) => any
   commitTemplate: (template: Template | TemplateState, refetch: () => void) => Promise<void>
-  exportTemplate: (template: Template | TemplateState, refetch: () => void) => Promise<void>
+  exportTemplate: (template: Template, refetch: () => void) => Promise<void>
   duplicateTemplate: (template: Template, refetch: () => void) => Promise<void>
   importTemplate: (e: React.ChangeEvent<HTMLInputElement>, refetch: () => void) => Promise<void>
+  getFullEntityDiff: (
+    uid: string,
+    type: keyof ModifiedEntities,
+    name: string
+  ) => Promise<{ incoming: Record<string, unknown>; current: Record<string, unknown> }>
   updateTemplate: UpdateTemplate
   deleteTemplate: DeleteTemplate
   updateTemplateFilterJoin: UpdateTemplateFilterJoin
@@ -85,6 +91,7 @@ const defaultOperationContext: OperationContextState = {
   commitTemplate: contextNotPresentError,
   exportTemplate: contextNotPresentError,
   duplicateTemplate: contextNotPresentError,
+  getFullEntityDiff: contextNotPresentError,
   importTemplate: contextNotPresentError,
   updateTemplate: contextNotPresentError,
   deleteTemplate: contextNotPresentError,
@@ -113,14 +120,21 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
   const [innerState, setInnerState] = useState<ErrorAndLoadingState>({ isLoading: false })
-  const { commitTemplate, duplicateTemplate, exportTemplate, importTemplate, modalState } =
-    useTemplateOperations(setInnerState)
+  const {
+    commitTemplate,
+    duplicateTemplate,
+    exportTemplate,
+    importTemplate,
+    modalState,
+    getFullEntityDiff,
+  } = useTemplateOperations(setInnerState)
   const { create } = useCreateApplication()
   const { getSerialAsync } = useGetApplicationSerial()
   const [contextState] = useState<Omit<OperationContextState, 'operationModalState'>>({
     fetch: () => {},
     commitTemplate,
     exportTemplate,
+    getFullEntityDiff,
     duplicateTemplate,
     importTemplate,
     updateTemplate: updateTemplate(setInnerState, updateTemplateMutation),
