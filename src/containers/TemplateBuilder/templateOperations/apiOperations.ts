@@ -56,18 +56,18 @@ export const check = async (id: number) => {
   }
 }
 
-export const duplicate = async (id: number, code?: string) => {
+export const duplicate = async (id: number, newCode?: string) => {
   try {
-    const newId = await postRequest({
+    const { newTemplateId, code, versionId, versionNo, status } = await postRequest({
       url: getServerUrl('templateImportExport', {
         action: 'duplicate',
         id,
-        type: code ? 'new' : 'version',
+        type: newCode ? 'new' : 'version',
       }),
-      jsonBody: { code },
+      jsonBody: { code: newCode },
       headers: { 'Content-Type': 'application/json' },
     })
-    return { newId }
+    return { newTemplateId, code, versionId, versionNo, status }
   } catch (err) {
     return { error: (err as Error).message }
   }
@@ -118,7 +118,7 @@ export const upload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
 export const getFullEntityDiff = async (
   uid: string,
-  type: keyof ModifiedEntities,
+  group: keyof ModifiedEntities,
   name: string
 ) => {
   console.log(
@@ -127,7 +127,7 @@ export const getFullEntityDiff = async (
       action: 'import',
       type: 'getEntityDetail',
       uid,
-      group: type,
+      group,
       name,
     })
   )
@@ -137,7 +137,7 @@ export const getFullEntityDiff = async (
         action: 'import',
         type: 'getEntityDetail',
         uid,
-        group: type,
+        group,
         name,
       })
     )

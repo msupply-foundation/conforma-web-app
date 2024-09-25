@@ -221,7 +221,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
   }
 
   const duplicateStep = async (state: WorkflowState) => {
-    const { id, code, committed, refetch } = state
+    const { id, committed, refetch } = state
     console.log('Duplicating, committed?', committed)
     showModal(
       'duplicate',
@@ -237,7 +237,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
           }
         }
 
-        const { error } = await duplicate(id, newCode)
+        const { error, code, versionNo, status } = await duplicate(id, newCode)
         if (error) {
           showError('Problem duplicating template', error)
           return
@@ -245,7 +245,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
 
         showSuccess({
           title: newCode ? 'New template created' : 'New template version created',
-          message: `${newCode ?? code}`,
+          message: `${newCode ?? code} - v${versionNo}\nStatus: ${status}`,
         })
 
         refetch()
