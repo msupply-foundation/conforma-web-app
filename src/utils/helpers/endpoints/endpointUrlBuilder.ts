@@ -210,12 +210,14 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
       const type = 'type' in templateOptions && templateOptions.type
 
       switch (action) {
+        case 'check':
+          return `${serverREST}${endpointPath}/check/${id}`
         case 'commit':
           return `${serverREST}${endpointPath}/commit/${id}`
         case 'duplicate':
           return `${serverREST}${endpointPath}/duplicate/${type}/${id}`
         case 'export':
-          return `${serverREST}${endpointPath}/export/${type}/${id}`
+          return `${serverREST}${endpointPath}/export/${id}`
         case 'import':
           if (type === 'install' && 'uid' in templateOptions)
             return `${serverREST}${endpointPath}/import/${type}/${templateOptions.uid}`

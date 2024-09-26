@@ -48,7 +48,7 @@ interface CheckResult {
 export const check = async (id: number) => {
   try {
     const result: CheckResult = await getRequest(
-      getServerUrl('templateImportExport', { action: 'export', id, type: 'check' })
+      getServerUrl('templateImportExport', { action: 'check', id })
     )
     return result
   } catch (err) {

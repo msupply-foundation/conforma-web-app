@@ -38,6 +38,7 @@ export interface ModifiedEntities {
   dataViewColumns: Record<string, ComparisonObject>
   category: Record<string, ComparisonObject>
   dataTables: Record<string, ComparisonObject>
+  files: Record<string, ComparisonObject>
 }
 
 export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
@@ -83,11 +84,11 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
         </ModalDescription>
         <Table stackable className="import-table">
           <TableBody>
-            {modifiedEntities?.category && (
+            {Object.keys(modifiedEntities?.category ?? {}).length > 0 && (
               <EntityGroup
                 title="Category"
                 group="category"
-                modified={modifiedEntities.category}
+                modified={modifiedEntities?.category ?? {}}
                 currentlySelected={new Set(preserveCurrentSelections.category)}
                 updateState={updateState}
                 color="blue"
@@ -146,6 +147,17 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 currentlySelected={preserveCurrentSelections.dataTables}
                 updateState={updateState}
                 color="yellow"
+                uid={uid}
+              />
+            )}
+            {Object.keys(modifiedEntities?.files ?? {}).length > 0 && (
+              <EntityGroup
+                title="Files"
+                group="files"
+                modified={modifiedEntities?.files ?? {}}
+                currentlySelected={preserveCurrentSelections.files}
+                updateState={updateState}
+                color="purple"
                 uid={uid}
               />
             )}

@@ -124,9 +124,10 @@ export type LookupTableOptions =
 
 export type TemplateKey = 'templateImportExport'
 export type TemplateOptions =
+  | { action: 'check'; id: number }
   | { action: 'commit'; id: number }
   | { action: 'duplicate'; id: number; type: 'new' | 'version' }
-  | { action: 'export'; id: number; type: 'check' | 'dump' }
+  | { action: 'export'; id: number }
   | { action: 'import'; type: 'upload' }
   | {
       action: 'import'
