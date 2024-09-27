@@ -86,7 +86,6 @@ export const exportAndDownload = async (
       getServerUrl('templateImportExport', {
         action: 'export',
         id,
-        type: 'dump',
       }),
       filename,
       {
@@ -121,16 +120,6 @@ export const getFullEntityDiff = async (
   group: keyof ModifiedEntities,
   name: string
 ) => {
-  console.log(
-    'URL',
-    getServerUrl('templateImportExport', {
-      action: 'import',
-      type: 'getEntityDetail',
-      uid,
-      group,
-      name,
-    })
-  )
   try {
     const result = await getRequest(
       getServerUrl('templateImportExport', {

@@ -1,3 +1,4 @@
+import { ModifiedEntities } from '../../../containers/TemplateBuilder/templateOperations/EntitySelectModal'
 import { DataViewTableAPIQueries } from '../../types'
 
 export type BasicEndpoint =
@@ -133,7 +134,7 @@ export type TemplateOptions =
       action: 'import'
       type: 'getEntityDetail'
       uid: string
-      group: 'filters' | 'permissions' | 'dataViews' | 'dataViewColumns' | 'category' | 'dataTables'
+      group: keyof ModifiedEntities
       name: string
     }
   | { action: 'import'; type: 'install'; uid: string }
