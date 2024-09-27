@@ -59,6 +59,7 @@ export const CommitConfirm: React.FC<
   Omit<ModalState, 'type'> & { type: 'commit' | 'exportCommit' }
 > = ({ type, isOpen, onConfirm, close }) => {
   const [comment, setComment] = useState('')
+  const [commitError, setCommitError] = useState(false)
 
   const headerText = type === 'commit' ? 'Commit version?' : 'Commit and export template?'
   const mainText =
@@ -79,17 +80,20 @@ export const CommitConfirm: React.FC<
             <label>Please provide a commit message:</label>
             <Input
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e) => {
+                setCommitError(false)
+                setComment(e.target.value)
+              }}
               style={{ width: '60%' }}
+              error={commitError}
             />
           </div>
         </div>
       }
       onCancel={close}
       onConfirm={() => {
-        console.log('CONFIRMS???')
         if (comment !== '') onConfirm(comment)
-        else console.log('No comment')
+        else setCommitError(true)
       }}
     />
   )
@@ -105,6 +109,7 @@ export const DuplicateModal: React.FC<Omit<ModalState, 'type'>> = ({
   const [newCode, setNewCode] = useState('')
   const [codeError, setCodeError] = useState(false)
   const [commitMessage, setCommitMessage] = useState('')
+  const [commitError, setCommitError] = useState(false)
 
   const requiresCommit = !currentIsCommitted && selectedType === 'version'
   return (
@@ -154,8 +159,12 @@ export const DuplicateModal: React.FC<Omit<ModalState, 'type'>> = ({
                 <label>Commit message:</label>
                 <Input
                   value={commitMessage}
-                  onChange={(e) => setCommitMessage(e.target.value)}
+                  onChange={(e) => {
+                    setCommitError(false)
+                    setCommitMessage(e.target.value)
+                  }}
                   style={{ width: '80%' }}
+                  error={commitError}
                 />
               </div>
             </div>
@@ -168,7 +177,10 @@ export const DuplicateModal: React.FC<Omit<ModalState, 'type'>> = ({
           setCodeError(true)
           return
         }
-        if (requiresCommit && commitMessage === '') return
+        if (requiresCommit && commitMessage === '') {
+          setCommitError(true)
+          return
+        }
 
         onConfirm({
           newCode: selectedType === 'template' ? newCode : undefined,
