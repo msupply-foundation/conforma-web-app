@@ -11,7 +11,7 @@ export const DataViewSelector: React.FC<{}> = () => {
   const [menuSelection, setMenuSelection] = useState<number>()
   const [menuFilter, setMenuFilter] = useState<DataViewFilter>('SUGGESTED')
   const [selectedDataViewJoinId, setSelectedDataViewJoinId] = useState<number>()
-  const { current, menuItems, unconnectedSuggestions } = useDataViews(menuFilter)
+  const { current, menuItems } = useDataViews(menuFilter)
 
   const menuOptions = menuItems.map(({ id, code, identifier, title }) => ({
     key: identifier,
@@ -39,10 +39,10 @@ export const DataViewSelector: React.FC<{}> = () => {
     }
   }
 
-  const addAllSuggested = () => {
+  const addAllInMenu = () => {
     updateTemplate(template, {
       templateDataViewJoinsUsingId: {
-        create: unconnectedSuggestions.map((id) => ({ dataViewId: id })),
+        create: menuItems.map(({ id }) => ({ dataViewId: id })),
       },
     })
   }
@@ -94,7 +94,9 @@ export const DataViewSelector: React.FC<{}> = () => {
             value={menuFilter}
             title="Filter menu"
             options={[
-              { key: 'suggested', text: 'Suggested', value: 'SUGGESTED' },
+              { key: 'elements', text: 'In Form Elements', value: 'IN_ELEMENTS' },
+              { key: 'outcomes', text: 'In Outcome Tables', value: 'IN_OUTCOMES' },
+              { key: 'suggested', text: 'All in use', value: 'SUGGESTED' },
               { key: 'all', text: 'All', value: 'ALL' },
               { key: 'applicant', text: 'Accessible to Applicant', value: 'APPLICANT_ACCESSIBLE' },
             ]}
@@ -105,9 +107,10 @@ export const DataViewSelector: React.FC<{}> = () => {
             minLabelWidth={0}
             additionalStyles={{ marginBottom: 0 }}
           />
-          {unconnectedSuggestions.length > 0 && (
-            <Button primary size="mini" content="Add all suggested" onClick={addAllSuggested} />
-          )}
+          {menuItems.length > 0 &&
+            ['SUGGESTED', 'IN_ELEMENTS', 'IN_OUTCOMES'].includes(menuFilter) && (
+              <Button primary size="mini" content="Add all in menu" onClick={addAllInMenu} />
+            )}
         </div>
       )}
       <div className="filter-joins">
@@ -118,11 +121,13 @@ export const DataViewSelector: React.FC<{}> = () => {
               className={`${template.canEdit ? 'clickable' : ''}${
                 dv.dataViewJoinId === selectedDataViewJoinId ? ' builder-selected' : ''
               }${
-                !dv.applicantAccessible
+                !dv.applicantAccessible && !dv.inOutputTables
                   ? ' dv-inaccessible'
-                  : dv.suggested
-                  ? ' dv-suggested'
-                  : ' dv-not-suggested'
+                  : dv.inTemplateElements
+                  ? ' dv-elements'
+                  : dv.inOutputTables
+                  ? ' dv-outcomes'
+                  : ''
               }`}
               style={{ fontSize: '100%', position: 'relative' }}
               onClick={() => {

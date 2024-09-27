@@ -7,10 +7,16 @@ import { useTemplateState } from '../../TemplateWrapper'
 interface DataViewDetails {
   data: DataView
   applicantAccessible: boolean
-  suggested: boolean
+  inTemplateElements: boolean
+  inOutputTables: boolean
 }
 
-export type DataViewFilter = 'SUGGESTED' | 'ALL' | 'APPLICANT_ACCESSIBLE'
+export type DataViewFilter =
+  | 'IN_ELEMENTS'
+  | 'IN_OUTCOMES'
+  | 'SUGGESTED'
+  | 'ALL'
+  | 'APPLICANT_ACCESSIBLE'
 
 export const useDataViews = (filter: DataViewFilter) => {
   const { template, dataViewJoins } = useTemplateState()
@@ -23,12 +29,14 @@ export const useDataViews = (filter: DataViewFilter) => {
     return {
       ...node?.dataView,
       dataViewJoinId: node.id,
-      suggested: details?.suggested ?? false,
+      inTemplateElements: details?.inTemplateElements ?? false,
+      inOutputTables: details?.inOutputTables ?? false,
       applicantAccessible: details?.applicantAccessible ?? false,
     }
   }) ?? []) as (DataView & {
     dataViewJoinId: number
-    suggested: boolean
+    inTemplateElements: boolean
+    inOutputTables: boolean
     applicantAccessible: boolean
   })[]
 
@@ -53,14 +61,21 @@ export const useDataViews = (filter: DataViewFilter) => {
     setMenuItems(getDataViewMenuItems(dataViewDetails, currentlyLinkedDataViewIDs, filter))
   }, [filter, dataViewDetails])
 
-  const unconnectedSuggestions = dataViewDetails
-    .filter((dv) => dv.suggested && !currentlyLinkedDataViewIDs.includes(dv.data.identifier))
-    .map((dv) => dv.data.id)
+  // const unconnectedElementSuggestions = dataViewDetails
+  //   .filter(
+  //     (dv) => dv.inTemplateElements && !currentlyLinkedDataViewIDs.includes(dv.data.identifier)
+  //   )
+  //   .map((dv) => dv.data.id)
+
+  // const unconnectedOutcomeSuggestions = dataViewDetails
+  //   .filter((dv) => dv.inOutputTables && !currentlyLinkedDataViewIDs.includes(dv.data.identifier))
+  //   .map((dv) => dv.data.id)
 
   return {
     current: dataViews,
     menuItems,
-    unconnectedSuggestions,
+    // unconnectedElementSuggestions,
+    // unconnectedOutcomeSuggestions,
     error,
   }
 }
@@ -75,8 +90,14 @@ const getDataViewMenuItems = (
     case 'ALL':
       menuDataViews = dataViewDetails
       break
+    case 'IN_ELEMENTS':
+      menuDataViews = dataViewDetails.filter((dv) => dv.inTemplateElements)
+      break
+    case 'IN_OUTCOMES':
+      menuDataViews = dataViewDetails.filter((dv) => dv.inOutputTables)
+      break
     case 'SUGGESTED':
-      menuDataViews = dataViewDetails.filter((dv) => dv.suggested)
+      menuDataViews = dataViewDetails.filter((dv) => dv.inTemplateElements || dv.inOutputTables)
       break
     case 'APPLICANT_ACCESSIBLE':
       menuDataViews = dataViewDetails.filter((dv) => dv.applicantAccessible)

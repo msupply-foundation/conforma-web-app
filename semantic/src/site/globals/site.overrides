@@ -2397,12 +2397,12 @@ a:hover {
   top: 0;
 }
 
-.dv-suggested {
+.dv-elements {
   border-left: 3px solid @green !important;
 }
 
-.dv-not-suggested {
-  border-left: 3px solid @yellow !important;
+.dv-outcomes {
+  border-left: 3px solid @blue !important;
 }
 
 .dv-inaccessible {
