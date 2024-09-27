@@ -373,6 +373,9 @@ export default {
     'Are you sure?  This will overwrite core settings and can break the system if misconfigured',
   PREFERENCES_SAVED: 'Preferences saved',
   PREFERENCES_SAVE_PROBLEM: 'Problem saving preferences!',
+  PREFERENCES_OVERRIDE_INFO:
+    'Please note, the following overrides are in place due to environment variables specified on the server, so changing them above will have no effect:',
+  PREFERENCES_MAINTENANCE_MODE: 'Maintenance Mode',
   PREFERENCES_MAINTENANCE_WARNING: 'Caution!',
   PREFERENCES_MAINTENANCE_WARNING_TEXT:
     'Enabling maintenance mode will disconnect all active users and re-direct them to a temporary page',

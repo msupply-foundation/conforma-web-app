@@ -30,7 +30,7 @@ const Login: React.FC = () => {
   const { onLogin } = useUserState()
   const client = useApolloClient()
   const { t, languageOptions } = useLanguageProvider()
-  const { preferences } = usePrefs()
+  const { preferences, latestSnapshot } = usePrefs()
 
   usePageTitle(t('LABEL_LOG_IN'))
 
@@ -43,6 +43,9 @@ const Login: React.FC = () => {
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
   useEffect(() => {
+    // So we can remember which snapshot is loaded while logged out (on Demo
+    // servers)
+    console.log('Latest snapshot', latestSnapshot)
     if (isLoggedIn()) push('/')
     client.clearStore()
   }, [])

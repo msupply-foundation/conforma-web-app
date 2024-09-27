@@ -8,7 +8,7 @@ import useUndo from 'use-undo'
 import { truncateString } from '../../../utils/helpers/utilityFunctions'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
-  onSave: (data: JsonData) => void
+  onSave?: (data: JsonData) => void
   isSaving?: boolean
   data: JsonData
   showSaveButton?: boolean
@@ -16,8 +16,8 @@ interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   searchPlaceholder?: string
 }
 
-const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
-  onSave,
+export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
+  onSave = () => {},
   isSaving = false,
   data,
   showSaveButton = true,
@@ -97,20 +97,20 @@ const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         searchText={searchText}
         {...jsonViewProps}
       />
-      <div className="flex-row-space-between">
-        <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
-          <a onClick={undo}>
-            <Icon name="arrow alternate circle left" />
-            <strong>{t('BUTTON_UNDO')}</strong>
-          </a>
-        </p>
-        <p className={`clickable nav-button ${!canRedo ? 'invisible' : ''}`}>
-          <a onClick={redo}>
-            <strong>{t('BUTTON_REDO')}</strong>
-            <Icon name="arrow alternate circle right" />
-          </a>
-        </p>
-        {showSaveButton && (
+      {showSaveButton && (
+        <div className="flex-row-space-between">
+          <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
+            <a onClick={undo}>
+              <Icon name="arrow alternate circle left" />
+              <strong>{t('BUTTON_UNDO')}</strong>
+            </a>
+          </p>
+          <p className={`clickable nav-button ${!canRedo ? 'invisible' : ''}`}>
+            <a onClick={redo}>
+              <strong>{t('BUTTON_REDO')}</strong>
+              <Icon name="arrow alternate circle right" />
+            </a>
+          </p>
           <Button
             primary
             disabled={!isDirty}
@@ -118,8 +118,8 @@ const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
             content={t('BUTTON_SAVE')}
             onClick={handleSave}
           />
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }
