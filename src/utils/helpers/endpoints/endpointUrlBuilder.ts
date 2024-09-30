@@ -229,8 +229,10 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
           )
             return `${serverREST}${endpointPath}/import/get-full-entity-diff/${templateOptions.uid}?type=${templateOptions.group}&value=${templateOptions.name}`
           return `${serverREST}${endpointPath}/import/${type}`
-        case 'getDataViews':
+        case 'getDataViewDetails':
           return `${serverREST}${endpointPath}/get-data-view-details/${id}`
+        case 'getLinkedFiles':
+          return `${serverREST}${endpointPath}/get-linked-files/${id}`
       }
       break
     }

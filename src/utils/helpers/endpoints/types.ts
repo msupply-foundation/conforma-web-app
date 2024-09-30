@@ -138,7 +138,8 @@ export type TemplateOptions =
       name: string
     }
   | { action: 'import'; type: 'install'; uid: string }
-  | { action: 'getDataViews'; id: number }
+  | { action: 'getDataViewDetails'; id: number }
+  | { action: 'getLinkedFiles'; id: number }
 
 export type ArchiveKey = 'archiveFiles'
 export type ArchiveOptions = { days: number }

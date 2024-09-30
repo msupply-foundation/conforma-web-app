@@ -23,6 +23,7 @@ import { getVersionString, isTemplateUnlocked } from '../helpers'
 import NumberIO from '../../shared/NumberIO'
 import { TemplateOperationsModal } from '../../templateOperations/TemplateOperationsModal'
 import { DataViewSelector } from './DataViews/DataViews'
+import { FileSelector } from './Files/Files'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -174,6 +175,7 @@ const General: React.FC = () => {
       <Filters />
 
       <DataViewSelector />
+      <FileSelector />
 
       {/* MESSAGES */}
       <div className="spacer-20" />

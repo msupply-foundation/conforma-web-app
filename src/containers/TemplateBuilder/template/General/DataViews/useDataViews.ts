@@ -45,7 +45,7 @@ export const useDataViews = (filter: DataViewFilter) => {
   useEffect(() => {
     getRequest(
       getServerUrl('templateImportExport', {
-        action: 'getDataViews',
+        action: 'getDataViewDetails',
         id: template.id,
       })
     )
@@ -60,16 +60,6 @@ export const useDataViews = (filter: DataViewFilter) => {
   useEffect(() => {
     setMenuItems(getDataViewMenuItems(dataViewDetails, currentlyLinkedDataViewIDs, filter))
   }, [filter, dataViewDetails])
-
-  // const unconnectedElementSuggestions = dataViewDetails
-  //   .filter(
-  //     (dv) => dv.inTemplateElements && !currentlyLinkedDataViewIDs.includes(dv.data.identifier)
-  //   )
-  //   .map((dv) => dv.data.id)
-
-  // const unconnectedOutcomeSuggestions = dataViewDetails
-  //   .filter((dv) => dv.inOutputTables && !currentlyLinkedDataViewIDs.includes(dv.data.identifier))
-  //   .map((dv) => dv.data.id)
 
   return {
     current: dataViews,
