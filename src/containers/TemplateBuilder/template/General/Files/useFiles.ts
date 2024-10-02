@@ -13,6 +13,7 @@ interface LinkedFile {
   linkedInDatabase: boolean
   usedInAction: boolean
   missingFromDatabase?: boolean
+  joinId?: number
 }
 
 export const useFiles = () => {
@@ -23,6 +24,10 @@ export const useFiles = () => {
   const [error, setError] = useState<string>('')
 
   useEffect(() => {
+    getFiles()
+  }, [])
+
+  const getFiles = async () => {
     getRequest(
       getServerUrl('templateImportExport', {
         action: 'getLinkedFiles',
@@ -41,10 +46,11 @@ export const useFiles = () => {
       .catch((err) => {
         setError('Error: ' + err.message)
       })
-  }, [])
+  }
 
   return {
     fileDetails,
     error,
+    refetch: getFiles,
   }
 }
