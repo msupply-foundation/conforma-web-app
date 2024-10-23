@@ -179,9 +179,11 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
                 headers,
               })
             : await fetchAPIrequest({ url: urlWithQuery, APIfetch, headers })
-        } catch {
-          throw new Error('Problem with API call')
+        } catch (err) {
+          console.log('Fetch error', (err as Error).message)
+          throw err
         }
+        console.log('Data after', data)
         try {
           result = extractAndSimplify(data, returnedProperty)
         } catch {
@@ -478,7 +480,17 @@ const fetchAPIrequest = async ({
     },
     body: JSON.stringify(body),
   })
-  return await result.json()
+  if (!result.ok) {
+    const message = await result.text()
+    throw new Error(message)
+  }
+  const contentType = result.headers.get('content-type')
+  if (contentType.startsWith('application/json')) {
+    return await result.json()
+  } else if (contentType.startsWith('text/plain')) {
+    return await result.text()
+  }
+  throw new Error('Unknown result type')
 }
 
 export default evaluateExpression
