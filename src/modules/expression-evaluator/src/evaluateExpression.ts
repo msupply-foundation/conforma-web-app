@@ -183,7 +183,6 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
           console.log('Fetch error', (err as Error).message)
           throw err
         }
-        console.log('Data after', data)
         try {
           result = extractAndSimplify(data, returnedProperty)
         } catch {
