@@ -77,7 +77,10 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   useDefault({
     defaultValue,
     currentResponse,
-    parameters,
+    // Set persistUserInput to `true` by default, to prevent the user's
+    // selection being wiped out by an options list that loads dynamically from
+    // an external source.
+    parameters: { persistUserInput: true, ...parameters },
     additionalDependencies: [options],
     onChange: (defaultOption: any) => {
       const optionIndex = getDefaultIndex(defaultOption, options)

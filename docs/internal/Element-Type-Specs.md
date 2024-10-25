@@ -264,7 +264,7 @@ _Multi-choice question, with one allowed option, displayed as Drop-down list (Co
 - **description**: `string` -- as above [Optional]
 - **options**: `array[string | object]` -- array of options for the user to select from. If an array of **strings** is provided, these strings will be displayed to the user. However, if an array of **objects** is provided, you will also need to specify an `optionsDisplayProperty` (see below)
 - **default**: `string`/`number` -- can be either a string representing the *value*, or a number representing the index in the `options` array. [Optional]
-- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params). This one differs *slightly* however, in that `persistUserInput` is `true` by default, to prevent the user's selection being wiped out by an options list that loads dynamically from an external source.
 - **search**: `boolean` (default: `false`) -- if `true`, the list of options can be searched and filtered by user
 - **optionsDisplayProperty**: If `options` (above) consists of an array of objects, this parameter specifies the field of each object to be displayed in the options list. For example, if `options` was a list of organisation objects (i.e. `{orgId, name, licenceNumber}`), you'd probably specify `name` as the `optionsDisplayProperty`. Note that even though one field is displayed to the user in the Dropdown list, the _entire_ selected object is saved as the selection. And if `optionsDisplayProperty` refers to a field that doesn't exist on the supplied object, the plugin will fail and show in error in the application.
 - **optionsDisplayExpression**: Similar to `optionsDisplayProperty`, but you can build a display string out of multiple object properties, using the same substitution/templating mechanism as the [listBuilder](#list-builder-ingredients-list) `displayFormat` property.
@@ -314,7 +314,7 @@ _Multi-choice question, with one allowed selection, displayed as labelled radio 
 - **description**: `string` -- as above [Optional]
 - **options**: `array[string | object]` -- as above (in [Drop-down](#dropdown))
 - **default**: `string`/`number` -- the value initially selected before user input. If `number`, refers to the index of the options array. If not provided, no options will be pre-selected.
-- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params)
+- **persistUserInput** / **ignoreNullDefault**: See [above](#input-params).
 - **optionsDisplayProperty**: -- as above (in Drop-down)
 - **layout**: `string` -- if "inline", displays radio buttons horizontally, rather than stacked vertically (default)
 - **hasOther**: `boolean` (default `false`) -- if `true`, displays an additional "Other" option with a free text field for inputting additional user-defined option.
