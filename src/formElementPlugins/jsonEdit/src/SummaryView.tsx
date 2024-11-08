@@ -1,8 +1,9 @@
 import React from 'react'
-import { JsonEditor } from '../../../components/Admin/JsonEditor/JsonEditor'
 import { SummaryViewProps } from '../../types'
 import { useViewport } from '../../../contexts/ViewportState'
 import { Parameters } from './ApplicationView'
+
+const JsonEditor = React.lazy(() => import('../../../components/Admin/JsonEditor/JsonEditor'))
 
 const SummaryView: React.FC<SummaryViewProps> = ({ parameters, response, Markdown }) => {
   const { viewport } = useViewport()

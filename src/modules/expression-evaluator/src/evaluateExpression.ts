@@ -88,7 +88,7 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
 
         // Concatenate arrays/strings
         if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child))) {
-          result = childrenResolved.reduce((acc, child) => acc.concat(child))
+          result = childrenResolved.reduce((acc, child) => acc.concat(child as string))
           break
         }
 

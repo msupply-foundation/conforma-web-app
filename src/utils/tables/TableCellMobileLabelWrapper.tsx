@@ -14,6 +14,7 @@ import { useViewport } from '../../contexts/ViewportState'
  */
 
 interface MobileLabelWrapperProps {
+  children: React.ReactNode
   label: string
   hideLabel?: boolean
   minLabelWidth?: number | string

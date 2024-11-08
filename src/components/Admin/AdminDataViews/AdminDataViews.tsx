@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import {
   Header,
@@ -19,12 +19,14 @@ import {
   GetDataTablesQuery,
   useGetDataTablesQuery,
 } from '../../../utils/generated/graphql'
-import { JsonEditor } from '../JsonEditor/JsonEditor'
-import { camelCase, pickBy, startCase } from 'lodash'
+import { camelCase, pickBy, startCase } from 'lodash-es'
 import { nanoid } from 'nanoid'
 import { useAdminDataViewConfig } from './useAdminDataViewConfig'
 import config from '../../../config'
 import { JsonData } from 'json-edit-react'
+import Loading from '../../Loading'
+
+const JsonEditor = React.lazy(() => import('../JsonEditor/JsonEditor'))
 
 export const AdminDataViews: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -323,17 +325,19 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
         </div>
       </div>
       {data && (
-        <JsonEditor
-          data={data}
-          onSave={onSave}
-          isSaving={isSaving}
-          rootName={dataName}
-          collapse={1}
-          showArrayIndices={false}
-          maxWidth={650}
-          restrictAdd={({ level }) => level === 0}
-          restrictDelete={({ level }) => level === 1}
-        />
+        <Suspense fallback={<Loading />}>
+          <JsonEditor
+            data={data}
+            onSave={onSave}
+            isSaving={isSaving}
+            rootName={dataName}
+            collapse={1}
+            showArrayIndices={false}
+            maxWidth={650}
+            restrictAdd={({ level }) => level === 0}
+            restrictDelete={({ level }) => level === 1}
+          />
+        </Suspense>
       )}
     </div>
   )

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { ErrorBoundary, pluginProvider } from '.'
+import { ErrorBoundary } from '.'
+import { PluginProvider } from './pluginProvider'
 import { Form } from 'semantic-ui-react'
 import { SummaryViewWrapperProps, PluginComponents } from './types'
 import evaluateExpression from '../modules/expression-evaluator'
@@ -27,7 +28,9 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   } = useUserState()
   const [evaluatedParameters, setEvaluatedParameters] = useState({})
 
-  const { SummaryView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+  const plugin = PluginProvider?.[pluginCode]
+
+  const { SummaryView, config }: PluginComponents = plugin
 
   const parameterLoadingValues = config?.parameterLoadingValues
   const internalParameters = config?.internalParameters || []
@@ -61,7 +64,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
     }
   }, [allResponses])
 
-  if (!pluginCode || !isVisible) return null
+  if (!pluginCode || !isVisible || !plugin) return null
 
   const DefaultSummaryView: React.FC = () => {
     const combinedParams = getCombinedParams(simpleParameters, evaluatedParameters, response)

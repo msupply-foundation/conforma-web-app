@@ -52,10 +52,7 @@ const ReviewSectionRowLastActionDate: React.FC<ReviewSectionComponentProps> = ({
   )
 }
 
-const LastDate: React.FC<{ title: string; indicator?: React.ReactNode }> = ({
-  title,
-  indicator,
-}) => {
+const LastDate: React.FC<{ title: string; indicator?: React.ReactNode }> = ({ indicator }) => {
   return <Label className="simple-label" content={indicator} />
 }
 

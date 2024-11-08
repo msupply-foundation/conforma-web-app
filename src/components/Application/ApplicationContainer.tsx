@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { Container, Header, Icon, Label } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useUserState } from '../../contexts/UserState'
-import { ApplicationDetails, TemplateDetails, User } from '../../utils/types'
+import { ApplicationDetails, TemplateDetails } from '../../utils/types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 export interface ApplicationContainerProps {
   template: TemplateDetails
   applicationInfo?: ApplicationDetails
+  children: React.ReactNode
 }
 
 const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
@@ -17,7 +18,7 @@ const ApplicationContainer: React.FC<ApplicationContainerProps> = ({
   const { t } = useLanguageProvider()
   const { push, location } = useRouter()
   const {
-    userState: { currentUser, isNonRegistered },
+    userState: { isNonRegistered },
   } = useUserState()
   // Need to store in useState, else location.state is lost on subsequent
   // re-renders

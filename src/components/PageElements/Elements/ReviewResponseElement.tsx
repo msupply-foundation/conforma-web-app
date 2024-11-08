@@ -11,6 +11,7 @@ interface ReviewResponseElementProps {
   originalReviewResponse?: ReviewResponse
   isActiveEdit?: boolean
   setIsActiveEdit?: Function
+  children?: React.ReactNode
 }
 
 const ReviewResponseElement: React.FC<ReviewResponseElementProps> = ({

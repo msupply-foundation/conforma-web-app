@@ -21,7 +21,7 @@ import NewCommentForm from './NewCommentForm'
 import useNotesMutations from '../../../utils/hooks/useNotesMutations'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { useSimpleCache } from '../../../utils/hooks/useSimpleCache'
-import { useDocumentModal } from '../../../utils/hooks/useDocumentModal'
+import { useDocumentModal } from '../../../utils/hooks/useDocumentModal/useDocumentModal'
 
 const COMMENT_DELETION_LIMIT = 5 // minutes
 

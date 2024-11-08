@@ -1,5 +1,5 @@
 import { DocumentNode } from 'graphql'
-import { DateTime, DurationObjectUnits } from 'luxon'
+import { DateTime, DateTimeUnit } from 'luxon'
 import { today } from '../../dateAndTime/parseDateRange'
 import {
   ApplicationOutcome,
@@ -219,7 +219,7 @@ const constructFilterListQuery = (query: DocumentNode, queryMethod: string) => {
   return getListQuery
 }
 
-type GetDateRangeForUnit = (unit: keyof DurationObjectUnits, value?: number) => [DateTime, DateTime]
+type GetDateRangeForUnit = (unit: DateTimeUnit, value?: number) => [DateTime, DateTime]
 
 const getDateRangeForUnit: GetDateRangeForUnit = (unit, value = 0) => {
   if (value === 0) return [today().startOf(unit), today().endOf(unit).startOf('day')]

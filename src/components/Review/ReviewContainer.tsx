@@ -6,6 +6,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 
 export interface ReviewContainerProps {
   application: ApplicationDetails
+  children: React.ReactNode
 }
 
 const ReviewContainer: React.FC<ReviewContainerProps> = ({ application, children }) => {

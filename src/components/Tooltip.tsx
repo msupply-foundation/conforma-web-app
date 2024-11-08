@@ -36,7 +36,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       content={<MarkdownBlock text={message} />}
       on={triggerEvent}
       pinned
-      offset={-12}
+      offset={[-12]}
       trigger={<Icon name={icon} color={color} className="tooltip-trigger" style={iconStyle} />}
     />
   )

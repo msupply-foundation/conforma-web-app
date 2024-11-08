@@ -1,15 +1,6 @@
-import React from 'react'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../../utils/data/LuxonDateTimeConstants'
-import {
-  BasicStringObject,
-  DataViewsTableResponse,
-  DataViewTableAPIQueries,
-  DisplayDefinition,
-  DisplayDefinitionBasic,
-  FilterDefinitions,
-  HeaderRow,
-} from '../../utils/types'
+import { DisplayDefinition, DisplayDefinitionBasic, HeaderRow } from '../../utils/types'
 import { substituteValues } from '../../utils/helpers/utilityFunctions'
 import { SummaryViewWrapper } from '../../formElementPlugins'
 import { defaultEvaluatedElement } from '../../utils/hooks/useLoadApplication'

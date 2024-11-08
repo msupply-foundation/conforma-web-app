@@ -1,7 +1,7 @@
 import React from 'react'
 import { CellProps } from '../../../utils/types'
 
-const ConsolidatorCell: React.FC<CellProps> = ({ application }) => {
+const ConsolidatorCell: React.FC<CellProps> = () => {
   // TODO
   return null
 }

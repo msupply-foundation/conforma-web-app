@@ -1,7 +1,7 @@
 import { EvaluatorNode } from '../../../../modules/expression-evaluator'
 import React, { useEffect, useState } from 'react'
 import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
-import { pluginProvider } from '../../../../formElementPlugins'
+import { PluginProvider } from '../../../../formElementPlugins/pluginProvider'
 import {
   Reviewability,
   TemplateElement,
@@ -83,7 +83,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
       confirmText: t('BUTTON_CONFIRM'),
     })
 
-  const { structure } = useFullApplicationState()
+  const { structure, reloadApplication } = useFullApplicationState()
   const {
     template: { canEdit },
   } = useTemplateState()
@@ -120,6 +120,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         deleteById: [{ id: state.id }],
       },
     })
+    reloadApplication()
     if (!result) return
 
     onClose()
@@ -165,7 +166,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 setState({ ...state, elementTypePluginCode: String(value) })
                 markNeedsUpdate()
               }}
-              options={Object.values(pluginProvider.pluginManifest)}
+              options={Object.values(PluginProvider).map((element) => element.config)}
               search
               labelNegative
               minLabelWidth={50}

@@ -9,7 +9,7 @@ import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
 import { FiltersCommon } from '../../List/ListFilters/types'
-import { isUndefined } from 'lodash'
+import { isUndefined } from 'lodash-es'
 
 type NumberFilterProps = FiltersCommon & {
   setFilterText: (text: string) => void

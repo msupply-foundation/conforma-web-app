@@ -24,7 +24,6 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
   setIsActiveEdit,
   summaryViewProps,
   reviewInfo,
-  stageNumber,
 }) => {
   const { t } = useLanguageProvider()
   const [reviewResponse, setReviewResponse] = useState<{
@@ -33,7 +32,7 @@ const ReviewInlineNewResponse: React.FC<ReviewInlineNewResponseProps> = ({
   }>({})
 
   const [createResponse] = useCreateReviewResponseMutation({
-    onError: (error) => {
+    onError: (_) => {
       // To-do
       // setError(error)
     },

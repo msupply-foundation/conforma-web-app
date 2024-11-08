@@ -10,8 +10,8 @@ import { usePrefs } from '../../contexts/SystemPrefs'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
+import defaultLogo from '../../../images/logos/conforma_logo_wide_1024.png'
 
-const defaultLogo = require('../../../images/logos/conforma_logo_wide_1024.png').default
 import config from '../../config'
 import { Tracker } from '../Main/Tracker'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -27,10 +27,10 @@ const Login: React.FC = () => {
   const [loginPayload, setLoginPayload] = useState<LoginPayload>()
   const [selectedOrgId, setSelectedOrgId] = useState<number>(NO_ORG_SELECTED)
   const { push, history } = useRouter()
-  const { onLogin, userState } = useUserState()
+  const { onLogin } = useUserState()
   const client = useApolloClient()
   const { t, languageOptions } = useLanguageProvider()
-  const { preferences } = usePrefs()
+  const { preferences, latestSnapshot } = usePrefs()
 
   usePageTitle(t('LABEL_LOG_IN'))
 
@@ -43,6 +43,9 @@ const Login: React.FC = () => {
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
   useEffect(() => {
+    // So we can remember which snapshot is loaded while logged out (on Demo
+    // servers)
+    console.log('Latest snapshot', latestSnapshot)
     if (isLoggedIn()) push('/')
     client.clearStore()
   }, [])

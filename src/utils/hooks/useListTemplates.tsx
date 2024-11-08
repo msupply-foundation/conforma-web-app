@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { SemanticICONS } from 'semantic-ui-react'
 import {
   Filter,

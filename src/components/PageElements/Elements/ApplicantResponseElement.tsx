@@ -8,6 +8,7 @@ interface ApplicantResponseElementProps {
   applicationResponse: ApplicationResponse
   summaryViewProps: SummaryViewWrapperProps
   isResponseUpdated?: boolean
+  children?: React.ReactNode
 }
 
 const ApplicantResponseElement: React.FC<ApplicantResponseElementProps> = ({

@@ -28,9 +28,9 @@ const dateFormats = {
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
-  onUpdate,
-  setIsActive,
-  validationState,
+  // onUpdate,
+  // setIsActive,
+  // validationState,
   onSave,
   Markdown,
   currentResponse,
@@ -120,11 +120,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 const toDateSaved = (date: SelectedDateRange): DateSaved | null => {
   if (!date) return null
   // Single date
-  if (!Array.isArray(date)) return { start: DateTime.fromJSDate(date).toISODate() }
+  if (!Array.isArray(date)) return { start: DateTime.fromJSDate(date).toISODate() ?? '' }
   // Date range
   return {
-    start: DateTime.fromJSDate(date[0]).toISODate(),
-    end: DateTime.fromJSDate(date[1]).toISODate(),
+    start: DateTime.fromJSDate(date[0]).toISODate() ?? '',
+    end: DateTime.fromJSDate(date[1]).toISODate() ?? '',
   }
 }
 

@@ -186,7 +186,7 @@ const getReviewEvent = (
   event: ActivityLog,
   fullLog: ActivityLog[],
   structure: FullStructure,
-  index: number,
+  _: number,
   t: TranslateMethod,
   decisionStrings: { [key in Decision]: string }
 ): EventOutput => {

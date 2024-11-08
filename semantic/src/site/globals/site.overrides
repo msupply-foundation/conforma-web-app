@@ -15,6 +15,10 @@ p {
   padding: 0;
 }
 
+strong {
+  font-weight: @semiboldWeight;
+}
+
 p strong {
   font-weight: @semiboldWeight;
 }
@@ -362,6 +366,7 @@ a:hover {
     color: @darkGrey;
     min-width: 120px;
     max-width: 300px;
+    font-weight: 600;
   }
   .ui .dropdown {
     display: flex;

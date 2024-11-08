@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { Checkbox, Header, Icon, Message } from 'semantic-ui-react'
+import React, { useState, useEffect, Suspense } from 'react'
+import { Checkbox, Header, Message, Icon } from 'semantic-ui-react'
 import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useToast, topLeft } from '../../contexts/Toast'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
-import { JsonEditor } from './JsonEditor/JsonEditor'
 import Loading from '../Loading'
 import { useViewport } from '../../contexts/ViewportState'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { JsonData } from 'json-edit-react'
+
+const JsonEditor = React.lazy(() => import('./JsonEditor/JsonEditor'))
 
 export const AdminPreferences: React.FC = () => {
   const { t, tFormat } = useLanguageProvider()
@@ -54,7 +55,11 @@ export const AdminPreferences: React.FC = () => {
         showToast({ title: t('PREFERENCES_SAVE_PROBLEM'), text: result.message, style: 'error' })
       }
     } catch (err) {
-      showToast({ title: t('PREFERENCES_SAVE_PROBLEM'), text: err.message, style: 'error' })
+      showToast({
+        title: t('PREFERENCES_SAVE_PROBLEM'),
+        text: (err as Error).message,
+        style: 'error',
+      })
     }
     setIsSaving(false)
   }
@@ -85,18 +90,20 @@ export const AdminPreferences: React.FC = () => {
       <Header>{t('PREFERENCES_HEADER')}</Header>
       <p>{tFormat('PREFERENCES_SEE_DOCS')}</p>
       {prefs ? (
-        <JsonEditor
-          data={prefs}
-          onSave={(data) => showWarningModal({ onConfirm: () => handleSave(data) })}
-          isSaving={isSaving}
-          rootName="preferences"
-          collapse={2}
-          showArrayIndices={false}
-          maxWidth={650}
-          restrictDelete={({ level }) => level === 1}
-          restrictAdd={({ level }) => level === 0}
-          indent={isMobile ? 1 : 2}
-        />
+        <Suspense fallback={<Loading />}>
+          <JsonEditor
+            data={prefs}
+            onSave={(data) => showWarningModal({ onConfirm: () => handleSave(data) })}
+            isSaving={isSaving}
+            rootName="preferences"
+            collapse={2}
+            showArrayIndices={false}
+            maxWidth={650}
+            restrictDelete={({ level }) => level === 1}
+            restrictAdd={({ level }) => level === 0}
+            indent={isMobile ? 1 : 2}
+          />
+        </Suspense>
       ) : (
         <Loading />
       )}

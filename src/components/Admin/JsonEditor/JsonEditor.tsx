@@ -123,3 +123,5 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     </div>
   )
 }
+
+export default JsonEditor

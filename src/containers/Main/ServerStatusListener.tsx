@@ -28,7 +28,7 @@ interface RedirectStatus {
 // "immediate" -- means notification came on first load, so we redirect
 // immediately before user even sees the site
 
-export const ServerStatusListener: React.FC = ({ children }) => {
+export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { t } = useLanguageProvider()
   const {
     userState: { currentUser },

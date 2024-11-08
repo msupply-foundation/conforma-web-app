@@ -1,6 +1,5 @@
 import React from 'react'
 import { Label } from 'semantic-ui-react'
-import { PLUGIN_ERRORS } from './pluginProvider'
 
 type Props = {
   pluginCode: any
@@ -21,11 +20,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   // This trigger is for updating UI, can use prop 'error' in this method
   static getDerivedStateFromError(error: Error) {
-    console.log(Error)
-    const knownError = Object.values(PLUGIN_ERRORS).find(
-      (errorMessage) => errorMessage === error.message
-    )
-    return { hasError: true, errorMessage: knownError ? error.message : 'Failed to load plugin' }
+    return { hasError: true, errorMessage: 'Failed to load plugin:' + error.message }
   }
 
   // This trigger is for logging, can use prop 'error', 'errorInfo'

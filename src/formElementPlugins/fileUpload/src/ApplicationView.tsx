@@ -117,7 +117,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       errorMessage: t('ERROR_FILE_TOO_BIG'),
     },
     {
-      condition: (file: any, newFileData: FileInfo[]) => newFileData.length >= fileCountLimit,
+      condition: (_: any, newFileData: FileInfo[]) => newFileData.length >= fileCountLimit,
       errorMessage: t('ERROR_TOO_MANY_FILES'),
     },
   ]
@@ -185,7 +185,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       } as FileResponseData
       setUploadedFiles(newFiles)
     } catch (err) {
-      console.warn('Error', err.message)
+      console.warn('Error', (err as Error).message)
     }
   }
 

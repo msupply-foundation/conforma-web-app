@@ -46,7 +46,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [textValue, setTextValue] = useState<string | null | undefined>(currentResponse?.text)
   const [internalValidation, setInternalValidation] = useState(validationState)
 
-  const formatOptions = {
+  const formatOptions: Intl.NumberFormatOptions = {
     style: currency ? 'currency' : undefined,
     currency: currency !== '' ? currency : undefined,
     maximumSignificantDigits: maxSignificantDigits,

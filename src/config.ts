@@ -1,10 +1,10 @@
 // for production we get URL relative to web app
-const isProductionBuild = process.env.NODE_ENV === 'production'
-const { version } = require('../package.json')
+const isProductionBuild = import.meta.env.MODE === 'production'
+import { version } from '../package.json'
 
 // To connect to a remote server, store url(s) in .env file:
-// REMOTE_SERVER=<server-url>
-const remoteServer = process.env.REMOTE_SERVER
+// VITE_REMOTE_SERVER=<server-url>
+const remoteServer = import.meta.env.VITE_REMOTE_SERVER ?? null
 
 const remoteRestServer = remoteServer ? `${remoteServer}/server/api` : null
 const remoteGraphQLServer = remoteServer ? `${remoteServer}/graphql` : null

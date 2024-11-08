@@ -23,7 +23,7 @@ const ApplicationOperationContext = createContext<ApplicationOperationContextSta
   defaultApplicationOperationContext
 )
 
-const CreateApplicationWrapper: React.FC = ({ children }) => {
+const CreateApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { configApplicationSerial, configApplicationId } = useFormStructureState()
   const [state, setState] = useState<ApplicationOperationContextState | null>(null)
   const { deleteApplication, createApplication } = useOperationState()
@@ -80,18 +80,19 @@ const CreateApplicationWrapper: React.FC = ({ children }) => {
 
 type ApplicationContextState = {
   structure: FullStructure
+  reloadApplication: () => void
 }
 
 const ApplicationContext = createContext<ApplicationContextState>({} as ApplicationContextState)
 
-const ApplicationWrapper: React.FC = ({ children }) => {
+const ApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const {
     userState: { currentUser },
   } = useUserState()
   const [state, setState] = useState<ApplicationContextState | null>(null)
   const { configApplicationSerial } = useFormStructureState()
 
-  const { structure } = useLoadApplication({
+  const { structure, reloadApplication } = useLoadApplication({
     serialNumber: configApplicationSerial,
     currentUser: currentUser as User,
     networkFetch: true,
@@ -99,7 +100,7 @@ const ApplicationWrapper: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (structure) {
-      setState({ structure })
+      setState({ structure, reloadApplication })
     }
   }, [structure])
 
@@ -110,14 +111,15 @@ const ApplicationWrapper: React.FC = ({ children }) => {
 
 type FullApplicationContextState = {
   structure: FullStructure
+  reloadApplication: () => void
 }
 
 const FullApplicationContext = createContext<FullApplicationContextState>(
   {} as FullApplicationContextState
 )
 
-const FullApplicationWrapper: React.FC = ({ children }) => {
-  const { structure } = useApplicationState()
+const FullApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { structure, reloadApplication } = useApplicationState()
   const [state, setState] = useState<FullApplicationContextState | null>(null)
   const { fullStructure } = useGetApplicationStructure({
     structure,
@@ -128,7 +130,7 @@ const FullApplicationWrapper: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (fullStructure) {
-      setState({ structure: fullStructure })
+      setState({ structure: fullStructure, reloadApplication })
     }
   }, [fullStructure])
 

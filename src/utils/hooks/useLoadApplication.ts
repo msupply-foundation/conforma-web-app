@@ -33,7 +33,7 @@ import getServerUrl, { serverGraphQL, serverREST } from '../helpers/endpoints/en
 const graphQLEndpoint = getServerUrl('graphQL')
 const JWT = localStorage.getItem(config.localStorageJWTKey)
 
-const useLoadApplication = ({ serialNumber, networkFetch }: UseGetApplicationProps) => {
+const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const { t } = useLanguageProvider()
   const [isLoading, setIsLoading] = useState(true)
   const [structureError, setStructureError] = useState('')

@@ -1,10 +1,11 @@
 import { FilterFunction, JsonData, JsonEditorProps } from 'json-edit-react'
 import React, { useState } from 'react'
-import { JsonEditor } from '../../../components/Admin/JsonEditor/JsonEditor'
 import { ApplicationViewProps } from '../../types'
 import { useViewport } from '../../../contexts/ViewportState'
 
 import useDefault from '../../useDefault'
+
+const JsonEditor = React.lazy(() => import('../../../components/Admin/JsonEditor/JsonEditor'))
 
 export interface Parameters extends Omit<JsonEditorProps, 'data'> {
   label?: string

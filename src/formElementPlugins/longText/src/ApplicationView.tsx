@@ -38,7 +38,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setValue(text)
   }
 
-  function handleLoseFocus(e: any) {
+  function handleLoseFocus() {
     onSave({ text: value })
   }
 

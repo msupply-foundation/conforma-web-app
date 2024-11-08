@@ -9,7 +9,7 @@ import { exportLanguages } from '../../utils/localisation/exportLanguages'
 import { importLanguages } from '../../utils/localisation/importLanguages'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
-export const AdminLocalisations: React.FC = () => {
+const AdminLocalisations: React.FC = () => {
   const { refetchLanguages, languageOptionsFull: languageOptions, t } = useLanguageProvider()
   usePageTitle(t('PAGE_TITLE_LOCALISATION'))
   const fileInputRef = useRef<any>(null)
@@ -200,3 +200,5 @@ const LanguageRow: React.FC<{
     </div>
   )
 }
+
+export default AdminLocalisations
