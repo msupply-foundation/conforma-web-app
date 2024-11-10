@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Accordion, Button, Header, Icon } from 'semantic-ui-react'
 import { EvaluatorNode, FullStructure } from '../../../utils/types'
 import { useActionState } from '../template/Actions/Actions'

@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  LanguageStrings,
-  TranslateMethod,
-  useLanguageProvider,
-} from '../../../contexts/Localisation'
+import { TranslateMethod, useLanguageProvider } from '../../../contexts/Localisation'
 import {
   ActivityLog,
   ApplicationStatus,

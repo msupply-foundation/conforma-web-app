@@ -25,6 +25,7 @@ export const useAdminDataViewConfig = (tableName: string) => {
 
   const { data, loading, refetch } = useGetDataViewsQuery({
     variables: { tableName },
+    fetchPolicy: 'cache-and-network',
   })
 
   const selectedDataView = query.dataView
@@ -44,7 +45,7 @@ export const useAdminDataViewConfig = (tableName: string) => {
   const [deleteDataView, { loading: isDeleting }] = useDeleteDataViewMutation({
     onError: (e) =>
       showToast({ title: t('DATA_VIEW_CONFIG_DELETE_PROBLEM'), text: e.message, style: 'error' }),
-    onCompleted: (d) => {
+    onCompleted: (_) => {
       showToast({ title: t('DATA_VIEW_CONFIG_DELETED'), text: selectedDataView, style: 'success' })
       updateQuery({ dataView: null })
       refetch()
@@ -73,6 +74,7 @@ export const useAdminDataViewConfig = (tableName: string) => {
     refetch: columnsRefetch,
   } = useGetColumnDefinitionsQuery({
     variables: { tableName },
+    fetchPolicy: 'cache-and-network',
   })
 
   const selectedColumn = query.columnDefinition

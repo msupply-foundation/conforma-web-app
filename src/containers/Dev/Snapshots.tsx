@@ -23,6 +23,8 @@ import TextIO from '../TemplateBuilder/shared/TextIO'
 import { downloadFile, fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
 import { useRouter } from '../../utils/hooks/useRouter'
 import Tooltip from '../../components/Tooltip'
+import { usePrefs } from '../../contexts/SystemPrefs'
+import { BrowserNotifications } from '../../utils/browserNotifications'
 
 type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
 interface SnapshotData {
@@ -63,6 +65,7 @@ const Snapshots: React.FC = () => {
   const [archive, setArchive] = useState<number | 'full' | 'none'>()
   const [archiveEnd, setArchiveEnd] = useState<number>()
   const [refetchData, setRefetchData] = useState(false)
+  const { maintenanceMode } = usePrefs()
 
   const [data, setData] = useState<ListData | null>(null)
 
@@ -71,6 +74,8 @@ const Snapshots: React.FC = () => {
 
   const JWT = localStorage.getItem(config.localStorageJWTKey)
   const isProductionBuild = config.isProductionBuild
+
+  BrowserNotifications.checkPermission()
 
   useEffect(() => {
     updateQuery({ type: displayType })
@@ -120,17 +125,43 @@ const Snapshots: React.FC = () => {
       if (resultJson.success) {
         await getList(displayType)
         setIsLoading(false)
-        if (displayType === 'snapshots') location.reload()
+        BrowserNotifications.notify({
+          title: 'Snapshot saved',
+          body: name,
+          onFocus: () => {
+            if (displayType === 'snapshots') location.reload()
+          },
+        })
+        if (document.hasFocus() && displayType === 'snapshots') location.reload()
         return
       }
-
       setSnapshotError(resultJson)
+      BrowserNotifications.notify({
+        title: 'Problem taking snapshot',
+        body: name,
+      })
     } catch (error) {
-      setSnapshotError({ message: 'Front end error while taking snapshot', error })
+      setSnapshotError({
+        message: 'Front end error while taking snapshot',
+        error: (error as Error).message,
+      })
+      BrowserNotifications.notify({
+        title: 'Problem taking snapshot',
+        body: name,
+      })
     }
   }
 
   const useSnapshot = async (name: string) => {
+    const maintenanceModeAlreadyEnabled = maintenanceMode.enabled
+    if (!maintenanceModeAlreadyEnabled && isProductionBuild) {
+      console.log('Enabling maintenance mode')
+      await postRequest({
+        url: getServerUrl('setMaintenanceMode'),
+        jsonBody: { enabled: true },
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
     setIsLoading(true)
     try {
       const resultJson = await postRequest({
@@ -139,13 +170,38 @@ const Snapshots: React.FC = () => {
 
       if (resultJson.success) {
         setIsLoading(false)
-        location.reload()
+        BrowserNotifications.notify({
+          title: 'Snapshot loaded',
+          body: name,
+          onFocus: () => location.reload(),
+        })
         return
       }
-
       setSnapshotError(resultJson)
+      BrowserNotifications.notify({
+        title: 'Problem loading snapshot',
+        body: name,
+      })
     } catch (error) {
-      setSnapshotError({ message: 'Front end error while loading snapshot', error })
+      setSnapshotError({
+        message: 'Front end error while loading snapshot',
+        error: (error as Error).message,
+      })
+      BrowserNotifications.notify({
+        title: 'Problem loading snapshot',
+        body: name,
+      })
+    } finally {
+      // Only re-enable maintenance mode if it wasn't already on before
+      // snapshot load
+      if (!maintenanceModeAlreadyEnabled && isProductionBuild) {
+        console.log('Disabling maintenance mode')
+        await postRequest({
+          url: getServerUrl('setMaintenanceMode'),
+          jsonBody: { enabled: false },
+          headers: { 'Content-Type': 'application/json' },
+        })
+      }
     }
   }
 
@@ -166,7 +222,10 @@ const Snapshots: React.FC = () => {
       }
       setSnapshotError(resultJson)
     } catch (error) {
-      setSnapshotError({ message: 'Front end error while deleting snapshot', error })
+      setSnapshotError({
+        message: 'Front end error while deleting snapshot',
+        error: (error as Error).message,
+      })
     }
   }
 
@@ -188,11 +247,26 @@ const Snapshots: React.FC = () => {
       if (resultJson.success) {
         await getList(displayType)
         setIsLoading(false)
+        BrowserNotifications.notify({
+          title: 'Snapshot uploaded',
+          body: file.name,
+        })
         return
       }
       setSnapshotError(resultJson)
+      BrowserNotifications.notify({
+        title: 'Problem uploading snapshot',
+        body: file.name,
+      })
     } catch (error) {
-      setSnapshotError({ message: 'Front end error while uploading snapshot', error })
+      setSnapshotError({
+        message: 'Front end error while uploading snapshot',
+        error: (error as Error).message,
+      })
+      BrowserNotifications.notify({
+        title: 'Problem uploading snapshot',
+        body: file.name,
+      })
     }
   }
 
@@ -246,6 +320,7 @@ const Snapshots: React.FC = () => {
                   text: `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}`,
                   timeout: 0,
                 })
+                BrowserNotifications.notify({ title: 'Snapshot downloaded', body: name })
               }}
             />
 

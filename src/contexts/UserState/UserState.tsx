@@ -123,7 +123,12 @@ export function UserProvider({ children }: UserProviderProps) {
   const logout = () => {
     clearInterval(refreshTokenTimer.current)
     refreshTokenTimer.current = 0
-    clearLocalStorageExcept(['language', LOCAL_STORAGE_EXPIRY_KEY])
+    clearLocalStorageExcept([
+      'language',
+      LOCAL_STORAGE_EXPIRY_KEY,
+      'redirectLocation',
+      'maintenanceMode',
+    ])
     client.clearStore()
     setUserState({ type: 'resetCurrentUser' })
     loginTimer.end()

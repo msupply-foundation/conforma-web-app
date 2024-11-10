@@ -2,7 +2,7 @@ import { useParams, useLocation, useHistory, useRouteMatch, match } from 'react-
 import queryString from 'query-string'
 import { useMemo } from 'react'
 import { BasicStringObject, PageType } from '../types'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 
 interface RouterResult {
   goBack: () => void

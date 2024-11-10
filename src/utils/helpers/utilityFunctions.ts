@@ -1,4 +1,4 @@
-import { get as extractObjectProperty } from 'lodash'
+import { get as extractObjectProperty } from 'lodash-es'
 
 export const isArraySorted = (array: any[], ascending = true) => {
   if (ascending) return array.every((element, index) => index === 0 || element >= array[index - 1])

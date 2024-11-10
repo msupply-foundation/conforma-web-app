@@ -27,9 +27,9 @@ export const getInterval: GetInterval = (_startDate, _endDate) => {
   return Interval.fromDateTimes(startDate || MIN_DATE, endDate || MAX_DATE)
 }
 
-const caluclateCurrentMonth: GetCurrentMonth = (date, type, range) => {
+const calculateCurrentMonth: GetCurrentMonth = (date, type, range) => {
   if (date) return date
-  if (!range) return date || today()
+  if (!range || !range.start || !range.end) return date || today()
 
   const isMinDate = range.start.equals(MIN_DATE)
   const isMaxDate = range.end.equals(MAX_DATE)
@@ -46,24 +46,24 @@ const caluclateCurrentMonth: GetCurrentMonth = (date, type, range) => {
 }
 
 export const getCurrentMonth: GetCurrentMonth = (date, type, range) => {
-  const resultDate = caluclateCurrentMonth(date, type, range)
+  const resultDate = calculateCurrentMonth(date, type, range)
   return DateTime.local(resultDate.year, resultDate.month, 1)
 }
 
 const isInRange: IsInRange = (date, range) => {
-  if (!range || !date) return false
+  if (!range || !date || !range.start || !range.end) return false
   return range.contains(date) || range.end.equals(date)
 }
 
 const isSelected: IsSelected = (date, range, type) => {
-  if (!range || !date) return false
+  if (!range || !date || !range.start || !range.end) return false
   if (type === 'FROM') return range.start.equals(date)
   return range.end.equals(date)
 }
 
 const isDateClickable: IsDateClickable = (date, range, type) => {
   if (!date) return false
-  if (!range) return true
+  if (!range || !range.start || !range.end) return true
 
   if (type === 'FROM') return date <= range.end
   return date >= range.start
@@ -71,7 +71,7 @@ const isDateClickable: IsDateClickable = (date, range, type) => {
 
 export const getWeeks: GetWeeks = (month, range, type) => {
   const firstDay = month.weekday
-  const daysInMonth = month.daysInMonth
+  const daysInMonth = month.daysInMonth ?? 0
 
   const weeks: Week[] = []
   let dayCount = 0

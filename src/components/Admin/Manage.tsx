@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Link, Route, Switch } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
 import { Loading, NoMatch } from '..'
@@ -7,7 +7,8 @@ import TemplateWrapper from '../../containers/TemplateBuilder/template/TemplateW
 import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { AdminLocalisations } from './AdminLocalisations'
+
+const AdminLocalisations = React.lazy(() => import('./AdminLocalisations'))
 
 const Manage: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -31,7 +32,11 @@ const Manage: React.FC = () => {
     {
       route: 'localisations',
       header: t('MENU_ITEM_ADMIN_LOCALISATION'),
-      Element: <AdminLocalisations />,
+      Element: (
+        <Suspense fallback={<Loading />}>
+          <AdminLocalisations />
+        </Suspense>
+      ),
     },
   ]
 

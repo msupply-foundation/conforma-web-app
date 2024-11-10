@@ -37,7 +37,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
   parameters,
   onSave,
-  onUpdate,
+  // onUpdate,
   Markdown,
   validationState,
   currentResponse,
@@ -172,7 +172,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const deleteItem = async (index: number) => {
     setListItems(listItems.filter((_, i) => i !== index))
-    setInputState((prev) => defaultInputState)
+    setInputState((_) => defaultInputState)
   }
 
   const listDisplayProps: ListLayoutProps = {
@@ -217,7 +217,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     <>
       <Markdown text={modalText} />
       {inputState.currentElementsState &&
-        inputFields.map((field: TemplateElement, index: number) => {
+        inputFields.map((field: TemplateElement) => {
           const element = inputState.currentElementsState?.[field.code]
           return (
             <ApplicationViewWrapper

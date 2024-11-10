@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader, Input } from 'semantic-ui-react'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
-import { useDocumentModal } from '../../../../utils/hooks/useDocumentModal'
+import { useDocumentModal } from '../../../../utils/hooks/useDocumentModal/useDocumentModal'
 import { FileDisplayProps } from './FileDisplay'
 import prefs from '../../config.json'
 

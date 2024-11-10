@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pagination, Dropdown, Grid } from 'semantic-ui-react'
+import { Pagination, Dropdown } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { TranslateMethod } from '../../contexts/Localisation'
 import { usePrefs } from '../../contexts/SystemPrefs'

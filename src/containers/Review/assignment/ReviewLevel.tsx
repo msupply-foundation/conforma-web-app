@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Dropdown, Label } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { AssignmentDetails, LevelDetails, Filters, FullStructure } from '../../../utils/types'
+import { LevelDetails, Filters, FullStructure } from '../../../utils/types'
 
 export const ALL_LEVELS = 0
 

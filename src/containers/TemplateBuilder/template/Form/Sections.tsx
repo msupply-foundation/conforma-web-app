@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Button, Header, Label } from 'semantic-ui-react'
 import { IconButton } from '../../shared/IconButton'
 

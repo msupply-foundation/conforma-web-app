@@ -1,10 +1,11 @@
-import { FilterFunction, JsonEditorProps } from 'json-edit-react'
+import { FilterFunction, JsonData, JsonEditorProps } from 'json-edit-react'
 import React, { useState } from 'react'
-import { JsonEditor } from '../../../components/Admin/JsonEditor/JsonEditor'
 import { ApplicationViewProps } from '../../types'
 import { useViewport } from '../../../contexts/ViewportState'
 
 import useDefault from '../../useDefault'
+
+const JsonEditor = React.lazy(() => import('../../../components/Admin/JsonEditor/JsonEditor'))
 
 export interface Parameters extends Omit<JsonEditorProps, 'data'> {
   label?: string
@@ -26,7 +27,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   onSave,
   Markdown,
-  validationState,
 }) => {
   const [value, setValue] = useState(currentResponse?.data ?? {})
   const { viewport } = useViewport()
@@ -58,7 +58,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     },
   })
 
-  const handleChange = (data: Record<string, any>) => {
+  const handleChange = (data: JsonData) => {
     setValue(value)
     onSave({ text: JSON.stringify(data), data })
   }

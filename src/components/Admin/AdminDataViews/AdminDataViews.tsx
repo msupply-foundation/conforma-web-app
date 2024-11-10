@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import {
   Header,
@@ -19,11 +19,14 @@ import {
   GetDataTablesQuery,
   useGetDataTablesQuery,
 } from '../../../utils/generated/graphql'
-import { JsonEditor } from '../JsonEditor/JsonEditor'
-import { camelCase, pickBy, startCase } from 'lodash'
+import { camelCase, pickBy, startCase } from 'lodash-es'
 import { nanoid } from 'nanoid'
 import { useAdminDataViewConfig } from './useAdminDataViewConfig'
 import config from '../../../config'
+import { JsonData } from 'json-edit-react'
+import Loading from '../../Loading'
+
+const JsonEditor = React.lazy(() => import('../JsonEditor/JsonEditor'))
 
 export const AdminDataViews: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -33,7 +36,7 @@ export const AdminDataViews: React.FC = () => {
 
   const { query, updateQuery, setQuery } = useRouter()
 
-  const { data, loading } = useGetDataTablesQuery()
+  const { data, loading } = useGetDataTablesQuery({ fetchPolicy: 'cache-and-network' })
 
   const selectedTable = query.selectedTable
   const isLookupTable =
@@ -132,7 +135,9 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName, isLookupTabl
             title: t('DATA_VIEW_CONFIG_SAVE_WARNING'),
             message: t('DATA_VIEW_CONFIG_SAVE_MESSAGE'),
             onConfirm: () =>
-              updateDataView({ variables: { id: dataViewObject?.id as number, patch: data } }),
+              updateDataView({
+                variables: { id: dataViewObject?.id as number, patch: data as object },
+              }),
             awaitAction: false,
           })
         }}
@@ -216,7 +221,7 @@ const ColumnDefinitionEditor: React.FC<{ tableName: string }> = ({ tableName }) 
             message: t('DATA_VIEW_CONFIG_SAVE_COL_MESSAGE'),
             onConfirm: () =>
               updateColumnDefinition({
-                variables: { id: columnDefinitionObject?.id as number, patch: data },
+                variables: { id: columnDefinitionObject?.id as number, patch: data as object },
               }),
           })
         }}
@@ -253,7 +258,7 @@ interface DataViewDisplayProps {
   onChange: (_: unknown, value: DropdownProps) => void
   data: object | undefined
   dataName: string
-  onSave: (data: object) => void
+  onSave: (data: JsonData) => void
   isSaving: boolean
   onDelete: () => void
   isDeleting: boolean
@@ -278,16 +283,11 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
   onAdd,
   isAdding,
 }) => {
-  const [dataState, setDataState] = useState(data ?? {})
   const { t } = useLanguageProvider()
   const { ConfirmModal } = useConfirmationModal({
     type: 'warning',
     confirmText: t('BUTTON_CONFIRM'),
   })
-
-  useEffect(() => {
-    setDataState(data ?? {})
-  }, [data])
 
   return (
     <div>
@@ -325,17 +325,19 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
         </div>
       </div>
       {data && (
-        <JsonEditor
-          data={dataState}
-          onSave={onSave}
-          isSaving={isSaving}
-          rootName={dataName}
-          collapse={1}
-          showArrayIndices={false}
-          maxWidth={650}
-          restrictAdd={({ level }) => level === 0}
-          restrictDelete={({ level }) => level === 1}
-        />
+        <Suspense fallback={<Loading />}>
+          <JsonEditor
+            data={data}
+            onSave={onSave}
+            isSaving={isSaving}
+            rootName={dataName}
+            collapse={1}
+            showArrayIndices={false}
+            maxWidth={650}
+            restrictAdd={({ level }) => level === 0}
+            restrictDelete={({ level }) => level === 1}
+          />
+        </Suspense>
       )}
     </div>
   )

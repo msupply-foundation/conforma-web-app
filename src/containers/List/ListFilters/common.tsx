@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import useOnclickOutside from 'react-cool-onclickoutside'
-import { startCase as lodashStartCase } from 'lodash'
+import { startCase as lodashStartCase } from 'lodash-es'
 import { Checkbox, Dropdown, Icon, Label } from 'semantic-ui-react'
 import { FilterContainerProps, FilterOptionsProps } from './types'
 import { useLanguageProvider } from '../../../contexts/Localisation'

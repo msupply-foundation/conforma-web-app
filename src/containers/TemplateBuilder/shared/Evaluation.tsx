@@ -1,5 +1,5 @@
 import { EvaluatorNode } from '../../../modules/expression-evaluator'
-import { truncate } from 'lodash'
+import { truncate } from 'lodash-es'
 import React, { useState } from 'react'
 import { JsonEditor as ReactJson } from 'json-edit-react'
 import { Accordion, Icon, Label } from 'semantic-ui-react'

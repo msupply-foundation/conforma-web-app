@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { hot } from 'react-hot-loader'
 import ReactGA from 'react-ga4'
 import Login from '../User/Login'
 import Verify from '../User/Verification'
@@ -12,6 +11,7 @@ import { Loading } from '../../components'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { trackerTestMode } from './Tracker'
 import { ViewportStateProvider } from '../../contexts/ViewportState'
+import { ServerStatusListener } from './ServerStatusListener'
 
 const AppWrapper: React.FC = () => {
   const { error, loading } = useLanguageProvider()
@@ -41,34 +41,35 @@ const AppWrapper: React.FC = () => {
     <Router>
       <ViewportStateProvider>
         <UserProvider>
-          <Switch>
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Route exact path="/register">
-              <NonRegisteredLogin option="register" />
-            </Route>
-            <Route exact path="/reset-password">
-              <NonRegisteredLogin option="reset-password" />
-            </Route>
-            <Route exact path="/verify">
-              <Verify />
-            </Route>
-            <Route exact path="/logout">
-              <Logout />
-            </Route>
-            <Route>
-              <AuthenticatedContent />
-            </Route>
-          </Switch>
+          <ServerStatusListener>
+            <Switch>
+              <Route exact path="/login">
+                <Login />
+              </Route>
+              <Route exact path="/register">
+                <NonRegisteredLogin option="register" />
+              </Route>
+              <Route exact path="/reset-password">
+                <NonRegisteredLogin option="reset-password" />
+              </Route>
+              <Route exact path="/verify">
+                <Verify />
+              </Route>
+              <Route exact path="/logout">
+                <Logout />
+              </Route>
+              <Route>
+                <AuthenticatedContent />
+              </Route>
+            </Switch>
+          </ServerStatusListener>
         </UserProvider>
       </ViewportStateProvider>
     </Router>
   )
 }
 
-declare const module: any
-export default hot(module)(AppWrapper)
+export default AppWrapper
 
 const Logout: React.FC = () => {
   const { logout } = useUserState()

@@ -5,7 +5,7 @@ import { usePrefs } from '../../contexts/SystemPrefs'
 import { useUserState } from '../../contexts/UserState'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
-const defaultLogo = require('../../../images/logos/logo_512.png').default
+import defaultLogo from '../../../images/logos/logo_512.png'
 
 const Footer: React.FC = () => {
   const {

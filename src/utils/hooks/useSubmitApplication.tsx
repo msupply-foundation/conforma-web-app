@@ -31,6 +31,7 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
       },
     })
     if (result.errors) throw new Error(result.errors.toString())
+    await structure.reload()
     return result
   }
 

@@ -134,7 +134,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     type: 'warning',
   })
   // TODO: Show on message
-  const [submissionError, setSubmissionError] = useState<boolean>(false)
+  const [_, setSubmissionError] = useState<boolean>(false)
   const submitReview = useSubmitReview(Number(structure.thisReview?.id), structure.reload)
   const setAttemptSubmission = () => (structure.attemptSubmission = true)
   const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage

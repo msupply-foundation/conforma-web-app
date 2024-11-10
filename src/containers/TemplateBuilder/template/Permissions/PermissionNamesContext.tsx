@@ -15,7 +15,7 @@ const defaultContext: PermissionNamesContext = {
 }
 const Context = createContext<PermissionNamesContext>(defaultContext)
 
-const PermissionsContext: React.FC = ({ children }) => {
+const PermissionsContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<PermissionNamesContext | null>(null)
   const { data } = useGetAllPermissionNamesQuery()
 

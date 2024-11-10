@@ -2,7 +2,7 @@ import { getRequest } from '../helpers/fetchMethods'
 import { LanguageOption, LanguageStrings, getPluginStrings } from '../../contexts/Localisation'
 import defaultLanguageStrings from '../../utils/defaultLanguageStrings'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
-import { mapValues } from 'lodash'
+import { mapValues } from 'lodash-es'
 import Papa from 'papaparse'
 import { DateTime } from 'luxon'
 
@@ -90,7 +90,7 @@ export const exportLanguages = async (
 
     return { success: true, message: '' }
   } catch (err) {
-    return { success: false, message: err.message }
+    return { success: false, message: (err as Error).message }
   }
 }
 

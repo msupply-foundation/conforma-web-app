@@ -14,6 +14,8 @@ import {
   ArchiveEndpoint,
 } from './types'
 
+const { VITE_USE_DEV_SERVER } = import.meta.env
+
 const {
   isProductionBuild,
   restEndpoints,
@@ -23,12 +25,24 @@ const {
   productionPathGraphQL,
 } = config
 const { port, hostname, protocol } = window.location
-const getProductionUrl = (path: string) => `${protocol}//${hostname}:${port}${path}`
+const getProductionUrl = (path: string) => {
+  return `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`
+}
 
-export const serverREST = isProductionBuild ? getProductionUrl(productionPathREST) : devServerRest
+export const serverREST = isProductionBuild
+  ? VITE_USE_DEV_SERVER
+    ? devServerRest
+    : getProductionUrl(productionPathREST)
+  : devServerRest
 export const serverGraphQL = isProductionBuild
-  ? getProductionUrl(productionPathGraphQL)
+  ? VITE_USE_DEV_SERVER
+    ? devServerGraphQL
+    : getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
+const serverWebSocket = serverREST
+  .replace('http', 'ws')
+  .replace('api', '')
+  .replace('server', 'websocket')
 
 const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): string => {
   // "as" here ensures we must have types/cases for ALL keys of
@@ -52,6 +66,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'extendApplication':
     case 'getAllPrefs':
     case 'setPrefs':
+    case 'setMaintenanceMode':
       return serverREST + endpointPath
 
     case 'userPermissions':
@@ -67,19 +82,26 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       return `${serverREST}${endpointPath}/${code}`
     }
 
-    case 'file':
+    case 'file': {
       const { fileId, thumbnail = false } = options as FileEndpoint[1]
       return `${serverREST}${endpointPath}?uid=${fileId}${thumbnail ? '&thumbnail=true' : ''}`
+    }
 
-    case 'verify':
+    case 'files': {
+      return `${serverREST}${endpointPath}${buildQueryString(options)}`
+    }
+
+    case 'verify': {
       const { uid } = options as VerifyEndpoint[1]
       return `${serverREST}${endpointPath}?uid=${uid}`
+    }
 
-    case 'checkTrigger':
+    case 'checkTrigger': {
       const { serial } = options as CheckTriggersEndpoint[1]
       return `${serverREST}${endpointPath}?serial=${serial}`
+    }
 
-    case 'dataViews':
+    case 'dataViews': {
       // List view
       if (!('dataViewCode' in options)) return `${serverREST}${endpointPath}`
 
@@ -98,10 +120,11 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       // Table view
       const { dataViewCode, query } = options
       return `${serverREST}${endpointPath}/${dataViewCode}${buildQueryString(query)}`
+    }
 
     // Localisation management
     case 'localisation': {
-      let { action } = options as LocalisationEndpoint[1]
+      const { action } = options as LocalisationEndpoint[1]
 
       // Get all
       if (action === 'getAll') return `${serverREST}${endpointPath}/get-all`
@@ -123,7 +146,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       throw new Error('Missing options')
     }
 
-    case 'snapshot':
+    case 'snapshot': {
       const { action } = options as SnapshotEndpoint[1]
       const isArchive = 'archive' in options && options.archive
       const isTemplate = 'template' in options && options.template
@@ -152,9 +175,10 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       return `${serverREST}${endpointPath}/${action}?name=${name}${
         optionsName ? `&optionsName=${optionsName}` : ''
       }${isArchive ? '&archive=true' : ''}`
+    }
 
     case 'lookupTable': {
-      let { action } = options as LookupTableEndpoint[1]
+      const { action } = options as LookupTableEndpoint[1]
 
       // List structures
       if (action === 'list') return `${serverREST}${endpointPath}/list`
@@ -182,21 +206,27 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       throw new Error('Missing options')
     }
 
-    case 'getApplicationData':
+    case 'getApplicationData': {
       const { applicationId, reviewId } = options as GetApplicationDataEndpoint[1]
       return `${serverREST}${endpointPath}?applicationId=${applicationId}${
         reviewId ? `&reviewId=${reviewId}` : ''
       }`
+    }
 
-    case 'archiveFiles':
+    case 'archiveFiles': {
       const { days } = options as ArchiveEndpoint[1]
       return `${serverREST}${endpointPath}?days=${days}`
+    }
 
-    default:
+    case 'serverStatus':
+      return `${serverWebSocket}${endpointPath}`
+
+    default: {
       // "never" type ensures we will get a *compile-time* error if we are
       // missing a case defined in Endpoints types
       const missingValue: never = endpointKey
       throw new Error('Failed to consider case:' + missingValue)
+    }
   }
 }
 

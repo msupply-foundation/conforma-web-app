@@ -1,17 +1,14 @@
 import React from 'react'
 import { Header } from 'semantic-ui-react'
-
 import { Stage } from '../../../../components/Review'
 import {
   PermissionPolicyType,
   TemplateStage,
   TemplateStagePatch,
 } from '../../../../utils/generated/graphql'
-
 import { IconButton } from '../../shared/IconButton'
 import { useOperationState } from '../../shared/OperationContext'
-
-import TextIO, { colourLink, iconLink } from '../../shared/TextIO'
+import TextIO, { colourLink } from '../../shared/TextIO'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import PermissionNameList from './PermissionNameList'
 import PermissionNamesContext from './PermissionNamesContext'

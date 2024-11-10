@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Header, Input } from 'semantic-ui-react'
 import CheckboxIO from '../shared/CheckboxIO'
 import { IconButton } from '../shared/IconButton'

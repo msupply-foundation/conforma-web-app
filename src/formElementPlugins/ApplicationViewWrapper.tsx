@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { ErrorBoundary, pluginProvider } from '.'
-import { ApplicationViewWrapperProps, PluginComponents, ValidationState } from './types'
+import { ErrorBoundary } from '.'
+import { PluginProvider } from './pluginProvider'
+import { ApplicationViewWrapperProps, ValidationState } from './types'
 import { useUpdateResponseMutation } from '../utils/generated/graphql'
 import {
   EvaluatorNode,
@@ -12,7 +13,7 @@ import {
 import { useUserState } from '../contexts/UserState'
 import validate from './defaultValidate'
 import evaluateExpression, { isEvaluationExpression } from '../modules/expression-evaluator'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { Form, Icon } from 'semantic-ui-react'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
@@ -61,8 +62,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   })
   const [evaluatedParameters, setEvaluatedParameters] = useState<{ [key: string]: any }>({})
 
-  const { ApplicationView, config }: PluginComponents = pluginProvider.getPluginElement(pluginCode)
+  const plugin = PluginProvider?.[pluginCode]
 
+  const { ApplicationView, config } = plugin
   const parameterLoadingValues = config?.parameterLoadingValues
   const internalParameters = config?.internalParameters || []
   const [simpleParameters, parameterExpressions] = buildParameters(
@@ -74,10 +76,12 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   // Update dynamic parameters when responses change
   useEffect(() => {
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
-    setUpdateTrackerState({
-      type: 'elementProcessing',
-      elementCode: code,
-    })
+    if (!isInnerFormElement)
+      // Don't do this inside listBuilder or we get infinite loop
+      setUpdateTrackerState({
+        type: 'elementProcessing',
+        elementCode: code,
+      })
 
     const result = Object.entries(parameterExpressions).map(([field, expression]) => {
       return evaluateExpression(expression as EvaluatorNode, {
@@ -94,17 +98,20 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
         }
       })
     })
-    Promise.all(result).then(() =>
-      setUpdateTrackerState({
-        type: 'elementDoneProcessing',
-        elementCode: code,
-      })
-    )
+    Promise.all(result).then(() => {
+      if (!isInnerFormElement)
+        setUpdateTrackerState({
+          type: 'elementDoneProcessing',
+          elementCode: code,
+        })
+    })
   }, [allResponses])
 
   useEffect(() => {
     onUpdate(currentResponse?.text)
   }, [currentResponse, isStrictPage])
+
+  if (!plugin) return null
 
   const onUpdate = async (value: LooseString) => {
     const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
@@ -128,10 +135,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
   }
 
   const onSave = async (response: ResponseFull) => {
-    setUpdateTrackerState({
-      type: 'elementProcessing',
-      elementCode: code,
-    })
+    if (!isInnerFormElement)
+      setUpdateTrackerState({
+        type: 'elementProcessing',
+        elementCode: code,
+      })
     if (!response?.customValidation) {
       // Validate and Save response -- generic
       const validationResult: ValidationState = await onUpdate(response?.text)

@@ -12,7 +12,7 @@ export const ToastDemo: React.FC<any> = () => {
   const [showCloseIcon, setShowCloseIcon] = useState(false)
   const [style, setStyle] = useState<ToastStyle>('basic')
   const [timeDelay, setTimeDelay] = useState<number>(4000)
-  const [offset, setOffset] = useState({ x: 0, y: 0 })
+  // const [offset, setOffset] = useState({ x: 0, y: 0 })
   const { showToast, clearAllToasts, toasts } = useToast({ title: 'Hello', style: 'positive' })
 
   usePageTitle('Toast Demo')

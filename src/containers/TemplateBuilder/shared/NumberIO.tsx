@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Icon, Input, Popup, SemanticICONS, TextArea } from 'semantic-ui-react'
-import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic'
+import { Icon, Input, Popup, SemanticICONS } from 'semantic-ui-react'
 import { TextIOprops } from './TextIO'
 
 const iconLink = 'https://react.semantic-ui.com/elements/icon/'

@@ -44,6 +44,7 @@ export type FilterContainerProps = FiltersCommon & {
   label?: number | string
   trigger?: ReactNode
   setFocus?: () => void
+  children: React.ReactNode
 }
 
 export type FilterIconMapping = Partial<{ [key in FilterTypes]: SemanticICONS }>

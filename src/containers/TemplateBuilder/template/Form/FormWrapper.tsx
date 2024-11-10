@@ -58,7 +58,7 @@ const calculatePageBreaksToTrim = (sections: TemplateSection[]) => {
   return pageBreaksToTrim
 }
 
-const FormWrapper: React.FC = ({ children }) => {
+const FormWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<FormStructureContextState | null>(null)
   const { updateTemplateSection } = useOperationState()
   const { fromQuery: templateInfo, template, sections } = useTemplateState()

@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import config from '../config'
 import defaultStrings from '../utils/defaultLanguageStrings'
 import { getRequest } from '../utils/helpers/fetchMethods'
-import { pluginProvider } from '../formElementPlugins'
+import { PluginProvider } from '../formElementPlugins/pluginProvider'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
-import { mapValues, mapKeys } from 'lodash'
+import { mapValues, mapKeys } from 'lodash-es'
 import Markdown from '../utils/helpers/semanticReactMarkdown'
 
 const savedLanguageCode = localStorage.getItem('language')
@@ -94,11 +93,16 @@ const LanguageProviderContext = createContext(initialContext)
 // Get localisation strings from all form element plugins
 export const getPluginStrings = () => {
   let pluginStrings = {}
-  for (const plugin of Object.values(pluginProvider.pluginManifest)) {
+  for (const plugin of Object.values(PluginProvider)) {
     try {
-      const strings = require(`../${config.pluginsFolder}/${plugin.folderName}/localisation.json`)
-      pluginStrings = { ...pluginStrings, ...mapKeys(strings, (_, key) => `${plugin.code}.${key}`) }
-    } catch {}
+      const strings = plugin.localisation
+      pluginStrings = {
+        ...pluginStrings,
+        ...mapKeys(strings, (_, key) => `${plugin.config.code}.${key}`),
+      }
+    } catch {
+      //
+    }
   }
   return pluginStrings
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon, Search } from 'semantic-ui-react'
-import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction } from 'json-edit-react'
+import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction, JsonData } from 'json-edit-react'
 import { useToast, topLeft, Position } from '../../../contexts/Toast'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import Loading from '../../Loading'
@@ -8,16 +8,16 @@ import useUndo from 'use-undo'
 import { truncateString } from '../../../utils/helpers/utilityFunctions'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
-  onSave: (data: object) => void
+  onSave?: (data: JsonData) => void
   isSaving?: boolean
-  data: object
+  data: JsonData
   showSaveButton?: boolean
   showSearch?: boolean
   searchPlaceholder?: string
 }
 
 export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
-  onSave,
+  onSave = () => {},
   isSaving = false,
   data,
   showSaveButton = true,
@@ -46,8 +46,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     }
   }
 
-  const onUpdate = async (newData: object) => {
-    setData(newData)
+  const onUpdate = async (newData: JsonData) => {
     if (showSaveButton) setIsDirty(true)
     // If we don't have an explicit save button, we run "onSave" after every
     // update, but keep the Undo queue alive
@@ -83,6 +82,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
       )}
       <ReactJson
         data={currentData}
+        setData={setData as (value: JsonData) => void}
         onUpdate={({ newData }) => {
           onUpdate(newData)
         }}
@@ -97,20 +97,20 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         searchText={searchText}
         {...jsonViewProps}
       />
-      <div className="flex-row-space-between" style={{ maxWidth: 500 }}>
-        <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
-          <a onClick={undo}>
-            <Icon name="arrow alternate circle left" />
-            <strong>{t('BUTTON_UNDO')}</strong>
-          </a>
-        </p>
-        <p className={`clickable nav-button ${!canRedo ? 'invisible' : ''}`}>
-          <a onClick={redo}>
-            <strong>{t('BUTTON_REDO')}</strong>
-            <Icon name="arrow alternate circle right" />
-          </a>
-        </p>
-        {showSaveButton && (
+      {showSaveButton && (
+        <div className="flex-row-space-between">
+          <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
+            <a onClick={undo}>
+              <Icon name="arrow alternate circle left" />
+              <strong>{t('BUTTON_UNDO')}</strong>
+            </a>
+          </p>
+          <p className={`clickable nav-button ${!canRedo ? 'invisible' : ''}`}>
+            <a onClick={redo}>
+              <strong>{t('BUTTON_REDO')}</strong>
+              <Icon name="arrow alternate circle right" />
+            </a>
+          </p>
           <Button
             primary
             disabled={!isDirty}
@@ -118,8 +118,10 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
             content={t('BUTTON_SAVE')}
             onClick={handleSave}
           />
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }
+
+export default JsonEditor

@@ -114,7 +114,9 @@ export const renderEvaluationElement: RenderEvaluationElementType = (
       )
     }
   } catch (e) {
-    return <ComponentLibrary.Error error={'problem rendering element'} info={e.toString()} />
+    return (
+      <ComponentLibrary.Error error={'problem rendering element'} info={(e as Error).toString()} />
+    )
   }
   return (
     <ComponentLibrary.Error

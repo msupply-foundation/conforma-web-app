@@ -373,6 +373,15 @@ export default {
     'Are you sure?  This will overwrite core settings and can break the system if misconfigured',
   PREFERENCES_SAVED: 'Preferences saved',
   PREFERENCES_SAVE_PROBLEM: 'Problem saving preferences!',
+  PREFERENCES_OVERRIDE_INFO:
+    'Please note, the following overrides are in place due to environment variables specified on the server, so changing them above will have no effect:',
+  PREFERENCES_MAINTENANCE_MODE: 'Maintenance Mode',
+  PREFERENCES_MAINTENANCE_WARNING: 'Caution!',
+  PREFERENCES_MAINTENANCE_WARNING_TEXT:
+    'Enabling maintenance mode will disconnect all active users and re-direct them to a temporary page',
+  PREFERENCES_ENABLE_MAINTENANCE_MODE: 'Enable Maintenance mode?',
+  PREFERENCES_ENABLE_MAINTENANCE_TEXT:
+    'Use with caution — any currently active users will be disconnected',
   REVIEW_OVERVIEW_ACTIVITY: 'Activity',
   REVIEW_OVERVIEW_APPLICANT: 'Applicant',
   REVIEW_OVERVIEW_ORG: 'Organisation',
@@ -462,6 +471,20 @@ export default {
   REVIEW_NOTES_DELETE_MESSAGE:
     'Clicking "Confirm" will permanently delete your comment, including any associated files. Close this dialog to go back.',
   REVIEW_HISTORY_NO_RESPONSE: 'No response',
+  SERVER_RECONNECTED: 'Server re-connected',
+  SERVER_RECONNECTED_TEXT: 'We apologise for the interruption',
+  SERVER_MAINTENANCE_MODE_LABEL: 'MAINTENANCE MODE',
+  SERVER_MAINTENANCE_ON: 'Maintenance mode enabled',
+  SERVER_MAINTENANCE_ON_TEXT:
+    "If you weren't the person who enabled this, you should stop what you're doing and log out until maintenance is complete",
+  SERVER_MAINTENANCE_OFF: 'Maintenance mode: OFF',
+  SERVER_MAINTENANCE_OFF_TEXT: 'Normal server functionality restored',
+  SERVER_UNAVAILABLE: 'Server unavailable',
+  SERVER_UNAVAILABLE_TEXT:
+    'The server is undergoing maintenance. You will be re-directed to a holding page in 10 seconds',
+  SERVER_OFFLINE: 'Server offline!',
+  SERVER_OFFLINE_TEXT:
+    'Server connection has been unexpectedly interrupted. We will attempt to re-connect, but you will be re-directed to a holding page in 30 seconds if not successful.',
   STATUS_SUBMITTED: 'Submitted',
   STATUS_DRAFT: 'Draft',
   STATUS_CHANGES_REQUIRED: 'Changes required',

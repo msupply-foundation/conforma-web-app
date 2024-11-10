@@ -23,14 +23,14 @@ import {
 } from '../../utils/types'
 import useListTemplates from '../../utils/hooks/useListTemplates'
 import { useDataViewsList } from '../../utils/hooks/useDataViews'
-import { useReferenceDocs } from '../../utils/hooks/useReferenceDocs'
+import { FileData, useDocumentFiles } from '../../utils/hooks/useDocumentFiles'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import config from '../../config'
 import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
-import { UiLocation } from '../../utils/generated/graphql'
-const defaultBrandLogo = require('../../../images/logos/conforma_logo_wide_white_1024.png').default
+import { PermissionPolicyType, UiLocation } from '../../utils/generated/graphql'
+import defaultBrandLogo from '../../../images/logos/conforma_logo_wide_white_1024.png'
 import { useViewport } from './../../contexts/ViewportState'
 import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
 
@@ -43,7 +43,10 @@ const UserArea: React.FC = () => {
     templatesData: { templates },
   } = useListTemplates(templatePermissions, false)
   const { dataViewsList } = useDataViewsList()
-  const { intReferenceDocs, extReferenceDocs } = useReferenceDocs(currentUser)
+  const { intReferenceDocs, extReferenceDocs } = useDocumentFiles({
+    external: true,
+    internal: true,
+  })
   const [hamburgerActive, setHamburgerActive] = useState(false)
   const { isMobile } = useViewport()
 
@@ -85,8 +88,8 @@ interface MainMenuBarProps {
   templates: TemplateInList[]
   dataViews: DataViewsResponse
   referenceDocs: {
-    intReferenceDocs: { uniqueId: string; description: string }[]
-    extReferenceDocs: { uniqueId: string; description: string }[]
+    intReferenceDocs: FileData[]
+    extReferenceDocs: FileData[]
   }
   hamburgerActive: Boolean
   closeHamburger: () => void
@@ -175,19 +178,18 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       text: t('MENU_ITEM_ADMIN_PREFS'),
       value: '/admin/preferences',
     },
-  ]
-  // Only include Snapshots menu item in Dev mode
-  if (process.env.NODE_ENV === 'development')
-    configOptions.splice(1, 0, {
+    {
       key: 'snapshots',
       text: 'Snapshots',
       value: '/admin/snapshots',
-    })
+    },
+  ]
 
   // Add Config/Admin templates to Config menu (requires Admin permission)
   configOptions.push(
     ...constructNestedMenuOptions(templates, {
-      filterMethod: ({ templateCategory: { uiLocation } }) => uiLocation.includes(UiLocation.Admin),
+      filterMethod: ({ templateCategory: { uiLocation }, permissions }) =>
+        uiLocation.includes(UiLocation.Admin) && permissions.includes(PermissionPolicyType.Apply),
       mapMethod: (template) => ({
         key: template.code,
         text: template.name,
@@ -199,8 +201,9 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
   )
 
   const managementOptions = constructNestedMenuOptions(templates, {
-    filterMethod: ({ templateCategory: { uiLocation } }) =>
-      uiLocation.includes(UiLocation.Management),
+    filterMethod: ({ templateCategory: { uiLocation }, permissions }) =>
+      uiLocation.includes(UiLocation.Management) &&
+      permissions.includes(PermissionPolicyType.Apply),
     mapMethod: (template) => ({
       key: template.code,
       text: template.name,
@@ -231,7 +234,10 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
     configOptions.push(localisationOption)
   }
 
-  const handleMenuSelect = (value: string, menu: 'List' | 'DataView' | 'Manage' | 'Config') => {
+  const handleMenuSelect = async (
+    value: string,
+    menu: 'List' | 'DataView' | 'Manage' | 'Config'
+  ) => {
     let changedDropDown
     let linkStateData
     switch (menu) {

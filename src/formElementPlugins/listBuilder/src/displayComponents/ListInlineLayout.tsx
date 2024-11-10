@@ -7,7 +7,6 @@ import SummaryViewWrapper from '../../../SummaryViewWrapper'
 import { buildElements } from '../helpers'
 import { substituteValues } from '../../../../utils/helpers/utilityFunctions'
 import '../styles.less'
-import { useViewport } from '../../../../contexts/ViewportState'
 
 interface ListInlineProps extends ListLayoutProps {
   initialOpen: boolean
@@ -47,8 +46,8 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
   currentUser,
   applicationData,
   Markdown,
-  editItem = (index: number, value: boolean) => {},
-  deleteItem = (index: number) => {},
+  editItem = () => {},
+  deleteItem = () => {},
   editItemText,
   updateButtonText,
   deleteItemText,
@@ -61,11 +60,10 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
   const [currentItemElementsState, setItemResponseElementsState] = useState<{
     [key: string]: ElementState
   }>()
-  const { isMobile } = useViewport()
 
   const editItemInline = () => {
     setIsEditing(true)
-    editItem(index, false)
+    editItem(index)
   }
 
   const updateListInline = () => {

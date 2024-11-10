@@ -10,8 +10,8 @@ import { usePrefs } from '../../contexts/SystemPrefs'
 import { attemptLogin, attemptLoginOrg } from '../../utils/helpers/attemptLogin'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { LoginPayload, OrganisationSimple } from '../../utils/types'
+import defaultLogo from '../../../images/logos/conforma_logo_wide_1024.png'
 
-const defaultLogo = require('../../../images/logos/conforma_logo_wide_1024.png').default
 import config from '../../config'
 import { Tracker } from '../Main/Tracker'
 import usePageTitle from '../../utils/hooks/usePageTitle'
@@ -30,7 +30,7 @@ const Login: React.FC = () => {
   const { onLogin } = useUserState()
   const client = useApolloClient()
   const { t, languageOptions } = useLanguageProvider()
-  const { preferences } = usePrefs()
+  const { preferences, latestSnapshot } = usePrefs()
 
   usePageTitle(t('LABEL_LOG_IN'))
 
@@ -43,6 +43,9 @@ const Login: React.FC = () => {
 
   // useEffect ensures isLoggedIn only runs on first mount, not re-renders
   useEffect(() => {
+    // So we can remember which snapshot is loaded while logged out (on Demo
+    // servers)
+    console.log('Latest snapshot', latestSnapshot)
     if (isLoggedIn()) push('/')
     client.clearStore()
   }, [])
@@ -72,6 +75,7 @@ const Login: React.FC = () => {
   const finishLogin = async (loginPayload: LoginPayload) => {
     const { JWT, user, templatePermissions, orgList } = loginPayload
     await onLogin(JWT, user, templatePermissions, orgList)
+    localStorage.setItem(config.localStorageJWTKey, JWT)
     if (history.location?.state?.from) push(history.location.state.from)
     else push('/')
   }
@@ -237,6 +241,18 @@ const LanguageSelector: React.FC = () => {
       />
     </div>
   )
+}
+
+// For when Admin needs to logged in and site is in Maintenance mode
+export const AdminLogin: React.FC = () => {
+  const { maintenanceMode } = usePrefs()
+  const { push } = useRouter()
+  if (!maintenanceMode.enabled) {
+    push('/')
+    return null
+  }
+  localStorage.removeItem(config.localStorageJWTKey)
+  return <Login />
 }
 
 export default Login

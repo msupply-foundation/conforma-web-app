@@ -137,7 +137,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       textMarkdownList,
       textUnselectedMarkdownList,
       textMarkdownPropertyList,
-    } = createTextStrings(checkboxElements, t('LABEL_SUMMMARY_NOTHING_SELECTED'))
+    } = createTextStrings(checkboxElements, t('LABEL_SUMMARY_NOTHING_SELECTED'))
     onSave({
       text,
       textUnselected,
@@ -155,7 +155,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     })
   }, [checkboxElements])
 
-  const toggle = (e: any, data: any) => {
+  const toggle = (_: any, data: any) => {
     const { index } = data
     const changedCheckbox = { ...checkboxElements[index] }
     changedCheckbox.selected = !changedCheckbox.selected

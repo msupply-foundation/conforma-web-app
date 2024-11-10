@@ -68,7 +68,15 @@ const DataViewDetail: React.FC = () => {
           <Table celled stackable striped>
             <Table.Body>
               {columns
-                .filter((col) => !(displayDefinitions[col].hideIfNull && item[col] === null))
+                .filter(
+                  (col) =>
+                    !(
+                      displayDefinitions[col].hideIfNull &&
+                      // If "hideIfNull", we hide *any* falsy values or empty
+                      // arrays
+                      (!item[col] || (Array.isArray(item[col]) && item[col].length === 0))
+                    )
+                )
                 .map((columnName, index) => (
                   <Table.Row key={`row_${columnName}`}>
                     {!isMobile && (

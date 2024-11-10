@@ -9,6 +9,7 @@ interface ApplicationHomeWrapperProps {
   title: string
   subtitle?: string
   ButtonSegment?: React.FC
+  children: React.ReactNode
 }
 
 const ApplicationHomeWrapper: React.FC<ApplicationHomeWrapperProps> = ({

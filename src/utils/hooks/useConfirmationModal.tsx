@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Button, Header, Icon, Modal, ModalProps } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
 

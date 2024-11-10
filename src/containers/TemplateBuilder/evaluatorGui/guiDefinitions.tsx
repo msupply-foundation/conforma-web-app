@@ -5,11 +5,12 @@ import {
   renderDynamicParameters,
   renderSingleChild,
 } from './guiCommon'
-import { addToArray, removeFromArray, setInArray } from './helpers'
+import { addToArray, removeFromArray } from './helpers'
 import { renderEvaluationElement } from './renderEvaluation'
 
 import { getTypedEvaluation } from './typeHelpers'
 import { GuisType } from './types'
+import { Message } from 'semantic-ui-react'
 
 export const guis: GuisType = [
   {
@@ -471,6 +472,37 @@ export const guis: GuisType = [
               </ComponentLibrary.FlexColumn>
             )}
           </ComponentLibrary.FlexRow>
+        </React.Fragment>
+      )
+    },
+  },
+  {
+    selector: 'PG SQL query',
+    default: getTypedEvaluation({
+      operator: 'pgSQL',
+      children: [`SELECT * FROM organisation WHERE id = $1`, 1],
+    }),
+    match: (typedEvaluation) => typedEvaluation.asOperator.operator === 'pgSQL',
+    render: (evaluation, setEvaluation, ComponentLibrary, evaluatorParameters) => {
+      return (
+        <React.Fragment key="pgSQLComponent">
+          <ComponentLibrary.Label key="pgSQL" title="SQL query:" />
+          <Message warning size="tiny">
+            The SQL operator can only be used for ACTIONS (not form elements), and the expression
+            can't be previewed here.
+            <br /> Only use as a last resort -- prefer GET/POST/GraphQL
+          </Message>
+          {renderSingleChild(evaluation, 0, setEvaluation, ComponentLibrary, evaluatorParameters)}
+          {renderArrayControl({
+            title: 'Parameter substitutions',
+            evaluation,
+            key: 'substituteWith',
+            offset: 1,
+            setEvaluation,
+            newValue: getTypedEvaluation({ value: 'substitution' }),
+            ComponentLibrary,
+            evaluatorParameters,
+          })}
         </React.Fragment>
       )
     },

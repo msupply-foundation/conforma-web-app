@@ -5,7 +5,7 @@ import { FullStructure, User } from '../types'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
 
-const useNotesMutations = (applicationId: number, refetchNotes: Function) => {
+const useNotesMutations = (_: number, refetchNotes: Function) => {
   const { t } = useLanguageProvider()
   const [error, setError] = useState<string>()
   const [loadingMessage, setLoadingMessage] = useState('')

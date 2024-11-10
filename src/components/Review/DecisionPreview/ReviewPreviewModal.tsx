@@ -88,6 +88,6 @@ const fetchPreviews = async (reviewId: number, applicationDataOverride: { [key: 
     })
     return result
   } catch (err) {
-    return { error: err.message }
+    return { error: (err as Error).message }
   }
 }

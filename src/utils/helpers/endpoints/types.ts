@@ -15,6 +15,8 @@ export type BasicEndpoint = [
     | 'admin'
     | 'getAllPrefs'
     | 'setPrefs'
+    | 'setMaintenanceMode'
+    | 'serverStatus'
 ]
 
 export type LanguageEndpoint = [endpoint: 'language', options: { code: string }]
@@ -22,6 +24,11 @@ export type LanguageEndpoint = [endpoint: 'language', options: { code: string }]
 export type VerifyEndpoint = [endpoint: 'verify', options: { uid: string }]
 
 export type FileEndpoint = [endpoint: 'file', options: { fileId: string; thumbnail?: boolean }]
+
+export type FilesEndpoint = [
+  endpoint: 'files',
+  options: { applicationId?: number; outputOnly?: boolean; external?: boolean; internal?: boolean }
+]
 
 export type UserPermissionsEndpoint = [
   endpoint: 'userPermissions',
@@ -132,6 +139,7 @@ export type ComplexEndpoint =
   | LanguageEndpoint
   | VerifyEndpoint
   | FileEndpoint
+  | FilesEndpoint
   | UserPermissionsEndpoint
   | UploadEndpoint
   | CheckTriggersEndpoint

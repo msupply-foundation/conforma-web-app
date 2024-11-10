@@ -1,4 +1,4 @@
-import { TypedDocumentNode, OperationVariables, ApolloQueryResult } from '@apollo/client'
+import { TypedDocumentNode, OperationVariables } from '@apollo/client'
 import { DocumentNode } from 'graphql'
 
 type AllLookupTableStructuresType = {
@@ -68,12 +68,12 @@ type LookUpTableImportCsvActionType =
   | { type: 'SET_SUCCESS_MESSAGES'; payload: [] }
 
 export {
-  FieldMapType,
-  LookUpTableType,
-  TableStructureType,
-  LookUpTableListMainMenuType,
   LookUpTableImportCsvActions,
-  LookUpTableImportCsvType,
-  LookUpTableImportCsvActionType,
-  AllLookupTableStructuresType,
+  type FieldMapType,
+  type LookUpTableType,
+  type TableStructureType,
+  type LookUpTableListMainMenuType,
+  type LookUpTableImportCsvType,
+  type LookUpTableImportCsvActionType,
+  type AllLookupTableStructuresType,
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, Icon, Label } from 'semantic-ui-react'
+import { Header, Label } from 'semantic-ui-react'
 import { TemplateElementCategory } from '../../../../utils/generated/graphql'
 import { IconButton } from '../../shared/IconButton'
 import { useOperationState } from '../../shared/OperationContext'
