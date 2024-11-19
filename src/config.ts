@@ -11,7 +11,7 @@ const remoteGraphQLServer = remoteServer ? `${remoteServer}/graphql` : null
 
 const config = {
   devServerRest: remoteRestServer ?? 'http://localhost:8080/api',
-  devServerGraphQL: remoteGraphQLServer ?? 'http://localhost:5000/graphql',
+  devServerGraphQL: remoteGraphQLServer ?? 'http://localhost:5010/graphql',
   productionPathREST: '/server/api',
   productionPathGraphQL: '/postgraphile/graphql',
   restEndpoints: {
