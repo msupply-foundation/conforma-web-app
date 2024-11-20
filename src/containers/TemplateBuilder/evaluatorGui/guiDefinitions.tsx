@@ -413,7 +413,7 @@ export const guis: GuisType = [
            name
           }
         }`,
-        'http://localhost:5000/graphql',
+        'http://localhost:8080/graphql',
         ['appId'],
         1,
         'application.name',
