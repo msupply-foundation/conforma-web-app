@@ -33,7 +33,7 @@ const authLink = setContext((_, { headers }) => {
 // https://www.apollographql.com/docs/react/networking/authentication/#header
 const httpLink = createHttpLink({
   uri: ({ operationName }) => {
-    // return `http://localhost:5000/graphql?dev=${operationName}`
+    // return `http://localhost:8080/graphql?dev=${operationName}`
     return `${getServerUrl('graphQL')}?dev=${operationName}`
   },
 })
