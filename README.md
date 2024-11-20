@@ -61,7 +61,7 @@ The organisation-team will transfer approved changes from `develop` into the `ma
 
 ## Connecting to server
 
-In development, by default, the app will try to connect to local servers on `http://localhost:8080` (for REST server) and `http://localhost:5000/graphql` (GraphQl), so you'll need to have the [back-end](https://github.com/msupply-foundation/conforma-server) running.
+In development, by default, the app will try to connect to local servers on `http://localhost:8080` (for REST server) and `http://localhost:5010/graphql` (GraphQl), so you'll need to have the [back-end](https://github.com/msupply-foundation/conforma-server) running.
 
 It's possible to connect to a remote/online server by specifying it a local `.env` file (not committed with repo) in the repo root. An example `.env` file might look like:
 
