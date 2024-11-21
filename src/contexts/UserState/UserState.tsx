@@ -132,7 +132,9 @@ export function UserProvider({ children }: UserProviderProps) {
     client.clearStore()
     setUserState({ type: 'resetCurrentUser' })
     loginTimer.end()
-    push('/login')
+    // Forcing a refresh makes the app reload, which is useful if the app has
+    // been upgraded but still using locally cached javascript
+    location.reload()
   }
 
   const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
