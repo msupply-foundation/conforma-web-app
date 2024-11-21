@@ -16,7 +16,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml",
+    "push_docs": "exec ./utils/push_docs_to_wiki.sh"
   },
   "dependencies": {
     "@apollo/client": "^3.11.7",
