@@ -298,7 +298,7 @@ interface FullStructure {
   firstIncompleteReviewPage?: SectionAndPage
   sortedSections?: SectionState[]
   sortedPages?: Page[]
-  reload: () => void
+  reload: () => Promise<void>
 }
 
 interface HistoryElement {

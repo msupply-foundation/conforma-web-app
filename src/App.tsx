@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ApolloClient, ApolloProvider, createHttpLink, NormalizedCacheObject } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { onError } from '@apollo/client/link/error'
 import { persistCache } from 'apollo3-cache-persist'
 import '../semantic/src/semantic.less'
 import getServerUrl from './utils/helpers/endpoints/endpointUrlBuilder'
@@ -19,7 +20,6 @@ import { Loading } from './components'
 // https://www.apollographql.com/docs/react/networking/authentication/#header
 const authLink = setContext((_, { headers }) => {
   const JWT = localStorage.getItem('persistJWT')
-  // const JWT = localStorage.getItem(config.localStorageJWTKey);
   return {
     headers: {
       ...headers,
@@ -33,9 +33,19 @@ const authLink = setContext((_, { headers }) => {
 // https://www.apollographql.com/docs/react/networking/authentication/#header
 const httpLink = createHttpLink({
   uri: ({ operationName }) => {
-    // return `http://localhost:5000/graphql?dev=${operationName}`
+    // return `http://localhost:8080/graphql?dev=${operationName}`
     return `${getServerUrl('graphQL')}?dev=${operationName}`
   },
+})
+
+const errorLink = onError(({ graphQLErrors }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach((err) => {
+      if (err.message === 'invalid signature') {
+        console.log('Authentication error, logging out...')
+        location.reload()
+      }
+    })
 })
 
 // On iPhone, focusing on input fields causes the viewport to auto-zoom in. We
@@ -54,7 +64,7 @@ function App() {
 
   useEffect(() => {
     const client = new ApolloClient({
-      link: authLink.concat(httpLink),
+      link: authLink.concat(errorLink).concat(httpLink),
       cache,
     })
     setClient(client)
