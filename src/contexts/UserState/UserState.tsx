@@ -5,7 +5,6 @@ import { Position, useToast } from '../Toast'
 import { OrganisationSimple, TemplatePermissions, User } from '../../utils/types'
 import config from '../../config'
 import { usePrefs } from '../SystemPrefs'
-import { useRouter } from '../../utils/hooks/useRouter'
 import { useLanguageProvider } from '../Localisation'
 import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
 import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
@@ -94,7 +93,6 @@ export function UserProvider({ children }: UserProviderProps) {
   const userState = state
   const setUserState = dispatch
   const client = useApolloClient()
-  const { push } = useRouter()
   const { preferences } = usePrefs()
   const { showToast, clearAllToasts } = useToast()
 
