@@ -27,6 +27,7 @@ import {
   updateApplication,
   updateTemplateStage,
   deleteTemplate,
+  importTemplate, // DELETE in v1.5
 } from './OperationContextHelpers'
 import { TemplateState } from '../template/TemplateWrapper'
 import { ModalState, useTemplateOperations } from '../templateOperations/useTemplateOperations'
@@ -124,7 +125,7 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
     commitTemplate,
     duplicateTemplate,
     exportTemplate,
-    importTemplate,
+    // importTemplate, -- Enable in v1.5
     modalState,
     getFullEntityDiff,
   } = useTemplateOperations(setInnerState)
@@ -136,7 +137,8 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
     exportTemplate,
     getFullEntityDiff,
     duplicateTemplate,
-    importTemplate,
+    // @ts-ignore
+    importTemplate: importTemplate(setInnerState),
     updateTemplate: updateTemplate(setInnerState, updateTemplateMutation),
     updateTemplateFilterJoin: updateTemplateFilterJoin(
       setInnerState,
