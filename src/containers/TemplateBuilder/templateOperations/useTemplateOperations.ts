@@ -148,7 +148,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
   }
 
   const importTemplate = async (e: React.ChangeEvent<HTMLInputElement>, refetch: () => void) => {
-    console.log('Running Export workflow')
+    console.log('Running Import workflow')
     setWorkflow([uploadStep, installStep] as WorkflowStep[], {
       id: 0,
       code: '',
