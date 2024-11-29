@@ -76,6 +76,22 @@ type UpdateTemplateStageHelper = (
   updateTemplateStageMutation: ReturnType<typeof useUpdateTemplateStageMutation>[0]
 ) => UpdateTemplateStage
 
+export const deleteTemplate: DeleteTemplateHelper =
+  (setErrorAndLoadingState: SetErrorAndLoadingState, deleteTemplateMutation) => async (id) => {
+    try {
+      const result = await deleteTemplateMutation({
+        variables: { id },
+      })
+      return checkMutationResult(result, setErrorAndLoadingState)
+    } catch (e) {
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { message: 'error', title: (e as Error).message },
+      })
+      return false
+    }
+  }
+
 const checkMutationResult = async (
   result: any,
   setErrorAndLoadingState: SetErrorAndLoadingState
