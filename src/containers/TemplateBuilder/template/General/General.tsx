@@ -171,9 +171,7 @@ const General: React.FC = () => {
         setNumber={(number) => updateTemplate(template, { priority: number })}
       />
       <Category />
-
       <Filters />
-
       <DataViewSelector />
       <FileSelector />
 
