@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Dropdown, Header, Icon, Label } from 'semantic-ui-react'
 import { useTemplateState } from '../TemplateWrapper'
 import DropdownIO from '../../shared/DropdownIO'
-import { DataViewFilter, useDataViews } from './useDataViews'
+import { DataViewFilter, useDataViews } from './DataViews/useManageDataViews'
 import { useOperationState } from '../../shared/OperationContext'
 
 export const FileSelector: React.FC<{}> = () => {
