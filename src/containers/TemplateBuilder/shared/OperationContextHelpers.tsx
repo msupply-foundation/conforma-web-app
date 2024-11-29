@@ -5,45 +5,25 @@ import {
   useDeleteWholeApplicationMutation,
   useRestartApplicationMutation,
   useUpdateTemplateStageMutation,
-  useDeleteTemplateMutation,
 } from '../../../utils/generated/graphql'
-import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
-import { postRequest } from '../../../utils/helpers/fetchMethods'
 import useCreateApplication from '../../../utils/hooks/useCreateApplication'
 import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
 import {
-  ImportTemplate,
   UpdateTemplate,
   UpdateTemplateFilterJoin,
   DeleteApplication,
   CreateApplication,
-  TemplatesOperationProps,
   ErrorAndLoadingState,
   UpdateApplication,
   UpdateTemplateStage,
-  DeleteTemplate,
 } from './OperationContext'
 
-const templateExportOptionName = 'templateExport'
-
 export type SetErrorAndLoadingState = (props: ErrorAndLoadingState) => void
-
-type TemplateOperationHelper = (
-  props: TemplatesOperationProps,
-  setErrorAndLoadingState: SetErrorAndLoadingState
-) => Promise<boolean>
-
-type ImportTemplateHelper = (setErrorAndLoadingState: SetErrorAndLoadingState) => ImportTemplate
 
 type UpdateTemplateHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
   updateTemplateMutation: ReturnType<typeof useUpdateTemplateMutation>[0]
 ) => UpdateTemplate
-
-type DeleteTemplateHelper = (
-  setErrorAndLoadingState: SetErrorAndLoadingState,
-  updateTemplateSectionMutation: ReturnType<typeof useDeleteTemplateMutation>[0]
-) => DeleteTemplate
 
 type UpdateTemplateFilterJoinHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
@@ -214,154 +194,5 @@ export const createApplication: CreateApplicationHelper =
       return false
     }
   }
-
-export const exportTemplate: TemplateOperationHelper = async (
-  { id, snapshotName },
-  setErrorAndLoadingState
-) => {
-  const result = await safeFetch(
-    getServerUrl('snapshot', {
-      action: 'take',
-      name: snapshotName,
-      options: templateExportOptionName,
-    }),
-    JSON.stringify(getFilterBody(id)),
-    setErrorAndLoadingState
-  )
-
-  return result
-}
-
-export const duplicateTemplate: TemplateOperationHelper = async (
-  { id, snapshotName, templates = {} },
-  setErrorAndLoadingState
-) => {
-  const body = JSON.stringify({ ...getFilterBody(id), templates })
-
-  const result = await safeFetch(
-    getServerUrl('snapshot', {
-      action: 'take',
-      name: snapshotName,
-      options: templateExportOptionName,
-    }),
-    body,
-    setErrorAndLoadingState
-  )
-
-  if (!result) return false
-
-  const snapshotResult = await safeFetch(
-    getServerUrl('snapshot', {
-      action: 'use',
-      name: snapshotName,
-      options: templateExportOptionName,
-    }),
-    body,
-    setErrorAndLoadingState
-  )
-
-  // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
-  safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})
-
-  return snapshotResult
-}
-
-export const deleteTemplate: DeleteTemplateHelper =
-  (setErrorAndLoadingState: SetErrorAndLoadingState, deleteTemplateMutation) => async (id) => {
-    try {
-      const result = await deleteTemplateMutation({
-        variables: { id },
-      })
-      return checkMutationResult(result, setErrorAndLoadingState)
-    } catch (e) {
-      setErrorAndLoadingState({
-        isLoading: false,
-        error: { message: 'error', title: (e as Error).message },
-      })
-      return false
-    }
-  }
-
-export const importTemplate: ImportTemplateHelper =
-  (setErrorAndLoadingState: SetErrorAndLoadingState) => async (e) => {
-    if (!e.target?.files) return false
-    const file = e.target.files[0]
-    const snapshotName = file.name.replace('.zip', '')
-
-    try {
-      const data = new FormData()
-      data.append('file', file)
-
-      const result = await safeFetch(
-        getServerUrl('snapshot', { action: 'upload', template: true }),
-        data,
-        setErrorAndLoadingState
-      )
-
-      if (!result) return false
-
-      const snapshotResult = await safeFetch(
-        getServerUrl('snapshot', {
-          action: 'use',
-          name: snapshotName,
-          options: templateExportOptionName,
-        }),
-        '{}',
-        setErrorAndLoadingState
-      )
-
-      // Delete the snapshot cos we don't want snapshots page cluttered with individual templates
-      safeFetch(getServerUrl('snapshot', { action: 'delete', name: snapshotName }), {}, () => {})
-
-      return snapshotResult
-    } catch (error) {
-      setErrorAndLoadingState({
-        isLoading: false,
-        error: { message: 'error', title: (error as Error).message },
-      })
-      return false
-    }
-  }
-
-const getFilterBody = (id: number) => {
-  const equalToTemplateId = { equalTo: id }
-  const allElementsMatchTemplateId = { some: { templateId: equalToTemplateId } }
-  const filters = {
-    filters: {
-      template: { id: equalToTemplateId },
-      filter: { templateFilterJoins: allElementsMatchTemplateId },
-      permissionName: { templatePermissions: allElementsMatchTemplateId },
-      templateCategory: { templates: { some: { id: { equalTo: id } } } },
-    },
-  }
-  return filters
-}
-const safeFetch = async (
-  url: string,
-  body: any,
-  setErrorAndLoadingState: SetErrorAndLoadingState
-) => {
-  setErrorAndLoadingState({ isLoading: true })
-  try {
-    const resultJson = await postRequest({
-      url,
-      headers: typeof body === 'string' ? { 'Content-Type': 'application/json' } : {},
-      otherBody: body,
-    })
-    if (!!resultJson?.success) {
-      setErrorAndLoadingState({ isLoading: false })
-      return true
-    }
-
-    setErrorAndLoadingState({ isLoading: false, error: resultJson })
-    return false
-  } catch (error) {
-    setErrorAndLoadingState({
-      isLoading: false,
-      error: { message: 'error', title: (error as Error).message },
-    })
-    return false
-  }
-}
 
 export const getRandomNumber = () => Math.floor(Math.random() * Math.pow(9, 9))

@@ -256,11 +256,7 @@ const Templates: React.FC = () => {
         hidden
         name="file"
         multiple={false}
-        onChange={async (e) => {
-          await importTemplate(e, refetch)
-          // TO-DO: Remove in v1.5 and make above not await
-          refetch()
-        }}
+        onChange={async (e) => importTemplate(e, refetch)}
       />
       <Button inverted primary onClick={() => fileInputRef?.current?.click()}>
         Import
