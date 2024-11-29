@@ -3,7 +3,7 @@ import { Button, Icon, Search } from 'semantic-ui-react'
 import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction, JsonData } from 'json-edit-react'
 import { useToast, topLeft, Position } from '../../../contexts/Toast'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import Loading from '../../Loading'
+import { Loading } from '../../common'
 import useUndo from 'use-undo'
 import { truncateString } from '../../../utils/helpers/utilityFunctions'
 

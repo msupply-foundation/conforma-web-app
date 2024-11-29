@@ -22,7 +22,7 @@ import { DateTime } from 'luxon'
 import TextIO from '../TemplateBuilder/shared/TextIO'
 import { downloadFile, fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
 import { useRouter } from '../../utils/hooks/useRouter'
-import Tooltip from '../../components/Tooltip'
+import { Tooltip } from '../../components/common'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { BrowserNotifications } from '../../utils/browserNotifications'
 
