@@ -1,10 +1,13 @@
-import React from 'react'
-import { Header, Icon, Label, Image, Message } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Header, Icon, Label, Image, Message, Button } from 'semantic-ui-react'
 import { useTemplateState } from '../../TemplateWrapper'
 import { useOperationState } from '../../../shared/OperationContext'
 import { useFiles } from './useFiles'
+import { downloadFile } from '../../../../../utils/helpers/utilityFunctions'
+import { NewFileModal } from './NewFileModal'
 
 export const FileSelector: React.FC<{}> = () => {
+  const [modalOpen, setModalOpen] = useState(false)
   const { template } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const { fileDetails, refetch } = useFiles()
@@ -37,6 +40,7 @@ export const FileSelector: React.FC<{}> = () => {
   return (
     <>
       <Header as="h3">Files</Header>
+      <NewFileModal open={modalOpen} closeModal={() => setModalOpen(false)} linkFile={addLink} />
       {fileDetails.length > 0 && (
         <>
           {fileDetails.map(
@@ -45,6 +49,7 @@ export const FileSelector: React.FC<{}> = () => {
               unique_id,
               thumbnailUrl,
               original_filename,
+              description,
               fileUrl,
               usedInAction,
               linkedInDatabase,
@@ -52,17 +57,30 @@ export const FileSelector: React.FC<{}> = () => {
               joinId,
             }) =>
               !missingFromDatabase ? (
-                <div className="flex-row-start-center" style={{ gap: 10, minHeight: 40 }}>
+                <div
+                  className="flex-row-start-center"
+                  style={{ gap: 10, minHeight: 40, marginBottom: '1em' }}
+                >
                   <Image
                     src={thumbnailUrl}
                     className="clickable"
                     style={{ maxWidth: '10%', maxHeight: 30 }}
                   />
-                  <span className="slightly-smaller-text" style={{ width: 300 }}>
-                    <a href={fileUrl} target="_blank">
+                  <div className="flex-column">
+                    <span
+                      className="slightly-smaller-text link-style clickable"
+                      onClick={() => downloadFile(fileUrl, original_filename ?? '')}
+                      style={{ width: 300 }}
+                    >
                       {original_filename}
-                    </a>
-                  </span>
+                    </span>
+                    <span className="slightly-smaller-text" style={{ width: 300 }}>
+                      {description}
+                    </span>
+                    <span className="slightly-smaller-text">
+                      ID: <em>{unique_id}</em>
+                    </span>
+                  </div>
                   <div style={{ width: 100, textAlign: 'center' }}>
                     <Label
                       size="tiny"
@@ -100,13 +118,14 @@ export const FileSelector: React.FC<{}> = () => {
         </>
       )}
       {template.canEdit && (
-        <p className="tiny-bit-smaller-text">
-          Click{' '}
-          <a href="/" target="_blank">
-            here
-          </a>{' '}
-          to add or update template files
-        </p>
+        <Button
+          primary
+          inverted
+          size="mini"
+          content="Upload a new file"
+          style={{ marginTop: '1em' }}
+          onClick={() => setModalOpen(true)}
+        />
       )}
     </>
   )
