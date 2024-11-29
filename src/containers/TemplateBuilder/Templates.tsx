@@ -1,18 +1,6 @@
-/** @format */
-
-import React, { ReactNode, useRef } from 'react'
+import React, { ReactNode } from 'react'
 import { useState } from 'react'
-import {
-  Button,
-  Header,
-  Icon,
-  Table,
-  Label,
-  Dropdown,
-  Checkbox,
-  Confirm,
-  Input,
-} from 'semantic-ui-react'
+import { Header, Icon, Table, Label, Dropdown, Checkbox, Confirm, Input } from 'semantic-ui-react'
 import { useRouter } from '../../utils/hooks/useRouter'
 import OperationContext, { TemplateOptions, useOperationState } from './shared/OperationContext'
 import TextIO from './shared/TextIO'
@@ -24,6 +12,7 @@ import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { DateTime } from 'luxon'
 import { useToast } from '../../contexts/Toast'
 import { isTemplateUnlocked, getTemplateVersionId, getVersionString } from './template/helpers'
+import { UploadButton } from '../../components/common'
 
 type CellPropsTemplate = Template & { numberOfVersions?: number; totalApplicationCount?: number }
 type CellProps = { template: CellPropsTemplate; refetch: () => void; isExpanded: boolean }
@@ -342,7 +331,6 @@ type SortColumn = 'name' | 'code' | 'category' | 'status' | 'dashboard'
 const Templates: React.FC = () => {
   const { t } = useLanguageProvider()
   const [expandedTemplates, setExpandedTemplates] = useState<string[]>([])
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const { templates, refetch } = useGetTemplates()
   const { importTemplate } = useOperationState()
   const { query, updateQuery } = useRouter()
@@ -429,22 +417,16 @@ const Templates: React.FC = () => {
   )
 
   const renderImportButton = () => (
-    <>
-      <input
-        type="file"
-        ref={fileInputRef}
-        accept=".zip"
-        hidden
-        name="file"
-        multiple={false}
-        onChange={async (e) => {
-          if (await importTemplate(e)) refetch()
-        }}
-      />
-      <Button inverted primary onClick={() => fileInputRef?.current?.click()}>
-        Import
-      </Button>
-    </>
+    <UploadButton
+      inverted
+      primary
+      handleFiles={async (e) => {
+        if (await importTemplate(e)) refetch()
+      }}
+      InputProps={{ accept: '.zip' }}
+    >
+      Import
+    </UploadButton>
   )
 
   const sortedTemplates = sortTemplates(
