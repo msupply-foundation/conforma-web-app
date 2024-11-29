@@ -26,6 +26,7 @@ import {
   createApplication,
   updateApplication,
   updateTemplateStage,
+  deleteTemplate,
 } from './OperationContextHelpers'
 import { TemplateState } from '../template/TemplateWrapper'
 import { ModalState, useTemplateOperations } from '../templateOperations/useTemplateOperations'

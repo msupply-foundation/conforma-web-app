@@ -5,6 +5,7 @@ import {
   useDeleteWholeApplicationMutation,
   useRestartApplicationMutation,
   useUpdateTemplateStageMutation,
+  useDeleteTemplateMutation,
 } from '../../../utils/generated/graphql'
 import useCreateApplication from '../../../utils/hooks/useCreateApplication'
 import useGetApplicationSerial from '../../../utils/hooks/useGetApplicationSerial'
@@ -16,6 +17,7 @@ import {
   ErrorAndLoadingState,
   UpdateApplication,
   UpdateTemplateStage,
+  DeleteTemplate,
 } from './OperationContext'
 
 export type SetErrorAndLoadingState = (props: ErrorAndLoadingState) => void
@@ -24,6 +26,11 @@ type UpdateTemplateHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
   updateTemplateMutation: ReturnType<typeof useUpdateTemplateMutation>[0]
 ) => UpdateTemplate
+
+type DeleteTemplateHelper = (
+  setErrorAndLoadingState: SetErrorAndLoadingState,
+  updateTemplateSectionMutation: ReturnType<typeof useDeleteTemplateMutation>[0]
+) => DeleteTemplate
 
 type UpdateTemplateFilterJoinHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
@@ -55,6 +62,22 @@ type UpdateTemplateStageHelper = (
   setErrorAndLoadingState: SetErrorAndLoadingState,
   updateTemplateStageMutation: ReturnType<typeof useUpdateTemplateStageMutation>[0]
 ) => UpdateTemplateStage
+
+export const deleteTemplate: DeleteTemplateHelper =
+  (setErrorAndLoadingState: SetErrorAndLoadingState, deleteTemplateMutation) => async (id) => {
+    try {
+      const result = await deleteTemplateMutation({
+        variables: { id },
+      })
+      return checkMutationResult(result, setErrorAndLoadingState)
+    } catch (e) {
+      setErrorAndLoadingState({
+        isLoading: false,
+        error: { message: 'error', title: (e as Error).message },
+      })
+      return false
+    }
+  }
 
 const checkMutationResult = async (
   result: any,
