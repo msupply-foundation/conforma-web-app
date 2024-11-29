@@ -282,22 +282,6 @@ export const duplicateTemplate: TemplateOperationHelper = async (
   return snapshotResult
 }
 
-export const deleteTemplate: DeleteTemplateHelper =
-  (setErrorAndLoadingState: SetErrorAndLoadingState, deleteTemplateMutation) => async (id) => {
-    try {
-      const result = await deleteTemplateMutation({
-        variables: { id },
-      })
-      return checkMutationResult(result, setErrorAndLoadingState)
-    } catch (e) {
-      setErrorAndLoadingState({
-        isLoading: false,
-        error: { message: 'error', title: (e as Error).message },
-      })
-      return false
-    }
-  }
-
 export const importTemplate: ImportTemplateHelper =
   (setErrorAndLoadingState: SetErrorAndLoadingState) => async (e) => {
     if (!e.target?.files) return false
