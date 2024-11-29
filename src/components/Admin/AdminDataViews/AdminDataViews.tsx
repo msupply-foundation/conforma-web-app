@@ -24,7 +24,7 @@ import { nanoid } from 'nanoid'
 import { useAdminDataViewConfig } from './useAdminDataViewConfig'
 import config from '../../../config'
 import { JsonData } from 'json-edit-react'
-import Loading from '../../Loading'
+import { Loading } from '../../common'
 
 const JsonEditor = React.lazy(() => import('../JsonEditor/JsonEditor'))
 
