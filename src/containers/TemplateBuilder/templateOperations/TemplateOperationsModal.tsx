@@ -41,7 +41,7 @@ const DataViewWarning: React.FC<Omit<ModalState, 'type'>> = ({
           </p>
           <List bulleted>
             {unconnectedDataViews.map((view) => (
-              <ListItem>{view.code}</ListItem>
+              <ListItem key={view.identifier}>{view.code}</ListItem>
             ))}
           </List>
           <p>Are you sure you want to proceed?</p>
@@ -202,7 +202,7 @@ const ExportWarning: React.FC<Omit<ModalState, 'type'>> = ({ isOpen, onConfirm, 
           <h2>Warning</h2>
           <p>
             This template currently exports data for some linked items (e.g. DataViews, Filters,
-            Permissions) that have changed since this template was committed. You may wish to make a
+            Permissions) that have changed since this template was committed, You may wish to make a
             new version of this template and export that to ensure that it includes the current
             state of the system.
           </p>

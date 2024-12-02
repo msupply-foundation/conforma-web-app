@@ -191,7 +191,6 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
   }
 
   const commitStep = async (state: WorkflowState) => {
-    console.log('STATE', state)
     const { id, refetch, commitType } = state
     console.log('Committing', id)
 
@@ -256,7 +255,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
 
   const warnStep = async (state: WorkflowState) => {
     console.log('Warning...')
-    if (state.readyForExport) {
+    if (state.readyForExport || !state.committed) {
       nextStep()
       return
     }

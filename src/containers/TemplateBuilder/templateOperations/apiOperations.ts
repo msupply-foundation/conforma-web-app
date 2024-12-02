@@ -1,5 +1,5 @@
 /**
- * The raw http operations called b the Template Operations hook
+ * The raw http operations called by the Template Operations hook
  */
 
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
