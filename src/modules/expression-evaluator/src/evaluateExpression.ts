@@ -158,9 +158,10 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
           ])
           headers = queryHeaders ?? params?.headers
           returnedProperty = returnProperty
+          const queryChar = url.match(/\?[A-z]+\=[\w]+/) ? '&' : '?'
           urlWithQuery =
             fieldNames.length > 0
-              ? `${url}?${fieldNames
+              ? `${url}${queryChar}${fieldNames
                   .map((field: string, index: number) => field + '=' + values[index])
                   .join('&')}`
               : url
