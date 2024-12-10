@@ -7,6 +7,7 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
 
   const [applicationSubmitMutation] = useUpdateApplicationMutation({
     onError: (submissionError) => setError(submissionError.message),
+    refetchQueries: ['getApplication'],
   })
 
   const submit = async (structure: FullStructure) => {
@@ -31,7 +32,6 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
       },
     })
     if (result.errors) throw new Error(result.errors.toString())
-    await structure.reload()
     return result
   }
 
