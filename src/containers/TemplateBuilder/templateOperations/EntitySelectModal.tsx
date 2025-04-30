@@ -374,9 +374,7 @@ const JsonViewer = ({
     rootName={title}
     rootFontSize={12}
     data={data}
-    restrictAdd={true}
-    restrictDelete={true}
-    restrictEdit={true}
+    viewOnly
     maxWidth="100%"
     collapse={1}
     showCollectionCount="when-closed"
