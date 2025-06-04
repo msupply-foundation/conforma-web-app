@@ -15,7 +15,7 @@ export default gql`
           id
           username
         }
-        files {
+        fileList {
           nodes {
             filePath
             description
