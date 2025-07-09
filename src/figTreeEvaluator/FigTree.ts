@@ -26,11 +26,9 @@ export const FigTree = new FigTreeEvaluator({
 
   // Undocumented property to support certain V1 expressions. Remove this once
   // we're sure all evaluator queries have been updated.
-  supportDeprecatedValueNodes: true,
+  //
+  // supportDeprecatedValueNodes: true,
 })
-
-// @ts-ignore
-FigTree.id = String(Math.random())
 
 export const loadFragments = async (type: 'frontEnd' | 'backEnd') => {
   getRequest(getServerUrl('figTreeFragments', { frontOrBack: type })).then((fragments) => {
