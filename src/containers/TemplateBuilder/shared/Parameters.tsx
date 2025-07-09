@@ -54,7 +54,7 @@ export const Parameters: React.FC<ParametersProps> = ({
           currentUser,
           applicationData: { ...fullStructure?.info, currentPageType: 'application' },
         }
-      : undefined
+      : {}
 
   return (
     <Accordion

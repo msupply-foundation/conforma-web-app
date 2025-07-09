@@ -19,6 +19,7 @@ import FromExistingElement from './FromExistingElement'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { EvaluatorNode } from 'fig-tree-evaluator'
+import { useUserState } from '../../../../contexts/UserState'
 
 type ElementConfigProps = {
   element: TemplateElement | null
@@ -93,6 +94,9 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
   const [open, setOpen] = useState(false) // TODO: Use ConfirmationModal (2 actions...)
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   useEffect(() => {
     if (!element) return setState(null)
@@ -325,15 +329,20 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               <Evaluation
                 label={title}
                 key={key}
-                currentElementCode={state.code}
-                fullStructure={structure}
                 evaluation={state[key]}
                 setEvaluation={(evaluation) => {
                   setState({ ...state, [key]: evaluation })
                   markNeedsUpdate()
                 }}
-                type="FormElement"
                 canEdit={canEdit}
+                objectData={{
+                  responses: {
+                    ...structure?.responsesByCode,
+                    thisResponse: structure?.responsesByCode?.[state.code]?.text,
+                  },
+                  currentUser,
+                  applicationData: { ...structure?.info, currentPageType: 'application' },
+                }}
               />
             ))}
           </div>

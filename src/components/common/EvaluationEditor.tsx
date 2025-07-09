@@ -54,6 +54,8 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
     setData(newData)
   }
 
+  console.log('objectData', objectData)
+
   return (
     <div className="fig-tree-container">
       <FigTreeEditor
@@ -69,7 +71,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         restrictAdd={!canEdit}
         restrictDelete={!canEdit}
         collapseAnimationTime={0}
-        onEvaluate={(result) =>
+        onEvaluate={(result) => {
           showToast({
             text: truncateString(String(result)),
             html: formatResult(result),
@@ -77,7 +79,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
             timeout: 10_000,
             maxWidth: 650,
           })
-        }
+        }}
         onEvaluateError={(err) => {
           showToast({
             title: 'Evaluation Error',

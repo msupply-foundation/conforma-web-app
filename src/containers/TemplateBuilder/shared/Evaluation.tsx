@@ -15,7 +15,7 @@ type EvaluationProps = {
   label: string
   updateKey?: (key: string) => void
   deleteKey?: () => void
-  objectData?: Record<string, unknown>
+  objectData: Record<string, unknown>
   canEdit: boolean
 }
 
@@ -91,6 +91,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
               figTree={FigTree}
               objectData={objectData}
               canEdit={canEdit}
+              rootName={label}
             />
             <ObjectDataDisplay objectData={objectData} />
           </div>
