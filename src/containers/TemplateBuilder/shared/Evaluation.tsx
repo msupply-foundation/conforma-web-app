@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { JsonEditor as ReactJson, IconDelete, IconEdit } from 'json-edit-react'
-import { Accordion, Icon, Label } from 'semantic-ui-react'
 import TextIO from './TextIO'
 import { EvaluatorNode } from 'fig-tree-evaluator'
 import { FigTree } from '../../../FigTreeEvaluator'

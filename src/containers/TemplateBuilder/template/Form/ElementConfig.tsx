@@ -20,9 +20,10 @@ import { useLanguageProvider } from '../../../../contexts/Localisation'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { EvaluatorNode } from 'fig-tree-evaluator'
 import { useUserState } from '../../../../contexts/UserState'
+import useUndo from 'use-undo'
 
 type ElementConfigProps = {
-  element: TemplateElement | null
+  element: TemplateElement
   onClose: () => void
 }
 
@@ -90,21 +91,17 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   } = useTemplateState()
   const { selectedSectionId } = useFormState()
   const { updateApplication, updateTemplateSection } = useOperationState()
-  const [state, setState] = useState<ElementUpdateState | null>(null)
+  // const [state, setState] = useState<ElementUpdateState>(getState(element))
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
-  const [open, setOpen] = useState(false) // TODO: Use ConfirmationModal (2 actions...)
+  const [open, setOpen] = useState(false)
   const {
     userState: { currentUser },
   } = useUserState()
 
-  useEffect(() => {
-    if (!element) return setState(null)
-    setState(getState(element))
-    setShowSaveAlert(false)
-  }, [element])
-
-  if (!state || !element) return null
+  const [{ present: state }, { set: setState, reset, undo, redo, canUndo, canRedo }] = useUndo(
+    getState(element)
+  )
 
   const removeElement = async () => {
     const applicationResponseId =
