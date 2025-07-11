@@ -5,10 +5,9 @@ export interface UndoRedoProps {
   canRedo: boolean
   undo: () => void
   redo: () => void
-  reset?: () => void
 }
 
-export const UndoRedo = ({ canUndo, canRedo, undo, redo, reset }: UndoRedoProps) => {
+export const UndoRedo = ({ canUndo, canRedo, undo, redo }: UndoRedoProps) => {
   if (!canUndo && !canRedo) return null
 
   return (

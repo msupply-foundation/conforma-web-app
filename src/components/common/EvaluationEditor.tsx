@@ -11,6 +11,7 @@ const RESULT_STRING_CHAR_LIMIT = 500
 interface EvaluatorProps extends Omit<FigTreeEditorProps, 'onEvaluate'> {
   toastPosition?: Position
   canEdit: boolean
+  resetExpression?: (expression: EvaluatorNode) => void
   isCombinedView?: boolean
 }
 
@@ -22,6 +23,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
   toastPosition = topMiddle,
   canEdit,
   isCombinedView = false,
+  resetExpression,
   ...figTreeEditorProps
 }) => {
   const { t } = useLanguageProvider()
@@ -44,7 +46,11 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
     // Loose => key order not considered
     const isLooselyEqual = dequal(newData, expression)
 
-    if (isLooselyEqual && !isStrictlyEqual) return
+    if (isLooselyEqual && !isStrictlyEqual && resetExpression) {
+      console.log('Resetting', newData)
+      resetExpression(newData)
+      return
+    }
 
     if (isStrictlyEqual) return
 

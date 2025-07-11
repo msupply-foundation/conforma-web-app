@@ -17,6 +17,7 @@ type EvaluationProps = {
   deleteKey?: () => void
   objectData: Record<string, unknown>
   canEdit: boolean
+  resetExpression?: (expression: EvaluatorNode) => void
 }
 
 type EvaluationHeaderProps = {
@@ -48,6 +49,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
   deleteKey,
   canEdit,
   objectData,
+  resetExpression,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isEditingKey, setIsEditingKey] = useState(false)
@@ -105,6 +107,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
                 setIsExpanded(!collapsed)
               }
             }}
+            resetExpression={resetExpression}
           />
           {isExpanded && <ObjectDataDisplay objectData={objectData} />}
         </div>

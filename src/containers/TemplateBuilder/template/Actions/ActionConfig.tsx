@@ -204,6 +204,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             requiredParameters={(currentActionPlugin?.requiredParameters as string[]) || []}
             optionalParameters={(currentActionPlugin?.optionalParameters as string[]) || []}
             type="Action"
+            UndoRedo={<></>}
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">

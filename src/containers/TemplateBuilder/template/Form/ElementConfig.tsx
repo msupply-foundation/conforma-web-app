@@ -374,8 +374,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 label={title}
                 key={key}
                 evaluation={commonData[key]}
-                setEvaluation={(evaluation) => {
-                  setCommonData({ ...commonData, [key]: evaluation })
+                setEvaluation={(expression) => {
+                  setCommonData({ ...commonData, [key]: expression })
                   markNeedsUpdate()
                 }}
                 canEdit={canEdit}
@@ -386,6 +386,10 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   },
                   currentUser,
                   applicationData: { ...structure?.info, currentPageType: 'application' },
+                }}
+                resetExpression={(expression) => {
+                  resetCommon({ ...commonData, [key]: expression })
+                  markNeedsUpdate()
                 }}
               />
             ))}
