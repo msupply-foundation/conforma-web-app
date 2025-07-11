@@ -75,7 +75,6 @@ export const PermissionActionInfo: React.FC<PermissionActionsProps> = ({ templat
       </div>
       <Evaluation
         label="condition"
-        currentElementCode={''}
         evaluation={templateAction?.condition}
         setEvaluation={() => {}}
       />

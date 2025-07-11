@@ -6,6 +6,7 @@ import { isFigTreeError, truncateString, dequal, EvaluatorNode } from 'fig-tree-
 import { Position, topMiddle, useToast } from '../../contexts/Toast'
 import { Icon } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import { handleCopyToClipboard } from '../Admin/JsonEditor'
 
 const RESULT_STRING_CHAR_LIMIT = 500
 
@@ -104,6 +105,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
             maxWidth: 650,
           })
         }}
+        enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
       />
       {(canUndo || canRedo) && (
         <div className="flex-row-space-between">

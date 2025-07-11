@@ -182,14 +182,13 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               />
               <Evaluation
                 label="Condition"
-                currentElementCode={''}
                 evaluation={state?.condition}
                 setEvaluation={(condition) => {
                   setState({ ...state, condition })
                   markNeedsUpdate()
                 }}
-                applicationData={applicationData}
-                type="Action"
+                canEdit={canEdit}
+                objectData={{ applicationData }}
               />
             </div>
           </div>

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon, Search } from 'semantic-ui-react'
-import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction, JsonData } from 'json-edit-react'
-import { useToast, topLeft, Position } from '../../../contexts/Toast'
+import { JsonEditor as ReactJson, JsonEditorProps, JsonData } from 'json-edit-react'
+import { useToast, topLeft } from '../../../contexts/Toast'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Loading } from '../../common'
 import useUndo from 'use-undo'
-import { truncateString } from '../../../utils/helpers/utilityFunctions'
+import { handleCopyToClipboard } from './utils'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   onSave?: (data: JsonData) => void
@@ -53,19 +53,6 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     else await onSave(newData)
   }
 
-  const handleCopy: CopyFunction = ({ key, value, type, stringValue }) => {
-    const text =
-      typeof value === 'object' && value !== null
-        ? t('CLIPBOARD_COPIED_ITEMS', { name: key, count: Object.keys(value).length })
-        : truncateString(stringValue)
-    showToast({
-      title: t(type === 'value' ? 'CLIPBOARD_COPIED_VALUE' : 'CLIPBOARD_COPIED_PATH'),
-      text,
-      style: 'info',
-      position: Position.bottomLeft,
-    })
-  }
-
   if (currentData === undefined) return <Loading />
 
   return (
@@ -86,7 +73,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         onUpdate={({ newData }) => {
           onUpdate(newData)
         }}
-        enableClipboard={handleCopy}
+        enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
         theme={{
           container: {
             backgroundColor: '#fefefe',
@@ -123,5 +110,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     </div>
   )
 }
+
+//
 
 export default JsonEditor
