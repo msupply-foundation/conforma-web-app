@@ -47,7 +47,6 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
     const isLooselyEqual = dequal(newData, expression)
 
     if (isLooselyEqual && !isStrictlyEqual && resetExpression) {
-      console.log('Resetting', newData)
       resetExpression(newData)
       return
     }
