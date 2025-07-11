@@ -133,6 +133,7 @@ export const Parameters: React.FC<ParametersProps> = ({
                       canEdit={canEdit}
                       collapse={1}
                       objectData={objectData}
+                      isCombinedView
                     />
                     <ObjectDataDisplay objectData={objectData} />
                   </div>

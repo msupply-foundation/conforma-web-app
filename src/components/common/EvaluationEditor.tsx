@@ -11,6 +11,7 @@ const RESULT_STRING_CHAR_LIMIT = 500
 interface EvaluatorProps extends Omit<FigTreeEditorProps, 'onEvaluate'> {
   toastPosition?: Position
   canEdit: boolean
+  isCombinedView?: boolean
 }
 
 export const EvaluationEditor: React.FC<EvaluatorProps> = ({
@@ -20,6 +21,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
   objectData,
   toastPosition = topMiddle,
   canEdit,
+  isCombinedView = false,
   ...figTreeEditorProps
 }) => {
   const { t } = useLanguageProvider()
@@ -50,6 +52,8 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
     // setData(newData)
   }
 
+  const boldLevel = isCombinedView ? 1 : 0
+
   return (
     <div className="fig-tree-container">
       <FigTreeEditor
@@ -58,7 +62,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         {...figTreeEditorProps}
         styles={{
           property: ({ level }) => {
-            if (level === 0) return { fontWeight: 'bold' }
+            if (level === boldLevel) return { fontWeight: 'bold' }
             return {}
           },
           container: 'transparent',
