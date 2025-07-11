@@ -80,7 +80,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const responses = { thisResponse: password || '', ...allResponses }
     const JWT = localStorage.getItem(config.localStorageJWTKey)
     const customValidation = await validate(validationInternal, validationMessageInternal, {
-      objects: { responses, currentUser, applicationData, functions },
+      objects: { responses, currentUser, applicationData },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
       headers: { Authorization: 'Bearer ' + JWT },

@@ -14,7 +14,6 @@ import {
   TemplateOptions,
   GetApplicationDataOptions,
   ArchiveOptions,
-  FigTreeFragmentsEndpoint,
   FigTreeFragmentsOptions,
 } from './types'
 

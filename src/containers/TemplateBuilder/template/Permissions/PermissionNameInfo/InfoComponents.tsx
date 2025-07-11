@@ -74,9 +74,11 @@ export const PermissionActionInfo: React.FC<PermissionActionsProps> = ({ templat
         <TextIO title="Trigger" text={templateAction?.trigger || ''} />
       </div>
       <Evaluation
-        label="condition"
+        label="Condition"
         evaluation={templateAction?.condition}
         setEvaluation={() => {}}
+        canEdit={false}
+        objectData={{}}
       />
       {/* <Parameters
         key="parametersElement"
