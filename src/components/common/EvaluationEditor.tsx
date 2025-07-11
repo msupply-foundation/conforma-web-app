@@ -77,7 +77,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         restrictEdit={!canEdit}
         restrictAdd={!canEdit}
         restrictDelete={!canEdit}
-        collapseAnimationTime={0}
+        collapseAnimationTime={100}
         onEvaluate={(result, e) => {
           let resultString = truncateString(String(result))
           let copiedToClipboardText = ''
