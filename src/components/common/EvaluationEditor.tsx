@@ -49,7 +49,6 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
     if (isStrictlyEqual) return
 
     setExpression(newData)
-    // setData(newData)
   }
 
   const boldLevel = isCombinedView ? 1 : 0
