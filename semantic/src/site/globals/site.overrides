@@ -2453,23 +2453,32 @@ a:hover {
   width: 100%;
   border-radius: @borderRadius;
   border: 1px solid @indicatorColor;
-  padding: 2px;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
   margin: 2px;
   background-color: @surfacesWhite;
   .evaluation-container-title {
     .flex-row-start-center();
     white-space: nowrap;
   }
+  input {
+    border: 1px solid @surfacesMed;
+    border-radius: 0.3em;
+    font-family: inherit;
+    outline: none;
+    padding: 0.3em;
+  }
+  input::selection {
+    background-color: #b3d8ff;
+  }
+  .jer-editor-container {
+    padding: 0;
+    width: max-content;
+    margin-left: 0.8em;
+    margin-bottom: 0;
+  }
   .evaluation-container-content {
     .flex-row() !important;
     align-items: flex-start;
     justify-content: space-between;
-  }
-  .jer-editor-container {
-    width: max-content;
-    margin-bottom: 1em;
   }
 }
 
@@ -2694,6 +2703,9 @@ a:hover {
 .config-container-alternate {
   .config-container();
   background-color: @surfacesLight;
+  .ui.header {
+    margin: 0.5em !important;
+  }
 }
 
 .config-container-outline {

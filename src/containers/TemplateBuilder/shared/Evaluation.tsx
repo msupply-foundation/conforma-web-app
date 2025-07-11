@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { JsonEditor as ReactJson } from 'json-edit-react'
+import { JsonEditor as ReactJson, IconDelete, IconEdit } from 'json-edit-react'
 import { Accordion, Icon, Label } from 'semantic-ui-react'
 import TextIO from './TextIO'
 import { EvaluatorNode } from 'fig-tree-evaluator'
@@ -50,55 +50,87 @@ const Evaluation: React.FC<EvaluationProps> = ({
   canEdit,
   objectData,
 }) => {
-  const [isActive, setIsActive] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isEditingKey, setIsEditingKey] = useState(false)
+
+  const changeKey = updateKey
+    ? (key: string) => {
+        updateKey(key)
+        setIsEditingKey(false)
+      }
+    : () => {}
 
   return (
-    <Accordion className="evaluation-container">
-      <Accordion.Title className="evaluation-container-title flex-gap-10" active={isActive}>
-        {!updateKey && label && (
-          <Label style={{ minWidth: 120, textAlign: 'center' }}>{label}</Label>
-        )}
+    <div
+      className="evaluation-container flex-row-start-center"
+      style={{
+        paddingLeft: isExpanded ? '1em' : '0.5em',
+        paddingTop: isExpanded ? '0.6em' : '0.2em',
+        paddingBottom: isExpanded ? '0.6em' : '0.2em',
+      }}
+    >
+      <div
+        className="flex-row"
+        style={{
+          gap: '0.6em',
+          marginRight: deleteKey || updateKey ? '1em' : 0,
+          display: isExpanded ? 'none' : 'inherit',
+        }}
+      >
         {deleteKey && (
-          <Icon
-            className="clickable left-margin-space-10"
-            name="window close"
-            onClick={deleteKey}
-          />
+          <span onClick={deleteKey}>
+            <IconDelete size="1.4em" style={{ color: 'rgb(203, 75, 22)' }} />
+          </span>
         )}
         {updateKey && (
-          <div className="flex-row-start-center" style={{ marginTop: 6 }}>
-            <TextIO
-              title="Parameter Name"
-              text={label}
-              setText={updateKey as (key: string | null) => void}
-            />
-          </div>
+          <span onClick={() => setIsEditingKey(true)} title="Edit Key">
+            <IconEdit size="1.4em" />
+          </span>
         )}
-        <EvaluationHeader evaluation={evaluation} />
-        <div className="flex-row-end">
-          <Icon
-            size="large"
-            name={isActive ? 'angle up' : 'angle down'}
-            onClick={() => setIsActive(!isActive)}
+      </div>
+      {!isEditingKey ? (
+        <div
+          className="flex-row-space-between"
+          style={{ gap: '1em', marginLeft: deleteKey || updateKey ? 0 : '1em' }}
+        >
+          <EvaluationEditor
+            expression={evaluation}
+            setExpression={setEvaluation}
+            figTree={FigTree}
+            objectData={objectData}
+            canEdit={canEdit}
+            rootName={label}
+            collapse={0}
+            onCollapse={({ path, collapsed }) => {
+              if (path.length === 0) {
+                console.log(path, collapsed)
+                setIsExpanded(!collapsed)
+              }
+            }}
           />
+          {isExpanded && <ObjectDataDisplay objectData={objectData} />}
         </div>
-      </Accordion.Title>
-      {isActive && (
-        <Accordion.Content className="evaluation-container-content" active={isActive}>
-          <div className="flex-row-space-between" style={{ gap: '1em' }}>
-            <EvaluationEditor
-              expression={evaluation}
-              setExpression={setEvaluation}
-              figTree={FigTree}
-              objectData={objectData}
-              canEdit={canEdit}
-              rootName={label}
-            />
-            <ObjectDataDisplay objectData={objectData} />
-          </div>
-        </Accordion.Content>
+      ) : (
+        <input
+          style={{ marginLeft: '1em' }}
+          type="text"
+          name={label}
+          defaultValue={label}
+          autoFocus
+          onFocus={(e) => e.target.select()}
+          onKeyDown={(e: React.KeyboardEvent) => {
+            if (e.key === 'Enter') {
+              changeKey((e.target as HTMLInputElement).value)
+            } else if (e.key === 'Escape') {
+              setIsEditingKey(false)
+            }
+          }}
+          onBlur={(e) => {
+            changeKey((e.target as HTMLInputElement).value)
+          }}
+        />
       )}
-    </Accordion>
+    </div>
   )
 }
 

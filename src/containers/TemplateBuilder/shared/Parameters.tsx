@@ -62,13 +62,12 @@ export const Parameters: React.FC<ParametersProps> = ({
       style={{ minWidth: 450 }}
     >
       <Accordion.Title
-        className="evaluation-container-title"
+        className="evaluation-container-title no-margin-no-padding"
         active={isActive}
         onClick={() => setIsActive(!isActive)}
       >
         <Header
           as="h4"
-          className="no-margin-no-padding"
           content={`Plugin Specific Parameters (${Object.keys(parameters).length})`}
         />
         <div className="flex-row-end">
@@ -142,9 +141,11 @@ export const Parameters: React.FC<ParametersProps> = ({
                   <Evaluation
                     setEvaluation={(value: any) => setParameters({ ...parameters, [key]: value })}
                     updateKey={(newKey) => {
-                      const newParameters = { ...parameters }
-                      delete newParameters[key]
-                      if (newKey) setParameters({ ...newParameters, [newKey]: value })
+                      // Convert to array to preserve property order
+                      const newParameters = Object.entries(parameters)
+                      const thisParameter = newParameters.find(([k]) => k === key)
+                      if (thisParameter) thisParameter[0] = newKey
+                      setParameters(Object.fromEntries(newParameters))
                     }}
                     deleteKey={
                       canEdit

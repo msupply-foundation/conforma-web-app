@@ -55,12 +55,9 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
     setData(newData)
   }
 
-  console.log('objectData', objectData)
-
   return (
     <div className="fig-tree-container">
       <FigTreeEditor
-        collapse={3}
         minWidth={600}
         rootName=""
         {...figTreeEditorProps}
@@ -69,6 +66,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
             if (level === 0) return { fontWeight: 'bold' }
             return {}
           },
+          container: 'transparent',
         }}
         expression={currentData}
         setExpression={handleUpdate}
