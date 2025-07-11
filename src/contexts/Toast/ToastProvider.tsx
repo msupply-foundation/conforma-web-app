@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
-import { Message, MessageContent, MessageHeader, Transition } from 'semantic-ui-react'
+import { Message, MessageContent, Transition } from 'semantic-ui-react'
 import { ToastProps, MessageProps, Position, bottomLeft } from './types'
 import { getStyleProps } from './helpers'
 import { nanoid } from 'nanoid'

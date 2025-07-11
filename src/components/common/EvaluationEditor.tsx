@@ -63,6 +63,12 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         minWidth={600}
         rootName=""
         {...figTreeEditorProps}
+        styles={{
+          property: ({ level }) => {
+            if (level === 0) return { fontWeight: 'bold' }
+            return {}
+          },
+        }}
         expression={currentData}
         setExpression={handleUpdate}
         figTree={figTree}
@@ -71,10 +77,17 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         restrictAdd={!canEdit}
         restrictDelete={!canEdit}
         collapseAnimationTime={0}
-        onEvaluate={(result) => {
+        onEvaluate={(result, e) => {
+          let resultString = truncateString(String(result))
+          let copiedToClipboardText = ''
+          if (e.getModifierState('Meta') || e.getModifierState('Control')) {
+            navigator.clipboard.writeText(String(result))
+            copiedToClipboardText = '(Copied to clipboard)'
+            resultString += `\n${copiedToClipboardText}`
+          }
           showToast({
-            text: truncateString(String(result)),
-            html: formatResult(result),
+            text: resultString,
+            html: formatResult(result, copiedToClipboardText),
             style: 'success',
             timeout: 10_000,
             maxWidth: 650,
@@ -112,20 +125,42 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
   )
 }
 
-const formatResult = (result: unknown) => {
+const formatResult = (result: unknown, copiedToClipboardText?: string) => {
+  const copiedToClipboard = copiedToClipboardText ? (
+    <div style={{ textAlign: 'center' }}>
+      <em>{copiedToClipboardText}</em>
+    </div>
+  ) : null
+
+  let htmlResult: JSX.Element | null = null
+
   switch (typeof result) {
     case 'boolean':
     case 'number':
+      // Returning undefined will force the Message component to render the
+      // plain text result rather than the formatted HTML
       return undefined
     case 'object':
-      if (result === null)
-        return (
+      if (result === null) {
+        htmlResult = (
           <code>
             <strong>NULL</strong>
           </code>
         )
-      return <pre>{truncateString(JSON.stringify(result, null, 2), RESULT_STRING_CHAR_LIMIT)}</pre>
+        break
+      }
+      htmlResult = (
+        <pre>{truncateString(JSON.stringify(result, null, 2), RESULT_STRING_CHAR_LIMIT)}</pre>
+      )
+      break
     default:
-      return <Markdown text={truncateString(String(result), RESULT_STRING_CHAR_LIMIT)} />
+      htmlResult = <Markdown text={truncateString(String(result), RESULT_STRING_CHAR_LIMIT)} />
   }
+
+  return (
+    <>
+      {htmlResult}
+      {copiedToClipboard}
+    </>
+  )
 }
