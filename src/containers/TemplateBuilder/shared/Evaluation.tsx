@@ -103,7 +103,6 @@ const Evaluation: React.FC<EvaluationProps> = ({
             collapse={0}
             onCollapse={({ path, collapsed }) => {
               if (path.length === 0) {
-                console.log(path, collapsed)
                 setIsExpanded(!collapsed)
               }
             }}
