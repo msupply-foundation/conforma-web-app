@@ -1,10 +1,8 @@
 import React from 'react'
-import useUndo from 'use-undo'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { FigTreeEditor, FigTreeEditorProps } from 'fig-tree-editor-react'
 import { isFigTreeError, truncateString, dequal, EvaluatorNode } from 'fig-tree-evaluator'
 import { Position, topMiddle, useToast } from '../../contexts/Toast'
-import { Icon } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { handleCopyToClipboard } from '../Admin/JsonEditor'
 
@@ -25,8 +23,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
   ...figTreeEditorProps
 }) => {
   const { t } = useLanguageProvider()
-  const [{ present: currentData }, { set: setData, reset, undo, redo, canUndo, canRedo }] =
-    useUndo(expression)
+
   const { showToast } = useToast({ position: toastPosition })
 
   const handleUpdate = (newData: EvaluatorNode) => {
@@ -40,19 +37,17 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
     // queue by using the "reset" method rather than "setData" in this case.
 
     // Strict => key order must be the same
-    const isStrictlyEqual = JSON.stringify(newData) === JSON.stringify(currentData)
-    // Loose => key order not considered
-    const isLooselyEqual = dequal(newData, currentData)
+    const isStrictlyEqual = JSON.stringify(newData) === JSON.stringify(expression)
 
-    if (isLooselyEqual && !isStrictlyEqual) {
-      reset(newData)
-      return
-    }
+    // Loose => key order not considered
+    const isLooselyEqual = dequal(newData, expression)
+
+    if (isLooselyEqual && !isStrictlyEqual) return
 
     if (isStrictlyEqual) return
 
     setExpression(newData)
-    setData(newData)
+    // setData(newData)
   }
 
   return (
@@ -68,7 +63,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
           },
           container: 'transparent',
         }}
-        expression={currentData}
+        expression={expression}
         setExpression={handleUpdate}
         figTree={figTree}
         objectData={objectData as Record<string, unknown>}
@@ -105,22 +100,6 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         }}
         enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
       />
-      {(canUndo || canRedo) && (
-        <div className="flex-row-space-between">
-          <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
-            <a onClick={undo}>
-              <Icon name="arrow alternate circle left" />
-              <strong>{t('BUTTON_UNDO')}</strong>
-            </a>
-          </p>
-          <p className={`clickable nav-button ${!canRedo ? 'invisible' : ''}`}>
-            <a onClick={redo}>
-              <strong>{t('BUTTON_REDO')}</strong>
-              <Icon name="arrow alternate circle right" />
-            </a>
-          </p>
-        </div>
-      )}
     </div>
   )
 }

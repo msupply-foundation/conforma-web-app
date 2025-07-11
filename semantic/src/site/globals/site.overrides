@@ -2513,6 +2513,10 @@ a:hover {
     border-top-left-radius: @borderRadius;
     border-top-right-radius: @borderRadius;
   }
+  .nav-button {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 // Template import

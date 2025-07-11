@@ -23,6 +23,7 @@ type ParametersProps = {
   requiredParameters?: string[]
   optionalParameters?: string[]
   type?: 'FormElement' | 'Action'
+  UndoRedo: JSX.Element
 }
 
 export const Parameters: React.FC<ParametersProps> = ({
@@ -34,6 +35,7 @@ export const Parameters: React.FC<ParametersProps> = ({
   requiredParameters,
   optionalParameters,
   type,
+  UndoRedo,
 }) => {
   const {
     userState: { currentUser },
@@ -77,7 +79,7 @@ export const Parameters: React.FC<ParametersProps> = ({
       {isActive && (
         <Accordion.Content className="evaluation-container-content" active={isActive}>
           <>
-            <div className="flex-column-start-center">
+            <div className="flex-column-start-stretch">
               {(requiredParameters || optionalParameters) && (
                 <div className="flex-row-start-center-wrap" style={{ maxWidth: 600 }}>
                   <TextIO
@@ -163,6 +165,8 @@ export const Parameters: React.FC<ParametersProps> = ({
                     objectData={objectData}
                   />
                 ))}
+              <div className="spacer-10" />
+              {UndoRedo}
             </div>
           </>
         </Accordion.Content>
