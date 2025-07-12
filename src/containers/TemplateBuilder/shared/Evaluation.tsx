@@ -101,8 +101,11 @@ const Evaluation: React.FC<EvaluationProps> = ({
             objectData={objectData}
             canEdit={canEdit}
             rootName={label}
-            collapse={0}
+            // This ensures that the expression first loads fully collapsed, but has a depth of 2 when first opened
+            collapse={isExpanded ? 2 : 0}
             onCollapse={({ path, collapsed }) => {
+              // The "isExpanded" state is updated when the user opens or closes
+              // the *root* of the evaluation expression
               if (path.length === 0) {
                 setIsExpanded(!collapsed)
               }
