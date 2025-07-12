@@ -203,10 +203,12 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
             </div>
           ))}
         </div>
-        <ActionConfig
-          templateAction={currentTemplateAction}
-          onClose={() => setCurrentTemplateAction(null)}
-        />
+        {currentTemplateAction && (
+          <ActionConfig
+            templateAction={currentTemplateAction}
+            onClose={() => setCurrentTemplateAction(null)}
+          />
+        )}
       </div>
     )
   }

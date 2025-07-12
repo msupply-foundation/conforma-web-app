@@ -6,39 +6,28 @@ import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
 import Evaluation from '../../shared/Evaluation'
 import { useOperationState } from '../../shared/OperationContext'
-import { Parameters, ParametersType } from '../../shared/Parameters'
+import { Parameters } from '../../shared/Parameters'
 import TextIO from '../../shared/TextIO'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { useToast } from '../../../../contexts/Toast'
-import { EvaluatorNode } from 'fig-tree-evaluator'
+import useUndo from 'use-undo'
+import { UndoRedo } from '../../../../components/common/UndoRedo'
 
 type ActionConfigProps = {
-  templateAction: TemplateAction | null
+  templateAction: TemplateAction
   onClose: () => void
 }
 
-type ActionUpdateState = {
-  code?: string | null
-  actionCode: string
-  description: string | null
-  eventCode?: string | null
-  condition: EvaluatorNode
-  parameterQueries: ParametersType
-  id: number
-}
-
-type GetState = (action: TemplateAction) => ActionUpdateState
-
-const getState: GetState = (action: TemplateAction) => ({
+const getState = (action: TemplateAction) => ({
   code: action?.code,
   actionCode: action?.actionCode || '',
   description: action?.description || '',
   eventCode: action?.eventCode,
   condition: action?.condition || true,
-  parameterQueries: action?.parameterQueries || {},
+  // parameterQueries: action?.parameterQueries || {},
   id: action?.id || 0,
 })
 
@@ -46,7 +35,6 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const { t } = useLanguageProvider()
   const { template } = useTemplateState()
   const { updateTemplate } = useOperationState()
-  const [state, setState] = useState<ActionUpdateState | null>(null)
   const { allActionsByCode, applicationData } = useActionState()
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
@@ -57,17 +45,36 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
 
   const { canEdit } = template
 
-  useEffect(() => {
-    if (!templateAction) return setState(null)
-    setState(getState(templateAction))
-  }, [templateAction])
+  // Action data is divided into two "blocks" for "undo" groupings
+  const [
+    { present: mainData },
+    {
+      set: setMainData,
+      reset: resetMain,
+      undo: undoMain,
+      redo: redoMain,
+      canUndo: canUndoMain,
+      canRedo: canRedoMain,
+    },
+  ] = useUndo(getState(templateAction))
 
-  if (!state || !templateAction) return null
+  const [
+    { present: parameters },
+    {
+      set: setParameters,
+      reset: resetParameters,
+      undo: undoParameters,
+      redo: redoParameters,
+      canUndo: canUndoParameters,
+      canRedo: canRedoParameters,
+    },
+  ] = useUndo(templateAction?.parameterQueries || {})
 
   const updateAction = async () => {
+    const patch = { ...mainData, parameterQueries: parameters }
     const result = await updateTemplate(template, {
       templateActionsUsingId: {
-        updateById: [{ id: state.id, patch: state }],
+        updateById: [{ id: mainData.id, patch }],
       },
     })
     setShouldUpdate(false)
@@ -104,7 +111,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               getValue={'code'}
               getText={'name'}
               setValue={(value) => {
-                setState({ ...state, actionCode: String(value) })
+                resetMain({ ...mainData, actionCode: String(value) })
                 markNeedsUpdate()
               }}
               options={Object.values(allActionsByCode)}
@@ -114,9 +121,11 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             />
             {canEdit && (
               <FromExistingAction
-                pluginCode={state.actionCode}
+                pluginCode={mainData.actionCode}
                 setTemplateAction={(templateAction) => {
-                  setState({ ...state, ...templateAction })
+                  const { condition, description, parameterQueries } = templateAction
+                  resetMain({ ...mainData, condition, description })
+                  resetParameters(parameterQueries)
                   markNeedsUpdate()
                 }}
               />
@@ -139,39 +148,39 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           {!canEdit && <Label color="red">Actions only editable in draft templates</Label>}
           <div className="spacer-10" />
           <div className="config-container-outline">
-            <div className="flex-column-start-center">
+            <div className="flex-column-start-stretch">
               <TextIO
-                text={state?.code || ''}
+                text={mainData?.code || ''}
                 title="Code"
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 setText={(text) => {
-                  setState({ ...state, code: text || null })
+                  setMainData({ ...mainData, code: text || null })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
               <TextIO
-                text={state?.eventCode || ''}
+                text={mainData?.eventCode || ''}
                 title="Scheduled Event Code"
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 setText={(text) => {
-                  setState({ ...state, eventCode: text || null })
+                  setMainData({ ...mainData, eventCode: text || null })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
               <TextIO
-                text={state?.description || ''}
+                text={mainData?.description || ''}
                 isTextArea={true}
                 title="Description"
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 setText={(text) => {
-                  setState({ ...state, description: text || null })
+                  setMainData({ ...mainData, description: text ?? '' })
                 }}
                 markNeedsUpdate={markNeedsUpdate}
                 isPropUpdated={true}
@@ -182,29 +191,58 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               />
               <Evaluation
                 label="Condition"
-                evaluation={state?.condition}
+                evaluation={mainData?.condition}
                 setEvaluation={(condition) => {
-                  setState({ ...state, condition })
+                  setMainData({ ...mainData, condition })
                   markNeedsUpdate()
                 }}
                 canEdit={canEdit}
                 objectData={{ applicationData }}
+                resetExpression={(expression) => {
+                  resetMain({ ...mainData, condition: expression })
+                  markNeedsUpdate()
+                }}
+              />
+              <div className="spacer-10" />
+              <UndoRedo
+                canUndo={canUndoMain}
+                canRedo={canRedoMain}
+                undo={undoMain}
+                redo={redoMain}
               />
             </div>
           </div>
           <div className="spacer-10" />
           <Parameters
+            key="parametersAction"
             currentElementCode={''}
-            parameters={state.parameterQueries}
+            parameters={parameters}
             setParameters={(parameterQueries) => {
-              setState({ ...state, parameterQueries })
+              setParameters(parameterQueries)
+              markNeedsUpdate()
+            }}
+            reset={(expression, key) => {
+              if (key) {
+                const newParameters = { ...parameters }
+                delete newParameters[key]
+                resetParameters({ ...parameters, [key]: expression })
+              } else {
+                resetParameters(expression)
+              }
               markNeedsUpdate()
             }}
             canEdit={template.canEdit}
             requiredParameters={(currentActionPlugin?.requiredParameters as string[]) || []}
             optionalParameters={(currentActionPlugin?.optionalParameters as string[]) || []}
             type="Action"
-            UndoRedo={<></>}
+            UndoRedo={
+              <UndoRedo
+                canUndo={canUndoParameters}
+                canRedo={canRedoParameters}
+                undo={undoParameters}
+                redo={redoParameters}
+              />
+            }
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">

@@ -18,6 +18,7 @@ type ParametersProps = {
   parameters: ParametersType
   currentElementCode: string
   setParameters: (parameters: ParametersType) => void
+  reset: (expression: EvaluatorNode, key?: string) => void
   canEdit: boolean
   fullStructure?: FullStructure
   requiredParameters?: string[]
@@ -36,6 +37,7 @@ export const Parameters: React.FC<ParametersProps> = ({
   optionalParameters,
   type,
   UndoRedo,
+  reset,
 }) => {
   const {
     userState: { currentUser },
@@ -124,12 +126,41 @@ export const Parameters: React.FC<ParametersProps> = ({
                     </Button>
                   )}
                 </div>
+                {!showCombined &&
+                  Object.entries(parameters).map(([key, value]) => (
+                    <Evaluation
+                      setEvaluation={(value: any) => setParameters({ ...parameters, [key]: value })}
+                      updateKey={(newKey) => {
+                        // Convert to array to preserve property order
+                        const newParameters = Object.entries(parameters)
+                        const thisParameter = newParameters.find(([k]) => k === key)
+                        if (thisParameter) thisParameter[0] = newKey
+                        setParameters(Object.fromEntries(newParameters))
+                      }}
+                      deleteKey={
+                        canEdit
+                          ? () => {
+                              const newParameters = { ...parameters }
+                              delete newParameters[key]
+                              setParameters(newParameters)
+                            }
+                          : undefined
+                      }
+                      key={key}
+                      evaluation={value}
+                      label={key}
+                      canEdit={canEdit}
+                      objectData={objectData}
+                      resetExpression={(expression) => reset(expression, key)}
+                    />
+                  ))}
                 {showCombined && (
                   <div className="flex-row-space-between" style={{ gap: '1em' }}>
                     <EvaluationEditor
                       figTree={FigTree}
                       expression={parameters}
                       setExpression={setParameters as (d: EvaluatorNode) => void}
+                      resetExpression={reset}
                       canEdit={canEdit}
                       collapse={1}
                       objectData={objectData}
@@ -139,33 +170,6 @@ export const Parameters: React.FC<ParametersProps> = ({
                   </div>
                 )}
               </div>
-              {!showCombined &&
-                Object.entries(parameters).map(([key, value]) => (
-                  <Evaluation
-                    setEvaluation={(value: any) => setParameters({ ...parameters, [key]: value })}
-                    updateKey={(newKey) => {
-                      // Convert to array to preserve property order
-                      const newParameters = Object.entries(parameters)
-                      const thisParameter = newParameters.find(([k]) => k === key)
-                      if (thisParameter) thisParameter[0] = newKey
-                      setParameters(Object.fromEntries(newParameters))
-                    }}
-                    deleteKey={
-                      canEdit
-                        ? () => {
-                            const newParameters = { ...parameters }
-                            delete newParameters[key]
-                            setParameters(newParameters)
-                          }
-                        : undefined
-                    }
-                    key={key}
-                    evaluation={value}
-                    label={key}
-                    canEdit={canEdit}
-                    objectData={objectData}
-                  />
-                ))}
               <div className="spacer-10" />
               {UndoRedo}
             </div>

@@ -109,6 +109,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
     userState: { currentUser },
   } = useUserState()
 
+  // Element data is divided into three "blocks" for "undo" groupings
   const [
     { present: mainData },
     {
@@ -408,6 +409,16 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             parameters={parameters}
             setParameters={(params) => {
               setParameters(params)
+              markNeedsUpdate()
+            }}
+            reset={(expression, key) => {
+              if (key) {
+                const newParameters = { ...parameters }
+                delete newParameters[key]
+                resetParameters({ ...parameters, [key]: expression })
+              } else {
+                resetParameters(expression)
+              }
               markNeedsUpdate()
             }}
             canEdit={canEdit}
