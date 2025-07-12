@@ -11,7 +11,7 @@ export const UndoRedo = ({ canUndo, canRedo, undo, redo }: UndoRedoProps) => {
   if (!canUndo && !canRedo) return null
 
   return (
-    <div className="flex-row-space-between">
+    <div className="flex-row-space-between" style={{ width: '100%' }}>
       <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
         <a onClick={undo}>
           <Icon name="arrow alternate circle left" />

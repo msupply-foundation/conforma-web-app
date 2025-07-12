@@ -85,7 +85,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
         )}
         {updateKey && (
           <span onClick={() => setIsEditingKey(true)} title="Edit Key">
-            <IconEdit size="1.4em" />
+            <IconEdit size="1.4em" style={{ color: 'grey' }} />
           </span>
         )}
       </div>

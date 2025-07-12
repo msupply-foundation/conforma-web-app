@@ -148,7 +148,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           {!canEdit && <Label color="red">Actions only editable in draft templates</Label>}
           <div className="spacer-10" />
           <div className="config-container-outline">
-            <div className="flex-column-start-stretch">
+            <div className="flex-column-start-center">
               <TextIO
                 text={mainData?.code || ''}
                 title="Code"
