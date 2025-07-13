@@ -6,9 +6,9 @@ import CheckboxIO from './CheckboxIO'
 import TextIO from '../shared/TextIO'
 import Evaluation, { ObjectDataDisplay } from './Evaluation'
 import { EvaluatorNode } from 'fig-tree-evaluator'
-import { FigTree } from '../../../FigTreeEvaluator'
 import { EvaluationEditor } from '../../../components/common/EvaluationEditor'
 import { useUserState } from '../../../contexts/UserState'
+import { FigTreeEvaluator } from 'fig-tree-editor-react'
 
 export type ParametersType = {
   [key: string]: EvaluatorNode
@@ -25,6 +25,7 @@ type ParametersProps = {
   optionalParameters?: string[]
   type?: 'FormElement' | 'Action'
   UndoRedo: JSX.Element
+  figTree: FigTreeEvaluator
 }
 
 export const Parameters: React.FC<ParametersProps> = ({
@@ -38,6 +39,7 @@ export const Parameters: React.FC<ParametersProps> = ({
   type,
   UndoRedo,
   reset,
+  figTree,
 }) => {
   const {
     userState: { currentUser },
@@ -129,6 +131,7 @@ export const Parameters: React.FC<ParametersProps> = ({
                 {!showCombined &&
                   Object.entries(parameters).map(([key, value]) => (
                     <Evaluation
+                      figTree={figTree}
                       setEvaluation={(value: any) => setParameters({ ...parameters, [key]: value })}
                       updateKey={(newKey) => {
                         // Convert to array to preserve property order
@@ -157,7 +160,7 @@ export const Parameters: React.FC<ParametersProps> = ({
                 {showCombined && (
                   <div className="flex-row-space-between" style={{ gap: '1em' }}>
                     <EvaluationEditor
-                      figTree={FigTree}
+                      figTree={figTree}
                       expression={parameters}
                       setExpression={setParameters as (d: EvaluatorNode) => void}
                       resetExpression={reset}

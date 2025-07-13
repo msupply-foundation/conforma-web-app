@@ -2,7 +2,6 @@ import React, { createContext, useContext } from 'react'
 import { useEffect, useState } from 'react'
 import { Header } from 'semantic-ui-react'
 import { Loading } from '../../../../components'
-
 import { ActionPlugin, Trigger, useGetAllActionsQuery } from '../../../../utils/generated/graphql'
 import DropdownIO from '../../shared/DropdownIO'
 import { IconButton } from '../../shared/IconButton'

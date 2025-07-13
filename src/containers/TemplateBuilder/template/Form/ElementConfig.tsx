@@ -22,6 +22,7 @@ import { EvaluatorNode } from 'fig-tree-evaluator'
 import { useUserState } from '../../../../contexts/UserState'
 import useUndo from 'use-undo'
 import { UndoRedo } from '../../../../components/common/UndoRedo'
+import { FigTree } from '../../../../FigTreeEvaluator'
 
 type ElementConfigProps = {
   element: TemplateElement
@@ -372,6 +373,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <Header as="h4">Common Properties</Header>
             {evaluations.map(({ key, title }) => (
               <Evaluation
+                figTree={FigTree}
                 label={title}
                 key={key}
                 evaluation={commonData[key]}
@@ -403,6 +405,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             />
           </div>
           <Parameters
+            figTree={FigTree}
             key="parametersElement"
             currentElementCode={mainData.code}
             fullStructure={structure}

@@ -30,8 +30,9 @@ export const FigTree = new FigTreeEvaluator({
   // supportDeprecatedValueNodes: true,
 })
 
-export const loadFragments = async (type: 'frontEnd' | 'backEnd') => {
-  getRequest(getServerUrl('figTreeFragments', { frontOrBack: type })).then((fragments) => {
+// Called by "UserState" context whenever a user logs in
+export const loadFragments = async () => {
+  getRequest(getServerUrl('figTreeFragments', { frontOrBack: 'frontEnd' })).then((fragments) => {
     FigTree.updateOptions({ fragments })
   })
 }

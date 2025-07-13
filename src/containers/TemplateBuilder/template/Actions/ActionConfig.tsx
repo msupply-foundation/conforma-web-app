@@ -15,6 +15,7 @@ import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { useToast } from '../../../../contexts/Toast'
 import useUndo from 'use-undo'
 import { UndoRedo } from '../../../../components/common/UndoRedo'
+import { FigTreeActions } from './FigTreeActions'
 
 type ActionConfigProps = {
   templateAction: TemplateAction
@@ -190,6 +191,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 additionalStyles={{ minWidth: 500 }}
               />
               <Evaluation
+                figTree={FigTreeActions}
                 label="Condition"
                 evaluation={mainData?.condition}
                 setEvaluation={(condition) => {
@@ -214,6 +216,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           </div>
           <div className="spacer-10" />
           <Parameters
+            figTree={FigTreeActions}
             key="parametersAction"
             currentElementCode={''}
             parameters={parameters}

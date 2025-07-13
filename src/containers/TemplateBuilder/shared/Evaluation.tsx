@@ -2,14 +2,15 @@ import React, { useState } from 'react'
 import { JsonEditor as ReactJson, IconDelete, IconEdit } from 'json-edit-react'
 import TextIO from './TextIO'
 import { EvaluatorNode } from 'fig-tree-evaluator'
-import { FigTree } from '../../../FigTreeEvaluator'
 import { getFigTreeSummary } from '../../../FigTreeEvaluator/FigTree'
 import { EvaluationEditor } from '../../../components/common/EvaluationEditor'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast } from '../../../contexts/Toast'
 import { handleCopyToClipboard } from '../../../components/Admin/JsonEditor'
+import { FigTreeEvaluator } from 'fig-tree-editor-react'
 
 type EvaluationProps = {
+  figTree: FigTreeEvaluator
   evaluation: EvaluatorNode
   setEvaluation: (evaluation: EvaluatorNode) => void
   label: string
@@ -50,6 +51,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
   canEdit,
   objectData,
   resetExpression,
+  figTree,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isEditingKey, setIsEditingKey] = useState(false)
@@ -97,7 +99,7 @@ const Evaluation: React.FC<EvaluationProps> = ({
           <EvaluationEditor
             expression={evaluation}
             setExpression={setEvaluation}
-            figTree={FigTree}
+            figTree={figTree}
             objectData={objectData}
             canEdit={canEdit}
             rootName={label}

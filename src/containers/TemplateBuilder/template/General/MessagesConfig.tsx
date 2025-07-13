@@ -7,6 +7,7 @@ import { useOperationState } from '../../shared/OperationContext'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useUserState } from '../../../../contexts/UserState'
 import { useFullApplicationState } from '../ApplicationWrapper'
+import { FigTree } from '../../../../FigTreeEvaluator'
 
 type MessagesConfigProps = {
   isOpen: boolean
@@ -71,6 +72,7 @@ const MessagesConfig: React.FC<MessagesConfigProps> = ({ isOpen, onClose }) => {
 
         {evaluations.map(({ key, title }) => (
           <Evaluation
+            figTree={FigTree}
             label={title}
             key={key}
             evaluation={state[key]}

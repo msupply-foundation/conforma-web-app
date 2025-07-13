@@ -208,5 +208,5 @@ export const updateFigTree = async (JWT: string) => {
       Authorization: `Bearer ${JWT}`,
     },
   })
-  loadFragments('frontEnd')
+  loadFragments()
 }
