@@ -144,6 +144,7 @@ export type ModifiedEntitiesToKeep = {
   dataTables: Set<string>
   category: Set<string>
   files: Set<string>
+  fragments: Set<string>
 }
 
 export type ModifiedEntitiesToKeepAPIInput = {
@@ -154,6 +155,7 @@ export type ModifiedEntitiesToKeepAPIInput = {
   dataTables?: string[]
   category?: string
   files?: string[]
+  fragments?: string[]
 }
 
 export const install = async (uid: string, installDetails: ModifiedEntitiesToKeepAPIInput) => {

@@ -40,6 +40,7 @@ export interface ModifiedEntities {
   category: Record<string, ComparisonObject>
   dataTables: Record<string, ComparisonObject>
   files: Record<string, ComparisonObject>
+  fragments: Record<string, ComparisonObject>
 }
 
 export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
@@ -162,7 +163,17 @@ export const EntitySelectModal: React.FC<Omit<ModalState, 'type'>> = ({
                 uid={uid}
               />
             )}
-            {/* WHAT ABOUT FILES??? */}
+            {Object.keys(modifiedEntities?.fragments ?? {}).length > 0 && (
+              <EntityGroup
+                title="Evaluator Fragments"
+                group="fragments"
+                modified={modifiedEntities?.fragments ?? {}}
+                currentlySelected={preserveCurrentSelections.fragments}
+                updateState={updateState}
+                color="brown"
+                uid={uid}
+              />
+            )}
           </TableBody>
         </Table>
       </ModalContent>
@@ -392,6 +403,7 @@ const getInitialSelections = (entities?: ModifiedEntities) => {
     category: new Set<string>(),
     dataTables: new Set<string>(),
     files: new Set<string>(),
+    fragments: new Set<string>(),
   }
   if (!entities) return initialValues
   for (const [key, entitiesOfOneType] of Object.entries(entities)) {
