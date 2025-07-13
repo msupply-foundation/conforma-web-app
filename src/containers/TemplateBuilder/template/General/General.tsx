@@ -24,6 +24,7 @@ import NumberIO from '../../shared/NumberIO'
 import { TemplateOperationsModal } from '../../templateOperations/TemplateOperationsModal'
 import { DataViewSelector } from './DataViews/DataViews'
 import { FileSelector } from './Files/Files'
+import { FragmentSelector } from './Fragments/Fragments'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -174,6 +175,7 @@ const General: React.FC = () => {
       <Filters />
       <DataViewSelector />
       <FileSelector />
+      <FragmentSelector />
 
       {/* MESSAGES */}
       <div className="spacer-20" />

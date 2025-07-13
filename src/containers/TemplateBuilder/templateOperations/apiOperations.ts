@@ -36,6 +36,7 @@ export interface Diff {
   dataViewColumns: {}
   category: {}
   dataTables: {}
+  fragments: {}
 }
 
 interface CheckResult {

@@ -96,5 +96,15 @@ export default gql`
         }
       }
     }
+    templateEvaluatorFragmentJoins {
+      nodes {
+        id
+        evaluatorFragment {
+          id
+          name
+          metadata
+        }
+      }
+    }
   }
 `

@@ -143,6 +143,7 @@ export type TemplateOptions =
     }
   | { action: 'import'; type: 'install'; uid: string }
   | { action: 'getDataViewDetails'; id: number }
+  | { action: 'getFragmentDetails'; id: number }
   | { action: 'getLinkedFiles'; id: number }
 
 export type ArchiveKey = 'archiveFiles'

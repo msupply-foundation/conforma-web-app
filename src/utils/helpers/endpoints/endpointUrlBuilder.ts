@@ -229,6 +229,8 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
           return `${serverREST}${endpointPath}/import/${type}`
         case 'getDataViewDetails':
           return `${serverREST}${endpointPath}/get-data-view-details/${id}`
+        case 'getFragmentDetails':
+          return `${serverREST}${endpointPath}/get-fragment-details/${id}`
         case 'getLinkedFiles':
           return `${serverREST}${endpointPath}/get-linked-files/${id}`
       }
