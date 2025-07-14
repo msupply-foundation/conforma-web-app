@@ -4,6 +4,7 @@ import { useTemplateState } from '../../TemplateWrapper'
 import DropdownIO from '../../../shared/DropdownIO'
 import { DataViewFilter, useDataViews } from './useManageDataViews'
 import { useOperationState } from '../../../shared/OperationContext'
+import { Legend } from '../shared/Legend'
 
 export const DataViewSelector: React.FC<{}> = () => {
   const { template } = useTemplateState()
@@ -61,7 +62,7 @@ export const DataViewSelector: React.FC<{}> = () => {
   const hasOutputTables = current.some((dv) => dv.inOutputTables)
 
   return (
-    <>
+    <div className="template-builder-section">
       <Header as="h3">Connected Data Views</Header>
       {template.canEdit && (
         <div className="flex-row-start-center" style={{ gap: 5, marginBottom: 10 }}>
@@ -125,11 +126,11 @@ export const DataViewSelector: React.FC<{}> = () => {
                 dv.dataViewJoinId === selectedDataViewJoinId ? ' builder-selected' : ''
               }${
                 !dv.applicantAccessible && !dv.inOutputTables
-                  ? ' dv-inaccessible'
+                  ? ' entity-trim-inaccessible'
                   : dv.inTemplateElements
-                  ? ' dv-elements'
+                  ? ' entity-trim-elements'
                   : dv.inOutputTables
-                  ? ' dv-outcomes'
+                  ? ' entity-trim-output'
                   : ''
               }`}
               style={{ fontSize: '100%', position: 'relative' }}
@@ -164,33 +165,12 @@ export const DataViewSelector: React.FC<{}> = () => {
           </>
         ))}
       </div>
-      <div>
-        {(hasInaccessible || hasTemplateElements || hasOutputTables) && (
-          <Header as="h4" style={{ marginBottom: 5, marginTop: 10 }}>
-            Legend
-          </Header>
-        )}
-        <div className="flex-row" style={{ gap: 10 }}>
-          {hasInaccessible && (
-            <Label
-              key="legend-inaccessible"
-              className="dv-inaccessible"
-              content="Applicant does NOT have permission to view, but is used in form elements"
-              style={{ maxWidth: 250 }}
-            />
-          )}
-          {hasTemplateElements && (
-            <Label key="legend-form" className="dv-elements" content="Used in Form elements" />
-          )}
-          {hasOutputTables && (
-            <Label
-              key="legend-output"
-              className="dv-outcomes"
-              content="Used in data output actions"
-            />
-          )}
-        </div>
-      </div>
-    </>
+      <Legend
+        hasInaccessible={hasInaccessible}
+        hasTemplateElements={hasTemplateElements}
+        hasOutput={hasOutputTables}
+        outputText="Used in data output actions"
+      />
+    </div>
   )
 }

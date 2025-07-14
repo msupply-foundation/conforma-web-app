@@ -4,6 +4,7 @@ import { useTemplateState } from '../../TemplateWrapper'
 import DropdownIO from '../../../shared/DropdownIO'
 import { FragmentFilter, useFragments } from './useManageFragments'
 import { useOperationState } from '../../../shared/OperationContext'
+import { Legend } from '../shared/Legend'
 
 export const FragmentSelector: React.FC<{}> = () => {
   const { template } = useTemplateState()
@@ -59,11 +60,8 @@ export const FragmentSelector: React.FC<{}> = () => {
   const hasActions = current.some((dv) => dv.inActions)
 
   return (
-    <>
-      <div
-        className="flex-row-space-between-center"
-        style={{ marginTop: 30, width: '100%', maxWidth: 500 }}
-      >
+    <div className="template-builder-section">
+      <div className="flex-row-space-between-center" style={{ width: '100%', maxWidth: 500 }}>
         <Header as="h3">Connected Evaluator Fragments</Header>
         <p className="slightly-smaller-text" style={{ marginBottom: 10 }}>
           <a href="https://github.com/CarlosNZ/fig-tree-evaluator#fragments" target="_blank">
@@ -133,11 +131,11 @@ export const FragmentSelector: React.FC<{}> = () => {
                 frag.dataViewJoinId === selectedFragmentJoinId ? ' builder-selected' : ''
               }${
                 !frag.applicantAccessible && !frag.inActions
-                  ? ' dv-inaccessible'
+                  ? ' entity-trim-inaccessible'
                   : frag.inTemplateElements
-                  ? ' dv-elements'
+                  ? ' entity-trim-elements'
                   : frag.inActions
-                  ? ' dv-outcomes'
+                  ? ' entity-trim-output'
                   : ''
               }`}
               style={{ fontSize: '100%', position: 'relative' }}
@@ -166,35 +164,18 @@ export const FragmentSelector: React.FC<{}> = () => {
               {frag.name}
               <br />
               <span className="slightly-smaller-text" style={{ fontWeight: 400 }}>
-                {frag.metadata?.description ?? '-'}
+                {frag.metadata?.description}
               </span>
             </Label>
           </>
         ))}
       </div>
-      <div>
-        {(hasInaccessible || hasTemplateElements || hasActions) && (
-          <Header as="h4" style={{ marginBottom: 5, marginTop: 10 }}>
-            Legend
-          </Header>
-        )}
-        <div className="flex-row" style={{ gap: 10 }}>
-          {hasInaccessible && (
-            <Label
-              key="legend-inaccessible"
-              className="dv-inaccessible"
-              content="Applicant does NOT have permission to view, but is used in form elements"
-              style={{ maxWidth: 250 }}
-            />
-          )}
-          {hasTemplateElements && (
-            <Label key="legend-form" className="dv-elements" content="Used in Form elements" />
-          )}
-          {hasActions && (
-            <Label key="legend-output" className="dv-outcomes" content="Used in Actions" />
-          )}
-        </div>
-      </div>
-    </>
+      <Legend
+        hasInaccessible={hasInaccessible}
+        hasTemplateElements={hasTemplateElements}
+        hasOutput={hasActions}
+        outputText="Used in Actions"
+      />
+    </div>
   )
 }

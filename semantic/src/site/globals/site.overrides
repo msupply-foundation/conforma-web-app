@@ -2373,6 +2373,12 @@ a:hover {
   }
 }
 
+.template-builder-section {
+  // border: 1px solid red;
+  width: 100%;
+  margin-top: 2em;
+}
+
 .template-builder-category-input {
   .flex-column-center-start();
   margin-top: 20px;
@@ -2409,6 +2415,12 @@ a:hover {
 }
 
 .filter-joins {
+  .flex-row();
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.filter-joins {
   .ui.label {
     margin-right: 7px;
     margin-bottom: 7px;
@@ -2421,15 +2433,15 @@ a:hover {
   top: 0;
 }
 
-.dv-elements {
+.entity-trim-elements {
   border-left: 3px solid @green !important;
 }
 
-.dv-outcomes {
+.entity-trim-output {
   border-left: 3px solid @blue !important;
 }
 
-.dv-inaccessible {
+.entity-trim-inaccessible {
   border-left: 3px solid @red !important;
 }
 
