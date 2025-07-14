@@ -28,6 +28,8 @@ const UnlinkedEntitiesWarning: React.FC<Omit<ModalState, 'type'>> = ({
   unconnectedDataViews = [],
   unconnectedFragments = [],
 }) => {
+  const sectionHeaderStyle = { marginTop: '1em', marginBottom: 0 }
+  const paragraphStyle = { marginTop: '0.5em', marginBottom: 0 }
   return (
     <Confirm
       open={isOpen}
@@ -36,13 +38,13 @@ const UnlinkedEntitiesWarning: React.FC<Omit<ModalState, 'type'>> = ({
       content={
         <div style={{ padding: 10, gap: 10 }} className="flex-column">
           <h2>Warning</h2>
-          <p>
+          <p style={paragraphStyle}>
             The following Entities are used by this template but haven't been properly linked, so
             won't be exported with the template.
           </p>
           {unconnectedDataViews.length > 0 && (
             <>
-              <h4>Data Views</h4>
+              <h4 style={sectionHeaderStyle}>Data Views</h4>
               <List bulleted>
                 {unconnectedDataViews.map((view) => (
                   <ListItem key={view.identifier}>{view.code}</ListItem>
@@ -52,7 +54,7 @@ const UnlinkedEntitiesWarning: React.FC<Omit<ModalState, 'type'>> = ({
           )}
           {unconnectedFragments.length > 0 && (
             <>
-              <h4>Evaluator Fragments</h4>
+              <h4 style={sectionHeaderStyle}>Evaluator Fragments</h4>
               <List bulleted>
                 {unconnectedFragments.map((fragment) => (
                   <ListItem key={fragment.name}>{fragment.name}</ListItem>
@@ -60,7 +62,7 @@ const UnlinkedEntitiesWarning: React.FC<Omit<ModalState, 'type'>> = ({
               </List>
             </>
           )}
-          <p>Are you sure you want to proceed?</p>
+          <p style={paragraphStyle}>Are you sure you want to proceed?</p>
         </div>
       }
       confirmButton="I understand, commit anyway"
