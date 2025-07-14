@@ -29,6 +29,12 @@ export interface UnconnectedDataViews {
   title: string
 }
 
+export interface UnconnectedFragments {
+  id: number
+  name: string
+  metadata: { parameters: Record<string, unknown>; description?: string }
+}
+
 export interface Diff {
   filters: {}
   permissions: {}
@@ -42,6 +48,7 @@ export interface Diff {
 interface CheckResult {
   committed: boolean
   unconnectedDataViews: UnconnectedDataViews[]
+  unconnectedFragments: UnconnectedFragments[]
   ready?: boolean
   diff?: Diff
 }
