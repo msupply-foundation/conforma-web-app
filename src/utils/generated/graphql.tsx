@@ -49907,6 +49907,8 @@ export type DataViewColumnDefinitionFragmentFragment = { __typename?: 'DataViewC
 
 export type ElementFragmentFragment = { __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability };
 
+export type EvaluatorFragmentFragment = { __typename?: 'EvaluatorFragment', id: number, name: string, expression: any, metadata?: any | null, permissionNames?: Array<string | null> | null, backEnd: boolean, frontEnd: boolean };
+
 export type FullTemplateFragment = { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateEvaluatorFragmentJoins: { __typename?: 'TemplateEvaluatorFragmentJoinsConnection', nodes: Array<{ __typename?: 'TemplateEvaluatorFragmentJoin', id: number, evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number, name: string, metadata?: any | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } };
 
 export type OrganisationFragment = { __typename?: 'Organisation', id: number, name?: string | null, address?: string | null, registration?: string | null, logoUrl?: string | null };
@@ -50033,6 +50035,33 @@ export type DeleteNoteMutationVariables = Exact<{
 
 
 export type DeleteNoteMutation = { __typename?: 'Mutation', deleteApplicationNote?: { __typename?: 'DeleteApplicationNotePayload', applicationNote?: { __typename?: 'ApplicationNote', id: number } | null } | null };
+
+export type CreateEvaluatorFragmentMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  expression: Scalars['JSON']['input'];
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  permissionNames?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  backEnd: Scalars['Boolean']['input'];
+  frontEnd: Scalars['Boolean']['input'];
+}>;
+
+
+export type CreateEvaluatorFragmentMutation = { __typename?: 'Mutation', createEvaluatorFragment?: { __typename?: 'CreateEvaluatorFragmentPayload', evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number, name: string, expression: any, metadata?: any | null, permissionNames?: Array<string | null> | null, backEnd: boolean, frontEnd: boolean } | null } | null };
+
+export type DeleteEvaluatorFragmentMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteEvaluatorFragmentMutation = { __typename?: 'Mutation', deleteEvaluatorFragment?: { __typename?: 'DeleteEvaluatorFragmentPayload', evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number } | null } | null };
+
+export type UpdateEvaluatorFragmentMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+  patch: EvaluatorFragmentPatch;
+}>;
+
+
+export type UpdateEvaluatorFragmentMutation = { __typename?: 'Mutation', updateEvaluatorFragment?: { __typename?: 'UpdateEvaluatorFragmentPayload', evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number, name: string, expression: any, metadata?: any | null, permissionNames?: Array<string | null> | null, backEnd: boolean, frontEnd: boolean } | null } | null };
 
 export type RestartApplicationMutationVariables = Exact<{
   serial: Scalars['String']['input'];
@@ -50255,6 +50284,11 @@ export type GetApplicationListQueryVariables = Exact<{
 
 
 export type GetApplicationListQuery = { __typename?: 'Query', applicationList?: { __typename?: 'ApplicationListShapesConnection', totalCount: number, nodes: Array<{ __typename?: 'ApplicationListShape', id?: number | null, serial?: string | null, name?: string | null, templateCode?: string | null, templateName?: string | null, applicant?: string | null, orgName?: string | null, stage?: string | null, stageColour?: string | null, status?: ApplicationStatus | null, outcome?: ApplicationOutcome | null, lastActiveDate?: any | null, applicantDeadline?: any | null, reviewerAction?: ReviewerAction | null, assignerAction?: AssignerAction | null, assigners?: Array<string | null> | null, reviewers?: Array<string | null> | null } | null> } | null, templates?: { __typename?: 'TemplatesConnection', nodes: Array<{ __typename?: 'Template', code: string, name?: string | null, namePlural?: string | null } | null> } | null };
+
+export type EvaluatorFragmentsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type EvaluatorFragmentsQuery = { __typename?: 'Query', evaluatorFragments?: { __typename?: 'EvaluatorFragmentsConnection', nodes: Array<{ __typename?: 'EvaluatorFragment', id: number, name: string, expression: any, metadata?: any | null, permissionNames?: Array<string | null> | null, backEnd: boolean, frontEnd: boolean } | null> } | null };
 
 export type GetHistoryForApplicantQueryVariables = Exact<{
   serial: Scalars['String']['input'];
@@ -50533,6 +50567,17 @@ export const DataViewColumnDefinitionFragmentFragmentDoc = gql`
   filterExpression
   filterDataType
   hideIfNull
+}
+    `;
+export const EvaluatorFragmentFragmentDoc = gql`
+    fragment evaluatorFragment on EvaluatorFragment {
+  id
+  name
+  expression
+  metadata
+  permissionNames
+  backEnd
+  frontEnd
 }
     `;
 export const TemplateFragmentFragmentDoc = gql`
@@ -51251,6 +51296,119 @@ export function useDeleteNoteMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteNoteMutationHookResult = ReturnType<typeof useDeleteNoteMutation>;
 export type DeleteNoteMutationResult = Apollo.MutationResult<DeleteNoteMutation>;
 export type DeleteNoteMutationOptions = Apollo.BaseMutationOptions<DeleteNoteMutation, DeleteNoteMutationVariables>;
+export const CreateEvaluatorFragmentDocument = gql`
+    mutation createEvaluatorFragment($name: String!, $expression: JSON!, $metadata: JSON, $permissionNames: [String!], $backEnd: Boolean!, $frontEnd: Boolean!) {
+  createEvaluatorFragment(
+    input: {evaluatorFragment: {name: $name, expression: $expression, metadata: $metadata, permissionNames: $permissionNames, backEnd: $backEnd, frontEnd: $frontEnd}}
+  ) {
+    evaluatorFragment {
+      ...evaluatorFragment
+    }
+  }
+}
+    ${EvaluatorFragmentFragmentDoc}`;
+export type CreateEvaluatorFragmentMutationFn = Apollo.MutationFunction<CreateEvaluatorFragmentMutation, CreateEvaluatorFragmentMutationVariables>;
+
+/**
+ * __useCreateEvaluatorFragmentMutation__
+ *
+ * To run a mutation, you first call `useCreateEvaluatorFragmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEvaluatorFragmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEvaluatorFragmentMutation, { data, loading, error }] = useCreateEvaluatorFragmentMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      expression: // value for 'expression'
+ *      metadata: // value for 'metadata'
+ *      permissionNames: // value for 'permissionNames'
+ *      backEnd: // value for 'backEnd'
+ *      frontEnd: // value for 'frontEnd'
+ *   },
+ * });
+ */
+export function useCreateEvaluatorFragmentMutation(baseOptions?: Apollo.MutationHookOptions<CreateEvaluatorFragmentMutation, CreateEvaluatorFragmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateEvaluatorFragmentMutation, CreateEvaluatorFragmentMutationVariables>(CreateEvaluatorFragmentDocument, options);
+      }
+export type CreateEvaluatorFragmentMutationHookResult = ReturnType<typeof useCreateEvaluatorFragmentMutation>;
+export type CreateEvaluatorFragmentMutationResult = Apollo.MutationResult<CreateEvaluatorFragmentMutation>;
+export type CreateEvaluatorFragmentMutationOptions = Apollo.BaseMutationOptions<CreateEvaluatorFragmentMutation, CreateEvaluatorFragmentMutationVariables>;
+export const DeleteEvaluatorFragmentDocument = gql`
+    mutation deleteEvaluatorFragment($id: Int!) {
+  deleteEvaluatorFragment(input: {id: $id}) {
+    evaluatorFragment {
+      id
+    }
+  }
+}
+    `;
+export type DeleteEvaluatorFragmentMutationFn = Apollo.MutationFunction<DeleteEvaluatorFragmentMutation, DeleteEvaluatorFragmentMutationVariables>;
+
+/**
+ * __useDeleteEvaluatorFragmentMutation__
+ *
+ * To run a mutation, you first call `useDeleteEvaluatorFragmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteEvaluatorFragmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteEvaluatorFragmentMutation, { data, loading, error }] = useDeleteEvaluatorFragmentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteEvaluatorFragmentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteEvaluatorFragmentMutation, DeleteEvaluatorFragmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteEvaluatorFragmentMutation, DeleteEvaluatorFragmentMutationVariables>(DeleteEvaluatorFragmentDocument, options);
+      }
+export type DeleteEvaluatorFragmentMutationHookResult = ReturnType<typeof useDeleteEvaluatorFragmentMutation>;
+export type DeleteEvaluatorFragmentMutationResult = Apollo.MutationResult<DeleteEvaluatorFragmentMutation>;
+export type DeleteEvaluatorFragmentMutationOptions = Apollo.BaseMutationOptions<DeleteEvaluatorFragmentMutation, DeleteEvaluatorFragmentMutationVariables>;
+export const UpdateEvaluatorFragmentDocument = gql`
+    mutation updateEvaluatorFragment($id: Int!, $patch: EvaluatorFragmentPatch!) {
+  updateEvaluatorFragment(input: {patch: $patch, id: $id}) {
+    evaluatorFragment {
+      ...evaluatorFragment
+    }
+  }
+}
+    ${EvaluatorFragmentFragmentDoc}`;
+export type UpdateEvaluatorFragmentMutationFn = Apollo.MutationFunction<UpdateEvaluatorFragmentMutation, UpdateEvaluatorFragmentMutationVariables>;
+
+/**
+ * __useUpdateEvaluatorFragmentMutation__
+ *
+ * To run a mutation, you first call `useUpdateEvaluatorFragmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateEvaluatorFragmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateEvaluatorFragmentMutation, { data, loading, error }] = useUpdateEvaluatorFragmentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      patch: // value for 'patch'
+ *   },
+ * });
+ */
+export function useUpdateEvaluatorFragmentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateEvaluatorFragmentMutation, UpdateEvaluatorFragmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateEvaluatorFragmentMutation, UpdateEvaluatorFragmentMutationVariables>(UpdateEvaluatorFragmentDocument, options);
+      }
+export type UpdateEvaluatorFragmentMutationHookResult = ReturnType<typeof useUpdateEvaluatorFragmentMutation>;
+export type UpdateEvaluatorFragmentMutationResult = Apollo.MutationResult<UpdateEvaluatorFragmentMutation>;
+export type UpdateEvaluatorFragmentMutationOptions = Apollo.BaseMutationOptions<UpdateEvaluatorFragmentMutation, UpdateEvaluatorFragmentMutationVariables>;
 export const RestartApplicationDocument = gql`
     mutation restartApplication($serial: String!, $applicationPatch: ApplicationPatch!) {
   updateApplicationBySerial(input: {serial: $serial, patch: $applicationPatch}) {
@@ -52552,6 +52710,47 @@ export type GetApplicationListQueryHookResult = ReturnType<typeof useGetApplicat
 export type GetApplicationListLazyQueryHookResult = ReturnType<typeof useGetApplicationListLazyQuery>;
 export type GetApplicationListSuspenseQueryHookResult = ReturnType<typeof useGetApplicationListSuspenseQuery>;
 export type GetApplicationListQueryResult = Apollo.QueryResult<GetApplicationListQuery, GetApplicationListQueryVariables>;
+export const EvaluatorFragmentsDocument = gql`
+    query EvaluatorFragments {
+  evaluatorFragments {
+    nodes {
+      ...evaluatorFragment
+    }
+  }
+}
+    ${EvaluatorFragmentFragmentDoc}`;
+
+/**
+ * __useEvaluatorFragmentsQuery__
+ *
+ * To run a query within a React component, call `useEvaluatorFragmentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEvaluatorFragmentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEvaluatorFragmentsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEvaluatorFragmentsQuery(baseOptions?: Apollo.QueryHookOptions<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>(EvaluatorFragmentsDocument, options);
+      }
+export function useEvaluatorFragmentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>(EvaluatorFragmentsDocument, options);
+        }
+export function useEvaluatorFragmentsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>(EvaluatorFragmentsDocument, options);
+        }
+export type EvaluatorFragmentsQueryHookResult = ReturnType<typeof useEvaluatorFragmentsQuery>;
+export type EvaluatorFragmentsLazyQueryHookResult = ReturnType<typeof useEvaluatorFragmentsLazyQuery>;
+export type EvaluatorFragmentsSuspenseQueryHookResult = ReturnType<typeof useEvaluatorFragmentsSuspenseQuery>;
+export type EvaluatorFragmentsQueryResult = Apollo.QueryResult<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>;
 export const GetHistoryForApplicantDocument = gql`
     query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!, $templateVersionId: String!) {
   templateElementByTemplateCodeAndCodeAndTemplateVersion(
