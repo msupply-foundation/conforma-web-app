@@ -6,6 +6,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Loading } from '../../common'
 import useUndo from 'use-undo'
 import { handleCopyToClipboard } from './utils'
+import { UndoRedoSave } from './UndoRedoSave'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   onSave?: (data: JsonData) => void
@@ -85,27 +86,15 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         {...jsonViewProps}
       />
       {showSaveButton && (
-        <div className="flex-row-space-between">
-          <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
-            <a onClick={undo}>
-              <Icon name="arrow alternate circle left" />
-              <strong>{t('BUTTON_UNDO')}</strong>
-            </a>
-          </p>
-          <p className={`clickable nav-button ${!canRedo ? 'invisible' : ''}`}>
-            <a onClick={redo}>
-              <strong>{t('BUTTON_REDO')}</strong>
-              <Icon name="arrow alternate circle right" />
-            </a>
-          </p>
-          <Button
-            primary
-            disabled={!isDirty}
-            loading={isSaving}
-            content={t('BUTTON_SAVE')}
-            onClick={handleSave}
-          />
-        </div>
+        <UndoRedoSave
+          undo={undo}
+          redo={redo}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          isDirty={isDirty}
+          isSaving={isSaving}
+          handleSave={handleSave}
+        />
       )}
     </div>
   )

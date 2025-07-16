@@ -2,13 +2,23 @@ import { useRouter } from '../../../utils/hooks/useRouter'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast, Position } from '../../../contexts/Toast'
 import {
-  EvaluatorFragment,
   useGetEvaluatorFragmentsQuery,
   useUpdateEvaluatorFragmentMutation,
   useDeleteEvaluatorFragmentMutation,
   useCreateEvaluatorFragmentMutation,
 } from '../../../utils/generated/graphql'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import useUndo from 'use-undo'
+
+export interface Fragment {
+  id: number
+  name: string
+  expression: object
+  metadata: object | null
+  frontEnd: boolean
+  backEnd: boolean
+  permissionNames?: string[] | null
+}
 
 export const useFragmentConfig = () => {
   const { t } = useLanguageProvider()
@@ -21,17 +31,23 @@ export const useFragmentConfig = () => {
     fetchPolicy: 'cache-and-network',
   })
 
-  const [draft, setDraft] = useState<EvaluatorFragment>()
+  const [{ present: draft }, { set: setDraft, ...undoProps }] = useUndo<Fragment | null>(null)
 
   const selectedFragment = query.fragment
-  const fragments = data?.evaluatorFragments?.nodes as EvaluatorFragment[] | undefined
+  const fragments = (data?.evaluatorFragments?.nodes ?? []) as Fragment[]
 
   useEffect(() => {
+    if (!selectedFragment) {
+      undoProps.reset(null)
+      return
+    }
+
     if (fragments) {
       const fragmentObject = fragments.find((frag) => frag.name === selectedFragment)
-      if (fragmentObject) setDraft(fragmentObject)
+      if (fragmentObject) undoProps.reset(fragmentObject)
     }
-  }, [fragments, selectedFragment])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, selectedFragment])
 
   const [updateFragment, { loading: isSaving }] = useUpdateEvaluatorFragmentMutation({
     onError: (e) =>
@@ -67,15 +83,14 @@ export const useFragmentConfig = () => {
     },
   })
 
-  console.log('Draft', draft)
-
   return {
     fragments,
     loading,
     selectedFragment,
-    draftState: draft ? transformFragment(draft) : {},
-    updateDraft: (data: Record<string, any>, type: 'expression' | 'other') =>
-      updateDraft(data, type, setDraft as React.Dispatch<React.SetStateAction<EvaluatorFragment>>),
+    draftState: transformFragment(draft),
+    updateDraft: (data: Partial<Fragment>, type: 'expression' | 'other') =>
+      updateDraft(data, type, draft, setDraft),
+    undoProps,
     updateFragment,
     deleteFragment,
     addFragment,
@@ -85,7 +100,8 @@ export const useFragmentConfig = () => {
   }
 }
 
-const transformFragment = (fragment: EvaluatorFragment) => {
+const transformFragment = (fragment: Fragment | null) => {
+  if (!fragment) return {}
   const { id, expression, name, metadata, frontEnd, backEnd } = fragment
 
   return {
@@ -96,19 +112,23 @@ const transformFragment = (fragment: EvaluatorFragment) => {
 }
 
 const updateDraft = (
-  data: Record<string, any>,
+  input: Partial<Fragment>,
   type: 'expression' | 'other',
-  setDraft: React.Dispatch<React.SetStateAction<EvaluatorFragment>>
+  currentDraft: Fragment | null,
+  setDraft: (newValue: Fragment | null) => void
 ) => {
+  if (currentDraft === null) {
+    return
+  }
   if (type === 'expression') {
-    setDraft((prev) => ({
-      ...prev,
-      expression: data,
-    }))
+    setDraft({
+      ...currentDraft,
+      expression: input,
+    })
   } else {
-    setDraft((prev) => ({
-      ...prev,
-      ...data,
-    }))
+    setDraft({
+      ...currentDraft,
+      ...input,
+    })
   }
 }
