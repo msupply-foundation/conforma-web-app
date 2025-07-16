@@ -62,7 +62,7 @@ export const EvaluatorFragments: React.FC = () => {
           onChange={(_, { value }) => {
             if (fragments) updateQuery({ fragment: value })
           }}
-          style={{ minWidth: 300 }}
+          style={{ minWidth: 300, zIndex: 50 }}
         />
         <div>
           <Button
