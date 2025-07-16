@@ -1,10 +1,16 @@
 import { gql } from '@apollo/client'
 
 export default gql`
-  query EvaluatorFragments {
+  query getEvaluatorFragments {
     evaluatorFragments {
       nodes {
-        ...evaluatorFragment
+        id
+        name
+        expression
+        metadata
+        frontEnd
+        backEnd
+        permissionNames
       }
     }
   }

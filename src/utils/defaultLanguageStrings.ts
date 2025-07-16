@@ -158,6 +158,7 @@ export default {
   DOCUMENT_VIEW_NO_PREVIEW: 'No preview available. Please download to view file.',
   DOCUMENT_VIEW_PAGE_JUMP: 'Jump to page',
   DOCUMENT_VIEW_TOTAL_PAGES: 'Total pages: {{numPages}}',
+  EVALUATOR_FRAGMENTS_HEADER: 'Evaluator Fragments',
   ERROR_APPLICATION_CREATE: 'Problem loading application creation page',
   ERROR_APPLICATION_DELETE: 'Problem deleting application',
   ERROR_APPLICATION_PAGE: 'Problem loading application',

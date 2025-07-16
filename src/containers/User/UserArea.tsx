@@ -179,6 +179,11 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       value: '/admin/preferences',
     },
     {
+      key: 'fragments',
+      text: t('EVALUATOR_FRAGMENTS_HEADER'),
+      value: '/admin/fragments',
+    },
+    {
       key: 'snapshots',
       text: 'Snapshots',
       value: '/admin/snapshots',

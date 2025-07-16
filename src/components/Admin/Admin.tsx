@@ -8,6 +8,7 @@ import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { AdminPreferences } from './AdminPreferences'
 import { AdminDataViews } from './AdminDataViews/AdminDataViews'
+import { EvaluatorFragments } from './EvaluatorFragments/EvaluatorFragments'
 // import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Templates = React.lazy(() => import('../../containers/TemplateBuilder/Templates'))
@@ -63,6 +64,11 @@ const Admin: React.FC = () => {
       route: 'preferences',
       header: t('MENU_ITEM_ADMIN_PREFS'),
       Element: <AdminPreferences />,
+    },
+    {
+      route: 'fragments',
+      header: t('EVALUATOR_FRAGMENTS_HEADER'),
+      Element: <EvaluatorFragments />,
     },
     {
       route: 'snapshots',

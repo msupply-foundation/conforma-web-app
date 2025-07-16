@@ -50285,10 +50285,10 @@ export type GetApplicationListQueryVariables = Exact<{
 
 export type GetApplicationListQuery = { __typename?: 'Query', applicationList?: { __typename?: 'ApplicationListShapesConnection', totalCount: number, nodes: Array<{ __typename?: 'ApplicationListShape', id?: number | null, serial?: string | null, name?: string | null, templateCode?: string | null, templateName?: string | null, applicant?: string | null, orgName?: string | null, stage?: string | null, stageColour?: string | null, status?: ApplicationStatus | null, outcome?: ApplicationOutcome | null, lastActiveDate?: any | null, applicantDeadline?: any | null, reviewerAction?: ReviewerAction | null, assignerAction?: AssignerAction | null, assigners?: Array<string | null> | null, reviewers?: Array<string | null> | null } | null> } | null, templates?: { __typename?: 'TemplatesConnection', nodes: Array<{ __typename?: 'Template', code: string, name?: string | null, namePlural?: string | null } | null> } | null };
 
-export type EvaluatorFragmentsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetEvaluatorFragmentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EvaluatorFragmentsQuery = { __typename?: 'Query', evaluatorFragments?: { __typename?: 'EvaluatorFragmentsConnection', nodes: Array<{ __typename?: 'EvaluatorFragment', id: number, name: string, expression: any, metadata?: any | null, permissionNames?: Array<string | null> | null, backEnd: boolean, frontEnd: boolean } | null> } | null };
+export type GetEvaluatorFragmentsQuery = { __typename?: 'Query', evaluatorFragments?: { __typename?: 'EvaluatorFragmentsConnection', nodes: Array<{ __typename?: 'EvaluatorFragment', id: number, name: string, expression: any, metadata?: any | null, frontEnd: boolean, backEnd: boolean, permissionNames?: Array<string | null> | null } | null> } | null };
 
 export type GetHistoryForApplicantQueryVariables = Exact<{
   serial: Scalars['String']['input'];
@@ -52710,47 +52710,53 @@ export type GetApplicationListQueryHookResult = ReturnType<typeof useGetApplicat
 export type GetApplicationListLazyQueryHookResult = ReturnType<typeof useGetApplicationListLazyQuery>;
 export type GetApplicationListSuspenseQueryHookResult = ReturnType<typeof useGetApplicationListSuspenseQuery>;
 export type GetApplicationListQueryResult = Apollo.QueryResult<GetApplicationListQuery, GetApplicationListQueryVariables>;
-export const EvaluatorFragmentsDocument = gql`
-    query EvaluatorFragments {
+export const GetEvaluatorFragmentsDocument = gql`
+    query getEvaluatorFragments {
   evaluatorFragments {
     nodes {
-      ...evaluatorFragment
+      id
+      name
+      expression
+      metadata
+      frontEnd
+      backEnd
+      permissionNames
     }
   }
 }
-    ${EvaluatorFragmentFragmentDoc}`;
+    `;
 
 /**
- * __useEvaluatorFragmentsQuery__
+ * __useGetEvaluatorFragmentsQuery__
  *
- * To run a query within a React component, call `useEvaluatorFragmentsQuery` and pass it any options that fit your needs.
- * When your component renders, `useEvaluatorFragmentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetEvaluatorFragmentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEvaluatorFragmentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useEvaluatorFragmentsQuery({
+ * const { data, loading, error } = useGetEvaluatorFragmentsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useEvaluatorFragmentsQuery(baseOptions?: Apollo.QueryHookOptions<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>) {
+export function useGetEvaluatorFragmentsQuery(baseOptions?: Apollo.QueryHookOptions<GetEvaluatorFragmentsQuery, GetEvaluatorFragmentsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>(EvaluatorFragmentsDocument, options);
+        return Apollo.useQuery<GetEvaluatorFragmentsQuery, GetEvaluatorFragmentsQueryVariables>(GetEvaluatorFragmentsDocument, options);
       }
-export function useEvaluatorFragmentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>) {
+export function useGetEvaluatorFragmentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEvaluatorFragmentsQuery, GetEvaluatorFragmentsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>(EvaluatorFragmentsDocument, options);
+          return Apollo.useLazyQuery<GetEvaluatorFragmentsQuery, GetEvaluatorFragmentsQueryVariables>(GetEvaluatorFragmentsDocument, options);
         }
-export function useEvaluatorFragmentsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>) {
+export function useGetEvaluatorFragmentsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetEvaluatorFragmentsQuery, GetEvaluatorFragmentsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>(EvaluatorFragmentsDocument, options);
+          return Apollo.useSuspenseQuery<GetEvaluatorFragmentsQuery, GetEvaluatorFragmentsQueryVariables>(GetEvaluatorFragmentsDocument, options);
         }
-export type EvaluatorFragmentsQueryHookResult = ReturnType<typeof useEvaluatorFragmentsQuery>;
-export type EvaluatorFragmentsLazyQueryHookResult = ReturnType<typeof useEvaluatorFragmentsLazyQuery>;
-export type EvaluatorFragmentsSuspenseQueryHookResult = ReturnType<typeof useEvaluatorFragmentsSuspenseQuery>;
-export type EvaluatorFragmentsQueryResult = Apollo.QueryResult<EvaluatorFragmentsQuery, EvaluatorFragmentsQueryVariables>;
+export type GetEvaluatorFragmentsQueryHookResult = ReturnType<typeof useGetEvaluatorFragmentsQuery>;
+export type GetEvaluatorFragmentsLazyQueryHookResult = ReturnType<typeof useGetEvaluatorFragmentsLazyQuery>;
+export type GetEvaluatorFragmentsSuspenseQueryHookResult = ReturnType<typeof useGetEvaluatorFragmentsSuspenseQuery>;
+export type GetEvaluatorFragmentsQueryResult = Apollo.QueryResult<GetEvaluatorFragmentsQuery, GetEvaluatorFragmentsQueryVariables>;
 export const GetHistoryForApplicantDocument = gql`
     query getHistoryForApplicant($serial: String!, $questionCode: String!, $templateCode: String!, $templateVersionId: String!) {
   templateElementByTemplateCodeAndCodeAndTemplateVersion(
