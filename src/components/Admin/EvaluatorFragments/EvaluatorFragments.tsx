@@ -103,7 +103,7 @@ export const EvaluatorFragments: React.FC = () => {
         </div>
       </div>
       {fragmentData && (
-        <>
+        <div className="flex-column" style={{ width: '100%' }}>
           <ConfirmModal />
           <FigTreeEditor
             expression={expression ?? {}}
@@ -112,19 +112,37 @@ export const EvaluatorFragments: React.FC = () => {
             }
             figTree={FigTree}
             onEvaluate={() => {}}
-            rootName={'Expression fragment'}
+            rootName={'Expression Fragment'}
             collapse={2}
             showArrayIndices={false}
+            maxWidth={'100%'}
+            styles={{
+              container: {
+                backgroundColor: '#fefefe',
+                marginBottom: '0.8em',
+                paddingTop: '0.5em',
+                paddingBottom: '0.5em',
+              },
+            }}
           />
           <ReactJson
             data={fragmentData}
             setData={(newData) => updateDraft(newData as Partial<Fragment>, 'other')}
-            rootName={'Fragment data'}
+            rootName=""
             collapse={2}
             showArrayIndices={false}
-            maxWidth={650}
+            maxWidth={'100%'}
             restrictAdd={({ level }) => level === 0}
             restrictDelete={({ level }) => level === 1}
+            theme={{
+              container: {
+                backgroundColor: '#fefefe',
+                marginBottom: '1em',
+                paddingTop: '0.5em',
+                paddingBottom: '0.5em',
+              },
+            }}
+            showCollectionCount="when-closed"
           />
           <UndoRedoSave
             {...undoProps}
@@ -142,7 +160,7 @@ export const EvaluatorFragments: React.FC = () => {
               })
             }}
           />
-        </>
+        </div>
       )}
     </div>
   )
