@@ -7,11 +7,23 @@ import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { nanoid } from 'nanoid'
 import { useFragmentConfig, Fragment } from './useFragmentConfig'
 import { JsonEditor as ReactJson } from 'json-edit-react'
-import { FigTreeEditor } from 'fig-tree-editor-react'
+import { FigTreeEditor, FigTreeEvaluator } from 'fig-tree-editor-react'
 import { FigTree } from '../../../FigTreeEvaluator'
 import { UndoRedoSave } from '../JsonEditor/UndoRedoSave'
 
-export const EvaluatorFragments: React.FC = () => {
+console.log('Using Fragment Editor')
+
+const { fragments: _, ...originalFigTreeOptions } = FigTree.getOptions()
+
+console.log('FigTree Options', originalFigTreeOptions)
+
+// Use a new instance of FigTreeEvaluator here, as we need to remove the
+// fragments, as the Fragment Editor shouldn't be able to reference other
+// fragments (in theory they could, but it could cause problems with an
+// accidental circular reference).
+const FigTreeFragments = new FigTreeEvaluator(originalFigTreeOptions)
+
+const EvaluatorFragments: React.FC = () => {
   const { t } = useLanguageProvider()
   usePageTitle(t('EVALUATOR_FRAGMENTS_HEADER'))
 
@@ -110,7 +122,7 @@ export const EvaluatorFragments: React.FC = () => {
             setExpression={(newExpression) =>
               updateDraft(newExpression as Partial<Fragment>, 'expression')
             }
-            figTree={FigTree}
+            figTree={FigTreeFragments}
             onEvaluate={() => {}}
             rootName={'Expression Fragment'}
             collapse={2}
@@ -179,3 +191,5 @@ const getFragmentOptions = (fragments: Fragment[] | undefined) => {
     }
   })
 }
+
+export default EvaluatorFragments

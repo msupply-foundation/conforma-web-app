@@ -1,4 +1,7 @@
+import { useEffect } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
+import useUndo from 'use-undo'
+import { dequal } from 'fig-tree-editor-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast, Position } from '../../../contexts/Toast'
 import {
@@ -7,8 +10,6 @@ import {
   useDeleteEvaluatorFragmentMutation,
   useCreateEvaluatorFragmentMutation,
 } from '../../../utils/generated/graphql'
-import { useEffect } from 'react'
-import useUndo from 'use-undo'
 
 export interface Fragment {
   id: number
@@ -83,13 +84,35 @@ export const useFragmentConfig = () => {
     },
   })
 
+  const updateDraft = (input: Partial<Fragment>, type: 'expression' | 'other') => {
+    if (draft === null) {
+      return
+    }
+    const newDraft =
+      type === 'expression' ? { ...draft, expression: input } : { ...draft, ...input }
+
+    // Strict => key order must be the same
+    const isStrictlyEqual = JSON.stringify(newDraft) === JSON.stringify(draft)
+
+    // Loose => key order not considered
+    const isLooselyEqual = dequal(newDraft, draft)
+
+    if (isLooselyEqual && !isStrictlyEqual) {
+      undoProps.reset(newDraft)
+      return
+    }
+
+    if (isStrictlyEqual) return
+
+    setDraft(newDraft)
+  }
+
   return {
     fragments,
     loading,
     selectedFragment,
     draftState: transformFragment(draft),
-    updateDraft: (data: Partial<Fragment>, type: 'expression' | 'other') =>
-      updateDraft(data, type, draft, setDraft),
+    updateDraft,
     undoProps,
     updateFragment,
     deleteFragment,
@@ -108,27 +131,5 @@ const transformFragment = (fragment: Fragment | null) => {
     id,
     expression,
     fragmentData: { name, metadata, frontEnd, backEnd },
-  }
-}
-
-const updateDraft = (
-  input: Partial<Fragment>,
-  type: 'expression' | 'other',
-  currentDraft: Fragment | null,
-  setDraft: (newValue: Fragment | null) => void
-) => {
-  if (currentDraft === null) {
-    return
-  }
-  if (type === 'expression') {
-    setDraft({
-      ...currentDraft,
-      expression: input,
-    })
-  } else {
-    setDraft({
-      ...currentDraft,
-      ...input,
-    })
   }
 }

@@ -8,7 +8,6 @@ import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { AdminPreferences } from './AdminPreferences'
 import { AdminDataViews } from './AdminDataViews/AdminDataViews'
-import { EvaluatorFragments } from './EvaluatorFragments/EvaluatorFragments'
 // import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Templates = React.lazy(() => import('../../containers/TemplateBuilder/Templates'))
@@ -17,6 +16,7 @@ const TemplateWrapper = React.lazy(
 )
 const Snapshots = React.lazy(() => import('../../containers/Dev/Snapshots'))
 const AdminLocalisations = React.lazy(() => import('./AdminLocalisations'))
+const EvaluatorFragments = React.lazy(() => import('./EvaluatorFragments/EvaluatorFragments'))
 
 const Admin: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -68,7 +68,11 @@ const Admin: React.FC = () => {
     {
       route: 'fragments',
       header: t('EVALUATOR_FRAGMENTS_HEADER'),
-      Element: <EvaluatorFragments />,
+      Element: (
+        <Suspense fallback={<Loading />}>
+          <EvaluatorFragments />
+        </Suspense>
+      ),
     },
     {
       route: 'snapshots',
