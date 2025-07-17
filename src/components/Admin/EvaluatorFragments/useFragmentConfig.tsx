@@ -52,19 +52,27 @@ export const useFragmentConfig = () => {
 
   const [updateFragment, { loading: isSaving }] = useUpdateEvaluatorFragmentMutation({
     onError: (e) =>
-      showToast({ title: t('DATA_VIEW_CONFIG_UPDATE_PROBLEM'), text: e.message, style: 'error' }),
+      showToast({
+        title: t('EVALUATOR_FRAGMENTS_UPDATE_PROBLEM'),
+        text: e.message,
+        style: 'error',
+      }),
     onCompleted: (d) => {
       const name = d.updateEvaluatorFragment?.evaluatorFragment?.name
-      showToast({ title: t('DATA_VIEW_CONFIG_SAVED'), text: name, style: 'success' })
+      showToast({ title: t('EVALUATOR_FRAGMENT_SAVED'), text: name, style: 'success' })
       updateQuery({ dataView: d.updateEvaluatorFragment?.evaluatorFragment?.name })
     },
   })
 
   const [deleteFragment, { loading: isDeleting }] = useDeleteEvaluatorFragmentMutation({
     onError: (e) =>
-      showToast({ title: t('DATA_VIEW_CONFIG_DELETE_PROBLEM'), text: e.message, style: 'error' }),
+      showToast({ title: t('EVALUATOR_FRAGMENT_DELETE_PROBLEM'), text: e.message, style: 'error' }),
     onCompleted: (_) => {
-      showToast({ title: t('DATA_VIEW_CONFIG_DELETED'), text: selectedFragment, style: 'success' })
+      showToast({
+        title: t('EVALUATOR_FRAGMENT_DELETED'),
+        text: selectedFragment,
+        style: 'success',
+      })
       updateQuery({ fragment: null })
       refetch()
     },
@@ -72,11 +80,11 @@ export const useFragmentConfig = () => {
 
   const [addFragment, { loading: isAdding }] = useCreateEvaluatorFragmentMutation({
     onError: (e) =>
-      showToast({ title: t('DATA_VIEW_CONFIG_ADD_PROBLEM'), text: e.message, style: 'error' }),
+      showToast({ title: t('EVALUATOR_FRAGMENT_ADD_PROBLEM'), text: e.message, style: 'error' }),
     onCompleted: (d) => {
       showToast({
-        title: t('DATA_VIEW_CONFIG_ADDED'),
-        text: t('DATA_VIEW_CONFIG_ADD_MESSAGE'),
+        title: t('EVALUATOR_FRAGMENT_ADDED'),
+        text: t('EVALUATOR_FRAGMENT_ADD_MESSAGE'),
         style: 'success',
       })
       updateQuery({ fragment: d.createEvaluatorFragment?.evaluatorFragment?.name })

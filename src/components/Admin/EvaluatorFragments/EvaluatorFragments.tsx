@@ -67,7 +67,7 @@ const EvaluatorFragments: React.FC = () => {
         <Dropdown
           selection
           clearable
-          placeholder={t('DATA_VIEW_CONFIG_SELECT_VIEW')}
+          placeholder={t('EVALUATOR_FRAGMENT_SELECT_FRAGMENT')}
           loading={loading}
           value={selectedFragment}
           options={getFragmentOptions(fragments)}
@@ -86,8 +86,8 @@ const EvaluatorFragments: React.FC = () => {
             content={t('DATA_VIEW_CONFIG_DELETE_BUTTON')}
             onClick={() =>
               showConfirmation({
-                title: t('DATA_VIEW_CONFIG_DELETE_WARNING'),
-                message: t('DATA_VIEW_CONFIG_DELETE_MESSAGE'),
+                title: t('EVALUATOR_FRAGMENT_DELETE_WARNING'),
+                message: t('EVALUATOR_FRAGMENT_DELETE_MESSAGE'),
                 onConfirm: () => deleteFragment({ variables: { id } }),
                 awaitAction: false,
               })
@@ -124,7 +124,7 @@ const EvaluatorFragments: React.FC = () => {
             }
             figTree={FigTreeFragments}
             onEvaluate={() => {}}
-            rootName={'Expression Fragment'}
+            rootName={'Fragment'}
             collapse={2}
             showArrayIndices={false}
             maxWidth={'100%'}
@@ -140,8 +140,8 @@ const EvaluatorFragments: React.FC = () => {
           <ReactJson
             data={fragmentData}
             setData={(newData) => updateDraft(newData as Partial<Fragment>, 'other')}
-            rootName=""
-            collapse={2}
+            rootName="Data"
+            collapse={4}
             showArrayIndices={false}
             maxWidth={'100%'}
             restrictAdd={({ level }) => level === 0}
@@ -162,8 +162,8 @@ const EvaluatorFragments: React.FC = () => {
             isSaving={isSaving}
             handleSave={() => {
               showConfirmation({
-                title: t('DATA_VIEW_CONFIG_SAVE_WARNING'),
-                message: t('DATA_VIEW_CONFIG_SAVE_MESSAGE'),
+                title: t('EVALUATOR_FRAGMENT_CONFIG_SAVE_WARNING'),
+                message: t('EVALUATOR_FRAGMENT_CONFIG_SAVE_MESSAGE'),
                 onConfirm: () =>
                   updateFragment({
                     variables: { id, patch: { expression, ...fragmentData } },
