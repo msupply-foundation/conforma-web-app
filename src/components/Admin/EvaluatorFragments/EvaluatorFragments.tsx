@@ -13,6 +13,7 @@ import { UndoRedoSave } from '../JsonEditor/UndoRedoSave'
 import { onEvaluateErrorNotify, onEvaluateNotify } from '../../common/evaluatorHelpers'
 import { Position, useToast } from '../../../contexts/Toast'
 import { handleCopyToClipboard } from '../JsonEditor'
+import { FragmentTester } from './FragmentTester'
 
 console.log('Using Fragment Editor')
 
@@ -137,6 +138,13 @@ const EvaluatorFragments: React.FC = () => {
       {fragmentData && (
         <div className="flex-column" style={{ width: '100%' }}>
           <ConfirmModal />
+          <FragmentTester
+            figTree={FigTreeFragments}
+            fragmentExpression={expression}
+            fragmentData={fragmentData}
+            onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
+            onError={(err) => onEvaluateErrorNotify(err, showToast)}
+          />
           <FigTreeEditor
             expression={expression ?? {}}
             setExpression={(newExpression) =>
