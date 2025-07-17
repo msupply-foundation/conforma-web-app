@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
-import { Header, Button, Dropdown, Icon } from 'semantic-ui-react'
+import { Header, Button, Dropdown, Icon, DropdownMenu, DropdownItem } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import usePageTitle from '../../../utils/hooks/usePageTitle'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
@@ -10,6 +10,9 @@ import { JsonEditor as ReactJson } from 'json-edit-react'
 import { FigTreeEditor, FigTreeEvaluator } from 'fig-tree-editor-react'
 import { FigTree } from '../../../FigTreeEvaluator'
 import { UndoRedoSave } from '../JsonEditor/UndoRedoSave'
+import { onEvaluateErrorNotify, onEvaluateNotify } from '../../common/evaluatorHelpers'
+import { Position, useToast } from '../../../contexts/Toast'
+import { handleCopyToClipboard } from '../JsonEditor'
 
 console.log('Using Fragment Editor')
 
@@ -33,6 +36,8 @@ const EvaluatorFragments: React.FC = () => {
     type: 'warning',
     confirmText: t('BUTTON_CONFIRM'),
   })
+
+  const { showToast } = useToast({ position: Position.topMiddle })
 
   const {
     fragments,
@@ -70,12 +75,27 @@ const EvaluatorFragments: React.FC = () => {
           placeholder={t('EVALUATOR_FRAGMENT_SELECT_FRAGMENT')}
           loading={loading}
           value={selectedFragment}
-          options={getFragmentOptions(fragments)}
-          onChange={(_, { value }) => {
-            if (fragments) updateQuery({ fragment: value })
-          }}
+          text={selectedFragment}
           style={{ minWidth: 300, zIndex: 50 }}
-        />
+          onChange={(_, { value }) => {
+            // This handles the clear action when 'x' is clicked
+            if (value === '') updateQuery({ fragment: null })
+          }}
+        >
+          <DropdownMenu>
+            {getFragmentOptions(fragments).map(({ key, text, value, description }) => (
+              <DropdownItem
+                key={key}
+                value={value}
+                onClick={() => updateQuery({ fragment: value })}
+              >
+                {text}
+                <br />
+                <span className="slightly-smaller-text">{description}</span>
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
         <div>
           <Button
             primary
@@ -123,7 +143,9 @@ const EvaluatorFragments: React.FC = () => {
               updateDraft(newExpression as Partial<Fragment>, 'expression')
             }
             figTree={FigTreeFragments}
-            onEvaluate={() => {}}
+            onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
+            onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
+            enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
             rootName={'Fragment'}
             collapse={2}
             showArrayIndices={false}
@@ -140,7 +162,7 @@ const EvaluatorFragments: React.FC = () => {
           <ReactJson
             data={fragmentData}
             setData={(newData) => updateDraft(newData as Partial<Fragment>, 'other')}
-            rootName="Data"
+            rootName="Properties"
             collapse={4}
             showArrayIndices={false}
             maxWidth={'100%'}
@@ -155,6 +177,7 @@ const EvaluatorFragments: React.FC = () => {
               },
             }}
             showCollectionCount="when-closed"
+            enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
           />
           <UndoRedoSave
             {...undoProps}
@@ -182,12 +205,12 @@ const getFragmentOptions = (fragments: Fragment[] | undefined) => {
   if (!fragments) return []
 
   return fragments.map((fragment) => {
-    const { id, name } = fragment
+    const { id, name, metadata } = fragment
     return {
       key: `${name}_${id}`,
       text: name,
       value: name,
-      data: fragment,
+      description: metadata?.description ?? '',
     }
   })
 }

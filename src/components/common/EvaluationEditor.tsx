@@ -1,12 +1,10 @@
 import React from 'react'
-import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { FigTreeEditor, FigTreeEditorProps } from 'fig-tree-editor-react'
-import { isFigTreeError, truncateString, dequal, EvaluatorNode } from 'fig-tree-evaluator'
+import { dequal, EvaluatorNode } from 'fig-tree-evaluator'
 import { Position, topMiddle, useToast } from '../../contexts/Toast'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { handleCopyToClipboard } from '../Admin/JsonEditor'
-
-const RESULT_STRING_CHAR_LIMIT = 500
+import { onEvaluateErrorNotify, onEvaluateNotify } from './evaluatorHelpers'
 
 interface EvaluatorProps extends Omit<FigTreeEditorProps, 'onEvaluate'> {
   toastPosition?: Position
@@ -79,75 +77,10 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         restrictAdd={!canEdit}
         restrictDelete={!canEdit}
         collapseAnimationTime={100}
-        onEvaluate={(result, e) => {
-          let resultString = truncateString(String(result))
-          let copiedToClipboardText = ''
-          if (e.getModifierState('Meta') || e.getModifierState('Control')) {
-            navigator.clipboard.writeText(String(result))
-            copiedToClipboardText = '(Copied to clipboard)'
-            resultString += `\n${copiedToClipboardText}`
-          }
-          showToast({
-            text: resultString,
-            html: formatResult(result, copiedToClipboardText),
-            style: 'success',
-            timeout: 10_000,
-            maxWidth: 650,
-          })
-        }}
-        onEvaluateError={(err) => {
-          showToast({
-            title: 'Evaluation Error',
-            text: isFigTreeError(err)
-              ? truncateString(err.prettyPrint, 150)
-              : (err as Error).message,
-            style: 'negative',
-            timeout: 10_000,
-            maxWidth: 650,
-          })
-        }}
+        onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
+        onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
         enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
       />
     </div>
-  )
-}
-
-const formatResult = (result: unknown, copiedToClipboardText?: string) => {
-  const copiedToClipboard = copiedToClipboardText ? (
-    <div style={{ textAlign: 'center' }}>
-      <em>{copiedToClipboardText}</em>
-    </div>
-  ) : null
-
-  let htmlResult: JSX.Element | null = null
-
-  switch (typeof result) {
-    case 'boolean':
-    case 'number':
-      // Returning undefined will force the Message component to render the
-      // plain text result rather than the formatted HTML
-      return undefined
-    case 'object':
-      if (result === null) {
-        htmlResult = (
-          <code>
-            <strong>NULL</strong>
-          </code>
-        )
-        break
-      }
-      htmlResult = (
-        <pre>{truncateString(JSON.stringify(result, null, 2), RESULT_STRING_CHAR_LIMIT)}</pre>
-      )
-      break
-    default:
-      htmlResult = <Markdown text={truncateString(String(result), RESULT_STRING_CHAR_LIMIT)} />
-  }
-
-  return (
-    <>
-      {htmlResult}
-      {copiedToClipboard}
-    </>
   )
 }
