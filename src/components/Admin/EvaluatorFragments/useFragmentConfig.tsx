@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import useUndo from 'use-undo'
-import { dequal } from 'fig-tree-editor-react'
+import { dequal, Fragment, FragmentMetadata } from 'fig-tree-editor-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast, Position } from '../../../contexts/Toast'
 import {
@@ -11,14 +11,14 @@ import {
   useCreateEvaluatorFragmentMutation,
 } from '../../../utils/generated/graphql'
 
-export interface Fragment {
+export interface FragmentRow {
   id: number
   name: string
-  expression: object
-  metadata: object | null
+  expression: Fragment
+  metadata: FragmentMetadata | null
   frontEnd: boolean
   backEnd: boolean
-  permissionNames?: string[] | null
+  permissionNames: string[] | null
 }
 
 export const useFragmentConfig = () => {
@@ -32,10 +32,10 @@ export const useFragmentConfig = () => {
     fetchPolicy: 'cache-and-network',
   })
 
-  const [{ present: draft }, { set: setDraft, ...undoProps }] = useUndo<Fragment | null>(null)
+  const [{ present: draft }, { set: setDraft, ...undoProps }] = useUndo<FragmentRow | null>(null)
 
   const selectedFragment = query.fragment
-  const fragments = (data?.evaluatorFragments?.nodes ?? []) as Fragment[]
+  const fragments = (data?.evaluatorFragments?.nodes ?? []) as FragmentRow[]
 
   useEffect(() => {
     if (!selectedFragment) {
@@ -92,12 +92,13 @@ export const useFragmentConfig = () => {
     },
   })
 
-  const updateDraft = (input: Partial<Fragment>, type: 'expression' | 'other') => {
+  const updateDraft = (input: Partial<FragmentRow>, type: 'expression' | 'other') => {
     if (draft === null) {
       return
     }
-    const newDraft =
+    const newDraft = (
       type === 'expression' ? { ...draft, expression: input } : { ...draft, ...input }
+    ) as FragmentRow
 
     // Strict => key order must be the same
     const isStrictlyEqual = JSON.stringify(newDraft) === JSON.stringify(draft)
@@ -131,7 +132,7 @@ export const useFragmentConfig = () => {
   }
 }
 
-const transformFragment = (fragment: Fragment | null) => {
+const transformFragment = (fragment: FragmentRow | null) => {
   if (!fragment) return {}
   const { id, expression, name, metadata, frontEnd, backEnd } = fragment
 

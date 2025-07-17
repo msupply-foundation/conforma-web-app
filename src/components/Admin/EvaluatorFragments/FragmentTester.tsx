@@ -1,10 +1,5 @@
-import React, { useEffect } from 'react'
-import {
-  EvaluatorNode,
-  FigTreeEvaluator,
-  Fragment,
-  FragmentParameterMetadata,
-} from 'fig-tree-editor-react'
+import React from 'react'
+import { FigTreeEvaluator, Fragment, FragmentMetadata } from 'fig-tree-editor-react'
 import { JsonEditor as ReactJson } from 'json-edit-react'
 
 interface FragmentTesterProps {
@@ -12,12 +7,23 @@ interface FragmentTesterProps {
   fragmentExpression: Fragment
   fragmentData?: {
     name: string
-    metadata: object | null
+    metadata: FragmentMetadata | null
     frontEnd: boolean
     backEnd: boolean
   }
   onEvaluate: (result: unknown, e: React.MouseEvent<Element, MouseEvent>) => void
   onError: (err: unknown) => void
+}
+
+const getUpdatedParameters = (
+  parameters: Record<string, unknown>,
+  fragmentData?: FragmentTesterProps['fragmentData']
+) => {
+  const newValues = { ...parameters }
+  fragmentData?.metadata?.parameters?.forEach((param) => {
+    newValues[param.name] = param?.default ?? 'placeholder'
+  })
+  return newValues
 }
 
 export const FragmentTester = ({
@@ -27,19 +33,13 @@ export const FragmentTester = ({
   onEvaluate,
   onError,
 }: FragmentTesterProps) => {
-  const [parameterValues, setParameterValues] = React.useState<Record<string, unknown>>({})
-
-  useEffect(() => {
-    const newValues: Record<string, unknown> = {}
-    fragmentData?.metadata?.parameters.forEach((param) => {
-      newValues[param.name] = param?.default ?? 'placeholder'
-    })
-    setParameterValues(newValues)
-  }, [])
+  const [parameters, setParameters] = React.useState<Record<string, unknown>>(
+    getUpdatedParameters({}, fragmentData)
+  )
 
   const handleEvaluate = async (e: React.MouseEvent<Element, MouseEvent>) => {
     const fragmentName = fragmentData?.name ?? '?'
-    const expression = { fragment: fragmentName, parameters: parameterValues }
+    const expression = { fragment: fragmentName, parameters }
     const fragments = { [fragmentName]: fragmentExpression }
 
     console.log('Expression', expression)
@@ -56,7 +56,15 @@ export const FragmentTester = ({
   return (
     <div className="flex-row">
       <p onClick={handleEvaluate}>CLICK ME</p>
-      <ReactJson data={parameterValues} setData={setParameterValues} />
+      <p onClick={() => setParameters(getUpdatedParameters(parameters, fragmentData))}>
+        CLICK TO REFRESH PARAMS
+      </p>
+      <ReactJson
+        data={parameters}
+        setData={setParameters as (data: unknown) => void}
+        rootName="parameters"
+        rootFontSize={'1em'}
+      />
     </div>
   )
 }

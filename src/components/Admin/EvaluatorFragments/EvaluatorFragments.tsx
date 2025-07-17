@@ -5,7 +5,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import usePageTitle from '../../../utils/hooks/usePageTitle'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { nanoid } from 'nanoid'
-import { useFragmentConfig, Fragment } from './useFragmentConfig'
+import { useFragmentConfig, FragmentRow } from './useFragmentConfig'
 import { JsonEditor as ReactJson } from 'json-edit-react'
 import { FigTreeEditor, FigTreeEvaluator } from 'fig-tree-editor-react'
 import { FigTree } from '../../../FigTreeEvaluator'
@@ -15,11 +15,7 @@ import { Position, useToast } from '../../../contexts/Toast'
 import { handleCopyToClipboard } from '../JsonEditor'
 import { FragmentTester } from './FragmentTester'
 
-console.log('Using Fragment Editor')
-
 const { fragments: _, ...originalFigTreeOptions } = FigTree.getOptions()
-
-console.log('FigTree Options', originalFigTreeOptions)
 
 // Use a new instance of FigTreeEvaluator here, as we need to remove the
 // fragments, as the Fragment Editor shouldn't be able to reference other
@@ -148,7 +144,7 @@ const EvaluatorFragments: React.FC = () => {
           <FigTreeEditor
             expression={expression ?? {}}
             setExpression={(newExpression) =>
-              updateDraft(newExpression as Partial<Fragment>, 'expression')
+              updateDraft(newExpression as Partial<FragmentRow>, 'expression')
             }
             figTree={FigTreeFragments}
             onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
@@ -169,7 +165,7 @@ const EvaluatorFragments: React.FC = () => {
           />
           <ReactJson
             data={fragmentData}
-            setData={(newData) => updateDraft(newData as Partial<Fragment>, 'other')}
+            setData={(newData) => updateDraft(newData as Partial<FragmentRow>, 'other')}
             rootName="Properties"
             collapse={4}
             showArrayIndices={false}
@@ -209,7 +205,7 @@ const EvaluatorFragments: React.FC = () => {
   )
 }
 
-const getFragmentOptions = (fragments: Fragment[] | undefined) => {
+const getFragmentOptions = (fragments: FragmentRow[] | undefined) => {
   if (!fragments) return []
 
   return fragments.map((fragment) => {
