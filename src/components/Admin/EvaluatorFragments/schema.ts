@@ -1,7 +1,7 @@
 export const FragmentDataSchema = {
   type: 'object',
   properties: {
-    id: { type: 'number' },
+    // id: { type: 'number' },
     name: { type: 'string' },
     metadata: {
       anyOf: [
@@ -40,6 +40,14 @@ export const FragmentDataSchema = {
     backEnd: { type: 'boolean' },
     permissionNames: { anyOf: [{ type: 'array', items: { type: 'string' } }, { type: 'null' }] },
   },
-  required: ['id', 'name', 'expression', 'metadata', 'frontEnd', 'backEnd', 'permissionNames'],
+  required: [
+    // 'id',
+    'name',
+    // 'expression',
+    'metadata',
+    'frontEnd',
+    'backEnd',
+    // 'permissionNames',
+  ],
   additionalProperties: false,
 }

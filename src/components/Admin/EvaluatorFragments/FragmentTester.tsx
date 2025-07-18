@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import { FigTreeEvaluator, Fragment, FragmentMetadata } from 'fig-tree-editor-react'
 import { JsonEditor as ReactJson } from 'json-edit-react'
 import { Button, Icon } from 'semantic-ui-react'
-import { useLanguageProvider } from '../../../contexts/Localisation'
-import { max } from 'date-fns'
+// import { useLanguageProvider } from '../../../contexts/Localisation'
 
 interface FragmentTesterProps {
   figTree: FigTreeEvaluator
@@ -25,7 +24,7 @@ export const FragmentTester = ({
   onEvaluate,
   onError,
 }: FragmentTesterProps) => {
-  const { t } = useLanguageProvider()
+  // const { t } = useLanguageProvider()
   const [parameters, setParameters] = React.useState<Record<string, unknown>>(
     getUpdatedParameters({}, fragmentData)
   )

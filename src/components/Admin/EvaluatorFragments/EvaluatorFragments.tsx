@@ -16,6 +16,7 @@ import { Position, useToast } from '../../../contexts/Toast'
 import { handleCopyToClipboard } from '../JsonEditor'
 import { FragmentTester } from './FragmentTester'
 import { FragmentDataSchema } from './schema'
+import { DataContainer } from './DataContainer'
 
 const { fragments: _, ...originalFigTreeOptions } = FigTree.getOptions()
 
@@ -137,7 +138,7 @@ const EvaluatorFragments: React.FC = () => {
         </div>
       </div>
       {fragmentData && (
-        <div className="flex-column" style={{ width: '100%' }}>
+        <div className="flex-column" style={{ width: '100%', position: 'relative' }}>
           <ConfirmModal />
           <FragmentTester
             figTree={FigTreeFragments}
@@ -146,72 +147,82 @@ const EvaluatorFragments: React.FC = () => {
             onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
             onError={(err) => onEvaluateErrorNotify(err, showToast)}
           />
-          <FigTreeEditor
-            expression={expression ?? {}}
-            setExpression={(newExpression) =>
-              updateDraft(newExpression as Partial<FragmentRow>, 'expression')
-            }
-            figTree={FigTreeFragments}
-            onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
-            onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
-            enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
-            rootName={'Fragment'}
-            collapse={2}
-            showArrayIndices={false}
-            maxWidth={'100%'}
-            styles={{
-              container: {
-                backgroundColor: '#fefefe',
-                marginBottom: '0.8em',
-                paddingTop: '0.5em',
-                paddingBottom: '0.5em',
-              },
-            }}
-          />
-          <ReactJson
-            data={fragmentData}
-            setData={(newData) => updateDraft(newData as Partial<FragmentRow>, 'other')}
-            rootName="Properties"
-            collapse={4}
-            showArrayIndices={false}
-            maxWidth={'100%'}
-            restrictAdd={({ level }) => level === 0}
-            restrictDelete={({ level }) => level === 1}
-            theme={{
-              container: {
-                backgroundColor: '#fefefe',
-                marginBottom: '1em',
-                paddingTop: '0.5em',
-                paddingBottom: '0.5em',
-              },
-            }}
-            showCollectionCount="when-closed"
-            enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
-            onUpdate={({ newData }) => {
-              const valid = validateFragment(newData)
-              if (!valid) {
-                console.log('Errors', validateFragment.errors)
-                const errorMessage = validateFragment.errors
-                  ?.map(
-                    (error) =>
-                      `${error.instancePath}${error.instancePath ? ': ' : ''}${error.message}`
-                  )
-                  .join('\n')
-                // Send detailed error message to an external UI element,
-                // such as a "Toast" notification
-                showToast({
-                  title: 'Not compliant with JSON Schema',
-                  text: errorMessage,
-                  style: 'error',
-                  timeout: 10_000,
-                  maxWidth: 650,
-                  position: Position.topMiddle,
-                })
-                // This string returned to and displayed in json-edit-react UI
-                return 'JSON Schema error'
-              }
-            }}
-          />
+          <div className="flex-row" style={{ width: '100%', position: 'relative' }}>
+            <div style={{ width: '100%' }}>
+              <FigTreeEditor
+                expression={expression ?? {}}
+                setExpression={(newExpression) =>
+                  updateDraft(newExpression as Partial<FragmentRow>, 'expression')
+                }
+                figTree={FigTreeFragments}
+                onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
+                onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
+                enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
+                rootName={'Fragment'}
+                collapse={2}
+                showArrayIndices={false}
+                maxWidth={'100%'}
+                styles={{
+                  container: {
+                    backgroundColor: '#fefefe',
+                    marginBottom: '0.8em',
+                    paddingTop: '0.5em',
+                    paddingBottom: '0.5em',
+                    position: 'relative',
+                  },
+                }}
+              />
+              <ReactJson
+                data={fragmentData}
+                setData={(newData) => updateDraft(newData as Partial<FragmentRow>, 'other')}
+                rootName="Properties"
+                collapse={4}
+                showArrayIndices={false}
+                maxWidth={'100%'}
+                restrictAdd={({ level }) => level === 0}
+                restrictDelete={({ level }) => level === 1}
+                theme={{
+                  container: {
+                    backgroundColor: '#fefefe',
+                    marginBottom: '1em',
+                    paddingTop: '0.5em',
+                    paddingBottom: '0.5em',
+                  },
+                }}
+                showCollectionCount="when-closed"
+                enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
+                onUpdate={({ newData }) => {
+                  const valid = validateFragment(newData)
+                  if (!valid) {
+                    console.log('Errors', validateFragment.errors)
+                    const errorMessage = validateFragment.errors
+                      ?.map(
+                        (error) =>
+                          `${error.instancePath}${error.instancePath ? ': ' : ''}${error.message}`
+                      )
+                      .join('\n')
+                    // Send detailed error message to an external UI element,
+                    // such as a "Toast" notification
+                    showToast({
+                      title: 'Not compliant with JSON Schema',
+                      text: errorMessage,
+                      style: 'error',
+                      timeout: 10_000,
+                      maxWidth: 650,
+                      position: Position.topMiddle,
+                    })
+                    // This string returned to and displayed in json-edit-react UI
+                    return 'JSON Schema error'
+                  }
+                }}
+              />
+            </div>
+            <div style={{ position: 'relative', width: 0 }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, overflow: 'auto', width: 200 }}>
+                <DataContainer />
+              </div>
+            </div>
+          </div>
           <UndoRedoSave
             {...undoProps}
             isDirty={true}

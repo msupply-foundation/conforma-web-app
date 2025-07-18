@@ -24,6 +24,7 @@ interface Preferences {
   // This pref actually comes from server prefs
   logoutAfterInactivity: number
   publicUrlMap?: Record<string, string | { code: string; urlQuery: ParsedUrlQuery }>
+  appDataTestApplications?: string[]
 }
 interface PrefsState {
   preferences: Preferences

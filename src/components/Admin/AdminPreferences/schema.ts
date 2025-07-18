@@ -150,6 +150,7 @@ export const PreferencesSchema = {
             ],
           },
         },
+        appDataTestApplications: { type: 'array', items: { type: 'string' } },
       },
       additionalProperties: false,
     },
@@ -350,5 +351,6 @@ export interface Preferences {
       string,
       string | { code: string; urlQuery: Record<string, string | number | boolean> }
     >
+    appDataTestApplications?: string[]
   }
 }

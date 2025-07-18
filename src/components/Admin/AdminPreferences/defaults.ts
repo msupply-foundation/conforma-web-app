@@ -45,6 +45,7 @@ export const newKeyOptions: NewKeyOptionsFunction = ({ key }) => {
         'footerText',
         'footerLogoId',
         'publicUrlMap',
+        'appDataTestApplications',
       ]
   }
 }
@@ -181,5 +182,6 @@ const defaultPrefs: Preferences = {
         },
       },
     },
+    appDataTestApplications: ['Add valid serials here'],
   },
 }
