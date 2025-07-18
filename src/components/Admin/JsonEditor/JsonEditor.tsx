@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Icon, Search } from 'semantic-ui-react'
-import { JsonEditor as ReactJson, JsonEditorProps, CopyFunction, JsonData } from 'json-edit-react'
+import {
+  JsonEditor as ReactJson,
+  JsonEditorProps,
+  CopyFunction,
+  JsonData,
+  UpdateFunctionProps,
+  UpdateFunction,
+} from 'json-edit-react'
 import { useToast, topLeft, Position } from '../../../contexts/Toast'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Loading } from '../../common'
@@ -24,6 +31,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   showSearch = true,
   searchPlaceholder,
   searchFilter,
+  onUpdate,
   ...jsonViewProps
 }) => {
   const { t } = useLanguageProvider()
@@ -46,11 +54,21 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     }
   }
 
-  const onUpdate = async (newData: JsonData) => {
-    if (showSaveButton) setIsDirty(true)
-    // If we don't have an explicit save button, we run "onSave" after every
-    // update, but keep the Undo queue alive
-    else await onSave(newData)
+  const handleUpdate: UpdateFunction = async (updateInput: UpdateFunctionProps) => {
+    if (onUpdate) {
+      const result = await onUpdate(updateInput)
+      if (typeof result === 'string' || result === false) return result
+      if (Array.isArray(result) && result[0] === 'error') return result
+      const output =
+        Array.isArray(result) && result[0] === 'value' ? result[1] : updateInput.newData
+
+      if (showSaveButton) setIsDirty(true)
+      // If we don't have an explicit save button, we run "onSave" after every
+      // update, but keep the Undo queue alive
+      else await onSave(output)
+
+      return ['value', output]
+    }
   }
 
   const handleCopy: CopyFunction = ({ key, value, type, stringValue }) => {
@@ -83,9 +101,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
       <ReactJson
         data={currentData}
         setData={setData as (value: JsonData) => void}
-        onUpdate={({ newData }) => {
-          onUpdate(newData)
-        }}
+        onUpdate={handleUpdate}
         enableClipboard={handleCopy}
         theme={{
           container: {
