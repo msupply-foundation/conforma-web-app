@@ -11,7 +11,8 @@ import { useViewport } from '../../../contexts/ViewportState'
 import { usePrefs } from '../../../contexts/SystemPrefs'
 import { JsonData } from 'json-edit-react'
 import Ajv from 'ajv'
-import { PreferencesSchema } from '../AdminDataViews/schema'
+import { PreferencesSchema } from './schema'
+import { defaultValue, newKeyOptions } from './defaults'
 
 console.log('Lazy loading Admin Prefs...')
 
@@ -127,6 +128,8 @@ const AdminPreferences: React.FC = () => {
                 return 'JSON Schema error'
               }
             }}
+            newKeyOptions={newKeyOptions}
+            defaultValue={defaultValue}
           />
         </Suspense>
       ) : (

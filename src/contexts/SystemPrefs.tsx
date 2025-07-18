@@ -21,6 +21,7 @@ interface Preferences {
   helpLinks?: { text: string; link: string }[]
   footerText?: string
   footerLogoId?: string
+  // This pref actually comes from server prefs
   logoutAfterInactivity: number
   publicUrlMap?: Record<string, string | { code: string; urlQuery: ParsedUrlQuery }>
 }
