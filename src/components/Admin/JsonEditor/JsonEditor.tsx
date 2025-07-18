@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Search } from 'semantic-ui-react'
-<<<<<<< Updated upstream
 import {
   JsonEditor as ReactJson,
   JsonEditorProps,
@@ -8,10 +7,6 @@ import {
   UpdateFunctionProps,
   UpdateFunction,
 } from 'json-edit-react'
-=======
-import { JsonEditor as ReactJson, JsonEditorProps, JsonData } from 'json-edit-react'
-import { useToast, topLeft } from '../../../contexts/Toast'
->>>>>>> Stashed changes
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast, topLeft } from '../../../contexts/Toast'
 import { Loading } from '../../common'
