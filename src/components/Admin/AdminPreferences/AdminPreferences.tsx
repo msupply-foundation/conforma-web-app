@@ -121,15 +121,16 @@ const AdminPreferences: React.FC = () => {
                   )
                   .join('\n')
                 showToast({
-                  title: 'Not compliant with JSON Schema',
+                  title: 'Invalid entry',
                   text: errorMessage,
                   style: 'error',
                 })
-                return 'JSON Schema error'
+                return "Can't do that!"
               }
             }}
             newKeyOptions={newKeyOptions}
             defaultValue={defaultValue}
+            translations={{ KEY_SELECT: 'Add preference' }}
           />
         </Suspense>
       ) : (
