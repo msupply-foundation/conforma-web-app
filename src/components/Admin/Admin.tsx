@@ -6,7 +6,6 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { AdminPreferences } from './AdminPreferences'
 import { AdminDataViews } from './AdminDataViews/AdminDataViews'
 // import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
@@ -16,6 +15,7 @@ const TemplateWrapper = React.lazy(
 )
 const Snapshots = React.lazy(() => import('../../containers/Dev/Snapshots'))
 const AdminLocalisations = React.lazy(() => import('./AdminLocalisations'))
+const AdminPreferences = React.lazy(() => import('./AdminPreferences/AdminPreferences'))
 
 const Admin: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -62,7 +62,11 @@ const Admin: React.FC = () => {
     {
       route: 'preferences',
       header: t('MENU_ITEM_ADMIN_PREFS'),
-      Element: <AdminPreferences />,
+      Element: (
+        <Suspense fallback={<Loading />}>
+          <AdminPreferences />
+        </Suspense>
+      ),
     },
     {
       route: 'snapshots',

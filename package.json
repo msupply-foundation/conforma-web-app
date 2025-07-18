@@ -24,6 +24,7 @@
     "@graphql-codegen/typescript": "^4.0.9",
     "@graphql-codegen/typescript-operations": "^4.2.3",
     "@graphql-codegen/typescript-react-apollo": "^4.3.0",
+    "ajv": "^8.17.1",
     "apollo3-cache-persist": "^0.15.0",
     "axios": "^1.7.7",
     "clone-deep": "^4.0.1",
