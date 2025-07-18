@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { Header, Button, Dropdown, Icon, DropdownMenu, DropdownItem } from 'semantic-ui-react'
+import Ajv from 'ajv'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import usePageTitle from '../../../utils/hooks/usePageTitle'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
@@ -14,6 +15,7 @@ import { onEvaluateErrorNotify, onEvaluateNotify } from '../../common/evaluatorH
 import { Position, useToast } from '../../../contexts/Toast'
 import { handleCopyToClipboard } from '../JsonEditor'
 import { FragmentTester } from './FragmentTester'
+import { FragmentDataSchema } from './schema'
 
 const { fragments: _, ...originalFigTreeOptions } = FigTree.getOptions()
 
@@ -22,6 +24,9 @@ const { fragments: _, ...originalFigTreeOptions } = FigTree.getOptions()
 // fragments (in theory they could, but it could cause problems with an
 // accidental circular reference).
 const FigTreeFragments = new FigTreeEvaluator(originalFigTreeOptions)
+
+const ajv = new Ajv()
+const validateFragment = ajv.compile(FragmentDataSchema)
 
 const EvaluatorFragments: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -182,6 +187,30 @@ const EvaluatorFragments: React.FC = () => {
             }}
             showCollectionCount="when-closed"
             enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
+            onUpdate={({ newData }) => {
+              const valid = validateFragment(newData)
+              if (!valid) {
+                console.log('Errors', validateFragment.errors)
+                const errorMessage = validateFragment.errors
+                  ?.map(
+                    (error) =>
+                      `${error.instancePath}${error.instancePath ? ': ' : ''}${error.message}`
+                  )
+                  .join('\n')
+                // Send detailed error message to an external UI element,
+                // such as a "Toast" notification
+                showToast({
+                  title: 'Not compliant with JSON Schema',
+                  text: errorMessage,
+                  style: 'error',
+                  timeout: 10_000,
+                  maxWidth: 650,
+                  position: Position.topMiddle,
+                })
+                // This string returned to and displayed in json-edit-react UI
+                return 'JSON Schema error'
+              }
+            }}
           />
           <UndoRedoSave
             {...undoProps}

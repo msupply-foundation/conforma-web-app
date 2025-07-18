@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import useUndo from 'use-undo'
 import { dequal, Fragment, FragmentMetadata } from 'fig-tree-editor-react'
@@ -116,11 +116,13 @@ export const useFragmentConfig = () => {
     setDraft(newDraft)
   }
 
+  const draftState = useMemo(() => transformFragment(draft), [draft])
+
   return {
     fragments,
     loading,
     selectedFragment,
-    draftState: transformFragment(draft),
+    draftState,
     updateDraft,
     undoProps,
     updateFragment,
