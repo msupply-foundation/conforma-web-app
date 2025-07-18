@@ -1,19 +1,26 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { Checkbox, Header, Message, Icon } from 'semantic-ui-react'
-import { getRequest, postRequest } from '../../utils/helpers/fetchMethods'
-import { useLanguageProvider } from '../../contexts/Localisation'
-import usePageTitle from '../../utils/hooks/usePageTitle'
-import { useToast, topLeft } from '../../contexts/Toast'
-import useConfirmationModal from '../../utils/hooks/useConfirmationModal'
-import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
-import { Loading } from '../common'
-import { useViewport } from '../../contexts/ViewportState'
-import { usePrefs } from '../../contexts/SystemPrefs'
+import { getRequest, postRequest } from '../../../utils/helpers/fetchMethods'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import usePageTitle from '../../../utils/hooks/usePageTitle'
+import { useToast, topLeft } from '../../../contexts/Toast'
+import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
+import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { Loading } from '../../common'
+import { useViewport } from '../../../contexts/ViewportState'
+import { usePrefs } from '../../../contexts/SystemPrefs'
 import { JsonData } from 'json-edit-react'
+import Ajv from 'ajv'
+import { PreferencesSchema } from '../AdminDataViews/schema'
 
-const JsonEditor = React.lazy(() => import('./JsonEditor/JsonEditor'))
+console.log('Lazy loading Admin Prefs...')
 
-export const AdminPreferences: React.FC = () => {
+const JsonEditor = React.lazy(() => import('../JsonEditor/JsonEditor'))
+
+const ajv = new Ajv()
+const validate = ajv.compile(PreferencesSchema)
+
+const AdminPreferences: React.FC = () => {
   const { t, tFormat } = useLanguageProvider()
   usePageTitle(t('PAGE_TITLE_PREFS'))
   const { isMobile } = useViewport()
@@ -102,6 +109,24 @@ export const AdminPreferences: React.FC = () => {
             restrictDelete={({ level }) => level === 1}
             restrictAdd={({ level }) => level === 0}
             indent={isMobile ? 1 : 2}
+            onUpdate={({ newData }) => {
+              const valid = validate(newData)
+              if (!valid) {
+                console.log('Errors', validate.errors)
+                const errorMessage = validate.errors
+                  ?.map(
+                    (error) =>
+                      `${error.instancePath}${error.instancePath ? ': ' : ''}${error.message}`
+                  )
+                  .join('\n')
+                showToast({
+                  title: 'Not compliant with JSON Schema',
+                  text: errorMessage,
+                  style: 'error',
+                })
+                return 'JSON Schema error'
+              }
+            }}
           />
         </Suspense>
       ) : (
@@ -157,3 +182,5 @@ export const AdminPreferences: React.FC = () => {
     </div>
   )
 }
+
+export default AdminPreferences
