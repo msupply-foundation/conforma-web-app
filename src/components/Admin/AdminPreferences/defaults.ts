@@ -49,9 +49,16 @@ export const newKeyOptions: NewKeyOptionsFunction = ({ key }) => {
   }
 }
 
-export const defaultValue: DefaultValueFunction = ({ path }, newKey) => {
+export const defaultValue: DefaultValueFunction = ({ path, value }, newKey) => {
+  if (Array.isArray(value)) {
+    // If we're adding to an existing array, just get the first item from the
+    // defaultPrefs array
+    const defaultArray = extract(defaultPrefs, path as string[], [])
+    return defaultArray[0] ?? ''
+  }
+
   const fullPath = [...path, newKey]
-  return extract(defaultPrefs, fullPath as string[], 'NEW')
+  return extract(defaultPrefs, fullPath as string[], null)
 }
 
 const defaultPrefs: Preferences = {
