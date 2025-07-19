@@ -58,8 +58,8 @@ const EvaluatorFragments: React.FC = () => {
   } = useFragmentConfig()
 
   return (
-    <div id="data-view-config-panel" className="flex-column" style={{ gap: 15 }}>
-      <div className="flex-row-space-between-center">
+    <div id="fragment-config-panel" className="flex-column" style={{ gap: 15 }}>
+      <div className="flex-row-space-between-center" style={{ maxWidth: 700 }}>
         <Header>{t('EVALUATOR_FRAGMENTS_HEADER')}</Header>
         <p className="slightly-smaller-text">
           <a
@@ -71,7 +71,7 @@ const EvaluatorFragments: React.FC = () => {
         </p>
       </div>
       <ConfirmModal />
-      <div className="flex-row-space-between">
+      <div className="flex-row-space-between" style={{ maxWidth: 700 }}>
         <Dropdown
           selection
           clearable
@@ -138,8 +138,7 @@ const EvaluatorFragments: React.FC = () => {
         </div>
       </div>
       {fragmentData && (
-        <div className="flex-column" style={{ width: '100%', position: 'relative' }}>
-          <ConfirmModal />
+        <div className="flex-column" style={{}}>
           <FragmentTester
             figTree={FigTreeFragments}
             fragmentExpression={expression}
@@ -147,8 +146,8 @@ const EvaluatorFragments: React.FC = () => {
             onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
             onError={(err) => onEvaluateErrorNotify(err, showToast)}
           />
-          <div className="flex-row" style={{ width: '100%', position: 'relative' }}>
-            <div style={{ width: '100%' }}>
+          <div className="flex-row-space-between">
+            <div className="flex-column" style={{ width: '100%', maxWidth: 700 }}>
               <FigTreeEditor
                 expression={expression ?? {}}
                 setExpression={(newExpression) =>
@@ -216,38 +215,25 @@ const EvaluatorFragments: React.FC = () => {
                   }
                 }}
               />
-            </div>
-            <div style={{ position: 'relative', width: 0 }}>
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  overflow: 'auto',
-                  width: 200,
-                  height: '100%',
+              <UndoRedoSave
+                {...undoProps}
+                isDirty={true}
+                isSaving={isSaving}
+                handleSave={() => {
+                  showConfirmation({
+                    title: t('EVALUATOR_FRAGMENT_CONFIG_SAVE_WARNING'),
+                    message: t('EVALUATOR_FRAGMENT_CONFIG_SAVE_MESSAGE'),
+                    onConfirm: () =>
+                      updateFragment({
+                        variables: { id, patch: { expression, ...fragmentData } },
+                      }),
+                    awaitAction: false,
+                  })
                 }}
-              >
-                <DataContainer />
-              </div>
+              />
             </div>
+            {selectedFragment && <DataContainer figTree={FigTreeFragments} />}
           </div>
-          <UndoRedoSave
-            {...undoProps}
-            isDirty={true}
-            isSaving={isSaving}
-            handleSave={() => {
-              showConfirmation({
-                title: t('EVALUATOR_FRAGMENT_CONFIG_SAVE_WARNING'),
-                message: t('EVALUATOR_FRAGMENT_CONFIG_SAVE_MESSAGE'),
-                onConfirm: () =>
-                  updateFragment({
-                    variables: { id, patch: { expression, ...fragmentData } },
-                  }),
-                awaitAction: false,
-              })
-            }}
-          />
         </div>
       )}
     </div>

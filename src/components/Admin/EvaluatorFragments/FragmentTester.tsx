@@ -53,7 +53,7 @@ export const FragmentTester = ({
   }
 
   return (
-    <div className="flex-row-space-between" style={{ gap: '1em' }}>
+    <div className="flex-row-space-between" style={{ gap: '1em', maxWidth: 800 }}>
       <Button
         positive
         loading={loading}
@@ -63,7 +63,7 @@ export const FragmentTester = ({
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          maxHeight: '4em',
+          maxHeight: '3.5em',
           flexShrink: 0,
           maxWidth: '200px',
         }}

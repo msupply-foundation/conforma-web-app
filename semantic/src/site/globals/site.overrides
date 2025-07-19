@@ -1904,11 +1904,12 @@ a:hover {
 }
 
 /*--------------------------------
-      (Admin) Preferences / Data View Pages
+      (Admin) Preferences / Data View / Fragments Pages
 ---------------------------------*/
 
 #preferences-panel,
-#data-view-config-panel {
+#data-view-config-panel,
+#fragment-config-panel {
   padding-top: 20px;
   width: 50%;
   @media only screen and (max-width: @largestMobileScreen) {
@@ -1920,6 +1921,10 @@ a:hover {
     padding: 0;
     margin: 5px;
   }
+}
+
+#fragment-config-panel {
+  width: unset;
 }
 
 /*--------------------------------
