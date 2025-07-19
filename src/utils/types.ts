@@ -638,7 +638,7 @@ interface TemplateType {
 
 interface UseGetApplicationProps {
   serialNumber: string
-  currentUser: User
+  currentUser?: User
   sectionCode?: string
   page?: number
   networkFetch?: boolean

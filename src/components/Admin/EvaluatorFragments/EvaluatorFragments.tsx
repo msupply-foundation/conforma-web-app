@@ -218,7 +218,16 @@ const EvaluatorFragments: React.FC = () => {
               />
             </div>
             <div style={{ position: 'relative', width: 0 }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, overflow: 'auto', width: 200 }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  overflow: 'auto',
+                  width: 200,
+                  height: '100%',
+                }}
+              >
                 <DataContainer />
               </div>
             </div>
