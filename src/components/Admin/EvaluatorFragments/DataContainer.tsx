@@ -34,7 +34,7 @@ export const DataContainer = ({ figTree }: { figTree: FigTreeEvaluator }) => {
         clearable
         placeholder="Select test application"
         options={applicationOptions}
-        style={{ width: 'fit-content', fontSize: '80%' }}
+        style={{ width: 'fit-content', fontSize: '80%', zIndex: 100 }}
       />
       <Checkbox
         label="Use backend (Action) data"

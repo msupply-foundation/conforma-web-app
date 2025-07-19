@@ -71,7 +71,7 @@ const EvaluatorFragments: React.FC = () => {
         </p>
       </div>
       <ConfirmModal />
-      <div className="flex-row-space-between" style={{ maxWidth: 700 }}>
+      <div className="flex-row-space-between" style={{ maxWidth: 700, gap: '2em' }}>
         <Dropdown
           selection
           clearable
