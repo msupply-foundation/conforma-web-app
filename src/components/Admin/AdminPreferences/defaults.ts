@@ -4,49 +4,9 @@ import { Preferences } from './schema'
 export const newKeyOptions: NewKeyOptionsFunction = ({ key }) => {
   switch (key) {
     case 'server':
-      return [
-        'logoutAfterInactivity',
-        'thumbnailMaxHeight',
-        'thumbnailMaxWidth',
-        'actionSchedule',
-        'SMTPConfig',
-        'systemManagerPermissionName',
-        'managerCanEditLookupTables',
-        'previewDocsMinKeepTime',
-        'fileCleanupSchedule',
-        'backupSchedule',
-        'backupFilePrefix',
-        'maxBackupDurationDays',
-        'archiveSchedule',
-        'archiveFileAgeMinimum',
-        'archiveMinSize',
-        'emailTestMode',
-        'testingEmail',
-        'locale',
-        'timezone',
-        'externalApiConfigs',
-        'envVars',
-        'maintenanceSite',
-      ]
+      return Object.keys(defaultPrefs.server)
     case 'web':
-      return [
-        'paginationPresets',
-        'paginationDefault',
-        'defaultLanguageCode',
-        'brandLogoFileId',
-        'brandLogoOnDarkFileId',
-        'defaultListFilters',
-        'showDocumentModal',
-        'googleAnalyticsId',
-        'siteHost',
-        'userRegistrationCode',
-        'style',
-        'helpLinks',
-        'footerText',
-        'footerLogoId',
-        'publicUrlMap',
-        'appDataTestApplications',
-      ]
+      return Object.keys(defaultPrefs.web)
   }
 }
 
