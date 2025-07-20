@@ -1,28 +1,6 @@
-import { DefaultValueFunction, NewKeyOptionsFunction, extract } from 'json-edit-react'
 import { Preferences } from './schema'
 
-export const newKeyOptions: NewKeyOptionsFunction = ({ key }) => {
-  switch (key) {
-    case 'server':
-      return Object.keys(defaultPrefs.server)
-    case 'web':
-      return Object.keys(defaultPrefs.web)
-  }
-}
-
-export const defaultValue: DefaultValueFunction = ({ path, value }, newKey) => {
-  if (Array.isArray(value)) {
-    // If we're adding to an existing array, just get the first item from the
-    // defaultPrefs array
-    const defaultArray = extract(defaultPrefs, path as string[], [])
-    return defaultArray[0] ?? ''
-  }
-
-  const fullPath = [...path, newKey]
-  return extract(defaultPrefs, fullPath as string[], null)
-}
-
-const defaultPrefs: Preferences = {
+export const defaultPrefs: Preferences = {
   server: {
     logoutAfterInactivity: 60,
     thumbnailMaxWidth: 300,

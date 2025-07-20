@@ -1,20 +1,13 @@
 import React, { useEffect } from 'react'
-import { FigTreeEvaluator, Fragment, FragmentMetadata } from 'fig-tree-editor-react'
+import { FigTreeEvaluator, Fragment } from 'fig-tree-editor-react'
 import { ReactJson } from '../JsonEditor'
 import { Button, Icon } from 'semantic-ui-react'
-import { useLanguageProvider } from '../../../contexts/Localisation'
-import { useToast } from '../../../contexts/Toast'
-// import { useLanguageProvider } from '../../../contexts/Localisation'
+import { FragmentDataProperties } from './useFragmentConfig'
 
 interface FragmentTesterProps {
   figTree: FigTreeEvaluator
   fragmentExpression: Fragment
-  fragmentData?: {
-    name: string
-    metadata: Omit<FragmentMetadata, 'name'> | null
-    frontEnd: boolean
-    backEnd: boolean
-  }
+  fragmentData?: FragmentDataProperties
   onEvaluate: (result: unknown, e: React.MouseEvent<Element, MouseEvent>) => void
   onError: (err: unknown) => void
 }
@@ -26,8 +19,6 @@ export const FragmentTester = ({
   onEvaluate,
   onError,
 }: FragmentTesterProps) => {
-  const { t } = useLanguageProvider()
-  const { showToast } = useToast()
   const [parameters, setParameters] = React.useState<Record<string, unknown>>(
     getUpdatedParameters({}, fragmentData)
   )

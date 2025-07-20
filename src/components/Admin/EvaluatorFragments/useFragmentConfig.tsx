@@ -124,6 +124,8 @@ export const useFragmentConfig = () => {
 
   const draftState = useMemo(() => transformFragment(draft), [draft])
 
+  console.log('draftState', draftState)
+
   return {
     fragments,
     loading,
@@ -141,21 +143,38 @@ export const useFragmentConfig = () => {
   }
 }
 
+// The details for the fragment that are editable in the UI, not including the
+// expression itself
+export type FragmentDataProperties = {
+  name: string
+  metadata: Omit<FragmentMetadata, 'name'>
+  frontEnd: boolean
+  backEnd: boolean
+  permissionNames: string[] | null
+}
+
 const transformFragment = (fragment: FragmentRow | null) => {
   if (!fragment) return {}
   const { id, expression, name, metadata, frontEnd, backEnd, permissionNames } = fragment
 
   const { description, parameters, textColor, backgroundColor } = metadata || {}
 
-  return {
+  const transformed = {
     id,
     expression,
     fragmentData: {
       name,
-      metadata: { description, parameters, textColor, backgroundColor },
+      metadata,
       frontEnd,
       backEnd,
       permissionNames,
-    },
+    } as FragmentDataProperties,
   }
+
+  if (parameters) transformed.fragmentData.metadata.parameters = parameters
+  if (description) transformed.fragmentData.metadata.description = description
+  if (textColor) transformed.fragmentData.metadata.textColor = textColor
+  if (backgroundColor) transformed.fragmentData.metadata.backgroundColor = backgroundColor
+
+  return transformed
 }

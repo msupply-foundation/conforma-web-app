@@ -5,9 +5,15 @@ import JSON5 from 'json5'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import usePageTitle from '../../../utils/hooks/usePageTitle'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
-import { useFragmentConfig, FragmentRow } from './useFragmentConfig'
-import { ReactJson, handleCopyToClipboard, UndoRedoSave } from '../JsonEditor'
-import { FigTreeEditor, FigTreeEvaluator } from 'fig-tree-editor-react'
+import { useFragmentConfig, FragmentRow, FragmentDataProperties } from './useFragmentConfig'
+import {
+  ReactJson,
+  handleCopyToClipboard,
+  UndoRedoSave,
+  newKeyOptions,
+  defaultValue,
+} from '../JsonEditor'
+import { FigTreeEditor, FigTreeEvaluator, Fragment } from 'fig-tree-editor-react'
 import { FigTree } from '../../../FigTreeEvaluator'
 import { onEvaluateErrorNotify, onEvaluateNotify } from '../../common/evaluatorHelpers'
 import { Position, useToast } from '../../../contexts/Toast'
@@ -44,7 +50,7 @@ const EvaluatorFragments = () => {
     fragments,
     loading,
     selectedFragment,
-    draftState: { id, expression, fragmentData },
+    draftState,
     updateDraft,
     undoProps,
     updateFragment,
@@ -55,6 +61,12 @@ const EvaluatorFragments = () => {
     isAdding,
     isDirty,
   } = useFragmentConfig()
+
+  const { id, expression, fragmentData } = draftState as {
+    id: number
+    expression: Fragment
+    fragmentData: FragmentDataProperties
+  }
 
   return (
     <div id="fragment-config-panel" className="flex-column" style={{ gap: 15 }}>
@@ -202,6 +214,8 @@ const EvaluatorFragments = () => {
                     return 'JSON Schema error'
                   }
                 }}
+                newKeyOptions={(input) => newKeyOptions(input, defaultNewFragment)}
+                defaultValue={(input, key) => defaultValue(input, key, defaultNewFragment)}
               />
               <UndoRedoSave
                 {...undoProps}

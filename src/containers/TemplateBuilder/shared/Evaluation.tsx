@@ -6,8 +6,6 @@ import TextIO from './TextIO'
 import { EvaluatorNode } from 'fig-tree-evaluator'
 import { getFigTreeSummary } from '../../../FigTreeEvaluator/FigTree'
 import { EvaluationEditor } from '../../../components/common/EvaluationEditor'
-import { useLanguageProvider } from '../../../contexts/Localisation'
-import { useToast } from '../../../contexts/Toast'
 
 type EvaluationProps = {
   figTree: FigTreeEvaluator
@@ -146,9 +144,6 @@ interface ObjectDataDisplayProps {
 }
 
 export const ObjectDataDisplay: React.FC<ObjectDataDisplayProps> = ({ objectData }) => {
-  const { t } = useLanguageProvider()
-  const { showToast } = useToast()
-
   if (!objectData) return null
 
   return (

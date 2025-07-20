@@ -3,7 +3,6 @@ import { Search } from 'semantic-ui-react'
 import { ReactJson, UndoRedoSave } from './'
 import { JsonEditorProps, JsonData, UpdateFunctionProps, UpdateFunction } from 'json-edit-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { useToast, topLeft } from '../../../contexts/Toast'
 import { Loading } from '../../common'
 import useUndo from 'use-undo'
 
@@ -32,7 +31,6 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   const [searchText, setSearchText] = useState('')
   const [{ present: currentData }, { set: setData, reset, undo, redo, canUndo, canRedo }] =
     useUndo(data)
-  const { showToast } = useToast({ position: topLeft })
 
   useEffect(() => {
     reset(data)

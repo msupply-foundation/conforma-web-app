@@ -12,7 +12,8 @@ import { usePrefs } from '../../../contexts/SystemPrefs'
 import { JsonData } from 'json-edit-react'
 import Ajv from 'ajv'
 import { PreferencesSchema } from './schema'
-import { defaultValue, newKeyOptions } from './defaults'
+import { defaultValue, newKeyOptions } from '../JsonEditor'
+import { defaultPrefs } from './defaults'
 
 console.log('Lazy loading Admin Prefs...')
 
@@ -127,8 +128,15 @@ const AdminPreferences: React.FC = () => {
                 return "Can't do that!"
               }
             }}
-            newKeyOptions={newKeyOptions}
-            defaultValue={defaultValue}
+            newKeyOptions={(input) =>
+              newKeyOptions(input, defaultPrefs, [
+                // Exclusions
+                'backupSchedule',
+                'actionSchedule',
+                'archiveSchedule',
+              ])
+            }
+            defaultValue={(input, key) => defaultValue(input, key, defaultPrefs)}
             translations={{ KEY_SELECT: 'Add preference' }}
           />
         </Suspense>
