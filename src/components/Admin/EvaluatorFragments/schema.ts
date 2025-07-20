@@ -1,53 +1,77 @@
 export const FragmentDataSchema = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
+  title: 'FragmentData',
+  description: 'Schema for FigTree Fragment',
   properties: {
-    // id: { type: 'number' },
-    name: { type: 'string' },
+    name: { type: 'string', description: 'Name of the fragment' },
+    // expression: {
+    //   type: 'object',
+    //   description: 'FigTree Expression object with flexible structure',
+    // },
     metadata: {
-      anyOf: [
-        {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-            description: { type: 'string' },
-            parameters: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  name: { type: 'string' },
-                  type: {
-                    anyOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
-                  },
-                  required: { type: 'boolean' },
-                  description: { type: 'string' },
-                  default: {},
-                },
-                required: ['name', 'type', 'required'],
-                additionalProperties: false,
+      type: 'object',
+      description: 'Metadata information for the fragment, passed to FigTree',
+      properties: {
+        description: { type: 'string', description: 'Optional description of the fragment' },
+        parameters: {
+          type: 'array',
+          description: 'Array of parameter definitions',
+          items: {
+            type: 'object',
+            properties: {
+              name: { type: 'string', description: 'Parameter name' },
+              type: {
+                oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+                description: 'Parameter type - can be a string or array of strings',
               },
+              required: { type: 'boolean', description: 'Whether the parameter is required' },
+              description: { type: 'string', description: 'Optional parameter description' },
+              default: { description: 'Default value for the parameter - can be any type' },
             },
-            textColor: { type: 'string' },
-            backgroundColor: { type: 'string' },
+            required: ['name', 'type', 'required'],
+            additionalProperties: false,
           },
-          required: ['name'],
-          additionalProperties: false,
         },
-        { type: 'null' },
-      ],
+        textColor: { type: 'string', description: 'Optional text color' },
+        backgroundColor: { type: 'string', description: 'Optional background color' },
+      },
+      additionalProperties: false,
     },
-    frontEnd: { type: 'boolean' },
-    backEnd: { type: 'boolean' },
-    permissionNames: { anyOf: [{ type: 'array', items: { type: 'string' } }, { type: 'null' }] },
+    frontEnd: { type: 'boolean', description: 'Whether this fragment is used on the front end' },
+    backEnd: { type: 'boolean', description: 'Whether this fragment is used on the back end' },
+    permissionNames: {
+      oneOf: [{ type: 'array', items: { type: 'string' } }, { type: 'null' }],
+      description: 'Array of permission names or null',
+    },
   },
   required: [
-    // 'id',
     'name',
     // 'expression',
     'metadata',
     'frontEnd',
     'backEnd',
-    // 'permissionNames',
+    'permissionNames',
   ],
   additionalProperties: false,
 }
+
+// export interface FragmentData {
+//   name: string
+//   expression: object
+//   metadata: {
+//     description?: string
+//     parameters?: {
+//       name: string
+//       type: string | string[]
+//       required: boolean
+//       description?: string
+//       default?: unknown
+//     }[]
+//     textColor?: string
+//     backgroundColor?: string
+//   }
+//   frontEnd: boolean
+//   backEnd: boolean
+//   permissionNames: string[] | null
+// }

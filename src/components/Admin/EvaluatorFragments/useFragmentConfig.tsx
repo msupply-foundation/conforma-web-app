@@ -15,7 +15,7 @@ export interface FragmentRow {
   id: number
   name: string
   expression: Fragment
-  metadata: FragmentMetadata | null
+  metadata: Omit<FragmentMetadata, 'name'> | null
   frontEnd: boolean
   backEnd: boolean
   permissionNames: string[] | null
@@ -136,11 +136,19 @@ export const useFragmentConfig = () => {
 
 const transformFragment = (fragment: FragmentRow | null) => {
   if (!fragment) return {}
-  const { id, expression, name, metadata, frontEnd, backEnd } = fragment
+  const { id, expression, name, metadata, frontEnd, backEnd, permissionNames } = fragment
+
+  const { description, parameters, textColor, backgroundColor } = metadata || {}
 
   return {
     id,
     expression,
-    fragmentData: { name, metadata, frontEnd, backEnd },
+    fragmentData: {
+      name,
+      metadata: { description, parameters, textColor, backgroundColor },
+      frontEnd,
+      backEnd,
+      permissionNames,
+    },
   }
 }

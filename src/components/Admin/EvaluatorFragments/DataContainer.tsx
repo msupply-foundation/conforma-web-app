@@ -9,6 +9,9 @@ import { FullStructure } from '../../../utils/types'
 import { getRequest } from '../../../utils/helpers/fetchMethods'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FigTreeEvaluator } from 'fig-tree-editor-react'
+import { handleCopyToClipboard } from '../JsonEditor'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import { Position, useToast } from '../../../contexts/Toast'
 
 export const DataContainer = ({ figTree }: { figTree: FigTreeEvaluator }) => {
   const { preferences } = usePrefs()
@@ -63,6 +66,9 @@ const FrontEndAppDataDisplay = ({ structure, figTree }: FrontEndAppDataDisplayPr
   const {
     userState: { currentUser },
   } = useUserState()
+  const { t } = useLanguageProvider()
+  const { showToast } = useToast()
+
   const [applicationData, setApplicationData] = useState<Record<string, unknown>>({})
 
   const { fullStructure } = useGetApplicationStructure({ structure })
@@ -85,11 +91,12 @@ const FrontEndAppDataDisplay = ({ structure, figTree }: FrontEndAppDataDisplayPr
   return (
     <ReactJson
       rootFontSize={12}
-      rootName=""
+      rootName="data"
       data={applicationData}
       viewOnly
       collapse={1}
       theme={{ container: { backgroundColor: 'transparent' } }}
+      enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
     />
   )
 }
@@ -100,6 +107,9 @@ interface BackEndAppDataDisplayProps {
 }
 
 const BackEndAppDataDisplay = ({ applicationId, figTree }: BackEndAppDataDisplayProps) => {
+  const { t } = useLanguageProvider()
+  const { showToast } = useToast({ position: Position.topLeft })
+
   const [applicationData, setApplicationData] = useState<Record<string, unknown>>({})
 
   useEffect(() => {
@@ -111,11 +121,12 @@ const BackEndAppDataDisplay = ({ applicationId, figTree }: BackEndAppDataDisplay
   return (
     <ReactJson
       rootFontSize={12}
-      rootName=""
-      data={applicationData}
+      rootName="data"
+      data={{ applicationData }}
       viewOnly
       collapse={1}
       theme={{ container: { backgroundColor: 'transparent' } }}
+      enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
     />
   )
 }

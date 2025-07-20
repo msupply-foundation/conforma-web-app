@@ -166,7 +166,7 @@ export default {
   EVALUATOR_FRAGMENT_DELETED: 'Evaluator fragment deleted',
   EVALUATOR_FRAGMENT_ADD_PROBLEM: 'Problem creating fragment!',
   EVALUATOR_FRAGMENT_ADDED: 'Evaluator fragment created',
-  EVALUATOR_FRAGMENT_ADD_MESSAGE: 'Please give it a meaningful unique identifier',
+  EVALUATOR_FRAGMENT_ADD_MESSAGE: 'Example Fragment',
   EVALUATOR_FRAGMENT_DELETE_WARNING: 'Delete fragment?',
   EVALUATOR_FRAGMENT_DELETE_MESSAGE: 'This will irreversibly delete the fragment from the system',
   EVALUATOR_FRAGMENT_CONFIG_SAVE_WARNING: 'Save fragment?',

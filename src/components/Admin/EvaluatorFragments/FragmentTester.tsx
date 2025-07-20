@@ -2,6 +2,9 @@ import React, { useEffect } from 'react'
 import { FigTreeEvaluator, Fragment, FragmentMetadata } from 'fig-tree-editor-react'
 import { JsonEditor as ReactJson } from 'json-edit-react'
 import { Button, Icon } from 'semantic-ui-react'
+import { handleCopyToClipboard } from '../JsonEditor'
+import { useLanguageProvider } from '../../../contexts/Localisation'
+import { Position, useToast } from '../../../contexts/Toast'
 // import { useLanguageProvider } from '../../../contexts/Localisation'
 
 interface FragmentTesterProps {
@@ -9,7 +12,7 @@ interface FragmentTesterProps {
   fragmentExpression: Fragment
   fragmentData?: {
     name: string
-    metadata: FragmentMetadata | null
+    metadata: Omit<FragmentMetadata, 'name'> | null
     frontEnd: boolean
     backEnd: boolean
   }
@@ -24,7 +27,8 @@ export const FragmentTester = ({
   onEvaluate,
   onError,
 }: FragmentTesterProps) => {
-  // const { t } = useLanguageProvider()
+  const { t } = useLanguageProvider()
+  const { showToast } = useToast()
   const [parameters, setParameters] = React.useState<Record<string, unknown>>(
     getUpdatedParameters({}, fragmentData)
   )
@@ -83,9 +87,11 @@ export const FragmentTester = ({
             minWidth: '50%',
           },
         }}
+        collapse={1}
         restrictEdit={({ level }) => level === 0}
         showArrayIndices={false}
         showCollectionCount="when-closed"
+        enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
       />
     </div>
   )

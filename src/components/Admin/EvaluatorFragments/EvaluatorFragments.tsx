@@ -5,7 +5,6 @@ import Ajv from 'ajv'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import usePageTitle from '../../../utils/hooks/usePageTitle'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
-import { nanoid } from 'nanoid'
 import { useFragmentConfig, FragmentRow } from './useFragmentConfig'
 import { JsonEditor as ReactJson } from 'json-edit-react'
 import { FigTreeEditor, FigTreeEvaluator } from 'fig-tree-editor-react'
@@ -17,6 +16,7 @@ import { handleCopyToClipboard } from '../JsonEditor'
 import { FragmentTester } from './FragmentTester'
 import { FragmentDataSchema } from './schema'
 import { DataContainer } from './DataContainer'
+import { defaultNewFragment } from './default'
 
 const { fragments: _, ...originalFigTreeOptions } = FigTree.getOptions()
 
@@ -124,14 +124,7 @@ const EvaluatorFragments: React.FC = () => {
             content={t('DATA_VIEW_CONFIG_ADD_BUTTON')}
             onClick={() => {
               addFragment({
-                variables: {
-                  name: `Fragment_${nanoid(8)}`,
-                  expression: {},
-                  metadata: {},
-                  frontEnd: true,
-                  backEnd: true,
-                  permissionNames: [],
-                },
+                variables: defaultNewFragment,
               })
             }}
           />
