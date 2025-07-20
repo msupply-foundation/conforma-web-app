@@ -62,14 +62,14 @@ export const FragmentTester = ({
         positive
         loading={loading}
         icon={<Icon name="play" size="large" />}
-        content={'Test Fragment with Parameters'}
+        content={'Test with Parameters'}
         onClick={handleEvaluate}
         style={{
           display: 'inline-flex',
           alignItems: 'center',
           maxHeight: '3.5em',
           flexShrink: 0,
-          maxWidth: '200px',
+          maxWidth: '150px',
         }}
       />
       <ReactJson

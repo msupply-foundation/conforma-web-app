@@ -1,4 +1,3 @@
-import React from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { Header, Button, Dropdown, Icon, DropdownMenu, DropdownItem } from 'semantic-ui-react'
 import Ajv from 'ajv'
@@ -29,7 +28,7 @@ const FigTreeFragments = new FigTreeEvaluator(originalFigTreeOptions)
 const ajv = new Ajv()
 const validateFragment = ajv.compile(FragmentDataSchema)
 
-const EvaluatorFragments: React.FC = () => {
+const EvaluatorFragments = () => {
   const { t } = useLanguageProvider()
   usePageTitle(t('EVALUATOR_FRAGMENTS_HEADER'))
 
@@ -55,6 +54,7 @@ const EvaluatorFragments: React.FC = () => {
     isSaving,
     isDeleting,
     isAdding,
+    isDirty,
   } = useFragmentConfig()
 
   return (
@@ -193,8 +193,6 @@ const EvaluatorFragments: React.FC = () => {
                           `${error.instancePath}${error.instancePath ? ': ' : ''}${error.message}`
                       )
                       .join('\n')
-                    // Send detailed error message to an external UI element,
-                    // such as a "Toast" notification
                     showToast({
                       title: 'Not compliant with JSON Schema',
                       text: errorMessage,
@@ -210,7 +208,7 @@ const EvaluatorFragments: React.FC = () => {
               />
               <UndoRedoSave
                 {...undoProps}
-                isDirty={true}
+                isDirty={isDirty}
                 isSaving={isSaving}
                 handleSave={() => {
                   showConfirmation({

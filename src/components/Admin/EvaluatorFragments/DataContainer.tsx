@@ -12,13 +12,14 @@ import { FigTreeEvaluator } from 'fig-tree-editor-react'
 import { handleCopyToClipboard } from '../JsonEditor'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Position, useToast } from '../../../contexts/Toast'
+import { LoadingSmall } from '../../common'
 
 export const DataContainer = ({ figTree }: { figTree: FigTreeEvaluator }) => {
   const { preferences } = usePrefs()
   const [selectedApplication, setSelectedApplication] = useState<string>()
   const [backendData, setBackendData] = useState(false)
 
-  const { structure, error, loading } = useLoadApplication({
+  const { structure, isLoading } = useLoadApplication({
     serialNumber: selectedApplication ?? '',
   })
 
@@ -46,6 +47,7 @@ export const DataContainer = ({ figTree }: { figTree: FigTreeEvaluator }) => {
         toggle
         style={{ fontSize: '90%' }}
       />
+      {isLoading && selectedApplication && <LoadingSmall />}
       {selectedApplication &&
         structure &&
         (!backendData ? (

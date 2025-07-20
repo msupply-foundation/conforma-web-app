@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import useUndo from 'use-undo'
 import { dequal, Fragment, FragmentMetadata } from 'fig-tree-editor-react'
@@ -32,7 +32,11 @@ export const useFragmentConfig = () => {
     fetchPolicy: 'cache-and-network',
   })
 
-  const [{ present: draft }, { set: setDraft, ...undoProps }] = useUndo<FragmentRow | null>(null)
+  const [isDirty, setIsDirty] = useState(false)
+
+  const [{ present: draft, past }, { set: setDraft, ...undoProps }] = useUndo<FragmentRow | null>(
+    null
+  )
 
   const selectedFragment = query.fragment
   const fragments = (data?.evaluatorFragments?.nodes ?? []) as FragmentRow[]
@@ -61,6 +65,7 @@ export const useFragmentConfig = () => {
       const name = d.updateEvaluatorFragment?.evaluatorFragment?.name
       showToast({ title: t('EVALUATOR_FRAGMENT_SAVED'), text: name, style: 'success' })
       updateQuery({ dataView: d.updateEvaluatorFragment?.evaluatorFragment?.name })
+      setIsDirty(false)
     },
   })
 
@@ -113,6 +118,7 @@ export const useFragmentConfig = () => {
 
     if (isStrictlyEqual) return
 
+    setIsDirty(true)
     setDraft(newDraft)
   }
 
@@ -131,6 +137,7 @@ export const useFragmentConfig = () => {
     isSaving,
     isDeleting,
     isAdding,
+    isDirty: isDirty && past.length > 0,
   }
 }
 
