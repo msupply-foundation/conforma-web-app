@@ -1,6 +1,7 @@
 import React from 'react'
 import { FigTreeEditor, FigTreeEditorProps } from 'fig-tree-editor-react'
 import { dequal, EvaluatorNode } from 'fig-tree-evaluator'
+import JSON5 from 'json5'
 import { Position, topMiddle, useToast } from '../../contexts/Toast'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { handleCopyToClipboard } from '../Admin/JsonEditor'
@@ -80,6 +81,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
         onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
         enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
+        jsonParse={JSON5.parse}
       />
     </div>
   )

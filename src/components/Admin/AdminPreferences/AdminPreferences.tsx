@@ -105,7 +105,6 @@ const AdminPreferences: React.FC = () => {
             isSaving={isSaving}
             rootName="preferences"
             collapse={2}
-            showArrayIndices={false}
             maxWidth={650}
             restrictDelete={({ level }) => level === 1}
             restrictAdd={({ level }) => level === 0}
@@ -146,7 +145,6 @@ const AdminPreferences: React.FC = () => {
             data={overrides}
             rootName="overrides"
             collapse={2}
-            showArrayIndices={false}
             maxWidth={650}
             restrictDelete={true}
             restrictAdd={true}

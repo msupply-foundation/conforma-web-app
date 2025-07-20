@@ -386,7 +386,6 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
             isSaving={isSaving}
             rootName={dataName}
             collapse={1}
-            showArrayIndices={false}
             maxWidth={650}
             restrictAdd={({ level }) => level === 0}
             restrictDelete={({ level }) => level === 1}

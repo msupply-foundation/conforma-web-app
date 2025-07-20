@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { JsonEditor as ReactJson, IconDelete, IconEdit } from 'json-edit-react'
+import { IconDelete, IconEdit } from 'json-edit-react'
+import { FigTreeEvaluator } from 'fig-tree-editor-react'
+import { ReactJson } from '../../../components/Admin/JsonEditor'
 import TextIO from './TextIO'
 import { EvaluatorNode } from 'fig-tree-evaluator'
 import { getFigTreeSummary } from '../../../FigTreeEvaluator/FigTree'
 import { EvaluationEditor } from '../../../components/common/EvaluationEditor'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast } from '../../../contexts/Toast'
-import { handleCopyToClipboard } from '../../../components/Admin/JsonEditor'
-import { FigTreeEvaluator } from 'fig-tree-editor-react'
 
 type EvaluationProps = {
   figTree: FigTreeEvaluator
@@ -163,7 +163,6 @@ export const ObjectDataDisplay: React.FC<ObjectDataDisplayProps> = ({ objectData
         restrictDelete={true}
         restrictAdd={true}
         theme={{ container: ['transparent', { fontSize: '13px', padding: 0 }] }}
-        enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
       />
     </div>
   )

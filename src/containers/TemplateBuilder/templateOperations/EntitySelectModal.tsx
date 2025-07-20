@@ -388,7 +388,6 @@ const JsonViewer = ({
     viewOnly
     maxWidth="100%"
     collapse={1}
-    showCollectionCount="when-closed"
     indent={1}
     theme={{ container: { backgroundColor: newest ? 'rgb(236, 248, 233)' : '#fff4f4' } }}
   />

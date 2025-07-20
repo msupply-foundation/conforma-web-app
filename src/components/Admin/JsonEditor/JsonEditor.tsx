@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Search } from 'semantic-ui-react'
-import {
-  JsonEditor as ReactJson,
-  JsonEditorProps,
-  JsonData,
-  UpdateFunctionProps,
-  UpdateFunction,
-} from 'json-edit-react'
+import { ReactJson, UndoRedoSave } from './'
+import { JsonEditorProps, JsonData, UpdateFunctionProps, UpdateFunction } from 'json-edit-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast, topLeft } from '../../../contexts/Toast'
 import { Loading } from '../../common'
 import useUndo from 'use-undo'
-import { handleCopyToClipboard } from './utils'
-import { UndoRedoSave } from './UndoRedoSave'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   onSave?: (data: JsonData) => void
@@ -88,7 +81,6 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
       <ReactJson
         data={currentData}
         setData={setData as (value: JsonData) => void}
-        enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
         onUpdate={handleUpdate}
         theme={{
           container: {

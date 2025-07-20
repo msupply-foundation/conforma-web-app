@@ -3,15 +3,12 @@ import { usePrefs } from '../../../contexts/SystemPrefs'
 import { useEffect, useState } from 'react'
 import useLoadApplication from '../../../utils/hooks/useLoadApplication'
 import { useUserState } from '../../../contexts/UserState'
-import { JsonEditor as ReactJson } from 'json-edit-react'
+import { ReactJson } from '../JsonEditor'
 import useGetApplicationStructure from '../../../utils/hooks/useGetApplicationStructure'
 import { FullStructure } from '../../../utils/types'
 import { getRequest } from '../../../utils/helpers/fetchMethods'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { FigTreeEvaluator } from 'fig-tree-editor-react'
-import { handleCopyToClipboard } from '../JsonEditor'
-import { useLanguageProvider } from '../../../contexts/Localisation'
-import { Position, useToast } from '../../../contexts/Toast'
 import { LoadingSmall } from '../../common'
 
 export const DataContainer = ({ figTree }: { figTree: FigTreeEvaluator }) => {
@@ -68,8 +65,6 @@ const FrontEndAppDataDisplay = ({ structure, figTree }: FrontEndAppDataDisplayPr
   const {
     userState: { currentUser },
   } = useUserState()
-  const { t } = useLanguageProvider()
-  const { showToast } = useToast()
 
   const [applicationData, setApplicationData] = useState<Record<string, unknown>>({})
 
@@ -98,7 +93,6 @@ const FrontEndAppDataDisplay = ({ structure, figTree }: FrontEndAppDataDisplayPr
       viewOnly
       collapse={1}
       theme={{ container: { backgroundColor: 'transparent' } }}
-      enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
     />
   )
 }
@@ -109,9 +103,6 @@ interface BackEndAppDataDisplayProps {
 }
 
 const BackEndAppDataDisplay = ({ applicationId, figTree }: BackEndAppDataDisplayProps) => {
-  const { t } = useLanguageProvider()
-  const { showToast } = useToast({ position: Position.topLeft })
-
   const [applicationData, setApplicationData] = useState<Record<string, unknown>>({})
 
   useEffect(() => {
@@ -128,7 +119,6 @@ const BackEndAppDataDisplay = ({ applicationId, figTree }: BackEndAppDataDisplay
       viewOnly
       collapse={1}
       theme={{ container: { backgroundColor: 'transparent' } }}
-      enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
     />
   )
 }

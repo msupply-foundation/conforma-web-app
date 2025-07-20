@@ -1,17 +1,16 @@
 import { useRouter } from '../../../utils/hooks/useRouter'
 import { Header, Button, Dropdown, Icon, DropdownMenu, DropdownItem } from 'semantic-ui-react'
 import Ajv from 'ajv'
+import JSON5 from 'json5'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import usePageTitle from '../../../utils/hooks/usePageTitle'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { useFragmentConfig, FragmentRow } from './useFragmentConfig'
-import { JsonEditor as ReactJson } from 'json-edit-react'
+import { ReactJson, handleCopyToClipboard, UndoRedoSave } from '../JsonEditor'
 import { FigTreeEditor, FigTreeEvaluator } from 'fig-tree-editor-react'
 import { FigTree } from '../../../FigTreeEvaluator'
-import { UndoRedoSave } from '../JsonEditor/UndoRedoSave'
 import { onEvaluateErrorNotify, onEvaluateNotify } from '../../common/evaluatorHelpers'
 import { Position, useToast } from '../../../contexts/Toast'
-import { handleCopyToClipboard } from '../JsonEditor'
 import { FragmentTester } from './FragmentTester'
 import { FragmentDataSchema } from './schema'
 import { DataContainer } from './DataContainer'
@@ -163,13 +162,13 @@ const EvaluatorFragments = () => {
                     position: 'relative',
                   },
                 }}
+                jsonParse={JSON5.parse}
               />
               <ReactJson
                 data={fragmentData}
                 setData={(newData) => updateDraft(newData as Partial<FragmentRow>, 'other')}
                 rootName="Properties"
                 collapse={4}
-                showArrayIndices={false}
                 maxWidth={'100%'}
                 restrictAdd={({ level }) => level === 0}
                 restrictDelete={({ level }) => level === 1}
@@ -181,8 +180,6 @@ const EvaluatorFragments = () => {
                     paddingBottom: '0.5em',
                   },
                 }}
-                showCollectionCount="when-closed"
-                enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
                 onUpdate={({ newData }) => {
                   const valid = validateFragment(newData)
                   if (!valid) {
