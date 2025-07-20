@@ -124,8 +124,6 @@ export const useFragmentConfig = () => {
 
   const draftState = useMemo(() => transformFragment(draft), [draft])
 
-  console.log('draftState', draftState)
-
   return {
     fragments,
     loading,
@@ -164,7 +162,12 @@ const transformFragment = (fragment: FragmentRow | null) => {
     expression,
     fragmentData: {
       name,
-      metadata,
+      metadata: {
+        ...(parameters && { parameters }),
+        ...(description && { description }),
+        ...(textColor && { textColor }),
+        ...(backgroundColor && { backgroundColor }),
+      },
       frontEnd,
       backEnd,
       permissionNames,
