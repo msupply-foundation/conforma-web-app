@@ -64,7 +64,7 @@ export const useFragmentConfig = () => {
     onCompleted: (d) => {
       const name = d.updateEvaluatorFragment?.evaluatorFragment?.name
       showToast({ title: t('EVALUATOR_FRAGMENT_SAVED'), text: name, style: 'success' })
-      updateQuery({ dataView: d.updateEvaluatorFragment?.evaluatorFragment?.name })
+      updateQuery({ fragment: d.updateEvaluatorFragment?.evaluatorFragment?.name })
       setIsDirty(false)
     },
   })
@@ -97,12 +97,16 @@ export const useFragmentConfig = () => {
     },
   })
 
-  const updateDraft = (input: Partial<FragmentRow>, type: 'expression' | 'other') => {
-    if (draft === null) {
-      return
-    }
+  const updateDraft = (input: Partial<FragmentRow>, type: 'expression' | 'other' | 'full') => {
     const newDraft = (
-      type === 'expression' ? { ...draft, expression: input } : { ...draft, ...input }
+      type === 'expression'
+        ? // Update only the expression
+          { ...draft, expression: input }
+        : type === 'other'
+        ? // Update other properties
+          { ...draft, ...input }
+        : // Update all, when creating a new item
+          input
     ) as FragmentRow
 
     // Strict => key order must be the same
@@ -120,6 +124,7 @@ export const useFragmentConfig = () => {
 
     setIsDirty(true)
     setDraft(newDraft)
+    updateQuery({ fragment: newDraft.name })
   }
 
   const draftState = useMemo(() => transformFragment(draft), [draft])

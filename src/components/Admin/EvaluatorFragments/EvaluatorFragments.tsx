@@ -39,10 +39,17 @@ const EvaluatorFragments = () => {
 
   const { updateQuery } = useRouter()
 
-  const { ConfirmModal, showModal: showConfirmation } = useConfirmationModal({
+  const { ConfirmModal: ConfirmSaveModal, showModal: showSaveConfirmation } = useConfirmationModal({
     type: 'warning',
     confirmText: t('BUTTON_CONFIRM'),
   })
+  const { ConfirmModal: ConfirmUpdateOrNewModal, showModal: showUpdateOrNewModal } =
+    useConfirmationModal({
+      title: t('EVALUATOR_FRAGMENT_NAME_CHANGED'),
+      message: t('EVALUATOR_FRAGMENT_NAME_CHANGE_MESSAGE'),
+      confirmText: t('EVALUATOR_FRAGMENT_CONFIRM_EDIT'),
+      cancelText: t('EVALUATOR_FRAGMENT_CONFIRM_NEW'),
+    })
 
   const { showToast } = useToast({ position: Position.topMiddle })
 
@@ -81,7 +88,8 @@ const EvaluatorFragments = () => {
           </a>
         </p>
       </div>
-      <ConfirmModal />
+      <ConfirmSaveModal />
+      <ConfirmUpdateOrNewModal />
       <div className="flex-row-space-between" style={{ maxWidth: 700, gap: '2em' }}>
         <Dropdown
           selection
@@ -119,7 +127,7 @@ const EvaluatorFragments = () => {
             icon={<Icon name="trash alternate outline" size="small" />}
             content={t('DATA_VIEW_CONFIG_DELETE_BUTTON')}
             onClick={() =>
-              showConfirmation({
+              showSaveConfirmation({
                 title: t('EVALUATOR_FRAGMENT_DELETE_WARNING'),
                 message: t('EVALUATOR_FRAGMENT_DELETE_MESSAGE'),
                 onConfirm: () => deleteFragment({ variables: { id } }),
@@ -134,9 +142,7 @@ const EvaluatorFragments = () => {
             icon={<Icon name="plus" size="tiny" color="blue" />}
             content={t('DATA_VIEW_CONFIG_ADD_BUTTON')}
             onClick={() => {
-              addFragment({
-                variables: defaultNewFragment,
-              })
+              updateDraft(defaultNewFragment, 'full')
             }}
           />
         </div>
@@ -178,7 +184,31 @@ const EvaluatorFragments = () => {
               />
               <ReactJson
                 data={fragmentData}
-                setData={(newData) => updateDraft(newData as Partial<FragmentRow>, 'other')}
+                setData={(newData) => {
+                  // If changing from the default new fragment, we definitely
+                  // want to create a new one
+                  if ((newData as Partial<FragmentRow>)?.name === defaultNewFragment.name) {
+                    updateDraft({ expression, ...(newData as Partial<FragmentRow>) }, 'full')
+                    return
+                  }
+                  // If the name has changed, we need to confirm whether or not
+                  // to overwrite the currently selected fragment, or create a
+                  // new one
+                  if ((newData as Partial<FragmentRow>)?.name !== fragmentData?.name) {
+                    showUpdateOrNewModal({
+                      onConfirm: () => {
+                        updateDraft(newData as Partial<FragmentRow>, 'other')
+                      },
+                      onCancel: () => {
+                        // Remove the ID, so it's treated as a new fragment
+                        updateDraft({ expression, ...(newData as Partial<FragmentRow>) }, 'full')
+                      },
+                      awaitAction: false,
+                    })
+                    return
+                  }
+                  updateDraft(newData as Partial<FragmentRow>, 'other')
+                }}
                 rootName="Properties"
                 collapse={4}
                 maxWidth={'100%'}
@@ -222,13 +252,22 @@ const EvaluatorFragments = () => {
                 isDirty={isDirty}
                 isSaving={isSaving}
                 handleSave={() => {
-                  showConfirmation({
+                  showSaveConfirmation({
                     title: t('EVALUATOR_FRAGMENT_CONFIG_SAVE_WARNING'),
-                    message: t('EVALUATOR_FRAGMENT_CONFIG_SAVE_MESSAGE'),
-                    onConfirm: () =>
-                      updateFragment({
-                        variables: { id, patch: { expression, ...fragmentData } },
-                      }),
+                    message: id
+                      ? t('EVALUATOR_FRAGMENT_CONFIG_SAVE_MESSAGE')
+                      : t('EVALUATOR_FRAGMENT_CONFIG_ADD_MESSAGE'),
+                    onConfirm: () => {
+                      if (id)
+                        updateFragment({
+                          variables: { id, patch: { expression, ...fragmentData } },
+                        })
+                      else {
+                        addFragment({
+                          variables: { expression, ...fragmentData },
+                        })
+                      }
+                    },
                     awaitAction: false,
                   })
                 }}
