@@ -30,6 +30,7 @@ export const onEvaluateErrorNotify = (
   err: unknown,
   toast: (...state: Partial<ToastProps>[]) => void
 ) => {
+  console.log('Evaluation error:', isFigTreeError(err) ? err.prettyPrint : (err as Error).message)
   toast({
     title: 'Evaluation Error',
     text: isFigTreeError(err) ? truncateString(err.prettyPrint, 150) : (err as Error).message,
