@@ -59,6 +59,7 @@ const EvaluatorFragments = () => {
     selectedFragment,
     draftState,
     updateDraft,
+    resetDraft,
     undoProps,
     updateFragment,
     deleteFragment,
@@ -130,7 +131,10 @@ const EvaluatorFragments = () => {
               showSaveConfirmation({
                 title: t('EVALUATOR_FRAGMENT_DELETE_WARNING'),
                 message: t('EVALUATOR_FRAGMENT_DELETE_MESSAGE'),
-                onConfirm: () => deleteFragment({ variables: { id } }),
+                onConfirm: () => {
+                  if (id) deleteFragment({ variables: { id } })
+                  else resetDraft()
+                },
                 awaitAction: false,
               })
             }
@@ -233,7 +237,7 @@ const EvaluatorFragments = () => {
                       )
                       .join('\n')
                     showToast({
-                      title: 'Not compliant with JSON Schema',
+                      title: 'Invalid entry',
                       text: errorMessage,
                       style: 'error',
                       timeout: 10_000,

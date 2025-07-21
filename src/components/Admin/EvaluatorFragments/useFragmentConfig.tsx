@@ -127,6 +127,12 @@ export const useFragmentConfig = () => {
     updateQuery({ fragment: newDraft.name })
   }
 
+  const resetDraft = () => {
+    setIsDirty(false)
+    undoProps.reset(null)
+    updateQuery({ fragment: null })
+  }
+
   const draftState = useMemo(() => transformFragment(draft), [draft])
 
   return {
@@ -135,6 +141,7 @@ export const useFragmentConfig = () => {
     selectedFragment,
     draftState,
     updateDraft,
+    resetDraft,
     undoProps,
     updateFragment,
     deleteFragment,
