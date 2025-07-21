@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { Button, Dropdown, Header, Icon, Label } from 'semantic-ui-react'
+import { Button, Dropdown, Header, Icon } from 'semantic-ui-react'
 import { useTemplateState } from '../../TemplateWrapper'
 import DropdownIO from '../../../shared/DropdownIO'
 import { DataViewFilter, useDataViews } from './useManageDataViews'
 import { useOperationState } from '../../../shared/OperationContext'
-import { Legend } from '../shared/Legend'
+import { JoinedEntityLabel, Legend } from '../shared'
 
 export const DataViewSelector: React.FC<{}> = () => {
   const { template } = useTemplateState()
@@ -119,50 +119,25 @@ export const DataViewSelector: React.FC<{}> = () => {
       )}
       <div className="filter-joins">
         {current.map((dv) => (
-          <>
-            <Label
-              key={dv.identifier}
-              className={`${template.canEdit ? 'clickable' : ''}${
-                dv.dataViewJoinId === selectedDataViewJoinId ? ' builder-selected' : ''
-              }${
-                !dv.applicantAccessible && !dv.inOutputTables
-                  ? ' entity-trim-inaccessible'
-                  : dv.inTemplateElements
-                  ? ' entity-trim-elements'
-                  : dv.inOutputTables
-                  ? ' entity-trim-output'
-                  : ''
-              }`}
-              style={{ fontSize: '100%', position: 'relative' }}
-              onClick={() => {
-                if (!template.canEdit) return
-                if (dv.dataViewJoinId === selectedDataViewJoinId)
-                  setSelectedDataViewJoinId(undefined)
-                else {
-                  setSelectedDataViewJoinId(dv.dataViewJoinId)
-                  setMenuSelection(undefined)
-                }
-              }}
-            >
-              <div
-                className="ext-icon clickable"
-                onClick={() =>
-                  window.open(
-                    `/admin/data-views?selected-table=${dv.tableName}&data-view=${dv.identifier}`,
-                    '_blank'
-                  )
-                }
-              >
-                <Icon name="external" size="small" className="floating-icon clickable" />
-              </div>
-              {dv.title}
-              <br />
-              <span className="slightly-smaller-text" style={{ fontWeight: 400 }}>
+          <JoinedEntityLabel
+            key={dv.identifier}
+            joinId={dv.dataViewJoinId}
+            name={dv.title ?? ''}
+            description={
+              <>
                 <strong>Code:</strong> {dv.code}
                 <br /> <strong>ID:</strong> {dv.identifier}
-              </span>
-            </Label>
-          </>
+              </>
+            }
+            canEdit={template.canEdit}
+            selected={dv.dataViewJoinId === selectedDataViewJoinId}
+            inaccessible={!dv.applicantAccessible && !dv.inOutputTables}
+            inTemplateElements={dv.inTemplateElements}
+            inActions={dv.inOutputTables}
+            editLink={`/admin/data-views?selected-table=${dv.tableName}&data-view=${dv.identifier}`}
+            setSelected={setSelectedDataViewJoinId}
+            setMenu={setMenuSelection}
+          />
         ))}
       </div>
       <Legend

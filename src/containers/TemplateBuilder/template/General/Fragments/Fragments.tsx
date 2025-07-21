@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { Button, Dropdown, Header, Icon, Label } from 'semantic-ui-react'
+import { Button, Dropdown, Header, Icon } from 'semantic-ui-react'
 import { useTemplateState } from '../../TemplateWrapper'
 import DropdownIO from '../../../shared/DropdownIO'
 import { FragmentFilter, useFragments } from './useManageFragments'
 import { useOperationState } from '../../../shared/OperationContext'
-import { Legend } from '../shared/Legend'
+import { JoinedEntityLabel, Legend } from '../shared'
 
 export const FragmentSelector: React.FC<{}> = () => {
   const { template } = useTemplateState()
@@ -124,50 +124,20 @@ export const FragmentSelector: React.FC<{}> = () => {
       )}
       <div className="filter-joins">
         {current.map((frag) => (
-          <>
-            <Label
-              key={frag.name}
-              className={`${template.canEdit ? 'clickable' : ''}${
-                frag.dataViewJoinId === selectedFragmentJoinId ? ' builder-selected' : ''
-              }${
-                !frag.applicantAccessible && !frag.inActions
-                  ? ' entity-trim-inaccessible'
-                  : frag.inTemplateElements
-                  ? ' entity-trim-elements'
-                  : frag.inActions
-                  ? ' entity-trim-output'
-                  : ''
-              }`}
-              style={{ fontSize: '100%', position: 'relative' }}
-              onClick={() => {
-                if (!template.canEdit) return
-                if (frag.dataViewJoinId === selectedFragmentJoinId)
-                  setSelectedFragmentJoinId(undefined)
-                else {
-                  setSelectedFragmentJoinId(frag.dataViewJoinId)
-                  setMenuSelection(undefined)
-                }
-              }}
-            >
-              {/* TO-DO: Link to Fragment Editor */}
-              {/* <div
-                className="ext-icon clickable"
-                onClick={() =>
-                  window.open(
-                    `/admin/data-views?selected-table=${frag.tableName}&data-view=${frag.identifier}`,
-                    '_blank'
-                  )
-                }
-              > 
-                <Icon name="external" size="small" className="floating-icon clickable" />
-              </div> */}
-              {frag.name}
-              <br />
-              <span className="slightly-smaller-text" style={{ fontWeight: 400 }}>
-                {frag.metadata?.description}
-              </span>
-            </Label>
-          </>
+          <JoinedEntityLabel
+            key={frag.name}
+            joinId={frag.dataViewJoinId}
+            name={frag.name}
+            description={frag.metadata?.description}
+            canEdit={template.canEdit}
+            selected={frag.dataViewJoinId === selectedFragmentJoinId}
+            inaccessible={!frag.applicantAccessible && !frag.inActions}
+            inTemplateElements={frag.inTemplateElements}
+            inActions={frag.inActions}
+            editLink={`/admin/fragments?fragment=${frag.name}`}
+            setSelected={setSelectedFragmentJoinId}
+            setMenu={setMenuSelection}
+          />
         ))}
       </div>
       <Legend

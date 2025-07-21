@@ -81,10 +81,7 @@ const EvaluatorFragments = () => {
       <div className="flex-row-space-between-center" style={{ maxWidth: 700 }}>
         <Header>{t('EVALUATOR_FRAGMENTS_HEADER')}</Header>
         <p className="slightly-smaller-text">
-          <a
-            href="https://github.com/CarlosNZ/fig-tree-evaluator?tab=readme-ov-file#fragments"
-            target="_blank"
-          >
+          <a href="https://github.com/CarlosNZ/fig-tree-evaluator#fragments" target="_blank">
             Docs <Icon name="external" />
           </a>
         </p>
