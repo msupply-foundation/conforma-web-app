@@ -21,6 +21,7 @@ import { FragmentTester } from './FragmentTester'
 import { FragmentDataSchema } from './schema'
 import { DataContainer } from './DataContainer'
 import { defaultNewFragment } from './default'
+import { ColorPickerNodeDefinition } from '../JsonEditor/custom-components/ColorPicker'
 
 const { fragments: _, ...originalFigTreeOptions } = FigTree.getOptions()
 
@@ -247,6 +248,28 @@ const EvaluatorFragments = () => {
                 }}
                 newKeyOptions={(input) => newKeyOptions(input, defaultNewFragment)}
                 defaultValue={(input, key) => defaultValue(input, key, defaultNewFragment)}
+                customNodeDefinitions={[
+                  {
+                    ...ColorPickerNodeDefinition,
+                    condition: ({ key }) => key === 'backgroundColor' || key === 'textColor',
+                  },
+                  {
+                    condition: ({ key, level }) => key === 'name' && level === 1,
+                    element: () => (
+                      <div
+                        className="fragment-name-display"
+                        style={{
+                          backgroundColor: fragmentData.metadata?.backgroundColor,
+                          color: fragmentData.metadata?.textColor,
+                        }}
+                      >
+                        {fragmentData.name}
+                      </div>
+                    ),
+                    showOnEdit: false,
+                    showOnView: true,
+                  },
+                ]}
               />
               <UndoRedoSave
                 {...undoProps}

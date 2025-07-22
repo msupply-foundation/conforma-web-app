@@ -28,6 +28,7 @@
     "apollo3-cache-persist": "^0.15.0",
     "axios": "^1.7.7",
     "clone-deep": "^4.0.1",
+    "colord": "^2.9.3",
     "deep-equal": "^2.2.3",
     "fig-tree-editor-react": "^0.7.6",
     "graphql": "^16.9.0",
@@ -42,6 +43,7 @@
     "pluralize": "^8.0.0",
     "query-string": "^9.1.0",
     "react": "^18.3.1",
+    "react-colorful": "^5.6.1",
     "react-cool-onclickoutside": "^1.7.0",
     "react-dom": "^18.3.1",
     "react-ga4": "^2.1.0",
@@ -54,6 +56,7 @@
     "react-use-websocket": "^4.8.1",
     "semantic-ui-less": "^2.5.0",
     "semantic-ui-react": "^2.1.5",
+    "use-debounce": "^10.0.5",
     "use-undo": "^1.1.1"
   },
   "devDependencies": {
