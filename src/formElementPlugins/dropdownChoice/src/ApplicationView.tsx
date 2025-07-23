@@ -5,6 +5,7 @@ import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { substituteValues } from '../../../utils/helpers/utilityFunctions'
 import useDefault from '../../useDefault'
+import config from '../../../config'
 import './styles.css'
 
 // From
@@ -169,7 +170,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         fluid
         multiple={multiSelect}
         selection
-        clearable={isEditable && !isRequired}
+        clearable={(isEditable && !isRequired) || !config.isProductionBuild}
         disabled={!isEditable}
         search={search || hasOther}
         allowAdditions={hasOther}
