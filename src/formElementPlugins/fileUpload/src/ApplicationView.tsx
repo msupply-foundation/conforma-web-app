@@ -42,6 +42,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   Markdown,
   currentResponse,
   applicationData,
+  validationState,
 }) => {
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('fileUpload')
@@ -50,7 +51,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     label,
     description,
-    fileCountLimit,
+    fileCountLimit = 1,
     fileExtensions,
     fileSizeLimit,
     default: defaultValue,
@@ -64,6 +65,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const {
     userState: { currentUser },
   } = useUserState()
+
+  const { isValid, validationMessage } = validationState
 
   const application_response_id = currentResponse?.id
   const serialNumber = applicationData.serial
@@ -199,7 +202,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={description} />
       <Segment.Group>
         <Segment basic textAlign="center">
-          {(uploadedFiles.length < fileCountLimit || !fileCountLimit) && (
+          {uploadedFiles.length < fileCountLimit && (
             <UploadButton primary disabled={!isEditable} handleFiles={handleFiles}>
               <Icon name="upload" />
               {uploadedFiles.length === 0
@@ -230,13 +233,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
             )
           )}
         </List>
-
-        <Transition visible={errorVisible} duration={{ hide: 500, show: 200 }}>
+        <Transition visible={errorVisible || !isValid} duration={{ hide: 500, show: 200 }}>
           <p
             className="error-colour"
             style={{ position: 'absolute', bottom: 3, width: '100%', textAlign: 'center' }}
           >
-            {error}
+            {error ?? validationMessage}
           </p>
         </Transition>
       </Segment.Group>
