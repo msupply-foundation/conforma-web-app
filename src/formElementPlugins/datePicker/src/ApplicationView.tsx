@@ -157,7 +157,8 @@ const toDisplayString = (
   return `${formatDate(DateTime.fromJSDate(date[0]))} – ${DateTime.fromJSDate(date[1])}`
 }
 
-const dateFromDefault = (defaultDate: string | string[]): SelectedDateRange => {
+const dateFromDefault = (defaultDate: string | string[] | null): SelectedDateRange => {
+  if (!defaultDate) return null
   // Single date
   if (!Array.isArray(defaultDate)) return DateTime.fromISO(defaultDate).toJSDate()
   // Date range
