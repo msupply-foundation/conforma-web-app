@@ -18,7 +18,7 @@ import { getRequest } from '../utils/helpers/fetchMethods'
 export const FigTree = new FigTreeEvaluator({
   graphQLConnection: { endpoint: getServerUrl('graphQL') },
   maxCacheSize: 100,
-  maxCacheTime: 600,
+  maxCacheTime: 60 * 30, // 30 minutes
   evaluateFullObject: true,
   baseEndpoint: serverREST,
   functions,
