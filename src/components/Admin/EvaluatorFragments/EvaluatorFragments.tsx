@@ -29,7 +29,7 @@ const { fragments: _, ...originalFigTreeOptions } = FigTree.getOptions()
 // fragments, as the Fragment Editor shouldn't be able to reference other
 // fragments (in theory they could, but it could cause problems with an
 // accidental circular reference).
-const FigTreeFragments = new FigTreeEvaluator(originalFigTreeOptions)
+const FigTreeFragments = new FigTreeEvaluator({ ...originalFigTreeOptions, maxCacheTime: 60 * 2 })
 
 const ajv = new Ajv()
 const validateFragment = ajv.compile(FragmentDataSchema)
