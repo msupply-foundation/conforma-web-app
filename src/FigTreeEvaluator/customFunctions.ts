@@ -1,8 +1,7 @@
-// This file should be identical to the back-end "customFunctions.ts". It
-// allows us to preview the "objectFunctions" operator in the Template Builder
-// Actions config
+// This file should be identical to the front-end "customFunctions.ts". It
+// allows us to preview the "customOperators" in the Template Builder Actions
+// config, as well as use them in application expressions.
 
-import { FunctionDefinition } from 'fig-tree-editor-react'
 import { DateTime, Duration } from 'luxon'
 
 interface FilterOptions {
@@ -29,6 +28,12 @@ const dateFormats = {
   medDateTime: DateTime.DATETIME_MED,
   fullDateTime: DateTime.DATETIME_FULL,
   hugeDateTime: DateTime.DATETIME_HUGE,
+}
+
+interface FunctionDefinition {
+  function: (...args: any[]) => any
+  description: string
+  argsDefault?: any[]
 }
 
 export const functions: Record<string, FunctionDefinition> = {
@@ -157,6 +162,16 @@ export const functions: Record<string, FunctionDefinition> = {
     function: (text: string) => text.toLowerCase(),
     description: 'Convert string to lowercase',
     argsDefault: ['STOP SHOUTING!!!'], // ==> "stop shouting"
+  },
+  objectEntries: {
+    function: (obj: Record<string, any>) => {
+      return {
+        entries: Object.entries(obj),
+        flat: Object.entries(obj).flat(),
+      }
+    },
+    description: 'Convert an object to an array of key-value pairs',
+    argsDefault: [{ a: 1, b: 2, c: 3 }], // => [['a', 1], ['b', 2], ['c', 3]]
   },
 
   // The following can now be performed by native operators. Please remove once
