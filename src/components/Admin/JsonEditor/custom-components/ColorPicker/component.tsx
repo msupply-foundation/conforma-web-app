@@ -27,7 +27,6 @@ const HsvColorPicker = lazy(() =>
 )
 
 export interface ColorPickerProps {
-  loadingText?: string
   swatchStyles?: React.CSSProperties
   invalidColorError?: string
   /**
@@ -58,7 +57,6 @@ export const ColorPickerComponent: React.FC<CustomNodeProps<ColorPickerProps>> =
   ...props
 }) => {
   const {
-    loadingText,
     swatchStyles,
     alpha = false,
     keepAsColor = true,
