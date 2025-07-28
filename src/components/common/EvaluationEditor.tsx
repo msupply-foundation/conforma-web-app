@@ -6,6 +6,7 @@ import { Position, topMiddle, useToast } from '../../contexts/Toast'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { handleCopyToClipboard } from '../Admin/JsonEditor'
 import { onEvaluateErrorNotify, onEvaluateNotify } from './evaluatorHelpers'
+import { usePrefs } from '../../contexts/SystemPrefs'
 
 interface EvaluatorProps extends Omit<FigTreeEditorProps, 'onEvaluate'> {
   toastPosition?: Position
@@ -26,6 +27,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
   ...figTreeEditorProps
 }) => {
   const { t } = useLanguageProvider()
+  const { preferences } = usePrefs()
 
   const { showToast } = useToast({ position: toastPosition })
 
@@ -82,6 +84,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
         enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
         jsonParse={JSON5.parse}
+        {...preferences?.figTreeDefaults}
       />
     </div>
   )

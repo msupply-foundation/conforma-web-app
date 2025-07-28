@@ -121,5 +121,13 @@ export const defaultPrefs: Preferences = {
       },
     },
     appDataTestApplications: ['Add valid serials here'],
+    figTreeDefaults: {
+      defaultNewOperatorExpression: {
+        operator: 'getData',
+        property: 'applicationData',
+      },
+      defaultNewFragment: 'Response data',
+      defaultNewCustomOperator: 'getJSDate',
+    },
   },
 }
