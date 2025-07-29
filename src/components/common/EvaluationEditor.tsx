@@ -1,6 +1,5 @@
 import React from 'react'
 import { FigTreeEditor, FigTreeEditorProps } from 'fig-tree-editor-react'
-import { dequal, EvaluatorNode } from 'fig-tree-evaluator'
 import JSON5 from 'json5'
 import { Position, topMiddle, useToast } from '../../contexts/Toast'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -11,7 +10,6 @@ import { usePrefs } from '../../contexts/SystemPrefs'
 interface EvaluatorProps extends Omit<FigTreeEditorProps, 'onEvaluate'> {
   toastPosition?: Position
   canEdit: boolean
-  resetExpression?: (expression: EvaluatorNode) => void
   isCombinedView?: boolean
 }
 
@@ -23,39 +21,12 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
   toastPosition = topMiddle,
   canEdit,
   isCombinedView = false,
-  resetExpression,
   ...figTreeEditorProps
 }) => {
   const { t } = useLanguageProvider()
   const { preferences } = usePrefs()
 
   const { showToast } = useToast({ position: toastPosition })
-
-  const handleUpdate = (newData: EvaluatorNode) => {
-    // This somewhat clunky bit of logic handles the fact that when FigTree
-    // expressions are loaded from the database, the keys are often in an
-    // undesirable order (alphabetical, which puts "children" before
-    // "operator"). The FigTree Editor's internal "validate" function handles
-    // this, and puts the keys in a better order for presentation, but it adds
-    // an item to the Undo queue in doing so. By distinguishing between "strict"
-    // and "loose" equality, we can update the state *without* adding to the
-    // queue by using the "reset" method rather than "setData" in this case.
-
-    // Strict => key order must be the same
-    const isStrictlyEqual = JSON.stringify(newData) === JSON.stringify(expression)
-
-    // Loose => key order not considered
-    const isLooselyEqual = dequal(newData, expression)
-
-    if (isLooselyEqual && !isStrictlyEqual && resetExpression) {
-      resetExpression(newData)
-      return
-    }
-
-    if (isStrictlyEqual) return
-
-    setExpression(newData)
-  }
 
   const boldLevel = isCombinedView ? 1 : 0
 
@@ -73,7 +44,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
           container: 'transparent',
         }}
         expression={expression}
-        setExpression={handleUpdate}
+        setExpression={setExpression}
         figTree={figTree}
         objectData={objectData as Record<string, unknown>}
         restrictEdit={!canEdit}
