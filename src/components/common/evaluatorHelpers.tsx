@@ -70,7 +70,8 @@ const formatResult = (result: unknown, copiedToClipboardText?: string) => {
       )
       break
     default:
-      htmlResult = <Markdown text={truncateString(String(result), RESULT_STRING_CHAR_LIMIT)} />
+      if (result === '') htmlResult = <p>&lt;empty string&gt;</p>
+      else htmlResult = <Markdown text={truncateString(String(result), RESULT_STRING_CHAR_LIMIT)} />
   }
 
   return (
