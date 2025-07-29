@@ -120,9 +120,10 @@ export const Toast = ({ toast, removeToast }: { toast: ToastState; removeToast: 
     onClick: toast?.onClick ? toast.onClick : toast.clickable ? closeToast : undefined,
     floating: true,
     ...getStyleProps(toast.style),
+    style: { minHeight: 45 },
   }
 
-  if (toast.maxWidth) messageState.style = { maxWidth: toast.maxWidth }
+  if (toast.maxWidth) messageState.style.maxWidth = toast.maxWidth
 
   return (
     <div className="toast-wrapper">

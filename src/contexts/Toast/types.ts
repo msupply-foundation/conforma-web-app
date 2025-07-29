@@ -51,5 +51,5 @@ export interface MessageProps extends MessageStyleProps {
   onDismiss?: () => void
   onClick?: () => void
   floating: boolean
-  style?: React.CSSProperties
+  style: React.CSSProperties
 }
