@@ -12,7 +12,9 @@ export const onEvaluateNotify = (
   let resultString = truncateString(String(result))
   let copiedToClipboardText = ''
   if (e.getModifierState('Meta') || e.getModifierState('Control')) {
-    navigator.clipboard.writeText(String(result))
+    navigator.clipboard.writeText(
+      typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)
+    )
     copiedToClipboardText = '(Copied to clipboard)'
     resultString += `\n${copiedToClipboardText}`
   }

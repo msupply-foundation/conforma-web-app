@@ -2941,10 +2941,10 @@ fbjs@^3.0.0:
     setimmediate "^1.0.5"
     ua-parser-js "^1.0.35"
 
-fig-tree-editor-react@0.7.9:
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-0.7.9.tgz#4f82780395abf93f9b223808f6ebc289b89ecf45"
-  integrity sha512-n94tZ1K/ywGZoWbQ9MO713YnTgD0flUN2J5m1efqgAwJYNUx4l0leTHBirgmaMqJDemAB4KxA/7KZq1HUmzqEQ==
+fig-tree-editor-react@0.7.10:
+  version "0.7.10"
+  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-0.7.10.tgz#99999eadcfcd2d91ecd3363d37c323b0b235d46d"
+  integrity sha512-ZUtjuwZNxyKJqfhRynoV8NH/1rxthpI6vaHbT97zzL5+v1igtn/1ITNgMY/U7ZlSvORSdjA0OeCgTyKhWhIrWA==
   dependencies:
     fig-tree-evaluator "^2.20.6"
     json-edit-react "^1.28.2"
