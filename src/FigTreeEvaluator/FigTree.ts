@@ -52,6 +52,9 @@ export const getFigTreeSummary = (expression: EvaluatorNode) => {
     return { type: 'Operator', operator: (expression as OperatorNode)['operator'] }
   if (isFragmentNode(expression))
     return { type: 'Fragment', fragment: (expression as FragmentNode)['fragment'] }
+  // If it's a FT Expression, but not an operator or fragment, it's a shorthand
+  if (isFigTreeExpression(expression))
+    return { type: 'Shorthand', value: Object.keys(expression as object)[0] }
 
   const STRING_TRUNCATE_VALUE = 50
 

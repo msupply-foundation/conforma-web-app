@@ -19,9 +19,7 @@ type EvaluationProps = {
   resetExpression?: (expression: EvaluatorNode) => void
 }
 
-type EvaluationHeaderProps = {
-  evaluation: EvaluatorNode
-}
+type EvaluationHeaderProps = { evaluation: EvaluatorNode }
 
 export const EvaluationHeader: React.FC<EvaluationHeaderProps> = ({ evaluation }) => {
   const figTreeSummary = getFigTreeSummary(evaluation)
@@ -48,7 +46,6 @@ const Evaluation: React.FC<EvaluationProps> = ({
   deleteKey,
   canEdit,
   objectData,
-  resetExpression,
   figTree,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -111,7 +108,6 @@ const Evaluation: React.FC<EvaluationProps> = ({
                 setIsExpanded(!collapsed)
               }
             }}
-            resetExpression={resetExpression}
           />
           {isExpanded && <ObjectDataDisplay objectData={objectData} />}
         </div>
