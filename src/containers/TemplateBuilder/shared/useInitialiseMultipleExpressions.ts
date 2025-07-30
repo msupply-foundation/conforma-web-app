@@ -23,17 +23,17 @@
 const INITIALISATION_PHASE_DURATION = 500 //ms
 
 import { useEffect, useRef } from 'react'
-import { ParametersType } from './Parameters'
 import { EvaluatorNode } from 'fig-tree-editor-react'
 
 export const useInitialiseMultipleExpressions = (
-  expressionGroup: ParametersType,
-  setExpressionGroup: (parameters: ParametersType) => void,
+  expressionGroup: Record<string, EvaluatorNode>,
+  setExpressionGroup: (parameters: Record<string, EvaluatorNode>) => void,
   isActive: boolean,
-  reset: (expression: EvaluatorNode, key?: string) => void
+  reset: (expression: EvaluatorNode, key?: string) => void,
+  setIsDirty: (isDirty: boolean) => void
 ) => {
   const isInitializing = useRef(true)
-  const expressionsRef = useRef<ParametersType>({ ...expressionGroup })
+  const expressionsRef = useRef<Record<string, EvaluatorNode>>({ ...expressionGroup })
 
   useEffect(() => {
     if (!isActive || !isInitializing.current) return
@@ -51,6 +51,7 @@ export const useInitialiseMultipleExpressions = (
       expressionsRef.current[key] = value
     } else {
       setExpressionGroup({ ...expressionGroup, [key]: value })
+      setIsDirty(true)
     }
   }
 

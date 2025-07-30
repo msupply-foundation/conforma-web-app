@@ -16,6 +16,8 @@ import { useToast } from '../../../../contexts/Toast'
 import useUndo from 'use-undo'
 import { UndoRedo } from '../../../../components/common/UndoRedo'
 import { FigTreeActions } from './FigTreeActions'
+import { useInitialiseMultipleExpressions } from '../../shared/useInitialiseMultipleExpressions'
+import { EvaluatorNode } from 'fig-tree-editor-react'
 
 type ActionConfigProps = {
   templateAction: TemplateAction
@@ -37,7 +39,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const { template } = useTemplateState()
   const { updateTemplate } = useOperationState()
   const { allActionsByCode, applicationData } = useActionState()
-  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
+  const [isDirty, setIsDirty] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
   const { showToast } = useToast({
     title: t('TEMPLATE_MESSAGE_SAVE_SUCCESS'),
@@ -71,6 +73,14 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
     },
   ] = useUndo(templateAction?.parameterQueries || {})
 
+  const { updateExpression: setMainDataItem } = useInitialiseMultipleExpressions(
+    mainData,
+    setMainData as (data: Record<string, EvaluatorNode>) => void,
+    true,
+    resetMain as (data: EvaluatorNode, key?: string) => void,
+    setIsDirty
+  )
+
   const updateAction = async () => {
     const patch = { ...mainData, parameterQueries: parameters }
     const result = await updateTemplate(template, {
@@ -78,7 +88,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
         updateById: [{ id: mainData.id, patch }],
       },
     })
-    setShouldUpdate(false)
+    setIsDirty(false)
     showToast()
     if (!result) return
   }
@@ -86,10 +96,6 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const saveAndClose = () => {
     updateAction()
     onClose()
-  }
-
-  const markNeedsUpdate = () => {
-    setShouldUpdate(true)
   }
 
   const currentActionPlugin = allActionsByCode[String(templateAction?.actionCode)]
@@ -113,7 +119,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               getText={'name'}
               setValue={(value) => {
                 resetMain({ ...mainData, actionCode: String(value) })
-                markNeedsUpdate()
+                setIsDirty(true)
               }}
               options={Object.values(allActionsByCode)}
               search
@@ -127,7 +133,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                   const { condition, description, parameterQueries } = templateAction
                   resetMain({ ...mainData, condition, description })
                   resetParameters(parameterQueries)
-                  markNeedsUpdate()
+                  setIsDirty(true)
                 }}
               />
             )}
@@ -158,7 +164,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 setText={(text) => {
                   setMainData({ ...mainData, code: text || null })
                 }}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
@@ -170,7 +176,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 setText={(text) => {
                   setMainData({ ...mainData, eventCode: text || null })
                 }}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
@@ -183,7 +189,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 setText={(text) => {
                   setMainData({ ...mainData, description: text ?? '' })
                 }}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={150}
                 maxLabelWidth={150}
@@ -194,15 +200,11 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 figTree={FigTreeActions}
                 label="Condition"
                 evaluation={mainData?.condition}
-                setEvaluation={(condition) => {
-                  setMainData({ ...mainData, condition })
-                  markNeedsUpdate()
-                }}
+                setEvaluation={(condition) => setMainDataItem('condition', condition)}
                 canEdit={canEdit}
                 objectData={{ applicationData }}
                 resetExpression={(expression) => {
                   resetMain({ ...mainData, condition: expression })
-                  markNeedsUpdate()
                 }}
               />
               <div className="spacer-10" />
@@ -220,10 +222,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             key="parametersAction"
             currentElementCode={''}
             parameters={parameters}
-            setParameters={(parameterQueries) => {
-              setParameters(parameterQueries)
-              markNeedsUpdate()
-            }}
+            setParameters={(parameterQueries) => setParameters(parameterQueries)}
             reset={(expression, key) => {
               if (key) {
                 const newParameters = { ...parameters }
@@ -232,8 +231,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               } else {
                 resetParameters(expression)
               }
-              markNeedsUpdate()
             }}
+            setIsDirty={setIsDirty}
             canEdit={template.canEdit}
             requiredParameters={(currentActionPlugin?.requiredParameters as string[]) || []}
             optionalParameters={(currentActionPlugin?.optionalParameters as string[]) || []}
@@ -251,13 +250,13 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <div className="flex-row-center-center">
             <ButtonWithFallback
               title={t('BUTTON_SAVE')}
-              disabled={!canEdit || !shouldUpdate}
+              disabled={!canEdit || !isDirty}
               disabledMessage={!canEdit ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
               onClick={updateAction}
             />
             <ButtonWithFallback
               title={t('BUTTON_CLOSE')}
-              onClick={() => (shouldUpdate && canEdit ? setOpen(true) : onClose())}
+              onClick={() => (isDirty && canEdit ? setOpen(true) : onClose())}
             />
             <Modal
               basic

@@ -55,6 +55,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
         enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
         jsonParse={JSON5.parse}
+        addTopLevelFallback={null}
         {...preferences?.figTreeDefaults}
       />
     </div>

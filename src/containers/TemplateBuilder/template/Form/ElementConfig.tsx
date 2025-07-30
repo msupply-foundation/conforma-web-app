@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
+import { Modal, Label, Icon, Header } from 'semantic-ui-react'
 import { PluginProvider } from '../../../../formElementPlugins/pluginProvider'
 import {
   Reviewability,
@@ -24,6 +24,7 @@ import useUndo from 'use-undo'
 import { UndoRedo } from '../../../../components/common/UndoRedo'
 import { FigTree } from '../../../../FigTreeEvaluator'
 import { useInitialiseMultipleExpressions } from '../../shared/useInitialiseMultipleExpressions'
+import { Position, useToast } from '../../../../contexts/Toast'
 
 type ElementConfigProps = {
   element: TemplateElement
@@ -104,12 +105,13 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   } = useTemplateState()
   const { selectedSectionId } = useFormState()
   const { updateApplication, updateTemplateSection } = useOperationState()
-  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
-  const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
+  const [isDirty, setIsDirty] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
   const {
     userState: { currentUser },
   } = useUserState()
+
+  const { showToast } = useToast({ position: Position.topLeft })
 
   // Element data is divided into three "blocks" for "undo" groupings
   const [
@@ -176,7 +178,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
     commonData,
     setCommonData,
     true,
-    resetCommon
+    resetCommon,
+    setIsDirty
   )
 
   const updateElement = async () => {
@@ -186,20 +189,14 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         updateById: [{ id: mainData.id, patch }],
       },
     })
-    setShouldUpdate(false)
-    setShowSaveAlert(true)
-    setTimeout(() => setShowSaveAlert(false), 2000)
+    setIsDirty(false)
+    showToast({ title: t('TEMPLATE_MESSAGE_SAVE_SUCCESS'), style: 'success' })
     if (!result) return
   }
 
   const saveAndClose = () => {
     updateElement()
     onClose()
-  }
-
-  const markNeedsUpdate = () => {
-    setShouldUpdate(true)
-    setShowSaveAlert(false)
   }
 
   return (
@@ -218,7 +215,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               getText={'displayName'}
               setValue={(value) => {
                 resetMain({ ...mainData, elementTypePluginCode: String(value) })
-                markNeedsUpdate()
+                setIsDirty(true)
               }}
               options={Object.values(PluginProvider).map((element) => element.config)}
               search
@@ -237,7 +234,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   resetMain({ ...mainData, ...newMainData })
                   resetCommon(newCommonData)
                   resetParameters(newParameters)
-                  markNeedsUpdate()
+                  setIsDirty(true)
                 }}
               />
             )}
@@ -269,7 +266,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                   }}
                   disabled={!canEdit}
                   disabledMessage={disabledMessage}
-                  markNeedsUpdate={markNeedsUpdate}
+                  markNeedsUpdate={() => setIsDirty(true)}
                   isPropUpdated={true}
                   minLabelWidth={60}
                   maxLabelWidth={60}
@@ -285,7 +282,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 }}
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={60}
                 maxLabelWidth={60}
@@ -301,7 +298,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 isPropUpdated={true}
                 setValue={(value) => {
                   setMainData({ ...mainData, category: value as TemplateElementCategory })
-                  markNeedsUpdate()
+                  setIsDirty(true)
                 }}
                 options={[
                   { category: TemplateElementCategory.Information, title: 'Information' },
@@ -322,7 +319,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 setValue={(value) => {
                   const updateValue = value === 'default' ? null : value
                   setMainData({ ...mainData, reviewability: updateValue as Reviewability })
-                  markNeedsUpdate()
+                  setIsDirty(true)
                 }}
                 options={[
                   { value: Reviewability.Always, text: 'Always' },
@@ -349,7 +346,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 setText={(text) => {
                   setMainData({ ...mainData, validationMessage: text || null })
                 }}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={100}
                 maxLabelWidth={100}
@@ -367,7 +364,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 setText={(text) => {
                   setMainData({ ...mainData, helpText: text || null })
                 }}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={100}
                 maxLabelWidth={100}
@@ -385,10 +382,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 label={title}
                 key={key}
                 evaluation={commonData[key]}
-                setEvaluation={(expression) => {
-                  setCommonDataItem(key, expression)
-                  markNeedsUpdate()
-                }}
+                setEvaluation={(expression) => setCommonDataItem(key, expression)}
                 canEdit={canEdit}
                 objectData={{
                   responses: {
@@ -400,7 +394,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 }}
                 resetExpression={(expression) => {
                   resetCommon({ ...commonData, [key]: expression })
-                  markNeedsUpdate()
+                  setIsDirty(true)
                 }}
               />
             ))}
@@ -418,10 +412,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             currentElementCode={mainData.code}
             fullStructure={structure}
             parameters={parameters}
-            setParameters={(params) => {
-              setParameters(params)
-              markNeedsUpdate()
-            }}
+            setParameters={(params) => setParameters(params)}
+            setIsDirty={setIsDirty}
             reset={(expression, key) => {
               if (key) {
                 const newParameters = { ...parameters }
@@ -430,7 +422,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
               } else {
                 resetParameters(expression)
               }
-              markNeedsUpdate()
             }}
             canEdit={canEdit}
             type="FormElement"
@@ -447,7 +438,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
           <div className="flex-row-center-center">
             <ButtonWithFallback
               title={t('BUTTON_SAVE')}
-              disabled={!canEdit || !shouldUpdate}
+              disabled={!canEdit || !isDirty}
               disabledMessage={!canEdit ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
               onClick={updateElement}
             />
@@ -459,7 +450,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             />
             <ButtonWithFallback
               title={t('BUTTON_CLOSE')}
-              onClick={() => (shouldUpdate && canEdit ? setOpen(true) : onClose())}
+              onClick={() => (isDirty && canEdit ? setOpen(true) : onClose())}
             />
             <Modal
               basic
@@ -487,14 +478,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         </div>
       </div>
       <RemoveElementModal />
-      <Message
-        className="alert-success"
-        success
-        icon={<Icon name="check circle outline" />}
-        header={t('TEMPLATE_MESSAGE_SAVE_SUCCESS')}
-        hidden={!showSaveAlert}
-        onClick={() => setShowSaveAlert(false)}
-      />
     </Modal>
   )
 }
