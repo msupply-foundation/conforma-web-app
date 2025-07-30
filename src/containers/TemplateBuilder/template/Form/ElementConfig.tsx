@@ -23,6 +23,7 @@ import { useUserState } from '../../../../contexts/UserState'
 import useUndo from 'use-undo'
 import { UndoRedo } from '../../../../components/common/UndoRedo'
 import { FigTree } from '../../../../FigTreeEvaluator'
+import { useInitialiseMultipleExpressions } from '../../shared/useInitialiseMultipleExpressions'
 
 type ElementConfigProps = {
   element: TemplateElement
@@ -170,6 +171,13 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
 
     onClose()
   }
+
+  const { updateExpression: setCommonDataItem } = useInitialiseMultipleExpressions(
+    commonData,
+    setCommonData,
+    true,
+    resetCommon
+  )
 
   const updateElement = async () => {
     const patch = { ...mainData, ...commonData, parameters }
@@ -378,7 +386,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 key={key}
                 evaluation={commonData[key]}
                 setEvaluation={(expression) => {
-                  setCommonData({ ...commonData, [key]: expression })
+                  setCommonDataItem(key, expression)
                   markNeedsUpdate()
                 }}
                 canEdit={canEdit}

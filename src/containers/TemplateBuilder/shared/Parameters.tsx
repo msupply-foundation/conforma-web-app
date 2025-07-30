@@ -9,7 +9,7 @@ import { EvaluatorNode } from 'fig-tree-evaluator'
 import { EvaluationEditor } from '../../../components/common/EvaluationEditor'
 import { useUserState } from '../../../contexts/UserState'
 import { FigTreeEvaluator } from 'fig-tree-editor-react'
-import { useInitialiseParameters } from './useInitialiseParameters'
+import { useInitialiseMultipleExpressions } from './useInitialiseMultipleExpressions'
 
 export type ParametersType = {
   [key: string]: EvaluatorNode
@@ -49,7 +49,12 @@ export const Parameters: React.FC<ParametersProps> = ({
   const [showCombined, setShowCombined] = useState(false)
   const [isActive, setIsActive] = useState(false)
 
-  const { updateParameter } = useInitialiseParameters(parameters, setParameters, isActive, reset)
+  const { updateExpression } = useInitialiseMultipleExpressions(
+    parameters,
+    setParameters,
+    isActive,
+    reset
+  )
 
   const objectData =
     type === 'Action'
@@ -135,7 +140,7 @@ export const Parameters: React.FC<ParametersProps> = ({
                   Object.entries(parameters).map(([key, value]) => (
                     <Evaluation
                       figTree={figTree}
-                      setEvaluation={(value: EvaluatorNode) => updateParameter(key, value)}
+                      setEvaluation={(value: EvaluatorNode) => updateExpression(key, value)}
                       updateKey={(newKey) => {
                         // Convert to array to preserve property order
                         const newParameters = Object.entries(parameters)
@@ -166,7 +171,6 @@ export const Parameters: React.FC<ParametersProps> = ({
                       figTree={figTree}
                       expression={parameters}
                       setExpression={setParameters as (d: EvaluatorNode) => void}
-                      resetExpression={reset}
                       canEdit={canEdit}
                       collapse={1}
                       objectData={objectData}
