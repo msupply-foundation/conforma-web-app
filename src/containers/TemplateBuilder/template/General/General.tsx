@@ -170,6 +170,12 @@ const General: React.FC = () => {
         minLabelWidth={100}
         setNumber={(number) => updateTemplate(template, { priority: number })}
       />
+      <NumberIO
+        title="Stale application retention days"
+        number={template.staleDraftRetentionDays}
+        minLabelWidth={100}
+        setNumber={(number) => updateTemplate(template, { staleDraftRetentionDays: number })}
+      />
       <Category />
       <Filters />
       <DataViewSelector />

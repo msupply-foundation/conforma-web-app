@@ -616,6 +616,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -5432,6 +5433,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -12185,16 +12187,22 @@ export type DataTablePermitMedical = Node & {
   billLadingNumber?: Maybe<Scalars['String']['output']>;
   companyId?: Maybe<Scalars['Int']['output']>;
   companyName?: Maybe<Scalars['String']['output']>;
+  consignorAddress?: Maybe<Scalars['String']['output']>;
+  consignorName?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `DataTablePermitMedicalApplicationJoin`. */
   dataTablePermitMedicalApplicationJoins: DataTablePermitMedicalApplicationJoinsConnection;
   exportCountry?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
+  modeOfTransport?: Maybe<Scalars['String']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID']['output'];
   nonRegisteredProducts?: Maybe<Scalars['JSON']['output']>;
+  nonRegisteredProductsFilterData?: Maybe<Scalars['String']['output']>;
+  nonRegisteredReason?: Maybe<Scalars['String']['output']>;
   permitNo?: Maybe<Scalars['String']['output']>;
   portOfEntry?: Maybe<Scalars['String']['output']>;
   provisionalProducts?: Maybe<Scalars['JSON']['output']>;
+  provisionalProductsFilterData?: Maybe<Scalars['String']['output']>;
   registrationDate?: Maybe<Scalars['Datetime']['output']>;
 };
 
@@ -12223,13 +12231,19 @@ export type DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermit
   billLadingNumber?: InputMaybe<Scalars['String']['input']>;
   companyId?: InputMaybe<Scalars['Int']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  consignorName?: InputMaybe<Scalars['String']['input']>;
   dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
   nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   permitNo?: InputMaybe<Scalars['String']['input']>;
   portOfEntry?: InputMaybe<Scalars['String']['input']>;
   provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
   registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -12536,18 +12550,30 @@ export type DataTablePermitMedicalCondition = {
   companyId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `companyName` field. */
   companyName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `consignorAddress` field. */
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `consignorName` field. */
+  consignorName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `exportCountry` field. */
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `modeOfTransport` field. */
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `nonRegisteredProducts` field. */
   nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `nonRegisteredProductsFilterData` field. */
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `nonRegisteredReason` field. */
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `permitNo` field. */
   permitNo?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `portOfEntry` field. */
   portOfEntry?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `provisionalProducts` field. */
   provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `provisionalProductsFilterData` field. */
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `registrationDate` field. */
   registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -12572,6 +12598,10 @@ export type DataTablePermitMedicalFilter = {
   companyId?: InputMaybe<IntFilter>;
   /** Filter by the object’s `companyName` field. */
   companyName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `consignorAddress` field. */
+  consignorAddress?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `consignorName` field. */
+  consignorName?: InputMaybe<StringFilter>;
   /** Filter by the object’s `dataTablePermitMedicalApplicationJoins` relation. */
   dataTablePermitMedicalApplicationJoins?: InputMaybe<DataTablePermitMedicalToManyDataTablePermitMedicalApplicationJoinFilter>;
   /** Some related `dataTablePermitMedicalApplicationJoins` exist. */
@@ -12580,8 +12610,14 @@ export type DataTablePermitMedicalFilter = {
   exportCountry?: InputMaybe<StringFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `modeOfTransport` field. */
+  modeOfTransport?: InputMaybe<StringFilter>;
   /** Filter by the object’s `nonRegisteredProducts` field. */
   nonRegisteredProducts?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `nonRegisteredProductsFilterData` field. */
+  nonRegisteredProductsFilterData?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `nonRegisteredReason` field. */
+  nonRegisteredReason?: InputMaybe<StringFilter>;
   /** Negates the expression. */
   not?: InputMaybe<DataTablePermitMedicalFilter>;
   /** Checks for any expressions in this list. */
@@ -12592,6 +12628,8 @@ export type DataTablePermitMedicalFilter = {
   portOfEntry?: InputMaybe<StringFilter>;
   /** Filter by the object’s `provisionalProducts` field. */
   provisionalProducts?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `provisionalProductsFilterData` field. */
+  provisionalProductsFilterData?: InputMaybe<StringFilter>;
   /** Filter by the object’s `registrationDate` field. */
   registrationDate?: InputMaybe<DatetimeFilter>;
 };
@@ -12601,13 +12639,19 @@ export type DataTablePermitMedicalInput = {
   billLadingNumber?: InputMaybe<Scalars['String']['input']>;
   companyId?: InputMaybe<Scalars['Int']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  consignorName?: InputMaybe<Scalars['String']['input']>;
   dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
   nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   permitNo?: InputMaybe<Scalars['String']['input']>;
   portOfEntry?: InputMaybe<Scalars['String']['input']>;
   provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
   registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -12643,13 +12687,19 @@ export type DataTablePermitMedicalPatch = {
   billLadingNumber?: InputMaybe<Scalars['String']['input']>;
   companyId?: InputMaybe<Scalars['Int']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  consignorName?: InputMaybe<Scalars['String']['input']>;
   dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
   nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   permitNo?: InputMaybe<Scalars['String']['input']>;
   portOfEntry?: InputMaybe<Scalars['String']['input']>;
   provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
   registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -12693,13 +12743,23 @@ export enum DataTablePermitMedicalsOrderBy {
   CompanyIdDesc = 'COMPANY_ID_DESC',
   CompanyNameAsc = 'COMPANY_NAME_ASC',
   CompanyNameDesc = 'COMPANY_NAME_DESC',
+  ConsignorAddressAsc = 'CONSIGNOR_ADDRESS_ASC',
+  ConsignorAddressDesc = 'CONSIGNOR_ADDRESS_DESC',
+  ConsignorNameAsc = 'CONSIGNOR_NAME_ASC',
+  ConsignorNameDesc = 'CONSIGNOR_NAME_DESC',
   ExportCountryAsc = 'EXPORT_COUNTRY_ASC',
   ExportCountryDesc = 'EXPORT_COUNTRY_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  ModeOfTransportAsc = 'MODE_OF_TRANSPORT_ASC',
+  ModeOfTransportDesc = 'MODE_OF_TRANSPORT_DESC',
   Natural = 'NATURAL',
   NonRegisteredProductsAsc = 'NON_REGISTERED_PRODUCTS_ASC',
   NonRegisteredProductsDesc = 'NON_REGISTERED_PRODUCTS_DESC',
+  NonRegisteredProductsFilterDataAsc = 'NON_REGISTERED_PRODUCTS_FILTER_DATA_ASC',
+  NonRegisteredProductsFilterDataDesc = 'NON_REGISTERED_PRODUCTS_FILTER_DATA_DESC',
+  NonRegisteredReasonAsc = 'NON_REGISTERED_REASON_ASC',
+  NonRegisteredReasonDesc = 'NON_REGISTERED_REASON_DESC',
   PermitNoAsc = 'PERMIT_NO_ASC',
   PermitNoDesc = 'PERMIT_NO_DESC',
   PortOfEntryAsc = 'PORT_OF_ENTRY_ASC',
@@ -12708,6 +12768,8 @@ export enum DataTablePermitMedicalsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   ProvisionalProductsAsc = 'PROVISIONAL_PRODUCTS_ASC',
   ProvisionalProductsDesc = 'PROVISIONAL_PRODUCTS_DESC',
+  ProvisionalProductsFilterDataAsc = 'PROVISIONAL_PRODUCTS_FILTER_DATA_ASC',
+  ProvisionalProductsFilterDataDesc = 'PROVISIONAL_PRODUCTS_FILTER_DATA_DESC',
   RegistrationDateAsc = 'REGISTRATION_DATE_ASC',
   RegistrationDateDesc = 'REGISTRATION_DATE_DESC'
 }
@@ -32677,6 +32739,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -35242,6 +35305,7 @@ export type Template = Node & {
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   serialPattern?: Maybe<Scalars['String']['output']>;
+  staleDraftRetentionDays?: Maybe<Scalars['Int']['output']>;
   startMessage?: Maybe<Scalars['JSON']['output']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']['output']>;
@@ -35624,6 +35688,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -35946,6 +36011,8 @@ export type TemplateCondition = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `serialPattern` field. */
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `staleDraftRetentionDays` field. */
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `startMessage` field. */
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `status` field. */
@@ -36264,6 +36331,7 @@ export type TemplateDataViewJoinTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -37139,6 +37207,7 @@ export type TemplateFileJoinTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -37245,6 +37314,8 @@ export type TemplateFilter = {
   reviewAssignmentsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `serialPattern` field. */
   serialPattern?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `staleDraftRetentionDays` field. */
+  staleDraftRetentionDays?: InputMaybe<IntFilter>;
   /** Filter by the object’s `startMessage` field. */
   startMessage?: InputMaybe<JsonFilter>;
   /** Filter by the object’s `status` field. */
@@ -37540,6 +37611,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -37619,6 +37691,7 @@ export type TemplateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -37943,6 +38016,7 @@ export type TemplatePatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -38243,6 +38317,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -38550,6 +38625,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -39187,6 +39263,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -39413,6 +39490,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -39614,6 +39692,8 @@ export enum TemplatesOrderBy {
   PriorityDesc = 'PRIORITY_DESC',
   SerialPatternAsc = 'SERIAL_PATTERN_ASC',
   SerialPatternDesc = 'SERIAL_PATTERN_DESC',
+  StaleDraftRetentionDaysAsc = 'STALE_DRAFT_RETENTION_DAYS_ASC',
+  StaleDraftRetentionDaysDesc = 'STALE_DRAFT_RETENTION_DAYS_DESC',
   StartMessageAsc = 'START_MESSAGE_ASC',
   StartMessageDesc = 'START_MESSAGE_DESC',
   StatusAsc = 'STATUS_ASC',
@@ -40382,6 +40462,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -47717,13 +47798,19 @@ export type UpdateDataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinF
   billLadingNumber?: InputMaybe<Scalars['String']['input']>;
   companyId?: InputMaybe<Scalars['Int']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
+  consignorAddress?: InputMaybe<Scalars['String']['input']>;
+  consignorName?: InputMaybe<Scalars['String']['input']>;
   dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
+  modeOfTransport?: InputMaybe<Scalars['String']['input']>;
   nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
+  nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
+  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   permitNo?: InputMaybe<Scalars['String']['input']>;
   portOfEntry?: InputMaybe<Scalars['String']['input']>;
   provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
+  provisionalProductsFilterData?: InputMaybe<Scalars['String']['input']>;
   registrationDate?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -49190,6 +49277,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49226,6 +49314,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49262,6 +49351,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49298,6 +49388,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49334,6 +49425,7 @@ export type UpdateTemplateOnTemplateDataViewJoinForTemplateDataViewJoinTemplateI
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49370,6 +49462,7 @@ export type UpdateTemplateOnTemplateFileJoinForTemplateFileJoinTemplateIdFkeyPat
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49406,6 +49499,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49442,6 +49536,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49477,6 +49572,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49513,6 +49609,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49549,6 +49646,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49585,6 +49683,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   priority?: InputMaybe<Scalars['Int']['input']>;
   reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   serialPattern?: InputMaybe<Scalars['String']['input']>;
+  staleDraftRetentionDays?: InputMaybe<Scalars['Int']['input']>;
   startMessage?: InputMaybe<Scalars['JSON']['input']>;
   status?: InputMaybe<TemplateStatus>;
   submissionMessage?: InputMaybe<Scalars['JSON']['input']>;
@@ -49841,7 +49940,7 @@ export type DataViewColumnDefinitionFragmentFragment = { __typename?: 'DataViewC
 
 export type ElementFragmentFragment = { __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability };
 
-export type FullTemplateFragment = { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } };
+export type FullTemplateFragment = { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, staleDraftRetentionDays?: number | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } };
 
 export type OrganisationFragment = { __typename?: 'Organisation', id: number, name?: string | null, address?: string | null, registration?: string | null, logoUrl?: string | null };
 
@@ -50005,7 +50104,7 @@ export type UpdateTemplateMutationVariables = Exact<{
 }>;
 
 
-export type UpdateTemplateMutation = { __typename?: 'Mutation', updateTemplate?: { __typename?: 'UpdateTemplatePayload', template?: { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } } | null } | null };
+export type UpdateTemplateMutation = { __typename?: 'Mutation', updateTemplate?: { __typename?: 'UpdateTemplatePayload', template?: { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, staleDraftRetentionDays?: number | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } } | null } | null };
 
 export type UpdateTemplateFilterJoinMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -50327,7 +50426,7 @@ export type GetFullTemplateInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetFullTemplateInfoQuery = { __typename?: 'Query', template?: { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } } | null };
+export type GetFullTemplateInfoQuery = { __typename?: 'Query', template?: { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, staleDraftRetentionDays?: number | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } } | null };
 
 export type GetPermissionStatisticsQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -50556,6 +50655,7 @@ export const FullTemplateFragmentDoc = gql`
   parentVersionId
   versionComment
   versionHistory
+  staleDraftRetentionDays
   templateSections(orderBy: INDEX_ASC) {
     nodes {
       ...Section
