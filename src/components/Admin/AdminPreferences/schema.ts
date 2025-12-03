@@ -18,6 +18,7 @@ export const PreferencesSchema = {
         fileCleanupSchedule: { $ref: '#/definitions/schedule' },
         backupSchedule: { $ref: '#/definitions/schedule' },
         archiveSchedule: { $ref: '#/definitions/schedule' },
+        staleApplicationsCleanupSchedule: { $ref: '#/definitions/schedule' },
         SMTPConfig: {
           type: 'object',
           required: [
@@ -44,9 +45,6 @@ export const PreferencesSchema = {
         managerCanEditLookupTables: { type: 'boolean' },
         managerCanEditLocalisation: { type: 'boolean' },
         previewDocsMinKeepTime: { type: 'string' },
-        fileCleanupSchedule: { $ref: '#/definitions/schedule' },
-        staleApplicationsCleanupSchedule: { $ref: '#/definitions/schedule' },
-        backupSchedule: { $ref: '#/definitions/schedule' },
         backupFilePrefix: { type: 'string' },
         skipBackup: { type: 'boolean' },
         maxBackupDurationDays: { type: 'number' },
