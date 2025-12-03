@@ -44,6 +44,9 @@ export const PreferencesSchema = {
         managerCanEditLookupTables: { type: 'boolean' },
         managerCanEditLocalisation: { type: 'boolean' },
         previewDocsMinKeepTime: { type: 'string' },
+        fileCleanupSchedule: { $ref: '#/definitions/schedule' },
+        staleApplicationsCleanupSchedule: { $ref: '#/definitions/schedule' },
+        backupSchedule: { $ref: '#/definitions/schedule' },
         backupFilePrefix: { type: 'string' },
         skipBackup: { type: 'boolean' },
         maxBackupDurationDays: { type: 'number' },
@@ -314,6 +317,18 @@ export interface Preferences {
     managerCanEditLocalisation?: boolean
     previewDocsMinKeepTime?: string
     fileCleanupSchedule?:
+      | number[]
+      | {
+          date?: number | number[] | null
+          dayOfWeek?: number | number[] | null
+          hour?: number | number[] | null
+          minute?: number | number[] | null
+          month?: number | number[] | null
+          second?: number | number[] | null
+          year?: number | number[] | null
+          tz?: string | null
+        }
+    staleApplicationsCleanupSchedule?:
       | number[]
       | {
           date?: number | number[] | null

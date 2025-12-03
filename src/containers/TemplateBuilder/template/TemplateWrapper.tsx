@@ -143,6 +143,7 @@ export interface TemplateState {
   canApplicantMakeChanges: boolean
   dashboardRestrictions: string[] | null
   priority: number | null
+  staleDraftRetentionDays: number | null
   canEdit: boolean
 }
 
@@ -181,6 +182,7 @@ const defaultTemplateContextState: TemplateContextState = {
     canEdit: true,
     dashboardRestrictions: null,
     priority: null,
+    staleDraftRetentionDays: null,
   },
   refetch: () => {},
   sections: [],
@@ -222,7 +224,7 @@ const TemplateWrapper: React.FC = () => {
           versionTimestamp: DateTime.fromISO(template?.versionTimestamp) || DateTime.now(),
           parentVersionId: template?.parentVersionId || null,
           versionHistory:
-            [...template?.versionHistory]
+            [...(template?.versionHistory ?? [])]
               .map((version, index) => ({
                 ...version,
                 number: index + 1,
@@ -241,6 +243,7 @@ const TemplateWrapper: React.FC = () => {
           canEdit: isTemplateUnlocked(template) && template.status === TemplateStatus.Draft,
           dashboardRestrictions: template?.dashboardRestrictions as string[] | null,
           priority: template.priority ?? null,
+          staleDraftRetentionDays: template.staleDraftRetentionDays ?? null,
         },
         category: (template?.templateCategory as TemplateCategory) || undefined,
         fromQuery: template,

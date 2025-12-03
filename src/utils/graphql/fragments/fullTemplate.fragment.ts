@@ -15,6 +15,7 @@ export default gql`
     parentVersionId
     versionComment
     versionHistory
+    staleDraftRetentionDays
     templateSections(orderBy: INDEX_ASC) {
       nodes {
         ...Section

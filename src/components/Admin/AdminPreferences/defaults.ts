@@ -28,6 +28,11 @@ export const defaultPrefs: Preferences = {
       hour: 1,
       minute: 5,
     },
+    staleApplicationsCleanupSchedule: {
+      // Once per day at 1:30am
+      hour: 1,
+      minute: 30,
+    },
     backupSchedule: {
       // Once per day at 1:15am
       hour: 1,
