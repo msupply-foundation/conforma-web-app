@@ -40,7 +40,7 @@ export const useInitialiseMultipleExpressions = (
     const timer = setTimeout(() => {
       isInitializing.current = false
       reset({ ...expressionsRef.current })
-      console.log('Expression group initialized:', expressionsRef.current)
+      // console.log('Expression group initialized:', expressionsRef.current)
     }, INITIALISATION_PHASE_DURATION)
 
     return () => clearTimeout(timer)

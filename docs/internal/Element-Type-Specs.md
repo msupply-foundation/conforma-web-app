@@ -20,6 +20,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Date Picker](#date-picker)
   - [Number](#number)
   - [JSON Editor](#json-editor)
+  - [Get Values](#get-values)
   - [Page Break](#page-break)
 
 <!-- tocstop -->
@@ -793,6 +794,39 @@ Uses [json-edit-react](https://carlosnz.github.io/json-edit-react/)
 {
   text: <Stringified version of the data object>
   data: { ...JsonData }
+}
+```
+
+---
+
+<a name="get-values"/>
+
+### Get Values
+
+- **type/code**: `getValues`
+- **category**: `Information`
+
+_Hidden element to store useful data_
+
+This is a "dummy" element that can be used to fetch some data from anywhere and
+store it in a response. Useful when you have several other elements or actions
+that pull from the same query, this will reduce expression complexity and
+redundant network requests. You can store a whole object in here and just pull individual fields out of it in other elements.
+
+The element will be hidden for the applicant (and reviewer), but in the Template Builder you can see a Stringified representation of the current data for reference purposes.
+
+#### Input parameters
+
+- **values**: `any` -- The "data" you want (probably a network or database expression)
+- **default**: `any` -- alias for `values`. The `values` property behaves exactly like every other element type's `default` field, so you can use either name here. 
+
+
+#### Response type
+
+```
+{
+  text: <Stringified version of the data object>
+  data: { ...fetchedData }
 }
 ```
 

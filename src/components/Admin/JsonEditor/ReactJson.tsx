@@ -22,3 +22,5 @@ export const ReactJson = (props: JsonEditorProps) => {
     />
   )
 }
+
+export default ReactJson

@@ -1,0 +1,11 @@
+{
+  "isCore": true,
+  "code": "getValues",
+  "displayName": "Get Data Values",
+  "parameterLoadingValues": {
+    "label": "Loading...",
+    "description": ""
+  },
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Input"
+}
