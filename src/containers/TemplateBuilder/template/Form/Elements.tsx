@@ -54,6 +54,59 @@ const Elements: React.FC = () => {
     }).then(() => reloadApplication())
   }
 
+  const duplicateElement = (currentElement: TemplateElement) => {
+    const thisPageElements = currentPage.elements
+    const lastElementIndex = thisPageElements[thisPageElements.length - 1]?.index || 0
+    const elementsAfterLastIndex = currentSection.allElements.filter(
+      ({ index }) => index > lastElementIndex
+    )
+
+    const {
+      title,
+      category,
+      elementTypePluginCode,
+      visibilityCondition,
+      code,
+      isRequired,
+      isEditable,
+      validation,
+      validationMessage,
+      helpText,
+      parameters,
+      initialValue,
+    } = currentElement
+    const newElement = {
+      title,
+      category,
+      elementTypePluginCode,
+      visibilityCondition,
+      isRequired,
+      isEditable,
+      validation,
+      validationMessage,
+      helpText,
+      parameters,
+      initialValue,
+      index: lastElementIndex + 1,
+      code: `${code}-COPY}`,
+      applicationResponsesUsingId: {
+        create: [{ applicationId: structure.info.id }],
+      },
+      templateCode: '__Temp',
+      templateVersion: '__Temp',
+    }
+
+    updateTemplateSection(currentSection.id, {
+      templateElementsUsingId: {
+        updateById: elementsAfterLastIndex.map(({ id, index }) => ({
+          id,
+          patch: { index: index + 1 },
+        })),
+        create: [newElement],
+      },
+    }).then(() => reloadApplication())
+  }
+
   return (
     <div
       key={`${selectedSectionId}_${selectedPageNumber}`}
@@ -67,6 +120,7 @@ const Elements: React.FC = () => {
             elementId={element.id}
             isVisible={element.isVisible}
             setElementUpdateState={setElementUpdateState}
+            duplicateElement={duplicateElement}
           />
         )}
         elements={selectedPage.state}
@@ -90,7 +144,8 @@ const ElementConfigOptions: React.FC<{
   elementId: number
   isVisible: boolean
   setElementUpdateState: SetElementUpdateState
-}> = ({ elementId, isVisible, setElementUpdateState }) => {
+  duplicateElement: (el: TemplateElement) => void
+}> = ({ elementId, isVisible, setElementUpdateState, duplicateElement }) => {
   const { sections } = useTemplateState()
   const currentElement =
     sections
@@ -103,6 +158,7 @@ const ElementConfigOptions: React.FC<{
   return (
     <div className="element-config-options-container" key={elementId}>
       <ElementMove elementId={elementId} />
+      <IconButton name="copy outline" onClick={() => duplicateElement(currentElement)} />
       <IconButton name="setting" onClick={() => setElementUpdateState(currentElement)} />
       {!isVisible && (
         <Popup content="Visibility criteria did not match" trigger={<Icon name="eye slash" />} />
