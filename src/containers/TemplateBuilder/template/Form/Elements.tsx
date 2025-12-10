@@ -55,10 +55,8 @@ const Elements: React.FC = () => {
   }
 
   const duplicateElement = (currentElement: TemplateElement) => {
-    const thisPageElements = currentPage.elements
-    const lastElementIndex = thisPageElements[thisPageElements.length - 1]?.index || 0
-    const elementsAfterLastIndex = currentSection.allElements.filter(
-      ({ index }) => index > lastElementIndex
+    const elementsAfterThisElement = currentSection.allElements.filter(
+      ({ index }) => index > (currentElement?.index ?? 0)
     )
 
     const {
@@ -87,7 +85,7 @@ const Elements: React.FC = () => {
       helpText,
       parameters,
       initialValue,
-      index: lastElementIndex + 1,
+      index: (currentElement?.index ?? 0) + 1,
       code: `${code}-COPY`,
       applicationResponsesUsingId: {
         create: [{ applicationId: structure.info.id }],
@@ -98,7 +96,7 @@ const Elements: React.FC = () => {
 
     updateTemplateSection(currentSection.id, {
       templateElementsUsingId: {
-        updateById: elementsAfterLastIndex.map(({ id, index }) => ({
+        updateById: elementsAfterThisElement.map(({ id, index }) => ({
           id,
           patch: { index: index + 1 },
         })),
