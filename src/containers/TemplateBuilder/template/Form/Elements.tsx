@@ -88,7 +88,7 @@ const Elements: React.FC = () => {
       parameters,
       initialValue,
       index: lastElementIndex + 1,
-      code: `${code}-COPY}`,
+      code: `${code}-COPY`,
       applicationResponsesUsingId: {
         create: [{ applicationId: structure.info.id }],
       },
