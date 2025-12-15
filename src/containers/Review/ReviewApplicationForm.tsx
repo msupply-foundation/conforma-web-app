@@ -6,12 +6,15 @@ interface ReviewApplicationFormProps {
 }
 
 export const ReviewApplicationForm = ({ structure }: ReviewApplicationFormProps) => {
-  console.log('structure', structure.reviewSections.Review.pages['1'].state)
+  // For now we will only handle one section and one page in that section,
+  // since it's all got to be displayed in the same area of the UI
+  const sectionName = Object.keys(structure.reviewSections)[0]
+  console.log('structure', structure.reviewSections[sectionName].pages['1'].state)
   return (
     <PageElements
       canEdit={true}
-      elements={structure.reviewSections.Review.pages['1'].state}
-      responsesByCode={structure.responsesByCode}
+      elements={structure.reviewSections[sectionName].pages['1'].state}
+      responsesByCode={structure.responsesByCode ?? {}}
       stages={structure.stages.map(({ stage }) => stage)}
       applicationData={structure.info}
     />
