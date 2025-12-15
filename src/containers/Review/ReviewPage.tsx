@@ -215,7 +215,7 @@ const ReviewPage: React.FC<{
           review={previousAssignment?.review}
           serial={serial}
         />
-        <ReviewApplicationForm />
+        <ReviewApplicationForm structure={fullApplicationStructure} />
         <ReviewSubmit
           structure={reviewStructure}
           assignment={reviewAssignment}

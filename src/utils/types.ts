@@ -87,7 +87,6 @@ export {
   type TemplateInList,
   type TemplatesDetails,
   type TemplateType,
-  type UseGetApplicationProps,
   type User,
   type UseGetReviewStructureForSectionProps,
   type OrganisationSimple,
@@ -291,6 +290,7 @@ interface FullStructure {
   info: ApplicationDetails
   canApplicantMakeChanges: boolean
   sections: SectionsStructure
+  reviewSections: SectionsStructure
   applicantDeadline: { deadline: Date | null; isActive: boolean }
   stages: {
     stage: StageDetails
@@ -635,10 +635,6 @@ interface TemplateType {
   code: string
   name: string
   namePlural: string
-}
-
-interface UseGetApplicationProps {
-  serialNumber: string
 }
 
 interface User {
