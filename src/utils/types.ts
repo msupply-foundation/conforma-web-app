@@ -616,7 +616,8 @@ interface TemplateDetails {
   versionId: string
   elementsIds?: number[] // TODO: Change to not optional after re-structure
   elementsDefaults?: EvaluatorNode[]
-  sections?: SectionDetails[] // TODO: Change to not optional after re-structure
+  sections: SectionDetails[]
+  reviewerSections?: SectionDetails[]
   startMessage?: string
 }
 

@@ -42,6 +42,7 @@ import { useUserState } from '../../contexts/UserState'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Link } from 'react-router-dom'
 import useUpdateReviewResponses from '../../utils/hooks/useUpdateReviewResponses'
+import { ReviewApplicationForm } from './ReviewApplicationForm'
 
 const ReviewPage: React.FC<{
   reviewAssignment: AssignmentDetails
@@ -214,6 +215,7 @@ const ReviewPage: React.FC<{
           review={previousAssignment?.review}
           serial={serial}
         />
+        <ReviewApplicationForm />
         <ReviewSubmit
           structure={reviewStructure}
           assignment={reviewAssignment}
