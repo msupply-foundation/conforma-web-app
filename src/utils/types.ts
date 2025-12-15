@@ -469,6 +469,7 @@ interface SectionDetails {
   index: number
   code: string
   title: string
+  isReviewSection: boolean
   totalPages: number
 }
 
@@ -617,7 +618,6 @@ interface TemplateDetails {
   elementsIds?: number[] // TODO: Change to not optional after re-structure
   elementsDefaults?: EvaluatorNode[]
   sections: SectionDetails[]
-  reviewerSections?: SectionDetails[]
   startMessage?: string
 }
 
@@ -639,12 +639,6 @@ interface TemplateType {
 
 interface UseGetApplicationProps {
   serialNumber: string
-  currentUser?: User
-  sectionCode?: string
-  page?: number
-  networkFetch?: boolean
-  isApplicationReady?: boolean
-  setApplicationState?: Function
 }
 
 interface User {

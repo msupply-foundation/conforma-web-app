@@ -33,6 +33,8 @@ const ApplicationCreate: React.FC = () => {
 
   const { error: creationError, create } = useCreateApplication()
 
+  console.log('template', template)
+
   useEffect(() => {
     if (template && !template?.startMessage) handleCreate()
   }, [template?.startMessage])
@@ -106,7 +108,7 @@ const ApplicationCreate: React.FC = () => {
         subtitle={t('SUBTITLE_APPLICATION_STEPS')}
         ButtonSegment={StartButtonSegment}
       >
-        <SectionsList sections={template.sections} />
+        <SectionsList sections={template.sections.filter((section) => !section.isReviewSection)} />
       </ApplicationHomeWrapper>
     </ApplicationContainer>
   ) : null
