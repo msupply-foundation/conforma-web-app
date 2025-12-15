@@ -5,7 +5,6 @@ import {
   ElementBase,
   EvaluatedElement,
   FullStructure,
-  TemplateDetails,
   UseGetApplicationProps,
 } from '../types'
 import { FigTree } from '../../FigTreeEvaluator'
@@ -106,7 +105,7 @@ const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
 
     const applicationDetails: ApplicationDetails = {
       id: application.id,
-      template: application.template as TemplateDetails,
+      template: application.template as any, // TO-DO: Fix
       isLinear: application.template?.isLinear as boolean,
       serial: application.serial as string,
       name: application.name as string,

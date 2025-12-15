@@ -33,8 +33,6 @@ const ApplicationCreate: React.FC = () => {
 
   const { error: creationError, create } = useCreateApplication()
 
-  console.log('template', template)
-
   useEffect(() => {
     if (template && !template?.startMessage) handleCreate()
   }, [template?.startMessage])

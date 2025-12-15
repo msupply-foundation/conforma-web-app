@@ -3,7 +3,7 @@ import { Loading } from '../../../components'
 import { useUserState } from '../../../contexts/UserState'
 import useGetApplicationStructure from '../../../utils/hooks/useGetApplicationStructure'
 import useLoadApplication from '../../../utils/hooks/useLoadApplication'
-import { FullStructure, User } from '../../../utils/types'
+import { FullStructure } from '../../../utils/types'
 import { getInitialValues } from '../../Application/ApplicationCreate'
 import { useOperationState } from '../shared/OperationContext'
 import { useTemplateState } from './TemplateWrapper'
@@ -86,16 +86,11 @@ type ApplicationContextState = {
 const ApplicationContext = createContext<ApplicationContextState>({} as ApplicationContextState)
 
 const ApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const {
-    userState: { currentUser },
-  } = useUserState()
   const [state, setState] = useState<ApplicationContextState | null>(null)
   const { configApplicationSerial } = useFormStructureState()
 
   const { structure, reloadApplication } = useLoadApplication({
     serialNumber: configApplicationSerial,
-    currentUser: currentUser as User,
-    networkFetch: true,
   })
 
   useEffect(() => {
