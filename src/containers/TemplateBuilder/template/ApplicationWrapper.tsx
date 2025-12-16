@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { Loading } from '../../../components'
 import { useUserState } from '../../../contexts/UserState'
 import useGetApplicationStructure from '../../../utils/hooks/useGetApplicationStructure'
@@ -26,9 +26,11 @@ const ApplicationOperationContext = createContext<ApplicationOperationContextSta
 const CreateApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { configApplicationSerial, configApplicationId } = useFormStructureState()
   const [state, setState] = useState<ApplicationOperationContextState | null>(null)
+  const configApplicationCreated = useRef<boolean>(false)
   const { deleteApplication, createApplication } = useOperationState()
   const {
     template: { id: templateId },
+    sections,
     allElements,
     refetch: refetchFullTemplate,
   } = useTemplateState()
@@ -38,7 +40,8 @@ const CreateApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ chi
   } = useUserState()
 
   useEffect(() => {
-    if (!configApplicationSerial) {
+    if (!configApplicationSerial && !configApplicationCreated.current) {
+      configApplicationCreated.current = true
       create()
     } else if (!state) {
       setState({ resetApplication })
@@ -56,6 +59,13 @@ const CreateApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ chi
       .map((element) => element.initialValue)
     const initialValues = await getInitialValues(elementsDefaults || [], currentUser)
 
+    const reviewSectionElementIds =
+      sections
+        .filter((section) => section.isReviewSection)
+        .flatMap((section) =>
+          section.templateElementsBySectionId?.nodes.map((element) => element?.id)
+        ) || []
+
     await createApplication({
       name: 'Config Application',
       templateId,
@@ -63,7 +73,11 @@ const CreateApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ chi
       templateResponses: allElements
         .filter((element) => element.elementTypePluginCode !== 'pageBreak')
         .map((element, index) => {
-          return { templateElementId: element?.id || 0, value: initialValues[index] }
+          return {
+            templateElementId: element?.id || 0,
+            value: initialValues[index],
+            status: reviewSectionElementIds.includes(element?.id) ? 'REVIEW' : 'DRAFT',
+          }
         }),
     })
     refetchFullTemplate()
@@ -121,6 +135,7 @@ const FullApplicationWrapper: React.FC<{ children: React.ReactNode }> = ({ child
     shouldRevalidate: false,
     minRefetchTimestampForRevalidation: 0,
     forceRun: true,
+    isConfig: true,
   })
 
   useEffect(() => {

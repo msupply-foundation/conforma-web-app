@@ -26,6 +26,7 @@ interface UseGetApplicationStructureProps {
   shouldCalculateProgress?: boolean
   shouldGetDraftResponses?: boolean
   forceRun?: boolean
+  isConfig?: boolean
 }
 
 const useGetApplicationStructure = ({
@@ -36,6 +37,7 @@ const useGetApplicationStructure = ({
   shouldCalculateProgress = structure.info.current.status !== ApplicationStatus.Completed,
   shouldGetDraftResponses = true,
   forceRun = false,
+  isConfig = false,
 }: UseGetApplicationStructureProps) => {
   const {
     info: { serial },
@@ -57,7 +59,11 @@ const useGetApplicationStructure = ({
     variables: {
       serial,
       responseStatuses: shouldGetDraftResponses
-        ? [ApplicationResponseStatus.Submitted, ApplicationResponseStatus.Draft]
+        ? [
+            ApplicationResponseStatus.Submitted,
+            ApplicationResponseStatus.Draft,
+            ...(isConfig ? [ApplicationResponseStatus.Review] : []),
+          ]
         : [ApplicationResponseStatus.Submitted, ApplicationResponseStatus.Review],
     },
     skip: !serial,

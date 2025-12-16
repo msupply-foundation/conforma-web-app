@@ -6,6 +6,7 @@ import {
   TemplatePatch,
   TemplateSectionPatch,
   TemplateStagePatch,
+  useDeleteApplicationMutation,
   useDeleteTemplateMutation,
   useDeleteWholeApplicationMutation,
   useRestartApplicationMutation,
@@ -116,7 +117,7 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   const [updateTemplateFilterJoinMutation] = useUpdateTemplateFilterJoinMutation()
   const [updateTemplateSectionMutation] = useUpdateTemplateSectionMutation()
   const [deleteTemplateMutation] = useDeleteTemplateMutation()
-  const [deleteApplicationMutation] = useDeleteWholeApplicationMutation()
+  const [deleteApplicationMutation] = useDeleteApplicationMutation()
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
   const [innerState, setInnerState] = useState<ErrorAndLoadingState>({ isLoading: false })
