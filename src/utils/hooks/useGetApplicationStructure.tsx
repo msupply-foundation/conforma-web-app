@@ -58,7 +58,7 @@ const useGetApplicationStructure = ({
       serial,
       responseStatuses: shouldGetDraftResponses
         ? [ApplicationResponseStatus.Submitted, ApplicationResponseStatus.Draft]
-        : [ApplicationResponseStatus.Submitted],
+        : [ApplicationResponseStatus.Submitted, ApplicationResponseStatus.Review],
     },
     skip: !serial,
     fetchPolicy: 'network-only',
@@ -77,9 +77,9 @@ const useGetApplicationStructure = ({
     if (!data) return
 
     const isDataUpToDate = lastProcessedTimestamp > lastRefetchedTimestamp
-    const shouldRevalidationWaitForRefetech =
+    const shouldRevalidationWaitForRefetch =
       minRefetchTimestampForRevalidation > lastRefetchedTimestamp
-    const shouldRevalidateThisRun = shouldRevalidate && !shouldRevalidationWaitForRefetech
+    const shouldRevalidateThisRun = shouldRevalidate && !shouldRevalidationWaitForRefetch
 
     if (isDataUpToDate && !shouldRevalidateThisRun && !forceRun && currentPageType !== 'summary')
       return

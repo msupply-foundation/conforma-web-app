@@ -8,8 +8,10 @@ interface ReviewApplicationFormProps {
 export const ReviewApplicationForm = ({ structure }: ReviewApplicationFormProps) => {
   // For now we will only handle one section and one page in that section,
   // since it's all got to be displayed in the same area of the UI
-  const sectionName = Object.keys(structure.reviewSections)[0]
-  console.log('structure', structure.reviewSections[sectionName].pages['1'].state)
+  const sectionName = Object.keys(structure.reviewSections)?.[0]
+  if (!sectionName) return null
+
+  console.log('Review elements', structure.reviewSections[sectionName].pages['1'].state)
   return (
     <PageElements
       canEdit={true}

@@ -3828,6 +3828,7 @@ export type ApplicationResponsePatch = {
 
 export enum ApplicationResponseStatus {
   Draft = 'DRAFT',
+  Review = 'REVIEW',
   Submitted = 'SUBMITTED'
 }
 

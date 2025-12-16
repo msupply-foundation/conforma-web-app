@@ -55,7 +55,9 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
     const { id, code, name, versionId } = template
     const templateSections = template.templateSections.nodes as TemplateSection[]
     const sections = getTemplateSections(templateSections)
+    const reviewSection = sections.filter((section) => section.isReviewSection)?.[0] || null
     const elementsIds: number[] = []
+    const reviewSectionElementIds: number[] = []
     const elementsDefaults: any[] = []
 
     templateSections.forEach((section) => {
@@ -66,6 +68,7 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
           (element.category === TemplateElementCategory.Question || element?.initialValue !== null)
         ) {
           elementsIds.push(element.id)
+          if (section.isReviewSection) reviewSectionElementIds.push(element.id)
           elementsDefaults.push(element.initialValue)
         }
       })
@@ -80,7 +83,9 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
           versionId,
           elementsIds,
           elementsDefaults,
+          reviewSectionElementIds,
           sections,
+          reviewSection,
           startMessage,
         })
       }

@@ -231,8 +231,6 @@ const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
           baseElements,
           page: t('PAGE'),
         }),
-        responsesByCode: {},
-        evaluationsByElementId: {},
         applicantDeadline: applicantDeadline
           ? { deadline: applicantDeadline.timeScheduled, isActive: applicantDeadline.isActive }
           : { deadline: null, isActive: false },
