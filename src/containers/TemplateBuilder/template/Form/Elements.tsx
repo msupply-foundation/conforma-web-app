@@ -27,10 +27,10 @@ const Elements: React.FC = () => {
   const { updateTemplateSection } = useOperationState()
   const [elementUpdateState, setElementUpdateState] = useState<TemplateElement | null>(null)
 
+  const allSections = Object.values({ ...structure.sections, ...structure.reviewSections })
+
   if (selectedPageNumber === -1 || selectedSectionId === -1) return null
-  const selectedSection = Object.values(structure.sections).find(
-    (section) => section.details.id === selectedSectionId
-  )
+  const selectedSection = allSections.find((section) => section.details.id === selectedSectionId)
   if (!selectedSection) return null
   const selectedPage = selectedSection.pages[selectedPageNumber]
   if (!selectedPage) return null

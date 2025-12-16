@@ -2418,6 +2418,10 @@ a:hover {
   }
 }
 
+.builder-review-label {
+  border: 2px solid @red !important;
+}
+
 .page-controller {
   background-color: @surfacesLight;
   width: fit-content;

@@ -54,6 +54,10 @@ const Pages: React.FC = () => {
       },
     })
   }
+
+  // No page options for Review section
+  if (currentSection.isReviewSection) return null
+
   return (
     <div className="config-container-outline">
       <div className="flex-row-start-center">
