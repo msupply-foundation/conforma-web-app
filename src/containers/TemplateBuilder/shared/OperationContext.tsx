@@ -8,7 +8,6 @@ import {
   TemplateStagePatch,
   useDeleteApplicationMutation,
   useDeleteTemplateMutation,
-  useDeleteWholeApplicationMutation,
   useRestartApplicationMutation,
   useUpdateTemplateFilterJoinMutation,
   useUpdateTemplateMutation,

@@ -49,7 +49,7 @@ const Elements: React.FC = () => {
           id,
           patch: { index: index + 1 },
         })),
-        create: [getNewElement(structure.info.id, lastElementIndex + 1)],
+        create: [getNewElement(structure.info.id, currentSection, lastElementIndex + 1)],
       },
     }).then(() => reloadApplication())
   }
@@ -288,14 +288,28 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
   )
 }
 
-const getNewElement = (applicationId: number, index: number) => ({
+const getNewElement = (applicationId: number, currentSection: MoveSection, index: number) => ({
   title: 'New Element',
   category: TemplateElementCategory.Question,
   elementTypePluginCode: 'shortText',
   visibilityCondition: true,
   code: `newElementCode_${getRandomNumber()}`,
   isRequired: false,
-  isEditable: true,
+  // Default for review section elements is to make then non-editable once the
+  // application is completed
+  isEditable: currentSection.isReviewSection
+    ? {
+        operator: '!=',
+        values: [
+          {
+            operator: 'getData',
+            property: 'applicationData.outcome',
+            fallback: 'PENDING',
+          },
+          'COMPLETED',
+        ],
+      }
+    : true,
   validation: true,
   index,
   validationMessage: 'no validation',
