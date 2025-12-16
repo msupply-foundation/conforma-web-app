@@ -225,7 +225,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       <Button
         primary
         className={attemptSubmissionFailed ? 'alert wide-button' : 'wide-button'}
-        onClick={() => onClick()}
+        onClick={onClick}
         content={t('BUTTON_REVIEW_SUBMIT')}
       />
       {attemptSubmissionFailed && (

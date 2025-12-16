@@ -29137,7 +29137,7 @@ export type Query = Node & {
   applications?: Maybe<ApplicationsConnection>;
   assignableQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
   assignedQuestions?: Maybe<AssignedQuestionsConnection>;
-  assignedQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  assignedQuestionsCount?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `AssignedSectionsByStageAndLevel`. */
   assignedSectionsByStageAndLevels?: Maybe<AssignedSectionsByStageAndLevelsConnection>;
   assignerList?: Maybe<AssignerListConnection>;
@@ -29438,13 +29438,13 @@ export type Query = Node & {
   /** Reads a single `ReviewStatusHistory` using its globally unique `ID`. */
   reviewStatusHistoryByNodeId?: Maybe<ReviewStatusHistory>;
   reviewableQuestions?: Maybe<ReviewableQuestionsConnection>;
-  reviewableQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  reviewableQuestionsCount?: Maybe<Scalars['Int']['output']>;
   /** Reads and enables pagination through a set of `Review`. */
   reviews?: Maybe<ReviewsConnection>;
   /** Reads and enables pagination through a set of `SchemaColumn`. */
   schemaColumns?: Maybe<SchemaColumnsConnection>;
   singleApplicationDetail?: Maybe<SingleApplicationDetailConnection>;
-  submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']['output']>;
+  submittedAssignedQuestionsCount?: Maybe<Scalars['Int']['output']>;
   systemInfo?: Maybe<SystemInfo>;
   /** Reads a single `SystemInfo` using its globally unique `ID`. */
   systemInfoByNodeId?: Maybe<SystemInfo>;
