@@ -28,7 +28,7 @@ type ReviewSubmitProps = {
 }
 
 const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
-  const { reviewStructure, applicationStructure } = props
+  const { reviewStructure } = props
 
   const { info, thisReview, assignment, canApplicantMakeChanges } = reviewStructure
 

@@ -217,8 +217,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               <FileDisplayWithDescription
                 key={file.key}
                 file={file}
-                onDelete={handleDelete}
-                updateDescription={handleUpdateDescription}
+                onDelete={isEditable ? handleDelete : undefined}
+                updateDescription={isEditable ? handleUpdateDescription : undefined}
                 showDocumentModal={showDocumentModal}
                 cachedFile={getFromCache(file?.fileData?.uniqueId ?? '')}
               />
@@ -226,7 +226,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
               <FileDisplay
                 key={file.key}
                 file={file}
-                onDelete={handleDelete}
+                onDelete={isEditable ? handleDelete : undefined}
                 showDocumentModal={showDocumentModal}
                 cachedFile={getFromCache(file?.fileData?.uniqueId ?? '')}
               />

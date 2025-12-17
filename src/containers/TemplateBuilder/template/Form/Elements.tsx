@@ -311,7 +311,7 @@ const getNewElement = (applicationId: number, currentSection: MoveSection, index
         values: [
           {
             operator: 'getData',
-            property: 'applicationData.outcome',
+            property: 'applicationData.current.status',
             fallback: 'PENDING',
           },
           'COMPLETED',
