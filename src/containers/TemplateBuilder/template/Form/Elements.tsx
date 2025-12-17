@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import { Popup, Icon } from 'semantic-ui-react'
 import { PageElements } from '../../../../components'
-import { TemplateElement, TemplateElementCategory } from '../../../../utils/generated/graphql'
+import {
+  Reviewability,
+  TemplateElement,
+  TemplateElementCategory,
+} from '../../../../utils/generated/graphql'
 import { ElementState } from '../../../../utils/types'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import { IconButton } from '../../shared/IconButton'
@@ -132,7 +136,11 @@ const Elements: React.FC = () => {
         onClick={createElement}
       />
       {elementUpdateState && (
-        <ElementConfig element={elementUpdateState} onClose={() => setElementUpdateState(null)} />
+        <ElementConfig
+          element={elementUpdateState}
+          onClose={() => setElementUpdateState(null)}
+          isReviewerSectionElement={currentSection.isReviewSection}
+        />
       )}
     </div>
   )
@@ -310,6 +318,9 @@ const getNewElement = (applicationId: number, currentSection: MoveSection, index
         ],
       }
     : true,
+  reviewability: currentSection.isReviewSection
+    ? Reviewability.Never
+    : Reviewability.OnlyIfApplicantAnswer,
   validation: true,
   index,
   validationMessage: 'no validation',
