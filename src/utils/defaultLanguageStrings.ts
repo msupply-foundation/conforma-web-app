@@ -450,6 +450,9 @@ export default {
   REVIEW_STATUS_PENDING_TITLE: 'Please reload review before submitting',
   REVIEW_STATUS_PENDING_MESSAGE:
     'All your existing decisions will be kept.\nYou will be redirected to the home page now. Click "Start" in there to reload page with latest responses to review.',
+  REVIEW_INCOMPLETE_APPLICATION_QUESTIONS_TITLE: 'Incomplete reviewer application questions',
+  REVIEW_INCOMPLETE_APPLICATION_QUESTIONS_MESSAGE:
+    "Either you haven't completed all the required questions or some of your responses are invalid",
   REVIEW_STATUS_IN_PROGRESS: 'In progress',
   REVIEW_STATUS_NOT_STARTED: 'Not started',
   REVIEW_STATUS_PENDING_ACTION: 'Pending reviewer action',

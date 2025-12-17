@@ -11,7 +11,6 @@ export const ReviewApplicationForm = ({ structure }: ReviewApplicationFormProps)
   const sectionName = Object.keys(structure.reviewSections)?.[0]
   if (!sectionName) return null
 
-  console.log('Review elements', structure.reviewSections[sectionName].pages['1'].state)
   return (
     <PageElements
       canEdit={true}

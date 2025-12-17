@@ -217,7 +217,8 @@ const ReviewPage: React.FC<{
         />
         <ReviewApplicationForm structure={fullApplicationStructure} />
         <ReviewSubmit
-          structure={reviewStructure}
+          reviewStructure={reviewStructure}
+          applicationStructure={fullApplicationStructure}
           assignment={reviewAssignment}
           previousAssignment={previousAssignment}
           scrollTo={scrollTo}

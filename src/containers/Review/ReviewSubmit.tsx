@@ -6,6 +6,7 @@ import ReviewDecision from '../../components/Review/ReviewDecision'
 import {
   Decision,
   ReviewStatus,
+  TemplateElementCategory,
   useGetReviewableQuestionCountsQuery,
 } from '../../utils/generated/graphql'
 import useGetDecisionOptions from '../../utils/hooks/useGetDecisionOptions'
@@ -14,19 +15,22 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import useSubmitReview from '../../utils/hooks/useSubmitReview'
 import { ReviewDecisionPreview } from '../../components/Review/DecisionPreview/ReviewDecisionPreview'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import { AssignmentDetails, FullStructure } from '../../utils/types'
+import { AssignmentDetails, FullStructure, User } from '../../utils/types'
+import { FigTree } from '../../FigTreeEvaluator'
+import { useUserState } from '../../contexts/UserState'
 
 type ReviewSubmitProps = {
-  structure: FullStructure
+  reviewStructure: FullStructure
+  applicationStructure: FullStructure
   assignment: AssignmentDetails
   previousAssignment: AssignmentDetails
   scrollTo: (code: string) => void
 }
 
 const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
-  const { structure } = props
+  const { reviewStructure, applicationStructure } = props
 
-  const { info, thisReview, assignment, canApplicantMakeChanges } = structure
+  const { info, thisReview, assignment, canApplicantMakeChanges } = reviewStructure
 
   const { data, refetch } = useGetReviewableQuestionCountsQuery({
     variables: {
@@ -42,7 +46,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
   // This will recalculate assignableQuestions after each reviewResponse is updated
   useEffect(() => {
     refetch()
-  }, [structure])
+  }, [reviewStructure])
   if (!data) return null
 
   const { assignedQuestions, reviewableQuestions } = data
@@ -59,7 +63,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = (props) => {
             isDecisionError={isDecisionError}
             isEditable={thisReview?.current.reviewStatus === ReviewStatus.Draft}
           />
-          <ReviewDecisionPreview structure={props.structure} decision={getDecision()} />
+          <ReviewDecisionPreview structure={props.reviewStructure} decision={getDecision()} />
         </div>
       )}
       <ReviewComment
@@ -84,7 +88,8 @@ type ReviewSubmitButtonProps = {
 
 const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> = ({
   scrollTo,
-  structure,
+  reviewStructure,
+  applicationStructure,
   getDecision,
   getAndSetDecisionError,
   fullyAssigned,
@@ -92,6 +97,9 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   previousAssignment,
 }) => {
   const { t } = useLanguageProvider()
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const {
     location: { pathname },
     replace,
@@ -121,11 +129,15 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       title: t('REVIEW_STATUS_PENDING_TITLE'),
       message: t('REVIEW_STATUS_PENDING_MESSAGE'),
     },
+    REVIEW_INCOMPLETE_APPLICATION_QUESTIONS: {
+      title: t('REVIEW_INCOMPLETE_APPLICATION_QUESTIONS_TITLE'),
+      message: t('REVIEW_INCOMPLETE_APPLICATION_QUESTIONS_MESSAGE'),
+    },
   }
 
   // Need to refetch review status before submission, in case it's pending
   const getFullReviewStructureAsync = useGetFullReviewStructureAsync({
-    reviewStructure: structure,
+    reviewStructure,
     reviewAssignment: assignment,
   })
 
@@ -133,11 +145,16 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const { ConfirmModal: WarningModal, showModal: showWarning } = useConfirmationModal({
     type: 'warning',
   })
+
   // TODO: Show on message
   const [_, setSubmissionError] = useState<boolean>(false)
-  const submitReview = useSubmitReview(Number(structure.thisReview?.id), structure.reload)
-  const setAttemptSubmission = () => (structure.attemptSubmission = true)
-  const attemptSubmissionFailed = structure.attemptSubmission && structure.firstIncompleteReviewPage
+  const submitReview = useSubmitReview(
+    Number(reviewStructure.thisReview?.id),
+    reviewStructure.reload
+  )
+  const setAttemptSubmission = () => (reviewStructure.attemptSubmission = true)
+  const attemptSubmissionFailed =
+    reviewStructure.attemptSubmission && reviewStructure.firstIncompleteReviewPage
 
   const showIncompleteReviewsWarning = () => {
     showWarning({ ...messages.REVIEW_SUBMISSION_INCOMPLETE, onConfirm: () => submission() })
@@ -150,8 +167,8 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   const showPendingReviewWarning = () => {
     showWarning({
       ...messages.REVIEW_STATUS_PENDING,
-      onConfirm: () => push(`/application/${structure.info.serial}/review`),
-      onCancel: () => push(`/application/${structure.info.serial}/review`),
+      onConfirm: () => push(`/application/${reviewStructure.info.serial}/review`),
+      onCancel: () => push(`/application/${reviewStructure.info.serial}/review`),
     })
   }
 
@@ -159,10 +176,18 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     showWarning({ ...messages.REVIEW_DECISION_MISMATCH, onConfirm: () => submission() })
   }
 
+  const showInvalidReviewApplicationWarning = () => {
+    showWarning({
+      ...messages.REVIEW_INCOMPLETE_APPLICATION_QUESTIONS,
+      showCancel: false,
+      confirmText: t('OPTION_OK'),
+    })
+  }
+
   const onClick = async () => {
     const firstIncompleteReviewPage = assignment.isMakeDecision
       ? null
-      : structure.firstIncompleteReviewPage
+      : reviewStructure.firstIncompleteReviewPage
 
     // Check INCOMPLETE
     if (firstIncompleteReviewPage) {
@@ -178,6 +203,17 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
     const decisionError = getAndSetDecisionError()
     if (decisionError) {
       showIncompleteSectionWarning()
+      return
+    }
+
+    // Validate Reviewer section elements
+    const { hasInvalid, hasRequiredMissing } = await validateReviewerSections(
+      applicationStructure,
+      currentUser
+    )
+    console.log(' hasInvalid, hasRequiredMissing', hasInvalid, hasRequiredMissing)
+    if (hasInvalid || hasRequiredMissing) {
+      showInvalidReviewApplicationWarning()
       return
     }
 
@@ -211,14 +247,14 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
 
   const submission = async () => {
     try {
-      await submitReview(structure, getDecision())
+      await submitReview(reviewStructure, getDecision())
     } catch (e) {
       console.log(e)
       setSubmissionError(true)
     }
   }
 
-  if (structure.thisReview?.current.reviewStatus !== ReviewStatus.Draft) return null
+  if (reviewStructure.thisReview?.current.reviewStatus !== ReviewStatus.Draft) return null
 
   return (
     <Form.Field>
@@ -237,3 +273,33 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
   )
 }
 export default ReviewSubmit
+
+const validateReviewerSections = async (structure: FullStructure, currentUser: User | null) => {
+  const responses = structure.responsesByCode || {}
+  const applicationData = structure.info
+
+  let hasRequiredMissing = false
+  let hasInvalid = false
+  const sectionName = Object.keys(structure.reviewSections)[0]
+  const elements = structure.reviewSections[sectionName].pages['1'].state.filter(
+    ({ element }) => element.isVisible && element.category === TemplateElementCategory.Question
+  )
+  for (const { element, response } of elements) {
+    if (element.isRequired && !response?.text) {
+      hasRequiredMissing = true
+      // console.log(' Missing required response for ', element.code)
+    }
+
+    const data = {
+      responses: { ...responses, thisResponse: response?.text },
+      currentUser,
+      applicationData,
+    }
+
+    if (!(await FigTree.evaluate(element.validationExpression, { data }))) {
+      hasInvalid = true
+    }
+  }
+
+  return { hasRequiredMissing, hasInvalid }
+}
