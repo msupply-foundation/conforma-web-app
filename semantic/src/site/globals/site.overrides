@@ -66,6 +66,10 @@ a:hover {
   visibility: hidden;
 }
 
+.input-error input {
+  border: 1px solid @attention !important;
+}
+
 /*--------------------------------
    Common layout
 ---------------------------------*/
