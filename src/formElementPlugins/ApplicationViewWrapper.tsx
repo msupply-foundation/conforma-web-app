@@ -76,14 +76,19 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     const result = Object.entries(parameterExpressions).map(([field, expression]) => {
       return FigTree.evaluate(expression as EvaluatorNode, {
         data: { responses: allResponses, currentUser, applicationData },
-      }).then((result: any) => {
-        // Need to do our own equality check since React treats 'result' as
-        // different object to original and causes a re-render even when not
-        // really changed
-        if (!isEqual(result, evaluatedParameters?.[field])) {
-          setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
-        }
       })
+        .then((result: any) => {
+          // Need to do our own equality check since React treats 'result' as
+          // different object to original and causes a re-render even when not
+          // really changed
+          if (!isEqual(result, evaluatedParameters?.[field])) {
+            setEvaluatedParameters((prevState) => ({ ...prevState, [field]: result }))
+          }
+        })
+        .catch((err) => {
+          console.log('Error evaluating parameter expression', err)
+          console.log('Expression:', expression)
+        })
     })
     Promise.all(result).then(() => {
       if (!isInnerFormElement)
