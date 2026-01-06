@@ -211,7 +211,7 @@ const ReviewSubmitButton: React.FC<ReviewSubmitProps & ReviewSubmitButtonProps> 
       applicationStructure,
       currentUser
     )
-    console.log(' hasInvalid, hasRequiredMissing', hasInvalid, hasRequiredMissing)
+
     if (hasInvalid || hasRequiredMissing) {
       showInvalidReviewApplicationWarning()
       return
@@ -281,6 +281,8 @@ const validateReviewerSections = async (structure: FullStructure, currentUser: U
   let hasRequiredMissing = false
   let hasInvalid = false
   const sectionName = Object.keys(structure.reviewSections)[0]
+  if (!sectionName) return { hasRequiredMissing, hasInvalid }
+
   const elements = structure.reviewSections[sectionName].pages['1'].state.filter(
     ({ element }) => element.isVisible && element.category === TemplateElementCategory.Question
   )
