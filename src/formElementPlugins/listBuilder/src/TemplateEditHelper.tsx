@@ -142,15 +142,27 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
 
   if (inputFields.length === 0)
     return (
-      <div>
-        {(selectedElementIds.length > 0 || !showElementSelect) && (
-          <Button onClick={handleAbsorb}>{showElementSelect ? 'Go!' : 'Absorb elements'}</Button>
+      <div className="flex-row-end">
+        {showElementSelect && (
+          <Button secondary inverted size="tiny" onClick={handleCancel}>
+            Cancel
+          </Button>
         )}
-        {showElementSelect && <Button onClick={handleCancel}>Cancel</Button>}
+        {(selectedElementIds.length > 0 || !showElementSelect) && (
+          <Button secondary inverted size="tiny" onClick={handleAbsorb} style={{ minWidth: 100 }}>
+            {showElementSelect ? 'Go!' : 'Absorb elements'}
+          </Button>
+        )}
       </div>
     )
 
-  return <Button onClick={handleExtract}>Extract elements</Button>
+  return (
+    <div className="flex-row-end">
+      <Button secondary inverted size="tiny" onClick={handleExtract}>
+        Extract elements
+      </Button>
+    </div>
+  )
 }
 
 export default TemplateEditHelper

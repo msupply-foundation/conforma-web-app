@@ -257,18 +257,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           <ChangesComment reviewerComment={reviewerComment} iconName={iconName} />
         </Form.Field>
         {pluginCode === 'listBuilder' && currentPageType === 'admin' && (
-          <ListBuilderEditHelper
-            onUpdate={onUpdate}
-            onSave={onSave}
-            {...props}
-            // {...element}
-            // parameters={{ ...simpleParameters, ...evaluatedParameters }}
-            // setIsActive={setIsActive}
-            // Markdown={Markdown}
-            // validationState={validationState || { isValid: true }}
-            // validate={validate}
-            // getDefaultIndex={getDefaultIndex}
-          />
+          <ListBuilderEditHelper element={element} />
         )}
       </React.Suspense>
     </ErrorBoundary>
