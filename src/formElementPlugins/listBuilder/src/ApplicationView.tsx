@@ -213,7 +213,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           const element = inputState?.currentElementsState?.[field?.code]
           if (!element) return null
           const current = inputState?.currentResponses?.[element?.code]?.value
-          if (!current) return null
           return (
             <ApplicationViewWrapper
               key={`list-${element.code}`}
