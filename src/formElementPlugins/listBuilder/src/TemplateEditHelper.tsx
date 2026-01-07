@@ -149,7 +149,13 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
           </Button>
         )}
         {(selectedElementIds.length > 0 || !showElementSelect) && (
-          <Button secondary inverted size="tiny" onClick={handleAbsorb} style={{ minWidth: 100 }}>
+          <Button
+            secondary
+            inverted={!showElementSelect}
+            size="tiny"
+            onClick={handleAbsorb}
+            style={{ minWidth: 100 }}
+          >
             {showElementSelect ? 'Go!' : 'Absorb elements'}
           </Button>
         )}

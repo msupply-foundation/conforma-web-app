@@ -209,15 +209,18 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={modalText} />
       {inputState.currentElementsState &&
         inputFields.map((field: TemplateElement) => {
+          if (!field?.code) return null
           const element = inputState?.currentElementsState?.[field?.code]
           if (!element) return null
+          const current = inputState?.currentResponses?.[element?.code]?.value
+          if (!current) return null
           return (
             <ApplicationViewWrapper
               key={`list-${element.code}`}
               element={element}
               isStrictPage={inputState.error}
               allResponses={combineResponses(allResponses, inputState.currentResponses)}
-              currentResponse={inputState?.currentResponses?.[element?.code].value ?? null}
+              currentResponse={current}
               onSaveUpdateMethod={innerElementUpdate(element.code)}
               applicationData={applicationData}
             />
