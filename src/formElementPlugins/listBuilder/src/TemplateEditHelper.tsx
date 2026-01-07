@@ -142,7 +142,7 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
 
   if (inputFields.length === 0)
     return (
-      <div className="flex-row-end">
+      <div className="flex-row-end" style={{ transform: 'translateY(-0.9em)' }}>
         {showElementSelect && (
           <Button secondary inverted size="tiny" onClick={handleCancel}>
             Cancel
@@ -163,7 +163,7 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
     )
 
   return (
-    <div className="flex-row-end">
+    <div className="flex-row-end" style={{ transform: 'translateY(-0.9em)' }}>
       <Button secondary inverted size="tiny" onClick={handleExtract}>
         Extract elements
       </Button>
