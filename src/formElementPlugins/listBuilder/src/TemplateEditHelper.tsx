@@ -1,37 +1,33 @@
 import { Button } from 'semantic-ui-react'
-import { ApplicationDetails, ElementState } from '../../../utils/types'
+import { ElementState } from '../../../utils/types'
 import { useOperationState } from '../../../containers/TemplateBuilder/shared/OperationContext'
 import { useFormStructureState } from '../../../containers/TemplateBuilder/template/Form/FormWrapper'
+import { useTemplateState } from '../../../containers/TemplateBuilder/template/TemplateWrapper'
+import { TemplateElementCategory } from '../../../utils/generated/graphql'
+import { useFullApplicationState } from '../../../containers/TemplateBuilder/template/ApplicationWrapper'
 
-interface ListBuilderEditHelperProps {
-  element: ElementState
-  onUpdate: (value: string) => void
-  onSave: (value: any) => void
-  applicationData: ApplicationDetails
-}
-
-const TemplateEditHelper = ({
-  element,
-  //   onUpdate,
-  //   onSave,
-  applicationData,
-  ...props
-}: //   ...props
-ListBuilderEditHelperProps) => {
+const TemplateEditHelper = ({ element }: { element: ElementState }) => {
   const { moveStructure } = useFormStructureState()
-  const { showElementCheckboxes, setShowElementCheckboxes, updateTemplateSection } =
-    useOperationState()
+  const { allElements } = useTemplateState()
+  const { reloadApplication } = useFullApplicationState()
+  const {
+    showElementSelect,
+    setShowElementSelect,
+    updateTemplateSection,
+    selectedElementIds,
+    clearSelectedElements,
+  } = useOperationState()
   const inputFields = element.parameters?.inputFields ?? []
 
   const handleExtract = () => {
     const currentSection = Object.values(moveStructure.sections).find(
       (section) => section.index === element.sectionIndex
     )
-
     if (!currentSection) {
       console.error('Current section not found')
       return
     }
+
     const currentPage = Object.values(currentSection.pages).find(
       (page) => page.pageNumber === element.page
     )
@@ -55,6 +51,7 @@ ListBuilderEditHelperProps) => {
         validation,
         ...rest,
         index: (element?.elementIndex ?? 0) + 1 + idx,
+        // These are required, but get auto-updated by Postgres function
         templateCode: '__Temp',
         templateVersion: '__Temp',
       }
@@ -78,18 +75,82 @@ ListBuilderEditHelperProps) => {
         updateById: existingElementPatch,
         create: innerElements,
       },
-    })
+    }).then(reloadApplication)
   }
 
   const handleAbsorb = () => {
-    setShowElementCheckboxes(!showElementCheckboxes)
+    setShowElementSelect(!showElementSelect)
+
+    const selectedElements = allElements.filter((el) => selectedElementIds.includes(el.id))
+
+    const inputFields = selectedElements.map(
+      ({
+        // required
+        category,
+        code,
+        title = '',
+        elementTypePluginCode,
+        isEditable,
+        parameters,
+        // optional
+        isRequired,
+        visibilityCondition,
+        validation,
+        validationMessage = null,
+      }) => {
+        const field: Record<string, unknown> = {
+          category: category ?? TemplateElementCategory.Question,
+          code,
+          title: title || '',
+          elementTypePluginCode,
+          parameters,
+        }
+        if (isEditable !== true) field.isEditable = isEditable
+        if (isRequired !== true) field.isRequired = isRequired
+        if (visibilityCondition !== true) field.isVisible = visibilityCondition
+        if (validation !== true) field.validationExpression = validation
+        if (validationMessage !== null) field.validationMessage = validationMessage
+        return field
+      }
+    )
+
+    const currentSection = Object.values(moveStructure.sections).find(
+      (section) => section.index === element.sectionIndex
+    )
+    if (!currentSection) {
+      console.error('Current section not found')
+      return
+    }
+
+    updateTemplateSection(currentSection.id, {
+      templateElementsUsingId: {
+        updateById: [
+          {
+            id: element.id,
+            patch: { parameters: { ...element.parameters, inputFields } },
+          },
+        ],
+        deleteById: selectedElementIds.map((id) => ({ id })),
+      },
+    }).then(reloadApplication)
   }
 
-  return inputFields.length === 0 ? (
-    <Button onClick={handleAbsorb}>Absorb elements</Button>
-  ) : (
-    <Button onClick={handleExtract}>Extract elements</Button>
-  )
+  const handleCancel = () => {
+    clearSelectedElements()
+    setShowElementSelect(false)
+  }
+
+  if (inputFields.length === 0)
+    return (
+      <div>
+        {(selectedElementIds.length > 0 || !showElementSelect) && (
+          <Button onClick={handleAbsorb}>{showElementSelect ? 'Go!' : 'Absorb elements'}</Button>
+        )}
+        {showElementSelect && <Button onClick={handleCancel}>Cancel</Button>}
+      </div>
+    )
+
+  return <Button onClick={handleExtract}>Extract elements</Button>
 }
 
 export default TemplateEditHelper

@@ -135,7 +135,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
     if (!response?.customValidation) {
       // Validate and Save response -- generic
       const validationResult: ValidationState = await onUpdate(response?.text)
-      if (response?.text !== undefined)
+      if (response?.text !== undefined && !!currentResponse?.id)
         await onSaveUpdateMethod({
           variables: {
             id: currentResponse?.id as number,
@@ -145,7 +145,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
             evaluatedParameters: { ...simpleParameters, ...evaluatedParameters },
           },
         })
-      if (response === null || response?.text == undefined)
+      if (response === null || (response?.text == undefined && !!currentResponse?.id))
         // Reset response if cleared
         await onSaveUpdateMethod({
           variables: {

@@ -80,8 +80,11 @@ type OperationContextState = {
   updateApplication: UpdateApplication
   updateTemplateStage: UpdateTemplateStage
   operationModalState: ModalState
-  showElementCheckboxes: boolean
-  setShowElementCheckboxes: (show: boolean) => void
+  showElementSelect: boolean
+  setShowElementSelect: (show: boolean) => void
+  selectedElementIds: number[]
+  toggleSelectedElement: (id: number) => void
+  clearSelectedElements: () => void
 }
 
 const contextNotPresentError = () => {
@@ -109,8 +112,11 @@ const defaultOperationContext: OperationContextState = {
     onConfirm: async () => {},
     close: () => {},
   },
-  showElementCheckboxes: false,
-  setShowElementCheckboxes: () => {},
+  showElementSelect: false,
+  setShowElementSelect: () => {},
+  selectedElementIds: [],
+  toggleSelectedElement: () => {},
+  clearSelectedElements: () => {},
 }
 
 const Context = createContext(defaultOperationContext)
@@ -125,6 +131,21 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
   const [innerState, setInnerState] = useState<ErrorAndLoadingState>({ isLoading: false })
   const [showElementCheckboxes, setShowElementCheckboxes] = useState<boolean>(false)
+  const [selectedElementIds, setSelectedElementIds] = useState<number[]>([])
+
+  const toggleSelectedElement = (id: number) => {
+    setSelectedElementIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((elId) => elId !== id)
+      } else {
+        return [...prev, id]
+      }
+    })
+  }
+  const clearSelectedElements = () => {
+    setSelectedElementIds([])
+  }
+
   const {
     commitTemplate,
     duplicateTemplate,
@@ -153,8 +174,11 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
     createApplication: createApplication(setInnerState, create, getSerialAsync),
     updateApplication: updateApplication(setInnerState, updateApplicationMutation),
     updateTemplateStage: updateTemplateStage(setInnerState, updateTemplateStageMutation),
-    showElementCheckboxes: false,
-    setShowElementCheckboxes: () => {},
+    showElementSelect: false,
+    setShowElementSelect: () => {},
+    selectedElementIds,
+    toggleSelectedElement,
+    clearSelectedElements,
   })
 
   const { isLoading, error } = innerState
@@ -183,8 +207,11 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
       value={{
         ...contextState,
         operationModalState: modalState,
-        showElementCheckboxes,
-        setShowElementCheckboxes,
+        showElementSelect: showElementCheckboxes,
+        setShowElementSelect: setShowElementCheckboxes,
+        selectedElementIds,
+        toggleSelectedElement,
+        clearSelectedElements,
       }}
     >
       {children}
