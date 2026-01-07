@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Popup, Icon } from 'semantic-ui-react'
+import { Popup, Icon, Checkbox } from 'semantic-ui-react'
 import { PageElements } from '../../../../components'
 import {
   Reviewability,
@@ -28,7 +28,7 @@ const Elements: React.FC = () => {
     template: { canEdit },
   } = useTemplateState()
   const { moveStructure } = useFormStructureState()
-  const { updateTemplateSection } = useOperationState()
+  const { updateTemplateSection, showElementCheckboxes } = useOperationState()
   const [elementUpdateState, setElementUpdateState] = useState<TemplateElement | null>(null)
 
   const allSections = Object.values({ ...structure.sections, ...structure.reviewSections })
@@ -123,6 +123,8 @@ const Elements: React.FC = () => {
             isVisible={element.isVisible}
             setElementUpdateState={setElementUpdateState}
             duplicateElement={duplicateElement}
+            showCheckbox={showElementCheckboxes}
+            setShowCheckbox={() => {}}
           />
         )}
         elements={selectedPage.state}
@@ -151,7 +153,9 @@ const ElementConfigOptions: React.FC<{
   isVisible: boolean
   setElementUpdateState: SetElementUpdateState
   duplicateElement: (el: TemplateElement) => void
-}> = ({ elementId, isVisible, setElementUpdateState, duplicateElement }) => {
+  showCheckbox?: boolean
+  setShowCheckbox?: (show: boolean) => void
+}> = ({ elementId, isVisible, setElementUpdateState, duplicateElement, showCheckbox }) => {
   const { sections } = useTemplateState()
   const currentElement =
     sections
@@ -169,6 +173,7 @@ const ElementConfigOptions: React.FC<{
       {!isVisible && (
         <Popup content="Visibility criteria did not match" trigger={<Icon name="eye slash" />} />
       )}
+      {showCheckbox && <Checkbox checked={isVisible} readOnly />}
     </div>
   )
 }

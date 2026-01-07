@@ -80,6 +80,8 @@ type OperationContextState = {
   updateApplication: UpdateApplication
   updateTemplateStage: UpdateTemplateStage
   operationModalState: ModalState
+  showElementCheckboxes: boolean
+  setShowElementCheckboxes: (show: boolean) => void
 }
 
 const contextNotPresentError = () => {
@@ -107,6 +109,8 @@ const defaultOperationContext: OperationContextState = {
     onConfirm: async () => {},
     close: () => {},
   },
+  showElementCheckboxes: false,
+  setShowElementCheckboxes: () => {},
 }
 
 const Context = createContext(defaultOperationContext)
@@ -120,6 +124,7 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
   const [innerState, setInnerState] = useState<ErrorAndLoadingState>({ isLoading: false })
+  const [showElementCheckboxes, setShowElementCheckboxes] = useState<boolean>(false)
   const {
     commitTemplate,
     duplicateTemplate,
@@ -148,6 +153,8 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
     createApplication: createApplication(setInnerState, create, getSerialAsync),
     updateApplication: updateApplication(setInnerState, updateApplicationMutation),
     updateTemplateStage: updateTemplateStage(setInnerState, updateTemplateStageMutation),
+    showElementCheckboxes: false,
+    setShowElementCheckboxes: () => {},
   })
 
   const { isLoading, error } = innerState
@@ -172,7 +179,14 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   }
 
   return (
-    <Context.Provider value={{ ...contextState, operationModalState: modalState }}>
+    <Context.Provider
+      value={{
+        ...contextState,
+        operationModalState: modalState,
+        showElementCheckboxes,
+        setShowElementCheckboxes,
+      }}
+    >
       {children}
       {renderExtra()}
     </Context.Provider>
