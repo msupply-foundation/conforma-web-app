@@ -145,7 +145,7 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
             evaluatedParameters: { ...simpleParameters, ...evaluatedParameters },
           },
         })
-      if (response === null || (response?.text == undefined && !!currentResponse?.id))
+      if ((response === null || response?.text == undefined) && !!currentResponse?.id)
         // Reset response if cleared
         await onSaveUpdateMethod({
           variables: {
