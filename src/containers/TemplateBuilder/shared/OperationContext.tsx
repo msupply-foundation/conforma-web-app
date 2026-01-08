@@ -80,6 +80,9 @@ type OperationContextState = {
   updateApplication: UpdateApplication
   updateTemplateStage: UpdateTemplateStage
   operationModalState: ModalState
+  // These 5 for List Builder extract/absorb functionality -- but
+  // theoretically could be used for any functionality that requires element
+  // selection, for example bulk delete.
   selectionRequestingElement: number | null // ID of requesting ListBuilder element
   setSelectionRequestingElement: (id: number | null) => void
   selectedElementIds: number[]

@@ -1,3 +1,16 @@
+/**
+ * This is a tool that allows form elements to be extracted from the List
+ * Builder into the main form, and vice versa. This allows you to create the
+ * elements using the normal Template Builder UI, as part of the main form, then
+ * "absorb" them into the List Builder element when ready. You can also
+ * "extract" them back out again for later editing.
+ *
+ * The selection of elements is handled by the OperationContext, which tracks
+ * which elements are currently selected, and which element is requesting the
+ * selection (i.e. the List Builder element that will absorb the selected
+ * elements).
+ */
+
 import { Button } from 'semantic-ui-react'
 import { ElementState } from '../../../utils/types'
 import { useOperationState } from '../../../containers/TemplateBuilder/shared/OperationContext'
