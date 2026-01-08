@@ -79,8 +79,6 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
   }
 
   const handleAbsorb = () => {
-    setSelectionRequestingElement(element.id)
-
     const selectedElements = allElements.filter((el) => selectedElementIds.includes(el.id))
 
     const inputFields = selectedElements.map(
@@ -133,6 +131,9 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
         deleteById: selectedElementIds.map((id) => ({ id })),
       },
     }).then(reloadApplication)
+
+    clearSelectedElements()
+    setSelectionRequestingElement(null)
   }
 
   const handleCancel = () => {
@@ -153,7 +154,11 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
             secondary
             inverted={!selectionRequestingElement}
             size="tiny"
-            onClick={handleAbsorb}
+            onClick={
+              selectionRequestingElement
+                ? handleAbsorb
+                : () => setSelectionRequestingElement(element.id)
+            }
             style={{ minWidth: 100 }}
           >
             {selectionRequestingElement ? 'Go!' : 'Absorb elements'}
