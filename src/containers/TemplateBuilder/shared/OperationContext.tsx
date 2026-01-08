@@ -80,8 +80,8 @@ type OperationContextState = {
   updateApplication: UpdateApplication
   updateTemplateStage: UpdateTemplateStage
   operationModalState: ModalState
-  showElementSelect: boolean
-  setShowElementSelect: (show: boolean) => void
+  selectionRequestingElement: number | null // ID of requesting ListBuilder element
+  setSelectionRequestingElement: (id: number | null) => void
   selectedElementIds: number[]
   toggleSelectedElement: (id: number) => void
   clearSelectedElements: () => void
@@ -112,8 +112,8 @@ const defaultOperationContext: OperationContextState = {
     onConfirm: async () => {},
     close: () => {},
   },
-  showElementSelect: false,
-  setShowElementSelect: () => {},
+  selectionRequestingElement: null,
+  setSelectionRequestingElement: () => {},
   selectedElementIds: [],
   toggleSelectedElement: () => {},
   clearSelectedElements: () => {},
@@ -130,7 +130,7 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
   const [innerState, setInnerState] = useState<ErrorAndLoadingState>({ isLoading: false })
-  const [showElementCheckboxes, setShowElementCheckboxes] = useState<boolean>(false)
+  const [selectionRequestingElement, setSelectionRequestingElement] = useState<number | null>(null)
   const [selectedElementIds, setSelectedElementIds] = useState<number[]>([])
 
   const toggleSelectedElement = (id: number) => {
@@ -174,8 +174,8 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
     createApplication: createApplication(setInnerState, create, getSerialAsync),
     updateApplication: updateApplication(setInnerState, updateApplicationMutation),
     updateTemplateStage: updateTemplateStage(setInnerState, updateTemplateStageMutation),
-    showElementSelect: false,
-    setShowElementSelect: () => {},
+    selectionRequestingElement: null,
+    setSelectionRequestingElement: () => {},
     selectedElementIds,
     toggleSelectedElement,
     clearSelectedElements,
@@ -207,8 +207,8 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
       value={{
         ...contextState,
         operationModalState: modalState,
-        showElementSelect: showElementCheckboxes,
-        setShowElementSelect: setShowElementCheckboxes,
+        selectionRequestingElement,
+        setSelectionRequestingElement,
         selectedElementIds,
         toggleSelectedElement,
         clearSelectedElements,

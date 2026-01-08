@@ -30,8 +30,7 @@ const Elements: React.FC = () => {
   const { moveStructure } = useFormStructureState()
   const {
     updateTemplateSection,
-    showElementSelect,
-    setShowElementSelect,
+    selectionRequestingElement,
     selectedElementIds,
     toggleSelectedElement,
   } = useOperationState()
@@ -130,8 +129,7 @@ const Elements: React.FC = () => {
             isVisible={element.isVisible}
             setElementUpdateState={setElementUpdateState}
             duplicateElement={duplicateElement}
-            showCheckbox={showElementSelect}
-            setShowCheckbox={setShowElementSelect}
+            showCheckbox={!!selectionRequestingElement && selectionRequestingElement !== element.id}
             isSelected={selectedElementIds.includes(element.id)}
             toggleSelectedElement={toggleSelectedElement}
           />
@@ -162,9 +160,8 @@ const ElementConfigOptions: React.FC<{
   isVisible: boolean
   setElementUpdateState: SetElementUpdateState
   duplicateElement: (el: TemplateElement) => void
-  showCheckbox?: boolean
-  setShowCheckbox?: (show: boolean) => void
-  isSelected?: boolean
+  showCheckbox: boolean
+  isSelected: boolean
   toggleSelectedElement: (id: number) => void
 }> = ({
   elementId,

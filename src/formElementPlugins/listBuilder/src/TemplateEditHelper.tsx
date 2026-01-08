@@ -11,8 +11,8 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
   const { allElements } = useTemplateState()
   const { reloadApplication } = useFullApplicationState()
   const {
-    showElementSelect,
-    setShowElementSelect,
+    selectionRequestingElement,
+    setSelectionRequestingElement,
     updateTemplateSection,
     selectedElementIds,
     clearSelectedElements,
@@ -79,7 +79,7 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
   }
 
   const handleAbsorb = () => {
-    setShowElementSelect(!showElementSelect)
+    setSelectionRequestingElement(element.id)
 
     const selectedElements = allElements.filter((el) => selectedElementIds.includes(el.id))
 
@@ -137,26 +137,26 @@ const TemplateEditHelper = ({ element }: { element: ElementState }) => {
 
   const handleCancel = () => {
     clearSelectedElements()
-    setShowElementSelect(false)
+    setSelectionRequestingElement(null)
   }
 
   if (inputFields.length === 0)
     return (
       <div className="flex-row-end" style={{ transform: 'translateY(-0.9em)' }}>
-        {showElementSelect && (
+        {selectionRequestingElement && (
           <Button secondary inverted size="tiny" onClick={handleCancel}>
             Cancel
           </Button>
         )}
-        {(selectedElementIds.length > 0 || !showElementSelect) && (
+        {(selectedElementIds.length > 0 || !selectionRequestingElement) && (
           <Button
             secondary
-            inverted={!showElementSelect}
+            inverted={!selectionRequestingElement}
             size="tiny"
             onClick={handleAbsorb}
             style={{ minWidth: 100 }}
           >
-            {showElementSelect ? 'Go!' : 'Absorb elements'}
+            {selectionRequestingElement ? 'Go!' : 'Absorb elements'}
           </Button>
         )}
       </div>
