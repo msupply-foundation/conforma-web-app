@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { ApplicationResponseStatus, useUpdateApplicationMutation } from '../generated/graphql'
-import { FullStructure, UseGetApplicationProps } from '../types'
+import { FullStructure } from '../types'
+
+interface UseGetApplicationProps {
+  serialNumber: string
+}
 
 const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const [error, setError] = useState('')

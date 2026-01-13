@@ -11,6 +11,8 @@ import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useApplicationOperationState, useFullApplicationState } from '../ApplicationWrapper'
 import { useFormState } from './Form'
 import { useFormStructureState } from './FormWrapper'
+import { SectionState } from '../../../../utils/types'
+import CheckboxIO from '../../shared/CheckboxIO'
 
 const Sections: React.FC = () => {
   const { resetApplication } = useApplicationOperationState()
@@ -34,6 +36,8 @@ const Sections: React.FC = () => {
       },
     })
 
+  const allSections = Object.values({ ...structure.sections, ...structure.reviewSections })
+
   return (
     <div className="config-container-outline" style={{ minWidth: 700 }}>
       <div className="flex-row-start-center full-width-container">
@@ -56,7 +60,7 @@ const Sections: React.FC = () => {
       <div className="spacer-10" />
       <div className="flex-row-start-center">
         <div className="flex-row-start-center-wrap flex-grow-1 flex-gap-10">
-          {Object.values(structure.sections).map((section) => (
+          {allSections.map((section) => (
             <Label
               key={section.details.id}
               onClick={() => {
@@ -65,7 +69,7 @@ const Sections: React.FC = () => {
               }}
               className={`clickable ${
                 section.details.id === selectedSectionId ? 'builder-selected ' : ''
-              }`}
+              }${section.details.isReviewSection ? 'builder-review-label' : ' '}`}
             >
               {section.details.title}
             </Label>
@@ -73,12 +77,12 @@ const Sections: React.FC = () => {
         </div>
       </div>
       <div className="spacer-20" />
-      <Section />
+      <Section allSections={allSections} />
     </div>
   )
 }
 
-const Section: React.FC = () => {
+const Section = ({ allSections }: { allSections: SectionState[] }) => {
   const { selectedSectionId, unselect } = useFormState()
   const { updateTemplate, updateTemplateSection, updateApplication } = useOperationState()
   const { askForConfirmation } = useConfirmationState()
@@ -89,15 +93,19 @@ const Section: React.FC = () => {
 
   if (selectedSectionId === -1) return null
 
-  const selectedSection = Object.values(structure.sections).find(
-    (section) => section.details.id === selectedSectionId
-  )
+  const selectedSection = allSections.find((section) => section.details.id === selectedSectionId)
 
   if (!selectedSection) return null
 
-  const currentSection = moveStructure.sections[selectedSectionId]
-  const canMoveForward = currentSection.index !== moveStructure.firstSectionIndex
-  const canMoveBackward = currentSection.index !== moveStructure.lastSectionIndex
+  const currentSection = moveStructure.sections?.[selectedSectionId]
+  const canMoveForward =
+    currentSection?.index !== moveStructure.firstSectionIndex &&
+    !selectedSection.details.isReviewSection
+  const canMoveBackward =
+    currentSection?.index !== moveStructure.lastSectionIndex &&
+    !selectedSection.details.isReviewSection
+
+  const isLastSection = currentSection.id === allSections[allSections.length - 1].details.id
 
   const swapSections = (fromId: number, fromIndex: number, toId: number, toIndex: number) => {
     const currentUpdateById = {
@@ -192,7 +200,7 @@ const Section: React.FC = () => {
         name="angle down"
         onClick={moveSectionBackward}
         hidden={!canMoveBackward}
-        toolTip="Move to down"
+        toolTip="Move down"
       />
 
       <div className="long">
@@ -229,6 +237,19 @@ const Section: React.FC = () => {
         name="window close"
         onClick={deleteSection}
       />
+      {isLastSection && (
+        <CheckboxIO
+          value={selectedSection.details.isReviewSection}
+          title="Reviewer section"
+          setValue={(value) => {
+            updateTemplate(template, {
+              templateSectionsUsingId: {
+                updateById: [{ id: selectedSectionId, patch: { isReviewSection: value } }],
+              },
+            })
+          }}
+        />
+      )}
     </div>
   )
 }

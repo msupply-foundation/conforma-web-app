@@ -29,6 +29,7 @@ import { Position, useToast } from '../../../../contexts/Toast'
 type ElementConfigProps = {
   element: TemplateElement
   onClose: () => void
+  isReviewerSectionElement: boolean
 }
 
 type ElementUpdateState = {
@@ -90,7 +91,11 @@ const evaluations: Evaluations = [
   { key: 'initialValue', title: 'Initial Value' },
 ]
 
-const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
+const ElementConfig: React.FC<ElementConfigProps> = ({
+  element,
+  isReviewerSectionElement,
+  onClose,
+}) => {
   const { t } = useLanguageProvider()
   const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } =
     useConfirmationModal({
@@ -306,36 +311,38 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 ]}
               />
             </div>
-            <div className="full-width-container">
-              <DropdownIO
-                title="Is Reviewable"
-                value={mainData.reviewability || 'default'}
-                disabled={!canEdit}
-                disabledMessage={disabledMessage}
-                getKey={'value'}
-                getValue={'value'}
-                getText={'text'}
-                isPropUpdated={true}
-                setValue={(value) => {
-                  const updateValue = value === 'default' ? null : value
-                  setMainData({ ...mainData, reviewability: updateValue as Reviewability })
-                  setIsDirty(true)
-                }}
-                options={[
-                  { value: Reviewability.Always, text: 'Always' },
-                  { value: Reviewability.Never, text: 'Never' },
-                  {
-                    value: Reviewability.OptionalIfNoResponse,
-                    text: 'Optional (if no application response)',
-                  },
-                  {
-                    value: Reviewability.OnlyIfApplicantAnswer,
-                    text: 'Only if applicant answered',
-                  },
-                ]}
-                maxLabelWidth={120}
-              />
-            </div>
+            {!isReviewerSectionElement && (
+              <div className="full-width-container">
+                <DropdownIO
+                  title="Is Reviewable"
+                  value={mainData.reviewability || 'default'}
+                  disabled={!canEdit}
+                  disabledMessage={disabledMessage}
+                  getKey={'value'}
+                  getValue={'value'}
+                  getText={'text'}
+                  isPropUpdated={true}
+                  setValue={(value) => {
+                    const updateValue = value === 'default' ? null : value
+                    setMainData({ ...mainData, reviewability: updateValue as Reviewability })
+                    setIsDirty(true)
+                  }}
+                  options={[
+                    { value: Reviewability.Always, text: 'Always' },
+                    { value: Reviewability.Never, text: 'Never' },
+                    {
+                      value: Reviewability.OptionalIfNoResponse,
+                      text: 'Optional (if no application response)',
+                    },
+                    {
+                      value: Reviewability.OnlyIfApplicantAnswer,
+                      text: 'Only if applicant answered',
+                    },
+                  ]}
+                  maxLabelWidth={120}
+                />
+              </div>
+            )}
             <div className="full-width-container">
               <TextIO
                 text={mainData?.validationMessage || ''}

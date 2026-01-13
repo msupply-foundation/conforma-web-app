@@ -5,8 +5,6 @@ import {
   ElementBase,
   EvaluatedElement,
   FullStructure,
-  TemplateDetails,
-  UseGetApplicationProps,
 } from '../types'
 import { FigTree } from '../../FigTreeEvaluator'
 import { useUserState } from '../../contexts/UserState'
@@ -29,6 +27,11 @@ import { getSectionDetails } from '../helpers/application/getSectionsDetails'
 import useTriggers from './useTriggers'
 import getServerUrl, { serverGraphQL, serverREST } from '../helpers/endpoints/endpointUrlBuilder'
 import { useRouter } from './useRouter'
+
+interface UseGetApplicationProps {
+  serialNumber: string
+  isReview?: boolean
+}
 
 const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const { t } = useLanguageProvider()
@@ -90,7 +93,10 @@ const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
     setIsLoading(true)
 
     const sections = (application?.template?.templateSections?.nodes || []) as TemplateSection[]
-    const sectionDetails = getSectionDetails(sections)
+    const sectionDetails = getSectionDetails(sections.filter((section) => !section.isReviewSection))
+    const reviewerSectionDetails = getSectionDetails(
+      sections.filter((section) => section.isReviewSection)
+    )
 
     const stages = data.applicationStageStatusLatests?.nodes as ApplicationStageStatusAll[]
     if (stages.length > 1) console.log('StageStatusAll More than one results for 1 application!')
@@ -106,7 +112,7 @@ const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
 
     const applicationDetails: ApplicationDetails = {
       id: application.id,
-      template: application.template as TemplateDetails,
+      template: application.template as any, // TO-DO: Fix
       isLinear: application.template?.isLinear as boolean,
       serial: application.serial as string,
       name: application.name as string,
@@ -220,6 +226,11 @@ const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
         },
         stages: templateStages.map((stage) => getStageAndLevels(stage)),
         sections: buildSectionsStructure({ sectionDetails, baseElements, page: t('PAGE') }),
+        reviewSections: buildSectionsStructure({
+          sectionDetails: reviewerSectionDetails,
+          baseElements,
+          page: t('PAGE'),
+        }),
         applicantDeadline: applicantDeadline
           ? { deadline: applicantDeadline.timeScheduled, isActive: applicantDeadline.isActive }
           : { deadline: null, isActive: false },

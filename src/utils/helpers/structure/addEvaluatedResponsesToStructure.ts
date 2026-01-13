@@ -95,6 +95,10 @@ const flattenStructureElements = (structure: FullStructure) => {
       flattened.push(...structure.sections[section].pages[Number(page)].state)
     })
   })
+  // Also include Review sections if they exist
+  const sectionName = Object.keys(structure.reviewSections)?.[0]
+  if (sectionName) flattened.push(...structure.reviewSections[sectionName].pages['1'].state)
+
   return flattened
 }
 

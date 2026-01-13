@@ -173,6 +173,18 @@ export const functions: Record<string, FunctionDefinition> = {
     description: 'Convert an object to an array of key-value pairs',
     argsDefault: [{ a: 1, b: 2, c: 3 }], // => [['a', 1], ['b', 2], ['c', 3]]
   },
+  max: {
+    function: (...values: number[]) => {
+      return Math.max(...values)
+    },
+    description: 'Maximum of multiple numbers',
+  },
+  min: {
+    function: (...values: number[]) => {
+      return Math.min(...values)
+    },
+    description: 'Minimum of multiple numbers',
+  },
 
   // The following can now be performed by native operators. Please remove once
   // all templates have been migrated to use them:

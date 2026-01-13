@@ -66,6 +66,10 @@ a:hover {
   visibility: hidden;
 }
 
+.input-error input {
+  border: 1px solid @attention !important;
+}
+
 /*--------------------------------
    Common layout
 ---------------------------------*/
@@ -2416,6 +2420,10 @@ a:hover {
   .header {
     color: @surfacesWhite !important;
   }
+}
+
+.builder-review-label {
+  border: 2px solid @red !important;
 }
 
 .page-controller {

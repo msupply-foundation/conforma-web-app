@@ -87,7 +87,6 @@ export {
   type TemplateInList,
   type TemplatesDetails,
   type TemplateType,
-  type UseGetApplicationProps,
   type User,
   type UseGetReviewStructureForSectionProps,
   type OrganisationSimple,
@@ -291,6 +290,7 @@ interface FullStructure {
   info: ApplicationDetails
   canApplicantMakeChanges: boolean
   sections: SectionsStructure
+  reviewSections: SectionsStructure
   applicantDeadline: { deadline: Date | null; isActive: boolean }
   stages: {
     stage: StageDetails
@@ -469,6 +469,7 @@ interface SectionDetails {
   index: number
   code: string
   title: string
+  isReviewSection: boolean
   totalPages: number
 }
 
@@ -615,8 +616,10 @@ interface TemplateDetails {
   code: string
   versionId: string
   elementsIds?: number[] // TODO: Change to not optional after re-structure
+  reviewSectionElementIds: number[]
   elementsDefaults?: EvaluatorNode[]
-  sections?: SectionDetails[] // TODO: Change to not optional after re-structure
+  sections: SectionDetails[]
+  reviewSection?: SectionDetails | null
   startMessage?: string
 }
 
@@ -634,16 +637,6 @@ interface TemplateType {
   code: string
   name: string
   namePlural: string
-}
-
-interface UseGetApplicationProps {
-  serialNumber: string
-  currentUser?: User
-  sectionCode?: string
-  page?: number
-  networkFetch?: boolean
-  isApplicationReady?: boolean
-  setApplicationState?: Function
 }
 
 interface User {

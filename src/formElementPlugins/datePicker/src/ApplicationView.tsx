@@ -5,6 +5,7 @@ import { DateTime } from 'luxon'
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDefault from '../../useDefault'
+import { Label } from 'semantic-ui-react'
 
 // Stored response date format
 interface DateSaved {
@@ -30,7 +31,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   // onUpdate,
   // setIsActive,
-  // validationState,
+  validationState,
   onSave,
   Markdown,
   currentResponse,
@@ -93,6 +94,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     onSave({ text: toDisplayString(date, locale, displayFormat), date: toDateSaved(date) })
   }
 
+  const isError = !validationState.isValid
+
   return (
     <>
       {label && (
@@ -101,18 +104,31 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      <SemanticDatepicker
-        locale={locale}
-        onChange={(_, data) => handleSelect(data.value)}
-        type={allowRange ? 'range' : 'basic'}
-        value={selectedDate}
-        format={entryFormat}
-        firstDayOfWeek={firstDayOfWeek}
-        showToday={showToday}
-        maxDate={maxDateValue}
-        minDate={minDateValue}
-        disabled={!isEditable}
-      />
+      <div className="flex-column-start-start">
+        <SemanticDatepicker
+          locale={locale}
+          onChange={(_, data) => handleSelect(data.value)}
+          type={allowRange ? 'range' : 'basic'}
+          value={selectedDate}
+          format={entryFormat}
+          firstDayOfWeek={firstDayOfWeek}
+          showToday={showToday}
+          maxDate={maxDateValue}
+          minDate={minDateValue}
+          disabled={!isEditable}
+          className={isError ? 'input-error' : undefined}
+        />
+        {isError && (
+          <Label
+            basic
+            color="pink"
+            pointing
+            content={validationState?.validationMessage}
+            className="prompt"
+            style={{ marginTop: 0 }}
+          />
+        )}
+      </div>
     </>
   )
 }

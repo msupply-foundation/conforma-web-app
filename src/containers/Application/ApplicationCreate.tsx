@@ -44,7 +44,7 @@ const ApplicationCreate: React.FC = () => {
       }
       setNewApplicationLoading(true)
 
-      const { name, elementsIds, elementsDefaults } = template
+      const { name, elementsIds, elementsDefaults, reviewSectionElementIds } = template
       const initialValues = await getInitialValues(elementsDefaults || [], currentUser)
 
       const mutationResult = await create({
@@ -52,6 +52,7 @@ const ApplicationCreate: React.FC = () => {
         templateId: template.id,
         templateResponses: (elementsIds as number[]).map((id, index) => ({
           templateElementId: id,
+          status: reviewSectionElementIds.includes(id) ? 'REVIEW' : 'DRAFT',
           value: initialValues[index],
         })),
       })
@@ -106,7 +107,7 @@ const ApplicationCreate: React.FC = () => {
         subtitle={t('SUBTITLE_APPLICATION_STEPS')}
         ButtonSegment={StartButtonSegment}
       >
-        <SectionsList sections={template.sections} />
+        <SectionsList sections={template.sections.filter((section) => !section.isReviewSection)} />
       </ApplicationHomeWrapper>
     </ApplicationContainer>
   ) : null

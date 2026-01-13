@@ -3,10 +3,8 @@ import { Switch, Route } from 'react-router-dom'
 import { Message } from 'semantic-ui-react'
 
 import { ApplicationContainer, Loading, NoMatch } from '../../components'
-import { useUserState } from '../../contexts/UserState'
 import useLoadApplication from '../../utils/hooks/useLoadApplication'
 import { useRouter } from '../../utils/hooks/useRouter'
-import { User } from '../../utils/types'
 import { ApplicationHome, ApplicationSubmission, ApplicationPageWrapper } from './'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { ReviewWrapper } from '../Review'
@@ -17,14 +15,9 @@ const ApplicationWrapper: React.FC = () => {
     match: { path },
     query: { serialNumber },
   } = useRouter()
-  const {
-    userState: { currentUser },
-  } = useUserState()
 
   const { error, isLoading, structure } = useLoadApplication({
     serialNumber,
-    currentUser: currentUser as User,
-    networkFetch: true,
   })
 
   return error ? (
