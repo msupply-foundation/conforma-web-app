@@ -143,10 +143,12 @@ const PageElements: React.FC<PageElementProps> = ({
 
             const isResponseUpdated = !!isChangeRequest || !!isChanged
 
-            // Applicant can add new response to elements not responded in first submission or changes required
+            // Applicant can add new response to elements not responded in first
+            // submission or changes required
             const canApplicantAddNew = canEdit && !isUpdating && !latestApplicationResponse?.value
             // And can edit if not an empty response in first submission or
-            // during updated to changes required any question that have been updated (isUpdating true)
+            // during updated to changes required any question that have been
+            // updated (isUpdating true)
             const canApplicantEdit =
               canEdit &&
               !canApplicantAddNew &&
