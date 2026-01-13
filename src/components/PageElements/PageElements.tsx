@@ -139,6 +139,8 @@ const PageElements: React.FC<PageElementProps> = ({
               previousApplicationResponse,
             } = state
 
+            if (element.pluginCode === 'getValues') return null
+
             const isResponseUpdated = !!isChangeRequest || !!isChanged
 
             // Applicant can add new response to elements not responded in first submission or changes required
