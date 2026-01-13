@@ -80,6 +80,14 @@ type OperationContextState = {
   updateApplication: UpdateApplication
   updateTemplateStage: UpdateTemplateStage
   operationModalState: ModalState
+  // These 5 for List Builder extract/absorb functionality -- but
+  // theoretically could be used for any functionality that requires element
+  // selection, for example bulk delete.
+  selectionRequestingElement: number | null // ID of requesting ListBuilder element
+  setSelectionRequestingElement: (id: number | null) => void
+  selectedElementIds: number[]
+  toggleSelectedElement: (id: number) => void
+  clearSelectedElements: () => void
 }
 
 const contextNotPresentError = () => {
@@ -107,6 +115,11 @@ const defaultOperationContext: OperationContextState = {
     onConfirm: async () => {},
     close: () => {},
   },
+  selectionRequestingElement: null,
+  setSelectionRequestingElement: () => {},
+  selectedElementIds: [],
+  toggleSelectedElement: () => {},
+  clearSelectedElements: () => {},
 }
 
 const Context = createContext(defaultOperationContext)
@@ -120,6 +133,22 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   const [updateApplicationMutation] = useRestartApplicationMutation()
   const [updateTemplateStageMutation] = useUpdateTemplateStageMutation()
   const [innerState, setInnerState] = useState<ErrorAndLoadingState>({ isLoading: false })
+  const [selectionRequestingElement, setSelectionRequestingElement] = useState<number | null>(null)
+  const [selectedElementIds, setSelectedElementIds] = useState<number[]>([])
+
+  const toggleSelectedElement = (id: number) => {
+    setSelectedElementIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((elId) => elId !== id)
+      } else {
+        return [...prev, id]
+      }
+    })
+  }
+  const clearSelectedElements = () => {
+    setSelectedElementIds([])
+  }
+
   const {
     commitTemplate,
     duplicateTemplate,
@@ -148,6 +177,11 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
     createApplication: createApplication(setInnerState, create, getSerialAsync),
     updateApplication: updateApplication(setInnerState, updateApplicationMutation),
     updateTemplateStage: updateTemplateStage(setInnerState, updateTemplateStageMutation),
+    selectionRequestingElement: null,
+    setSelectionRequestingElement: () => {},
+    selectedElementIds,
+    toggleSelectedElement,
+    clearSelectedElements,
   })
 
   const { isLoading, error } = innerState
@@ -172,7 +206,17 @@ const OperationContext: React.FC<{ children: React.ReactNode }> = ({ children })
   }
 
   return (
-    <Context.Provider value={{ ...contextState, operationModalState: modalState }}>
+    <Context.Provider
+      value={{
+        ...contextState,
+        operationModalState: modalState,
+        selectionRequestingElement,
+        setSelectionRequestingElement,
+        selectedElementIds,
+        toggleSelectedElement,
+        clearSelectedElements,
+      }}
+    >
       {children}
       {renderExtra()}
     </Context.Provider>

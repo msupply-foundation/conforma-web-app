@@ -489,11 +489,33 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 - **deleteItemText** `string` -- text to display on the button to delete an item from the item editing modal (default: "Update")  
   Note: this button only appears when displaying the list in "Table" view (see below). In "Cards" view, there is an icon to delete items directly on each card.
 - **modalText** `string` -- additional instructional text to show on the item editing modal (e.g. "Please enter ingredient details") [Optional]
-- **inputFields** `array[Elements]` -- an ordered list of input fields -- these are template questions/elements, just like all the ones on this page, but are "children" of the listBuilder element and display in the item editing modal. Not all fields are required or respected:
+- **inputFields** `array[Elements]` -- an ordered list of input fields -- these are template questions/elements, just like all the ones on this page, but are "children" of the listBuilder element and display in the item editing modal. Not all fields are required:
 
-  - `index` -- not required, order follows listed order
-  - `visibility_condition` / `is_editable` -- not required, always `true` (for now, may be implemented later)
   - `parameters`, `title`, and `code` are essential
+  - `index` -- not required, order follows listed order
+
+  
+  > [!TIP]  
+  > It is difficult to edit internal elements in this field directly, as it's all just JSON rather than TemplateBuilder UI. The best way to manage it is to create and edit the elements in the normal form editor, and then use the "Absorb elements" button to pull them into the List Builder:
+
+  <img src="images/Element-Type-Specs-listBuilder-absorb.png"
+     alt="Absorb elements"
+     style="max-width: 660px;">
+
+    Select the elements to pull in:
+
+    <img src="images/Element-Type-Specs-listBuilder-absorb-in-progress.png"
+        alt="Absorb elements in progress"
+        style="max-width: 690px; width: 100%;">
+
+    Reverse the process (pull out elements for further editing) using "Extract elements":
+
+    <img src="images/Element-Type-Specs-listBuilder-extract.png"
+        alt="Extract elements"
+        style="max-width: 500px;">
+
+  > [!IMPORTANT]  
+  > To dynamically target other elements within a List Builder (e.g. if visibility of one is dependent on another), use the `applicationData` path as though the elements were in the main form rather than inside another element. This means that you can configure the dynamic behaviour as normal, with the elements in the main form, and when you pull them into the List Builder using "Absorb elements", the behaviour will be preserved. You will need to ensure that your element codes are unique within the whole template.
 
 - **maxItems** `number` -- if specified, the maximum number of items that can be added to the list (once this number is reached, the "Add" button will no longer appear)
 - **displayType** `'table' | 'cards' | 'inline' | 'list'` (default: `cards`) -- how to present the list of items, as shown here:

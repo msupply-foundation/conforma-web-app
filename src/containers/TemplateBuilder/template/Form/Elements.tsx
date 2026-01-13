@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Popup, Icon } from 'semantic-ui-react'
+import { Popup, Icon, Checkbox } from 'semantic-ui-react'
 import { PageElements } from '../../../../components'
 import {
   Reviewability,
@@ -28,7 +28,12 @@ const Elements: React.FC = () => {
     template: { canEdit },
   } = useTemplateState()
   const { moveStructure } = useFormStructureState()
-  const { updateTemplateSection } = useOperationState()
+  const {
+    updateTemplateSection,
+    selectionRequestingElement,
+    selectedElementIds,
+    toggleSelectedElement,
+  } = useOperationState()
   const [elementUpdateState, setElementUpdateState] = useState<TemplateElement | null>(null)
 
   const allSections = Object.values({ ...structure.sections, ...structure.reviewSections })
@@ -94,6 +99,7 @@ const Elements: React.FC = () => {
       applicationResponsesUsingId: {
         create: [{ applicationId: structure.info.id }],
       },
+      // These are required, but get auto-updated by Postgres function
       templateCode: '__Temp',
       templateVersion: '__Temp',
     }
@@ -123,6 +129,9 @@ const Elements: React.FC = () => {
             isVisible={element.isVisible}
             setElementUpdateState={setElementUpdateState}
             duplicateElement={duplicateElement}
+            showCheckbox={!!selectionRequestingElement && selectionRequestingElement !== element.id}
+            isSelected={selectedElementIds.includes(element.id)}
+            toggleSelectedElement={toggleSelectedElement}
           />
         )}
         elements={selectedPage.state}
@@ -151,7 +160,18 @@ const ElementConfigOptions: React.FC<{
   isVisible: boolean
   setElementUpdateState: SetElementUpdateState
   duplicateElement: (el: TemplateElement) => void
-}> = ({ elementId, isVisible, setElementUpdateState, duplicateElement }) => {
+  showCheckbox: boolean
+  isSelected: boolean
+  toggleSelectedElement: (id: number) => void
+}> = ({
+  elementId,
+  isVisible,
+  setElementUpdateState,
+  duplicateElement,
+  showCheckbox,
+  isSelected,
+  toggleSelectedElement,
+}) => {
   const { sections } = useTemplateState()
   const currentElement =
     sections
@@ -168,6 +188,9 @@ const ElementConfigOptions: React.FC<{
       <IconButton name="setting" onClick={() => setElementUpdateState(currentElement)} />
       {!isVisible && (
         <Popup content="Visibility criteria did not match" trigger={<Icon name="eye slash" />} />
+      )}
+      {showCheckbox && (
+        <Checkbox checked={isSelected} onChange={() => toggleSelectedElement(elementId)} />
       )}
     </div>
   )

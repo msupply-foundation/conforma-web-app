@@ -15,11 +15,15 @@ import { useLanguageProvider } from '../contexts/Localisation'
 import { SemanticICONS } from 'semantic-ui-react'
 import { isFigTreeExpression } from '../FigTreeEvaluator/FigTree'
 import { EvaluatorNode, FigTreeOptions } from 'fig-tree-evaluator'
+import { useRouter } from '../utils/hooks/useRouter'
+import ListBuilderEditHelper from './listBuilder/src/TemplateEditHelper'
 
 export const DEFAULT_LOADING_VALUE = 'Loading...'
 
 const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) => {
   const { t } = useLanguageProvider()
+  const { currentPageType } = useRouter()
+
   const calculateValidationState = useCalculateValidationState()
   const [responseMutation] = useUpdateResponseMutation()
   const { element, isStrictPage, changesRequired, currentResponse, allResponses, applicationData } =
@@ -252,6 +256,9 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
           )}
           <ChangesComment reviewerComment={reviewerComment} iconName={iconName} />
         </Form.Field>
+        {pluginCode === 'listBuilder' && currentPageType === 'admin' && (
+          <ListBuilderEditHelper element={element} />
+        )}
       </React.Suspense>
     </ErrorBoundary>
   )
