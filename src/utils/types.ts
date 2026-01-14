@@ -707,6 +707,7 @@ interface FormatOptions {
   elementParameters?: object
   substitution?: string
   dateFormat?: DateTimeConstant | DateTimeFormatOptions
+  numberFormat?: Intl.NumberFormatOptions
   hideLabelOnMobile?: boolean
   hideCellOnMobile?: boolean
   // Add more as required

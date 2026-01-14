@@ -14,7 +14,7 @@ export const formatCellText = (
   columnDetails: HeaderRow | DisplayDefinition | DisplayDefinitionBasic
 ): string | null => {
   const { dataType, formatting } = columnDetails
-  const { elementTypePluginCode, substitution, dateFormat } = formatting
+  const { elementTypePluginCode, substitution, dateFormat, numberFormat } = formatting
   if (elementTypePluginCode && dataType === 'object') return null // Leave these to be handled by SummaryView component
   if (!value) return ''
 
@@ -36,6 +36,10 @@ export const formatCellText = (
   }
   if (substitution) {
     formattedValue = substituteValues(substitution, value)
+  }
+  if (numberFormat) {
+    const numberFormatter = new Intl.NumberFormat(undefined, numberFormat)
+    formattedValue = numberFormatter.format(Number(value))
   }
   // Add two spaces to lines with carriage returns so Markdown renders them as line breaks
   formattedValue = formattedValue.replace(/([^\s\s]$)/gm, '$1  ')
