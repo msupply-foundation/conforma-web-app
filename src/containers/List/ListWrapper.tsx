@@ -146,7 +146,7 @@ const ListWrapper: React.FC = () => {
           open={false}
           value={searchText}
         />
-        {query.userRole === 'applicant' ? (
+        {query.userRole === 'applicant' || query.userRole === 'internal-applicant' ? (
           <Button as={Link} to={`/application/new?type=${type}`} inverted color="blue">
             <Icon name="plus" size="tiny" color="blue" />
             {t('BUTTON_APPLICATION_NEW')}
