@@ -38,11 +38,6 @@ const ListWrapper: React.FC = () => {
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>([])
   usePageTitle(t('PAGE_TITLE_LIST') as string)
 
-  if (isNonRegistered) {
-    logout()
-    return null
-  }
-
   const { error, loading, refetch, templateType, applications, applicationCount } =
     useListApplications(query)
 
@@ -119,6 +114,11 @@ const ListWrapper: React.FC = () => {
       visibleTo.includes(userRole as USER_ROLES)
     )
   )
+
+  if (isNonRegistered) {
+    logout()
+    return null
+  }
 
   return error ? (
     <Label content={t('ERROR_APPLICATIONS_LIST')} error={error} />
