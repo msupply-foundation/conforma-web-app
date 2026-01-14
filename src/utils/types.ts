@@ -186,6 +186,7 @@ interface CellProps {
   application: ApplicationListShape
   loading: boolean
   deleteApplication: Function
+  isInternalUser: boolean
 }
 
 type HideOnMobileTestMethod = (rowData: Record<string, unknown>) => boolean
