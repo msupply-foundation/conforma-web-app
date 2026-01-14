@@ -115,7 +115,9 @@ const TemplateComponent: React.FC<{
 
   const userRole =
     permissions.filter((type) => type === PermissionPolicyType.Apply).length > 0
-      ? USER_ROLES.APPLICANT
+      ? currentUser?.organisation?.isSystemOrg
+        ? USER_ROLES.INTERNAL_APPLICANT
+        : USER_ROLES.APPLICANT
       : USER_ROLES.REVIEWER
 
   // Only show on Dashboard if any of the designated restriction filters have
