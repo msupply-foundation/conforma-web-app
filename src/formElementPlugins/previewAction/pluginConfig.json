@@ -1,0 +1,8 @@
+{
+  "isCore": true,
+  "code": "previewAction",
+  "displayName": "Preview Action",
+  "parameterLoadingValues": {},
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Informative"
+}
