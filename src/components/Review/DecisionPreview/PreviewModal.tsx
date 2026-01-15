@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Modal, Message, Button, Loader, ModalProps } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
@@ -8,18 +8,27 @@ import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 interface PreviewProps extends ModalProps {
   open: boolean
   setOpen: (open: boolean) => void
-  decision: string
-  reviewId: number
+  decision?: string
+  reviewId?: number
   applicationDataOverride: { [key: string]: any }
+  preventDownload?: boolean
+  // Used by the "Preview Action" form element plugin
+  applicationId?: number
+  headerText?: string
+  previewText?: string
 }
 
-const ReviewPreviewModal: React.FC<PreviewProps> = ({
+const PreviewModal = ({
   open,
   setOpen,
   decision,
   reviewId,
   applicationDataOverride,
-}) => {
+  applicationId,
+  headerText,
+  previewText,
+  preventDownload = true,
+}: PreviewProps) => {
   const { t } = useLanguageProvider()
   const [data, setData] = useState<ActionResultPreviewData[] | null>(null)
   const [loading, setLoading] = useState(true)
@@ -32,7 +41,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
       return
     }
     setLoading(true)
-    fetchPreviews(reviewId, applicationDataOverride).then((result) => {
+    fetchPreviews({ reviewId, applicationId, applicationDataOverride }).then((result) => {
       if (result.error) setError(result.error)
       else setData(result.displayData)
       setLoading(false)
@@ -43,9 +52,9 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
     // closeOnDimmerClick makes it harder to accidentally close Modal, as it
     // generates new Previews every time it's opened
     <Modal id="preview-modal" open={open} closeOnDimmerClick={false}>
-      <Modal.Header>{t('REVIEW_DECISION_PREVIEW_HEADER')}</Modal.Header>
+      <Modal.Header>{headerText || t('REVIEW_DECISION_PREVIEW_HEADER')}</Modal.Header>
       <Modal.Content scrolling>
-        {t('REVIEW_DECISION_PREVIEW_TEXT')} <strong>{decision}</strong>
+        {previewText || t('REVIEW_DECISION_PREVIEW_TEXT')} {decision && <strong>{decision}</strong>}
         {loading && (
           <Loader active size="huge">
             {t('REVIEW_DECISION_PREVIEW_FETCHING')}
@@ -62,7 +71,7 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
         <div id="preview-items">
           {data &&
             (data.length > 0 ? (
-              data.map((item, index) => getItemDisplayComponent(item, index))
+              data.map((item, index) => getItemDisplayComponent(item, index, preventDownload))
             ) : (
               <Message info header={t('REVIEW_DECISION_NO_PREVIEWS_AVAILABLE')} />
             ))}
@@ -77,13 +86,21 @@ const ReviewPreviewModal: React.FC<PreviewProps> = ({
   )
 }
 
-export default ReviewPreviewModal
+export default PreviewModal
 
-const fetchPreviews = async (reviewId: number, applicationDataOverride: { [key: string]: any }) => {
+const fetchPreviews = async ({
+  reviewId,
+  applicationId,
+  applicationDataOverride,
+}: {
+  reviewId?: number
+  applicationId?: number
+  applicationDataOverride: { [key: string]: any }
+}) => {
   try {
     const result = await postRequest({
       url: getServerUrl('previewActions'),
-      jsonBody: { reviewId, applicationDataOverride },
+      jsonBody: { reviewId, applicationId, applicationDataOverride },
       headers: { 'Content-Type': 'application/json' },
     })
     return result

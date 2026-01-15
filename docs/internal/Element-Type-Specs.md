@@ -21,6 +21,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Number](#number)
   - [JSON Editor](#json-editor)
   - [Get Values](#get-values)
+  - [Preview Action](#preview-action)
   - [Page Break](#page-break)
 
 <!-- tocstop -->
@@ -851,6 +852,30 @@ The element will be hidden for the applicant (and reviewer), but in the Template
   data: { ...fetchedData }
 }
 ```
+
+---
+
+<a name="preview-action"/>
+
+### Preview Action
+
+- **type/code**: `previewAction`
+- **category**: `Information`
+
+_Button to view previews of back-end actions (e.g. generated documents)_
+
+Behaves similarly to the "Preview Decision" button & modal for Reviewers when submitting their review. If Action aliases are configured for the `ON_PREVIEW` trigger (see [here](https://github.com/msupply-foundation/conforma-server/wiki/List-of-Action-plugins#aliasing-existing-template-actions)), when clicking the "Preview", the applicant will see the result of some server actions. Useful for showing what a certain output document will look like without having to Submit first.
+
+![modal](images/Element-Type-Specs-previewAction-modal.png)
+
+
+#### Input parameters
+
+- **buttonText**: `string` -- Text to display on the "Preview" button (default: "Preview")
+- **headerText**: `string` -- Text to display on the "Header" region of the Preview modal (see screenshot above) (default: "Preview Action")
+- **previewText**: `string` -- Text to display on the "Content" region of the Preview modal (above the Action outputs) (default: "Action output:")
+- **preventDownload**: `boolean` -- If previewing a document, and you have `showDocumentModal` enabled in [Preferences](https://github.com/msupply-foundation/conforma-server/wiki/Preferences), this will determine if there is a "Download" icon button available on the document preview modal (default: `true`)
+- **applicationDataOverride**: `object` -- As with the Review decision preview, we can overwrite some `applicationData` values if required (for example, to simulate a different stage than the one we're actually on)
 
 ---
 

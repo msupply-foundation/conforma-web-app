@@ -114,6 +114,7 @@ const ItemAccordion: React.FC<ItemAccordionProps> = ({
               element={currentItemElementsState[code]}
               response={item[code].value}
               allResponses={responses}
+              applicationData={applicationData as ApplicationDetails}
             />
           )
         )}

@@ -15,7 +15,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
   element,
   response,
   allResponses,
-  applicationData = {},
+  applicationData,
   displayTitle = true,
 }) => {
   const { parameters, pluginCode, isRequired, isVisible } = element
@@ -83,6 +83,7 @@ const SummaryViewWrapper: React.FC<SummaryViewWrapperProps> = ({
       response={response}
       Markdown={Markdown}
       DefaultSummaryView={DefaultSummaryView}
+      applicationData={applicationData}
     />
   )
 
