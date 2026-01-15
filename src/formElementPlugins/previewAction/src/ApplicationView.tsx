@@ -8,6 +8,7 @@ interface Parameters {
   buttonText?: string
   headerText?: string
   previewText?: string
+  preventDownload?: boolean
   applicationDataOverride?: { [key: string]: any }
 }
 
@@ -24,6 +25,7 @@ export const PreviewButton = ({ parameters, applicationData }: PreviewButtonProp
     headerText = t('DEFAULT_HEADER_TEXT'),
     previewText = t('DEFAULT_PREVIEW_TEXT'),
     applicationDataOverride = {},
+    preventDownload = true,
   } = parameters as Parameters
   return (
     <>
@@ -34,6 +36,7 @@ export const PreviewButton = ({ parameters, applicationData }: PreviewButtonProp
         applicationDataOverride={applicationDataOverride}
         headerText={headerText}
         previewText={previewText}
+        preventDownload={preventDownload}
       />
       <Button primary onClick={() => setIsModalOpen(true)}>
         {buttonText}

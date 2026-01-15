@@ -49,14 +49,20 @@ const NotificationPreview = ({ item }: { item: NotificationPreviewData }) => {
   )
 }
 
-const DocumentPreview = ({ item }: { item: DocumentPreviewData }) => {
+const DocumentPreview = ({
+  item,
+  preventDownload,
+}: {
+  item: DocumentPreviewData
+  preventDownload: boolean
+}) => {
   const { displayString, fileId, filename } = item
   const fileUrl = getServerUrl('file', { fileId })
   const thumbnailUrl = getServerUrl('file', { fileId, thumbnail: true })
   const { DocumentModal, handleFile } = useDocumentModal({
     filename,
     fileUrl,
-    preventDownload: true,
+    preventDownload,
   })
 
   return (
@@ -93,9 +99,14 @@ const ErrorPreview = ({ item }: { item: ActionResultPreviewData }) => {
   )
 }
 
-export const getItemDisplayComponent = (item: ActionResultPreviewData, index: number) => {
+export const getItemDisplayComponent = (
+  item: ActionResultPreviewData,
+  index: number,
+  preventDownload: boolean
+) => {
   if (item.status === 'FAIL') return <ErrorPreview item={item} key={index} />
   if (item.type === 'NOTIFICATION') return <NotificationPreview item={item} key={index} />
-  if (item.type === 'DOCUMENT') return <DocumentPreview item={item} key={index} />
+  if (item.type === 'DOCUMENT')
+    return <DocumentPreview item={item} key={index} preventDownload={preventDownload} />
   return <FallbackPreview item={item} key={index} />
 }

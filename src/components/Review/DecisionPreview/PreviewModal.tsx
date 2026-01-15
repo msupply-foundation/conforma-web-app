@@ -11,6 +11,7 @@ interface PreviewProps extends ModalProps {
   decision?: string
   reviewId?: number
   applicationDataOverride: { [key: string]: any }
+  preventDownload?: boolean
   // Used by the "Preview Action" form element plugin
   applicationId?: number
   headerText?: string
@@ -26,6 +27,7 @@ const PreviewModal = ({
   applicationId,
   headerText,
   previewText,
+  preventDownload = true,
 }: PreviewProps) => {
   const { t } = useLanguageProvider()
   const [data, setData] = useState<ActionResultPreviewData[] | null>(null)
@@ -69,7 +71,7 @@ const PreviewModal = ({
         <div id="preview-items">
           {data &&
             (data.length > 0 ? (
-              data.map((item, index) => getItemDisplayComponent(item, index))
+              data.map((item, index) => getItemDisplayComponent(item, index, preventDownload))
             ) : (
               <Message info header={t('REVIEW_DECISION_NO_PREVIEWS_AVAILABLE')} />
             ))}
