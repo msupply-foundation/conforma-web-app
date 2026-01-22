@@ -9,8 +9,8 @@ import { Label } from 'semantic-ui-react'
 
 // Stored response date format
 interface DateSaved {
-  start: string // ISO Date strings: YYYY-MM-DD
-  end?: string
+  start: string | null // ISO Date strings: YYYY-MM-DD
+  end?: string | null
 }
 
 // This is the type used by react-semantic-ui-datepicker, and what we use for
@@ -136,11 +136,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 const toDateSaved = (date: SelectedDateRange): DateSaved | null => {
   if (!date) return null
   // Single date
-  if (!Array.isArray(date)) return { start: DateTime.fromJSDate(date).toISODate() ?? '' }
+  if (!Array.isArray(date)) return { start: DateTime.fromJSDate(date).toISODate() ?? undefined }
   // Date range
   return {
-    start: DateTime.fromJSDate(date[0]).toISODate() ?? '',
-    end: DateTime.fromJSDate(date[1]).toISODate() ?? '',
+    start: DateTime.fromJSDate(date[0]).toISODate() ?? undefined,
+    end: DateTime.fromJSDate(date[1]).toISODate() ?? undefined,
   }
 }
 
