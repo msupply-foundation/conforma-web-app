@@ -9,8 +9,8 @@ import { Label } from 'semantic-ui-react'
 
 // Stored response date format
 interface DateSaved {
-  start: string | null // ISO Date strings: YYYY-MM-DD
-  end?: string | null
+  start: string | null | undefined // ISO Date strings: YYYY-MM-DD
+  end?: string | null | undefined
 }
 
 // This is the type used by react-semantic-ui-datepicker, and what we use for
@@ -145,7 +145,7 @@ const toDateSaved = (date: SelectedDateRange): DateSaved | null => {
 }
 
 const fromDateSaved = (date: DateSaved | null): SelectedDateRange | null => {
-  if (!date) return null
+  if (!date || !date.start) return null
   // Single date
   if (!date?.end) return DateTime.fromISO(date.start).toJSDate()
   // Date range
