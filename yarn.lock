@@ -2941,21 +2941,21 @@ fbjs@^3.0.0:
     setimmediate "^1.0.5"
     ua-parser-js "^1.0.35"
 
-fig-tree-editor-react@0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-0.8.2.tgz#50d8b39d8bfc0afbe3914cb87a0cdea2d6cdc169"
-  integrity sha512-h27i5jp9Ee5C+mjjQf1MJ0QnpEwOSUGAHDH7UfWy4mNzsb8KJKNNIdmAOuxAB5YBmDvyGKBMb55JIlvk4aRuag==
+fig-tree-editor-react@0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-0.8.3.tgz#b2d1ceddf178d5ca13f4a6d136c747e79b2c1e57"
+  integrity sha512-1hBOEv9TmR1g64xD+GcpKWAsA5wmHBC7zZT9X7jPlvYykH/ekYteW/mKpvjPHOB11rqFQpvghyQ6IGC5qDDsCg==
   dependencies:
-    fig-tree-evaluator "^2.21.2"
+    fig-tree-evaluator "^2.21.3"
     json-edit-react "^1.29.0"
 
-fig-tree-evaluator@^2.21.2:
-  version "2.21.2"
-  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.21.2.tgz#b196325bd435a54510f82e16ccb3e114510dabe4"
-  integrity sha512-kEp0vpzj2Ouf6u9b3LsvzrTWe88GU4tKpDGvBXIsI64ZQlqeCekqkFeDbfv25xu1LT/szhaGvJA0leajmVbovQ==
+fig-tree-evaluator@^2.21.3:
+  version "2.21.3"
+  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.21.3.tgz#e7026afbb4170f55de7993138d670d3aa563cf4b"
+  integrity sha512-Ec7jx3SRCPbrQRZGNeLX0jcEo/6Mp85AaJuT5JlBpnINLWeXX/c8isfMB/Q35/appn5LPWQeH4iHoOb/G+zzCA==
   dependencies:
     dequal "^2.0.3"
-    object-property-extractor "^1.0.13"
+    object-property-extractor "^1.0.14"
 
 figures@^3.0.0:
   version "3.2.0"
@@ -4240,6 +4240,11 @@ object-property-extractor@^1.0.13:
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.13.tgz#fff188d6308ac5574eb2610221af906eb87b4f38"
   integrity sha512-9kgEjTWDhTPuPn7nyof+5mLmCKBPKdU0c7IVpTbOvYKYSdXQ5skH4Pa/8MPbZXeyXBGrqS82JyWecsh6tMxiLw==
+
+object-property-extractor@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/object-property-extractor/-/object-property-extractor-1.0.14.tgz#bff9292974a47633129e8108b547b6a116ad67b6"
+  integrity sha512-euG3MQwj41DMbfk1keguY+jKQvaf9r26NeECtb28G8jABnhZVqxVEvIFywWC2107cSgx8dimA+JXuCAZFfbsSg==
 
 object.assign@^4.1.4:
   version "4.1.5"
