@@ -19,6 +19,7 @@ export const onEvaluateNotify = (
     resultString += `\n${copiedToClipboardText}`
   }
   toast({
+    title: undefined,
     text: resultString,
     html: formatResult(result, copiedToClipboardText),
     style: 'success',
