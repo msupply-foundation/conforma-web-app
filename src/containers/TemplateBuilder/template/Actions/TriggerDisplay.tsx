@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Suspense, lazy } from 'react'
 import { Checkbox, Header, Button } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
@@ -8,8 +8,10 @@ import { IconButton } from '../../shared/IconButton'
 import { useOperationState } from '../../shared/OperationContext'
 import TextIO from '../../shared/TextIO'
 import { useTemplateState, disabledMessage } from '../TemplateWrapper'
-import ActionConfig from './ActionConfig'
 import { useActionState } from './Actions'
+import { Loading } from '../../../../components'
+
+const ActionConfig = lazy(() => import('./ActionConfig'))
 
 type TemplateActions = { sequential: TemplateAction[]; asynchronous: TemplateAction[] }
 type GetActionsForTrigger = (
@@ -204,10 +206,12 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
           ))}
         </div>
         {currentTemplateAction && (
-          <ActionConfig
-            templateAction={currentTemplateAction}
-            onClose={() => setCurrentTemplateAction(null)}
-          />
+          <Suspense fallback={<Loading />}>
+            <ActionConfig
+              templateAction={currentTemplateAction}
+              onClose={() => setCurrentTemplateAction(null)}
+            />
+          </Suspense>
         )}
       </div>
     )

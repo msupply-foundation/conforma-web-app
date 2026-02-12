@@ -10,9 +10,10 @@ import { AdminDataViews } from './AdminDataViews/AdminDataViews'
 // import { AdminDataViews, AdminPermissions, AdminPlugins } from './AdminOther'
 
 const Templates = React.lazy(() => import('../../containers/TemplateBuilder/Templates'))
-const TemplateWrapper = React.lazy(
-  () => import('../../containers/TemplateBuilder/template/TemplateWrapper')
-)
+const TemplateWrapper = React.lazy(() => {
+  console.log('Lazy loading Tetmplates')
+  return import('../../containers/TemplateBuilder/template/TemplateWrapper')
+})
 const Snapshots = React.lazy(() => import('../../containers/Dev/Snapshots'))
 const AdminLocalisations = React.lazy(() => import('./AdminLocalisations'))
 const EvaluatorFragments = React.lazy(() => import('./EvaluatorFragments/EvaluatorFragments'))
