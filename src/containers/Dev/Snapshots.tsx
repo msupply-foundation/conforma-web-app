@@ -34,6 +34,7 @@ interface SnapshotData {
   timestamp: string
   version: string
   archive?: ArchiveType
+  hasZip: boolean
 }
 
 interface ArchiveInfo {
@@ -152,7 +153,7 @@ const Snapshots: React.FC = () => {
     }
   }
 
-  const useSnapshot = async (name: string) => {
+  const loadSnapshot = async (name: string) => {
     const maintenanceModeAlreadyEnabled = maintenanceMode.enabled
     if (!maintenanceModeAlreadyEnabled && isProductionBuild) {
       console.log('Enabling maintenance mode')
@@ -272,7 +273,7 @@ const Snapshots: React.FC = () => {
   }
 
   const renderSingleSnapshot = (
-    { name, filename, timestamp, archive, size }: SnapshotData,
+    { name, filename, timestamp, archive, size, hasZip }: SnapshotData,
     hasChildren = false
   ) => (
     <Table.Row key={filename}>
@@ -280,7 +281,25 @@ const Snapshots: React.FC = () => {
         <div className="flex-row-space-between" style={{ width: '100%', padding: 5 }}>
           <div className="flex-row" style={{ gap: 10 }}>
             <strong>{name}</strong>
-            <span className="smaller-text">{size ? fileSizeWithUnits(size) : 'Size unknown'}</span>
+            <span className="smaller-text">
+              {size ? fileSizeWithUnits(size) : 'Size unknown'}
+              {hasZip && (
+                <Icon
+                  // size="large"
+                  style={{ marginLeft: 3, transform: 'translateY(-1px)' }}
+                  className="clickable"
+                  name="file archive"
+                  onClick={() => {
+                    showModal({
+                      title: 'Are you sure?',
+                      message:
+                        'This will delete the zipped archive of this snapshot, which make take a significant amount of time to regenerate if you later choose to download this snapshot. Are you sure?',
+                      // onConfirm: () => deleteSnapshotZip(filename),
+                    })
+                  }}
+                />
+              )}
+            </span>
           </div>
           <div className="flex-row" style={{ gap: 5 }}>
             {displayType === 'snapshots' && (
@@ -293,9 +312,9 @@ const Snapshots: React.FC = () => {
                     showModal({
                       title: 'Are you sure?',
                       message: `This will overwrite ALL existing data on: ${window.location.host}`,
-                      onConfirm: () => useSnapshot(filename),
+                      onConfirm: () => loadSnapshot(filename),
                     })
-                  else useSnapshot(filename)
+                  else loadSnapshot(filename)
                 }}
               />
             )}

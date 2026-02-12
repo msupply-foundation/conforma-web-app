@@ -90,12 +90,10 @@ export const fileSizeWithUnits = (size: number): string => {
   return `${parseInt(String(sizeInGB * 100)) / 100} GB`
 }
 
-// Force a file download
-export const downloadFile = async (url: string, filename: string, fetchOptions: object = {}) => {
-  const res = await fetch(url, fetchOptions)
-  const data = await res.blob()
+// Force a file download (browser handles progress tracking)
+export const downloadFile = (url: string, filename: string) => {
   const a = document.createElement('a')
-  a.href = window.URL.createObjectURL(data)
+  a.href = url
   a.download = filename
   a.click()
 }
