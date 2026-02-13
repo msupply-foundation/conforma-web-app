@@ -2770,6 +2770,13 @@ a:hover {
   }
 }
 
+.smaller-text-tooltip {
+  padding: 0.5em !important;
+  p {
+    font-size: @smallerText;
+  }
+}
+
 /*******************************
              Headers
 *******************************/
