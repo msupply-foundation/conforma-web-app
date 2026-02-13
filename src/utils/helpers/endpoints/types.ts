@@ -93,7 +93,7 @@ export type LocalisationOptions =
 
 export type SnapshotKey = 'snapshot'
 export type SnapshotOptions =
-  | { action: 'list'; archive?: boolean }
+  | { action: 'list' }
   | { action: 'download' | 'delete'; name: string; archive?: boolean }
   | { action: 'upload' }
   | {

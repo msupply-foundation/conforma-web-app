@@ -149,8 +149,7 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
       const { action } = snapshotOptions
       const isArchive = 'archive' in snapshotOptions && snapshotOptions.archive
 
-      if (action === 'list')
-        return `${serverREST}${endpointPath}/list${isArchive ? '?archive=true' : ''}`
+      if (action === 'list') return `${serverREST}${endpointPath}/list`
 
       const name = 'name' in snapshotOptions ? snapshotOptions.name : null
 

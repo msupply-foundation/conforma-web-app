@@ -48,20 +48,19 @@ interface ArchiveInfo {
 
 interface ListData {
   snapshots: SnapshotData[]
-  currentArchives: ArchiveInfo[]
+  orphanArchives: string[]
+  archivesNotinStore: string[]
 }
-
-type SnapshotType = 'snapshots' | 'archives'
 
 const Snapshots: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [snapshotError, setSnapshotError] = useState<{ message: string; error: string } | null>(
     null
   )
-  const { query, updateQuery } = useRouter()
-  const [displayType, setDisplayType] = useState<SnapshotType>(
-    (query.type as SnapshotType) ?? 'snapshots'
-  )
+  // const { query, updateQuery } = useRouter()
+  // const [displayType, setDisplayType] = useState<SnapshotType>(
+  //   (query.type as SnapshotType) ?? 'snapshots'
+  // )
   const [expandedSnapshots, setExpandedSnapshots] = useState<string[]>([])
   const [archive, setArchive] = useState<number | 'full' | 'none'>()
   const [archiveEnd, setArchiveEnd] = useState<number>()
@@ -73,25 +72,21 @@ const Snapshots: React.FC = () => {
   const { ConfirmModal, showModal } = useConfirmationModal({ type: 'warning', awaitAction: false })
   const { showToast } = useToast({ style: 'success' })
 
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
+  // const JWT = localStorage.getItem(config.localStorageJWTKey)
   const isProductionBuild = config.isProductionBuild
 
   BrowserNotifications.checkPermission()
 
   useEffect(() => {
-    updateQuery({ type: displayType })
+    // updateQuery({ type: displayType })
     setData(null)
     setSnapshotError(null)
-    getList(displayType)
-  }, [displayType, refetchData])
+    getList()
+  }, [refetchData])
 
-  const getList = async (displayType: SnapshotType) => {
+  const getList = async () => {
     try {
-      setData(
-        await getRequest(
-          getServerUrl('snapshot', { action: 'list', archive: displayType === 'archives' })
-        )
-      )
+      setData(await getRequest(getServerUrl('snapshot', { action: 'list' })))
     } catch (e) {}
   }
 
@@ -110,7 +105,7 @@ const Snapshots: React.FC = () => {
         url: getServerUrl('snapshot', {
           action: 'take',
           name: normaliseSnapshotName(name),
-          archive: displayType === 'archives',
+          // archive: displayType === 'archives',
         }),
         jsonBody: {
           archive:
@@ -124,16 +119,17 @@ const Snapshots: React.FC = () => {
       })
 
       if (resultJson.success) {
-        await getList(displayType)
+        await getList()
         setIsLoading(false)
         BrowserNotifications.notify({
           title: 'Snapshot saved',
           body: name,
           onFocus: () => {
-            if (displayType === 'snapshots') location.reload()
+            // if (displayType === 'snapshots')
+            location.reload()
           },
         })
-        if (document.hasFocus() && displayType === 'snapshots') location.reload()
+        if (document.hasFocus()) location.reload()
         return
       }
       setSnapshotError(resultJson)
@@ -214,11 +210,11 @@ const Snapshots: React.FC = () => {
         url: getServerUrl('snapshot', {
           action: 'delete',
           name,
-          archive: displayType === 'archives',
+          // archive: displayType === 'archives',
         }),
       })
       if (resultJson.success) {
-        await getList(displayType)
+        await getList()
         setIsLoading(false)
         return
       }
@@ -247,7 +243,7 @@ const Snapshots: React.FC = () => {
       })
 
       if (resultJson.success) {
-        await getList(displayType)
+        await getList()
         setIsLoading(false)
         BrowserNotifications.notify({
           title: 'Snapshot uploaded',
@@ -302,22 +298,20 @@ const Snapshots: React.FC = () => {
             </span>
           </div>
           <div className="flex-row" style={{ gap: 5 }}>
-            {displayType === 'snapshots' && (
-              <Icon
-                size="large"
-                className="clickable"
-                name="play circle"
-                onClick={() => {
-                  if (isProductionBuild)
-                    showModal({
-                      title: 'Are you sure?',
-                      message: `This will overwrite ALL existing data on: ${window.location.host}`,
-                      onConfirm: () => loadSnapshot(filename),
-                    })
-                  else loadSnapshot(filename)
-                }}
-              />
-            )}
+            <Icon
+              size="large"
+              className="clickable"
+              name="play circle"
+              onClick={() => {
+                if (isProductionBuild)
+                  showModal({
+                    title: 'Are you sure?',
+                    message: `This will overwrite ALL existing data on: ${window.location.host}`,
+                    onConfirm: () => loadSnapshot(filename),
+                  })
+                else loadSnapshot(filename)
+              }}
+            />
             <Icon
               name="download"
               size="large"
@@ -328,16 +322,16 @@ const Snapshots: React.FC = () => {
                   getServerUrl('snapshot', {
                     action: 'download',
                     name: filename,
-                    archive: displayType === 'archives',
+                    // archive: displayType === 'archives',
                   }),
-                  `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}.zip`,
-                  {
-                    headers: { Authorization: `Bearer ${JWT}` },
-                  }
+                  `${filename}.zip`
+                  // {
+                  //   headers: { Authorization: `Bearer ${JWT}` },
+                  // }
                 )
                 showToast({
                   title: 'Download complete',
-                  text: `${displayType === 'archives' ? 'ARCHIVE_' : ''}${filename}`,
+                  text: filename,
                   timeout: 0,
                 })
                 BrowserNotifications.notify({ title: 'Snapshot downloaded', body: name })
@@ -351,7 +345,7 @@ const Snapshots: React.FC = () => {
               onClick={async () => {
                 await deleteSnapshot(filename)
                 showToast({
-                  title: `${displayType === 'archives' ? 'Archive snapshot' : 'Snapshot'} deleted`,
+                  title: 'Snapshot deleted',
                   text: name,
                 })
               }}
@@ -487,117 +481,118 @@ const Snapshots: React.FC = () => {
   }
 
   const renderNewSnapshot = () => {
-    const [name, setName] = useState(localStorage.getItem('defaultSnapshotName') ?? '')
-    const archiveOptions =
-      data && data.currentArchives?.length > 0
-        ? [
-            { key: 'full', value: 'full', text: 'Include full archive' },
-            ...data?.currentArchives.map(({ timestamp, uid, totalFileSize }) => ({
-              text: `${DateTime.fromMillis(timestamp).toLocaleString(DateTime.DATETIME_SHORT)}${
-                totalFileSize ? ` (${fileSizeWithUnits(totalFileSize)})` : ''
-              }`,
-              value: timestamp,
-              key: uid,
-            })),
-          ]
-        : []
-    if (displayType === 'snapshots' && archiveOptions.length > 0)
-      archiveOptions.unshift({ key: 'none', value: 'none', text: 'No archive' })
+    return <p>TEMP</p>
+    // const [name, setName] = useState(localStorage.getItem('defaultSnapshotName') ?? '')
+    // const archiveOptions =
+    //   data && data.currentArchives?.length > 0
+    //     ? [
+    //         { key: 'full', value: 'full', text: 'Include full archive' },
+    //         ...data?.currentArchives.map(({ timestamp, uid, totalFileSize }) => ({
+    //           text: `${DateTime.fromMillis(timestamp).toLocaleString(DateTime.DATETIME_SHORT)}${
+    //             totalFileSize ? ` (${fileSizeWithUnits(totalFileSize)})` : ''
+    //           }`,
+    //           value: timestamp,
+    //           key: uid,
+    //         })),
+    //       ]
+    //     : []
+    // if (displayType === 'snapshots' && archiveOptions.length > 0)
+    //   archiveOptions.unshift({ key: 'none', value: 'none', text: 'No archive' })
 
-    const archiveEndOptions =
-      typeof archive === 'number'
-        ? archiveOptions.filter(({ value }) => typeof value === 'number' && value >= archive)
-        : []
+    // const archiveEndOptions =
+    //   typeof archive === 'number'
+    //     ? archiveOptions.filter(({ value }) => typeof value === 'number' && value >= archive)
+    //     : []
 
-    const hasArchives = data && data.currentArchives?.length > 0
+    // const hasArchives = data && data.currentArchives?.length > 0
 
-    const totalSelectionSize = getTotalSize(archive, archiveEnd, data?.currentArchives)
+    // const totalSelectionSize = getTotalSize(archive, archiveEnd, data?.currentArchives)
 
-    return (
-      <Table.Row>
-        <Table.Cell className="flex-row-start-center" style={{ gap: 10, padding: 15 }}>
-          <div className="flex-column" style={{ gap: 10, width: '100%' }}>
-            <Input
-              onChange={(_, { value }) => setName(value)}
-              value={name}
-              placeholder="Enter snapshot name"
-              style={{ width: 250 }}
-            />
-            {hasArchives && (
-              <>
-                <div className="flex-row-start-center" style={{ gap: 10 }}>
-                  {typeof archive === 'number' && <span>From: </span>}
-                  <Dropdown
-                    placeholder="Select earliest archive"
-                    selection
-                    clearable
-                    value={archive}
-                    options={archiveOptions}
-                    onChange={(_, { value }) => {
-                      setArchive(value as number | 'none' | 'full')
-                      if (
-                        value === 'none' ||
-                        value === 'full' ||
-                        (value as number) > (archiveEnd ?? 0)
-                      )
-                        setArchiveEnd(undefined)
-                    }}
-                    style={{ maxWidth: 400, fontSize: '90%' }}
-                  />
-                  {typeof archive === 'number' &&
-                    data &&
-                    data?.currentArchives.filter(({ timestamp }) => timestamp > archive).length >
-                      0 && (
-                      <>
-                        <span>to: </span>
-                        <Dropdown
-                          placeholder="Select latest archive"
-                          selection
-                          clearable
-                          value={archiveEnd}
-                          options={archiveEndOptions}
-                          onChange={(_, { value }) => {
-                            setArchiveEnd(value === '' ? undefined : (value as number))
-                          }}
-                          style={{ maxWidth: 400, fontSize: '90%' }}
-                        />
-                      </>
-                    )}
-                </div>
-                {totalSelectionSize && (
-                  <div className="flex-row-start-center" style={{ gap: 6 }}>
-                    Total selected size:
-                    {typeof totalSelectionSize === 'number' ? (
-                      <span>
-                        {fileSizeWithUnits(totalSelectionSize)}{' '}
-                        <span className="smaller-text">(before zip compression)</span>
-                      </span>
-                    ) : (
-                      <em>{totalSelectionSize}</em>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-          <div className="flex-column" style={{ gap: 10 }}>
-            <Header as="h4" style={{ marginBottom: 0, textAlign: 'center', maxWidth: 250 }}>
-              {`Create new ${displayType === 'archives' ? 'Archive ' : ''}snapshot`}
-            </Header>
-            <Button
-              primary
-              disabled={
-                !name || (hasArchives && !archive) || (displayType === 'archives' && !archive)
-              }
-              onClick={() => {
-                takeSnapshot(name)
-              }}
-              content="Save"
-            />
-          </div>
-        </Table.Cell>
-      </Table.Row>
-    )
+    // return (
+    //   <Table.Row>
+    //     <Table.Cell className="flex-row-start-center" style={{ gap: 10, padding: 15 }}>
+    //       <div className="flex-column" style={{ gap: 10, width: '100%' }}>
+    //         <Input
+    //           onChange={(_, { value }) => setName(value)}
+    //           value={name}
+    //           placeholder="Enter snapshot name"
+    //           style={{ width: 250 }}
+    //         />
+    //         {hasArchives && (
+    //           <>
+    //             <div className="flex-row-start-center" style={{ gap: 10 }}>
+    //               {typeof archive === 'number' && <span>From: </span>}
+    //               <Dropdown
+    //                 placeholder="Select earliest archive"
+    //                 selection
+    //                 clearable
+    //                 value={archive}
+    //                 options={archiveOptions}
+    //                 onChange={(_, { value }) => {
+    //                   setArchive(value as number | 'none' | 'full')
+    //                   if (
+    //                     value === 'none' ||
+    //                     value === 'full' ||
+    //                     (value as number) > (archiveEnd ?? 0)
+    //                   )
+    //                     setArchiveEnd(undefined)
+    //                 }}
+    //                 style={{ maxWidth: 400, fontSize: '90%' }}
+    //               />
+    //               {typeof archive === 'number' &&
+    //                 data &&
+    //                 data?.currentArchives.filter(({ timestamp }) => timestamp > archive).length >
+    //                   0 && (
+    //                   <>
+    //                     <span>to: </span>
+    //                     <Dropdown
+    //                       placeholder="Select latest archive"
+    //                       selection
+    //                       clearable
+    //                       value={archiveEnd}
+    //                       options={archiveEndOptions}
+    //                       onChange={(_, { value }) => {
+    //                         setArchiveEnd(value === '' ? undefined : (value as number))
+    //                       }}
+    //                       style={{ maxWidth: 400, fontSize: '90%' }}
+    //                     />
+    //                   </>
+    //                 )}
+    //             </div>
+    //             {totalSelectionSize && (
+    //               <div className="flex-row-start-center" style={{ gap: 6 }}>
+    //                 Total selected size:
+    //                 {typeof totalSelectionSize === 'number' ? (
+    //                   <span>
+    //                     {fileSizeWithUnits(totalSelectionSize)}{' '}
+    //                     <span className="smaller-text">(before zip compression)</span>
+    //                   </span>
+    //                 ) : (
+    //                   <em>{totalSelectionSize}</em>
+    //                 )}
+    //               </div>
+    //             )}
+    //           </>
+    //         )}
+    //       </div>
+    //       <div className="flex-column" style={{ gap: 10 }}>
+    //         <Header as="h4" style={{ marginBottom: 0, textAlign: 'center', maxWidth: 250 }}>
+    //           {`Create new ${displayType === 'archives' ? 'Archive ' : ''}snapshot`}
+    //         </Header>
+    //         <Button
+    //           primary
+    //           disabled={
+    //             !name || (hasArchives && !archive) || (displayType === 'archives' && !archive)
+    //           }
+    //           onClick={() => {
+    //             takeSnapshot(name)
+    //           }}
+    //           content="Save"
+    //         />
+    //       </div>
+    //     </Table.Cell>
+    //   </Table.Row>
+    // )
   }
 
   const renderMissingArchives = (missingArchives: ArchiveInfo[]) => {
@@ -623,58 +618,59 @@ const Snapshots: React.FC = () => {
   }
 
   const renderArchiveFiles = () => {
-    const [days, setDays] = useState(7)
-    const [loading, setLoading] = useState(false)
+    return <p>TEMP ARCHIVES</p>
+    // const [days, setDays] = useState(7)
+    // const [loading, setLoading] = useState(false)
 
-    const archiveFiles = async () => {
-      setLoading(true)
-      const result = await getRequest(getServerUrl('archiveFiles', { days }))
-      showToast({
-        title: result === null ? 'Nothing to archive' : 'Archive complete',
-        text: result === null ? undefined : `${result.numFiles} files archived`,
-        style: result ? 'success' : 'warning',
-      })
-      setLoading(false)
-      setRefetchData(!refetchData)
-    }
+    // const archiveFiles = async () => {
+    //   setLoading(true)
+    //   const result = await getRequest(getServerUrl('archiveFiles', { days }))
+    //   showToast({
+    //     title: result === null ? 'Nothing to archive' : 'Archive complete',
+    //     text: result === null ? undefined : `${result.numFiles} files archived`,
+    //     style: result ? 'success' : 'warning',
+    //   })
+    //   setLoading(false)
+    //   setRefetchData(!refetchData)
+    // }
 
-    return (
-      <div style={{ display: displayType === 'snapshots' ? 'none' : 'block' }}>
-        <Header as="h3">Create a new archive</Header>
-        <div className="flex-row-space-between-center" style={{ marginTop: 10 }}>
-          <div className="flex-row-start-center" style={{ gap: 5 }}>
-            Archive files older than
-            <Form.Input
-              size="mini"
-              type="number"
-              min={1}
-              value={days}
-              onChange={(e) => {
-                const num = Number(e.target.value)
-                if (num < 1) setDays(1)
-                else setDays(num)
-              }}
-              style={{ maxWidth: 65 }}
-            />
-            days
-          </div>
-          <Button
-            primary
-            inverted
-            loading={loading}
-            onClick={() =>
-              showModal({
-                title: 'Make a new archive?',
-                message: `This will archive system files older than ${days} days. Are you sure?`,
-                onConfirm: archiveFiles,
-              })
-            }
-          >
-            Archive <Icon name="archive" style={{ paddingLeft: 5, transform: 'translateY(0px)' }} />
-          </Button>
-        </div>
-      </div>
-    )
+    // return (
+    //   <div style={{ display: displayType === 'snapshots' ? 'none' : 'block' }}>
+    //     <Header as="h3">Create a new archive</Header>
+    //     <div className="flex-row-space-between-center" style={{ marginTop: 10 }}>
+    //       <div className="flex-row-start-center" style={{ gap: 5 }}>
+    //         Archive files older than
+    //         <Form.Input
+    //           size="mini"
+    //           type="number"
+    //           min={1}
+    //           value={days}
+    //           onChange={(e) => {
+    //             const num = Number(e.target.value)
+    //             if (num < 1) setDays(1)
+    //             else setDays(num)
+    //           }}
+    //           style={{ maxWidth: 65 }}
+    //         />
+    //         days
+    //       </div>
+    //       <Button
+    //         primary
+    //         inverted
+    //         loading={loading}
+    //         onClick={() =>
+    //           showModal({
+    //             title: 'Make a new archive?',
+    //             message: `This will archive system files older than ${days} days. Are you sure?`,
+    //             onConfirm: archiveFiles,
+    //           })
+    //         }
+    //       >
+    //         Archive <Icon name="archive" style={{ paddingLeft: 5, transform: 'translateY(0px)' }} />
+    //       </Button>
+    //     </div>
+    //   </div>
+    // )
   }
 
   const renderUploadSnapshot = () => {
@@ -687,14 +683,14 @@ const Snapshots: React.FC = () => {
     )
   }
 
-  const missingArchives = data ? getMissingArchives(data) : []
+  // const missingArchives = data ? getMissingArchives(data) : []
 
   return (
     <div id="list-container" style={{ minWidth: 500, maxWidth: 750 }}>
       <ConfirmModal />
       <Header>Snapshots</Header>
       <div className="flex-row-space-between">
-        <div className="flex-row-start-center" style={{ gap: 10 }}>
+        {/* <div className="flex-row-start-center" style={{ gap: 10 }}>
           Show:
           <Dropdown
             selection
@@ -706,13 +702,13 @@ const Snapshots: React.FC = () => {
             onChange={(_, { value }) => setDisplayType(value as SnapshotType)}
             style={{ maxWidth: 350 }}
           />
-        </div>
+        </div> */}
         {renderUploadSnapshot()}
       </div>
       <Table stackable style={{ marginTop: 0 }}>
         <Table.Body>
           {renderNewSnapshot()}
-          {missingArchives.length > 0 && renderMissingArchives(missingArchives)}
+          {/* {missingArchives.length > 0 && renderMissingArchives(missingArchives)} */}
           {renderSnapshotList()}
         </Table.Body>
       </Table>
@@ -722,18 +718,18 @@ const Snapshots: React.FC = () => {
   )
 }
 
-const getMissingArchives = ({ currentArchives, snapshots }: ListData) => {
-  const availableArchives = new Set<string>()
-  snapshots.forEach(({ archive }) => {
-    if (!archive) return
-    const from = archive.from ? DateTime.fromISO(archive.from).toMillis() : 0
-    const to = archive.to ? DateTime.fromISO(archive.to).toMillis() : Infinity
-    currentArchives.forEach((archive) => {
-      if (archive.timestamp >= from && archive.timestamp <= to) availableArchives.add(archive.uid)
-    })
-  })
-  return currentArchives.filter(({ uid }) => !availableArchives.has(uid))
-}
+// const getMissingArchives = ({ currentArchives, snapshots }: ListData) => {
+//   const availableArchives = new Set<string>()
+//   snapshots.forEach(({ archive }) => {
+//     if (!archive) return
+//     const from = archive.from ? DateTime.fromISO(archive.from).toMillis() : 0
+//     const to = archive.to ? DateTime.fromISO(archive.to).toMillis() : Infinity
+//     currentArchives.forEach((archive) => {
+//       if (archive.timestamp >= from && archive.timestamp <= to) availableArchives.add(archive.uid)
+//     })
+//   })
+//   return currentArchives.filter(({ uid }) => !availableArchives.has(uid))
+// }
 
 const getTotalSize = (
   archiveStart: number | 'full' | 'none' | undefined,
