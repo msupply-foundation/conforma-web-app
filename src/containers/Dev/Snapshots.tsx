@@ -310,16 +310,22 @@ const Snapshots: React.FC = () => {
               className="clickable blue"
               onClick={async () => {
                 showToast({ title: 'Download started...', timeout: 2000 })
-                await downloadFile(
-                  getServerUrl('snapshot', {
-                    action: 'download',
-                    name: filename,
-                  }),
-                  `${filename}.zip`
-                  // {
-                  //   headers: { Authorization: `Bearer ${JWT}` },
-                  // }
-                )
+                console.log('URL', getServerUrl('snapshot', { action: 'download', name: filename }))
+                const response = await postRequest({
+                  url: getServerUrl('snapshot', { action: 'download', name: filename }),
+                  // jsonBody: {
+                  //   archiveRange: { to: 99999999999999, from: 0 },
+                  //   includeSnapshot: true,
+                  // },
+                  headers: { 'Content-Type': 'application/json' },
+                })
+
+                const zipFile = response?.zipFileName
+
+                const fileUrl = getServerUrl('file', { zipFile })
+
+                downloadFile(fileUrl, `${filename}.zip`)
+
                 showToast({
                   title: 'Download complete',
                   text: filename,

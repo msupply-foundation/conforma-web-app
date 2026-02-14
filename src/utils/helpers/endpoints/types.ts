@@ -25,7 +25,7 @@ export type VerifyKey = 'verify'
 export type VerifyOptions = { uid: string }
 
 export type FileKey = 'file'
-export type FileOptions = { fileId: string; thumbnail?: boolean }
+export type FileOptions = { fileId?: string; thumbnail?: boolean; zipFile?: string }
 
 export type FilesKey = 'files'
 export type FilesOptions = {
@@ -94,12 +94,17 @@ export type LocalisationOptions =
 export type SnapshotKey = 'snapshot'
 export type SnapshotOptions =
   | { action: 'list' }
-  | { action: 'download' | 'delete'; name: string; archive?: boolean }
+  | { action: 'delete'; name: string }
+  | {
+      action: 'download'
+      name: string
+      includeSnapshot?: boolean
+      archiveRange?: { to?: string; from?: string }
+    }
   | { action: 'upload' }
   | {
       action: 'take' | 'use'
       name: string
-      archive?: boolean
     }
 
 export type LookupTableKey = 'lookupTable'

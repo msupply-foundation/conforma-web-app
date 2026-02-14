@@ -92,9 +92,11 @@ export const fileSizeWithUnits = (size: number): string => {
 
 // Force a file download (browser handles progress tracking)
 export const downloadFile = (url: string, filename: string) => {
+  const separator = url.includes('?') ? '&' : '?'
+  const downloadUrl = `${url}${separator}filename=${encodeURIComponent(filename)}`
+
   const a = document.createElement('a')
-  a.href = url
-  a.download = filename
+  a.href = downloadUrl
   a.style.display = 'none'
   document.body.appendChild(a)
   a.click()

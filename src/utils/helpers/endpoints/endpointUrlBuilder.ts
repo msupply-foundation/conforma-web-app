@@ -78,7 +78,8 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     }
 
     case 'file': {
-      const { fileId, thumbnail = false } = options as FileOptions
+      const { fileId, thumbnail = false, zipFile } = options as FileOptions
+      if (zipFile) return `${serverREST}${endpointPath}?zipFile=${zipFile}`
       return `${serverREST}${endpointPath}?uid=${fileId}${thumbnail ? '&thumbnail=true' : ''}`
     }
 
@@ -147,8 +148,6 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     case 'snapshot': {
       const snapshotOptions = options as SnapshotOptions
       const { action } = snapshotOptions
-      const isArchive = 'archive' in snapshotOptions && snapshotOptions.archive
-
       if (action === 'list') return `${serverREST}${endpointPath}/list`
 
       const name = 'name' in snapshotOptions ? snapshotOptions.name : null
@@ -157,20 +156,13 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
 
       if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
-      // "download" is direct download url
-      if (action === 'download')
-        return `${serverREST}${endpointPath}/files/${isArchive ? '_archives/' : ''}${name}.zip`
+      if (action === 'download') return `${serverREST}${endpointPath}/download?name=${name}`
+      // Archive details are passed in Body JSON
 
-      if (action === 'delete')
-        return `${serverREST}${endpointPath}/${action}?name=${name}${
-          isArchive ? '&archive=true' : ''
-        }`
+      if (action === 'delete') return `${serverREST}${endpointPath}/${action}?name=${name}`
 
       // Must be "take" or "use"
-      return `${serverREST}${endpointPath}/${action}?name=${name}${
-        isArchive ? `&type=archive` : ''
-      }`
-      // Archive details are passed in Body JSON
+      return `${serverREST}${endpointPath}/${action}?name=${name}`
     }
 
     case 'lookupTable': {
