@@ -12,6 +12,7 @@ import {
   Dropdown,
   Form,
   List,
+  Checkbox,
 } from 'semantic-ui-react'
 import config from '../../config'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
@@ -58,10 +59,7 @@ const Snapshots: React.FC = () => {
   const [snapshotError, setSnapshotError] = useState<{ message: string; error: string } | null>(
     null
   )
-  // const { query, updateQuery } = useRouter()
-  // const [displayType, setDisplayType] = useState<SnapshotType>(
-  //   (query.type as SnapshotType) ?? 'snapshots'
-  // )
+  const [selectedDownload, setSelectedDownload] = useState<string>()
   const [expandedSnapshots, setExpandedSnapshots] = useState<string[]>([])
   const [archive, setArchive] = useState<number | 'full' | 'none'>()
   const [archiveEnd, setArchiveEnd] = useState<number>()
@@ -308,31 +306,7 @@ const Snapshots: React.FC = () => {
               name="download"
               size="large"
               className="clickable blue"
-              onClick={async () => {
-                showToast({ title: 'Download started...', timeout: 2000 })
-                console.log('URL', getServerUrl('snapshot', { action: 'download', name: filename }))
-                const response = await postRequest({
-                  url: getServerUrl('snapshot', { action: 'download', name: filename }),
-                  // jsonBody: {
-                  //   archiveRange: { to: 99999999999999, from: 0 },
-                  //   includeSnapshot: true,
-                  // },
-                  headers: { 'Content-Type': 'application/json' },
-                })
-
-                const zipFile = response?.zipFileName
-
-                const fileUrl = getServerUrl('file', { zipFile })
-
-                downloadFile(fileUrl, `${filename}.zip`)
-
-                showToast({
-                  title: 'Download complete',
-                  text: filename,
-                  timeout: 0,
-                })
-                BrowserNotifications.notify({ title: 'Snapshot downloaded', body: name })
-              }}
+              onClick={() => setSelectedDownload(filename)}
             />
 
             <Icon
@@ -552,62 +526,6 @@ const Snapshots: React.FC = () => {
     )
   }
 
-  const renderArchiveFiles = () => {
-    return <p>TEMP ARCHIVES</p>
-    // const [days, setDays] = useState(7)
-    // const [loading, setLoading] = useState(false)
-
-    // const archiveFiles = async () => {
-    //   setLoading(true)
-    //   const result = await getRequest(getServerUrl('archiveFiles', { days }))
-    //   showToast({
-    //     title: result === null ? 'Nothing to archive' : 'Archive complete',
-    //     text: result === null ? undefined : `${result.numFiles} files archived`,
-    //     style: result ? 'success' : 'warning',
-    //   })
-    //   setLoading(false)
-    //   setRefetchData(!refetchData)
-    // }
-
-    // return (
-    //   <div style={{ display: displayType === 'snapshots' ? 'none' : 'block' }}>
-    //     <Header as="h3">Create a new archive</Header>
-    //     <div className="flex-row-space-between-center" style={{ marginTop: 10 }}>
-    //       <div className="flex-row-start-center" style={{ gap: 5 }}>
-    //         Archive files older than
-    //         <Form.Input
-    //           size="mini"
-    //           type="number"
-    //           min={1}
-    //           value={days}
-    //           onChange={(e) => {
-    //             const num = Number(e.target.value)
-    //             if (num < 1) setDays(1)
-    //             else setDays(num)
-    //           }}
-    //           style={{ maxWidth: 65 }}
-    //         />
-    //         days
-    //       </div>
-    //       <Button
-    //         primary
-    //         inverted
-    //         loading={loading}
-    //         onClick={() =>
-    //           showModal({
-    //             title: 'Make a new archive?',
-    //             message: `This will archive system files older than ${days} days. Are you sure?`,
-    //             onConfirm: archiveFiles,
-    //           })
-    //         }
-    //       >
-    //         Archive <Icon name="archive" style={{ paddingLeft: 5, transform: 'translateY(0px)' }} />
-    //       </Button>
-    //     </div>
-    //   </div>
-    // )
-  }
-
   const renderUploadSnapshot = () => {
     return (
       <div>
@@ -624,8 +542,11 @@ const Snapshots: React.FC = () => {
   return (
     <div id="list-container" style={{ minWidth: 500, maxWidth: 750 }}>
       <ConfirmModal />
-      <Header>Snapshots</Header>
-      <div className="flex-row-end">{renderUploadSnapshot()}</div>
+      <DownloadModal name={selectedDownload} onClose={() => setSelectedDownload(undefined)} />
+      <div className="flex-row-space-between">
+        <Header>Snapshots</Header>
+        {renderUploadSnapshot()}
+      </div>
       <Table stackable style={{ marginTop: 0 }}>
         <Table.Body>
           <NewSnapshot />
@@ -639,18 +560,70 @@ const Snapshots: React.FC = () => {
   )
 }
 
-const getMissingArchives = ({ currentArchives, snapshots }: ListData) => {
-  // const availableArchives = new Set<string>()
-  // snapshots.forEach(({ archive }) => {
-  //   if (!archive) return
-  //   const from = archive.from ? DateTime.fromISO(archive.from).toMillis() : 0
-  //   const to = archive.to ? DateTime.fromISO(archive.to).toMillis() : Infinity
-  //   currentArchives.forEach((archive) => {
-  //     if (archive.timestamp >= from && archive.timestamp <= to) availableArchives.add(archive.uid)
-  //   })
-  // })
-  // return currentArchives.filter(({ uid }) => !availableArchives.has(uid))
-  return []
+interface DownloadModalProps {
+  name?: string
+  onClose: () => void
+}
+
+interface DownloadOptions {
+  includeSnapshot: boolean
+  archiveRange?: { from?: number; to?: number }
+}
+
+const DownloadModal = ({ onClose, name }: DownloadModalProps) => {
+  const [downloadOptions, setDownloadOptions] = useState<DownloadOptions>({
+    includeSnapshot: true,
+  })
+  return (
+    <Modal open={!!name} onClose={onClose} closeIcon>
+      <Modal.Header>Download {name}</Modal.Header>
+      <Modal.Content>
+        <Form>
+          <Checkbox
+            label="Include snapshot file"
+            onChange={(_, { checked }) =>
+              setDownloadOptions((options) => ({ ...options, includeSnapshot: !!checked }))
+            }
+          />
+          <div className="flex-row-start-center" style={{ gap: 10 }}>
+            <span>From: </span>
+            <Dropdown
+              placeholder="Select earliest archive"
+              selection
+              clearable
+              // value={archive}
+              // options={archiveOptions}
+              onChange={(_, { value }) => {
+                // setArchive(value as number | 'none' | 'full')
+                // if (value === 'none' || value === 'full' || (value as number) > (archiveEnd ?? 0))
+                //   setArchiveEnd(undefined)
+              }}
+              style={{ maxWidth: 400, fontSize: '90%' }}
+            />
+            <span>to: </span>
+            <Dropdown
+              placeholder="Select latest archive"
+              selection
+              clearable
+              // value={archiveEnd}
+              // options={archiveEndOptions}
+              onChange={(_, { value }) => {
+                // setArchiveEnd(value === '' ? undefined : (value as number))
+              }}
+              style={{ maxWidth: 400, fontSize: '90%' }}
+            />
+          </div>
+        </Form>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button
+          // onClick={() => updateQuery({ showHistory: null })}
+          primary
+          content={'OK'}
+        />
+      </Modal.Actions>
+    </Modal>
+  )
 }
 
 const getTotalSize = (
