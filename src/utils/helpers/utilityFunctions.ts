@@ -81,7 +81,10 @@ export const constructOrObjectFilters = (filters: { [key: string]: string }[]) =
 })
 
 // Nicely formatted file sizes, e.g. 1000000 => "1MB"
-export const fileSizeWithUnits = (size: number): string => {
+export const fileSizeWithUnits = (size: number | string | null): string => {
+  if (typeof size === 'string') return size
+  if (size === null) return 'Unknown'
+
   const sizeInKb = size / 1000
   if (sizeInKb < 1000) return `${sizeInKb} kB`
   const sizeInMB = size / 1_000_000

@@ -161,7 +161,7 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
 
       if (action === 'delete') return `${serverREST}${endpointPath}/${action}?name=${name}`
 
-      // Must be "take" or "use"
+      // Must be "take", "use" or "fetch-archives"
       return `${serverREST}${endpointPath}/${action}?name=${name}`
     }
 

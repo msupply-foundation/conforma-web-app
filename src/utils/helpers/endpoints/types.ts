@@ -103,7 +103,7 @@ export type SnapshotOptions =
     }
   | { action: 'upload' }
   | {
-      action: 'take' | 'use'
+      action: 'take' | 'use' | 'fetch-archives'
       name: string
     }
 

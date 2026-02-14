@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   Button,
   Icon,
@@ -26,6 +26,7 @@ import { useRouter } from '../../utils/hooks/useRouter'
 import { Tooltip, UploadButton } from '../../components/common'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { BrowserNotifications } from '../../utils/browserNotifications'
+import { max, set } from 'date-fns'
 
 type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
 interface SnapshotData {
@@ -59,7 +60,7 @@ const Snapshots: React.FC = () => {
   const [snapshotError, setSnapshotError] = useState<{ message: string; error: string } | null>(
     null
   )
-  const [selectedDownload, setSelectedDownload] = useState<string>()
+  const [selectedDownload, setSelectedDownload] = useState<{ name: string; size?: number }>()
   const [expandedSnapshots, setExpandedSnapshots] = useState<string[]>([])
   const [archive, setArchive] = useState<number | 'full' | 'none'>()
   const [archiveEnd, setArchiveEnd] = useState<number>()
@@ -306,7 +307,7 @@ const Snapshots: React.FC = () => {
               name="download"
               size="large"
               className="clickable blue"
-              onClick={() => setSelectedDownload(filename)}
+              onClick={() => setSelectedDownload({ name: filename, size })}
             />
 
             <Icon
@@ -542,7 +543,7 @@ const Snapshots: React.FC = () => {
   return (
     <div id="list-container" style={{ minWidth: 500, maxWidth: 750 }}>
       <ConfirmModal />
-      <DownloadModal name={selectedDownload} onClose={() => setSelectedDownload(undefined)} />
+      <DownloadModal snapshot={selectedDownload} onClose={() => setSelectedDownload(undefined)} />
       <div className="flex-row-space-between">
         <Header>Snapshots</Header>
         {renderUploadSnapshot()}
@@ -561,56 +562,158 @@ const Snapshots: React.FC = () => {
 }
 
 interface DownloadModalProps {
-  name?: string
+  snapshot?: { name: string; size?: number }
   onClose: () => void
 }
 
 interface DownloadOptions {
   includeSnapshot: boolean
   archiveRange?: { from?: number; to?: number }
+  zlibCompression?: number
 }
 
-const DownloadModal = ({ onClose, name }: DownloadModalProps) => {
+const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
+  const [archives, setArchives] = useState<ArchiveInfo[]>([])
   const [downloadOptions, setDownloadOptions] = useState<DownloadOptions>({
     includeSnapshot: true,
+    zlibCompression: 6,
   })
+
+  const reset = useCallback(() => {
+    setArchives([])
+    setDownloadOptions({ includeSnapshot: true, zlibCompression: 6 })
+    onClose()
+  }, [onClose])
+
+  useEffect(() => {
+    if (!snapshot?.name) return
+
+    const name = snapshot.name
+
+    getRequest(getServerUrl('snapshot', { action: 'fetch-archives', name })).then(({ archives }) =>
+      setArchives(archives)
+    )
+
+    return reset
+  }, [snapshot?.name, reset])
+
+  // Archive options for dropdowns
+
+  const options =
+    archives?.map(({ timestamp, totalFileSize, uid }) => ({
+      text: `${DateTime.fromMillis(timestamp).toLocaleString(DateTime.DATETIME_SHORT)}${
+        totalFileSize ? ` (${fileSizeWithUnits(totalFileSize)})` : ''
+      }`,
+      value: timestamp,
+      key: uid,
+    })) ?? []
+
+  const startArchiveOptions = options?.filter(
+    (option) => option.value <= (downloadOptions.archiveRange?.to ?? Infinity)
+  )
+
+  const endArchiveOptions = options?.filter(
+    (option) => option.value >= (downloadOptions.archiveRange?.from ?? 0)
+  )
+
+  const selectedArchives =
+    downloadOptions.archiveRange?.from === undefined &&
+    downloadOptions.archiveRange?.to === undefined
+      ? []
+      : archives?.filter((archive) => {
+          return (
+            archive.timestamp >= (downloadOptions.archiveRange?.from ?? 0) &&
+            archive.timestamp <= (downloadOptions.archiveRange?.to ?? Infinity)
+          )
+        })
+
+  const totalArchiveSize = getTotalSize(
+    downloadOptions.archiveRange?.from,
+    downloadOptions.archiveRange?.to,
+    archives
+  )
+
+  const totalDownloadSize =
+    typeof snapshot?.size !== 'number' || typeof totalArchiveSize !== 'number'
+      ? 'Unknown'
+      : snapshot.size + totalArchiveSize
+
   return (
-    <Modal open={!!name} onClose={onClose} closeIcon>
-      <Modal.Header>Download {name}</Modal.Header>
+    <Modal open={!!snapshot} onClose={onClose} closeIcon>
+      <Modal.Header>Download {snapshot?.name}</Modal.Header>
       <Modal.Content>
-        <Form>
+        <Form className="flex-column" style={{ gap: 20 }}>
           <Checkbox
-            label="Include snapshot file"
+            label={`Include snapshot file (${
+              snapshot?.size ? fileSizeWithUnits(snapshot.size) : 'Size unknown'
+            })`}
+            checked={downloadOptions.includeSnapshot}
             onChange={(_, { checked }) =>
               setDownloadOptions((options) => ({ ...options, includeSnapshot: !!checked }))
             }
           />
-          <div className="flex-row-start-center" style={{ gap: 10 }}>
-            <span>From: </span>
-            <Dropdown
-              placeholder="Select earliest archive"
-              selection
-              clearable
-              // value={archive}
-              // options={archiveOptions}
-              onChange={(_, { value }) => {
-                // setArchive(value as number | 'none' | 'full')
-                // if (value === 'none' || value === 'full' || (value as number) > (archiveEnd ?? 0))
-                //   setArchiveEnd(undefined)
-              }}
-              style={{ maxWidth: 400, fontSize: '90%' }}
-            />
-            <span>to: </span>
-            <Dropdown
-              placeholder="Select latest archive"
-              selection
-              clearable
-              // value={archiveEnd}
-              // options={archiveEndOptions}
-              onChange={(_, { value }) => {
-                // setArchiveEnd(value === '' ? undefined : (value as number))
-              }}
-              style={{ maxWidth: 400, fontSize: '90%' }}
+          <div>
+            <div>Include Archives:</div>
+            <div className="flex-row-start-center" style={{ gap: 10 }}>
+              <span>From: </span>
+              <Dropdown
+                placeholder="Select earliest archive"
+                selection
+                clearable
+                value={downloadOptions.archiveRange?.from}
+                options={startArchiveOptions}
+                onChange={(_, { value }) =>
+                  setDownloadOptions((options) => ({
+                    ...options,
+                    archiveRange: {
+                      ...options.archiveRange,
+                      from: value === '' ? undefined : (value as number),
+                    },
+                  }))
+                }
+                style={{ maxWidth: 400, fontSize: '90%' }}
+              />
+              <span>to: </span>
+              <Dropdown
+                placeholder="Select latest archive"
+                selection
+                clearable
+                value={downloadOptions.archiveRange?.to}
+                options={endArchiveOptions}
+                onChange={(_, { value }) =>
+                  setDownloadOptions((options) => ({
+                    ...options,
+                    archiveRange: {
+                      ...options.archiveRange,
+                      to: value === '' ? undefined : (value as number),
+                    },
+                  }))
+                }
+                style={{ maxWidth: 400, fontSize: '90%' }}
+              />
+              {selectedArchives?.length > 0 && (
+                <span>Total size: {fileSizeWithUnits(totalArchiveSize)}</span>
+              )}
+            </div>
+          </div>
+          <div>
+            Total download size (before Zip compression): {fileSizeWithUnits(totalDownloadSize)}
+          </div>
+          <div>
+            <span>Zip compression level:</span>
+            <span>(0: no compression, 9: maximum compression, slowest)</span>
+            <Form.Input
+              type={'number'}
+              min={0}
+              max={9}
+              value={downloadOptions.zlibCompression}
+              style={{ maxWidth: 100 }}
+              onChange={(e) =>
+                setDownloadOptions((options) => ({
+                  ...options,
+                  zlibCompression: Number(e.target.value),
+                }))
+              }
             />
           </div>
         </Form>
