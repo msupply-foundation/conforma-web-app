@@ -638,13 +638,23 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
   const totalDownloadSize =
     typeof snapshot?.size !== 'number' || typeof totalArchiveSize !== 'number'
       ? 'Unknown'
-      : snapshot.size + totalArchiveSize
+      : (downloadOptions.includeSnapshot ? snapshot.size : 0) + totalArchiveSize
 
   const handleSubmit = async () => {
     onClose()
     if (!snapshot?.name) return
 
-    showToast({ title: 'Download started...', timeout: 2000 })
+    showToast({ title: 'Download requested...', text: snapshot.name, timeout: 5000 })
+
+    let slowRequestToastShown = false
+    const slowRequestTimer = setTimeout(() => {
+      showToast({
+        title: '🥱',
+        text: 'Zip archive creation is taking a while, please stand by...',
+        timeout: 0,
+      })
+      slowRequestToastShown = true
+    }, 10_000) // 10 seconds
 
     const response = await postRequest({
       url: getServerUrl('snapshot', { action: 'download', name: snapshot?.name }),
@@ -652,17 +662,18 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
       headers: { 'Content-Type': 'application/json' },
     })
 
+    clearTimeout(slowRequestTimer)
+
+    if (slowRequestToastShown) {
+      showToast({ title: 'Download starting...', timeout: 5000 })
+    }
+
     const zipFile = response?.zipFileName
 
     const fileUrl = getServerUrl('file', { zipFile })
 
     downloadFile(fileUrl, `${snapshot.name}.zip`)
 
-    showToast({
-      title: 'Download complete',
-      text: snapshot.name,
-      timeout: 0,
-    })
     BrowserNotifications.notify({ title: 'Snapshot downloaded', body: snapshot.name })
   }
 
@@ -747,7 +758,16 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button onClick={handleSubmit} primary content={'Go'} />
+        <Button
+          onClick={handleSubmit}
+          primary
+          content={'Go'}
+          disabled={
+            !downloadOptions.includeSnapshot &&
+            !downloadOptions.archiveRange?.from &&
+            !downloadOptions.archiveRange?.to
+          }
+        />
       </Modal.Actions>
     </Modal>
   )
