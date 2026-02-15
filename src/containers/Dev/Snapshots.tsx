@@ -569,7 +569,7 @@ interface DownloadModalProps {
 interface DownloadOptions {
   includeSnapshot: boolean
   archiveRange?: { from?: number; to?: number }
-  zlibCompression?: number
+  zlibCompression?: number // 0-9, where 0 is no compression and 9 is maximum compression (but slowest) -- default 6
 }
 
 const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
@@ -578,6 +578,8 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
     includeSnapshot: true,
     zlibCompression: 6,
   })
+
+  const { showToast } = useToast({ style: 'success' })
 
   const reset = useCallback(() => {
     setArchives([])
@@ -637,6 +639,32 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
     typeof snapshot?.size !== 'number' || typeof totalArchiveSize !== 'number'
       ? 'Unknown'
       : snapshot.size + totalArchiveSize
+
+  const handleSubmit = async () => {
+    onClose()
+    if (!snapshot?.name) return
+
+    showToast({ title: 'Download started...', timeout: 2000 })
+
+    const response = await postRequest({
+      url: getServerUrl('snapshot', { action: 'download', name: snapshot?.name }),
+      jsonBody: downloadOptions,
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    const zipFile = response?.zipFileName
+
+    const fileUrl = getServerUrl('file', { zipFile })
+
+    downloadFile(fileUrl, `${snapshot.name}.zip`)
+
+    showToast({
+      title: 'Download complete',
+      text: snapshot.name,
+      timeout: 0,
+    })
+    BrowserNotifications.notify({ title: 'Snapshot downloaded', body: snapshot.name })
+  }
 
   return (
     <Modal open={!!snapshot} onClose={onClose} closeIcon>
@@ -719,24 +747,21 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button
-          // onClick={() => updateQuery({ showHistory: null })}
-          primary
-          content={'OK'}
-        />
+        <Button onClick={handleSubmit} primary content={'Go'} />
       </Modal.Actions>
     </Modal>
   )
 }
 
 const getTotalSize = (
-  archiveStart: number | 'full' | 'none' | undefined,
+  archiveStart: number | undefined,
   archiveEnd: number | undefined,
   currentArchives: ArchiveInfo[] | undefined
 ) => {
   if (!currentArchives) return null
-  if (!archiveStart || archiveStart === 'none') return null
-  const start = archiveStart === 'full' ? 0 : archiveStart ?? 0
+  if (!archiveStart && !archiveEnd) return 0
+
+  const start = archiveStart ?? 0
   const end = archiveEnd ?? Infinity
 
   const includedArchives = currentArchives.filter(
