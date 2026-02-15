@@ -644,6 +644,8 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
     onClose()
     if (!snapshot?.name) return
 
+    const outputFilename = getFilename(snapshot.name, downloadOptions)
+
     showToast({ title: 'Download requested...', text: snapshot.name, timeout: 5000 })
 
     let slowRequestToastShown = false
@@ -672,7 +674,7 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
 
     const fileUrl = getServerUrl('file', { zipFile })
 
-    downloadFile(fileUrl, `${snapshot.name}.zip`)
+    downloadFile(fileUrl, outputFilename)
 
     BrowserNotifications.notify({ title: 'Snapshot downloaded', body: snapshot.name })
   }
@@ -701,35 +703,43 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
                 clearable
                 value={downloadOptions.archiveRange?.from}
                 options={startArchiveOptions}
-                onChange={(_, { value }) =>
+                onChange={(_, { value }) => {
+                  const archiveRange = {
+                    ...downloadOptions.archiveRange,
+                    from: value === '' ? undefined : (value as number),
+                  }
+                  // If "from" value is cleared, also clear "to" value since it
+                  // doesn't make sense to have a "to" without a "from"
+                  if (value === '') archiveRange.to = undefined
                   setDownloadOptions((options) => ({
                     ...options,
-                    archiveRange: {
-                      ...options.archiveRange,
-                      from: value === '' ? undefined : (value as number),
-                    },
+                    archiveRange: archiveRange,
                   }))
-                }
+                }}
                 style={{ maxWidth: 400, fontSize: '90%' }}
               />
-              <span>to: </span>
-              <Dropdown
-                placeholder="Select latest archive"
-                selection
-                clearable
-                value={downloadOptions.archiveRange?.to}
-                options={endArchiveOptions}
-                onChange={(_, { value }) =>
-                  setDownloadOptions((options) => ({
-                    ...options,
-                    archiveRange: {
-                      ...options.archiveRange,
-                      to: value === '' ? undefined : (value as number),
-                    },
-                  }))
-                }
-                style={{ maxWidth: 400, fontSize: '90%' }}
-              />
+              {downloadOptions.archiveRange?.from && (
+                <>
+                  <span>to: </span>
+                  <Dropdown
+                    placeholder="Select latest archive"
+                    selection
+                    clearable
+                    value={downloadOptions.archiveRange?.to}
+                    options={endArchiveOptions}
+                    onChange={(_, { value }) =>
+                      setDownloadOptions((options) => ({
+                        ...options,
+                        archiveRange: {
+                          ...options.archiveRange,
+                          to: value === '' ? undefined : (value as number),
+                        },
+                      }))
+                    }
+                    style={{ maxWidth: 400, fontSize: '90%' }}
+                  />
+                </>
+              )}
               {selectedArchives?.length > 0 && (
                 <span>Total size: {fileSizeWithUnits(totalArchiveSize)}</span>
               )}
@@ -800,6 +810,37 @@ const getNestedSnapshots = (snapshots: SnapshotData[]) => {
     else nestedSnapshots.push({ ...snapshot, otherVersions: [] })
   })
   return nestedSnapshots
+}
+
+const getFilename = (name: string, downloadOptions: DownloadOptions): string => {
+  const { includeSnapshot, archiveRange } = downloadOptions
+
+  // No archive options set
+  if (!archiveRange?.from && !archiveRange?.to) {
+    return `${name}.zip`
+  }
+
+  // Format date from timestamp
+  const formatDate = (timestamp: number) => {
+    return DateTime.fromMillis(timestamp).toFormat('yyyy_MM_dd')
+  }
+
+  // Build date range string
+  let dateString = ''
+  if (archiveRange.from && archiveRange.to) {
+    dateString = `${formatDate(archiveRange.from)}-${formatDate(archiveRange.to)}`
+  } else if (archiveRange.from) {
+    dateString = formatDate(archiveRange.from)
+  } else if (archiveRange.to) {
+    dateString = formatDate(archiveRange.to)
+  }
+
+  // Build filename based on whether snapshot is included
+  if (includeSnapshot) {
+    return `${name} [+ARCHIVE ${dateString}].zip`
+  } else {
+    return `${name} - ARCHIVE ONLY ${dateString}.zip`
+  }
 }
 
 export default Snapshots
