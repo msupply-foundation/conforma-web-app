@@ -683,7 +683,7 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
     <Modal open={!!snapshot} onClose={onClose} closeIcon>
       <Modal.Header>Download {snapshot?.name}</Modal.Header>
       <Modal.Content>
-        <Form className="flex-column" style={{ gap: 20 }}>
+        <Form className="flex-column" style={{ gap: 25 }}>
           <Checkbox
             label={`Include snapshot file (${
               snapshot?.size ? fileSizeWithUnits(snapshot.size) : 'Size unknown'
@@ -693,7 +693,7 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
               setDownloadOptions((options) => ({ ...options, includeSnapshot: !!checked }))
             }
           />
-          <div>
+          <div className="flex-column" style={{ gap: 10 }}>
             <div>Include Archives:</div>
             <div className="flex-row-start-center" style={{ gap: 10 }}>
               <span>From: </span>
@@ -746,11 +746,17 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
             </div>
           </div>
           <div>
-            Total download size (before Zip compression): {fileSizeWithUnits(totalDownloadSize)}
+            Total download size <em>(before Zip compression)</em>:{' '}
+            <strong>{fileSizeWithUnits(totalDownloadSize)}</strong>
           </div>
-          <div>
-            <span>Zip compression level:</span>
-            <span>(0: no compression, 9: maximum compression, slowest)</span>
+          <div className="flex-column" style={{ gap: 10 }}>
+            <span>
+              Zip compression level:
+              <br />
+              <span className="smaller-text">
+                <em>(0: no compression, 9: maximum compression, slowest)</em>
+              </span>
+            </span>
             <Form.Input
               type={'number'}
               min={0}
