@@ -660,16 +660,20 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
 
     const outputFilename = getFilename(snapshot.name, downloadOptions)
 
-    showToast({ title: 'Download requested...', text: snapshot.name, timeout: 5000 })
+    const toastId = showToast({
+      uid: 'test',
+      title: 'Download requested...',
+      text: snapshot.name,
+      timeout: 0,
+    })
 
-    let slowRequestToastShown = false
     const slowRequestTimer = setTimeout(() => {
       showToast({
+        uid: toastId,
         title: '🥱',
         text: 'Zip archive creation is taking a while, please stand by...',
         timeout: 0,
       })
-      slowRequestToastShown = true
     }, 10_000) // 10 seconds
 
     const response = await postRequest({
@@ -680,9 +684,7 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
 
     clearTimeout(slowRequestTimer)
 
-    if (slowRequestToastShown) {
-      showToast({ title: 'Download starting...', timeout: 5000 })
-    }
+    showToast({ uid: toastId, title: 'Download starting...', timeout: 5_000 })
 
     const zipFile = response?.zipFileName
 
