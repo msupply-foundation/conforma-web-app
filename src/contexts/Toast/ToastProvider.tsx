@@ -36,34 +36,28 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   })
   const [toasts, setToasts] = useState<ToastState[]>([])
 
-  console.log('toasts', toasts)
-
   const updateDefaults = (newDefaults: Partial<ToastProps>) => {
     setToastDefaults((prevDefaults) => ({ ...prevDefaults, ...newDefaults }))
   }
 
   const showToast = (newToast: Partial<ToastProps> = {}): string => {
-    console.log('Showing toast', newToast.uid)
-    console.log('Current toasts', toasts)
-    if (newToast.uid) {
-      // Update existing toast
-      const toastIndex = toasts.findIndex((toast) => toast.uid === newToast.uid)
-      console.log('toastIndex', toastIndex)
-      if (toastIndex > -1) {
-        setToasts((prevState) =>
-          prevState.map((toast) => (toast.uid === newToast.uid ? { ...toast, ...newToast } : toast))
-        )
-        return newToast.uid
-      }
-    }
-
-    // If existing toast not found, just show it a a new one with the provided
-    // uid
     const uid = newToast.uid ?? nanoid(8)
-    setToasts((prevState) => [
-      ...prevState,
-      { ...toastDefaults, ...newToast, uid, close: () => {} },
-    ])
+
+    setToasts((prevState) => {
+      if (newToast.uid) {
+        // Update existing toast if it exists
+        const toastIndex = prevState.findIndex((toast) => toast.uid === newToast.uid)
+        if (toastIndex > -1) {
+          return prevState.map((toast) =>
+            toast.uid === newToast.uid ? { ...toast, ...newToast } : toast
+          )
+        }
+      }
+
+      // If existing toast not found, add new one
+      return [...prevState, { ...toastDefaults, ...newToast, uid, close: () => {} }]
+    })
+
     return uid
   }
 
