@@ -8,7 +8,7 @@ const TRANSITION_DURATION = 350 // ms
 
 const setTimeout = window.setTimeout // To ensure return type is number
 interface ToastProviderValue {
-  showToast: (...state: Partial<ToastProps>[]) => void
+  showToast: (...state: Partial<ToastProps>[]) => string
   updateDefaults: (state: Partial<ToastProps>) => void
   clearAllToasts: () => void
   toasts: ToastProps[]
@@ -17,7 +17,7 @@ interface ToastProviderValue {
 type ToastState = ToastProps & { close: () => void }
 
 const ToastProviderContext = createContext<ToastProviderValue>({
-  showToast: () => {},
+  showToast: () => '',
   updateDefaults: () => {},
   clearAllToasts: () => {},
   toasts: [],
@@ -36,15 +36,35 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   })
   const [toasts, setToasts] = useState<ToastState[]>([])
 
+  console.log('toasts', toasts)
+
   const updateDefaults = (newDefaults: Partial<ToastProps>) => {
     setToastDefaults((prevDefaults) => ({ ...prevDefaults, ...newDefaults }))
   }
 
-  const showToast = (newToast: Partial<ToastProps> = {}) => {
+  const showToast = (newToast: Partial<ToastProps> = {}): string => {
+    console.log('Showing toast', newToast.uid)
+    console.log('Current toasts', toasts)
+    if (newToast.uid) {
+      // Update existing toast
+      const toastIndex = toasts.findIndex((toast) => toast.uid === newToast.uid)
+      console.log('toastIndex', toastIndex)
+      if (toastIndex > -1) {
+        setToasts((prevState) =>
+          prevState.map((toast) => (toast.uid === newToast.uid ? { ...toast, ...newToast } : toast))
+        )
+        return newToast.uid
+      }
+    }
+
+    // If existing toast not found, just show it a a new one with the provided
+    // uid
+    const uid = newToast.uid ?? nanoid(8)
     setToasts((prevState) => [
       ...prevState,
-      { ...toastDefaults, ...newToast, uid: nanoid(8), close: () => {} },
+      { ...toastDefaults, ...newToast, uid, close: () => {} },
     ])
+    return uid
   }
 
   const removeToast = (uid: string) => {

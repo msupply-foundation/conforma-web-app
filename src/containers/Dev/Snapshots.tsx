@@ -483,10 +483,13 @@ const Snapshots: React.FC = () => {
             <Button
               primary
               onClick={async () => {
+                const toastId = showToast({ title: '', text: 'Storing archives...' })
+                console.log('toastId', toastId)
                 const result = await postRequest({
                   url: getServerUrl('snapshot', { action: 'store' }),
                 })
                 showToast({
+                  uid: toastId,
                   title: 'Archives stored',
                   text: result.message,
                 })
