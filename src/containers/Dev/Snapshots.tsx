@@ -33,7 +33,6 @@ interface SnapshotData {
   version: string
   missingArchives: string[]
   archiveSize: number
-  archiveSizeIncomplete: boolean
 }
 
 interface ArchiveInfo {
@@ -265,16 +264,7 @@ const Snapshots: React.FC = () => {
   }
 
   const renderSingleSnapshot = (
-    {
-      name,
-      filename,
-      timestamp,
-      size,
-      version,
-      missingArchives,
-      archiveSize,
-      archiveSizeIncomplete,
-    }: SnapshotData,
+    { name, filename, timestamp, size, version, missingArchives, archiveSize }: SnapshotData,
     hasChildren = false
   ) => (
     <Table.Row key={filename}>
@@ -332,7 +322,6 @@ const Snapshots: React.FC = () => {
               text={fileSizeWithUnits(archiveSize)}
               title="Archives"
               additionalStyles={{ margin: 0 }}
-              color={archiveSizeIncomplete ? 'orange' : undefined}
             />
           )}
           {archiveSize > 0 && missingArchives.length > 0 && (
