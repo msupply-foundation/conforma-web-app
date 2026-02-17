@@ -150,6 +150,10 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
       const { action } = snapshotOptions
       if (action === 'list') return `${serverREST}${endpointPath}/list`
 
+      if (action === 'purge') return `${serverREST}${endpointPath}/purge-orphan-archives`
+
+      if (action === 'store') return `${serverREST}${endpointPath}/store-archives`
+
       const name = 'name' in snapshotOptions ? snapshotOptions.name : null
 
       if (action === 'upload') return `${serverREST}${endpointPath}/upload`

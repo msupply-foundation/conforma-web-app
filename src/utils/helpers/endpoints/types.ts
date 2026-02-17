@@ -106,6 +106,8 @@ export type SnapshotOptions =
       action: 'take' | 'use' | 'fetch-archives'
       name: string
     }
+  | { action: 'purge' }
+  | { action: 'store' }
 
 export type LookupTableKey = 'lookupTable'
 export type LookupTableOptions =

@@ -8,7 +8,6 @@ import {
   Modal,
   Table,
   Header,
-  SemanticCOLORS,
   Dropdown,
   Form,
   List,
@@ -22,13 +21,10 @@ import { useToast } from '../../contexts/Toast'
 import { DateTime } from 'luxon'
 import TextIO from '../TemplateBuilder/shared/TextIO'
 import { downloadFile, fileSizeWithUnits } from '../../utils/helpers/utilityFunctions'
-import { useRouter } from '../../utils/hooks/useRouter'
 import { Tooltip, UploadButton } from '../../components/common'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import { BrowserNotifications } from '../../utils/browserNotifications'
-import { max, set } from 'date-fns'
 
-type ArchiveType = { type: 'full' | 'none' | 'partial'; from?: string; to?: string }
 interface SnapshotData {
   name: string
   filename: string
@@ -112,8 +108,8 @@ const Snapshots: React.FC = () => {
             typeof archive === 'string'
               ? archive
               : archive === undefined
-              ? 'full'
-              : { from: archive, to: archiveEnd },
+                ? 'full'
+                : { from: archive, to: archiveEnd },
         },
         headers: { 'Content-Type': 'application/json' },
       })
@@ -486,8 +482,15 @@ const Snapshots: React.FC = () => {
             </p>
             <Button
               primary
-              onClick={() => {
-                // TO-DO
+              onClick={async () => {
+                const result = await postRequest({
+                  url: getServerUrl('snapshot', { action: 'store' }),
+                })
+                showToast({
+                  title: 'Archives stored',
+                  text: result.message,
+                })
+                getList()
               }}
               content="Save to archive snapshots"
             />
@@ -516,8 +519,15 @@ const Snapshots: React.FC = () => {
             <div className="spacer-10" />
             <Button
               primary
-              onClick={() => {
-                // TO-DO
+              onClick={async () => {
+                const result = await postRequest({
+                  url: getServerUrl('snapshot', { action: 'purge' }),
+                })
+                showToast({
+                  title: 'Archives purged',
+                  text: result.message,
+                })
+                getList()
               }}
               content="Zap 'em"
             />
@@ -582,6 +592,7 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
   const { showToast } = useToast({ style: 'success' })
 
   const reset = useCallback(() => {
+    console.log('Resetting')
     setArchives([])
     setDownloadOptions({ includeSnapshot: true, zlibCompression: 6 })
     onClose()
