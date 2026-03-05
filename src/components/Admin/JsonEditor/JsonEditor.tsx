@@ -55,20 +55,21 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   }
 
   const handleUpdate: UpdateFunction = async (updateInput: UpdateFunctionProps) => {
+    let output = updateInput.newData
+
     if (onUpdate) {
       const result = await onUpdate(updateInput)
       if (typeof result === 'string' || result === false) return result
       if (Array.isArray(result) && result[0] === 'error') return result
-      const output =
-        Array.isArray(result) && result[0] === 'value' ? result[1] : updateInput.newData
-
-      if (showSaveButton) setIsDirty(true)
-      // If we don't have an explicit save button, we run "onSave" after every
-      // update, but keep the Undo queue alive
-      else await onSave(output)
-
-      return ['value', output]
+      if (Array.isArray(result) && result[0] === 'value') output = result[1]
     }
+
+    if (showSaveButton) setIsDirty(true)
+    // If we don't have an explicit save button, we run "onSave" after every
+    // update, but keep the Undo queue alive
+    else await onSave(output)
+
+    return ['value', output]
   }
 
   const handleCopy: CopyFunction = ({ key, value, type, stringValue }) => {
