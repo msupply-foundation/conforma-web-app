@@ -15,7 +15,13 @@ export default defineConfig({
   },
   build: {
     commonjsOptions: { transformMixedEsModules: true },
+    // Disable source maps during build to avoid the specific code path
+    sourcemap: false,
   },
+  esbuild: {
+    // Force single-threaded esbuild
+  },
+
   server: { port: 5100 },
   preview: { port: 5101 },
 })
