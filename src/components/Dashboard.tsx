@@ -19,6 +19,8 @@ import { constructOrObjectFilters } from '../utils/helpers/utilityFunctions'
 
 const Dashboard: React.FC = () => {
   const { t } = useLanguageProvider()
+  usePageTitle(t('PAGE_TITLE_HOME'))
+
   const {
     userState: { templatePermissions, isNonRegistered },
     logout,
@@ -30,8 +32,6 @@ const Dashboard: React.FC = () => {
     logout()
     return null
   }
-
-  usePageTitle(t('PAGE_TITLE_HOME'))
 
   const dashboardCategories = templatesByCategory.filter(({ templateCategory: { uiLocation } }) =>
     uiLocation.includes(UiLocation.Dashboard)
@@ -113,6 +113,12 @@ const TemplateComponent: React.FC<{
     dashboardRestrictions,
   } = template
 
+  const totalFilterCount = Object.values(filterCounts).reduce((acc, count) => acc + count, 0)
+
+  // We consider the totalFilterCount here, cos `totalApplications` only applies
+  // to the current template version.
+  const hasNoApplications = totalApplications === 0 && totalFilterCount === 0
+
   const userRole =
     permissions.filter((type) => type === PermissionPolicyType.Apply).length > 0
       ? currentUser?.organisation?.isSystemOrg
@@ -130,7 +136,7 @@ const TemplateComponent: React.FC<{
 
   return (
     <div className={`template${shouldHide ? ' hidden-element' : ''}`}>
-      <div className="content">
+      <div className="content flex-row-space-between">
         <div className="filters">
           <Label className="strong-label clickable">
             <Link to={`/applications?type=${code}&user-role=${userRole}`}>
@@ -149,16 +155,16 @@ const TemplateComponent: React.FC<{
           ))}
           {Object.keys(filterCounts).length !== filters.length && <LoadingSmall />}
         </div>
-        {totalApplications === 0 && hasApplyPermission && <StartNewTemplate template={template} />}
+        <div>
+          {hasApplyPermission && (
+            <Button as={Link} to={`/application/new?type=${code}`} inverted color="blue">
+              <Icon name="plus" size="tiny" color="blue" />
+              {t('BUTTON_DASHBOARD_NEW')}
+            </Button>
+          )}
+        </div>
       </div>
-      <div>
-        {totalApplications > 0 && hasApplyPermission && (
-          <Button as={Link} to={`/application/new?type=${code}`} inverted color="blue">
-            <Icon name="plus" size="tiny" color="blue" />
-            {t('BUTTON_DASHBOARD_NEW')}
-          </Button>
-        )}
-      </div>
+      {hasNoApplications && hasApplyPermission && <StartNewTemplate template={template} />}
     </div>
   )
 }
@@ -202,12 +208,12 @@ const FilterComponent: React.FC<{
   )
 }
 
-const StartNewTemplate: React.FC<{ template: TemplateInList }> = ({ template: { name, code } }) => {
+const StartNewTemplate: React.FC<{ template: TemplateInList }> = ({ template: { code } }) => {
   const { t } = useLanguageProvider()
   return (
     <div className="no-applications">
       <Label className="simple-label" content={t('LABEL_DASHBOARD_NO_APPLICATIONS')} />
-      <Link to={`/application/new?type=${code}`}>{t('LABEL_DASHBOARD_START_NEW', name)}</Link>
+      <Link to={`/application/new?type=${code}`}>{t('LABEL_DASHBOARD_START_NEW')}</Link>
     </div>
   )
 }
