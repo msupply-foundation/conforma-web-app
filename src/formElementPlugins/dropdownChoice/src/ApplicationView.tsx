@@ -65,7 +65,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const { isEditable, isRequired } = element
 
-  // Used for matching the defaultOption to the correct optionIndex when options are objects.
+  // Used for matching the defaultOption to the correct optionIndex when options
+  // are objects.
   const displayOptions =
     options[0] === 'Loading...'
       ? []
