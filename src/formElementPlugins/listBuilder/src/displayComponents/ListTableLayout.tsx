@@ -42,10 +42,14 @@ const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> 
         {listItems.map((item, index) => (
           <Table.Row key={`list-row-${index}`} onClick={() => editItem(index)}>
             {displayFields.map(({ code }, cellIndex) => {
-              if (isMobile && hideIfEmptyFields.includes(code) && !item[code]?.value?.text)
-                return null
+              const cellText = item[code]?.value?.text ?? ''
+              if (isMobile && hideIfEmptyFields.includes(code) && !cellText) return null
+              const isCurrency = /^[$€£¥]/.test(cellText.trim())
               return (
-                <TableCell key={`list-cell-${index}-${cellIndex}`}>
+                <TableCell
+                  key={`list-cell-${index}-${cellIndex}`}
+                  style={isCurrency ? { whiteSpace: 'nowrap' } : undefined}
+                >
                   <TableCellMobileLabelWrapper
                     label={displayFields[cellIndex].title ?? ''}
                     minLabelWidth={minMobileLabelWidth}
