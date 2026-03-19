@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Table, TableHeaderCell, TableCell } from 'semantic-ui-react'
 import { ListLayoutProps } from '../types'
 import { TableCellMobileLabelWrapper } from '../../../../utils/tables/TableCellMobileLabelWrapper'
@@ -27,8 +27,35 @@ const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> 
     return hideFromMobileIfEmpty
   })()
 
+  // Estimate the minimum table width based on column content. If the
+  // estimated width exceeds 450px, apply it directly (up to 550px) so the
+  // table can overflow its container rather than squeezing columns.
+  const CHAR_WIDTH = 8
+  const CELL_PADDING = 24
+  const DEFAULT_COL_MIN = 80
+
+  const tableWidth = useMemo(() => {
+    const totalMinWidth = displayFields.reduce((total, { code, title }) => {
+      const headerWidth = (title?.length ?? 0) * CHAR_WIDTH + CELL_PADDING
+      const maxCellWidth = listItems.reduce((max, item) => {
+        const text = item[code]?.value?.text ?? ''
+        const isNowrap = /^[$€£¥]/.test(text.trim())
+        const cellWidth = isNowrap ? text.length * CHAR_WIDTH + CELL_PADDING : DEFAULT_COL_MIN
+        return Math.max(max, cellWidth)
+      }, 0)
+      return total + Math.max(headerWidth, maxCellWidth)
+    }, 0)
+    if (totalMinWidth <= 450) return undefined
+    return Math.min(totalMinWidth, 550)
+  }, [displayFields, listItems])
+
   return (
-    <Table celled={!isMobile} stackable selectable={isEditable}>
+    <Table
+      celled={!isMobile}
+      stackable
+      selectable={isEditable}
+      style={tableWidth ? { width: tableWidth } : undefined}
+    >
       {!isMobile && (
         <Table.Header>
           <Table.Row>
