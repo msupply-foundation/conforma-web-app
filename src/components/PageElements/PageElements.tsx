@@ -214,6 +214,8 @@ const PageElements: React.FC<PageElementProps> = ({
               latestApplicationResponse,
               latestOriginalReviewResponse,
             }) => {
+              if (element.pluginCode === 'getValues') return null
+
               const summaryViewProps = getSummaryViewProps(element)
 
               // Information or no review, and not optionally reviewable
