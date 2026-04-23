@@ -20,6 +20,8 @@ export const FigTreeActions = new FigTreeEvaluator({
 })
 
 // Replace the fragments with the back-end ones
-getRequest(getServerUrl('figTreeFragments', { frontOrBack: 'backEnd' })).then((fragments) => {
+export const figTreeActionsReady = getRequest(
+  getServerUrl('figTreeFragments', { frontOrBack: 'backEnd' })
+).then((fragments) => {
   FigTreeActions.updateOptions({ fragments })
 })
