@@ -45,6 +45,7 @@ export const PreferencesSchema = {
         managerCanEditLookupTables: { type: 'boolean' },
         managerCanEditLocalisation: { type: 'boolean' },
         previewDocsMinKeepTime: { type: 'string' },
+        protectedFilesKeepDays: { type: 'number' },
         backupFilePrefix: { type: 'string' },
         skipBackup: { type: 'boolean' },
         maxBackupDurationDays: { type: 'number' },
@@ -314,6 +315,7 @@ export interface Preferences {
     managerCanEditLookupTables?: boolean
     managerCanEditLocalisation?: boolean
     previewDocsMinKeepTime?: string
+    protectedFilesKeepDays?: number
     fileCleanupSchedule?:
       | number[]
       | {
