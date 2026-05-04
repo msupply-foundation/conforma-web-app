@@ -107,7 +107,6 @@ export type SnapshotOptions =
       name: string
     }
   | { action: 'purge' }
-  | { action: 'store' }
 
 export type LookupTableKey = 'lookupTable'
 export type LookupTableOptions =

@@ -47,7 +47,6 @@ interface ArchiveInfo {
 interface ListData {
   snapshots: SnapshotData[]
   orphanArchives: string[]
-  archivesNotInStore: string[]
 }
 
 const Snapshots: React.FC = () => {
@@ -450,48 +449,6 @@ const Snapshots: React.FC = () => {
     )
   }
 
-  const renderMissingFromStore = (missingFromStore: string[]) => {
-    return (
-      <Table.Row>
-        <Table.Cell className="flex-row-start-center">
-          <div className="flex-column-start-start" style={{ margin: 8 }}>
-            <p style={{ marginBottom: 6, marginTop: 0 }}>
-              The following archives in the current system are not part of the saved snapshot
-              archives:
-            </p>
-            <List bulleted style={{ textAlign: 'left' }}>
-              {missingFromStore.map((archive) => (
-                <List.Item key={archive} className="slightly-smaller-text">
-                  {archive}
-                </List.Item>
-              ))}
-            </List>
-            <p style={{ marginBottom: 6, marginTop: 5 }}>
-              Click to copy them to the snapshot archives
-            </p>
-            <Button
-              primary
-              onClick={async () => {
-                const toastId = showToast({ title: '', text: 'Storing archives...' })
-                console.log('toastId', toastId)
-                const result = await postRequest({
-                  url: getServerUrl('snapshot', { action: 'store' }),
-                })
-                showToast({
-                  uid: toastId,
-                  title: 'Archives stored',
-                  text: result.message,
-                })
-                getList()
-              }}
-              content="Save to archive snapshots"
-            />
-          </div>
-        </Table.Cell>
-      </Table.Row>
-    )
-  }
-
   const renderOrphans = (orphans: string[]) => {
     return (
       <Table.Row>
@@ -539,7 +496,6 @@ const Snapshots: React.FC = () => {
     )
   }
 
-  const missingFromStore = data?.archivesNotInStore ?? []
   const orphanArchives = data?.orphanArchives ?? []
 
   return (
@@ -553,7 +509,6 @@ const Snapshots: React.FC = () => {
       <Table stackable style={{ marginTop: 0 }}>
         <Table.Body>
           <NewSnapshot />
-          {missingFromStore.length > 0 && renderMissingFromStore(missingFromStore)}
           {renderSnapshotList()}
           {orphanArchives.length > 0 && renderOrphans(orphanArchives)}
         </Table.Body>
