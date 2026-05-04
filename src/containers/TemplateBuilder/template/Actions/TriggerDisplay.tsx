@@ -11,7 +11,14 @@ import { useTemplateState, disabledMessage } from '../TemplateWrapper'
 import { useActionState } from './Actions'
 import { Loading } from '../../../../components'
 
-const ActionConfig = lazy(() => import('./ActionConfig'))
+// Delay loading ActionConfig until FigTreeActions has finished fetching
+// back-end fragments, so the Evaluation/Parameters components don't render
+// with stale (front-end) fragment data.
+const ActionConfig = lazy(() =>
+  import('./FigTreeActions').then(({ figTreeActionsReady }) =>
+    figTreeActionsReady.then(() => import('./ActionConfig'))
+  )
+)
 
 type TemplateActions = { sequential: TemplateAction[]; asynchronous: TemplateAction[] }
 type GetActionsForTrigger = (

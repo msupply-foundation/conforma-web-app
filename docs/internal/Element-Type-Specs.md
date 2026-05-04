@@ -445,6 +445,7 @@ _Interface for uploading documents or other files_
 - **showDescription**: `boolean` -- if `true`, an additional text input will be displayed alongside each file to allow the applicant to specify a description for each file. (default `false`)
 - **showFileRestrictions**: `boolean` -- will display the allowed file extensions and maximum size below the upload box (default: `true`)
 - **showDocumentModal**: `boolean` -- if `true`, will display documents (when clicked to view) in a modal overlay rather than opening in a new tab. Will fallback to global system preference.
+- **isProtected**: `boolean` -- if `true`, files uploaded are treated with special privacy considerations: they'll never be archived, and will be automatically deleted after a certain number of days after upload (specified in Server Prefs:`protectedFilesKeepDays`, default 90)
 
 #### Response type
 

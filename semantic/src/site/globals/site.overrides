@@ -1789,7 +1789,7 @@ a:hover {
   }
 
   .template {
-    .flex-row();
+    .flex-column();
 
     .content {
       justify-content: space-between;
@@ -1843,9 +1843,9 @@ a:hover {
     box-shadow: @gridBoxShadow;
     background-color: @surfacesWhite;
 
-    .content {
-      min-height: 65px;
-    }
+    // .content {
+    //   min-height: 65px;
+    // }
 
     .button {
       padding: 10px;
@@ -1930,7 +1930,9 @@ a:hover {
 .fragment-name-display {
   padding: 0.5em 0.8em;
   border-radius: 0.5em;
-  box-shadow: 0 2px 5px -1px rgba(50, 50, 93, 0.25), 0 1px 3px -1px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 2px 5px -1px rgba(50, 50, 93, 0.25),
+    0 1px 3px -1px rgba(0, 0, 0, 0.3);
   font-size: 1.2em;
   font-weight: 700;
 }
@@ -2272,7 +2274,7 @@ a:hover {
     padding: 2px;
     padding-left: 10px;
     padding-right: 10px;
-    line-height: 1.4285em // resets height set by Modal;;
+    line-height: 1.4285em; // resets height set by Modal;
   }
 
   .ui.checkbox {

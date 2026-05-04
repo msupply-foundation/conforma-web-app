@@ -22,7 +22,7 @@ export const defaultPrefs: Preferences = {
     systemManagerPermissionName: 'systemManager',
     managerCanEditLookupTables: true,
     managerCanEditLocalisation: true,
-    previewDocsMinKeepTime: '2 hours',
+    protectedFilesKeepDays: 90,
     fileCleanupSchedule: {
       // Once per day at 1:05am
       hour: 1,

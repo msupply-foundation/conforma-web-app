@@ -65,6 +65,19 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const { isEditable, isRequired } = element
 
+  // Used for matching the defaultOption to the correct optionIndex when options
+  // are objects.
+  const displayOptions =
+    options[0] === 'Loading...'
+      ? []
+      : optionsDisplayProperty
+        ? options.map((option) => (option as ObjectOption)[optionsDisplayProperty])
+        : optionsDisplayExpression
+          ? options.map((option) =>
+              substituteValues(optionsDisplayExpression, option as ObjectOption)
+            )
+          : options
+
   useEffect(() => {
     // This deals with the case when a default response has been externally set
     // (e.g. by a ListBuilder) and only a selection (with no index) has been
@@ -83,7 +96,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     parameters,
     additionalDependencies: [options],
     onChange: (defaultOption: any) => {
-      const optionIndex = getDefaultIndex(defaultOption, options)
+      const optionIndex = getDefaultIndex(defaultOption, displayOptions)
       if (optionIndex === -1 && hasOther) addItemHandler(defaultOption)
       else handleChange(optionIndex)
     },
