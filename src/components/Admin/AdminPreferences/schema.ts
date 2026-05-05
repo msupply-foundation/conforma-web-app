@@ -60,6 +60,7 @@ export const PreferencesSchema = {
           items: { type: 'string' },
         },
         maintenanceSite: { type: 'string' },
+        freeSpaceRequiredForZips: { type: 'number' },
         externalApiConfigs: {
           type: 'object',
           additionalProperties: {
@@ -217,6 +218,7 @@ export const PreferencesSchema = {
   definitions: {
     schedule: {
       oneOf: [
+        { type: 'null' },
         {
           type: 'array',
           items: { type: 'number' },
@@ -352,6 +354,7 @@ export interface Preferences {
           year?: number | number[] | null
           tz?: string | null
         }
+      | null
     backupFilePrefix?: string
     skipBackup?: boolean
     maxBackupDurationDays?: number
@@ -408,6 +411,7 @@ export interface Preferences {
     }
     envVars?: string[]
     maintenanceSite?: string
+    freeSpaceRequiredForZips?: number // GB
   }
   web: {
     paginationPresets?: number[]

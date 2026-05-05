@@ -81,7 +81,10 @@ export const constructOrObjectFilters = (filters: { [key: string]: string }[]) =
 })
 
 // Nicely formatted file sizes, e.g. 1000000 => "1MB"
-export const fileSizeWithUnits = (size: number): string => {
+export const fileSizeWithUnits = (size: number | string | null): string => {
+  if (typeof size === 'string') return size
+  if (size === null) return 'Unknown'
+
   const sizeInKb = size / 1000
   if (sizeInKb < 1000) return `${sizeInKb} kB`
   const sizeInMB = size / 1_000_000
@@ -90,14 +93,17 @@ export const fileSizeWithUnits = (size: number): string => {
   return `${parseInt(String(sizeInGB * 100)) / 100} GB`
 }
 
-// Force a file download
-export const downloadFile = async (url: string, filename: string, fetchOptions: object = {}) => {
-  const res = await fetch(url, fetchOptions)
-  const data = await res.blob()
+// Force a file download (browser handles progress tracking)
+export const downloadFile = (url: string, filename: string) => {
+  const separator = url.includes('?') ? '&' : '?'
+  const downloadUrl = `${url}${separator}filename=${encodeURIComponent(filename)}`
+
   const a = document.createElement('a')
-  a.href = window.URL.createObjectURL(data)
-  a.download = filename
+  a.href = downloadUrl
+  a.style.display = 'none'
+  document.body.appendChild(a)
   a.click()
+  document.body.removeChild(a)
 }
 
 // LOCAL STORAGE

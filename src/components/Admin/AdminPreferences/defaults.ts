@@ -86,6 +86,7 @@ export const defaultPrefs: Preferences = {
     },
     envVars: ['FILE_OUTPUT_PATH', 'API_KEY'],
     maintenanceSite: 'https://maintenance.example.com',
+    freeSpaceRequiredForZips: 5, // GB
   },
   web: {
     paginationPresets: [10, 25, 50],
