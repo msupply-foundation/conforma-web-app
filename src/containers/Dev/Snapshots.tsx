@@ -33,6 +33,7 @@ interface SnapshotData {
   version: string
   missingArchives: string[]
   archiveSize: number
+  isLegacy: boolean
 }
 
 interface ArchiveInfo {
@@ -263,7 +264,16 @@ const Snapshots: React.FC = () => {
   }
 
   const renderSingleSnapshot = (
-    { name, filename, timestamp, size, version, missingArchives, archiveSize }: SnapshotData,
+    {
+      name,
+      filename,
+      timestamp,
+      size,
+      version,
+      missingArchives,
+      archiveSize,
+      isLegacy,
+    }: SnapshotData,
     hasChildren = false
   ) => (
     <Table.Row key={filename}>
@@ -331,6 +341,18 @@ const Snapshots: React.FC = () => {
                 )}`}
                 color="red"
                 icon="exclamation triangle"
+                iconStyle={{ marginLeft: -5, height: 'auto' }}
+                className="smaller-text-tooltip"
+                triggerEvent="hover"
+              />
+            </div>
+          )}
+          {isLegacy && (
+            <div className="flex-row-start-center" style={{ gap: 5 }}>
+              <Tooltip
+                message="**Legacy format:** this snapshot is in the old archive layout. Loading it will convert it in place to the new format; a backup of the original is saved with an `OLD_` prefix."
+                color="orange"
+                icon="life ring"
                 iconStyle={{ marginLeft: -5, height: 'auto' }}
                 className="smaller-text-tooltip"
                 triggerEvent="hover"
