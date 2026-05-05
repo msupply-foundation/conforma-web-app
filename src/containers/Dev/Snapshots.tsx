@@ -352,7 +352,7 @@ const Snapshots: React.FC = () => {
               <Tooltip
                 message="**Legacy format:** this snapshot is in the old archive layout. Loading it will convert it in place to the new format; a backup of the original is saved with an `OLD_` prefix."
                 color="orange"
-                icon="life ring"
+                icon="warning"
                 iconStyle={{ marginLeft: -5, height: 'auto' }}
                 className="smaller-text-tooltip"
                 triggerEvent="hover"
