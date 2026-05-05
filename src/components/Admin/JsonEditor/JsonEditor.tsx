@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Search } from 'semantic-ui-react'
+import { isEqual } from 'lodash-es'
 import { ReactJson, UndoRedoSave } from './'
 import { JsonEditorProps, JsonData, UpdateFunctionProps, UpdateFunction } from 'json-edit-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
@@ -32,9 +33,13 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   const [{ present: currentData }, { set: setData, reset, undo, redo, canUndo, canRedo }] =
     useUndo(data)
 
+  const prevDataRef = useRef(data)
   useEffect(() => {
-    reset(data)
-    setIsDirty(false)
+    if (!isEqual(data, prevDataRef.current)) {
+      reset(data)
+      setIsDirty(false)
+      prevDataRef.current = data
+    }
   }, [data])
 
   const handleSave = async () => {

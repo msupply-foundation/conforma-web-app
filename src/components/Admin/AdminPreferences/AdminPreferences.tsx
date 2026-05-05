@@ -101,6 +101,7 @@ const AdminPreferences: React.FC = () => {
       {prefs ? (
         <Suspense fallback={<Loading />}>
           <JsonEditor
+            key="preferences"
             data={prefs}
             onSave={(data) => showWarningModal({ onConfirm: () => handleSave(data) })}
             isSaving={isSaving}
@@ -150,6 +151,7 @@ const AdminPreferences: React.FC = () => {
             <Message.Content>{t('PREFERENCES_OVERRIDE_INFO')}</Message.Content>
           </Message>
           <JsonEditor
+            key="overrides"
             data={overrides}
             rootName="overrides"
             collapse={2}

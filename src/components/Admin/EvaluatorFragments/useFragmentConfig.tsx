@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 import useUndo from 'use-undo'
 import { dequal, Fragment, FragmentMetadata } from 'fig-tree-editor-react'
@@ -41,15 +41,20 @@ export const useFragmentConfig = () => {
   const selectedFragment = query.fragment
   const fragments = (data?.evaluatorFragments?.nodes ?? []) as FragmentRow[]
 
+  const initializedForRef = useRef<string | null | undefined>(undefined)
   useEffect(() => {
     if (!selectedFragment) {
-      undoProps.reset(null)
+      if (initializedForRef.current !== null) {
+        undoProps.reset(null)
+        initializedForRef.current = null
+      }
       return
     }
-
-    if (fragments) {
-      const fragmentObject = fragments.find((frag) => frag.name === selectedFragment)
-      if (fragmentObject) undoProps.reset(fragmentObject)
+    if (initializedForRef.current === selectedFragment) return
+    const fragmentObject = fragments?.find((frag) => frag.name === selectedFragment)
+    if (fragmentObject) {
+      undoProps.reset(fragmentObject)
+      initializedForRef.current = selectedFragment
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, selectedFragment])
