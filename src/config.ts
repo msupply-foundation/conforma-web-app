@@ -9,9 +9,17 @@ const remoteServer = import.meta.env.VITE_REMOTE_SERVER ?? null
 const remoteRestServer = remoteServer ? `${remoteServer}/server/api` : null
 const remoteGraphQLServer = remoteServer ? `${remoteServer}/server/graphql` : null
 
+// In local dev (no remote server) HTTP requests use relative paths so they
+// flow through the vite dev-server proxy (see vite.config.ts) and the
+// browser treats them as same-origin — matching production. The websocket
+// connection isn't proxied, so it needs an absolute URL regardless; that's
+// what `devServerRestAbsolute` is for.
+const devServerRestAbsolute = remoteRestServer ?? 'http://localhost:8080/api'
+
 const config = {
-  devServerRest: remoteRestServer ?? 'http://localhost:8080/api',
-  devServerGraphQL: remoteGraphQLServer ?? 'http://localhost:8080/graphql',
+  devServerRest: remoteRestServer ?? '/api',
+  devServerGraphQL: remoteGraphQLServer ?? '/graphql',
+  devServerRestAbsolute,
   productionPathREST: '/server/api',
   productionPathGraphQL: '/server/graphql',
   restEndpoints: {

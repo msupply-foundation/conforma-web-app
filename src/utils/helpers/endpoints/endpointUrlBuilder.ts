@@ -24,6 +24,7 @@ const {
   restEndpoints,
   devServerRest,
   devServerGraphQL,
+  devServerRestAbsolute,
   productionPathREST,
   productionPathGraphQL,
 } = config
@@ -42,7 +43,15 @@ export const serverGraphQL = isProductionBuild
     ? devServerGraphQL
     : getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
-const serverWebSocket = serverREST
+// Websocket URL is computed from an absolute REST URL because the vite
+// dev-server proxy only handles HTTP — websockets connect directly to the
+// backend.
+const restForWebSocket = isProductionBuild
+  ? VITE_USE_DEV_SERVER
+    ? devServerRestAbsolute
+    : getProductionUrl(productionPathREST)
+  : devServerRestAbsolute
+const serverWebSocket = restForWebSocket
   .replace('http', 'ws')
   .replace('api', '')
   .replace('server', 'websocket')
