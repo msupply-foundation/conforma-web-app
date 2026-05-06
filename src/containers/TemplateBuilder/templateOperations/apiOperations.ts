@@ -6,7 +6,6 @@ import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { getRequest, postRequest } from '../../../utils/helpers/fetchMethods'
 import { downloadFile } from '../../../utils/helpers/utilityFunctions'
 import { VersionObject } from '../useGetTemplates'
-import config from '../../../config'
 import { ModifiedEntities } from './EntitySelectModal'
 
 export const commit = async (id: number, comment: string) => {
@@ -87,7 +86,6 @@ export const exportAndDownload = async (
   versionId: string,
   versionHistory: VersionObject[]
 ) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
   const filename = `${code}-${versionId}_v${versionHistory.length + 1}.zip`
   try {
     await downloadFile(
@@ -95,10 +93,7 @@ export const exportAndDownload = async (
         action: 'export',
         id,
       }),
-      filename,
-      {
-        headers: { Authorization: `Bearer ${JWT}` },
-      }
+      filename
     )
   } catch (err) {
     return { error: (err as Error).message }
