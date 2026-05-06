@@ -207,8 +207,8 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
           return `${serverREST}${endpointPath}/commit/${id}`
         case 'duplicate':
           return `${serverREST}${endpointPath}/duplicate/${type}/${id}`
-        case 'export':
-          return `${serverREST}${endpointPath}/export/${id}`
+        case 'prepareExport':
+          return `${serverREST}${endpointPath}/prepare-export/${id}`
         case 'import':
           if (type === 'install' && 'uid' in templateOptions)
             return `${serverREST}${endpointPath}/import/${type}/${templateOptions.uid}`

@@ -100,6 +100,11 @@ export const downloadFile = (url: string, filename: string) => {
 
   const a = document.createElement('a')
   a.href = downloadUrl
+  // Tells the browser this click is a download, not a navigation — without
+  // this the page can briefly enter a navigating state, reloading the SPA or
+  // aborting in-flight requests until the response's Content-Disposition
+  // arrives. Same-origin only; harmless cross-origin (silently ignored).
+  a.download = filename
   a.style.display = 'none'
   document.body.appendChild(a)
   a.click()
