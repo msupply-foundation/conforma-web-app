@@ -57,9 +57,6 @@ const Snapshots: React.FC = () => {
   )
   const [selectedDownload, setSelectedDownload] = useState<{ name: string; size?: number }>()
   const [expandedSnapshots, setExpandedSnapshots] = useState<string[]>([])
-  const [archive, setArchive] = useState<number | 'full' | 'none'>()
-  const [archiveEnd, setArchiveEnd] = useState<number>()
-  const [refetchData, setRefetchData] = useState(false)
   const { maintenanceMode } = usePrefs()
 
   const [data, setData] = useState<ListData | null>(null)
@@ -73,11 +70,8 @@ const Snapshots: React.FC = () => {
   BrowserNotifications.checkPermission()
 
   useEffect(() => {
-    // updateQuery({ type: displayType })
-    setData(null)
-    setSnapshotError(null)
     getList()
-  }, [refetchData])
+  }, [])
 
   const getList = async () => {
     try {
@@ -100,17 +94,7 @@ const Snapshots: React.FC = () => {
         url: getServerUrl('snapshot', {
           action: 'take',
           name: normaliseSnapshotName(name),
-          // archive: displayType === 'archives',
         }),
-        jsonBody: {
-          archive:
-            typeof archive === 'string'
-              ? archive
-              : archive === undefined
-                ? 'full'
-                : { from: archive, to: archiveEnd },
-        },
-        headers: { 'Content-Type': 'application/json' },
       })
 
       if (resultJson.success) {
