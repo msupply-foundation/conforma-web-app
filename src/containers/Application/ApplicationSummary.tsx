@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Header, Message, Container } from 'semantic-ui-react'
-import { ApplicationProps, MethodToCallProps, ResponsesByCode, User } from '../../utils/types'
+import { ApplicationProps, MethodToCallProps, ResponsesByCode } from '../../utils/types'
 import useSubmitApplication from '../../utils/hooks/useSubmitApplication'
-import { useUserState } from '../../contexts/UserState'
 import { ApplicationStatus } from '../../utils/generated/graphql'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { Loading, SectionWrapper } from '../../components'
@@ -21,15 +20,10 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   const { replace, push, query } = useRouter()
   const [error, setError] = useState(false)
 
-  const {
-    userState: { currentUser },
-  } = useUserState()
-
   usePageTitle(t('PAGE_TITLE_APPLICATION', fullStructure.info.serial))
 
   const { submit } = useSubmitApplication({
     serialNumber: fullStructure?.info.serial as string,
-    currentUser: currentUser as User,
   })
 
   const { isSectionActive, toggleSection } = useQuerySectionActivation({
@@ -95,7 +89,7 @@ const ApplicationSummary: React.FC<ApplicationProps> = ({
   const isSubmitted = status !== ApplicationStatus.Draft
 
   return (
-    <Container id="application-summary">
+    <Container id="application-summary" className="white-container-decoration">
       <div id="application-summary-header">
         <Header
           as="h2"

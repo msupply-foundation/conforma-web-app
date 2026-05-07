@@ -6,16 +6,10 @@ import {
   TemplateSection,
   useGetTemplateQuery,
 } from '../generated/graphql'
-import evaluate from '../../modules/expression-evaluator'
+import { FigTree } from '../../FigTreeEvaluator'
 import { useUserState } from '../../contexts/UserState'
-import { EvaluatorParameters } from '../types'
 import { getTemplateSections } from '../helpers/application/getSectionsDetails'
 import { TemplateDetails } from '../types'
-import config from '../../config'
-import getServerUrl from '../helpers/endpoints/endpointUrlBuilder'
-
-const graphQLEndpoint = getServerUrl('graphQL')
-const JWT = localStorage.getItem(config.localStorageJWTKey)
 
 interface UseLoadTemplateProps {
   templateCode?: string
@@ -61,7 +55,9 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
     const { id, code, name, versionId } = template
     const templateSections = template.templateSections.nodes as TemplateSection[]
     const sections = getTemplateSections(templateSections)
+    const reviewSection = sections.filter((section) => section.isReviewSection)?.[0] || null
     const elementsIds: number[] = []
+    const reviewSectionElementIds: number[] = []
     const elementsDefaults: any[] = []
 
     templateSections.forEach((section) => {
@@ -72,29 +68,28 @@ const useLoadTemplate = ({ templateCode }: UseLoadTemplateProps) => {
           (element.category === TemplateElementCategory.Question || element?.initialValue !== null)
         ) {
           elementsIds.push(element.id)
+          if (section.isReviewSection) reviewSectionElementIds.push(element.id)
           elementsDefaults.push(element.initialValue)
         }
       })
     })
 
-    const evaluatorParams: EvaluatorParameters = {
-      objects: { currentUser },
-      APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-      headers: { Authorization: 'Bearer ' + JWT },
-    }
-    evaluate(template?.startMessage || '', evaluatorParams).then((startMessage: any) => {
-      setTemplate({
-        id,
-        code,
-        name: String(name),
-        versionId,
-        elementsIds,
-        elementsDefaults,
-        sections,
-        startMessage,
-      })
-    })
+    FigTree.evaluate(template?.startMessage || '', { data: { currentUser } }).then(
+      (startMessage: any) => {
+        setTemplate({
+          id,
+          code,
+          name: String(name),
+          versionId,
+          elementsIds,
+          elementsDefaults,
+          reviewSectionElementIds,
+          sections,
+          reviewSection,
+          startMessage,
+        })
+      }
+    )
   }, [data, currentUser])
 
   return {

@@ -139,133 +139,148 @@ const Filters: React.FC = () => {
 
   return (
     <>
-      <Header as="h3">Dashboard Filters</Header>
-      {template.canEdit && (
-        <div className="flex-row-start-center">
-          <DropdownIO
-            value={selectedFilter.id}
-            title="Filters"
-            options={[...allFilters, newFilter].filter(
-              (fil) => !filterJoinCodes.includes(fil?.code)
-            )}
-            getKey={'id'}
-            getValue={'id'}
-            getText={'title'}
-            setValue={(_, fullValue) => {
-              setSelectedFilter(fullValue)
-            }}
-            additionalStyles={{ marginBottom: 0 }}
-          />
-          <Icon className="clickable" name="add square" onClick={addFilterJoin} />
-        </div>
-      )}
-      <div className="spacer-20" />
-      <div className="filter-joins">
-        {filterJoins.map((filterJoin) => (
-          <Label
-            key={filterJoin.id}
-            onClick={
-              template.canEdit
-                ? () => {
-                    selectFilterJoin(filterJoin)
-                  }
-                : () => {}
-            }
-            className={`${template.canEdit ? 'clickable' : ''} ${
-              filterJoin?.id === selectedFilterJoin?.id ? 'builder-selected' : ''
-            }`}
-          >
-            {filterJoin?.filter?.code}
-          </Label>
-        ))}
-      </div>
-      {updateState && (
-        <div key={selectedFilterJoin?.id} className="template-builder-filter-input">
-          <Header as="h5">{`Edit Filter`}</Header>
-          <TextIO
-            text={updateState.code}
-            title="Code"
-            setText={(value: string | null) =>
-              setUpdateState({ ...updateState, code: value ?? '' })
-            }
-          />
-          <TextIO
-            text={updateState.title}
-            title="Title"
-            setText={(value: string | null) =>
-              setUpdateState({ ...updateState, title: value ?? '' })
-            }
-          />
-          <DropdownIO
-            value={updateState.userRole}
-            options={userRoleOptions}
-            getKey="type"
-            getValue="type"
-            getText="text"
-            title="User Role"
-            setValue={(value) => {
-              setUpdateState({ ...updateState, userRole: value as PermissionPolicyType })
-            }}
-          />
-          <div className="longer">
-            <JsonIO
-              key="filterQuery"
-              object={updateState.query}
-              label="query"
-              setObject={(value) => setUpdateState({ ...updateState, query: value })}
-            />
-          </div>
-          <div className="spacer-20" />
-          <div className="flex-row">
-            <ButtonWithFallback title="Save" onClick={editFilter} />
-            <ButtonWithFallback title="Unlink" onClick={() => deleteFilterJoin()} />
-            <ButtonWithFallback title="Cancel" onClick={() => selectFilterJoin(null)} />
-          </div>
-        </div>
-      )}
-      <Header as="h3">Dashboard Restrictions</Header>
-      <p className="smaller-text">
-        Template will only appear on Dashboard if the following filters have active applications (no
-        restrictions means it'll always appear)
-      </p>
-      <div className="flex-row-start-center">
-        <DropdownIO
-          value={selectedRestriction?.id ?? 0}
-          placeholder="Select filter"
-          title="Filters"
-          options={allFilters.filter(
-            (fil) => !template.dashboardRestrictions?.includes(fil?.code ?? '')
-          )}
-          getKey={'id'}
-          getValue={'id'}
-          getText={'title'}
-          setValue={(_, fullValue) => {
-            setSelectedRestriction(fullValue)
-            setSelectedRestrictFilter(undefined)
-          }}
-          additionalStyles={{ marginBottom: 0 }}
-        />
-        {selectedRestriction && (
-          <Icon className="clickable" name="add square" onClick={addDashboardRestriction} />
-        )}
-        {selectedRestrictFilter && (
-          <Icon className="clickable" name="minus square" onClick={removeDashboardRestriction} />
-        )}
-      </div>
-      <div className="spacer-20" />
-      <div className="filter-joins">
-        {template.dashboardRestrictions &&
-          template.dashboardRestrictions.map((filter) => (
-            <Label
-              key={filter}
-              onClick={() => {
-                setSelectedRestrictFilter(filter)
+      <div className="template-builder-section">
+        <Header as="h3">Dashboard Filters</Header>
+        {template.canEdit && (
+          <div className="flex-row-start-center">
+            <DropdownIO
+              value={selectedFilter.id}
+              title="Filters"
+              options={[...allFilters, newFilter].filter(
+                (fil) => !filterJoinCodes.includes(fil?.code)
+              )}
+              getKey={'id'}
+              getValue={'id'}
+              getText={'title'}
+              setValue={(_, fullValue) => {
+                setSelectedFilter(fullValue)
               }}
-              className={`clickable ${filter === selectedRestrictFilter ? 'builder-selected' : ''}`}
+              additionalStyles={{ marginBottom: 0 }}
+            />
+            <Icon className="clickable" name="add square" onClick={addFilterJoin} />
+          </div>
+        )}
+        <div className="filter-joins">
+          {filterJoins.map((filterJoin) => (
+            <Label
+              key={filterJoin.id}
+              onClick={
+                template.canEdit
+                  ? () => {
+                      selectFilterJoin(filterJoin)
+                    }
+                  : () => {}
+              }
+              className={`${template.canEdit ? 'clickable' : ''} ${
+                filterJoin?.id === selectedFilterJoin?.id ? 'builder-selected' : ''
+              }`}
             >
-              {filter}
+              {filterJoin?.filter?.code}
             </Label>
           ))}
+        </div>
+        {updateState && (
+          <div key={selectedFilterJoin?.id} className="template-builder-filter-input">
+            <Header as="h5">{`Edit Filter`}</Header>
+            <TextIO
+              text={updateState.code}
+              title="Code"
+              setText={(value: string | null) =>
+                setUpdateState({ ...updateState, code: value ?? '' })
+              }
+            />
+            <TextIO
+              text={updateState.title}
+              title="Title"
+              setText={(value: string | null) =>
+                setUpdateState({ ...updateState, title: value ?? '' })
+              }
+            />
+            <DropdownIO
+              value={updateState.userRole}
+              options={userRoleOptions}
+              getKey="type"
+              getValue="type"
+              getText="text"
+              title="User Role"
+              setValue={(value) => {
+                setUpdateState({ ...updateState, userRole: value as PermissionPolicyType })
+              }}
+            />
+            <div className="longer">
+              <JsonIO
+                key="filterQuery"
+                object={updateState.query}
+                label="query"
+                setObject={(value) => setUpdateState({ ...updateState, query: value })}
+              />
+            </div>
+            <div className="spacer-20" />
+            <div className="flex-row">
+              <ButtonWithFallback title="Save" onClick={editFilter} />
+              <ButtonWithFallback title="Unlink" onClick={() => deleteFilterJoin()} />
+              <ButtonWithFallback title="Cancel" onClick={() => selectFilterJoin(null)} />
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="template-builder-section">
+        <Header as="h3">Dashboard Restrictions</Header>
+        <p className="smaller-text">
+          Template will only appear on Dashboard if the following filters have active applications
+          (no restrictions means it'll always appear)
+        </p>
+        {template.canEdit && (
+          <div className="flex-row-start-center">
+            <DropdownIO
+              value={selectedRestriction?.id ?? 0}
+              placeholder="Select filter"
+              title="Filters"
+              options={allFilters.filter(
+                (fil) => !template.dashboardRestrictions?.includes(fil?.code ?? '')
+              )}
+              getKey={'id'}
+              getValue={'id'}
+              getText={'title'}
+              setValue={(_, fullValue) => {
+                setSelectedRestriction(fullValue)
+                setSelectedRestrictFilter(undefined)
+              }}
+              additionalStyles={{ marginBottom: 0 }}
+            />
+            {selectedRestriction && (
+              <Icon className="clickable" name="add square" onClick={addDashboardRestriction} />
+            )}
+            {selectedRestrictFilter && (
+              <Icon
+                className="clickable"
+                name="minus square"
+                onClick={removeDashboardRestriction}
+              />
+            )}
+          </div>
+        )}
+        {(template?.dashboardRestrictions?.length ?? 0) > 0 && (
+          <>
+            <div className="spacer-20" />
+            <div className="filter-joins">
+              {template.dashboardRestrictions &&
+                template.dashboardRestrictions.map((filter) => (
+                  <Label
+                    key={filter}
+                    onClick={() => {
+                      setSelectedRestrictFilter(filter)
+                    }}
+                    className={`clickable ${
+                      filter === selectedRestrictFilter ? 'builder-selected' : ''
+                    }`}
+                  >
+                    {filter}
+                  </Label>
+                ))}
+            </div>
+          </>
+        )}
       </div>
     </>
   )

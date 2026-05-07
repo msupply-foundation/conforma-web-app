@@ -8,7 +8,7 @@ import { FilterContainer, FilterTitle } from '../../List/ListFilters/common'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDebounce from '../../../formElementPlugins/search/src/useDebounce'
 import { FiltersCommon } from '../../List/ListFilters/types'
-import { truncateString } from '../../../utils/helpers/utilityFunctions'
+import { truncateString } from 'fig-tree-editor-react'
 
 type TextSearchFilterProps = FiltersCommon & {
   setFilterText: (text: string) => void

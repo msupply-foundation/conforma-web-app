@@ -5,14 +5,11 @@ import { ApplicationProps } from '../../utils/types'
 import { useUserState } from '../../contexts/UserState'
 import { Stage } from '../../components/Review'
 import { useRouter } from '../../utils/hooks/useRouter'
-import evaluate from '../../modules/expression-evaluator'
-import { EvaluatorParameters } from '../../utils/types'
+import { FigTree } from '../../FigTreeEvaluator'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { Link } from 'react-router-dom'
 import { ApplicationStatus } from '../../utils/generated/graphql'
-import globalConfig from '../../config'
 import useGetApplicationStructure from '../../utils/hooks/useGetApplicationStructure'
-import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 
 const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   const [submissionMessageEvaluated, setSubmissionMessageEvaluated] = useState<string>()
@@ -38,30 +35,24 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
     structure,
   })
 
-  // Check if application not submitted and redirect to the summary page
-  // Note: The summary page has its own redirection logic to a specific page (with invalid items).
-  if (status === ApplicationStatus.Draft || status === ApplicationStatus.ChangesRequired)
-    push(`/application/${serialNumber}/summary`)
-
   // Evaluate submission message
   useEffect(() => {
     if (!fullStructure || !fullStructure?.responsesByCode) return
-    const JWT = localStorage.getItem(globalConfig.localStorageJWTKey)
-    const graphQLEndpoint = getServerUrl('graphQL')
-    const evaluatorParams: EvaluatorParameters = {
-      objects: {
+    FigTree.evaluate(submissionMessage, {
+      data: {
         responses: fullStructure.responsesByCode,
         currentUser,
         applicationData: fullStructure.info,
       },
-      APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-      headers: { Authorization: 'Bearer ' + JWT },
-    }
-    evaluate(submissionMessage, evaluatorParams).then((result) => {
+    }).then((result) => {
       setSubmissionMessageEvaluated(result as string)
     })
   }, [fullStructure])
+
+  // Check if application not submitted and redirect to the summary page
+  // Note: The summary page has its own redirection logic to a specific page (with invalid items).
+  if (status === ApplicationStatus.Draft || status === ApplicationStatus.ChangesRequired)
+    push(`/application/${serialNumber}/summary`)
 
   return (
     <Container id="application-summary">

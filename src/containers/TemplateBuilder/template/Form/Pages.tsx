@@ -54,6 +54,10 @@ const Pages: React.FC = () => {
       },
     })
   }
+
+  // No page options for Review section
+  if (currentSection.isReviewSection) return null
+
   return (
     <div className="config-container-outline">
       <div className="flex-row-start-center">
@@ -111,7 +115,8 @@ const Page: React.FC = () => {
       .filter((pageElement) => !!pageElement?.latestApplicationResponse?.id)
       .map((pageElement) => pageElement.latestApplicationResponse.id)
 
-    const elementsInPage = [...currentPage.elements, ...currentPage.endPageBreaks]
+    const elementsInPage = [...currentPage.elements, ...currentPage.startPageBreaks]
+
     setSelectedPageNumber(-1)
     if (applicationResponseIds.length > 0) {
       const result = await updateApplication(structure.info.serial, {

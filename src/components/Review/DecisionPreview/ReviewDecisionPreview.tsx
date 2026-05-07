@@ -5,7 +5,7 @@ import { useToast } from '../../../contexts/Toast'
 import useLocalisedEnums from '../../../utils/hooks/useLocalisedEnums'
 import { Decision } from '../../../utils/generated/graphql'
 import { FullStructure } from '../../../utils/types'
-import ReviewPreviewModal from './ReviewPreviewModal'
+import PreviewModal from './PreviewModal'
 
 interface ReviewDecisionProps {
   structure: FullStructure
@@ -26,7 +26,7 @@ export const ReviewDecisionPreview: React.FC<ReviewDecisionProps> = ({
 
   return (
     <>
-      <ReviewPreviewModal
+      <PreviewModal
         open={isModalOpen}
         setOpen={setIsModalOpen}
         reviewId={thisReview?.id as number}

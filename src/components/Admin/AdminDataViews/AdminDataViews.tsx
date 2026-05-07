@@ -1,5 +1,6 @@
 import React, { Suspense, useState } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
+import Ajv, { ValidateFunction } from 'ajv'
 import {
   Header,
   Button,
@@ -14,8 +15,6 @@ import usePageTitle from '../../../utils/hooks/usePageTitle'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import {
   DataTable,
-  DataView,
-  DataViewColumnDefinition,
   GetDataTablesQuery,
   useGetDataTablesQuery,
 } from '../../../utils/generated/graphql'
@@ -23,10 +22,21 @@ import { camelCase, pickBy, startCase } from 'lodash-es'
 import { nanoid } from 'nanoid'
 import { useAdminDataViewConfig } from './useAdminDataViewConfig'
 import config from '../../../config'
-import { JsonData } from 'json-edit-react'
-import Loading from '../../Loading'
+import { assign, JsonData } from 'json-edit-react'
+import { Loading } from '../../common'
+import {
+  DataView,
+  DataViewColumnDefinition,
+  DataViewColumnDefinitionSchema,
+  DataViewSchema,
+} from './schema'
+import { Position, useToast } from '../../../contexts/Toast'
 
 const JsonEditor = React.lazy(() => import('../JsonEditor/JsonEditor'))
+
+const ajv = new Ajv()
+const validateDataView = ajv.compile(DataViewSchema)
+const validateDataViewColumn = ajv.compile(DataViewColumnDefinitionSchema)
 
 export const AdminDataViews: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -45,7 +55,17 @@ export const AdminDataViews: React.FC = () => {
 
   return (
     <div id="data-view-config-panel" className="flex-column" style={{ gap: 15 }}>
-      <Header>{t('DATA_VIEW_CONFIG_HEADER')}</Header>
+      <div className="flex-row-space-between-center">
+        <Header>{t('DATA_VIEW_CONFIG_HEADER')}</Header>
+        <p className="slightly-smaller-text">
+          <a
+            href="https://github.com/msupply-foundation/conforma-server/wiki/Data-View"
+            target="_blank"
+          >
+            Docs <Icon name="external" />
+          </a>
+        </p>
+      </div>
       <div className="flex-row-space-between-center">
         <Dropdown
           selection
@@ -114,6 +134,8 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName, isLookupTabl
         loading={loading}
         dropdownValue={selectedDataView}
         options={getDataViewOptions(dataViews)}
+        validator={validateDataView}
+        entityKey={dataViewObject?.id}
         onChange={(_, { value }) => {
           if (dataViews) updateQuery({ dataView: value })
         }}
@@ -199,6 +221,8 @@ const ColumnDefinitionEditor: React.FC<{ tableName: string }> = ({ tableName }) 
         loading={columnsLoading}
         dropdownValue={selectedColumn}
         options={getColumnDefinitionOptions(columnDefinitions)}
+        validator={validateDataViewColumn}
+        entityKey={columnDefinitionObject?.id}
         onChange={(_, { value }) => {
           if (columnDefinitions) updateQuery({ columnDefinition: value })
         }}
@@ -265,6 +289,8 @@ interface DataViewDisplayProps {
   onAdd: () => void
   isAdding: boolean
   isLookupTable?: boolean
+  validator: ValidateFunction
+  entityKey?: string | number
 }
 
 const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
@@ -273,6 +299,7 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
   loading,
   dropdownValue,
   options,
+  validator,
   onChange,
   data,
   dataName,
@@ -282,12 +309,14 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
   isDeleting,
   onAdd,
   isAdding,
+  entityKey,
 }) => {
   const { t } = useLanguageProvider()
   const { ConfirmModal } = useConfirmationModal({
     type: 'warning',
     confirmText: t('BUTTON_CONFIRM'),
   })
+  const { showToast } = useToast({ position: Position.topLeft })
 
   return (
     <div>
@@ -327,12 +356,41 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
       {data && (
         <Suspense fallback={<Loading />}>
           <JsonEditor
+            key={entityKey ?? 'none'}
             data={data}
             onSave={onSave}
+            onUpdate={({ newData, newValue, currentValue, path }) => {
+              // By default, when a value is turned to an array, it puts current
+              // value inside it, so `null` => `[null]`. This would be illegal
+              // under the current schema, so we modify it in place before
+              // validating.
+              if (Array.isArray(newValue) && currentValue === null) {
+                newData = assign(newData as { [key: string]: string }, path, [])
+              }
+
+              const valid = validator(newData)
+              if (!valid) {
+                console.log('Errors', validator.errors)
+                const errorMessage = validator.errors
+                  ?.map(
+                    (error) =>
+                      `${error.instancePath}${error.instancePath ? ': ' : ''}${error.message}`
+                  )
+                  .join('\n')
+                showToast({
+                  title: 'Invalid entry',
+                  text: errorMessage,
+                  style: 'error',
+                })
+                return "Can't do that!"
+              }
+              // We shouldn't need to return anything, but this is just for the
+              // case when a value has been switched to an Array, as above
+              return ['value', newData]
+            }}
             isSaving={isSaving}
             rootName={dataName}
             collapse={1}
-            showArrayIndices={false}
             maxWidth={650}
             restrictAdd={({ level }) => level === 0}
             restrictDelete={({ level }) => level === 1}

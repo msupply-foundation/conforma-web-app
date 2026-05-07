@@ -30,6 +30,7 @@ type MoveSection = {
   elements: MoveElement[]
   nextSection: MoveSection | null
   previousSection: MoveSection | null
+  isReviewSection: boolean
 }
 
 type MoveStructure = {
@@ -62,6 +63,7 @@ const getMoveStructure = (templateInfo: FullTemplateFragment) => {
       allElements: [],
       isLast: templateSections.length - 1 === index,
       lastElementIndex: 0,
+      isReviewSection: !!templateSection?.isReviewSection,
     }
     if (previousSection) previousSection.nextSection = section
     previousSection = section
@@ -69,7 +71,7 @@ const getMoveStructure = (templateInfo: FullTemplateFragment) => {
     let pageNumber = 0
 
     result.sections[templateSection?.id || 0] = section
-    result.lastSectionIndex = section.index
+    if (!templateSection?.isReviewSection) result.lastSectionIndex = section.index
     if (index === 0) result.firstSectionIndex = section.index
 
     let previousElement: MoveElement | null = null

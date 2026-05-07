@@ -9,9 +9,10 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { SectionsList } from '../../components/Sections'
 import ApplicationHomeWrapper from '../../components/Application/ApplicationHomeWrapper'
-import { ElementForEvaluation, EvaluatorNode, User } from '../../utils/types'
+import { ElementForEvaluation, User } from '../../utils/types'
 import { evaluateElements } from '../../utils/helpers/evaluateElements'
 import useGetApplicationSerial from '../../utils/hooks/useGetApplicationSerial'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 const ApplicationCreate: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -43,7 +44,7 @@ const ApplicationCreate: React.FC = () => {
       }
       setNewApplicationLoading(true)
 
-      const { name, elementsIds, elementsDefaults } = template
+      const { name, elementsIds, elementsDefaults, reviewSectionElementIds } = template
       const initialValues = await getInitialValues(elementsDefaults || [], currentUser)
 
       const mutationResult = await create({
@@ -51,6 +52,7 @@ const ApplicationCreate: React.FC = () => {
         templateId: template.id,
         templateResponses: (elementsIds as number[]).map((id, index) => ({
           templateElementId: id,
+          status: reviewSectionElementIds.includes(id) ? 'REVIEW' : 'DRAFT',
           value: initialValues[index],
         })),
       })
@@ -105,7 +107,7 @@ const ApplicationCreate: React.FC = () => {
         subtitle={t('SUBTITLE_APPLICATION_STEPS')}
         ButtonSegment={StartButtonSegment}
       >
-        <SectionsList sections={template.sections} />
+        <SectionsList sections={template.sections.filter((section) => !section.isReviewSection)} />
       </ApplicationHomeWrapper>
     </ApplicationContainer>
   ) : null

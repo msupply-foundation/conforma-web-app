@@ -2,7 +2,6 @@ import { useRouter } from '../../../utils/hooks/useRouter'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast, Position } from '../../../contexts/Toast'
 import {
-  DataView,
   useGetDataViewsQuery,
   useCreateDataViewMutation,
   useDeleteDataViewMutation,
@@ -11,8 +10,8 @@ import {
   useCreateColumnDefinitionMutation,
   useDeleteColumnDefinitionMutation,
   useUpdateColumnDefinitionMutation,
-  DataViewColumnDefinition,
 } from '../../../utils/generated/graphql'
+import { DataView, DataViewColumnDefinition } from './schema'
 
 export const useAdminDataViewConfig = (tableName: string) => {
   const { t } = useLanguageProvider()

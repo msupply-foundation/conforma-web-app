@@ -20,6 +20,8 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [Date Picker](#date-picker)
   - [Number](#number)
   - [JSON Editor](#json-editor)
+  - [Get Values](#get-values)
+  - [Preview Action](#preview-action)
   - [Page Break](#page-break)
 
 <!-- tocstop -->
@@ -443,6 +445,7 @@ _Interface for uploading documents or other files_
 - **showDescription**: `boolean` -- if `true`, an additional text input will be displayed alongside each file to allow the applicant to specify a description for each file. (default `false`)
 - **showFileRestrictions**: `boolean` -- will display the allowed file extensions and maximum size below the upload box (default: `true`)
 - **showDocumentModal**: `boolean` -- if `true`, will display documents (when clicked to view) in a modal overlay rather than opening in a new tab. Will fallback to global system preference.
+- **isProtected**: `boolean` -- if `true`, files uploaded are treated with special privacy considerations: they'll never be archived, and will be automatically deleted after a certain number of days after upload (specified in Server Prefs:`protectedFilesKeepDays`, default 90)
 
 #### Response type
 
@@ -488,11 +491,33 @@ _Allows user to build a list of items, such as an **Ingredients List**_
 - **deleteItemText** `string` -- text to display on the button to delete an item from the item editing modal (default: "Update")  
   Note: this button only appears when displaying the list in "Table" view (see below). In "Cards" view, there is an icon to delete items directly on each card.
 - **modalText** `string` -- additional instructional text to show on the item editing modal (e.g. "Please enter ingredient details") [Optional]
-- **inputFields** `array[Elements]` -- an ordered list of input fields -- these are template questions/elements, just like all the ones on this page, but are "children" of the listBuilder element and display in the item editing modal. Not all fields are required or respected:
+- **inputFields** `array[Elements]` -- an ordered list of input fields -- these are template questions/elements, just like all the ones on this page, but are "children" of the listBuilder element and display in the item editing modal. Not all fields are required:
 
-  - `index` -- not required, order follows listed order
-  - `visibility_condition` / `is_editable` -- not required, always `true` (for now, may be implemented later)
   - `parameters`, `title`, and `code` are essential
+  - `index` -- not required, order follows listed order
+
+  
+  > [!TIP]  
+  > It is difficult to edit internal elements in this field directly, as it's all just JSON rather than TemplateBuilder UI. The best way to manage it is to create and edit the elements in the normal form editor, and then use the "Absorb elements" button to pull them into the List Builder:
+
+  <img src="images/Element-Type-Specs-listBuilder-absorb.png"
+     alt="Absorb elements"
+     style="max-width: 660px;">
+
+    Select the elements to pull in:
+
+    <img src="images/Element-Type-Specs-listBuilder-absorb-in-progress.png"
+        alt="Absorb elements in progress"
+        style="max-width: 690px; width: 100%;">
+
+    Reverse the process (pull out elements for further editing) using "Extract elements":
+
+    <img src="images/Element-Type-Specs-listBuilder-extract.png"
+        alt="Extract elements"
+        style="max-width: 500px;">
+
+  > [!IMPORTANT]  
+  > To dynamically target other elements within a List Builder (e.g. if visibility of one is dependent on another), use the `applicationData` path as though the elements were in the main form rather than inside another element. This means that you can configure the dynamic behaviour as normal, with the elements in the main form, and when you pull them into the List Builder using "Absorb elements", the behaviour will be preserved. You will need to ensure that your element codes are unique within the whole template.
 
 - **maxItems** `number` -- if specified, the maximum number of items that can be added to the list (once this number is reached, the "Add" button will no longer appear)
 - **displayType** `'table' | 'cards' | 'inline' | 'list'` (default: `cards`) -- how to present the list of items, as shown here:
@@ -795,6 +820,63 @@ Uses [json-edit-react](https://carlosnz.github.io/json-edit-react/)
   data: { ...JsonData }
 }
 ```
+
+---
+
+<a name="get-values"/>
+
+### Get Values
+
+- **type/code**: `getValues`
+- **category**: `Information`
+
+_Hidden element to store useful data_
+
+This is a "dummy" element that can be used to fetch some data from anywhere and
+store it in a response. Useful when you have several other elements or actions
+that pull from the same query, this will reduce expression complexity and
+redundant network requests. You can store a whole object in here and just pull individual fields out of it in other elements.
+
+The element will be hidden for the applicant (and reviewer), but in the Template Builder you can see a Stringified representation of the current data for reference purposes.
+
+#### Input parameters
+
+- **values**: `any` -- The "data" you want (probably a network or database expression)
+- **default**: `any` -- alias for `values`. The `values` property behaves exactly like every other element type's `default` field, so you can use either name here. 
+
+
+#### Response type
+
+```
+{
+  text: <Stringified version of the data object>
+  data: { ...fetchedData }
+}
+```
+
+---
+
+<a name="preview-action"/>
+
+### Preview Action
+
+- **type/code**: `previewAction`
+- **category**: `Information`
+
+_Button to view previews of back-end actions (e.g. generated documents)_
+
+Behaves similarly to the "Preview Decision" button & modal for Reviewers when submitting their review. If Action aliases are configured for the `ON_PREVIEW` trigger (see [here](https://github.com/msupply-foundation/conforma-server/wiki/List-of-Action-plugins#aliasing-existing-template-actions)), when clicking the "Preview", the applicant will see the result of some server actions. Useful for showing what a certain output document will look like without having to Submit first.
+
+![modal](images/Element-Type-Specs-previewAction-modal.png)
+
+
+#### Input parameters
+
+- **buttonText**: `string` -- Text to display on the "Preview" button (default: "Preview")
+- **headerText**: `string` -- Text to display on the "Header" region of the Preview modal (see screenshot above) (default: "Preview Action")
+- **previewText**: `string` -- Text to display on the "Content" region of the Preview modal (above the Action outputs) (default: "Action output:")
+- **preventDownload**: `boolean` -- If previewing a document, and you have `showDocumentModal` enabled in [Preferences](https://github.com/msupply-foundation/conforma-server/wiki/Preferences), this will determine if there is a "Download" icon button available on the document preview modal (default: `true`)
+- **applicationDataOverride**: `object` -- As with the Review decision preview, we can overwrite some `applicationData` values if required (for example, to simulate a different stage than the one we're actually on)
 
 ---
 

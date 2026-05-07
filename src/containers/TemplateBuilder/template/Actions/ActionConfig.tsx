@@ -1,44 +1,35 @@
-import { EvaluatorNode } from '../../../../modules/expression-evaluator'
-import React from 'react'
-import { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Icon, Label, Modal, Header } from 'semantic-ui-react'
 import { TemplateAction } from '../../../../utils/generated/graphql'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import DropdownIO from '../../shared/DropdownIO'
 import Evaluation from '../../shared/Evaluation'
 import { useOperationState } from '../../shared/OperationContext'
-import { Parameters, ParametersType } from '../../shared/Parameters'
+import { Parameters } from '../../shared/Parameters'
 import TextIO from '../../shared/TextIO'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
 import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { useToast } from '../../../../contexts/Toast'
+import useUndo from 'use-undo'
+import { UndoRedo } from '../../../../components/common/UndoRedo'
+import { FigTreeActions } from './FigTreeActions'
+import { useInitialiseMultipleExpressions } from '../../shared/useInitialiseMultipleExpressions'
+import { EvaluatorNode } from 'fig-tree-editor-react'
 
 type ActionConfigProps = {
-  templateAction: TemplateAction | null
+  templateAction: TemplateAction
   onClose: () => void
 }
 
-type ActionUpdateState = {
-  code?: string | null
-  actionCode: string
-  description: string | null
-  eventCode?: string | null
-  condition: EvaluatorNode
-  parameterQueries: ParametersType
-  id: number
-}
-
-type GetState = (action: TemplateAction) => ActionUpdateState
-
-const getState: GetState = (action: TemplateAction) => ({
+const getState = (action: TemplateAction) => ({
   code: action?.code,
   actionCode: action?.actionCode || '',
   description: action?.description || '',
   eventCode: action?.eventCode,
   condition: action?.condition || true,
-  parameterQueries: action?.parameterQueries || {},
+  // parameterQueries: action?.parameterQueries || {},
   id: action?.id || 0,
 })
 
@@ -46,9 +37,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const { t } = useLanguageProvider()
   const { template } = useTemplateState()
   const { updateTemplate } = useOperationState()
-  const [state, setState] = useState<ActionUpdateState | null>(null)
   const { allActionsByCode, applicationData } = useActionState()
-  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
+  const [isDirty, setIsDirty] = useState<boolean>(false)
   const [open, setOpen] = useState(false)
   const { showToast } = useToast({
     title: t('TEMPLATE_MESSAGE_SAVE_SUCCESS'),
@@ -57,20 +47,47 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
 
   const { canEdit } = template
 
-  useEffect(() => {
-    if (!templateAction) return setState(null)
-    setState(getState(templateAction))
-  }, [templateAction])
+  // Action data is divided into two "blocks" for "undo" groupings
+  const [
+    { present: mainData },
+    {
+      set: setMainData,
+      reset: resetMain,
+      undo: undoMain,
+      redo: redoMain,
+      canUndo: canUndoMain,
+      canRedo: canRedoMain,
+    },
+  ] = useUndo(getState(templateAction))
 
-  if (!state || !templateAction) return null
+  const [
+    { present: parameters },
+    {
+      set: setParameters,
+      reset: resetParameters,
+      undo: undoParameters,
+      redo: redoParameters,
+      canUndo: canUndoParameters,
+      canRedo: canRedoParameters,
+    },
+  ] = useUndo(templateAction?.parameterQueries || {})
+
+  const { updateExpression: setMainDataItem } = useInitialiseMultipleExpressions(
+    mainData,
+    setMainData as (data: Record<string, EvaluatorNode>) => void,
+    true,
+    resetMain as (data: EvaluatorNode, key?: string) => void,
+    setIsDirty
+  )
 
   const updateAction = async () => {
+    const patch = { ...mainData, parameterQueries: parameters }
     const result = await updateTemplate(template, {
       templateActionsUsingId: {
-        updateById: [{ id: state.id, patch: state }],
+        updateById: [{ id: mainData.id, patch }],
       },
     })
-    setShouldUpdate(false)
+    setIsDirty(false)
     showToast()
     if (!result) return
   }
@@ -78,10 +95,6 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const saveAndClose = () => {
     updateAction()
     onClose()
-  }
-
-  const markNeedsUpdate = () => {
-    setShouldUpdate(true)
   }
 
   const currentActionPlugin = allActionsByCode[String(templateAction?.actionCode)]
@@ -104,8 +117,8 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
               getValue={'code'}
               getText={'name'}
               setValue={(value) => {
-                setState({ ...state, actionCode: String(value) })
-                markNeedsUpdate()
+                resetMain({ ...mainData, actionCode: String(value) })
+                setIsDirty(true)
               }}
               options={Object.values(allActionsByCode)}
               search
@@ -114,10 +127,12 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             />
             {canEdit && (
               <FromExistingAction
-                pluginCode={state.actionCode}
+                pluginCode={mainData.actionCode}
                 setTemplateAction={(templateAction) => {
-                  setState({ ...state, ...templateAction })
-                  markNeedsUpdate()
+                  const { condition, description, parameterQueries } = templateAction
+                  resetMain({ ...mainData, condition, description })
+                  resetParameters(parameterQueries)
+                  setIsDirty(true)
                 }}
               />
             )}
@@ -141,39 +156,39 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
           <div className="config-container-outline">
             <div className="flex-column-start-center">
               <TextIO
-                text={state?.code || ''}
+                text={mainData?.code || ''}
                 title="Code"
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 setText={(text) => {
-                  setState({ ...state, code: text || null })
+                  setMainData({ ...mainData, code: text || null })
                 }}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
               <TextIO
-                text={state?.eventCode || ''}
+                text={mainData?.eventCode || ''}
                 title="Scheduled Event Code"
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 setText={(text) => {
-                  setState({ ...state, eventCode: text || null })
+                  setMainData({ ...mainData, eventCode: text || null })
                 }}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={150}
               />
               <TextIO
-                text={state?.description || ''}
+                text={mainData?.description || ''}
                 isTextArea={true}
                 title="Description"
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 setText={(text) => {
-                  setState({ ...state, description: text || null })
+                  setMainData({ ...mainData, description: text ?? '' })
                 }}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={150}
                 maxLabelWidth={150}
@@ -181,42 +196,66 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
                 additionalStyles={{ minWidth: 500 }}
               />
               <Evaluation
+                figTree={FigTreeActions}
                 label="Condition"
-                currentElementCode={''}
-                evaluation={state?.condition}
-                setEvaluation={(condition) => {
-                  setState({ ...state, condition })
-                  markNeedsUpdate()
+                evaluation={mainData?.condition}
+                setEvaluation={(condition) => setMainDataItem('condition', condition)}
+                canEdit={canEdit}
+                objectData={{ applicationData }}
+                resetExpression={(expression) => {
+                  resetMain({ ...mainData, condition: expression })
                 }}
-                applicationData={applicationData}
-                type="Action"
+              />
+              <div className="spacer-10" />
+              <UndoRedo
+                canUndo={canUndoMain}
+                canRedo={canRedoMain}
+                undo={undoMain}
+                redo={redoMain}
               />
             </div>
           </div>
           <div className="spacer-10" />
           <Parameters
+            figTree={FigTreeActions}
+            key="parametersAction"
             currentElementCode={''}
-            parameters={state.parameterQueries}
-            setParameters={(parameterQueries) => {
-              setState({ ...state, parameterQueries })
-              markNeedsUpdate()
+            parameters={parameters}
+            setParameters={(parameterQueries) => setParameters(parameterQueries)}
+            reset={(expression, key) => {
+              if (key) {
+                const newParameters = { ...parameters }
+                delete newParameters[key]
+                resetParameters({ ...parameters, [key]: expression })
+              } else {
+                resetParameters(expression)
+              }
             }}
+            setIsDirty={setIsDirty}
             canEdit={template.canEdit}
             requiredParameters={(currentActionPlugin?.requiredParameters as string[]) || []}
             optionalParameters={(currentActionPlugin?.optionalParameters as string[]) || []}
             type="Action"
+            UndoRedo={
+              <UndoRedo
+                canUndo={canUndoParameters}
+                canRedo={canRedoParameters}
+                undo={undoParameters}
+                redo={redoParameters}
+              />
+            }
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
               title={t('BUTTON_SAVE')}
-              disabled={!canEdit || !shouldUpdate}
+              disabled={!canEdit || !isDirty}
               disabledMessage={!canEdit ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
               onClick={updateAction}
             />
             <ButtonWithFallback
               title={t('BUTTON_CLOSE')}
-              onClick={() => (shouldUpdate && canEdit ? setOpen(true) : onClose())}
+              onClick={() => (isDirty && canEdit ? setOpen(true) : onClose())}
             />
             <Modal
               basic

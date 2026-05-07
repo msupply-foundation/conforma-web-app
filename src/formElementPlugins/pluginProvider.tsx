@@ -26,6 +26,9 @@ import searchConfig from './search/pluginConfig.json'
 import shortTextConfig from './shortText/pluginConfig.json'
 // import textInfoLocalisation from './textInfo/localisation.json'
 import textInfoConfig from './textInfo/pluginConfig.json'
+import getValuesConfig from './getValues/pluginConfig.json'
+import previewActionConfig from './previewAction/pluginConfig.json'
+import previewActionLocalisation from './previewAction/localisation.json'
 import { PluginComponents, PluginConfig } from './types'
 
 export const PluginProvider: Record<string, PluginComponents> = {
@@ -113,5 +116,17 @@ export const PluginProvider: Record<string, PluginComponents> = {
     config: textInfoConfig as PluginConfig,
     ApplicationView: React.lazy(() => import('./textInfo/src/ApplicationView')),
     SummaryView: React.lazy(() => import('./textInfo/src/SummaryView')),
+  },
+  getValues: {
+    localisation: {},
+    config: getValuesConfig as PluginConfig,
+    ApplicationView: React.lazy(() => import('./getValues/src/ApplicationView')),
+    SummaryView: React.lazy(() => import('./getValues/src/SummaryView')),
+  },
+  previewAction: {
+    localisation: previewActionLocalisation,
+    config: previewActionConfig as PluginConfig,
+    ApplicationView: React.lazy(() => import('./previewAction/src/ApplicationView')),
+    SummaryView: React.lazy(() => import('./previewAction/src/SummaryView')),
   },
 }

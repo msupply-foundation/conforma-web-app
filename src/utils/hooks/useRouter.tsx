@@ -1,7 +1,7 @@
 import { useParams, useLocation, useHistory, useRouteMatch, match } from 'react-router-dom'
 import queryString from 'query-string'
 import { useMemo } from 'react'
-import { BasicStringObject, PageType } from '../types'
+import { BasicStringObject, PageType, ParsedUrlQuery } from '../types'
 import { isEqual } from 'lodash-es'
 
 interface RouterResult {
@@ -11,6 +11,7 @@ interface RouterResult {
   query: BasicStringObject
   updateQuery: Function
   setQuery: Function
+  getParsedUrlQuery: () => ParsedUrlQuery
   replace: (path: string) => void
   match: match
   history: any
@@ -97,6 +98,18 @@ export function useRouter(): RouterResult {
         })
     }
 
+    // Just the url query properties, but parsed to their correct type, e.g.
+    // "name=Carl&value=3.0&alive=true"
+    //    => { name: "Carl", value: 3, valueText: "3.0" alive: true }
+    const getParsedUrlQuery = () => {
+      return Object.entries(queryFilters).reduce((acc, [key, value]) => {
+        const typedVal = getTypedValue(value as string)
+        const returnValue: Record<string, unknown> = { ...acc, [key]: typedVal }
+        if (!Number.isNaN(Number(value))) returnValue[`${key}Text`] = value
+        return returnValue
+      }, {})
+    }
+
     return {
       // For convenience add push(), replace(), pathname at top level
       push: history.push,
@@ -114,6 +127,7 @@ export function useRouter(): RouterResult {
       },
       updateQuery,
       setQuery,
+      getParsedUrlQuery,
 
       // Include match, location, history objects so we have
       // access to extra React Router functionality if needed.
@@ -140,4 +154,15 @@ const getCurrentPageType = (pathname: string) => {
     default:
       return 'dashboard'
   }
+}
+
+const getTypedValue = (
+  value: string
+): string | boolean | number | Array<string | boolean | number> => {
+  const split = value.split(',')
+  if (split.length > 1) return split.map((val) => getTypedValue(val)) as string[]
+  if (value === 'true') return true
+  if (value === 'false') return false
+  if (!Number.isNaN(Number(value))) return Number(value)
+  return value
 }

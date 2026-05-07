@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import { ApplicationResponseStatus, useUpdateApplicationMutation } from '../generated/graphql'
-import { FullStructure, UseGetApplicationProps } from '../types'
+import { FullStructure } from '../types'
+
+interface UseGetApplicationProps {
+  serialNumber: string
+}
 
 const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
   const [error, setError] = useState('')
 
   const [applicationSubmitMutation] = useUpdateApplicationMutation({
     onError: (submissionError) => setError(submissionError.message),
+    refetchQueries: ['getApplication'],
   })
 
   const submit = async (structure: FullStructure) => {
@@ -31,7 +36,6 @@ const useSubmitApplication = ({ serialNumber }: UseGetApplicationProps) => {
       },
     })
     if (result.errors) throw new Error(result.errors.toString())
-    await structure.reload()
     return result
   }
 

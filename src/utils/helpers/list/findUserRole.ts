@@ -2,10 +2,6 @@ import { USER_ROLES } from '../../data'
 import { PermissionPolicyType } from '../../generated/graphql'
 import { TemplatePermissions } from '../../types'
 
-type UserRoles = {
-  [role in USER_ROLES]: Array<PermissionPolicyType>
-}
-
 /**
  * @function: findUserRole
  * Deduce the current user Role to interact with applications.
@@ -14,47 +10,56 @@ type UserRoles = {
  * - @returns UserRole deduced from group of permissions or undefined.
  */
 
-const userRoles: UserRoles = {
-  applicant: [PermissionPolicyType.Apply],
-  reviewer: [PermissionPolicyType.Review, PermissionPolicyType.Assign, PermissionPolicyType.View],
+const getPermissionsForType = (templatePermissions: TemplatePermissions, type: string) => {
+  const permissions = templatePermissions?.[type] || []
+  return permissions
 }
 
-// permissions: Array<PermissionPolicyType>
-const getUserRolesForType = (templatePermissions: TemplatePermissions, type: string): string[] => {
-  const found = Object.entries(templatePermissions).find(([template]) => template === type)
-  if (!found) return []
-
-  const [_, permissions] = found
-
-  // Compare array of permission checking if are the same
-  const matching = Object.entries(userRoles).filter(([_, permissionList]) => {
-    const common = permissionList.filter((permission) => permissions.includes(permission))
-    return common.length > 0
-  })
-  const filteredRoles = matching.map(([role]) => role)
-  return filteredRoles
-}
+const isReviewPermission = (permissions: PermissionPolicyType[]) =>
+  permissions.includes(PermissionPolicyType.Review) ||
+  permissions.includes(PermissionPolicyType.Assign) ||
+  permissions.includes(PermissionPolicyType.View)
 
 const findUserRole = (
   templatePermissions: TemplatePermissions,
-  type: string
+  type: string,
+  isInternalUser: boolean
 ): string | undefined => {
-  const userRoles = getUserRolesForType(templatePermissions, type)
-  return userRoles?.[0]
+  const permissions = getPermissionsForType(templatePermissions, type)
+  if (isInternalUser && permissions.includes(PermissionPolicyType.Apply)) {
+    return USER_ROLES.INTERNAL_APPLICANT
+  }
+  if (isReviewPermission(permissions)) {
+    return USER_ROLES.REVIEWER
+  }
+
+  return USER_ROLES.APPLICANT
 }
 
 const checkExistingUserRole = (
   templatePermissions: TemplatePermissions,
   type: string,
-  userRole: string
+  userRole: string,
+  isInternalUser: boolean
 ) => {
   const list = Object.values(USER_ROLES)
-  const existing = list.includes(userRole as USER_ROLES)
-  if (!existing) return false
+  if (!list.includes(userRole as USER_ROLES)) return false
 
-  // If userRole correspond to one existing, check if user has permission
-  const userRoles = getUserRolesForType(templatePermissions, type)
-  return userRoles?.includes(userRole)
+  const permissions = getPermissionsForType(templatePermissions, type)
+
+  if (userRole === USER_ROLES.INTERNAL_APPLICANT) {
+    return permissions.includes(PermissionPolicyType.Apply) && isInternalUser
+  }
+
+  if (userRole === USER_ROLES.APPLICANT) {
+    return permissions.includes(PermissionPolicyType.Apply)
+  }
+
+  if (userRole === USER_ROLES.REVIEWER) {
+    return isReviewPermission(permissions)
+  }
+
+  return false
 }
 
 export { findUserRole, checkExistingUserRole }

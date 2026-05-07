@@ -68,10 +68,6 @@ export const replaceCommas = (value: string) => value.replace(new RegExp(MAGIC_S
 export const removeCommasArray = (values: string[]) => values.map((value) => removeCommas(value))
 export const replaceCommasArray = (values: string[]) => values.map((value) => replaceCommas(value))
 
-// If input value is longer than maxLength, returns truncated string with "..."
-export const truncateString = (string: string, length: number = 30) =>
-  string.length < length ? string : `${string.slice(0, length - 2).trim()}...`
-
 // Constructs OR filter for an objects-array i.e. [ {fieldName1: value1}, {fieldName1: value2} ]
 // Returns the GraphQL filter i.e: { or: {fieldName1: { equalsTo: value1 }}, {fieldName1: { equalsTo: value2} }}}
 // This is useful to filter same key with many values using OR statement
@@ -85,7 +81,10 @@ export const constructOrObjectFilters = (filters: { [key: string]: string }[]) =
 })
 
 // Nicely formatted file sizes, e.g. 1000000 => "1MB"
-export const fileSizeWithUnits = (size: number): string => {
+export const fileSizeWithUnits = (size: number | string | null): string => {
+  if (typeof size === 'string') return size
+  if (size === null) return 'Unknown'
+
   const sizeInKb = size / 1000
   if (sizeInKb < 1000) return `${sizeInKb} kB`
   const sizeInMB = size / 1_000_000
@@ -94,14 +93,22 @@ export const fileSizeWithUnits = (size: number): string => {
   return `${parseInt(String(sizeInGB * 100)) / 100} GB`
 }
 
-// Force a file download
-export const downloadFile = async (url: string, filename: string, fetchOptions: object = {}) => {
-  const res = await fetch(url, fetchOptions)
-  const data = await res.blob()
-  var a = document.createElement('a')
-  a.href = window.URL.createObjectURL(data)
+// Force a file download (browser handles progress tracking)
+export const downloadFile = (url: string, filename: string) => {
+  const separator = url.includes('?') ? '&' : '?'
+  const downloadUrl = `${url}${separator}filename=${encodeURIComponent(filename)}`
+
+  const a = document.createElement('a')
+  a.href = downloadUrl
+  // Tells the browser this click is a download, not a navigation — without
+  // this the page can briefly enter a navigating state, reloading the SPA or
+  // aborting in-flight requests until the response's Content-Disposition
+  // arrives. Same-origin only; harmless cross-origin (silently ignored).
   a.download = filename
+  a.style.display = 'none'
+  document.body.appendChild(a)
   a.click()
+  document.body.removeChild(a)
 }
 
 // LOCAL STORAGE

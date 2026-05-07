@@ -2,7 +2,6 @@ import React, { createContext, useContext } from 'react'
 import { useEffect, useState } from 'react'
 import { Header } from 'semantic-ui-react'
 import { Loading } from '../../../../components'
-
 import { ActionPlugin, Trigger, useGetAllActionsQuery } from '../../../../utils/generated/graphql'
 import DropdownIO from '../../shared/DropdownIO'
 import { IconButton } from '../../shared/IconButton'
@@ -12,6 +11,7 @@ import TriggerDisplay from './TriggerDisplay'
 import { useFormStructureState } from '../Form/FormWrapper'
 import { getRequest } from '../../../../utils/helpers/fetchMethods'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
+import { useRouter } from '../../../../utils/hooks/useRouter'
 
 type ActionsByCode = { [actionCode: string]: ActionPlugin }
 
@@ -34,6 +34,7 @@ const ActionsWrapper: React.FC = () => {
   })
   const { data } = useGetAllActionsQuery()
   const { configApplicationId } = useFormStructureState()
+  const { getParsedUrlQuery } = useRouter()
 
   useEffect(() => {
     const allActions = data?.actionPlugins?.nodes
@@ -48,6 +49,10 @@ const ActionsWrapper: React.FC = () => {
     if (!configApplicationId) return
     getRequest(getServerUrl('getApplicationData', { applicationId: configApplicationId })).then(
       (applicationData) => {
+        // Current url queries will *NOT* be available when actions run, but
+        // this provides a way of simulating values in the Template Builder
+        const currentUrlQuery = getParsedUrlQuery()
+        applicationData.urlProperties = { ...currentUrlQuery, ...applicationData.urlProperties }
         setState({ allActionsByCode, applicationData, loading: false })
       }
     )

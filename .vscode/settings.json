@@ -1,0 +1,13 @@
+{
+  "files.exclude": {},
+  "cSpell.words": ["colour", "Prefs", "Refetched", "stackable", "Unassignment"],
+  "cSpell.ignoreWords": ["hkgx", "webp"],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "terminal.integrated.profiles.osx": {
+    "zsh (nvm)": {
+      "path": "zsh",
+      "args": ["-l", "-c", "source ~/.nvm/nvm.sh && nvm use && exec zsh"]
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "zsh (nvm)"
+}

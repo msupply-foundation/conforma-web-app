@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
-import { Popup, Icon } from 'semantic-ui-react'
+import { Popup, Icon, Checkbox } from 'semantic-ui-react'
 import { PageElements } from '../../../../components'
-import { TemplateElement, TemplateElementCategory } from '../../../../utils/generated/graphql'
+import {
+  Reviewability,
+  TemplateElement,
+  TemplateElementCategory,
+} from '../../../../utils/generated/graphql'
 import { ElementState } from '../../../../utils/types'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import { IconButton } from '../../shared/IconButton'
@@ -24,13 +28,18 @@ const Elements: React.FC = () => {
     template: { canEdit },
   } = useTemplateState()
   const { moveStructure } = useFormStructureState()
-  const { updateTemplateSection } = useOperationState()
+  const {
+    updateTemplateSection,
+    selectionRequestingElement,
+    selectedElementIds,
+    toggleSelectedElement,
+  } = useOperationState()
   const [elementUpdateState, setElementUpdateState] = useState<TemplateElement | null>(null)
 
+  const allSections = Object.values({ ...structure.sections, ...structure.reviewSections })
+
   if (selectedPageNumber === -1 || selectedSectionId === -1) return null
-  const selectedSection = Object.values(structure.sections).find(
-    (section) => section.details.id === selectedSectionId
-  )
+  const selectedSection = allSections.find((section) => section.details.id === selectedSectionId)
   if (!selectedSection) return null
   const selectedPage = selectedSection.pages[selectedPageNumber]
   if (!selectedPage) return null
@@ -49,7 +58,59 @@ const Elements: React.FC = () => {
           id,
           patch: { index: index + 1 },
         })),
-        create: [getNewElement(structure.info.id, lastElementIndex + 1)],
+        create: [getNewElement(structure.info.id, currentSection, lastElementIndex + 1)],
+      },
+    }).then(() => reloadApplication())
+  }
+
+  const duplicateElement = (currentElement: TemplateElement) => {
+    const elementsAfterThisElement = currentSection.allElements.filter(
+      ({ index }) => index > (currentElement?.index ?? 0)
+    )
+
+    const {
+      title,
+      category,
+      elementTypePluginCode,
+      visibilityCondition,
+      code,
+      isRequired,
+      isEditable,
+      validation,
+      validationMessage,
+      helpText,
+      parameters,
+      initialValue,
+    } = currentElement
+    const newElement = {
+      title,
+      category,
+      elementTypePluginCode,
+      visibilityCondition,
+      isRequired,
+      isEditable,
+      validation,
+      validationMessage,
+      helpText,
+      parameters,
+      initialValue,
+      index: (currentElement?.index ?? 0) + 1,
+      code: `${code}-COPY`,
+      applicationResponsesUsingId: {
+        create: [{ applicationId: structure.info.id }],
+      },
+      // These are required, but get auto-updated by Postgres function
+      templateCode: '__Temp',
+      templateVersion: '__Temp',
+    }
+
+    updateTemplateSection(currentSection.id, {
+      templateElementsUsingId: {
+        updateById: elementsAfterThisElement.map(({ id, index }) => ({
+          id,
+          patch: { index: index + 1 },
+        })),
+        create: [newElement],
       },
     }).then(() => reloadApplication())
   }
@@ -67,6 +128,10 @@ const Elements: React.FC = () => {
             elementId={element.id}
             isVisible={element.isVisible}
             setElementUpdateState={setElementUpdateState}
+            duplicateElement={duplicateElement}
+            showCheckbox={!!selectionRequestingElement && selectionRequestingElement !== element.id}
+            isSelected={selectedElementIds.includes(element.id)}
+            toggleSelectedElement={toggleSelectedElement}
           />
         )}
         elements={selectedPage.state}
@@ -79,7 +144,13 @@ const Elements: React.FC = () => {
         title="New Element"
         onClick={createElement}
       />
-      <ElementConfig element={elementUpdateState} onClose={() => setElementUpdateState(null)} />
+      {elementUpdateState && (
+        <ElementConfig
+          element={elementUpdateState}
+          onClose={() => setElementUpdateState(null)}
+          isReviewerSectionElement={currentSection.isReviewSection}
+        />
+      )}
     </div>
   )
 }
@@ -88,7 +159,19 @@ const ElementConfigOptions: React.FC<{
   elementId: number
   isVisible: boolean
   setElementUpdateState: SetElementUpdateState
-}> = ({ elementId, isVisible, setElementUpdateState }) => {
+  duplicateElement: (el: TemplateElement) => void
+  showCheckbox: boolean
+  isSelected: boolean
+  toggleSelectedElement: (id: number) => void
+}> = ({
+  elementId,
+  isVisible,
+  setElementUpdateState,
+  duplicateElement,
+  showCheckbox,
+  isSelected,
+  toggleSelectedElement,
+}) => {
   const { sections } = useTemplateState()
   const currentElement =
     sections
@@ -101,9 +184,13 @@ const ElementConfigOptions: React.FC<{
   return (
     <div className="element-config-options-container" key={elementId}>
       <ElementMove elementId={elementId} />
+      <IconButton name="copy outline" onClick={() => duplicateElement(currentElement)} />
       <IconButton name="setting" onClick={() => setElementUpdateState(currentElement)} />
       {!isVisible && (
         <Popup content="Visibility criteria did not match" trigger={<Icon name="eye slash" />} />
+      )}
+      {showCheckbox && (
+        <Checkbox checked={isSelected} onChange={() => toggleSelectedElement(elementId)} />
       )}
     </div>
   )
@@ -232,14 +319,31 @@ const ElementMove: React.FC<{ elementId: number }> = ({ elementId }) => {
   )
 }
 
-const getNewElement = (applicationId: number, index: number) => ({
+const getNewElement = (applicationId: number, currentSection: MoveSection, index: number) => ({
   title: 'New Element',
   category: TemplateElementCategory.Question,
   elementTypePluginCode: 'shortText',
   visibilityCondition: true,
   code: `newElementCode_${getRandomNumber()}`,
   isRequired: false,
-  isEditable: true,
+  // Default for review section elements is to make then non-editable once the
+  // application is completed
+  isEditable: currentSection.isReviewSection
+    ? {
+        operator: '!=',
+        values: [
+          {
+            operator: 'getData',
+            property: 'applicationData.current.status',
+            fallback: 'PENDING',
+          },
+          'COMPLETED',
+        ],
+      }
+    : true,
+  reviewability: currentSection.isReviewSection
+    ? Reviewability.Never
+    : Reviewability.OnlyIfApplicantAnswer,
   validation: true,
   index,
   validationMessage: 'no validation',

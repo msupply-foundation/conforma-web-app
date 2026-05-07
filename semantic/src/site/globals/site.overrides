@@ -66,6 +66,10 @@ a:hover {
   visibility: hidden;
 }
 
+.input-error input {
+  border: 1px solid @attention !important;
+}
+
 /*--------------------------------
    Common layout
 ---------------------------------*/
@@ -231,6 +235,11 @@ a:hover {
   gap: 20px;
 }
 
+.white-container-decoration {
+  box-shadow: @areaBoxShadow;
+  border-radius: @borderRadiusSmall;
+}
+
 /*--------------------------------
    Login page
 ---------------------------------*/
@@ -249,7 +258,7 @@ a:hover {
   flex-direction: column;
   background-color: white;
   width: clamp(360px, 35%, 450px);
-  box-shadow: @basicBoxShadow;
+  box-shadow: @loginBoxShadow;
   border-radius: @borderRadius;
   padding: 20px;
 }
@@ -525,6 +534,9 @@ a:hover {
   background-color: @surfacesWhite;
   width: 800px;
   padding: 30px 50px 32px;
+  @media only screen and (min-width: @largestMobileScreen) {
+    margin-top: 1em;
+  }
   @media only screen and (max-width: @largestMobileScreen) {
     padding: 20px;
   }
@@ -1182,6 +1194,9 @@ a:hover {
   background-color: @surfacesWhite;
   width: @applicationFormWidth;
   padding: 30px 1rem 32px;
+  @media only screen and (min-width: @largestMobileScreen) {
+    margin-top: 0.5em;
+  }
 }
 
 #progress-column {
@@ -1430,8 +1445,11 @@ a:hover {
   align-items: center;
   width: @applicationSummaryWidth;
   background-color: @surfacesWhite;
-  border: 2px solid @surfacesMed;
+  // border: 2px solid @surfacesMed;
   border-radius: @borderRadius;
+  @media only screen and (min-width: @largestMobileScreen) {
+    margin-top: 0.5em;
+  }
 
   @media only screen and (max-width: @largestMobileScreen) {
     padding-left: 10px;
@@ -1473,7 +1491,7 @@ a:hover {
 
 .summary-section {
   background-color: @surfacesLight;
-  border: 2px solid @surfacesMed;
+  border: 1px solid @surfacesMed;
   border-radius: @borderRadius;
   padding: 0px;
   margin-bottom: 15px;
@@ -1546,9 +1564,10 @@ a:hover {
     padding-right: 20px;
     padding-left: 20px;
     background: @surfacesWhite;
-    border: 2px solid @surfacesMed;
+    // border: 2px solid @surfacesMed;
     border-top: none;
     margin: 0px;
+    box-shadow: @gridBoxShadow;
 
     @media only screen and (max-width: @largestMobileScreen) {
       padding-left: 10px;
@@ -1637,7 +1656,12 @@ a:hover {
   }
 
   .response-container:first-of-type {
-    border-top: 2px solid @surfacesMed;
+    // border-top: 2px solid @surfacesMed;
+  }
+
+  .response-container:not(:first-of-type) {
+    border-top: 1px solid @surfacesLight;
+    // border: 3px solid red;
   }
 
   > :first-child {
@@ -1660,7 +1684,8 @@ a:hover {
   background: @surfacesWhite;
   border-bottom-left-radius: @borderRadius;
   border-bottom-right-radius: @borderRadius;
-  border: 2px solid @surfacesMed;
+  // border: 2px solid @surfacesMed;
+  box-shadow: @gridBoxShadow;
   border-top: none;
 }
 
@@ -1764,7 +1789,7 @@ a:hover {
   }
 
   .template {
-    .flex-row();
+    .flex-column();
 
     .content {
       justify-content: space-between;
@@ -1813,13 +1838,14 @@ a:hover {
     max-width: 95vw;
     padding: 10px;
     justify-content: space-between;
-    border: 1px solid @surfacesDark;
+    // border: 1px solid @surfacesDark;
     border-radius: @borderRadius;
+    box-shadow: @gridBoxShadow;
     background-color: @surfacesWhite;
 
-    .content {
-      min-height: 65px;
-    }
+    // .content {
+    //   min-height: 65px;
+    // }
 
     .button {
       padding: 10px;
@@ -1858,7 +1884,7 @@ a:hover {
     .admin-option {
       border-radius: @borderRadius;
       background-color: @surfacesWhite;
-      box-shadow: @templateBoxShadow;
+      border: 1px solid @surfacesDark;
       padding: 10px;
     }
   }
@@ -1877,15 +1903,17 @@ a:hover {
     margin-bottom: 5px;
     padding: 10px;
     border-radius: 8px;
+    box-shadow: @gridBoxShadow;
   }
 }
 
 /*--------------------------------
-      (Admin) Preferences / Data View Pages
+      (Admin) Preferences / Data View / Fragments Pages
 ---------------------------------*/
 
 #preferences-panel,
-#data-view-config-panel {
+#data-view-config-panel,
+#fragment-config-panel {
   padding-top: 20px;
   width: 50%;
   @media only screen and (max-width: @largestMobileScreen) {
@@ -1897,6 +1925,20 @@ a:hover {
     padding: 0;
     margin: 5px;
   }
+}
+
+.fragment-name-display {
+  padding: 0.5em 0.8em;
+  border-radius: 0.5em;
+  box-shadow:
+    0 2px 5px -1px rgba(50, 50, 93, 0.25),
+    0 1px 3px -1px rgba(0, 0, 0, 0.3);
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+#fragment-config-panel {
+  width: unset;
 }
 
 /*--------------------------------
@@ -1949,6 +1991,7 @@ a:hover {
   .ui.dropdown {
     .clickable();
     .filterItem();
+    border: 1px solid @surfacesMed;
 
     .menu {
       top: 120%;
@@ -2231,7 +2274,7 @@ a:hover {
     padding: 2px;
     padding-left: 10px;
     padding-right: 10px;
-    line-height: 1.4285em // resets height set by Modal;;
+    line-height: 1.4285em; // resets height set by Modal;
   }
 
   .ui.checkbox {
@@ -2349,6 +2392,12 @@ a:hover {
   }
 }
 
+.template-builder-section {
+  // border: 1px solid red;
+  width: 100%;
+  margin-top: 2em;
+}
+
 .template-builder-category-input {
   .flex-column-center-start();
   margin-top: 20px;
@@ -2375,6 +2424,10 @@ a:hover {
   }
 }
 
+.builder-review-label {
+  border: 2px solid @red !important;
+}
+
 .page-controller {
   background-color: @surfacesLight;
   width: fit-content;
@@ -2385,10 +2438,34 @@ a:hover {
 }
 
 .filter-joins {
+  .flex-row();
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.filter-joins {
   .ui.label {
     margin-right: 7px;
     margin-bottom: 7px;
   }
+}
+
+.ext-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.entity-trim-elements {
+  border-left: 3px solid @green !important;
+}
+
+.entity-trim-output {
+  border-left: 3px solid @blue !important;
+}
+
+.entity-trim-inaccessible {
+  border-left: 3px solid @red !important;
 }
 
 .builder-page-elements-wrapper {
@@ -2411,14 +2488,27 @@ a:hover {
   width: 100%;
   border-radius: @borderRadius;
   border: 1px solid @indicatorColor;
-  padding: 2px;
-  padding-left: 10px;
-  padding-right: 10px;
   margin: 2px;
   background-color: @surfacesWhite;
   .evaluation-container-title {
     .flex-row-start-center();
     white-space: nowrap;
+  }
+  input {
+    border: 1px solid @surfacesMed;
+    border-radius: 0.3em;
+    font-family: inherit;
+    outline: none;
+    padding: 0.3em;
+  }
+  input::selection {
+    background-color: #b3d8ff;
+  }
+  .jer-editor-container {
+    padding: 0;
+    width: max-content;
+    margin-left: 0.8em;
+    margin-bottom: 0;
   }
   .evaluation-container-content {
     .flex-row() !important;
@@ -2437,6 +2527,7 @@ a:hover {
     .flex-column-center-center();
     padding: 20px;
     border-radius: @borderRadius !important;
+    max-width: 100vw;
   }
   .config-modal-info {
     background-color: @surfacesWhite !important;
@@ -2457,6 +2548,48 @@ a:hover {
     border-top-left-radius: @borderRadius;
     border-top-right-radius: @borderRadius;
   }
+  .nav-button {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// Template import
+.import-section-header-row {
+  background-color: @headersInteractiveLow;
+  h3.ui.header {
+    color: @surfacesLight;
+  }
+  td {
+    padding-top: 0.4em !important;
+    padding-bottom: 0.4em !important;
+  }
+}
+
+.import-row {
+  p {
+    margin-bottom: 0.2em;
+    margin-top: 0.2em;
+    font-size: @slightlySmallerText;
+  }
+}
+
+.import-entity-row {
+  td {
+    padding-top: 0.4em !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+.import-table {
+  .jer-editor-container {
+    padding-top: 0.4em;
+  }
+}
+.import-select-row td {
+  border: none !important;
+  padding-top: 0.2em !important;
+  padding-bottom: 0.2em !important;
 }
 
 /*******************************
@@ -2486,6 +2619,20 @@ a:hover {
 .json-editor {
   padding-top: 1em;
   .flex-column();
+
+  .jer-editor-container {
+    box-shadow: rgba(99, 99, 99, 0.07) 0px 2px 8px 0px;
+  }
+}
+
+/*******************************
+        Fig-Tree JSON Editor
+*******************************/
+
+.fig-tree-container {
+  .jer-editor-container {
+    width: auto;
+  }
 }
 
 /*******************************
@@ -2559,6 +2706,7 @@ a:hover {
     p {
       word-wrap: break-word;
       max-width: 250px;
+      white-space: pre-wrap;
     }
   }
   .icon.info {
@@ -2594,6 +2742,9 @@ a:hover {
 .config-container-alternate {
   .config-container();
   background-color: @surfacesLight;
+  .ui.header {
+    margin: 0.5em !important;
+  }
 }
 
 .config-container-outline {
@@ -2618,6 +2769,13 @@ a:hover {
   }
   li {
     margin-bottom: 0.5em;
+  }
+}
+
+.smaller-text-tooltip {
+  padding: 0.5em !important;
+  p {
+    font-size: @smallerText;
   }
 }
 
