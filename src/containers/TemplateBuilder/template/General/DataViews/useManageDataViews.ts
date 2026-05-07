@@ -21,7 +21,6 @@ export type DataViewFilter =
 export const useDataViews = (filter: DataViewFilter) => {
   const { template, dataViewJoins } = useTemplateState()
   const [dataViewDetails, setDataViewDetails] = useState<DataViewDetails[]>([])
-  const [menuItems, setMenuItems] = useState<DataView[]>([])
   const [error, setError] = useState<string>('')
 
   const dataViews = (dataViewJoins.map((node) => {
@@ -57,9 +56,7 @@ export const useDataViews = (filter: DataViewFilter) => {
       })
   }, [dataViewJoins])
 
-  useEffect(() => {
-    setMenuItems(getDataViewMenuItems(dataViewDetails, currentlyLinkedDataViewIDs, filter))
-  }, [filter, dataViewDetails])
+  const menuItems = getDataViewMenuItems(dataViewDetails, currentlyLinkedDataViewIDs, filter)
 
   return {
     current: dataViews,

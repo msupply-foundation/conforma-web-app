@@ -61,6 +61,7 @@ const PageElements: React.FC<PageElementProps> = ({
   const {
     push,
     query: { showHistory },
+    currentPageType,
   } = useRouter()
 
   const visibleElements = elements.filter(({ element }) => element.isVisible)
@@ -77,6 +78,8 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form className="form-area">
         {elements.map(({ element, isChangeRequest, isChanged, previousApplicationResponse }) => {
+          if (element.pluginCode === 'getValues' && currentPageType !== 'admin') return null
+
           const currentReview = previousApplicationResponse?.reviewResponses.nodes[0]
           const changesRequired =
             isChangeRequest || isChanged

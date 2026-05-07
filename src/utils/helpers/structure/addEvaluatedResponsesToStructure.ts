@@ -97,7 +97,8 @@ const flattenStructureElements = (structure: FullStructure) => {
   })
   // Also include Review sections if they exist
   const sectionName = Object.keys(structure.reviewSections)?.[0]
-  if (sectionName) flattened.push(...structure.reviewSections[sectionName].pages['1'].state)
+  const reviewPage = sectionName ? structure.reviewSections[sectionName].pages['1'] : undefined
+  if (reviewPage) flattened.push(...reviewPage.state)
 
   return flattened
 }

@@ -4,6 +4,7 @@ import getServerUrl from '../../../../../utils/helpers/endpoints/endpointUrlBuil
 import { EvaluatorFragment } from '../../../../../utils/generated/graphql'
 import { useTemplateState } from '../../TemplateWrapper'
 
+
 interface FragmentsDetails {
   data: EvaluatorFragment
   applicantAccessible: boolean
@@ -21,7 +22,6 @@ export type FragmentFilter =
 export const useFragments = (filter: FragmentFilter) => {
   const { template, fragmentJoins } = useTemplateState()
   const [fragmentDetails, setFragmentDetails] = useState<FragmentsDetails[]>([])
-  const [menuItems, setMenuItems] = useState<EvaluatorFragment[]>([])
   const [error, setError] = useState<string>('')
 
   const fragments = (fragmentJoins.map((node) => {
@@ -57,9 +57,7 @@ export const useFragments = (filter: FragmentFilter) => {
       })
   }, [fragmentJoins])
 
-  useEffect(() => {
-    setMenuItems(getFragmentMenuItems(fragmentDetails, currentlyLinkedFragmentIDs, filter))
-  }, [filter, fragmentDetails])
+  const menuItems = getFragmentMenuItems(fragmentDetails, currentlyLinkedFragmentIDs, filter)
 
   return {
     current: fragments,

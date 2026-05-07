@@ -48,7 +48,13 @@ export const JoinedEntityLabel = ({
         }
       }}
     >
-      <div className="ext-icon clickable" onClick={() => window.open(editLink, '_blank')}>
+      <div
+        className="ext-icon clickable"
+        onClick={(e) => {
+          e.stopPropagation()
+          window.open(editLink, '_blank')
+        }}
+      >
         <Icon name="external" size="small" className="floating-icon clickable" />
       </div>
       {name}

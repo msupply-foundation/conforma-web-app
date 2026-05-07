@@ -104,6 +104,8 @@ export const useToast = (toastSettings: Partial<ToastProps> = {}) => {
 export const Toast = ({ toast, removeToast }: { toast: ToastState; removeToast: () => void }) => {
   const [visible, setVisible] = useState(false)
   const timerId = useRef<number>(0)
+  const removeToastRef = useRef(removeToast)
+  removeToastRef.current = removeToast
   const { timeout } = toast
 
   useEffect(() => {
@@ -114,9 +116,9 @@ export const Toast = ({ toast, removeToast }: { toast: ToastState; removeToast: 
     if (timeout !== 0)
       timerId.current = setTimeout(() => {
         setVisible(false)
-        setTimeout(() => removeToast(), TRANSITION_DURATION + 50)
+        setTimeout(() => removeToastRef.current(), TRANSITION_DURATION + 50)
       }, timeout)
-  }, [timeout, removeToast])
+  }, [timeout])
 
   const closeToast = () => {
     setVisible(false)
