@@ -55,7 +55,8 @@ const Snapshots: React.FC = () => {
   const [snapshotError, setSnapshotError] = useState<{ message: string; error: string } | null>(
     null
   )
-  const [selectedDownload, setSelectedDownload] = useState<{ name: string; size?: number }>()
+  const [selectedDownload, setSelectedDownload] =
+    useState<{ name: string; size?: number; archiveSize: number }>()
   const [expandedSnapshots, setExpandedSnapshots] = useState<string[]>([])
   const { maintenanceMode } = usePrefs()
 
@@ -286,7 +287,7 @@ const Snapshots: React.FC = () => {
               name="download"
               size="large"
               className="clickable blue"
-              onClick={() => setSelectedDownload({ name: filename, size })}
+              onClick={() => setSelectedDownload({ name: filename, size, archiveSize })}
             />
 
             <Icon
@@ -525,7 +526,7 @@ const Snapshots: React.FC = () => {
 }
 
 interface DownloadModalProps {
-  snapshot?: { name: string; size?: number }
+  snapshot?: { name: string; size?: number; archiveSize: number }
   onClose: () => void
 }
 
@@ -652,72 +653,78 @@ const DownloadModal = ({ onClose, snapshot }: DownloadModalProps) => {
     BrowserNotifications.notify({ title: 'Snapshot downloaded', body: snapshot.name })
   }
 
+  const hasArchives = (snapshot?.archiveSize ?? 0) > 0
+
   return (
     <Modal open={!!snapshot} onClose={onClose} closeIcon>
       <Modal.Header>Download {snapshot?.name}</Modal.Header>
       <Modal.Content>
         <Form className="flex-column" style={{ gap: 25 }}>
-          <Checkbox
-            label={`Include snapshot file (${
-              snapshot?.size ? fileSizeWithUnits(snapshot.size) : 'Size unknown'
-            })`}
-            checked={downloadOptions.includeSnapshot}
-            onChange={(_, { checked }) =>
-              setDownloadOptions((options) => ({ ...options, includeSnapshot: !!checked }))
-            }
-          />
-          <div className="flex-column" style={{ gap: 10 }}>
-            <div>Include Archives:</div>
-            <div className="flex-row-start-center" style={{ gap: 10 }}>
-              <span>From: </span>
-              <Dropdown
-                placeholder="Select earliest archive"
-                selection
-                clearable
-                value={downloadOptions.archiveRange?.from}
-                options={startArchiveOptions}
-                onChange={(_, { value }) => {
-                  const archiveRange = {
-                    ...downloadOptions.archiveRange,
-                    from: value === '' ? undefined : (value as number),
-                  }
-                  // If "from" value is cleared, also clear "to" value since it
-                  // doesn't make sense to have a "to" without a "from"
-                  if (value === '') archiveRange.to = undefined
-                  setDownloadOptions((options) => ({
-                    ...options,
-                    archiveRange: archiveRange,
-                  }))
-                }}
-                style={{ maxWidth: 400, fontSize: '90%' }}
+          {hasArchives && (
+            <>
+              <Checkbox
+                label={`Include snapshot file (${
+                  snapshot?.size ? fileSizeWithUnits(snapshot.size) : 'Size unknown'
+                })`}
+                checked={downloadOptions.includeSnapshot}
+                onChange={(_, { checked }) =>
+                  setDownloadOptions((options) => ({ ...options, includeSnapshot: !!checked }))
+                }
               />
-              {downloadOptions.archiveRange?.from && (
-                <>
-                  <span>to: </span>
+              <div className="flex-column" style={{ gap: 10 }}>
+                <div>Include Archives:</div>
+                <div className="flex-row-start-center" style={{ gap: 10 }}>
+                  <span>From: </span>
                   <Dropdown
-                    placeholder="Select latest archive"
+                    placeholder="Select earliest archive"
                     selection
                     clearable
-                    value={downloadOptions.archiveRange?.to}
-                    options={endArchiveOptions}
-                    onChange={(_, { value }) =>
+                    value={downloadOptions.archiveRange?.from}
+                    options={startArchiveOptions}
+                    onChange={(_, { value }) => {
+                      const archiveRange = {
+                        ...downloadOptions.archiveRange,
+                        from: value === '' ? undefined : (value as number),
+                      }
+                      // If "from" value is cleared, also clear "to" value since it
+                      // doesn't make sense to have a "to" without a "from"
+                      if (value === '') archiveRange.to = undefined
                       setDownloadOptions((options) => ({
                         ...options,
-                        archiveRange: {
-                          ...options.archiveRange,
-                          to: value === '' ? undefined : (value as number),
-                        },
+                        archiveRange: archiveRange,
                       }))
-                    }
+                    }}
                     style={{ maxWidth: 400, fontSize: '90%' }}
                   />
-                </>
-              )}
-              {selectedArchives?.length > 0 && (
-                <span>Total size: {fileSizeWithUnits(totalArchiveSize)}</span>
-              )}
-            </div>
-          </div>
+                  {downloadOptions.archiveRange?.from && (
+                    <>
+                      <span>to: </span>
+                      <Dropdown
+                        placeholder="Select latest archive"
+                        selection
+                        clearable
+                        value={downloadOptions.archiveRange?.to}
+                        options={endArchiveOptions}
+                        onChange={(_, { value }) =>
+                          setDownloadOptions((options) => ({
+                            ...options,
+                            archiveRange: {
+                              ...options.archiveRange,
+                              to: value === '' ? undefined : (value as number),
+                            },
+                          }))
+                        }
+                        style={{ maxWidth: 400, fontSize: '90%' }}
+                      />
+                    </>
+                  )}
+                  {selectedArchives?.length > 0 && (
+                    <span>Total size: {fileSizeWithUnits(totalArchiveSize)}</span>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
           <div>
             Total download size <em>(before Zip compression)</em>:{' '}
             <strong>{fileSizeWithUnits(totalDownloadSize)}</strong>
