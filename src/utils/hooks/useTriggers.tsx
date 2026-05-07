@@ -47,7 +47,7 @@ const useTriggers = (serialNumber: string) => {
       }, 2000)
       setTimerId(timerId)
     }
-  }, [refetchAttempts])
+  }, [refetchAttempts, serialNumber])
 
   const getTriggers = async () => {
     console.log('Checking triggers, attempt #', refetchAttempts)

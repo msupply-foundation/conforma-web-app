@@ -89,7 +89,7 @@ const RowLevelPolicyInfo: React.FC<PolicyRulesProps> = ({ rules }) => (
       <div key={tableName} className="config-container-alternate">
         <TextIO title="Table name" text={tableName} />
         <div className="spacer-10" />
-        <ReactJson data={rules || {}} collapse={2} />
+        <ReactJson data={rules || {}} collapse={2} viewOnly rootName={tableName} />
       </div>
     ))}
   </div>

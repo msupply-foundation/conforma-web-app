@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Button, Dropdown, Header, Icon, Label } from 'semantic-ui-react'
+import { Button, Dropdown, Header, Icon } from 'semantic-ui-react'
 import { useTemplateState } from '../../TemplateWrapper'
 import DropdownIO from '../../../shared/DropdownIO'
 import { DataViewFilter, useDataViews } from './useManageDataViews'
 import { useOperationState } from '../../../shared/OperationContext'
+import { JoinedEntityLabel, Legend } from '../shared'
 
 export const DataViewSelector: React.FC<{}> = () => {
   const { template } = useTemplateState()
@@ -61,7 +62,7 @@ export const DataViewSelector: React.FC<{}> = () => {
   const hasOutputTables = current.some((dv) => dv.inOutputTables)
 
   return (
-    <>
+    <div className="template-builder-section">
       <Header as="h3">Connected Data Views</Header>
       {template.canEdit && (
         <div className="flex-row-start-center" style={{ gap: 5, marginBottom: 10 }}>
@@ -118,79 +119,33 @@ export const DataViewSelector: React.FC<{}> = () => {
       )}
       <div className="filter-joins">
         {current.map((dv) => (
-          <>
-            <Label
-              key={dv.identifier}
-              className={`${template.canEdit ? 'clickable' : ''}${
-                dv.dataViewJoinId === selectedDataViewJoinId ? ' builder-selected' : ''
-              }${
-                !dv.applicantAccessible && !dv.inOutputTables
-                  ? ' dv-inaccessible'
-                  : dv.inTemplateElements
-                  ? ' dv-elements'
-                  : dv.inOutputTables
-                  ? ' dv-outcomes'
-                  : ''
-              }`}
-              style={{ fontSize: '100%', position: 'relative' }}
-              onClick={() => {
-                if (!template.canEdit) return
-                if (dv.dataViewJoinId === selectedDataViewJoinId)
-                  setSelectedDataViewJoinId(undefined)
-                else {
-                  setSelectedDataViewJoinId(dv.dataViewJoinId)
-                  setMenuSelection(undefined)
-                }
-              }}
-            >
-              <div
-                className="ext-icon clickable"
-                onClick={() =>
-                  window.open(
-                    `/admin/data-views?selected-table=${dv.tableName}&data-view=${dv.identifier}`,
-                    '_blank'
-                  )
-                }
-              >
-                <Icon name="external" size="small" className="floating-icon clickable" />
-              </div>
-              {dv.title}
-              <br />
-              <span className="slightly-smaller-text" style={{ fontWeight: 400 }}>
+          <JoinedEntityLabel
+            key={dv.identifier}
+            joinId={dv.dataViewJoinId}
+            name={dv.title ?? ''}
+            description={
+              <>
                 <strong>Code:</strong> {dv.code}
                 <br /> <strong>ID:</strong> {dv.identifier}
-              </span>
-            </Label>
-          </>
+              </>
+            }
+            canEdit={template.canEdit}
+            selected={dv.dataViewJoinId === selectedDataViewJoinId}
+            inaccessible={!dv.applicantAccessible && !dv.inOutputTables}
+            inTemplateElements={dv.inTemplateElements}
+            inActions={dv.inOutputTables}
+            editLink={`/admin/data-views?selected-table=${dv.tableName}&data-view=${dv.identifier}`}
+            setSelected={setSelectedDataViewJoinId}
+            setMenu={setMenuSelection}
+          />
         ))}
       </div>
-      <div>
-        {(hasInaccessible || hasTemplateElements || hasOutputTables) && (
-          <Header as="h4" style={{ marginBottom: 5, marginTop: 10 }}>
-            Legend
-          </Header>
-        )}
-        <div className="flex-row" style={{ gap: 10 }}>
-          {hasInaccessible && (
-            <Label
-              key="legend-inaccessible"
-              className="dv-inaccessible"
-              content="Applicant does NOT have permission to view, but is used in form elements"
-              style={{ maxWidth: 250 }}
-            />
-          )}
-          {hasTemplateElements && (
-            <Label key="legend-form" className="dv-elements" content="Used in Form elements" />
-          )}
-          {hasOutputTables && (
-            <Label
-              key="legend-output"
-              className="dv-outcomes"
-              content="Used in data output actions"
-            />
-          )}
-        </div>
-      </div>
-    </>
+      <Legend
+        hasInaccessible={hasInaccessible}
+        hasTemplateElements={hasTemplateElements}
+        hasOutput={hasOutputTables}
+        outputText="Used in data output actions"
+      />
+    </div>
   )
 }

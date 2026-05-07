@@ -46,7 +46,7 @@ const ReviewComment: React.FC<ReviewCommentProps> = ({ reviewDecisionId, isEdita
         <strong>{t('LABEL_REVIEW_OVERALL_COMMENT')}:</strong>
         <Tooltip message={t('LABEL_REVIEW_OVERALL_COMMENT_TOOLTIP')} />
       </p>
-      <Form.Field id="review-commment-content">
+      <Form.Field id="review-comment-content">
         <TextArea
           defaultValue={initialComment}
           rows={4}

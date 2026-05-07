@@ -8,6 +8,7 @@ import {
 } from '../../../../../utils/generated/graphql'
 import Evaluation from '../../../shared/Evaluation'
 import TextIO from '../../../shared/TextIO'
+import { FigTree } from '../../../../../FigTreeEvaluator'
 
 type TemplateInfoProps = {
   template: Template | null
@@ -74,10 +75,12 @@ export const PermissionActionInfo: React.FC<PermissionActionsProps> = ({ templat
         <TextIO title="Trigger" text={templateAction?.trigger || ''} />
       </div>
       <Evaluation
-        label="condition"
-        currentElementCode={''}
+        label="Condition"
         evaluation={templateAction?.condition}
         setEvaluation={() => {}}
+        canEdit={false}
+        objectData={{}}
+        figTree={FigTree}
       />
       {/* <Parameters
         key="parametersElement"

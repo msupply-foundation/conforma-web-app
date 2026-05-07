@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Icon, Search } from 'semantic-ui-react'
-import {
-  JsonEditor as ReactJson,
-  JsonEditorProps,
-  CopyFunction,
-  JsonData,
-  UpdateFunctionProps,
-  UpdateFunction,
-} from 'json-edit-react'
-import { useToast, topLeft, Position } from '../../../contexts/Toast'
+import React, { useEffect, useRef, useState } from 'react'
+import { Search } from 'semantic-ui-react'
+import { isEqual } from 'lodash-es'
+import { ReactJson, UndoRedoSave } from './'
+import { JsonEditorProps, JsonData, UpdateFunctionProps, UpdateFunction } from 'json-edit-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Loading } from '../../common'
 import useUndo from 'use-undo'
-import { truncateString } from '../../../utils/helpers/utilityFunctions'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
   onSave?: (data: JsonData) => void
@@ -39,11 +32,14 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   const [searchText, setSearchText] = useState('')
   const [{ present: currentData }, { set: setData, reset, undo, redo, canUndo, canRedo }] =
     useUndo(data)
-  const { showToast } = useToast({ position: topLeft })
 
+  const prevDataRef = useRef(data)
   useEffect(() => {
-    reset(data)
-    setIsDirty(false)
+    if (!isEqual(data, prevDataRef.current)) {
+      reset(data)
+      setIsDirty(false)
+      prevDataRef.current = data
+    }
   }, [data])
 
   const handleSave = async () => {
@@ -72,19 +68,6 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     return ['value', output]
   }
 
-  const handleCopy: CopyFunction = ({ key, value, type, stringValue }) => {
-    const text =
-      typeof value === 'object' && value !== null
-        ? t('CLIPBOARD_COPIED_ITEMS', { name: key, count: Object.keys(value).length })
-        : truncateString(stringValue)
-    showToast({
-      title: t(type === 'value' ? 'CLIPBOARD_COPIED_VALUE' : 'CLIPBOARD_COPIED_PATH'),
-      text,
-      style: 'info',
-      position: Position.bottomLeft,
-    })
-  }
-
   if (currentData === undefined) return <Loading />
 
   return (
@@ -103,7 +86,6 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         data={currentData}
         setData={setData as (value: JsonData) => void}
         onUpdate={handleUpdate}
-        enableClipboard={handleCopy}
         theme={{
           container: {
             backgroundColor: '#fefefe',
@@ -115,30 +97,20 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
         {...jsonViewProps}
       />
       {showSaveButton && (
-        <div className="flex-row-space-between">
-          <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
-            <a onClick={undo}>
-              <Icon name="arrow alternate circle left" />
-              <strong>{t('BUTTON_UNDO')}</strong>
-            </a>
-          </p>
-          <p className={`clickable nav-button ${!canRedo ? 'invisible' : ''}`}>
-            <a onClick={redo}>
-              <strong>{t('BUTTON_REDO')}</strong>
-              <Icon name="arrow alternate circle right" />
-            </a>
-          </p>
-          <Button
-            primary
-            disabled={!isDirty}
-            loading={isSaving}
-            content={t('BUTTON_SAVE')}
-            onClick={handleSave}
-          />
-        </div>
+        <UndoRedoSave
+          undo={undo}
+          redo={redo}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          isDirty={isDirty}
+          isSaving={isSaving}
+          handleSave={handleSave}
+        />
       )}
     </div>
   )
 }
+
+//
 
 export default JsonEditor

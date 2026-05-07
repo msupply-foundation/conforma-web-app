@@ -5,6 +5,7 @@ import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 // @ts-ignore -- no types declarations available
 import Css from 'json-to-css'
 import { ParsedUrlQuery } from '../utils/types'
+import { EvaluatorNode } from 'fig-tree-editor-react'
 
 interface Preferences {
   paginationPresets?: number[]
@@ -24,6 +25,12 @@ interface Preferences {
   // This pref actually comes from server prefs
   logoutAfterInactivity: number
   publicUrlMap?: Record<string, string | { code: string; urlQuery: ParsedUrlQuery }>
+  appDataTestApplications?: string[]
+  figTreeDefaults?: {
+    defaultNewOperatorExpression?: EvaluatorNode
+    defaultNewFragment?: string
+    defaultNewCustomOperator?: string
+  }
 }
 interface PrefsState {
   preferences: Preferences

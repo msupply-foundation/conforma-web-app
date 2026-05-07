@@ -3,7 +3,7 @@ import { Header, Icon } from 'semantic-ui-react'
 import { SummaryViewWrapper } from '../../../formElementPlugins'
 import getSimplifiedTimeDifference from '../../../utils/dateAndTime/getSimplifiedTimeDifference'
 import { useLanguageProvider } from '../../../contexts/Localisation'
-import { ElementState, HistoryElement } from '../../../utils/types'
+import { ApplicationDetails, ElementState, HistoryElement } from '../../../utils/types'
 
 const HistoryResponseElement: React.FC<HistoryElement> = ({
   author = '',
@@ -45,6 +45,7 @@ const HistoryResponseElement: React.FC<HistoryElement> = ({
                 // Not passing any other responses, as these elements will be
                 // using pre-evaluated parameters, not doing new evaluations
                 allResponses={{}}
+                applicationData={{} as ApplicationDetails}
               />
             ) : (
               <p>{message}</p>

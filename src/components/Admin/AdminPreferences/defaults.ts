@@ -1,28 +1,6 @@
-import { DefaultValueFunction, NewKeyOptionsFunction, extract } from 'json-edit-react'
 import { Preferences } from './schema'
 
-export const newKeyOptions: NewKeyOptionsFunction = ({ key }) => {
-  switch (key) {
-    case 'server':
-      return Object.keys(defaultPrefs.server)
-    case 'web':
-      return Object.keys(defaultPrefs.web)
-  }
-}
-
-export const defaultValue: DefaultValueFunction = ({ path, value }, newKey) => {
-  if (Array.isArray(value)) {
-    // If we're adding to an existing array, just get the first item from the
-    // defaultPrefs array
-    const defaultArray = extract(defaultPrefs, path as string[], [])
-    return defaultArray[0] ?? ''
-  }
-
-  const fullPath = [...path, newKey]
-  return extract(defaultPrefs, fullPath as string[], null)
-}
-
-const defaultPrefs: Preferences = {
+export const defaultPrefs: Preferences = {
   server: {
     logoutAfterInactivity: 60,
     thumbnailMaxWidth: 300,
@@ -44,7 +22,7 @@ const defaultPrefs: Preferences = {
     systemManagerPermissionName: 'systemManager',
     managerCanEditLookupTables: true,
     managerCanEditLocalisation: true,
-    previewDocsMinKeepTime: '2 hours',
+    protectedFilesKeepDays: 90,
     fileCleanupSchedule: {
       // Once per day at 1:05am
       hour: 1,
@@ -108,6 +86,7 @@ const defaultPrefs: Preferences = {
     },
     envVars: ['FILE_OUTPUT_PATH', 'API_KEY'],
     maintenanceSite: 'https://maintenance.example.com',
+    freeSpaceRequiredForZips: 5, // GB
   },
   web: {
     paginationPresets: [10, 25, 50],
@@ -146,6 +125,15 @@ const defaultPrefs: Preferences = {
           selectVersion: true,
         },
       },
+    },
+    appDataTestApplications: ['Add valid serials here'],
+    figTreeDefaults: {
+      defaultNewOperatorExpression: {
+        operator: 'getData',
+        property: 'applicationData',
+      },
+      defaultNewFragment: 'Response data',
+      defaultNewCustomOperator: 'getJSDate',
     },
   },
 }

@@ -66,6 +66,10 @@ a:hover {
   visibility: hidden;
 }
 
+.input-error input {
+  border: 1px solid @attention !important;
+}
+
 /*--------------------------------
    Common layout
 ---------------------------------*/
@@ -1785,7 +1789,7 @@ a:hover {
   }
 
   .template {
-    .flex-row();
+    .flex-column();
 
     .content {
       justify-content: space-between;
@@ -1839,9 +1843,9 @@ a:hover {
     box-shadow: @gridBoxShadow;
     background-color: @surfacesWhite;
 
-    .content {
-      min-height: 65px;
-    }
+    // .content {
+    //   min-height: 65px;
+    // }
 
     .button {
       padding: 10px;
@@ -1904,11 +1908,12 @@ a:hover {
 }
 
 /*--------------------------------
-      (Admin) Preferences / Data View Pages
+      (Admin) Preferences / Data View / Fragments Pages
 ---------------------------------*/
 
 #preferences-panel,
-#data-view-config-panel {
+#data-view-config-panel,
+#fragment-config-panel {
   padding-top: 20px;
   width: 50%;
   @media only screen and (max-width: @largestMobileScreen) {
@@ -1920,6 +1925,20 @@ a:hover {
     padding: 0;
     margin: 5px;
   }
+}
+
+.fragment-name-display {
+  padding: 0.5em 0.8em;
+  border-radius: 0.5em;
+  box-shadow:
+    0 2px 5px -1px rgba(50, 50, 93, 0.25),
+    0 1px 3px -1px rgba(0, 0, 0, 0.3);
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+#fragment-config-panel {
+  width: unset;
 }
 
 /*--------------------------------
@@ -2255,7 +2274,7 @@ a:hover {
     padding: 2px;
     padding-left: 10px;
     padding-right: 10px;
-    line-height: 1.4285em // resets height set by Modal;;
+    line-height: 1.4285em; // resets height set by Modal;
   }
 
   .ui.checkbox {
@@ -2373,6 +2392,12 @@ a:hover {
   }
 }
 
+.template-builder-section {
+  // border: 1px solid red;
+  width: 100%;
+  margin-top: 2em;
+}
+
 .template-builder-category-input {
   .flex-column-center-start();
   margin-top: 20px;
@@ -2399,6 +2424,10 @@ a:hover {
   }
 }
 
+.builder-review-label {
+  border: 2px solid @red !important;
+}
+
 .page-controller {
   background-color: @surfacesLight;
   width: fit-content;
@@ -2406,6 +2435,12 @@ a:hover {
   border: 1px solid @surfacesMed;
   border-radius: @borderRadius;
   margin: 15px;
+}
+
+.filter-joins {
+  .flex-row();
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .filter-joins {
@@ -2421,15 +2456,15 @@ a:hover {
   top: 0;
 }
 
-.dv-elements {
+.entity-trim-elements {
   border-left: 3px solid @green !important;
 }
 
-.dv-outcomes {
+.entity-trim-output {
   border-left: 3px solid @blue !important;
 }
 
-.dv-inaccessible {
+.entity-trim-inaccessible {
   border-left: 3px solid @red !important;
 }
 
@@ -2453,14 +2488,27 @@ a:hover {
   width: 100%;
   border-radius: @borderRadius;
   border: 1px solid @indicatorColor;
-  padding: 2px;
-  padding-left: 10px;
-  padding-right: 10px;
   margin: 2px;
   background-color: @surfacesWhite;
   .evaluation-container-title {
     .flex-row-start-center();
     white-space: nowrap;
+  }
+  input {
+    border: 1px solid @surfacesMed;
+    border-radius: 0.3em;
+    font-family: inherit;
+    outline: none;
+    padding: 0.3em;
+  }
+  input::selection {
+    background-color: #b3d8ff;
+  }
+  .jer-editor-container {
+    padding: 0;
+    width: max-content;
+    margin-left: 0.8em;
+    margin-bottom: 0;
   }
   .evaluation-container-content {
     .flex-row() !important;
@@ -2479,6 +2527,7 @@ a:hover {
     .flex-column-center-center();
     padding: 20px;
     border-radius: @borderRadius !important;
+    max-width: 100vw;
   }
   .config-modal-info {
     background-color: @surfacesWhite !important;
@@ -2498,6 +2547,10 @@ a:hover {
     padding: 10px;
     border-top-left-radius: @borderRadius;
     border-top-right-radius: @borderRadius;
+  }
+  .nav-button {
+    margin: 0;
+    padding: 0;
   }
 }
 
@@ -2566,10 +2619,20 @@ a:hover {
 .json-editor {
   padding-top: 1em;
   .flex-column();
+
+  .jer-editor-container {
+    box-shadow: rgba(99, 99, 99, 0.07) 0px 2px 8px 0px;
+  }
 }
 
-.jer-editor-container {
-  box-shadow: rgba(99, 99, 99, 0.07) 0px 2px 8px 0px;
+/*******************************
+        Fig-Tree JSON Editor
+*******************************/
+
+.fig-tree-container {
+  .jer-editor-container {
+    width: auto;
+  }
 }
 
 /*******************************
@@ -2679,6 +2742,9 @@ a:hover {
 .config-container-alternate {
   .config-container();
   background-color: @surfacesLight;
+  .ui.header {
+    margin: 0.5em !important;
+  }
 }
 
 .config-container-outline {
@@ -2703,6 +2769,13 @@ a:hover {
   }
   li {
     margin-bottom: 0.5em;
+  }
+}
+
+.smaller-text-tooltip {
+  padding: 0.5em !important;
+  p {
+    font-size: @smallerText;
   }
 }
 

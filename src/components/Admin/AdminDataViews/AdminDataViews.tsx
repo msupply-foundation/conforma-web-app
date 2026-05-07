@@ -135,6 +135,7 @@ const DataViewEditor: React.FC<DataViewEditorProps> = ({ tableName, isLookupTabl
         dropdownValue={selectedDataView}
         options={getDataViewOptions(dataViews)}
         validator={validateDataView}
+        entityKey={dataViewObject?.id}
         onChange={(_, { value }) => {
           if (dataViews) updateQuery({ dataView: value })
         }}
@@ -221,6 +222,7 @@ const ColumnDefinitionEditor: React.FC<{ tableName: string }> = ({ tableName }) 
         dropdownValue={selectedColumn}
         options={getColumnDefinitionOptions(columnDefinitions)}
         validator={validateDataViewColumn}
+        entityKey={columnDefinitionObject?.id}
         onChange={(_, { value }) => {
           if (columnDefinitions) updateQuery({ columnDefinition: value })
         }}
@@ -288,6 +290,7 @@ interface DataViewDisplayProps {
   isAdding: boolean
   isLookupTable?: boolean
   validator: ValidateFunction
+  entityKey?: string | number
 }
 
 const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
@@ -306,6 +309,7 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
   isDeleting,
   onAdd,
   isAdding,
+  entityKey,
 }) => {
   const { t } = useLanguageProvider()
   const { ConfirmModal } = useConfirmationModal({
@@ -352,6 +356,7 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
       {data && (
         <Suspense fallback={<Loading />}>
           <JsonEditor
+            key={entityKey ?? 'none'}
             data={data}
             onSave={onSave}
             onUpdate={({ newData, newValue, currentValue, path }) => {
@@ -386,7 +391,6 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
             isSaving={isSaving}
             rootName={dataName}
             collapse={1}
-            showArrayIndices={false}
             maxWidth={650}
             restrictAdd={({ level }) => level === 0}
             restrictDelete={({ level }) => level === 1}

@@ -14,11 +14,12 @@ import {
   UnconnectedDataViews,
   ModifiedEntitiesToKeepAPIInput,
   getFullEntityDiff,
+  UnconnectedFragments,
 } from './apiOperations.ts'
 import { TemplateState } from '../template/TemplateWrapper.tsx'
 
 type ModalType =
-  | 'unlinkedDataViewWarning'
+  | 'unlinkedEntitiesWarning'
   | 'commit'
   | 'exportCommit'
   | 'exportWarning'
@@ -36,6 +37,7 @@ export interface ModalState extends AdditionalProps {
 interface AdditionalProps {
   currentIsCommitted?: boolean
   unconnectedDataViews?: UnconnectedDataViews[]
+  unconnectedFragments?: UnconnectedFragments[]
   modifiedEntities?: ModifiedEntities
   uid?: string
 }
@@ -49,6 +51,7 @@ export interface WorkflowState {
   refetch: () => void
   committed?: boolean
   unconnectedDataViews?: unknown[]
+  unconnectedFragments?: unknown[]
   readyForExport?: boolean
   commitType?: 'commit' | 'exportCommit'
   uploadEvent?: React.ChangeEvent<HTMLInputElement>
@@ -80,6 +83,7 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
     additionalProps: {
       currentIsCommitted?: boolean
       unconnectedDataViews?: UnconnectedDataViews[]
+      unconnectedFragments?: UnconnectedFragments[]
       modifiedEntities?: ModifiedEntities
       uid?: string
     } = {}
@@ -175,18 +179,25 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
       return
     }
 
-    const { committed, unconnectedDataViews = [], ready } = checkResult
-    setWorkflowState({ ...state, committed, unconnectedDataViews, readyForExport: ready })
+    const { committed, unconnectedDataViews = [], unconnectedFragments = [], ready } = checkResult
+    setWorkflowState({
+      ...state,
+      committed,
+      unconnectedDataViews,
+      unconnectedFragments,
+      readyForExport: ready,
+    })
 
     // console.log('committed', committed)
 
-    if (unconnectedDataViews.length === 0 || committed) {
+    if ((unconnectedDataViews.length === 0 && unconnectedFragments.length === 0) || committed) {
       nextStep()
       return
     }
 
-    showModal('unlinkedDataViewWarning', nextStep, {
+    showModal('unlinkedEntitiesWarning', nextStep, {
       unconnectedDataViews,
+      unconnectedFragments,
     })
   }
 
@@ -264,8 +275,8 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
   }
 
   const exportStep = async (state: WorkflowState) => {
-    const { id, code, versionId, versionHistory, refetch } = state
-    const result = await exportAndDownload(id, code, versionId, versionHistory)
+    const { id, code, versionHistory, refetch } = state
+    const result = await exportAndDownload(id)
     if (result?.error) {
       showError('Problem exporting template', result.error)
       return

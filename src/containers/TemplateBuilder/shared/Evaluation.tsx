@@ -1,52 +1,39 @@
-import { EvaluatorNode } from '../../../modules/expression-evaluator'
-import { truncate } from 'lodash-es'
 import React, { useState } from 'react'
-import { JsonEditor as ReactJson } from 'json-edit-react'
-import { Accordion, Icon, Label } from 'semantic-ui-react'
-import config from '../../../config'
-import { useUserState } from '../../../contexts/UserState'
-import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
-import { FullStructure } from '../../../utils/types'
-import { renderEvaluation } from '../evaluatorGui/renderEvaluation'
-import functions from '../evaluatorGui/evaluatorFunctions'
-import semanticComponentLibrary from '../evaluatorGui/semanticComponentLibrary'
-import { getTypedEvaluation, getTypedEvaluationAsString } from '../evaluatorGui/typeHelpers'
-import CheckboxIO from './CheckboxIO'
-import JsonIO from './JsonIO'
+import { IconDelete, IconEdit } from 'json-edit-react'
+import { FigTreeEvaluator } from 'fig-tree-editor-react'
+import { ReactJson } from '../../../components/Admin/JsonEditor'
 import TextIO from './TextIO'
+import { EvaluatorNode } from 'fig-tree-evaluator'
+import { getFigTreeSummary } from '../../../FigTreeEvaluator/FigTree'
+import { EvaluationEditor } from '../../../components/common/EvaluationEditor'
 
 type EvaluationProps = {
+  figTree: FigTreeEvaluator
   evaluation: EvaluatorNode
-  currentElementCode: string
   setEvaluation: (evaluation: EvaluatorNode) => void
-  fullStructure?: FullStructure // for Form Elements
-  applicationData?: any // for Actions
   label: string
   updateKey?: (key: string) => void
   deleteKey?: () => void
-  type?: 'FormElement' | 'Action'
+  objectData: Record<string, unknown>
+  canEdit: boolean
+  resetExpression?: (expression: EvaluatorNode) => void
 }
 
-type EvaluationHeaderProps = {
-  evaluation: EvaluatorNode
-}
+type EvaluationHeaderProps = { evaluation: EvaluatorNode }
 
 export const EvaluationHeader: React.FC<EvaluationHeaderProps> = ({ evaluation }) => {
-  const typedEvaluation = getTypedEvaluation(evaluation)
+  const figTreeSummary = getFigTreeSummary(evaluation)
 
   return (
     <div className="flex-row-start-center" style={{ marginTop: 6 }}>
-      <TextIO title="Type" text={typedEvaluation.type} />
-      {typedEvaluation.type === 'operator' && (
-        <TextIO title="operator" text={typedEvaluation.asOperator.operator} />
+      <TextIO title="Type" text={figTreeSummary.type} />
+      {figTreeSummary.type === 'Operator' && (
+        <TextIO title="Operator" text={figTreeSummary.operator} />
       )}
-
-      {typedEvaluation.type !== 'operator' && (
-        <TextIO
-          title="Value"
-          text={truncate(getTypedEvaluationAsString(typedEvaluation), { length: 80 })}
-        />
+      {figTreeSummary.type === 'Fragment' && (
+        <TextIO title="Fragment" text={figTreeSummary.fragment} />
       )}
+      {'value' in figTreeSummary && <TextIO title="Value" text={figTreeSummary.value} />}
     </div>
   )
 }
@@ -55,127 +42,121 @@ const Evaluation: React.FC<EvaluationProps> = ({
   evaluation,
   setEvaluation,
   label,
-  currentElementCode,
-  fullStructure,
-  applicationData,
   updateKey,
   deleteKey,
-  type,
+  canEdit,
+  objectData,
+  figTree,
 }) => {
-  const {
-    userState: { currentUser },
-  } = useUserState()
-  const [isActive, setIsActive] = useState(false)
-  const [asGui, setAsGui] = useState(true)
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-  const objects =
-    type === 'Action'
-      ? { applicationData, functions }
-      : type === 'FormElement'
-      ? {
-          responses: {
-            ...fullStructure?.responsesByCode,
-            thisResponse: fullStructure?.responsesByCode?.[currentElementCode]?.text,
-          },
-          currentUser,
-          applicationData: { ...fullStructure?.info, currentPageType: 'application' },
-          functions,
-        }
-      : undefined
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isEditingKey, setIsEditingKey] = useState(false)
 
-  const evaluationParameters = {
-    objects,
-    APIfetch: fetch,
-    graphQLConnection: {
-      fetch: fetch.bind(window),
-      endpoint: getServerUrl('graphQL'),
-    },
-    headers: { Authorization: 'Bearer ' + JWT },
-  }
+  const changeKey = updateKey
+    ? (key: string) => {
+        updateKey(key)
+        setIsEditingKey(false)
+      }
+    : () => {}
 
   return (
-    <Accordion className="evaluation-container">
-      <Accordion.Title className="evaluation-container-title flex-gap-10" active={isActive}>
-        {!updateKey && label && (
-          <Label style={{ minWidth: 120, textAlign: 'center' }}>{label}</Label>
-        )}
+    <div
+      className="evaluation-container flex-row-start-center"
+      style={{
+        paddingLeft: isExpanded ? '1em' : '0.5em',
+        paddingTop: isExpanded ? '0.6em' : '0.2em',
+        paddingBottom: isExpanded ? '0.6em' : '0.2em',
+      }}
+    >
+      <div
+        className="flex-row"
+        style={{
+          gap: '0.6em',
+          marginRight: deleteKey || updateKey ? '1em' : 0,
+          display: isExpanded ? 'none' : 'inherit',
+        }}
+      >
         {deleteKey && (
-          <Icon
-            className="clickable left-margin-space-10"
-            name="window close"
-            onClick={deleteKey}
-          />
+          <span onClick={deleteKey}>
+            <IconDelete size="1.4em" style={{ color: 'rgb(203, 75, 22)' }} />
+          </span>
         )}
         {updateKey && (
-          <div className="flex-row-start-center" style={{ marginTop: 6 }}>
-            <TextIO
-              title="Parameter Name"
-              text={label}
-              setText={updateKey as (key: string | null) => void}
-            />
-          </div>
+          <span onClick={() => setIsEditingKey(true)} title="Edit Key">
+            <IconEdit size="1.4em" style={{ color: 'grey' }} />
+          </span>
         )}
-        <EvaluationHeader evaluation={evaluation} />
-        <div className="flex-row-end">
-          <Icon
-            size="large"
-            name={isActive ? 'angle up' : 'angle down'}
-            onClick={() => setIsActive(!isActive)}
+      </div>
+      {!isEditingKey ? (
+        <div
+          className="flex-row-space-between"
+          style={{ gap: '1em', marginLeft: deleteKey || updateKey ? 0 : '1em' }}
+        >
+          <EvaluationEditor
+            expression={evaluation}
+            setExpression={setEvaluation}
+            figTree={figTree}
+            objectData={objectData}
+            canEdit={canEdit}
+            rootName={label}
+            // This ensures that the expression first loads fully collapsed, but
+            // has a depth of 2 when first opened
+            collapse={isExpanded ? 2 : 0}
+            onCollapse={({ path, collapsed }) => {
+              // The "isExpanded" state is updated when the user opens or closes
+              // the *root* of the evaluation expression
+              if (path.length === 0) {
+                setIsExpanded(!collapsed)
+              }
+            }}
           />
+          {isExpanded && <ObjectDataDisplay objectData={objectData} />}
         </div>
-      </Accordion.Title>
-      {isActive && (
-        <Accordion.Content className="evaluation-container-content" active={isActive}>
-          <>
-            <div className="flex-column-start-center">
-              <div style={{ marginLeft: 30 }}>
-                <CheckboxIO title="Show As GUI" value={asGui} setValue={setAsGui} />
-                <div className="spacer-10" />
-              </div>
-              {!asGui && (
-                <div className="long">
-                  <JsonIO
-                    isPropUpdated={true}
-                    object={asObject(evaluation)}
-                    label="Plugin Parameters"
-                    setObject={(value) => setEvaluation(value)}
-                  />
-                </div>
-              )}
-              {asGui &&
-                renderEvaluation(
-                  evaluation,
-                  (evaluation) => setEvaluation(evaluation),
-                  semanticComponentLibrary,
-                  evaluationParameters
-                )}
-            </div>
-            {objects && (
-              <div className="object-properties-container">
-                <Label>Object Properties</Label>
-                <ReactJson
-                  data={objects}
-                  rootName="objects"
-                  collapse={1}
-                  indent={1}
-                  maxWidth={450}
-                  restrictEdit={true}
-                  restrictDelete={true}
-                  restrictAdd={true}
-                  theme={{ container: ['transparent', { fontSize: '13px', padding: 0 }] }}
-                />
-              </div>
-            )}
-          </>
-        </Accordion.Content>
+      ) : (
+        <input
+          style={{ marginLeft: '1em' }}
+          type="text"
+          name={label}
+          defaultValue={label}
+          autoFocus
+          onFocus={(e) => e.target.select()}
+          onKeyDown={(e: React.KeyboardEvent) => {
+            if (e.key === 'Enter') {
+              changeKey((e.target as HTMLInputElement).value)
+            } else if (e.key === 'Escape') {
+              setIsEditingKey(false)
+            }
+          }}
+          onBlur={(e) => {
+            changeKey((e.target as HTMLInputElement).value)
+          }}
+        />
       )}
-    </Accordion>
+    </div>
   )
 }
 
-export const asObject = (value: EvaluatorNode) =>
-  typeof value === 'object' && value !== null
-    ? value
-    : { value: value || (value === false ? false : null) }
+interface ObjectDataDisplayProps {
+  objectData?: Record<string, unknown>
+}
+
+export const ObjectDataDisplay: React.FC<ObjectDataDisplayProps> = ({ objectData }) => {
+  if (!objectData) return null
+
+  return (
+    <div className="object-properties-container">
+      <ReactJson
+        data={objectData}
+        rootName="data"
+        collapse={1}
+        indent={2}
+        maxWidth={450}
+        restrictEdit={true}
+        restrictDelete={true}
+        restrictAdd={true}
+        theme={{ container: ['transparent', { fontSize: '13px', padding: 0 }] }}
+      />
+    </div>
+  )
+}
 
 export default Evaluation

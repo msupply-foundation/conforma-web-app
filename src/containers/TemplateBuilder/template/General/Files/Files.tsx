@@ -38,7 +38,7 @@ export const FileSelector: React.FC<{}> = () => {
   }
 
   return (
-    <>
+    <div className="template-builder-section">
       <Header as="h3">Files</Header>
       <NewFileModal open={modalOpen} closeModal={() => setModalOpen(false)} linkFile={addLink} />
       {fileDetails.length > 0 && (
@@ -127,6 +127,6 @@ export const FileSelector: React.FC<{}> = () => {
           onClick={() => setModalOpen(true)}
         />
       )}
-    </>
+    </div>
   )
 }

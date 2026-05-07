@@ -5,8 +5,8 @@ import { EntitySelectModal } from './EntitySelectModal'
 
 export const TemplateOperationsModal: React.FC<ModalState> = ({ type, ...props }) => {
   switch (type) {
-    case 'unlinkedDataViewWarning':
-      return <DataViewWarning {...props} />
+    case 'unlinkedEntitiesWarning':
+      return <UnlinkedEntitiesWarning {...props} />
     case 'commit':
     case 'exportCommit':
       return <CommitConfirm type={type} {...props} />
@@ -21,12 +21,15 @@ export const TemplateOperationsModal: React.FC<ModalState> = ({ type, ...props }
   }
 }
 
-const DataViewWarning: React.FC<Omit<ModalState, 'type'>> = ({
+const UnlinkedEntitiesWarning: React.FC<Omit<ModalState, 'type'>> = ({
   isOpen,
   onConfirm,
   close,
   unconnectedDataViews = [],
+  unconnectedFragments = [],
 }) => {
+  const sectionHeaderStyle = { marginTop: '1em', marginBottom: 0 }
+  const paragraphStyle = { marginTop: '0.5em', marginBottom: 0 }
   return (
     <Confirm
       open={isOpen}
@@ -35,16 +38,31 @@ const DataViewWarning: React.FC<Omit<ModalState, 'type'>> = ({
       content={
         <div style={{ padding: 10, gap: 10 }} className="flex-column">
           <h2>Warning</h2>
-          <p>
-            The following Data Views are used by this template but haven't been properly linked, so
+          <p style={paragraphStyle}>
+            The following Entities are used by this template but haven't been properly linked, so
             won't be exported with the template.
           </p>
-          <List bulleted>
-            {unconnectedDataViews.map((view) => (
-              <ListItem key={view.identifier}>{view.code}</ListItem>
-            ))}
-          </List>
-          <p>Are you sure you want to proceed?</p>
+          {unconnectedDataViews.length > 0 && (
+            <>
+              <h4 style={sectionHeaderStyle}>Data Views</h4>
+              <List bulleted>
+                {unconnectedDataViews.map((view) => (
+                  <ListItem key={view.identifier}>{view.code}</ListItem>
+                ))}
+              </List>
+            </>
+          )}
+          {unconnectedFragments.length > 0 && (
+            <>
+              <h4 style={sectionHeaderStyle}>Evaluator Fragments</h4>
+              <List bulleted>
+                {unconnectedFragments.map((fragment) => (
+                  <ListItem key={fragment.name}>{fragment.name}</ListItem>
+                ))}
+              </List>
+            </>
+          )}
+          <p style={paragraphStyle}>Are you sure you want to proceed?</p>
         </div>
       }
       confirmButton="I understand, commit anyway"

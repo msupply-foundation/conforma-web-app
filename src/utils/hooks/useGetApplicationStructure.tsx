@@ -26,6 +26,7 @@ interface UseGetApplicationStructureProps {
   shouldCalculateProgress?: boolean
   shouldGetDraftResponses?: boolean
   forceRun?: boolean
+  isConfig?: boolean
 }
 
 const useGetApplicationStructure = ({
@@ -36,6 +37,7 @@ const useGetApplicationStructure = ({
   shouldCalculateProgress = structure.info.current.status !== ApplicationStatus.Completed,
   shouldGetDraftResponses = true,
   forceRun = false,
+  isConfig = false,
 }: UseGetApplicationStructureProps) => {
   const {
     info: { serial },
@@ -57,8 +59,12 @@ const useGetApplicationStructure = ({
     variables: {
       serial,
       responseStatuses: shouldGetDraftResponses
-        ? [ApplicationResponseStatus.Submitted, ApplicationResponseStatus.Draft]
-        : [ApplicationResponseStatus.Submitted],
+        ? [
+            ApplicationResponseStatus.Submitted,
+            ApplicationResponseStatus.Draft,
+            ...(isConfig ? [ApplicationResponseStatus.Review] : []),
+          ]
+        : [ApplicationResponseStatus.Submitted, ApplicationResponseStatus.Review],
     },
     skip: !serial,
     fetchPolicy: 'network-only',
@@ -77,9 +83,9 @@ const useGetApplicationStructure = ({
     if (!data) return
 
     const isDataUpToDate = lastProcessedTimestamp > lastRefetchedTimestamp
-    const shouldRevalidationWaitForRefetech =
+    const shouldRevalidationWaitForRefetch =
       minRefetchTimestampForRevalidation > lastRefetchedTimestamp
-    const shouldRevalidateThisRun = shouldRevalidate && !shouldRevalidationWaitForRefetech
+    const shouldRevalidateThisRun = shouldRevalidate && !shouldRevalidationWaitForRefetch
 
     if (isDataUpToDate && !shouldRevalidateThisRun && !forceRun && currentPageType !== 'summary')
       return

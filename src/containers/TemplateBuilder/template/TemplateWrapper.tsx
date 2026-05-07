@@ -11,6 +11,7 @@ import {
   TemplateCategory,
   TemplateDataViewJoin,
   TemplateElement,
+  TemplateEvaluatorFragmentJoin,
   TemplateFilterJoin,
   TemplatePermission,
   TemplateSection,
@@ -158,6 +159,7 @@ type TemplateContextState = {
   templateStages: TemplateStage[]
   actions: TemplateAction[]
   dataViewJoins: TemplateDataViewJoin[]
+  fragmentJoins: TemplateEvaluatorFragmentJoin[]
 }
 
 const defaultTemplateContextState: TemplateContextState = {
@@ -190,6 +192,7 @@ const defaultTemplateContextState: TemplateContextState = {
   templateStages: [],
   actions: [],
   dataViewJoins: [],
+  fragmentJoins: [],
 }
 
 const Context = createContext<TemplateContextState>(defaultTemplateContextState)
@@ -252,6 +255,8 @@ const TemplateWrapper: React.FC = () => {
         templateStages: (template?.templateStages?.nodes || []) as TemplateStage[],
         actions: (template?.templateActions?.nodes || []) as TemplateAction[],
         dataViewJoins: (template?.templateDataViewJoins?.nodes || []) as TemplateDataViewJoin[],
+        fragmentJoins: (template?.templateEvaluatorFragmentJoins?.nodes ||
+          []) as TemplateEvaluatorFragmentJoin[],
       })
       setFirstLoaded(true)
     }

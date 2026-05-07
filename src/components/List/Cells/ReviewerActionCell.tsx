@@ -53,9 +53,9 @@ const ReviewerActionCell: React.FC<CellProps> = ({
   // Reviewer action takes priority, and only show if Application is PENDING
   const action =
     outcome === ApplicationOutcome.Pending
-      ? !!reviewerAction
+      ? reviewerAction
         ? getReviewActionString(reviewerAction)
-        : !!assignerAction
+        : assignerAction
         ? getAssignActionString(assignerAction)
         : null
       : null

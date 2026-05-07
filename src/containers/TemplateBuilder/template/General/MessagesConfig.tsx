@@ -5,6 +5,9 @@ import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import Evaluation from '../../shared/Evaluation'
 import { useOperationState } from '../../shared/OperationContext'
 import { disabledMessage, useTemplateState } from '../TemplateWrapper'
+import { useUserState } from '../../../../contexts/UserState'
+import { useFullApplicationState } from '../ApplicationWrapper'
+import { FigTree } from '../../../../FigTreeEvaluator'
 
 type MessagesConfigProps = {
   isOpen: boolean
@@ -24,6 +27,10 @@ const MessagesConfig: React.FC<MessagesConfigProps> = ({ isOpen, onClose }) => {
   const { template, fromQuery } = useTemplateState()
   const { isDraft } = template
   const { updateTemplate } = useOperationState()
+  const {
+    userState: { currentUser },
+  } = useUserState()
+  const { structure } = useFullApplicationState()
 
   const [state, setState] = useState({
     startMessage: fromQuery?.startMessage,
@@ -52,6 +59,12 @@ const MessagesConfig: React.FC<MessagesConfigProps> = ({ isOpen, onClose }) => {
     onClose()
   }
 
+  const objectData = {
+    applicationData: structure.info,
+    currentUser,
+    responses: structure.responsesByCode,
+  }
+
   return (
     <Modal className="config-modal" open={true} onClose={onClose}>
       <div className="config-modal-container">
@@ -59,11 +72,17 @@ const MessagesConfig: React.FC<MessagesConfigProps> = ({ isOpen, onClose }) => {
 
         {evaluations.map(({ key, title }) => (
           <Evaluation
+            figTree={FigTree}
             label={title}
             key={key}
-            currentElementCode={''}
             evaluation={state[key]}
             setEvaluation={(evaluation) => setState({ ...state, [key]: evaluation })}
+            // Always editable, as this component only renders when template is
+            // editable
+            canEdit
+            // Start message only has access to limited data, since application
+            // hasn't been created yet
+            objectData={key === 'startMessage' ? { currentUser } : objectData}
           />
         ))}
         <div className="spacer-20" />
@@ -74,7 +93,6 @@ const MessagesConfig: React.FC<MessagesConfigProps> = ({ isOpen, onClose }) => {
             disabledMessage={disabledMessage}
             onClick={updateMessage}
           />
-          ˀ
           <ButtonWithFallback title="Cancel" onClick={onClose} />
         </div>
       </div>

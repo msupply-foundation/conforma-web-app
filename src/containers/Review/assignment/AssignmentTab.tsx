@@ -9,7 +9,7 @@ import {
 } from '../../../utils/types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Stage } from '../../../components/Review'
-import { Loading, NoMatch } from '../../../components/common'
+import { Loading } from '../../../components/common'
 import ReviewLevel from './ReviewLevel'
 import {
   ReviewStateProvider,
@@ -42,6 +42,8 @@ const AssignmentTab: React.FC<{
       sectionCodes,
       filters,
     })
+
+  const canAssign = assignmentsFiltered && assignmentsFiltered.length > 0
 
   if (error) return <Message error header={t('ERROR_REVIEW_PAGE')} list={[error]} />
 
@@ -142,8 +144,12 @@ const AssignmentTab: React.FC<{
       </div>
       {loading ? (
         <Loading />
-      ) : !assignmentsFiltered || assignmentsFiltered.length === 0 ? (
-        <NoMatch />
+      ) : !canAssign ? (
+        <Message
+          icon="lock"
+          header={t('ASSIGNMENT_NOT_AVAILABLE')}
+          content={t('ASSIGNMENT_NO_PERMISSION')}
+        />
       ) : (
         <ReviewStateProvider assignments={assignmentsFiltered}>
           {Object.values(fullStructure.sections).map(({ details }) => (
@@ -151,17 +157,21 @@ const AssignmentTab: React.FC<{
           ))}
         </ReviewStateProvider>
       )}
-      {!isFullyAssigned && (
-        <AssignAll assignments={assignmentsFiltered} setReviewerForAll={assignAllSections} />
-      )}
-      {fullStructure.info.outcome === ApplicationOutcome.Pending && (
-        <AssignmentSubmit
-          fullStructure={fullStructure}
-          assignedSectionsByLevel={assignedSectionsByLevel}
-          assignmentsFiltered={assignmentsFiltered}
-          enableSubmit={enableSubmit}
-          setAssignmentError={setAssignmentError}
-        />
+      {canAssign && (
+        <>
+          {!isFullyAssigned && (
+            <AssignAll assignments={assignmentsFiltered} setReviewerForAll={assignAllSections} />
+          )}
+          {fullStructure.info.outcome === ApplicationOutcome.Pending && (
+            <AssignmentSubmit
+              fullStructure={fullStructure}
+              assignedSectionsByLevel={assignedSectionsByLevel}
+              assignmentsFiltered={assignmentsFiltered}
+              enableSubmit={enableSubmit}
+              setAssignmentError={setAssignmentError}
+            />
+          )}
+        </>
       )}
     </Container>
   )

@@ -1,6 +1,5 @@
-import { EvaluatorNode } from '../../../../modules/expression-evaluator'
-import React, { useEffect, useState } from 'react'
-import { Modal, Label, Icon, Header, Message } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Modal, Label, Icon, Header } from 'semantic-ui-react'
 import { PluginProvider } from '../../../../formElementPlugins/pluginProvider'
 import {
   Reviewability,
@@ -19,10 +18,18 @@ import { useFormState } from './Form'
 import FromExistingElement from './FromExistingElement'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
+import { EvaluatorNode } from 'fig-tree-evaluator'
+import { useUserState } from '../../../../contexts/UserState'
+import useUndo from 'use-undo'
+import { UndoRedo } from '../../../../components/common/UndoRedo'
+import { FigTree } from '../../../../FigTreeEvaluator'
+import { useInitialiseMultipleExpressions } from '../../shared/useInitialiseMultipleExpressions'
+import { Position, useToast } from '../../../../contexts/Toast'
 
 type ElementConfigProps = {
-  element: TemplateElement | null
+  element: TemplateElement
   onClose: () => void
+  isReviewerSectionElement: boolean
 }
 
 type ElementUpdateState = {
@@ -42,24 +49,34 @@ type ElementUpdateState = {
   id: number
 }
 
-type GetState = (element: TemplateElement) => ElementUpdateState
-
-const getState: GetState = (element: TemplateElement) => ({
-  code: element.code || '',
-  title: element.title || null,
-  category: element.category || TemplateElementCategory.Information,
-  elementTypePluginCode: element.elementTypePluginCode || '',
-  visibilityCondition: element.visibilityCondition,
-  isRequired: element.isRequired,
-  isEditable: element.isEditable,
-  validation: element.validation,
-  helpText: element.helpText || null,
-  validationMessage: element.validationMessage || '',
-  parameters: element.parameters || {},
-  initialValue: element.initialValue || null,
-  reviewability: element.reviewability || null,
-  id: element.id,
-})
+const getState = (
+  element: Partial<TemplateElement>,
+  block: 'main' | 'commonProperties' | 'parameters'
+) => {
+  switch (block) {
+    case 'main':
+      return {
+        id: element.id,
+        code: element.code || '',
+        title: element.title || null,
+        category: element.category || TemplateElementCategory.Information,
+        elementTypePluginCode: element.elementTypePluginCode || '',
+        helpText: element.helpText || null,
+        validationMessage: element.validationMessage || '',
+        reviewability: element.reviewability || null,
+      }
+    case 'commonProperties':
+      return {
+        visibilityCondition: element.visibilityCondition,
+        isRequired: element.isRequired,
+        isEditable: element.isEditable,
+        validation: element.validation,
+        initialValue: element.initialValue || null,
+      }
+    case 'parameters':
+      return element.parameters || {}
+  }
+}
 
 type Evaluations = {
   key: keyof ElementUpdateState
@@ -74,7 +91,11 @@ const evaluations: Evaluations = [
   { key: 'initialValue', title: 'Initial Value' },
 ]
 
-const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
+const ElementConfig: React.FC<ElementConfigProps> = ({
+  element,
+  isReviewerSectionElement,
+  onClose,
+}) => {
   const { t } = useLanguageProvider()
   const { ConfirmModal: RemoveElementModal, showModal: showRemoveElementModal } =
     useConfirmationModal({
@@ -89,22 +110,54 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
   } = useTemplateState()
   const { selectedSectionId } = useFormState()
   const { updateApplication, updateTemplateSection } = useOperationState()
-  const [state, setState] = useState<ElementUpdateState | null>(null)
-  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false)
-  const [showSaveAlert, setShowSaveAlert] = useState<boolean>(false)
-  const [open, setOpen] = useState(false) // TODO: Use ConfirmationModal (2 actions...)
+  const [isDirty, setIsDirty] = useState<boolean>(false)
+  const [open, setOpen] = useState(false)
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
-  useEffect(() => {
-    if (!element) return setState(null)
-    setState(getState(element))
-    setShowSaveAlert(false)
-  }, [element])
+  const { showToast } = useToast({ position: Position.topLeft })
 
-  if (!state || !element) return null
+  // Element data is divided into three "blocks" for "undo" groupings
+  const [
+    { present: mainData },
+    {
+      set: setMainData,
+      reset: resetMain,
+      undo: undoMain,
+      redo: redoMain,
+      canUndo: canUndoMain,
+      canRedo: canRedoMain,
+    },
+  ] = useUndo(getState(element, 'main'))
+
+  const [
+    { present: commonData },
+    {
+      set: setCommonData,
+      reset: resetCommon,
+      undo: undoCommon,
+      redo: redoCommon,
+      canUndo: canUndoCommon,
+      canRedo: canRedoCommon,
+    },
+  ] = useUndo(getState(element, 'commonProperties'))
+
+  const [
+    { present: parameters },
+    {
+      set: setParameters,
+      reset: resetParameters,
+      undo: undoParameters,
+      redo: redoParameters,
+      canUndo: canUndoParameters,
+      canRedo: canRedoParameters,
+    },
+  ] = useUndo(getState(element, 'parameters'))
 
   const removeElement = async () => {
     const applicationResponseId =
-      structure?.elementsById?.[state.id]?.latestApplicationResponse?.id || null
+      structure?.elementsById?.[mainData.id]?.latestApplicationResponse?.id || null
 
     if (applicationResponseId) {
       const result = await updateApplication(structure.info.serial, {
@@ -117,7 +170,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
 
     const result = await updateTemplateSection(selectedSectionId, {
       templateElementsUsingId: {
-        deleteById: [{ id: state.id }],
+        deleteById: [{ id: mainData.id }],
       },
     })
     reloadApplication()
@@ -126,15 +179,23 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
     onClose()
   }
 
+  const { updateExpression: setCommonDataItem } = useInitialiseMultipleExpressions(
+    commonData,
+    setCommonData,
+    true,
+    resetCommon,
+    setIsDirty
+  )
+
   const updateElement = async () => {
+    const patch = { ...mainData, ...commonData, parameters }
     const result = await updateTemplateSection(selectedSectionId, {
       templateElementsUsingId: {
-        updateById: [{ id: state.id, patch: state }],
+        updateById: [{ id: mainData.id, patch }],
       },
     })
-    setShouldUpdate(false)
-    setShowSaveAlert(true)
-    setTimeout(() => setShowSaveAlert(false), 2000)
+    setIsDirty(false)
+    showToast({ title: t('TEMPLATE_MESSAGE_SAVE_SUCCESS'), style: 'success' })
     if (!result) return
   }
 
@@ -143,40 +204,42 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
     onClose()
   }
 
-  const markNeedsUpdate = () => {
-    setShouldUpdate(true)
-    setShowSaveAlert(false)
-  }
-
   return (
     <Modal className="config-modal" open={true}>
       <div className="config-modal-container">
         <div className="config-modal-header">
-          <Header as="h3">{state.title}</Header>
+          <Header as="h3">{mainData.title}</Header>
           <div className="flex-column">
             <DropdownIO
               title="Type"
-              value={state.elementTypePluginCode}
+              value={mainData.elementTypePluginCode}
               disabled={!canEdit}
               disabledMessage={disabledMessage}
               getKey={'code'}
               getValue={'code'}
               getText={'displayName'}
               setValue={(value) => {
-                setState({ ...state, elementTypePluginCode: String(value) })
-                markNeedsUpdate()
+                resetMain({ ...mainData, elementTypePluginCode: String(value) })
+                setIsDirty(true)
               }}
               options={Object.values(PluginProvider).map((element) => element.config)}
               search
               labelNegative
               minLabelWidth={50}
+              isPropUpdated={true}
             />
             {canEdit && (
               <FromExistingElement
-                pluginCode={state.elementTypePluginCode}
+                pluginCode={mainData.elementTypePluginCode}
                 setTemplateElement={(existingElement) => {
-                  setState({ ...state, ...existingElement })
-                  markNeedsUpdate()
+                  const { category, helpText, validationMessage } = existingElement
+                  const newMainData = { ...mainData, category, helpText, validationMessage }
+                  const newCommonData = getState(existingElement, 'commonProperties')
+                  const newParameters = getState(existingElement, 'parameters')
+                  resetMain({ ...mainData, ...newMainData })
+                  resetCommon(newCommonData)
+                  resetParameters(newParameters)
+                  setIsDirty(true)
                 }}
               />
             )}
@@ -201,14 +264,14 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             <div className="flex-row-start-start">
               <div className="full-width-container">
                 <TextIO
-                  text={state?.title || ''}
+                  text={mainData?.title || ''}
                   title="Title"
                   setText={(text) => {
-                    setState({ ...state, title: text })
+                    setMainData({ ...mainData, title: text })
                   }}
                   disabled={!canEdit}
                   disabledMessage={disabledMessage}
-                  markNeedsUpdate={markNeedsUpdate}
+                  markNeedsUpdate={() => setIsDirty(true)}
                   isPropUpdated={true}
                   minLabelWidth={60}
                   maxLabelWidth={60}
@@ -217,21 +280,21 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             </div>
             <div className="flex-row-start-start">
               <TextIO
-                text={state.code}
+                text={mainData.code}
                 title="Code"
                 setText={(text) => {
-                  setState({ ...state, code: text ?? '' })
+                  setMainData({ ...mainData, code: text ?? '' })
                 }}
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
-                markNeedsUpdate={markNeedsUpdate}
+                markNeedsUpdate={() => setIsDirty(true)}
                 isPropUpdated={true}
                 minLabelWidth={60}
                 maxLabelWidth={60}
               />
               <DropdownIO
                 title="Category"
-                value={state.category}
+                value={mainData.category}
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
                 getKey={'category'}
@@ -239,8 +302,8 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 getText={'title'}
                 isPropUpdated={true}
                 setValue={(value) => {
-                  setState({ ...state, category: value as TemplateElementCategory })
-                  markNeedsUpdate()
+                  setMainData({ ...mainData, category: value as TemplateElementCategory })
+                  setIsDirty(true)
                 }}
                 options={[
                   { category: TemplateElementCategory.Information, title: 'Information' },
@@ -248,112 +311,141 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
                 ]}
               />
             </div>
+            {!isReviewerSectionElement && (
+              <div className="full-width-container">
+                <DropdownIO
+                  title="Is Reviewable"
+                  value={mainData.reviewability || 'default'}
+                  disabled={!canEdit}
+                  disabledMessage={disabledMessage}
+                  getKey={'value'}
+                  getValue={'value'}
+                  getText={'text'}
+                  isPropUpdated={true}
+                  setValue={(value) => {
+                    const updateValue = value === 'default' ? null : value
+                    setMainData({ ...mainData, reviewability: updateValue as Reviewability })
+                    setIsDirty(true)
+                  }}
+                  options={[
+                    { value: Reviewability.Always, text: 'Always' },
+                    { value: Reviewability.Never, text: 'Never' },
+                    {
+                      value: Reviewability.OptionalIfNoResponse,
+                      text: 'Optional (if no application response)',
+                    },
+                    {
+                      value: Reviewability.OnlyIfApplicantAnswer,
+                      text: 'Only if applicant answered',
+                    },
+                  ]}
+                  maxLabelWidth={120}
+                />
+              </div>
+            )}
             <div className="full-width-container">
-              <DropdownIO
-                title="Is Reviewable"
-                value={state.reviewability || 'default'}
+              <TextIO
+                text={mainData?.validationMessage || ''}
+                title="Validation Message"
                 disabled={!canEdit}
                 disabledMessage={disabledMessage}
-                getKey={'value'}
-                getValue={'value'}
-                getText={'text'}
-                isPropUpdated={true}
-                setValue={(value) => {
-                  const updateValue = value === 'default' ? null : value
-                  setState({ ...state, reviewability: updateValue as Reviewability })
-                  markNeedsUpdate()
+                isTextArea={true}
+                setText={(text) => {
+                  setMainData({ ...mainData, validationMessage: text || null })
                 }}
-                options={[
-                  { value: Reviewability.Always, text: 'Always' },
-                  { value: Reviewability.Never, text: 'Never' },
-                  {
-                    value: Reviewability.OptionalIfNoResponse,
-                    text: 'Optional (if no application response)',
-                  },
-                  {
-                    value: Reviewability.OnlyIfApplicantAnswer,
-                    text: 'Only if applicant answered',
-                  },
-                ]}
-                maxLabelWidth={120}
+                markNeedsUpdate={() => setIsDirty(true)}
+                isPropUpdated={true}
+                minLabelWidth={100}
+                maxLabelWidth={100}
+                labelTextAlign="right"
+                textAreaDefaultRows={3}
               />
             </div>
-            <div className="flex-row-start-center-wrap">
-              <div className="full-width-container">
-                <TextIO
-                  text={state?.validationMessage || ''}
-                  title="Validation Message"
-                  disabled={!canEdit}
-                  disabledMessage={disabledMessage}
-                  isTextArea={true}
-                  setText={(text) => {
-                    setState({ ...state, validationMessage: text || null })
-                  }}
-                  markNeedsUpdate={markNeedsUpdate}
-                  isPropUpdated={true}
-                  minLabelWidth={100}
-                  maxLabelWidth={100}
-                  labelTextAlign="right"
-                  textAreaDefaultRows={3}
-                />
-              </div>
+            <div className="full-width-container">
+              <TextIO
+                text={mainData?.helpText || ''}
+                isTextArea={true}
+                title="Help Text"
+                disabled={!canEdit}
+                disabledMessage={disabledMessage}
+                setText={(text) => {
+                  setMainData({ ...mainData, helpText: text || null })
+                }}
+                markNeedsUpdate={() => setIsDirty(true)}
+                isPropUpdated={true}
+                minLabelWidth={100}
+                maxLabelWidth={100}
+                labelTextAlign="right"
+              />
             </div>
-            <div className="flex-row-start-center-wrap">
-              <div className="full-width-container">
-                <TextIO
-                  text={state?.helpText || ''}
-                  isTextArea={true}
-                  title="Help Text"
-                  disabled={!canEdit}
-                  disabledMessage={disabledMessage}
-                  setText={(text) => {
-                    setState({ ...state, helpText: text || null })
-                  }}
-                  markNeedsUpdate={markNeedsUpdate}
-                  isPropUpdated={true}
-                  minLabelWidth={100}
-                  maxLabelWidth={100}
-                  labelTextAlign="right"
-                />
-              </div>
-            </div>
+            <UndoRedo canUndo={canUndoMain} canRedo={canRedoMain} undo={undoMain} redo={redoMain} />
           </div>
           <div className="spacer-10" />
           <div className="config-container-alternate">
             <Header as="h4">Common Properties</Header>
             {evaluations.map(({ key, title }) => (
               <Evaluation
+                figTree={FigTree}
                 label={title}
                 key={key}
-                currentElementCode={state.code}
-                fullStructure={structure}
-                evaluation={state[key]}
-                setEvaluation={(evaluation) => {
-                  setState({ ...state, [key]: evaluation })
-                  markNeedsUpdate()
+                evaluation={commonData[key]}
+                setEvaluation={(expression) => setCommonDataItem(key, expression)}
+                canEdit={canEdit}
+                objectData={{
+                  responses: {
+                    ...structure?.responsesByCode,
+                    thisResponse: structure?.responsesByCode?.[mainData.code]?.text,
+                  },
+                  currentUser,
+                  applicationData: { ...structure?.info, currentPageType: 'application' },
                 }}
-                type="FormElement"
+                resetExpression={(expression) => {
+                  resetCommon({ ...commonData, [key]: expression })
+                  setIsDirty(true)
+                }}
               />
             ))}
+            <div className="spacer-10" />
+            <UndoRedo
+              canUndo={canUndoCommon}
+              canRedo={canRedoCommon}
+              undo={undoCommon}
+              redo={redoCommon}
+            />
           </div>
-          <div className="spacer-10" />
           <Parameters
+            figTree={FigTree}
             key="parametersElement"
-            currentElementCode={state.code}
+            currentElementCode={mainData.code}
             fullStructure={structure}
-            parameters={state.parameters}
-            setParameters={(parameters) => {
-              setState({ ...state, parameters })
-              markNeedsUpdate()
+            parameters={parameters}
+            setParameters={(params) => setParameters(params)}
+            setIsDirty={setIsDirty}
+            reset={(expression, key) => {
+              if (key) {
+                const newParameters = { ...parameters }
+                delete newParameters[key]
+                resetParameters({ ...parameters, [key]: expression })
+              } else {
+                resetParameters(expression)
+              }
             }}
             canEdit={canEdit}
             type="FormElement"
+            UndoRedo={
+              <UndoRedo
+                canUndo={canUndoParameters}
+                canRedo={canRedoParameters}
+                undo={undoParameters}
+                redo={redoParameters}
+              />
+            }
           />
           <div className="spacer-20" />
           <div className="flex-row-center-center">
             <ButtonWithFallback
               title={t('BUTTON_SAVE')}
-              disabled={!canEdit || !shouldUpdate}
+              disabled={!canEdit || !isDirty}
               disabledMessage={!canEdit ? disabledMessage : t('TEMPLATE_MESSAGE_SAVE_DISABLED')}
               onClick={updateElement}
             />
@@ -365,7 +457,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
             />
             <ButtonWithFallback
               title={t('BUTTON_CLOSE')}
-              onClick={() => (shouldUpdate && canEdit ? setOpen(true) : onClose())}
+              onClick={() => (isDirty && canEdit ? setOpen(true) : onClose())}
             />
             <Modal
               basic
@@ -393,14 +485,6 @@ const ElementConfig: React.FC<ElementConfigProps> = ({ element, onClose }) => {
         </div>
       </div>
       <RemoveElementModal />
-      <Message
-        className="alert-success"
-        success
-        icon={<Icon name="check circle outline" />}
-        header={t('TEMPLATE_MESSAGE_SAVE_SUCCESS')}
-        hidden={!showSaveAlert}
-        onClick={() => setShowSaveAlert(false)}
-      />
     </Modal>
   )
 }

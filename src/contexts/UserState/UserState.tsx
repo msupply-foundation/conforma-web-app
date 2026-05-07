@@ -8,6 +8,7 @@ import { usePrefs } from '../SystemPrefs'
 import { useLanguageProvider } from '../Localisation'
 import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
 import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
+import { FigTree, loadFragments } from '../../FigTreeEvaluator'
 
 type UserState = {
   currentUser: User | null
@@ -45,7 +46,7 @@ const reducer = (state: UserState, action: UserActions) => {
   switch (action.type) {
     case 'resetCurrentUser':
       return initialState
-    case 'setCurrentUser':
+    case 'setCurrentUser': {
       const { newUser, newPermissions, newOrgList } = action
       return {
         ...state,
@@ -54,12 +55,14 @@ const reducer = (state: UserState, action: UserActions) => {
         orgList: newOrgList,
         isNonRegistered: newUser.username === config.nonRegisteredUser,
       }
-    case 'setLoading':
+    }
+    case 'setLoading': {
       const { isLoading } = action
       return {
         ...state,
         isLoading,
       }
+    }
     default:
       return state
   }
@@ -96,7 +99,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const { preferences } = usePrefs()
   const { showToast, clearAllToasts } = useToast()
 
-  let refreshTokenTimer = useRef(0)
+  const refreshTokenTimer = useRef(0)
 
   const disableAutoLogout = preferences.logoutAfterInactivity === 0
   const loginTimer = useMemo(
@@ -154,6 +157,7 @@ export function UserProvider({ children }: UserProviderProps) {
         newOrgList: orgList || [],
       })
       dispatch({ type: 'setLoading', isLoading: false })
+      updateFigTree(JWT)
     }
 
     if (!disableAutoLogout) {
@@ -195,3 +199,14 @@ export function UserProvider({ children }: UserProviderProps) {
  * - @returns an object with a reducer function `setUserState` and the `userState`
  */
 export const useUserState = () => useContext(UserContext)
+
+// Updates the global FigTree object with user token and refreshes available
+// Fragments
+export const updateFigTree = async (JWT: string) => {
+  FigTree.updateOptions({
+    headers: {
+      Authorization: `Bearer ${JWT}`,
+    },
+  })
+  loadFragments()
+}

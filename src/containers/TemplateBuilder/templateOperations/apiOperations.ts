@@ -2,11 +2,11 @@
  * The raw http operations called by the Template Operations hook
  */
 
-import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import getServerUrl, {
+  serverREST,
+} from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { getRequest, postRequest } from '../../../utils/helpers/fetchMethods'
 import { downloadFile } from '../../../utils/helpers/utilityFunctions'
-import { VersionObject } from '../useGetTemplates'
-import config from '../../../config'
 import { ModifiedEntities } from './EntitySelectModal'
 
 export const commit = async (id: number, comment: string) => {
@@ -29,6 +29,12 @@ export interface UnconnectedDataViews {
   title: string
 }
 
+export interface UnconnectedFragments {
+  id: number
+  name: string
+  metadata: { parameters: Record<string, unknown>; description?: string }
+}
+
 export interface Diff {
   filters: {}
   permissions: {}
@@ -36,11 +42,13 @@ export interface Diff {
   dataViewColumns: {}
   category: {}
   dataTables: {}
+  fragments: {}
 }
 
 interface CheckResult {
   committed: boolean
   unconnectedDataViews: UnconnectedDataViews[]
+  unconnectedFragments: UnconnectedFragments[]
   ready?: boolean
   diff?: Diff
 }
@@ -73,25 +81,12 @@ export const duplicate = async (id: number, newCode?: string) => {
   }
 }
 
-export const exportAndDownload = async (
-  id: number,
-  code: string,
-  versionId: string,
-  versionHistory: VersionObject[]
-) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-  const filename = `${code}-${versionId}_v${versionHistory.length + 1}.zip`
+export const exportAndDownload = async (id: number) => {
   try {
-    await downloadFile(
-      getServerUrl('templateImportExport', {
-        action: 'export',
-        id,
-      }),
-      filename,
-      {
-        headers: { Authorization: `Bearer ${JWT}` },
-      }
-    )
+    const { url, filename } = await postRequest({
+      url: getServerUrl('templateImportExport', { action: 'prepareExport', id }),
+    })
+    downloadFile(`${serverREST}${url}`, filename)
   } catch (err) {
     return { error: (err as Error).message }
   }
@@ -144,6 +139,7 @@ export type ModifiedEntitiesToKeep = {
   dataTables: Set<string>
   category: Set<string>
   files: Set<string>
+  fragments: Set<string>
 }
 
 export type ModifiedEntitiesToKeepAPIInput = {
@@ -154,6 +150,7 @@ export type ModifiedEntitiesToKeepAPIInput = {
   dataTables?: string[]
   category?: string
   files?: string[]
+  fragments?: string[]
 }
 
 export const install = async (uid: string, installDetails: ModifiedEntitiesToKeepAPIInput) => {

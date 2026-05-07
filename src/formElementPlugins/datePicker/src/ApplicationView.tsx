@@ -5,11 +5,12 @@ import { DateTime } from 'luxon'
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import useDefault from '../../useDefault'
+import { Label } from 'semantic-ui-react'
 
 // Stored response date format
 interface DateSaved {
-  start: string // ISO Date strings: YYYY-MM-DD
-  end?: string
+  start: string | null | undefined // ISO Date strings: YYYY-MM-DD
+  end?: string | null | undefined
 }
 
 // This is the type used by react-semantic-ui-datepicker, and what we use for
@@ -30,7 +31,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   parameters,
   // onUpdate,
   // setIsActive,
-  // validationState,
+  validationState,
   onSave,
   Markdown,
   currentResponse,
@@ -93,6 +94,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     onSave({ text: toDisplayString(date, locale, displayFormat), date: toDateSaved(date) })
   }
 
+  const isError = !validationState.isValid
+
   return (
     <>
       {label && (
@@ -101,18 +104,31 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         </label>
       )}
       <Markdown text={description} />
-      <SemanticDatepicker
-        locale={locale}
-        onChange={(_, data) => handleSelect(data.value)}
-        type={allowRange ? 'range' : 'basic'}
-        value={selectedDate}
-        format={entryFormat}
-        firstDayOfWeek={firstDayOfWeek}
-        showToday={showToday}
-        maxDate={maxDateValue}
-        minDate={minDateValue}
-        disabled={!isEditable}
-      />
+      <div className="flex-column-start-start">
+        <SemanticDatepicker
+          locale={locale}
+          onChange={(_, data) => handleSelect(data.value)}
+          type={allowRange ? 'range' : 'basic'}
+          value={selectedDate}
+          format={entryFormat}
+          firstDayOfWeek={firstDayOfWeek}
+          showToday={showToday}
+          maxDate={maxDateValue}
+          minDate={minDateValue}
+          disabled={!isEditable}
+          className={isError ? 'input-error' : undefined}
+        />
+        {isError && (
+          <Label
+            basic
+            color="pink"
+            pointing
+            content={validationState?.validationMessage}
+            className="prompt"
+            style={{ marginTop: 0 }}
+          />
+        )}
+      </div>
     </>
   )
 }
@@ -120,16 +136,16 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 const toDateSaved = (date: SelectedDateRange): DateSaved | null => {
   if (!date) return null
   // Single date
-  if (!Array.isArray(date)) return { start: DateTime.fromJSDate(date).toISODate() ?? '' }
+  if (!Array.isArray(date)) return { start: DateTime.fromJSDate(date).toISODate() ?? undefined }
   // Date range
   return {
-    start: DateTime.fromJSDate(date[0]).toISODate() ?? '',
-    end: DateTime.fromJSDate(date[1]).toISODate() ?? '',
+    start: DateTime.fromJSDate(date[0]).toISODate() ?? undefined,
+    end: DateTime.fromJSDate(date[1]).toISODate() ?? undefined,
   }
 }
 
 const fromDateSaved = (date: DateSaved | null): SelectedDateRange | null => {
-  if (!date) return null
+  if (!date || !date.start) return null
   // Single date
   if (!date?.end) return DateTime.fromISO(date.start).toJSDate()
   // Date range
@@ -157,7 +173,8 @@ const toDisplayString = (
   return `${formatDate(DateTime.fromJSDate(date[0]))} – ${DateTime.fromJSDate(date[1])}`
 }
 
-const dateFromDefault = (defaultDate: string | string[]): SelectedDateRange => {
+const dateFromDefault = (defaultDate: string | string[] | null): SelectedDateRange => {
+  if (!defaultDate) return null
   // Single date
   if (!Array.isArray(defaultDate)) return DateTime.fromISO(defaultDate).toJSDate()
   // Date range

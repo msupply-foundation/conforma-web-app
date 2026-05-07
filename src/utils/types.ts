@@ -19,13 +19,13 @@ import {
 
 import { ValidationState } from '../formElementPlugins/types'
 import { Checkbox } from '../formElementPlugins/checkbox/src/ApplicationView'
-import { type EvaluatorNode } from '../modules/expression-evaluator/src/types'
 import { SemanticICONS } from 'semantic-ui-react'
 import { DocumentNode } from '@apollo/client'
 import { DateTime, DateTimeFormatOptions } from 'luxon'
 import { DateTimeConstant } from '../utils/data/LuxonDateTimeConstants'
 import { ErrorResponse } from './hooks/useDataViews'
 import { USER_ROLES } from './data'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 export {
   type ParsedUrlQuery,
@@ -49,7 +49,6 @@ export {
   type ElementPluginParameterValue,
   type ElementPluginParameters,
   type ElementState,
-  type EvaluatorNode,
   type EvaluatorParameters,
   type Filters,
   type FullStructure,
@@ -88,7 +87,6 @@ export {
   type TemplateInList,
   type TemplatesDetails,
   type TemplateType,
-  type UseGetApplicationProps,
   type User,
   type UseGetReviewStructureForSectionProps,
   type OrganisationSimple,
@@ -188,6 +186,7 @@ interface CellProps {
   application: ApplicationListShape
   loading: boolean
   deleteApplication: Function
+  isInternalUser: boolean
 }
 
 type HideOnMobileTestMethod = (rowData: Record<string, unknown>) => boolean
@@ -292,6 +291,7 @@ interface FullStructure {
   info: ApplicationDetails
   canApplicantMakeChanges: boolean
   sections: SectionsStructure
+  reviewSections: SectionsStructure
   applicantDeadline: { deadline: Date | null; isActive: boolean }
   stages: {
     stage: StageDetails
@@ -470,6 +470,7 @@ interface SectionDetails {
   index: number
   code: string
   title: string
+  isReviewSection: boolean
   totalPages: number
 }
 
@@ -616,8 +617,10 @@ interface TemplateDetails {
   code: string
   versionId: string
   elementsIds?: number[] // TODO: Change to not optional after re-structure
+  reviewSectionElementIds: number[]
   elementsDefaults?: EvaluatorNode[]
-  sections?: SectionDetails[] // TODO: Change to not optional after re-structure
+  sections: SectionDetails[]
+  reviewSection?: SectionDetails | null
   startMessage?: string
 }
 
@@ -635,16 +638,6 @@ interface TemplateType {
   code: string
   name: string
   namePlural: string
-}
-
-interface UseGetApplicationProps {
-  serialNumber: string
-  currentUser: User
-  sectionCode?: string
-  page?: number
-  networkFetch?: boolean
-  isApplicationReady?: boolean
-  setApplicationState?: Function
 }
 
 interface User {
@@ -715,6 +708,7 @@ interface FormatOptions {
   elementParameters?: object
   substitution?: string
   dateFormat?: DateTimeConstant | DateTimeFormatOptions
+  numberFormat?: Intl.NumberFormatOptions
   hideLabelOnMobile?: boolean
   hideCellOnMobile?: boolean
   // Add more as required

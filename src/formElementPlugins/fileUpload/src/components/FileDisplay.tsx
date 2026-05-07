@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Icon, Grid, List, Image, Message, Loader } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import getServerUrl from '../../../../utils/helpers/endpoints/endpointUrlBuilder'
@@ -27,6 +28,8 @@ export const FileDisplay = ({
   const thumbnailUrl = fileData
     ? getServerUrl('file', { fileId: fileData.uniqueId, thumbnail: true })
     : ''
+
+  const [thumbnailError, setThumbnailError] = useState(false)
 
   const { DocumentModal, handleFile } = useDocumentModal({
     filename,
@@ -70,21 +73,34 @@ export const FileDisplay = ({
         {fileData && (
           <>
             <Grid.Row centered style={{ boxShadow: 'none' }} verticalAlign="top">
-              <Image
-                src={thumbnailUrl}
-                className="clickable"
-                onClick={handleFile}
-                style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
-              />
+              {thumbnailError ? (
+                <p
+                  className="slightly-smaller-text"
+                  onClick={handleFile}
+                  style={{ color: 'grey', fontStyle: 'italic', marginLeft: 10 }}
+                >
+                  {t('FILE_UNAVAILABLE')}
+                </p>
+              ) : (
+                <Image
+                  src={thumbnailUrl}
+                  className="clickable"
+                  onClick={handleFile}
+                  onError={() => setThumbnailError(true)}
+                  style={{ maxHeight: prefs.applicationViewThumbnailHeight }}
+                />
+              )}
             </Grid.Row>
             <Grid.Row centered style={{ boxShadow: 'none' }}>
-              <p
-                style={{ wordBreak: 'break-word' }}
-                className="clickable link-style tiny-bit-smaller-text"
-                onClick={() => handleFile()}
-              >
-                {filename}
-              </p>
+              {!thumbnailError && (
+                <p
+                  style={{ wordBreak: 'break-word' }}
+                  className="clickable link-style tiny-bit-smaller-text"
+                  onClick={() => handleFile()}
+                >
+                  {filename}
+                </p>
+              )}
             </Grid.Row>
           </>
         )}
@@ -98,7 +114,7 @@ export const FileDisplay = ({
           color="grey"
           onClick={() => (onDelete ? onDelete(key) : () => {})}
           className="file-delete-icon"
-          style={{ position: 'absolute', right: 0, top: 0 }}
+          style={{ position: 'absolute', right: 0, top: -10 }}
         />
       )}
     </List.Item>

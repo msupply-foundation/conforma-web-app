@@ -52,12 +52,6 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
           {t('ACTION_VIEW')}
         </Link>
       )
-    case ApplicationStatus.ChangesRequired:
-      return (
-        <Link to={linkTo} className="user-action">
-          {t('ACTION_MAKE_CHANGES')}
-        </Link>
-      ) // TODO: Show number of responses to make changes
     case undefined:
       console.log('Problem getting status of application serial ', serial)
       return null

@@ -1,4 +1,3 @@
-import { EvaluatorNode } from '../../../../modules/expression-evaluator'
 import React, { useState, useEffect } from 'react'
 import { Dropdown } from 'semantic-ui-react'
 import {
@@ -6,6 +5,7 @@ import {
   useGetTemplateElementsByPluginQuery,
 } from '../../../../utils/generated/graphql'
 import { ParametersType } from '../../shared/Parameters'
+import { EvaluatorNode } from 'fig-tree-evaluator'
 
 type ExistingElement = {
   category: TemplateElementCategory

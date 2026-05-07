@@ -12,6 +12,7 @@ interface TooltipProps {
   style?: object
   popupStyle?: object
   iconStyle?: object
+  className?: string
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({
@@ -24,10 +25,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
   style,
   popupStyle = style,
   iconStyle,
+  className = 'tooltip',
 }) => {
   return (
     <Popup
-      className="tooltip"
+      className={className}
       style={{
         minWidth,
         maxWidth,

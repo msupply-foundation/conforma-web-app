@@ -1,8 +1,12 @@
 // Schema derived from the Typescript interface "Preferences" below, and
 // converted using ChatGPT:
 
+import { EvaluatorNode } from 'fig-tree-editor-react'
+
 export const PreferencesSchema = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
+  required: ['server', 'web'],
   properties: {
     server: {
       type: 'object',
@@ -11,17 +15,12 @@ export const PreferencesSchema = {
         thumbnailMaxWidth: { type: 'number' },
         thumbnailMaxHeight: { type: 'number' },
         actionSchedule: { $ref: '#/definitions/schedule' },
+        fileCleanupSchedule: { $ref: '#/definitions/schedule' },
+        backupSchedule: { $ref: '#/definitions/schedule' },
+        archiveSchedule: { $ref: '#/definitions/schedule' },
+        staleApplicationsCleanupSchedule: { $ref: '#/definitions/schedule' },
         SMTPConfig: {
           type: 'object',
-          properties: {
-            host: { type: 'string' },
-            port: { type: 'number' },
-            secure: { type: 'boolean' },
-            user: { type: 'string' },
-            password: { type: 'string' },
-            defaultFromName: { type: 'string' },
-            defaultFromEmail: { type: 'string' },
-          },
           required: [
             'host',
             'port',
@@ -31,100 +30,150 @@ export const PreferencesSchema = {
             'defaultFromName',
             'defaultFromEmail',
           ],
+          properties: {
+            host: { type: 'string' },
+            port: { type: 'number' },
+            secure: { type: 'boolean' },
+            user: { type: 'string' },
+            password: { type: 'string' },
+            defaultFromName: { type: 'string' },
+            defaultFromEmail: { type: 'string' },
+          },
           additionalProperties: false,
         },
         systemManagerPermissionName: { type: 'string' },
         managerCanEditLookupTables: { type: 'boolean' },
         managerCanEditLocalisation: { type: 'boolean' },
         previewDocsMinKeepTime: { type: 'string' },
-        fileCleanupSchedule: { $ref: '#/definitions/schedule' },
-        staleApplicationsCleanupSchedule: { $ref: '#/definitions/schedule' },
-        backupSchedule: { $ref: '#/definitions/schedule' },
+        protectedFilesKeepDays: { type: 'number' },
         backupFilePrefix: { type: 'string' },
         skipBackup: { type: 'boolean' },
         maxBackupDurationDays: { type: 'number' },
-        archiveSchedule: { $ref: '#/definitions/schedule' },
         archiveFileAgeMinimum: { type: 'number' },
         archiveMinSize: { type: 'number' },
         emailTestMode: { type: 'boolean' },
         testingEmail: { type: 'string' },
         locale: { type: 'string' },
         timezone: { type: 'string' },
+        envVars: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+        maintenanceSite: { type: 'string' },
+        freeSpaceRequiredForZips: { type: 'number' },
         externalApiConfigs: {
           type: 'object',
           additionalProperties: {
             type: 'object',
+            required: ['baseUrl', 'authentication', 'routes'],
             properties: {
               baseUrl: { type: 'string' },
               authentication: {
                 oneOf: [
                   {
                     type: 'object',
+                    required: ['type', 'username', 'password'],
                     properties: {
                       type: { const: 'Basic' },
                       username: { type: 'string' },
                       password: { type: 'string' },
                     },
-                    required: ['type', 'username', 'password'],
-                    additionalProperties: false,
                   },
                   {
                     type: 'object',
-                    properties: { type: { const: 'Bearer' }, token: { type: 'string' } },
                     required: ['type', 'token'],
-                    additionalProperties: false,
+                    properties: {
+                      type: { const: 'Bearer' },
+                      token: { type: 'string' },
+                    },
                   },
                 ],
               },
               routes: {
                 type: 'object',
                 additionalProperties: {
-                  type: 'object',
-                  properties: {
-                    method: { enum: ['get', 'post'] },
-                    url: { type: 'string' },
-                    permissions: { type: 'array', items: { type: 'string' } },
-                    queryParams: { type: 'object', additionalProperties: true },
-                    allowedClientQueryParams: { type: 'array', items: { type: 'string' } },
-                    additionalAxiosProperties: { type: 'object', additionalProperties: true },
-                    returnProperty: { type: 'string' },
-                    validationExpression: { type: 'object' },
-                  },
-                  required: ['method', 'url'],
-                  additionalProperties: false,
+                  oneOf: [
+                    {
+                      type: 'object',
+                      required: ['method', 'url'],
+                      properties: {
+                        method: { const: 'get' },
+                        url: { type: 'string' },
+                        permissions: {
+                          type: 'array',
+                          items: { type: 'string' },
+                        },
+                        queryParams: { type: 'object' },
+                        allowedClientQueryParams: {
+                          type: 'array',
+                          items: { type: 'string' },
+                        },
+                        additionalAxiosProperties: { type: 'object' },
+                        returnProperty: { type: 'string' },
+                        validationExpression: { type: 'object' },
+                      },
+                    },
+                    {
+                      type: 'object',
+                      required: ['method', 'url'],
+                      properties: {
+                        method: { const: 'post' },
+                        url: { type: 'string' },
+                        permissions: {
+                          type: 'array',
+                          items: { type: 'string' },
+                        },
+                        queryParams: { type: 'object' },
+                        allowedClientQueryParams: {
+                          type: 'array',
+                          items: { type: 'string' },
+                        },
+                        additionalAxiosProperties: { type: 'object' },
+                        returnProperty: { type: 'string' },
+                        validationExpression: { type: 'object' },
+                      },
+                    },
+                  ],
                 },
               },
             },
-            required: ['baseUrl', 'authentication', 'routes'],
-            additionalProperties: false,
           },
         },
-        envVars: { type: 'array', items: { type: 'string' } },
-        maintenanceSite: { type: 'string' },
       },
       additionalProperties: false,
     },
     web: {
       type: 'object',
       properties: {
-        paginationPresets: { type: 'array', items: { type: 'number' } },
+        paginationPresets: {
+          type: 'array',
+          items: { type: 'number' },
+        },
         paginationDefault: { type: 'number' },
         defaultLanguageCode: { type: 'string' },
         brandLogoFileId: { type: 'string' },
         brandLogoOnDarkFileId: { type: 'string' },
-        defaultListFilters: { type: 'array', items: { type: 'string' } },
+        defaultListFilters: {
+          type: 'array',
+          items: { type: 'string' },
+        },
         showDocumentModal: { type: 'boolean' },
         googleAnalyticsId: { type: 'string' },
         siteHost: { type: 'string' },
         userRegistrationCode: { type: 'string' },
-        style: { type: 'object', additionalProperties: { type: 'object' } },
+        style: {
+          type: 'object',
+          additionalProperties: { type: 'object' },
+        },
         helpLinks: {
           type: 'array',
           items: {
             type: 'object',
-            properties: { text: { type: 'string' }, link: { type: 'string' } },
             required: ['text', 'link'],
-            additionalProperties: false,
+            properties: {
+              text: { type: 'string' },
+              link: { type: 'string' },
+            },
           },
         },
         footerText: { type: 'string' },
@@ -136,89 +185,106 @@ export const PreferencesSchema = {
               { type: 'string' },
               {
                 type: 'object',
+                required: ['code', 'urlQuery'],
                 properties: {
                   code: { type: 'string' },
                   urlQuery: {
                     type: 'object',
                     additionalProperties: {
-                      oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }],
+                      type: ['string', 'number', 'boolean'],
                     },
                   },
                 },
-                required: ['code', 'urlQuery'],
-                additionalProperties: false,
               },
             ],
+          },
+        },
+        appDataTestApplications: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+        figTreeDefaults: {
+          type: 'object',
+          properties: {
+            defaultNewOperatorExpression: { type: 'object' },
+            defaultNewFragment: { type: 'string' },
+            defaultNewCustomOperator: { type: 'string' },
           },
         },
       },
       additionalProperties: false,
     },
   },
-  required: ['server', 'web'],
   definitions: {
     schedule: {
       oneOf: [
-        { type: 'array', items: { type: 'number' } },
+        { type: 'null' },
+        {
+          type: 'array',
+          items: { type: 'number' },
+        },
         {
           type: 'object',
           properties: {
             date: {
-              oneOf: [
+              anyOf: [
                 { type: 'number' },
                 { type: 'array', items: { type: 'number' } },
                 { type: 'null' },
               ],
             },
             dayOfWeek: {
-              oneOf: [
+              anyOf: [
                 { type: 'number' },
                 { type: 'array', items: { type: 'number' } },
                 { type: 'null' },
               ],
             },
             hour: {
-              oneOf: [
+              anyOf: [
                 { type: 'number' },
                 { type: 'array', items: { type: 'number' } },
                 { type: 'null' },
               ],
             },
             minute: {
-              oneOf: [
+              anyOf: [
                 { type: 'number' },
                 { type: 'array', items: { type: 'number' } },
                 { type: 'null' },
               ],
             },
             month: {
-              oneOf: [
+              anyOf: [
                 { type: 'number' },
                 { type: 'array', items: { type: 'number' } },
                 { type: 'null' },
               ],
             },
             second: {
-              oneOf: [
+              anyOf: [
                 { type: 'number' },
                 { type: 'array', items: { type: 'number' } },
                 { type: 'null' },
               ],
             },
             year: {
-              oneOf: [
+              anyOf: [
                 { type: 'number' },
                 { type: 'array', items: { type: 'number' } },
                 { type: 'null' },
               ],
             },
-            tz: { type: ['string', 'null'] },
+            tz: {
+              type: ['string', 'null'],
+            },
           },
           additionalProperties: false,
         },
       ],
     },
   },
+  additionalProperties: false,
 }
 
 export interface Preferences {
@@ -251,6 +317,7 @@ export interface Preferences {
     managerCanEditLookupTables?: boolean
     managerCanEditLocalisation?: boolean
     previewDocsMinKeepTime?: string
+    protectedFilesKeepDays?: number
     fileCleanupSchedule?:
       | number[]
       | {
@@ -287,6 +354,7 @@ export interface Preferences {
           year?: number | number[] | null
           tz?: string | null
         }
+      | null
     backupFilePrefix?: string
     skipBackup?: boolean
     maxBackupDurationDays?: number
@@ -343,6 +411,7 @@ export interface Preferences {
     }
     envVars?: string[]
     maintenanceSite?: string
+    freeSpaceRequiredForZips?: number // GB
   }
   web: {
     paginationPresets?: number[]
@@ -363,5 +432,11 @@ export interface Preferences {
       string,
       string | { code: string; urlQuery: Record<string, string | number | boolean> }
     >
+    appDataTestApplications?: string[]
+    figTreeDefaults?: {
+      defaultNewOperatorExpression?: EvaluatorNode
+      defaultNewFragment?: string
+      defaultNewCustomOperator?: string
+    }
   }
 }

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
-import { Message, Transition } from 'semantic-ui-react'
+import { Message, MessageContent, Transition } from 'semantic-ui-react'
 import { ToastProps, MessageProps, Position, bottomLeft } from './types'
 import { getStyleProps } from './helpers'
 import { nanoid } from 'nanoid'
@@ -8,7 +8,7 @@ const TRANSITION_DURATION = 350 // ms
 
 const setTimeout = window.setTimeout // To ensure return type is number
 interface ToastProviderValue {
-  showToast: (...state: Partial<ToastProps>[]) => void
+  showToast: (...state: Partial<ToastProps>[]) => string
   updateDefaults: (state: Partial<ToastProps>) => void
   clearAllToasts: () => void
   toasts: ToastProps[]
@@ -17,7 +17,7 @@ interface ToastProviderValue {
 type ToastState = ToastProps & { close: () => void }
 
 const ToastProviderContext = createContext<ToastProviderValue>({
-  showToast: () => {},
+  showToast: () => '',
   updateDefaults: () => {},
   clearAllToasts: () => {},
   toasts: [],
@@ -40,11 +40,25 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setToastDefaults((prevDefaults) => ({ ...prevDefaults, ...newDefaults }))
   }
 
-  const showToast = (newToast: Partial<ToastProps> = {}) => {
-    setToasts((prevState) => [
-      ...prevState,
-      { ...toastDefaults, ...newToast, uid: nanoid(8), close: () => {} },
-    ])
+  const showToast = (newToast: Partial<ToastProps> = {}): string => {
+    const uid = newToast.uid ?? nanoid(8)
+
+    setToasts((prevState) => {
+      if (newToast.uid) {
+        // Update existing toast if it exists
+        const toastIndex = prevState.findIndex((toast) => toast.uid === newToast.uid)
+        if (toastIndex > -1) {
+          return prevState.map((toast) =>
+            toast.uid === newToast.uid ? { ...toast, ...newToast } : toast
+          )
+        }
+      }
+
+      // If existing toast not found, add new one
+      return [...prevState, { ...toastDefaults, ...newToast, uid, close: () => {} }]
+    })
+
+    return uid
   }
 
   const removeToast = (uid: string) => {
@@ -90,18 +104,21 @@ export const useToast = (toastSettings: Partial<ToastProps> = {}) => {
 export const Toast = ({ toast, removeToast }: { toast: ToastState; removeToast: () => void }) => {
   const [visible, setVisible] = useState(false)
   const timerId = useRef<number>(0)
+  const removeToastRef = useRef(removeToast)
+  removeToastRef.current = removeToast
   const { timeout } = toast
 
   useEffect(() => {
     // Small time-out so component changes from invisible to visible, which
     // allows the Transition component to apply nice fade-in effect.
     setTimeout(() => setVisible(true), 50)
+    clearTimeout(timerId.current)
     if (timeout !== 0)
       timerId.current = setTimeout(() => {
         setVisible(false)
-        setTimeout(() => removeToast(), TRANSITION_DURATION + 50)
+        setTimeout(() => removeToastRef.current(), TRANSITION_DURATION + 50)
       }, timeout)
-  }, [])
+  }, [timeout])
 
   const closeToast = () => {
     setVisible(false)
@@ -120,12 +137,22 @@ export const Toast = ({ toast, removeToast }: { toast: ToastState; removeToast: 
     onClick: toast?.onClick ? toast.onClick : toast.clickable ? closeToast : undefined,
     floating: true,
     ...getStyleProps(toast.style),
+    style: { minHeight: 45 },
   }
+
+  if (toast.maxWidth) messageState.style.maxWidth = toast.maxWidth
 
   return (
     <div className="toast-wrapper">
       <Transition visible={visible} animation="scale" duration={TRANSITION_DURATION}>
-        <Message className="toast-message" {...messageState} />
+        {toast.html ? (
+          <Message className="toast-message" {...messageState}>
+            {/* {messageState.header && <MessageHeader>{messageState.header}</MessageHeader>} */}
+            <MessageContent>{toast.html}</MessageContent>
+          </Message>
+        ) : (
+          <Message className="toast-message" {...messageState} />
+        )}
       </Transition>
     </div>
   )

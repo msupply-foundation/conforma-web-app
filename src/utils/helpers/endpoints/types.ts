@@ -25,7 +25,7 @@ export type VerifyKey = 'verify'
 export type VerifyOptions = { uid: string }
 
 export type FileKey = 'file'
-export type FileOptions = { fileId: string; thumbnail?: boolean }
+export type FileOptions = { fileId?: string; thumbnail?: boolean; zipFile?: string }
 
 export type FilesKey = 'files'
 export type FilesOptions = {
@@ -93,14 +93,20 @@ export type LocalisationOptions =
 
 export type SnapshotKey = 'snapshot'
 export type SnapshotOptions =
-  | { action: 'list'; archive?: boolean }
-  | { action: 'download' | 'delete'; name: string; archive?: boolean }
+  | { action: 'list' }
+  | { action: 'delete'; name: string }
+  | {
+      action: 'download'
+      name: string
+      includeSnapshot?: boolean
+      archiveRange?: { to?: string; from?: string }
+    }
   | { action: 'upload' }
   | {
-      action: 'take' | 'use'
+      action: 'take' | 'use' | 'fetch-archives'
       name: string
-      archive?: boolean
     }
+  | { action: 'purge' }
 
 export type LookupTableKey = 'lookupTable'
 export type LookupTableOptions =
@@ -132,7 +138,7 @@ export type TemplateOptions =
   | { action: 'check'; id: number }
   | { action: 'commit'; id: number }
   | { action: 'duplicate'; id: number; type: 'new' | 'version' }
-  | { action: 'export'; id: number }
+  | { action: 'prepareExport'; id: number }
   | { action: 'import'; type: 'upload' }
   | {
       action: 'import'
@@ -143,10 +149,14 @@ export type TemplateOptions =
     }
   | { action: 'import'; type: 'install'; uid: string }
   | { action: 'getDataViewDetails'; id: number }
+  | { action: 'getFragmentDetails'; id: number }
   | { action: 'getLinkedFiles'; id: number }
 
 export type ArchiveKey = 'archiveFiles'
 export type ArchiveOptions = { days: number }
+
+export type FigTreeFragmentsKey = 'figTreeFragments'
+export type FigTreeFragmentsOptions = { frontOrBack: 'frontEnd' | 'backEnd' }
 
 export type GetServerUrlFunction = ((endpointKey: BasicEndpoint) => string) &
   ((endpointKey: 'graphQL') => string) &
@@ -164,4 +174,5 @@ export type GetServerUrlFunction = ((endpointKey: BasicEndpoint) => string) &
   ((endpointKey: LookupTableKey, options: LookupTableOptions) => string) &
   ((endpointKey: TemplateKey, options: TemplateOptions) => string) &
   ((endpointKey: ArchiveKey, options: ArchiveOptions) => string) &
-  ((endpointKey: GetApplicationDataKey, options: GetApplicationDataOptions) => string)
+  ((endpointKey: GetApplicationDataKey, options: GetApplicationDataOptions) => string) &
+  ((endpointKey: FigTreeFragmentsKey, options: FigTreeFragmentsOptions) => string)

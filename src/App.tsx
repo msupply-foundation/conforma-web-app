@@ -19,7 +19,7 @@ import { Loading } from './components'
 // request) see
 // https://www.apollographql.com/docs/react/networking/authentication/#header
 const authLink = setContext((_, { headers }) => {
-  const JWT = localStorage.getItem('persistJWT')
+  const JWT = localStorage.getItem(config.localStorageJWTKey)
   return {
     headers: {
       ...headers,

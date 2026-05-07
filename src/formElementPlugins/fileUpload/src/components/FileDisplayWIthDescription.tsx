@@ -8,7 +8,7 @@ import prefs from '../../config.json'
 
 interface FileDisplayDescriptionProps extends FileDisplayProps {
   description?: string
-  updateDescription: (uniqueId: string, value: string, key: string) => void
+  updateDescription?: (uniqueId: string, value: string, key: string) => void
 }
 
 export const FileDisplayWithDescription = ({
@@ -94,24 +94,29 @@ export const FileDisplayWithDescription = ({
               </Grid.Row>
             </>
           )}
-          <Icon
-            link
-            name="delete"
-            circular
-            fitted
-            color="grey"
-            onClick={() => (onDelete ? onDelete(key) : () => {})}
-            className="file-delete-icon"
-            style={{ position: 'absolute', right: 0, top: 0 }}
-          />
+          {onDelete && (
+            <Icon
+              link
+              name="delete"
+              circular
+              fitted
+              color="grey"
+              onClick={() => (onDelete ? onDelete(key) : () => {})}
+              className="file-delete-icon"
+              style={{ position: 'absolute', right: 0, top: 0 }}
+            />
+          )}
         </Grid>
         {fileData && (
           <Input
             fluid
+            disabled={!updateDescription}
             placeholder={t('ADD_DESCRIPTION')}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            onBlur={(e: any) => updateDescription(fileData.uniqueId, e.target.value, key)}
+            onBlur={(e: any) =>
+              updateDescription && updateDescription(fileData.uniqueId, e.target.value, key)
+            }
           />
         )}
       </div>

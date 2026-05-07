@@ -1,4 +1,3 @@
-import { BasicObject } from '../../../modules/expression-evaluator'
 import config from '../../../config'
 import {
   GetServerUrlFunction,
@@ -15,6 +14,7 @@ import {
   TemplateOptions,
   GetApplicationDataOptions,
   ArchiveOptions,
+  FigTreeFragmentsOptions,
 } from './types'
 
 const { VITE_USE_DEV_SERVER } = import.meta.env
@@ -24,6 +24,8 @@ const {
   restEndpoints,
   devServerRest,
   devServerGraphQL,
+  devServerRestAbsolute,
+  devServerGraphQLAbsolute,
   productionPathREST,
   productionPathGraphQL,
 } = config
@@ -32,17 +34,31 @@ const getProductionUrl = (path: string) => {
   return `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`
 }
 
+// In dev (vite dev server), HTTP URLs are relative — the dev-server proxy
+// forwards them to the backend, keeping everything same-origin. In a
+// production build the page is served from the same host as the API, so we
+// build a full URL relative to `window.location`. The `VITE_USE_DEV_SERVER`
+// branch is for the niche case of a production build pointed at a dev
+// backend (no dev-server proxy in play), so it needs the absolute URL.
 export const serverREST = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerRest
+    ? devServerRestAbsolute
     : getProductionUrl(productionPathREST)
   : devServerRest
 export const serverGraphQL = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerGraphQL
+    ? devServerGraphQLAbsolute
     : getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
-const serverWebSocket = serverREST
+// Websocket URL is computed from an absolute REST URL because the vite
+// dev-server proxy only handles HTTP — websockets connect directly to the
+// backend.
+const restForWebSocket = isProductionBuild
+  ? VITE_USE_DEV_SERVER
+    ? devServerRestAbsolute
+    : getProductionUrl(productionPathREST)
+  : devServerRestAbsolute
+const serverWebSocket = restForWebSocket
   .replace('http', 'ws')
   .replace('api', '')
   .replace('server', 'websocket')
@@ -78,7 +94,8 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     }
 
     case 'file': {
-      const { fileId, thumbnail = false } = options as FileOptions
+      const { fileId, thumbnail = false, zipFile } = options as FileOptions
+      if (zipFile) return `${serverREST}${endpointPath}?zipFile=${encodeURIComponent(zipFile)}`
       return `${serverREST}${endpointPath}?uid=${fileId}${thumbnail ? '&thumbnail=true' : ''}`
     }
 
@@ -147,10 +164,9 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     case 'snapshot': {
       const snapshotOptions = options as SnapshotOptions
       const { action } = snapshotOptions
-      const isArchive = 'archive' in snapshotOptions && snapshotOptions.archive
+      if (action === 'list') return `${serverREST}${endpointPath}/list`
 
-      if (action === 'list')
-        return `${serverREST}${endpointPath}/list${isArchive ? '?archive=true' : ''}`
+      if (action === 'purge') return `${serverREST}${endpointPath}/purge-orphan-archives`
 
       const name = 'name' in snapshotOptions ? snapshotOptions.name : null
 
@@ -158,20 +174,15 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
 
       if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
-      // "download" is direct download url
       if (action === 'download')
-        return `${serverREST}${endpointPath}/files/${isArchive ? '_archives/' : ''}${name}.zip`
+        return `${serverREST}${endpointPath}/download?name=${encodeURIComponent(name)}`
+      // Archive details are passed in Body JSON
 
       if (action === 'delete')
-        return `${serverREST}${endpointPath}/${action}?name=${name}${
-          isArchive ? '&archive=true' : ''
-        }`
+        return `${serverREST}${endpointPath}/${action}?name=${encodeURIComponent(name)}`
 
-      // Must be "take" or "use"
-      return `${serverREST}${endpointPath}/${action}?name=${name}${
-        isArchive ? `&type=archive` : ''
-      }`
-      // Archive details are passed in Body JSON
+      // Must be "take", "use" or "fetch-archives"
+      return `${serverREST}${endpointPath}/${action}?name=${encodeURIComponent(name)}`
     }
 
     case 'lookupTable': {
@@ -187,13 +198,17 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
       // Import
       if (action === 'import') {
         const { name, code } = lookupTableOptions
-        return `${serverREST}${endpointPath}/import?name=${name}&code=${code}`
+        return `${serverREST}${endpointPath}/import?name=${encodeURIComponent(
+          name
+        )}&code=${encodeURIComponent(code)}`
       }
 
       // "Update" uses /import/tableID route
       if (action === 'update') {
         const { id, name, code } = lookupTableOptions
-        return `${serverREST}${endpointPath}/import/${id}?name=${name}&code=${code}`
+        return `${serverREST}${endpointPath}/import/${id}?name=${encodeURIComponent(
+          name
+        )}&code=${encodeURIComponent(code)}`
       }
 
       // Export
@@ -214,8 +229,8 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
           return `${serverREST}${endpointPath}/commit/${id}`
         case 'duplicate':
           return `${serverREST}${endpointPath}/duplicate/${type}/${id}`
-        case 'export':
-          return `${serverREST}${endpointPath}/export/${id}`
+        case 'prepareExport':
+          return `${serverREST}${endpointPath}/prepare-export/${id}`
         case 'import':
           if (type === 'install' && 'uid' in templateOptions)
             return `${serverREST}${endpointPath}/import/${type}/${templateOptions.uid}`
@@ -229,10 +244,17 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
           return `${serverREST}${endpointPath}/import/${type}`
         case 'getDataViewDetails':
           return `${serverREST}${endpointPath}/get-data-view-details/${id}`
+        case 'getFragmentDetails':
+          return `${serverREST}${endpointPath}/get-fragment-details/${id}`
         case 'getLinkedFiles':
           return `${serverREST}${endpointPath}/get-linked-files/${id}`
       }
-      break
+    }
+
+    case 'figTreeFragments': {
+      const { frontOrBack } = options as FigTreeFragmentsOptions
+      const queryString = frontOrBack === 'backEnd' ? '?backEnd=true' : '?frontEnd=true'
+      return `${serverREST}${endpointPath}${queryString}`
     }
 
     case 'getApplicationData': {
@@ -259,7 +281,7 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
   }
 }
 
-const buildQueryString = (query?: BasicObject): string => {
+const buildQueryString = (query?: Record<string, any>): string => {
   if (!query) return ''
   const keyValStrings = Object.entries(query)
     .filter(([_, value]) => !!value)
