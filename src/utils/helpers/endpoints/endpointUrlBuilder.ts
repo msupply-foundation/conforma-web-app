@@ -95,7 +95,7 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
 
     case 'file': {
       const { fileId, thumbnail = false, zipFile } = options as FileOptions
-      if (zipFile) return `${serverREST}${endpointPath}?zipFile=${zipFile}`
+      if (zipFile) return `${serverREST}${endpointPath}?zipFile=${encodeURIComponent(zipFile)}`
       return `${serverREST}${endpointPath}?uid=${fileId}${thumbnail ? '&thumbnail=true' : ''}`
     }
 
@@ -174,13 +174,15 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
 
       if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
-      if (action === 'download') return `${serverREST}${endpointPath}/download?name=${name}`
+      if (action === 'download')
+        return `${serverREST}${endpointPath}/download?name=${encodeURIComponent(name)}`
       // Archive details are passed in Body JSON
 
-      if (action === 'delete') return `${serverREST}${endpointPath}/${action}?name=${name}`
+      if (action === 'delete')
+        return `${serverREST}${endpointPath}/${action}?name=${encodeURIComponent(name)}`
 
       // Must be "take", "use" or "fetch-archives"
-      return `${serverREST}${endpointPath}/${action}?name=${name}`
+      return `${serverREST}${endpointPath}/${action}?name=${encodeURIComponent(name)}`
     }
 
     case 'lookupTable': {
@@ -196,13 +198,17 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
       // Import
       if (action === 'import') {
         const { name, code } = lookupTableOptions
-        return `${serverREST}${endpointPath}/import?name=${name}&code=${code}`
+        return `${serverREST}${endpointPath}/import?name=${encodeURIComponent(
+          name
+        )}&code=${encodeURIComponent(code)}`
       }
 
       // "Update" uses /import/tableID route
       if (action === 'update') {
         const { id, name, code } = lookupTableOptions
-        return `${serverREST}${endpointPath}/import/${id}?name=${name}&code=${code}`
+        return `${serverREST}${endpointPath}/import/${id}?name=${encodeURIComponent(
+          name
+        )}&code=${encodeURIComponent(code)}`
       }
 
       // Export

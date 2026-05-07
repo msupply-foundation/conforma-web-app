@@ -64,7 +64,11 @@ export const FragmentSelector: React.FC<{}> = () => {
       <div className="flex-row-space-between-center" style={{ width: '100%', maxWidth: 500 }}>
         <Header as="h3">Connected Evaluator Fragments</Header>
         <p className="slightly-smaller-text" style={{ marginBottom: 10 }}>
-          <a href="https://github.com/CarlosNZ/fig-tree-evaluator#fragments" target="_blank">
+          <a
+            href="https://github.com/CarlosNZ/fig-tree-evaluator#fragments"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Docs <Icon name="external" />
           </a>
         </p>

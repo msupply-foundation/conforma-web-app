@@ -1,3 +1,4 @@
+import { CSSProperties } from 'react'
 import { Icon } from 'semantic-ui-react'
 
 export interface UndoRedoProps {
@@ -7,22 +8,31 @@ export interface UndoRedoProps {
   redo: () => void
 }
 
+const buttonResetStyle: CSSProperties = {
+  background: 'none',
+  border: 'none',
+  padding: 0,
+  font: 'inherit',
+  color: 'inherit',
+  cursor: 'pointer',
+}
+
 export const UndoRedo = ({ canUndo, canRedo, undo, redo }: UndoRedoProps) => {
   if (!canUndo && !canRedo) return null
 
   return (
     <div className="flex-row-space-between" style={{ width: '100%' }}>
       <p className={`clickable nav-button ${!canUndo ? 'invisible' : ''}`}>
-        <a onClick={undo}>
+        <button type="button" onClick={undo} style={buttonResetStyle}>
           <Icon name="arrow alternate circle left" />
           <strong>Undo</strong>
-        </a>
+        </button>
       </p>
       <p className={`clickable nav-button ${!canRedo ? 'invisible' : ''}`}>
-        <a onClick={redo}>
+        <button type="button" onClick={redo} style={buttonResetStyle}>
           <strong>Redo</strong>
           <Icon name="arrow alternate circle right" />
-        </a>
+        </button>
       </p>
     </div>
   )
