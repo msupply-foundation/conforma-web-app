@@ -73,6 +73,7 @@ const DropdownIO: React.FC<DropdownIOprops> = ({
   useEffect(() => {
     if (isPropUpdated) setInnerValue(value)
   }, [value])
+
   const renderText = () => {
     if (setValue) return null
 

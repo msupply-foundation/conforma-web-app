@@ -9,7 +9,7 @@ import {
   Form,
   Message,
 } from 'semantic-ui-react'
-import Loading from '../../../components/Loading'
+import { Loading } from '../../../components/common'
 import { ApplicationNote, useGetApplicationNotesQuery } from '../../../utils/generated/graphql'
 import useConfirmationModal from '../../../utils/hooks/useConfirmationModal'
 import { useUserState } from '../../../contexts/UserState'
@@ -141,7 +141,7 @@ const NotesTab: React.FC<{
                   />
                 </div>
                 <div className="file-row">
-                  {note.files.nodes.map((file) => (
+                  {note.fileList.nodes.map((file) => (
                     <FileDisplay
                       file={file as FileData}
                       cachedFile={fileCache.getFromCache(file?.uniqueId ?? '')}
@@ -232,7 +232,7 @@ const sortAndFilter = (
 ): ApplicationNote[] => {
   const sort = sortDesc ? (e: ApplicationNote[]) => e : (e: ApplicationNote[]) => [...e].reverse()
   const fileFilter = filesOnly
-    ? (e: ApplicationNote[]) => e.filter((note) => note.files.nodes.length > 0)
+    ? (e: ApplicationNote[]) => e.filter((note) => note.fileList.nodes.length > 0)
     : (e: ApplicationNote[]) => e
   return fileFilter(sort(notes))
 }

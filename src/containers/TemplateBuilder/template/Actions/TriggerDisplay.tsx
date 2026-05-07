@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Suspense, lazy } from 'react'
 import { Checkbox, Header, Button } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { TemplateAction, Trigger } from '../../../../utils/generated/graphql'
@@ -8,8 +8,17 @@ import { IconButton } from '../../shared/IconButton'
 import { useOperationState } from '../../shared/OperationContext'
 import TextIO from '../../shared/TextIO'
 import { useTemplateState, disabledMessage } from '../TemplateWrapper'
-import ActionConfig from './ActionConfig'
 import { useActionState } from './Actions'
+import { Loading } from '../../../../components'
+
+// Delay loading ActionConfig until FigTreeActions has finished fetching
+// back-end fragments, so the Evaluation/Parameters components don't render
+// with stale (front-end) fragment data.
+const ActionConfig = lazy(() =>
+  import('./FigTreeActions').then(({ figTreeActionsReady }) =>
+    figTreeActionsReady.then(() => import('./ActionConfig'))
+  )
+)
 
 type TemplateActions = { sequential: TemplateAction[]; asynchronous: TemplateAction[] }
 type GetActionsForTrigger = (
@@ -203,10 +212,14 @@ const TriggerDisplay: React.FC<TriggerDisplayProps> = ({ trigger, allTemplateAct
             </div>
           ))}
         </div>
-        <ActionConfig
-          templateAction={currentTemplateAction}
-          onClose={() => setCurrentTemplateAction(null)}
-        />
+        {currentTemplateAction && (
+          <Suspense fallback={<Loading />}>
+            <ActionConfig
+              templateAction={currentTemplateAction}
+              onClose={() => setCurrentTemplateAction(null)}
+            />
+          </Suspense>
+        )}
       </div>
     )
   }

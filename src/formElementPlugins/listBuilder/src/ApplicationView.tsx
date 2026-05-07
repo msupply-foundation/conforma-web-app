@@ -10,8 +10,6 @@ import {
   ListLayoutProps,
 } from './types'
 import { TemplateElement } from '../../../utils/generated/graphql'
-import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
-import config from '../../../config'
 import ApplicationViewWrapper from '../../ApplicationViewWrapper'
 import {
   buildElements,
@@ -93,14 +91,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [inputState, setInputState] = useState<InputState>(defaultInputState)
   const [listItems, setListItems] = useState<ListItem[]>(currentResponse?.list ?? [])
 
-  const graphQLEndpoint = applicationData.config.getServerUrl('graphQL')
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-  const evaluatorConfig = {
-    objects: { currentUser, applicationData, responses: allResponses, functions },
-    APIfetch: fetch,
-    graphQLConnection: { fetch: fetch.bind(window), endpoint: graphQLEndpoint },
-    headers: { Authorization: 'Bearer ' + JWT },
-  }
+  const evaluatorData = { currentUser, applicationData, responses: allResponses }
 
   useEffect(() => {
     buildElements(
@@ -122,7 +113,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   })
 
   useEffect(() => {
-    buildDataArray(listItems, inputFields, evaluatorConfig, dataFormat).then((data) =>
+    buildDataArray(listItems, inputFields, evaluatorData, dataFormat).then((data) =>
       onSave({
         text:
           listItems.length > 0 ? createTextString(listItems, inputFields, textFormat) : undefined,
@@ -218,14 +209,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <Markdown text={modalText} />
       {inputState.currentElementsState &&
         inputFields.map((field: TemplateElement) => {
-          const element = inputState.currentElementsState?.[field.code]
+          if (!field?.code) return null
+          const element = inputState?.currentElementsState?.[field?.code]
+          if (!element) return null
+          const current = inputState?.currentResponses?.[element?.code]?.value
           return (
             <ApplicationViewWrapper
               key={`list-${element.code}`}
               element={element}
               isStrictPage={inputState.error}
               allResponses={combineResponses(allResponses, inputState.currentResponses)}
-              currentResponse={inputState.currentResponses[element.code].value}
+              currentResponse={current}
               onSaveUpdateMethod={innerElementUpdate(element.code)}
               applicationData={applicationData}
             />

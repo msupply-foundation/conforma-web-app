@@ -45,13 +45,14 @@ interface SummaryViewProps {
   response: ResponseFull | null
   Markdown: any
   DefaultSummaryView: React.FC
+  applicationData: ApplicationDetails
 }
 
 interface SummaryViewWrapperProps {
   element: ElementState
   response: ResponseFull | null
   allResponses: ResponsesByCode
-  applicationData?: ApplicationDetails
+  applicationData: ApplicationDetails
   displayTitle?: boolean
 }
 

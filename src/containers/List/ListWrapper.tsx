@@ -38,17 +38,18 @@ const ListWrapper: React.FC = () => {
   const [applicationsRows, setApplicationsRows] = useState<ApplicationListRow[]>([])
   usePageTitle(t('PAGE_TITLE_LIST') as string)
 
-  if (isNonRegistered) {
-    logout()
-    return null
-  }
-
   const { error, loading, refetch, templateType, applications, applicationCount } =
     useListApplications(query)
 
+  const isInternalUser = currentUser?.organisation?.isSystemOrg || false
+
   useEffect(() => {
     if (!templatePermissions) return
-    if (!type || !userRole || !checkExistingUserRole(templatePermissions, type, userRole))
+    if (
+      !type ||
+      !userRole ||
+      !checkExistingUserRole(templatePermissions, type, userRole, isInternalUser)
+    )
       redirectToDefault()
     else {
       const columns = mapColumnsByRole(userRole as USER_ROLES)
@@ -80,9 +81,14 @@ const ListWrapper: React.FC = () => {
 
   const redirectToDefault = () => {
     const redirectType = type || Object.keys(templatePermissions)[0]
-    const redirectUserRole = checkExistingUserRole(templatePermissions, redirectType, userRole)
+    const redirectUserRole = checkExistingUserRole(
+      templatePermissions,
+      redirectType,
+      userRole,
+      isInternalUser
+    )
       ? userRole
-      : findUserRole(templatePermissions, redirectType)
+      : findUserRole(templatePermissions, redirectType, isInternalUser)
     if (redirectType && redirectUserRole) {
       updateQuery({ type: redirectType, userRole: redirectUserRole }, true)
     } else {
@@ -120,6 +126,11 @@ const ListWrapper: React.FC = () => {
     )
   )
 
+  if (isNonRegistered) {
+    logout()
+    return null
+  }
+
   return error ? (
     <Label content={t('ERROR_APPLICATIONS_LIST')} error={error} />
   ) : (
@@ -135,7 +146,7 @@ const ListWrapper: React.FC = () => {
           open={false}
           value={searchText}
         />
-        {query.userRole === 'applicant' ? (
+        {query.userRole === 'applicant' || query.userRole === 'internal-applicant' ? (
           <Button as={Link} to={`/application/new?type=${type}`} inverted color="blue">
             <Icon name="plus" size="tiny" color="blue" />
             {t('BUTTON_APPLICATION_NEW')}

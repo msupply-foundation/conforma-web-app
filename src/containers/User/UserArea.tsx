@@ -91,7 +91,7 @@ interface MainMenuBarProps {
     intReferenceDocs: FileData[]
     extReferenceDocs: FileData[]
   }
-  hamburgerActive: Boolean
+  hamburgerActive: boolean
   closeHamburger: () => void
 }
 interface DropdownsState {
@@ -177,6 +177,11 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
       key: 'prefs',
       text: t('MENU_ITEM_ADMIN_PREFS'),
       value: '/admin/preferences',
+    },
+    {
+      key: 'fragments',
+      text: t('EVALUATOR_FRAGMENTS_HEADER'),
+      value: '/admin/fragments',
     },
     {
       key: 'snapshots',

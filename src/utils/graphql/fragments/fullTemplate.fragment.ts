@@ -15,6 +15,7 @@ export default gql`
     parentVersionId
     versionComment
     versionHistory
+    staleDraftRetentionDays
     templateSections(orderBy: INDEX_ASC) {
       nodes {
         ...Section
@@ -79,6 +80,30 @@ export default gql`
             number
             singleReviewerAllSections
           }
+        }
+      }
+    }
+    templateDataViewJoins {
+      nodes {
+        id
+        dataView {
+          identifier
+          code
+          id
+          tableName
+          title
+          permissionNames
+          priority
+        }
+      }
+    }
+    templateEvaluatorFragmentJoins {
+      nodes {
+        id
+        evaluatorFragment {
+          id
+          name
+          metadata
         }
       }
     }

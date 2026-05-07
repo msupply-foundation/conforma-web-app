@@ -9,7 +9,9 @@ import {
   GetFullTemplateInfoQuery,
   TemplateAction,
   TemplateCategory,
+  TemplateDataViewJoin,
   TemplateElement,
+  TemplateEvaluatorFragmentJoin,
   TemplateFilterJoin,
   TemplatePermission,
   TemplateSection,
@@ -141,6 +143,7 @@ export interface TemplateState {
   canApplicantMakeChanges: boolean
   dashboardRestrictions: string[] | null
   priority: number | null
+  staleDraftRetentionDays: number | null
   canEdit: boolean
 }
 
@@ -155,6 +158,8 @@ type TemplateContextState = {
   templatePermissions: TemplatePermission[]
   templateStages: TemplateStage[]
   actions: TemplateAction[]
+  dataViewJoins: TemplateDataViewJoin[]
+  fragmentJoins: TemplateEvaluatorFragmentJoin[]
 }
 
 const defaultTemplateContextState: TemplateContextState = {
@@ -177,6 +182,7 @@ const defaultTemplateContextState: TemplateContextState = {
     canEdit: true,
     dashboardRestrictions: null,
     priority: null,
+    staleDraftRetentionDays: null,
   },
   refetch: () => {},
   sections: [],
@@ -185,6 +191,8 @@ const defaultTemplateContextState: TemplateContextState = {
   templatePermissions: [],
   templateStages: [],
   actions: [],
+  dataViewJoins: [],
+  fragmentJoins: [],
 }
 
 const Context = createContext<TemplateContextState>(defaultTemplateContextState)
@@ -216,7 +224,7 @@ const TemplateWrapper: React.FC = () => {
           versionTimestamp: DateTime.fromISO(template?.versionTimestamp) || DateTime.now(),
           parentVersionId: template?.parentVersionId || null,
           versionHistory:
-            [...template?.versionHistory]
+            [...(template?.versionHistory ?? [])]
               .map((version, index) => ({
                 ...version,
                 number: index + 1,
@@ -235,6 +243,7 @@ const TemplateWrapper: React.FC = () => {
           canEdit: isTemplateUnlocked(template) && template.status === TemplateStatus.Draft,
           dashboardRestrictions: template?.dashboardRestrictions as string[] | null,
           priority: template.priority ?? null,
+          staleDraftRetentionDays: template.staleDraftRetentionDays ?? null,
         },
         category: (template?.templateCategory as TemplateCategory) || undefined,
         fromQuery: template,
@@ -245,6 +254,9 @@ const TemplateWrapper: React.FC = () => {
         templatePermissions: (template?.templatePermissions?.nodes || []) as TemplatePermission[],
         templateStages: (template?.templateStages?.nodes || []) as TemplateStage[],
         actions: (template?.templateActions?.nodes || []) as TemplateAction[],
+        dataViewJoins: (template?.templateDataViewJoins?.nodes || []) as TemplateDataViewJoin[],
+        fragmentJoins: (template?.templateEvaluatorFragmentJoins?.nodes ||
+          []) as TemplateEvaluatorFragmentJoin[],
       })
       setFirstLoaded(true)
     }

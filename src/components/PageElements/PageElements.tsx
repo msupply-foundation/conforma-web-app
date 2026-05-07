@@ -61,6 +61,7 @@ const PageElements: React.FC<PageElementProps> = ({
   const {
     push,
     query: { showHistory },
+    currentPageType,
   } = useRouter()
 
   const visibleElements = elements.filter(({ element }) => element.isVisible)
@@ -77,6 +78,8 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form className="form-area">
         {elements.map(({ element, isChangeRequest, isChanged, previousApplicationResponse }) => {
+          if (element.pluginCode === 'getValues' && currentPageType !== 'admin') return null
+
           const currentReview = previousApplicationResponse?.reviewResponses.nodes[0]
           const changesRequired =
             isChangeRequest || isChanged
@@ -139,12 +142,16 @@ const PageElements: React.FC<PageElementProps> = ({
               previousApplicationResponse,
             } = state
 
+            if (element.pluginCode === 'getValues') return null
+
             const isResponseUpdated = !!isChangeRequest || !!isChanged
 
-            // Applicant can add new response to elements not responded in first submission or changes required
+            // Applicant can add new response to elements not responded in first
+            // submission or changes required
             const canApplicantAddNew = canEdit && !isUpdating && !latestApplicationResponse?.value
             // And can edit if not an empty response in first submission or
-            // during updated to changes required any question that have been updated (isUpdating true)
+            // during updated to changes required any question that have been
+            // updated (isUpdating true)
             const canApplicantEdit =
               canEdit &&
               !canApplicantAddNew &&
@@ -210,6 +217,8 @@ const PageElements: React.FC<PageElementProps> = ({
               latestApplicationResponse,
               latestOriginalReviewResponse,
             }) => {
+              if (element.pluginCode === 'getValues') return null
+
               const summaryViewProps = getSummaryViewProps(element)
 
               // Information or no review, and not optionally reviewable

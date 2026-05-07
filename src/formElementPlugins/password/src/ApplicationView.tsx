@@ -6,7 +6,6 @@ import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
 import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
-import functions from '../../../containers/TemplateBuilder/evaluatorGui/evaluatorFunctions'
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -63,7 +62,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       if (shouldShowValidation) {
         const JWT = localStorage.getItem(config.localStorageJWTKey)
         const customValidation = await validate(validationInternal, validationMessageInternal, {
-          objects: { responses, currentUser, applicationData, functions },
+          objects: { responses, currentUser, applicationData },
           APIfetch: fetch,
           graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
           headers: { Authorization: 'Bearer ' + JWT },
@@ -81,7 +80,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const responses = { thisResponse: password || '', ...allResponses }
     const JWT = localStorage.getItem(config.localStorageJWTKey)
     const customValidation = await validate(validationInternal, validationMessageInternal, {
-      objects: { responses, currentUser, applicationData, functions },
+      objects: { responses, currentUser, applicationData },
       APIfetch: fetch,
       graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
       headers: { Authorization: 'Bearer ' + JWT },

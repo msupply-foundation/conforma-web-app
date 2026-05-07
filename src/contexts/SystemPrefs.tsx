@@ -4,6 +4,8 @@ import { getRequest } from '../utils/helpers/fetchMethods'
 import getServerUrl from '../utils/helpers/endpoints/endpointUrlBuilder'
 // @ts-ignore -- no types declarations available
 import Css from 'json-to-css'
+import { ParsedUrlQuery } from '../utils/types'
+import { EvaluatorNode } from 'fig-tree-editor-react'
 
 interface Preferences {
   paginationPresets?: number[]
@@ -16,11 +18,19 @@ interface Preferences {
   googleAnalyticsId?: string
   siteHost?: string
   userRegistrationCode?: string
-  style?: { headerBgColor?: string }
+  style?: Record<string, object>
   helpLinks?: { text: string; link: string }[]
   footerText?: string
   footerLogoId?: string
+  // This pref actually comes from server prefs
   logoutAfterInactivity: number
+  publicUrlMap?: Record<string, string | { code: string; urlQuery: ParsedUrlQuery }>
+  appDataTestApplications?: string[]
+  figTreeDefaults?: {
+    defaultNewOperatorExpression?: EvaluatorNode
+    defaultNewFragment?: string
+    defaultNewCustomOperator?: string
+  }
 }
 interface PrefsState {
   preferences: Preferences

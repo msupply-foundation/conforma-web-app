@@ -3,12 +3,14 @@ import { Link, Route, Switch } from 'react-router-dom'
 import { Header } from 'semantic-ui-react'
 import { Loading, NoMatch } from '..'
 import { useLanguageProvider } from '../../contexts/Localisation'
-import TemplateWrapper from '../../containers/TemplateBuilder/template/TemplateWrapper'
 import { useUserState } from '../../contexts/UserState'
 import { LookupTableRoutes } from '../../LookupTable'
 import { useRouter } from '../../utils/hooks/useRouter'
 
 const AdminLocalisations = React.lazy(() => import('./AdminLocalisations'))
+const TemplateWrapper = React.lazy(
+  () => import('../../containers/TemplateBuilder/template/TemplateWrapper')
+)
 
 const Manage: React.FC = () => {
   const { t } = useLanguageProvider()
@@ -43,7 +45,9 @@ const Manage: React.FC = () => {
   return (
     <Switch>
       <Route path={`${path}/template/:templateId`}>
-        <TemplateWrapper />
+        <Suspense fallback={<Loading />}>
+          <TemplateWrapper />
+        </Suspense>
       </Route>
       {manageOption.map(({ route, Element }) => (
         <Route key={route} path={`${path}/${route}`}>

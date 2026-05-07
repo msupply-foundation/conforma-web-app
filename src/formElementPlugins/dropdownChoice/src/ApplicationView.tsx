@@ -5,6 +5,7 @@ import { ApplicationViewProps } from '../../types'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { substituteValues } from '../../../utils/helpers/utilityFunctions'
 import useDefault from '../../useDefault'
+import config from '../../../config'
 import './styles.css'
 
 // From
@@ -64,14 +65,29 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   const { isEditable, isRequired } = element
 
+  // Used for matching the defaultOption to the correct optionIndex when options
+  // are objects.
+  const displayOptions =
+    options[0] === 'Loading...'
+      ? []
+      : optionsDisplayProperty
+        ? options.map((option) => (option as ObjectOption)[optionsDisplayProperty])
+        : optionsDisplayExpression
+          ? options.map((option) =>
+              substituteValues(optionsDisplayExpression, option as ObjectOption)
+            )
+          : options
+
   useEffect(() => {
     // This deals with the case when a default response has been externally set
     // (e.g. by a ListBuilder) and only a selection (with no index) has been
     // provided.
     if (options[0] === 'Loading...') return
-    if (currentResponse?.selection && currentResponse?.optionIndex === undefined) {
+    if (currentResponse?.selection && currentResponse?.optionIndex === undefined)
       setSelectedIndex(getDefaultIndex(currentResponse?.selection, options))
-    }
+    // If the options list has changed, we need to update the currently selected
+    // item with the new contents (without changing the selected index)
+    else if (currentResponse?.optionIndex !== undefined) handleChange(currentResponse?.optionIndex)
   }, [options])
 
   useDefault({
@@ -80,7 +96,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     parameters,
     additionalDependencies: [options],
     onChange: (defaultOption: any) => {
-      const optionIndex = getDefaultIndex(defaultOption, options)
+      const optionIndex = getDefaultIndex(defaultOption, displayOptions)
       if (optionIndex === -1 && hasOther) addItemHandler(defaultOption)
       else handleChange(optionIndex)
     },
@@ -167,7 +183,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         fluid
         multiple={multiSelect}
         selection
-        clearable={isEditable && !isRequired}
+        clearable={(isEditable && !isRequired) || !config.isProductionBuild}
         disabled={!isEditable}
         search={search || hasOther}
         allowAdditions={hasOther}

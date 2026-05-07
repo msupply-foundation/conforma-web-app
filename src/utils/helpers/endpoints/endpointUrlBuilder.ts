@@ -1,17 +1,20 @@
-import { BasicObject } from '../../../modules/expression-evaluator'
 import config from '../../../config'
 import {
-  ComplexEndpoint,
-  BasicEndpoint,
-  VerifyEndpoint,
-  LookupTableEndpoint,
-  LanguageEndpoint,
-  FileEndpoint,
-  CheckTriggersEndpoint,
-  LocalisationEndpoint,
-  GetApplicationDataEndpoint,
-  SnapshotEndpoint,
-  ArchiveEndpoint,
+  GetServerUrlFunction,
+  LanguageOptions,
+  FilesOptions,
+  UserPermissionsOptions,
+  VerifyOptions,
+  CheckTriggersOptions,
+  FileOptions,
+  DataViewOptions,
+  LocalisationOptions,
+  SnapshotOptions,
+  LookupTableOptions,
+  TemplateOptions,
+  GetApplicationDataOptions,
+  ArchiveOptions,
+  FigTreeFragmentsOptions,
 } from './types'
 
 const { VITE_USE_DEV_SERVER } = import.meta.env
@@ -21,6 +24,8 @@ const {
   restEndpoints,
   devServerRest,
   devServerGraphQL,
+  devServerRestAbsolute,
+  devServerGraphQLAbsolute,
   productionPathREST,
   productionPathGraphQL,
 } = config
@@ -29,29 +34,38 @@ const getProductionUrl = (path: string) => {
   return `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`
 }
 
+// In dev (vite dev server), HTTP URLs are relative — the dev-server proxy
+// forwards them to the backend, keeping everything same-origin. In a
+// production build the page is served from the same host as the API, so we
+// build a full URL relative to `window.location`. The `VITE_USE_DEV_SERVER`
+// branch is for the niche case of a production build pointed at a dev
+// backend (no dev-server proxy in play), so it needs the absolute URL.
 export const serverREST = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerRest
+    ? devServerRestAbsolute
     : getProductionUrl(productionPathREST)
   : devServerRest
 export const serverGraphQL = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerGraphQL
+    ? devServerGraphQLAbsolute
     : getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
-const serverWebSocket = serverREST
+// Websocket URL is computed from an absolute REST URL because the vite
+// dev-server proxy only handles HTTP — websockets connect directly to the
+// backend.
+const restForWebSocket = isProductionBuild
+  ? VITE_USE_DEV_SERVER
+    ? devServerRestAbsolute
+    : getProductionUrl(productionPathREST)
+  : devServerRestAbsolute
+const serverWebSocket = restForWebSocket
   .replace('http', 'ws')
   .replace('api', '')
   .replace('server', 'websocket')
 
-const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): string => {
-  // "as" here ensures we must have types/cases for ALL keys of
-  // config.restEndpoints
-  const endpointKey = args[0] as keyof typeof restEndpoints | 'graphQL'
+const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) => {
   if (endpointKey === 'graphQL') return serverGraphQL
   const endpointPath = restEndpoints[endpointKey]
-
-  const options = (args[1] as ComplexEndpoint[1]) || {}
 
   switch (endpointKey) {
     case 'public':
@@ -72,67 +86,68 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
     case 'userPermissions':
     case 'checkUnique':
     case 'upload':
-      return `${serverREST}${endpointPath}${buildQueryString(options)}`
+      return `${serverREST}${endpointPath}${buildQueryString(options as UserPermissionsOptions)}`
 
-    // The "as"s here shouldn't be required, but it's a current limitation of
-    // Typescript that it doesn't properly narrow the "case" statements when the
-    // variable has been re-assigned. See example: https://bit.ly/3bFhQqX
     case 'language': {
-      const { code } = options as LanguageEndpoint[1]
+      const { code } = options as LanguageOptions
       return `${serverREST}${endpointPath}/${code}`
     }
 
     case 'file': {
-      const { fileId, thumbnail = false } = options as FileEndpoint[1]
+      const { fileId, thumbnail = false, zipFile } = options as FileOptions
+      if (zipFile) return `${serverREST}${endpointPath}?zipFile=${encodeURIComponent(zipFile)}`
       return `${serverREST}${endpointPath}?uid=${fileId}${thumbnail ? '&thumbnail=true' : ''}`
     }
 
     case 'files': {
-      return `${serverREST}${endpointPath}${buildQueryString(options)}`
+      return `${serverREST}${endpointPath}${buildQueryString(options as FilesOptions)}`
     }
 
     case 'verify': {
-      const { uid } = options as VerifyEndpoint[1]
+      const { uid } = options as VerifyOptions
       return `${serverREST}${endpointPath}?uid=${uid}`
     }
 
     case 'checkTrigger': {
-      const { serial } = options as CheckTriggersEndpoint[1]
+      const { serial } = options as CheckTriggersOptions
       return `${serverREST}${endpointPath}?serial=${serial}`
     }
 
     case 'dataViews': {
+      const dataViewOptions = (options as DataViewOptions) ?? {}
+      const { dataViewCode } = dataViewOptions
+
       // List view
-      if (!('dataViewCode' in options)) return `${serverREST}${endpointPath}`
+      if (!dataViewCode) return `${serverREST}${endpointPath}`
 
       // Detail view
-      if ('itemId' in options) {
-        const { dataViewCode, itemId } = options
+      if ('itemId' in dataViewOptions) {
+        const { itemId } = dataViewOptions
         return `${serverREST}${endpointPath}/${dataViewCode}/${itemId}`
       }
 
       // Filter list
-      if ('column' in options) {
-        const { dataViewCode, column } = options
+      if ('column' in dataViewOptions) {
+        const { column } = dataViewOptions
         return `${serverREST}${endpointPath}/${dataViewCode}/filterList/${column}`
       }
 
       // Table view
-      const { dataViewCode, query } = options
+      const { query } = dataViewOptions
       return `${serverREST}${endpointPath}/${dataViewCode}${buildQueryString(query)}`
     }
 
     // Localisation management
     case 'localisation': {
-      const { action } = options as LocalisationEndpoint[1]
+      const localisationOptions = options as LocalisationOptions
+      const { action } = localisationOptions
 
       // Get all
       if (action === 'getAll') return `${serverREST}${endpointPath}/get-all`
 
       // Enable/disable
-      if (action === 'enable' && 'code' in options) {
-        const { code, enabled } = options as { code: string; enabled?: boolean }
-        console.log('Enabled?', enabled)
+      if (action === 'enable') {
+        const { code, enabled } = localisationOptions
         return `${serverREST}${endpointPath}/enable?code=${code}&enabled=${enabled}`
       }
 
@@ -140,81 +155,117 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
       if (action === 'install') return `${serverREST}${endpointPath}/install`
 
       // Remove
-      if (action === 'remove' && 'code' in options)
-        return `${serverREST}${endpointPath}/remove?code=${options.code}`
+      if (action === 'remove')
+        return `${serverREST}${endpointPath}/remove?code=${localisationOptions.code}`
 
       throw new Error('Missing options')
     }
 
     case 'snapshot': {
-      const { action } = options as SnapshotEndpoint[1]
-      const isArchive = 'archive' in options && options.archive
-      const isTemplate = 'template' in options && options.template
+      const snapshotOptions = options as SnapshotOptions
+      const { action } = snapshotOptions
+      if (action === 'list') return `${serverREST}${endpointPath}/list`
 
-      if (action === 'list')
-        return `${serverREST}${endpointPath}/list${isArchive ? '?archive=true' : ''}`
+      if (action === 'purge') return `${serverREST}${endpointPath}/purge-orphan-archives`
 
-      const name = 'name' in options ? options.name : null
-      const optionsName = 'options' in options ? options.options : null
+      const name = 'name' in snapshotOptions ? snapshotOptions.name : null
 
-      if (action === 'upload')
-        return `${serverREST}${endpointPath}/upload${isTemplate ? '?template=true' : ''}`
+      if (action === 'upload') return `${serverREST}${endpointPath}/upload`
 
       if (!name) throw new Error('Name parameter missing in snapshot endpoint query')
 
-      // "download" is direct download url
       if (action === 'download')
-        return `${serverREST}${endpointPath}/files/${isArchive ? '_archives/' : ''}${name}.zip`
+        return `${serverREST}${endpointPath}/download?name=${encodeURIComponent(name)}`
+      // Archive details are passed in Body JSON
 
       if (action === 'delete')
-        return `${serverREST}${endpointPath}/${action}?name=${name}${
-          isArchive ? '&archive=true' : ''
-        }`
+        return `${serverREST}${endpointPath}/${action}?name=${encodeURIComponent(name)}`
 
-      // Must be "take" or "use", which uses "options" file
-      return `${serverREST}${endpointPath}/${action}?name=${name}${
-        optionsName ? `&optionsName=${optionsName}` : ''
-      }${isArchive ? '&archive=true' : ''}`
+      // Must be "take", "use" or "fetch-archives"
+      return `${serverREST}${endpointPath}/${action}?name=${encodeURIComponent(name)}`
     }
 
     case 'lookupTable': {
-      const { action } = options as LookupTableEndpoint[1]
+      const lookupTableOptions = options as LookupTableOptions
+      const { action } = lookupTableOptions
 
       // List structures
       if (action === 'list') return `${serverREST}${endpointPath}/list`
 
       // Single table structure
-      if (action === 'table' && 'id' in options)
-        return `${serverREST}${endpointPath}/table/${options.id}`
+      if (action === 'table') return `${serverREST}${endpointPath}/table/${lookupTableOptions.id}`
 
       // Import
-      if (action === 'import' && 'name' in options && 'code' in options) {
-        const { name, code } = options
-        return `${serverREST}${endpointPath}/import?name=${name}&code=${code}`
+      if (action === 'import') {
+        const { name, code } = lookupTableOptions
+        return `${serverREST}${endpointPath}/import?name=${encodeURIComponent(
+          name
+        )}&code=${encodeURIComponent(code)}`
       }
 
       // "Update" uses /import/tableID route
-      if (action === 'update' && 'id' in options && 'code' in options && 'name' in options) {
-        const { id, name, code } = options
-        return `${serverREST}${endpointPath}/import/${id}?name=${name}&code=${code}`
+      if (action === 'update') {
+        const { id, name, code } = lookupTableOptions
+        return `${serverREST}${endpointPath}/import/${id}?name=${encodeURIComponent(
+          name
+        )}&code=${encodeURIComponent(code)}`
       }
 
       // Export
-      if ('id' in options) return `${serverREST}${endpointPath}/export/${options.id}`
+      return `${serverREST}${endpointPath}/export/${lookupTableOptions.id}`
+    }
 
-      // Typescript should prevent this during compilation
-      throw new Error('Missing options')
+    // Template Export/Import
+    case 'templateImportExport': {
+      const templateOptions = options as TemplateOptions
+      const { action } = templateOptions
+      const id = 'id' in templateOptions && templateOptions.id
+      const type = 'type' in templateOptions && templateOptions.type
+
+      switch (action) {
+        case 'check':
+          return `${serverREST}${endpointPath}/check/${id}`
+        case 'commit':
+          return `${serverREST}${endpointPath}/commit/${id}`
+        case 'duplicate':
+          return `${serverREST}${endpointPath}/duplicate/${type}/${id}`
+        case 'prepareExport':
+          return `${serverREST}${endpointPath}/prepare-export/${id}`
+        case 'import':
+          if (type === 'install' && 'uid' in templateOptions)
+            return `${serverREST}${endpointPath}/import/${type}/${templateOptions.uid}`
+          if (
+            type === 'getEntityDetail' &&
+            'uid' in templateOptions &&
+            'group' in templateOptions &&
+            'name' in templateOptions
+          )
+            return `${serverREST}${endpointPath}/import/get-full-entity-diff/${templateOptions.uid}?type=${templateOptions.group}&value=${templateOptions.name}`
+          return `${serverREST}${endpointPath}/import/${type}`
+        case 'getDataViewDetails':
+          return `${serverREST}${endpointPath}/get-data-view-details/${id}`
+        case 'getFragmentDetails':
+          return `${serverREST}${endpointPath}/get-fragment-details/${id}`
+        case 'getLinkedFiles':
+          return `${serverREST}${endpointPath}/get-linked-files/${id}`
+      }
+    }
+
+    case 'figTreeFragments': {
+      const { frontOrBack } = options as FigTreeFragmentsOptions
+      const queryString = frontOrBack === 'backEnd' ? '?backEnd=true' : '?frontEnd=true'
+      return `${serverREST}${endpointPath}${queryString}`
     }
 
     case 'getApplicationData': {
-      const { applicationId, reviewId } = options as GetApplicationDataEndpoint[1]
+      const { applicationId, reviewId } = options as GetApplicationDataOptions
       return `${serverREST}${endpointPath}?applicationId=${applicationId}${
         reviewId ? `&reviewId=${reviewId}` : ''
       }`
     }
 
     case 'archiveFiles': {
-      const { days } = options as ArchiveEndpoint[1]
+      const { days } = options as ArchiveOptions
       return `${serverREST}${endpointPath}?days=${days}`
     }
 
@@ -230,7 +281,7 @@ const getServerUrl = (...args: ComplexEndpoint | BasicEndpoint | ['graphQL']): s
   }
 }
 
-const buildQueryString = (query?: BasicObject): string => {
+const buildQueryString = (query?: Record<string, any>): string => {
   if (!query) return ''
   const keyValStrings = Object.entries(query)
     .filter(([_, value]) => !!value)

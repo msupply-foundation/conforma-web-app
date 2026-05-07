@@ -1,49 +1,31 @@
-import React, { useState } from 'react'
-import { Button, Confirm, Header, Icon, Input, Table } from 'semantic-ui-react'
-
-import {
-  TemplateStatus,
-  useGetTemplatesAvailableForCodeQuery,
-} from '../../../../utils/generated/graphql'
+import React from 'react'
+import { Icon } from 'semantic-ui-react'
+import { TemplateStatus } from '../../../../utils/generated/graphql'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
-import Markdown from '../../../../utils/helpers/semanticReactMarkdown'
 import { useOperationState } from '../../shared/OperationContext'
 import TextIO from '../../shared/TextIO'
-import { useApplicationState } from '../ApplicationWrapper'
 import { useTemplateState } from '../TemplateWrapper'
 import Category from './Categories'
 import Filters from './Filters'
-import { IconButton } from '../../shared/IconButton'
-import MessagesConfig from './MessagesConfig'
 import CheckboxIO from '../../shared/CheckboxIO'
 import config from '../../../../config'
 import { Link } from 'react-router-dom'
-import { DateTime } from 'luxon'
-import { useRouter } from '../../../../utils/hooks/useRouter'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
-import { useToast } from '../../../../contexts/Toast'
-import { getVersionString, getTemplateVersionId, isTemplateUnlocked } from '../helpers'
+import { isTemplateUnlocked } from '../helpers'
 import NumberIO from '../../shared/NumberIO'
+import { TemplateOperationsModal } from '../../templateOperations/TemplateOperationsModal'
+import { DataViewSelector } from './DataViews/DataViews'
+import { FileSelector } from './Files/Files'
+import { FragmentSelector } from './Fragments/Fragments'
+import { Messages } from './Messages'
+import { VersionHistory } from './VersionHistory'
 
 const General: React.FC = () => {
   const { t } = useLanguageProvider()
-  const { replace } = useRouter()
-  const { updateTemplate, deleteTemplate } = useOperationState()
-  const { structure } = useApplicationState()
+  const { updateTemplate, operationModalState } = useOperationState()
   const { template } = useTemplateState()
   const { canEdit, isDraft, applicationCount } = template
-  const { refetch: refetchAvailable } = useGetTemplatesAvailableForCodeQuery({
-    variables: { code: template.code },
-  })
-  const { showToast } = useToast({ style: 'success' })
-  const [isMessageConfigOpen, setIsMessageConfigOpen] = useState(false)
-  const [commitConfirmOpen, setCommitConfirmOpen] = useState(false)
-  const [commitMessage, setCommitMessage] = useState('')
-
-  const { ConfirmModal: DeleteConfirm, showModal: confirmDelete } = useConfirmationModal({
-    type: 'warning',
-  })
   const { ConfirmModal: MakeAvailableConfirm, showModal: confirmMakeAvailable } =
     useConfirmationModal({
       type: 'warning',
@@ -63,6 +45,7 @@ const General: React.FC = () => {
   return (
     <div className="flex-column-center-start">
       <MakeAvailableConfirm />
+      <TemplateOperationsModal {...operationModalState} />
       <div className="flex-row flex-gap-10">
         <ButtonWithFallback
           title={t('TEMPLATE_GEN_BUTTON_AVAILABLE')}
@@ -85,18 +68,13 @@ const General: React.FC = () => {
           title={t('TEMPLATE_GEN_BUTTON_DRAFT')}
           disabledMessage={t('TEMPLATE_GEN_BUTTON_DRAFT_DISABLED')}
           disabled={!canSetDraft}
-          onClick={async () => {
-            if (await updateTemplate(template, { status: TemplateStatus.Draft })) refetchAvailable()
-          }}
+          onClick={async () => updateTemplate(template, { status: TemplateStatus.Draft })}
         />
         <ButtonWithFallback
           title="Disable"
           disabledMessage="Already disabled"
           disabled={!canSetDisabled}
-          onClick={async () => {
-            if (await updateTemplate(template, { status: TemplateStatus.Disabled }))
-              refetchAvailable()
-          }}
+          onClick={async () => updateTemplate(template, { status: TemplateStatus.Disabled })}
         />
       </div>
       <div className="spacer-10" />
@@ -179,158 +157,19 @@ const General: React.FC = () => {
         minLabelWidth={100}
         setNumber={(number) => updateTemplate(template, { priority: number })}
       />
-      <Category />
-
-      <Filters />
-
-      {/* MESSAGES */}
-      <div className="spacer-20" />
-      <div className="flex-row-start-center">
-        <Header className="no-margin-no-padding" as="h3">
-          Messages
-        </Header>
-        {canEdit && <IconButton name="setting" onClick={() => setIsMessageConfigOpen(true)} />}
-      </div>
-      <div className="flex-column-center full-width-container">
-        <div className="spacer-20" />
-        <Header className="no-margin-no-padding" as="h4">
-          Start Message
-        </Header>
-        <div className="config-container-alternate text-block-width">
-          <Markdown text={structure.info.startMessage || ''} />
-        </div>
-      </div>
-      <div className="flex-column-center full-width-container">
-        <div className="spacer-20" />
-        <Header className="no-margin-no-padding" as="h4">
-          Submission Message
-        </Header>
-        <div className="config-container-alternate text-block-width">
-          <Markdown text={structure.info.submissionMessage || ''} />
-        </div>
-      </div>
-      <MessagesConfig isOpen={isMessageConfigOpen} onClose={() => setIsMessageConfigOpen(false)} />
-
-      {/* VERSION HISTORY */}
-      <div className="spacer-20" />
-      <div className="spacer-20" />
-      <Confirm
-        open={commitConfirmOpen}
-        // Prevent click in Input from closing modal
-        onClick={(e: any) => e.stopPropagation()}
-        content={
-          <div style={{ padding: 10, gap: 10 }} className="flex-column">
-            <h2>Commit version?</h2>
-            <p>
-              This will create a permanent template version that can no longer be modified. To make
-              any further changes, you will need to duplicate it and create a new version.
-            </p>
-            <div className="flex-row-start-center" style={{ gap: 10 }}>
-              <label>Please provide a commit message:</label>
-              <Input
-                value={commitMessage}
-                onChange={(e) => setCommitMessage(e.target.value)}
-                style={{ width: '60%' }}
-              />
-            </div>
-          </div>
-        }
-        onCancel={() => setCommitConfirmOpen(false)}
-        onConfirm={async () => {
-          const versionId = getTemplateVersionId()
-          if (
-            await updateTemplate(template as any, {
-              versionId,
-              versionComment: commitMessage,
-              versionTimestamp: DateTime.now().toISO(),
-            })
-          )
-            await refetchAvailable()
-          setCommitConfirmOpen(false)
-        }}
+      <NumberIO
+        title="Stale application retention days"
+        number={template.staleDraftRetentionDays}
+        minLabelWidth={100}
+        setNumber={(number) => updateTemplate(template, { staleDraftRetentionDays: number })}
       />
-      <Header className="no-margin-no-padding" as="h3">
-        Version History
-      </Header>
-      <Table stackable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell key="num" width={1}>
-              No.
-            </Table.HeaderCell>
-            <Table.HeaderCell key="timestamp" width={5}>
-              Timestamp
-            </Table.HeaderCell>
-            <Table.HeaderCell key="versionId" width={3}>
-              Version ID
-            </Table.HeaderCell>
-            <Table.HeaderCell key="comment">Comment</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell>{template.versionHistory.length + 1}</Table.Cell>
-            <Table.Cell>
-              {template.versionTimestamp.toLocaleString(DateTime.DATETIME_MED)}
-            </Table.Cell>
-            <Table.Cell style={{ fontStyle: canEdit ? 'italic' : 'normal' }}>
-              {getVersionString(template, false)}
-            </Table.Cell>
-            <Table.Cell>
-              <div className="flex-row-space-between-center">
-                {isTemplateUnlocked(template) ? (
-                  <>
-                    <em>Not yet committed or exported</em>
-                    <Button
-                      primary
-                      inverted
-                      size="small"
-                      onClick={() => setCommitConfirmOpen(true)}
-                    >
-                      Commit now
-                    </Button>
-                  </>
-                ) : (
-                  template.versionComment
-                )}
-              </div>
-            </Table.Cell>
-          </Table.Row>
-          {template.versionHistory.map((version) => (
-            <Table.Row key={version.versionId}>
-              <Table.Cell>{version.number}</Table.Cell>
-              <Table.Cell>
-                {DateTime.fromISO(version.timestamp).toLocaleString(DateTime.DATETIME_MED)}
-              </Table.Cell>
-              <Table.Cell>{version.versionId}</Table.Cell>
-              <Table.Cell>{version.comment}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-      <DeleteConfirm />
-      {template.applicationCount === 0 && (
-        <Button
-          primary
-          onClick={() =>
-            confirmDelete({
-              title: 'Delete template?',
-              message: 'This will permanently remove this version of the template from the system',
-              onConfirm: async () => {
-                await deleteTemplate(template.id)
-                replace('/admin/templates')
-                showToast({
-                  title: 'Template deleted',
-                  text: `${template.code} - ${getVersionString(template)}`,
-                })
-              },
-              awaitAction: true,
-            })
-          }
-        >
-          Delete this version
-        </Button>
-      )}
+      <Category />
+      <Filters />
+      <Messages />
+      <FileSelector />
+      <DataViewSelector />
+      <FragmentSelector />
+      <VersionHistory />
     </div>
   )
 }

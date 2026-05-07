@@ -3,9 +3,10 @@ import { Table, Message, Popup } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { ApplicationStatus, useDeleteApplicationMutation } from '../../utils/generated/graphql'
 import { ApplicationListRow, ColumnDetails, SortQuery } from '../../utils/types'
-import Loading from '../Loading'
+import { Loading } from '../common'
 import { TableCellMobileLabelWrapper } from '../../utils/tables/TableCellMobileLabelWrapper'
 import { useViewport } from '../../contexts/ViewportState'
+import { useUserState } from '../../contexts/UserState'
 
 // Which column in the column array is the "Action" cell
 const ACTION_CELL_INDEX = 6
@@ -90,10 +91,14 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ refetch, columns, appli
     variables: { id: application.id || 0 },
     onCompleted: () => refetch(),
   })
+  const {
+    userState: { currentUser },
+  } = useUserState()
   const props = {
     application,
     loading,
     deleteApplication,
+    isInternalUser: currentUser?.organisation?.isSystemOrg ?? false,
   }
 
   if (error) return <Message error header={t('ERROR_APPLICATION_DELETE')} list={[error]} />
