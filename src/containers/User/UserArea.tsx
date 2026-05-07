@@ -27,7 +27,7 @@ import { FileData, useDocumentFiles } from '../../utils/hooks/useDocumentFiles'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { usePrefs } from '../../contexts/SystemPrefs'
 import config from '../../config'
-import { downloadFile, getFullUrl } from '../../utils/helpers/utilityFunctions'
+import { getFullUrl } from '../../utils/helpers/utilityFunctions'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
 import { PermissionPolicyType, UiLocation } from '../../utils/generated/graphql'
 import defaultBrandLogo from '../../../images/logos/conforma_logo_wide_white_1024.png'
@@ -340,12 +340,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
                   {extReferenceDocs.map((doc) => (
                     <Dropdown.Item
                       key={doc.uniqueId}
-                      onClick={() =>
-                        downloadFile(
-                          getServerUrl('file', { fileId: doc.uniqueId }),
-                          doc.originalFilename ?? doc.description ?? 'document'
-                        )
-                      }
+                      onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
                       text={doc.description}
                     />
                   ))}
@@ -360,12 +355,7 @@ const MainMenuBar: React.FC<MainMenuBarProps> = ({
                   {intReferenceDocs.map((doc) => (
                     <Dropdown.Item
                       key={doc.uniqueId}
-                      onClick={() =>
-                        downloadFile(
-                          getServerUrl('file', { fileId: doc.uniqueId }),
-                          doc.originalFilename ?? doc.description ?? 'document'
-                        )
-                      }
+                      onClick={() => window.open(getServerUrl('file', { fileId: doc.uniqueId }))}
                       text={doc.description}
                     />
                   ))}
