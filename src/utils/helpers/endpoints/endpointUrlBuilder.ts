@@ -25,6 +25,7 @@ const {
   devServerRest,
   devServerGraphQL,
   devServerRestAbsolute,
+  devServerGraphQLAbsolute,
   productionPathREST,
   productionPathGraphQL,
 } = config
@@ -33,14 +34,20 @@ const getProductionUrl = (path: string) => {
   return `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`
 }
 
+// In dev (vite dev server), HTTP URLs are relative — the dev-server proxy
+// forwards them to the backend, keeping everything same-origin. In a
+// production build the page is served from the same host as the API, so we
+// build a full URL relative to `window.location`. The `VITE_USE_DEV_SERVER`
+// branch is for the niche case of a production build pointed at a dev
+// backend (no dev-server proxy in play), so it needs the absolute URL.
 export const serverREST = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerRest
+    ? devServerRestAbsolute
     : getProductionUrl(productionPathREST)
   : devServerRest
 export const serverGraphQL = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerGraphQL
+    ? devServerGraphQLAbsolute
     : getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
 // Websocket URL is computed from an absolute REST URL because the vite
