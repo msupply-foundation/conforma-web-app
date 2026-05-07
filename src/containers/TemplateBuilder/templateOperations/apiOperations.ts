@@ -2,10 +2,11 @@
  * The raw http operations called by the Template Operations hook
  */
 
-import getServerUrl from '../../../utils/helpers/endpoints/endpointUrlBuilder'
+import getServerUrl, {
+  serverREST,
+} from '../../../utils/helpers/endpoints/endpointUrlBuilder'
 import { getRequest, postRequest } from '../../../utils/helpers/fetchMethods'
 import { downloadFile } from '../../../utils/helpers/utilityFunctions'
-import { VersionObject } from '../useGetTemplates'
 import { ModifiedEntities } from './EntitySelectModal'
 
 export const commit = async (id: number, comment: string) => {
@@ -80,21 +81,12 @@ export const duplicate = async (id: number, newCode?: string) => {
   }
 }
 
-export const exportAndDownload = async (
-  id: number,
-  code: string,
-  versionId: string,
-  versionHistory: VersionObject[]
-) => {
-  const filename = `${code}-${versionId}_v${versionHistory.length + 1}.zip`
+export const exportAndDownload = async (id: number) => {
   try {
-    await downloadFile(
-      getServerUrl('templateImportExport', {
-        action: 'export',
-        id,
-      }),
-      filename
-    )
+    const { url, filename } = await postRequest({
+      url: getServerUrl('templateImportExport', { action: 'prepareExport', id }),
+    })
+    downloadFile(`${serverREST}${url}`, filename)
   } catch (err) {
     return { error: (err as Error).message }
   }

@@ -24,6 +24,8 @@ const {
   restEndpoints,
   devServerRest,
   devServerGraphQL,
+  devServerRestAbsolute,
+  devServerGraphQLAbsolute,
   productionPathREST,
   productionPathGraphQL,
 } = config
@@ -32,17 +34,31 @@ const getProductionUrl = (path: string) => {
   return `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`
 }
 
+// In dev (vite dev server), HTTP URLs are relative — the dev-server proxy
+// forwards them to the backend, keeping everything same-origin. In a
+// production build the page is served from the same host as the API, so we
+// build a full URL relative to `window.location`. The `VITE_USE_DEV_SERVER`
+// branch is for the niche case of a production build pointed at a dev
+// backend (no dev-server proxy in play), so it needs the absolute URL.
 export const serverREST = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerRest
+    ? devServerRestAbsolute
     : getProductionUrl(productionPathREST)
   : devServerRest
 export const serverGraphQL = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerGraphQL
+    ? devServerGraphQLAbsolute
     : getProductionUrl(productionPathGraphQL)
   : devServerGraphQL
-const serverWebSocket = serverREST
+// Websocket URL is computed from an absolute REST URL because the vite
+// dev-server proxy only handles HTTP — websockets connect directly to the
+// backend.
+const restForWebSocket = isProductionBuild
+  ? VITE_USE_DEV_SERVER
+    ? devServerRestAbsolute
+    : getProductionUrl(productionPathREST)
+  : devServerRestAbsolute
+const serverWebSocket = restForWebSocket
   .replace('http', 'ws')
   .replace('api', '')
   .replace('server', 'websocket')
@@ -207,8 +223,8 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
           return `${serverREST}${endpointPath}/commit/${id}`
         case 'duplicate':
           return `${serverREST}${endpointPath}/duplicate/${type}/${id}`
-        case 'export':
-          return `${serverREST}${endpointPath}/export/${id}`
+        case 'prepareExport':
+          return `${serverREST}${endpointPath}/prepare-export/${id}`
         case 'import':
           if (type === 'install' && 'uid' in templateOptions)
             return `${serverREST}${endpointPath}/import/${type}/${templateOptions.uid}`

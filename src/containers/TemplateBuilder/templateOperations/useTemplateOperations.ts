@@ -275,8 +275,8 @@ export const useTemplateOperations = (setErrorAndLoadingState: SetErrorAndLoadin
   }
 
   const exportStep = async (state: WorkflowState) => {
-    const { id, code, versionId, versionHistory, refetch } = state
-    const result = await exportAndDownload(id, code, versionId, versionHistory)
+    const { id, code, versionHistory, refetch } = state
+    const result = await exportAndDownload(id)
     if (result?.error) {
       showError('Problem exporting template', result.error)
       return

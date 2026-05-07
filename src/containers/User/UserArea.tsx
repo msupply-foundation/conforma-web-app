@@ -91,7 +91,7 @@ interface MainMenuBarProps {
     intReferenceDocs: FileData[]
     extReferenceDocs: FileData[]
   }
-  hamburgerActive: Boolean
+  hamburgerActive: boolean
   closeHamburger: () => void
 }
 interface DropdownsState {
