@@ -54,13 +54,15 @@ const Verify: React.FC = () => {
         </Header>
         <Markdown text={verification?.message || ''} />
       </Segment>
-      <Segment basic textAlign="center" id="submission-nav">
-        <p>
-          <Link to={'/'}>
-            <strong>{isLoggedIn() ? t('MENU_ITEM_DASHBOARD') : t('LABEL_LOG_IN')}</strong>
-          </Link>
-        </p>
-      </Segment>
+      {isLoggedIn() && (
+        <Segment basic textAlign="center" id="submission-nav">
+          <p>
+            <Link to={'/'}>
+              <strong>{t('MENU_ITEM_DASHBOARD')}</strong>
+            </Link>
+          </p>
+        </Segment>
+      )}
     </Container>
   )
 }
