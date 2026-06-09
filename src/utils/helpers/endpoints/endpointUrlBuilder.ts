@@ -34,22 +34,30 @@ const getProductionUrl = (path: string) => {
   return `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`
 }
 
-// In dev (vite dev server), HTTP URLs are relative — the dev-server proxy
-// forwards them to the backend, keeping everything same-origin. In a
-// production build the page is served from the same host as the API, so we
-// build a full URL relative to `window.location`. The `VITE_USE_DEV_SERVER`
-// branch is for the niche case of a production build pointed at a dev
-// backend (no dev-server proxy in play), so it needs the absolute URL.
+// In dev (vite dev server) we build a full, *same-origin* URL from
+// `window.location` (e.g. http://localhost:5100/api). Because it points at
+// the dev server's own origin, the proxy still matches it on path and
+// forwards it to the backend — everything stays same-origin, so there are no
+// CORS preflights, exactly as with a bare `/api` path. The reason we make it
+// absolute rather than relative: fig-tree-evaluator's URL join strips the
+// leading slash off relative paths (turning `/api/...` into a path-relative
+// URL that resolves against the current route, e.g. `/admin/api/...`). An
+// absolute URL trips fig-tree's "already a full URL" guard and is used
+// as-is. In a production build the page is served from the same host as the
+// API, so we likewise build a full URL relative to `window.location`. The
+// `VITE_USE_DEV_SERVER` branch is for the niche case of a production build
+// pointed at a dev backend (no dev-server proxy in play), so it needs the
+// absolute URL to the backend's own (cross-)origin.
 export const serverREST = isProductionBuild
   ? VITE_USE_DEV_SERVER
     ? devServerRestAbsolute
     : getProductionUrl(productionPathREST)
-  : devServerRest
+  : getProductionUrl(devServerRest)
 export const serverGraphQL = isProductionBuild
   ? VITE_USE_DEV_SERVER
     ? devServerGraphQLAbsolute
     : getProductionUrl(productionPathGraphQL)
-  : devServerGraphQL
+  : getProductionUrl(devServerGraphQL)
 // Websocket URL is computed from an absolute REST URL because the vite
 // dev-server proxy only handles HTTP — websockets connect directly to the
 // backend.

@@ -27,7 +27,10 @@ export default defineConfig(({ mode }) => {
   //
   // To switch modes: set/unset `VITE_REMOTE_SERVER` in .env, then restart
   // the dev server (vite reads env vars at startup). No app-code changes —
-  // the client always emits relative `/api` and `/graphql` URLs in dev.
+  // in dev the client emits same-origin `/api` and `/graphql` requests
+  // (built as absolute `http://<dev-host>/api` URLs against window.location,
+  // see endpointUrlBuilder), which this proxy matches on path and forwards
+  // just the same — so it stays same-origin with no CORS either way.
   const remoteServer = env.VITE_REMOTE_SERVER
   const apiProxy = remoteServer
     ? {
