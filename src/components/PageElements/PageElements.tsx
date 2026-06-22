@@ -78,8 +78,6 @@ const PageElements: React.FC<PageElementProps> = ({
     return (
       <Form className="form-area">
         {elements.map(({ element, isChangeRequest, isChanged, previousApplicationResponse }) => {
-          if (element.pluginCode === 'getValues' && currentPageType !== 'admin') return null
-
           const currentReview = previousApplicationResponse?.reviewResponses.nodes[0]
           const changesRequired =
             isChangeRequest || isChanged
@@ -99,9 +97,14 @@ const PageElements: React.FC<PageElementProps> = ({
             currentResponse: responsesByCode?.[element.code],
           }
 
+          const hidden: React.CSSProperties =
+            element.pluginCode === 'getValues' && currentPageType !== 'admin'
+              ? { display: 'none' }
+              : {}
+
           // Wrapper displays response & changes requested warning for LOQ re-submission
           return (
-            <div className="form-element-wrapper" key={`question_${element.code}`}>
+            <div className="form-element-wrapper" key={`question_${element.code}`} style={hidden}>
               {renderConfigElement(element)}
               <div className="form-element">
                 {element.category === TemplateElementCategory.Information ? (
