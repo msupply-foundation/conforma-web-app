@@ -2,55 +2,41 @@
 
 Front end for Conforma.
 
-Built in a React framework with Typescript.
+Built in a React framework with Typescript, bundled with Vite.
 
 The components style is done using Semantic UI React (SUIR).
 
 Apollo client for data fetching from a GraphQL server [conforma-server](https://github.com/msupply-foundation/conforma-server) running Postgraphile.
 
-### React
+### Stack
 
-16.13.1
+- React 18
+- TypeScript 5
+- Vite 5 (build/dev server)
+- Apollo Client 3
+- Semantic UI React 2 (LESS for theming)
 
-### Typescript
-
-4.0.2
-
-### Webpack 4
-
-4.44.1
-
-### Apollo client 3
-
-3.1.4
-
-### Semantic UI React
-
-1.2.1
-
-### LESS
-
-3.12.2
+(See `package.json` for exact versions. For an architecture overview and conventions, see [CLAUDE.md](CLAUDE.md).)
 
 ## Usage
 
-- Install dependencies (Using node >=v13.8.0):
+Requires Node 20 (see `.nvmrc`).
+
+- Install dependencies:
 
 `yarn install`
 
-`cd src/formElementPlugins/ && yarn install`
-
-- Run on development mode:
+- Run in development mode:
 
 `yarn dev`
 
-- Bundle for production:
+- Bundle for production (`dist/`):
 
 `yarn build`
 
-- Serve bundled App:
+- Preview the production build:
 
-`yarn serve`
+`yarn preview`
 
 ## Development
 
