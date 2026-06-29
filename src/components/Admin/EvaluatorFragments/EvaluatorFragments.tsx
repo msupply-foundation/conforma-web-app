@@ -168,10 +168,10 @@ const EvaluatorFragments = () => {
                 figTree={FigTreeFragments}
                 onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
                 onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
-                enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
+                onCopy={(input) => handleCopyToClipboard(input, t, showToast)}
                 rootName={'Fragment'}
                 collapse={2}
-                showArrayIndices={false}
+                showArrayIndexes={false}
                 maxWidth={'100%'}
                 styles={{
                   container: {

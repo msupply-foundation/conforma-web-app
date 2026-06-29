@@ -47,13 +47,13 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         setExpression={setExpression}
         figTree={figTree}
         objectData={objectData as Record<string, unknown>}
-        restrictEdit={!canEdit}
-        restrictAdd={!canEdit}
-        restrictDelete={!canEdit}
+        allowEdit={canEdit}
+        allowAdd={canEdit}
+        allowDelete={canEdit}
         collapseAnimationTime={100}
         onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
         onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
-        enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
+        onCopy={(input) => handleCopyToClipboard(input, t, showToast)}
         jsonParse={JSON5.parse}
         addTopLevelFallback={null}
         {...preferences?.figTreeDefaults}
