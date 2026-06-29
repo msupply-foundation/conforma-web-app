@@ -1578,10 +1578,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@json-edit-react/components@^0.9.0-beta.2":
-  version "0.9.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@json-edit-react/components/-/components-0.9.0-beta.2.tgz#71609086b16b3a4e89e4a41c7bab7ead1a9b0d7d"
-  integrity sha512-aI7AhWLlxaN7bjveQ9uom5Ac0l021F8nxqkKbrsUT16bnGenvSchjVhzBwXgNYeyvLkhaPkJ+v0nZQhx3ngQLQ==
+"@json-edit-react/components@^0.9.0-beta.3":
+  version "0.9.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@json-edit-react/components/-/components-0.9.0-beta.3.tgz#b09a618ff64cc9b92f1a605a2cd4073b93e7bf10"
+  integrity sha512-aAuNU/srK4hsM5OqPUSXahgSGO42wCMaBYeJTuD6O4O6Xu1sTk8KEaGeky6PA/w1xxpZz3N5s6Rtykw7awuNMA==
   dependencies:
     "@codemirror/lang-json" "^6.0.1"
     "@uiw/codemirror-theme-console" "^4.23.13"
@@ -1599,10 +1599,10 @@
     react-select "^5.10.0"
     use-debounce "^10.0.5"
 
-"@json-edit-react/utils@^0.9.0-beta.1":
-  version "0.9.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@json-edit-react/utils/-/utils-0.9.0-beta.1.tgz#7beae8f53633d62f2d89abfd6414b0eb1644dcf3"
-  integrity sha512-Vp6KR6Jrb58JfasVwEfgVEifwgl6GMs/e3dszY0UDJe5rqvsPITrfIG54b1b6j1NiYM7er/1iDBhVwVLFA82PQ==
+"@json-edit-react/utils@^0.9.0-beta.2":
+  version "0.9.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@json-edit-react/utils/-/utils-0.9.0-beta.2.tgz#c6812c2b5ea26b3cc5322dbfcbc63dfce6740ca8"
+  integrity sha512-tYADe8NZ326KychobKQNiYss8/LxITd11I+HxTL7PRbBVgbaQKWd8H9lzglSCcX9+d/nYaGYCeIjK8OD/q/VVQ==
 
 "@kamilkisiela/fast-url-parser@^1.1.4":
   version "1.1.4"
@@ -3485,14 +3485,14 @@ fbjs@^3.0.0:
     setimmediate "^1.0.5"
     ua-parser-js "^1.0.35"
 
-fig-tree-editor-react@1.0.0-beta.0:
-  version "1.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-1.0.0-beta.0.tgz#0ea5cd8c9b08147c5c224d212913cafd86bab7a7"
-  integrity sha512-WbuLxMfMMlBKDVhzzFW9MOk34dQxgTexgAqA53SD+gF+EJE1XQOu6WClXgDwt2C5dP8Oxh+ewaEpsdvwqA6BUA==
+fig-tree-editor-react@1.0.0-beta.2:
+  version "1.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-1.0.0-beta.2.tgz#128e9ce4ad805a09e5ccc781518e983423d0a1b2"
+  integrity sha512-mNnGuFAkzvrvrbR5WH+Jf3ksx8tFhKAfrmrZjLu5Sf7a/v+mwuVAJNAweMtb89P3ZTNpjKX0fIW88tKeg73RuA==
   dependencies:
-    "@json-edit-react/utils" "^0.9.0-beta.1"
+    "@json-edit-react/utils" "^0.9.0-beta.2"
     fig-tree-evaluator "^2.22.0"
-    json-edit-react "^2.0.0-beta.7"
+    json-edit-react "^2.0.0-beta.8"
 
 fig-tree-evaluator@^2.22.0:
   version "2.22.0"
@@ -4349,10 +4349,10 @@ json-buffer@3.0.1:
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.1.tgz#9338802a30d3b6605fbe0613e094008ca8c05a13"
   integrity sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==
 
-json-edit-react@^2.0.0-beta.7:
-  version "2.0.0-beta.7"
-  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-2.0.0-beta.7.tgz#bd4b11312cb17f1d6bba68fc805f0e8b64c5ceb8"
-  integrity sha512-Q0V635s1M82OQR6b3UIBJvP1X1mYHN5rYblP56W74ENyuxdCBova2ppwo6fY+4lDLBuqNpDXfDxuUKSVGqvPmA==
+json-edit-react@^2.0.0-beta.8:
+  version "2.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-2.0.0-beta.8.tgz#0744cda02d8743a20559bd2e0127bf60247bcbd4"
+  integrity sha512-/5mJGYyFQpFstr0LcgJ3UhKIWc9DRlH/7hNhYjqVjIL1OIhrFXg8MT3zmg6A+7+WRPCaec7ps+dCvmzeO1hRfA==
 
 json-parse-even-better-errors@^2.3.0:
   version "2.3.1"
@@ -6510,11 +6510,6 @@ use-isomorphic-layout-effect@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.2.1.tgz#2f11a525628f56424521c748feabc2ffcc962fce"
   integrity sha512-tpZZ+EX0gaghDAiFR37hj5MgY6ZN55kLiPkJsKxBMZ6GZdOSPJXiOzPM984oPYZ5AnehYx5WQp1+ME8I/P/pRA==
-
-use-undo@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/use-undo/-/use-undo-1.1.1.tgz#8c5a9143207b6a8f94fc30bb9aa31e19386ba1c4"
-  integrity sha512-2NNpJv7TDQpyETgRTG5I/CsABX5nhExpx8PEhWiDsnW9C5BA6Xnn8G9u/lPeg3+JsBrBtUx8/5bMbGmpnWz1Cw==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2:
   version "1.0.2"

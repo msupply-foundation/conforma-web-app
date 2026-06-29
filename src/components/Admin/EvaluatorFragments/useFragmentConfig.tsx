@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from '../../../utils/hooks/useRouter'
-import useUndo from 'use-undo'
+import { useUndo } from '@json-edit-react/utils'
 import { dequal, Fragment, FragmentMetadata } from 'fig-tree-editor-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { useToast, Position } from '../../../contexts/Toast'
@@ -34,9 +34,12 @@ export const useFragmentConfig = () => {
 
   const [isDirty, setIsDirty] = useState(false)
 
-  const [{ present: draft, past }, { set: setDraft, ...undoProps }] = useUndo<FragmentRow | null>(
-    null
+  const [draft, setDraftState] = useState<FragmentRow | null>(null)
+  const { set: setDraft, reset, undo, redo, canUndo, canRedo } = useUndo<FragmentRow | null>(
+    draft,
+    setDraftState
   )
+  const undoProps = { undo, redo, canUndo, canRedo }
 
   const selectedFragment = query.fragment
   const fragments = (data?.evaluatorFragments?.nodes ?? []) as FragmentRow[]
@@ -45,7 +48,7 @@ export const useFragmentConfig = () => {
   useEffect(() => {
     if (!selectedFragment) {
       if (initializedForRef.current !== null) {
-        undoProps.reset(null)
+        reset(null)
         initializedForRef.current = null
       }
       return
@@ -53,7 +56,7 @@ export const useFragmentConfig = () => {
     if (initializedForRef.current === selectedFragment) return
     const fragmentObject = fragments?.find((frag) => frag.name === selectedFragment)
     if (fragmentObject) {
-      undoProps.reset(fragmentObject)
+      reset(fragmentObject)
       initializedForRef.current = selectedFragment
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,7 +124,7 @@ export const useFragmentConfig = () => {
     const isLooselyEqual = dequal(newDraft, draft)
 
     if (isLooselyEqual && !isStrictlyEqual) {
-      undoProps.reset(newDraft)
+      reset(newDraft)
       return
     }
 
@@ -134,7 +137,7 @@ export const useFragmentConfig = () => {
 
   const resetDraft = () => {
     setIsDirty(false)
-    undoProps.reset(null)
+    reset(null)
     updateQuery({ fragment: null })
   }
 
@@ -154,7 +157,7 @@ export const useFragmentConfig = () => {
     isSaving,
     isDeleting,
     isAdding,
-    isDirty: isDirty && past.length > 0,
+    isDirty: isDirty && canUndo,
   }
 }
 

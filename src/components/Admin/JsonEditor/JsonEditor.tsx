@@ -2,10 +2,16 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Search } from 'semantic-ui-react'
 import { isEqual } from 'lodash-es'
 import { ReactJson, UndoRedoSave } from './'
-import { JsonEditorProps, JsonData, UpdateFunctionProps, UpdateFunction } from 'json-edit-react'
+import {
+  JsonEditorProps,
+  JsonData,
+  UpdateFunctionProps,
+  UpdateFunction,
+  UpdateResult,
+} from 'json-edit-react'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Loading } from '../../common'
-import useUndo from 'use-undo'
+import { useUndo } from '@json-edit-react/utils'
 
 interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data' | 'setData'> {
   onSave?: (data: JsonData) => void
@@ -30,8 +36,11 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
   const { t } = useLanguageProvider()
   const [isDirty, setIsDirty] = useState(false)
   const [searchText, setSearchText] = useState('')
-  const [{ present: currentData }, { set: setData, reset, undo, redo, canUndo, canRedo }] =
-    useUndo(data)
+  const [currentData, setCurrentData] = useState<JsonData>(data)
+  const { set: setData, reset, undo, redo, canUndo, canRedo } = useUndo<JsonData>(
+    currentData,
+    setCurrentData
+  )
 
   const prevDataRef = useRef(data)
   useEffect(() => {
@@ -50,26 +59,38 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     }
   }
 
-  const handleUpdate: UpdateFunction = async (updateInput: UpdateFunctionProps, control) => {
-    let output = updateInput.newData
+  // Kept synchronous when the validator is: a synchronous rejection resolves in
+  // place, so a rejected value is never committed through `setData` and never
+  // enters the undo history. Only a genuinely async result is awaited.
+  const handleUpdate: UpdateFunction = (updateInput: UpdateFunctionProps, control) => {
+    const finalize = (result?: UpdateResult): UpdateResult => {
+      let override: JsonData | undefined
 
-    if (onUpdate) {
-      const result = await onUpdate(updateInput, control)
       // Rejecting (`{ error }`) or cancelling (`false`/`null`) is passed
-      // straight through to the editor without saving
+      // straight through to the editor; nothing is committed
       if (result === false || result === null) return result
       if (result && typeof result === 'object') {
         if ('error' in result && result.error !== undefined) return result
-        if ('data' in result && result.data !== undefined) output = result.data
+        if ('data' in result && result.data !== undefined) override = result.data
       }
+
+      const output = override ?? updateInput.newData
+
+      if (showSaveButton) setIsDirty(true)
+      // If we don't have an explicit save button, we run "onSave" after every
+      // update, but keep the Undo queue alive
+      else onSave(output)
+
+      // Only override the editor's own commit when the data was actually
+      // changed; re-committing the unchanged data would record a duplicate
+      // undo entry
+      return override !== undefined ? { data: override } : undefined
     }
 
-    if (showSaveButton) setIsDirty(true)
-    // If we don't have an explicit save button, we run "onSave" after every
-    // update, but keep the Undo queue alive
-    else await onSave(output)
+    if (!onUpdate) return finalize()
 
-    return { data: output }
+    const result = onUpdate(updateInput, control)
+    return result instanceof Promise ? result.then(finalize) : finalize(result)
   }
 
   if (currentData === undefined) return <Loading />

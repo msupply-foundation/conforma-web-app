@@ -12,7 +12,7 @@ import { useActionState } from './Actions'
 import FromExistingAction from './FromExistingAction'
 import { useLanguageProvider } from '../../../../contexts/Localisation'
 import { useToast } from '../../../../contexts/Toast'
-import useUndo from 'use-undo'
+import { useUndo } from '@json-edit-react/utils'
 import { UndoRedo } from '../../../../components/common/UndoRedo'
 import { FigTreeActions } from './FigTreeActions'
 import { useInitialiseMultipleExpressions } from '../../shared/useInitialiseMultipleExpressions'
@@ -48,29 +48,25 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const { canEdit } = template
 
   // Action data is divided into two "blocks" for "undo" groupings
-  const [
-    { present: mainData },
-    {
-      set: setMainData,
-      reset: resetMain,
-      undo: undoMain,
-      redo: redoMain,
-      canUndo: canUndoMain,
-      canRedo: canRedoMain,
-    },
-  ] = useUndo(getState(templateAction))
+  const [mainData, setMainDataState] = useState(getState(templateAction))
+  const {
+    set: setMainData,
+    reset: resetMain,
+    undo: undoMain,
+    redo: redoMain,
+    canUndo: canUndoMain,
+    canRedo: canRedoMain,
+  } = useUndo(mainData, setMainDataState)
 
-  const [
-    { present: parameters },
-    {
-      set: setParameters,
-      reset: resetParameters,
-      undo: undoParameters,
-      redo: redoParameters,
-      canUndo: canUndoParameters,
-      canRedo: canRedoParameters,
-    },
-  ] = useUndo(templateAction?.parameterQueries || {})
+  const [parameters, setParametersState] = useState(templateAction?.parameterQueries || {})
+  const {
+    set: setParameters,
+    reset: resetParameters,
+    undo: undoParameters,
+    redo: redoParameters,
+    canUndo: canUndoParameters,
+    canRedo: canRedoParameters,
+  } = useUndo(parameters, setParametersState)
 
   const { updateExpression: setMainDataItem } = useInitialiseMultipleExpressions(
     mainData,

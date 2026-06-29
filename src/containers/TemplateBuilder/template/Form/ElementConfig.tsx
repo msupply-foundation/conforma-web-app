@@ -20,7 +20,7 @@ import { useLanguageProvider } from '../../../../contexts/Localisation'
 import useConfirmationModal from '../../../../utils/hooks/useConfirmationModal'
 import { EvaluatorNode } from 'fig-tree-evaluator'
 import { useUserState } from '../../../../contexts/UserState'
-import useUndo from 'use-undo'
+import { useUndo } from '@json-edit-react/utils'
 import { UndoRedo } from '../../../../components/common/UndoRedo'
 import { FigTree } from '../../../../FigTreeEvaluator'
 import { useInitialiseMultipleExpressions } from '../../shared/useInitialiseMultipleExpressions'
@@ -119,41 +119,35 @@ const ElementConfig: React.FC<ElementConfigProps> = ({
   const { showToast } = useToast({ position: Position.topLeft })
 
   // Element data is divided into three "blocks" for "undo" groupings
-  const [
-    { present: mainData },
-    {
-      set: setMainData,
-      reset: resetMain,
-      undo: undoMain,
-      redo: redoMain,
-      canUndo: canUndoMain,
-      canRedo: canRedoMain,
-    },
-  ] = useUndo(getState(element, 'main'))
+  const [mainData, setMainDataState] = useState(getState(element, 'main'))
+  const {
+    set: setMainData,
+    reset: resetMain,
+    undo: undoMain,
+    redo: redoMain,
+    canUndo: canUndoMain,
+    canRedo: canRedoMain,
+  } = useUndo(mainData, setMainDataState)
 
-  const [
-    { present: commonData },
-    {
-      set: setCommonData,
-      reset: resetCommon,
-      undo: undoCommon,
-      redo: redoCommon,
-      canUndo: canUndoCommon,
-      canRedo: canRedoCommon,
-    },
-  ] = useUndo(getState(element, 'commonProperties'))
+  const [commonData, setCommonDataState] = useState(getState(element, 'commonProperties'))
+  const {
+    set: setCommonData,
+    reset: resetCommon,
+    undo: undoCommon,
+    redo: redoCommon,
+    canUndo: canUndoCommon,
+    canRedo: canRedoCommon,
+  } = useUndo(commonData, setCommonDataState)
 
-  const [
-    { present: parameters },
-    {
-      set: setParameters,
-      reset: resetParameters,
-      undo: undoParameters,
-      redo: redoParameters,
-      canUndo: canUndoParameters,
-      canRedo: canRedoParameters,
-    },
-  ] = useUndo(getState(element, 'parameters'))
+  const [parameters, setParametersState] = useState(getState(element, 'parameters'))
+  const {
+    set: setParameters,
+    reset: resetParameters,
+    undo: undoParameters,
+    redo: redoParameters,
+    canUndo: canUndoParameters,
+    canRedo: canRedoParameters,
+  } = useUndo(parameters, setParametersState)
 
   const removeElement = async () => {
     const applicationResponseId =

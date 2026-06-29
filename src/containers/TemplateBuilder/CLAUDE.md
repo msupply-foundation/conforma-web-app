@@ -25,7 +25,7 @@ TemplateBuilder/
 
 - **`OperationContext.tsx` + `OperationContextHelpers.tsx`** — the spine of the editor. Wraps the GraphQL mutations (update/delete/commit/duplicate/export/import) so most edits go through one place rather than calling Apollo directly, and renders the shared loading/error modal. It does **not** handle undo/redo or confirmations — those are separate (below).
 - **`ConfirmationContext.tsx`** — confirm-before-destructive-action modals.
-- **Undo/redo is not global.** It's scoped to per-element editing in `template/Form/ElementConfig.tsx` (and `Actions/ActionConfig.tsx`), built on the `use-undo` hook + the shared `components/common/UndoRedo` control.
+- **Undo/redo is not global.** It's scoped to per-element editing in `template/Form/ElementConfig.tsx` (and `Actions/ActionConfig.tsx`), built on the `useUndo` hook from `@json-edit-react/utils` + the shared `components/common/UndoRedo` control.
 - **Typed input components** — `TextIO`, `NumberIO`, `CheckboxIO`, `DropdownIO`, `JsonIO` — the consistent labelled inputs used throughout the builder.
 - **`Evaluation.tsx` + `Parameters.tsx` + `useInitialiseMultipleExpressions.ts`** — the fig-tree **expression editors** used wherever a field can be dynamic (labels, visibility, validation, action parameters, data-view columns).
 
