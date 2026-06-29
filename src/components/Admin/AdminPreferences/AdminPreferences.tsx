@@ -108,8 +108,8 @@ const AdminPreferences: React.FC = () => {
             rootName="preferences"
             collapse={2}
             maxWidth={650}
-            restrictDelete={({ level }) => level === 1}
-            restrictAdd={({ level }) => level === 0}
+            allowDelete={({ level }) => level !== 1}
+            allowAdd={({ level }) => level !== 0}
             indent={isMobile ? 1 : 2}
             onUpdate={({ newData }) => {
               const valid = validate(newData)
@@ -126,7 +126,7 @@ const AdminPreferences: React.FC = () => {
                   text: errorMessage,
                   style: 'error',
                 })
-                return "Can't do that!"
+                return { error: "Can't do that!" }
               }
             }}
             newKeyOptions={(input) =>
@@ -156,9 +156,9 @@ const AdminPreferences: React.FC = () => {
             rootName="overrides"
             collapse={2}
             maxWidth={650}
-            restrictDelete={true}
-            restrictAdd={true}
-            restrictEdit={true}
+            allowDelete={false}
+            allowAdd={false}
+            allowEdit={false}
             indent={isMobile ? 1 : 2}
             showSearch={false}
             showSaveButton={false}

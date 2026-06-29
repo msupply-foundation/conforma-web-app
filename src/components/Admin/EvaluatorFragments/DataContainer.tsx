@@ -3,7 +3,7 @@ import { usePrefs } from '../../../contexts/SystemPrefs'
 import { useEffect, useState } from 'react'
 import useLoadApplication from '../../../utils/hooks/useLoadApplication'
 import { useUserState } from '../../../contexts/UserState'
-import { ReactJson } from '../JsonEditor'
+import { ReactJsonView } from '../JsonEditor'
 import useGetApplicationStructure from '../../../utils/hooks/useGetApplicationStructure'
 import { FullStructure } from '../../../utils/types'
 import { getRequest } from '../../../utils/helpers/fetchMethods'
@@ -86,11 +86,10 @@ const FrontEndAppDataDisplay = ({ structure, figTree }: FrontEndAppDataDisplayPr
   if (!fullStructure) return null
 
   return (
-    <ReactJson
-      rootFontSize={12}
+    <ReactJsonView
+      baseFontSize={12}
       rootName="data"
       data={applicationData}
-      viewOnly
       collapse={1}
       theme={{ container: { backgroundColor: 'transparent' } }}
     />
@@ -112,11 +111,10 @@ const BackEndAppDataDisplay = ({ applicationId, figTree }: BackEndAppDataDisplay
     })
   }, [applicationId, figTree])
   return (
-    <ReactJson
-      rootFontSize={12}
+    <ReactJsonView
+      baseFontSize={12}
       rootName="data"
       data={{ applicationData }}
-      viewOnly
       collapse={1}
       theme={{ container: { backgroundColor: 'transparent' } }}
     />

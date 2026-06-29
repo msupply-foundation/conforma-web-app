@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { IconDelete, IconEdit } from 'json-edit-react'
+import { Icon } from 'semantic-ui-react'
 import { FigTreeEvaluator } from 'fig-tree-editor-react'
-import { ReactJson } from '../../../components/Admin/JsonEditor'
+import { ReactJsonView } from '../../../components/Admin/JsonEditor'
 import TextIO from './TextIO'
 import { EvaluatorNode } from 'fig-tree-evaluator'
 import { getFigTreeSummary } from '../../../FigTreeEvaluator/FigTree'
@@ -77,12 +77,15 @@ const Evaluation: React.FC<EvaluationProps> = ({
       >
         {deleteKey && (
           <span onClick={deleteKey}>
-            <IconDelete size="1.4em" style={{ color: 'rgb(203, 75, 22)' }} />
+            <Icon
+              name="trash alternate"
+              style={{ color: 'rgb(203, 75, 22)', fontSize: '1.2em', margin: 0 }}
+            />
           </span>
         )}
         {updateKey && (
           <span onClick={() => setIsEditingKey(true)} title="Edit Key">
-            <IconEdit size="1.4em" style={{ color: 'grey' }} />
+            <Icon name="pencil" style={{ color: 'grey', fontSize: '1.2em', margin: 0 }} />
           </span>
         )}
       </div>
@@ -144,15 +147,12 @@ export const ObjectDataDisplay: React.FC<ObjectDataDisplayProps> = ({ objectData
 
   return (
     <div className="object-properties-container">
-      <ReactJson
+      <ReactJsonView
         data={objectData}
         rootName="data"
         collapse={1}
         indent={2}
         maxWidth={450}
-        restrictEdit={true}
-        restrictDelete={true}
-        restrictAdd={true}
         theme={{ container: ['transparent', { fontSize: '13px', padding: 0 }] }}
       />
     </div>

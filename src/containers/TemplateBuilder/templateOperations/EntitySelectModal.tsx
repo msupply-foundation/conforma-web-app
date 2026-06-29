@@ -19,7 +19,7 @@ import {
 import { ModalState } from './useTemplateOperations'
 import { useOperationState } from '../shared/OperationContext'
 import { ModifiedEntitiesToKeep, ModifiedEntitiesToKeepAPIInput } from './apiOperations'
-import { JsonData, JsonEditor } from 'json-edit-react'
+import { JsonData, JsonViewer } from 'json-edit-react'
 
 interface Entity {
   checksum: string
@@ -304,7 +304,7 @@ const EntitySelect: React.FC<EntityProps> = ({
             Last modified: <strong>{new Date(incoming.lastModified).toLocaleString()}</strong>
           </p>
           {anyDataDiff || showFull ? (
-            <JsonViewer
+            <DataViewer
               data={showFull ? fullData?.incoming ?? incoming.data : incoming.data}
               title="incoming"
               newest={!currentIsNewer}
@@ -336,7 +336,7 @@ const EntitySelect: React.FC<EntityProps> = ({
             Last modified: <strong>{new Date(current.lastModified).toLocaleString()}</strong>
           </p>
           {(anyDataDiff || showFull) && (
-            <JsonViewer
+            <DataViewer
               data={showFull ? fullData?.current ?? current.data : current.data}
               title="current"
               newest={currentIsNewer}
@@ -372,7 +372,7 @@ const EntitySelect: React.FC<EntityProps> = ({
   )
 }
 
-const JsonViewer = ({
+const DataViewer = ({
   data,
   title,
   newest,
@@ -381,11 +381,10 @@ const JsonViewer = ({
   title: string
   newest: boolean
 }) => (
-  <JsonEditor
+  <JsonViewer
     rootName={title}
-    rootFontSize={12}
+    baseFontSize={12}
     data={data}
-    viewOnly
     maxWidth="100%"
     collapse={1}
     indent={1}

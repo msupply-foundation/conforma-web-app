@@ -7,7 +7,7 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 import { Loading } from '../../common'
 import useUndo from 'use-undo'
 
-interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data'> {
+interface JsonEditorExtendedProps extends Omit<JsonEditorProps, 'data' | 'setData'> {
   onSave?: (data: JsonData) => void
   isSaving?: boolean
   data: JsonData
@@ -50,14 +50,18 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     }
   }
 
-  const handleUpdate: UpdateFunction = async (updateInput: UpdateFunctionProps) => {
+  const handleUpdate: UpdateFunction = async (updateInput: UpdateFunctionProps, control) => {
     let output = updateInput.newData
 
     if (onUpdate) {
-      const result = await onUpdate(updateInput)
-      if (typeof result === 'string' || result === false) return result
-      if (Array.isArray(result) && result[0] === 'error') return result
-      if (Array.isArray(result) && result[0] === 'value') output = result[1]
+      const result = await onUpdate(updateInput, control)
+      // Rejecting (`{ error }`) or cancelling (`false`/`null`) is passed
+      // straight through to the editor without saving
+      if (result === false || result === null) return result
+      if (result && typeof result === 'object') {
+        if ('error' in result && result.error !== undefined) return result
+        if ('data' in result && result.data !== undefined) output = result.data
+      }
     }
 
     if (showSaveButton) setIsDirty(true)
@@ -65,7 +69,7 @@ export const JsonEditor: React.FC<JsonEditorExtendedProps> = ({
     // update, but keep the Undo queue alive
     else await onSave(output)
 
-    return ['value', output]
+    return { data: output }
   }
 
   if (currentData === undefined) return <Loading />
