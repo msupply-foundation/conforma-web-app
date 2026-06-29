@@ -132,6 +132,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({
   const [commonData, setCommonDataState] = useState(getState(element, 'commonProperties'))
   const {
     set: setCommonData,
+    replace: replaceCommon,
     reset: resetCommon,
     undo: undoCommon,
     redo: redoCommon,
@@ -142,6 +143,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({
   const [parameters, setParametersState] = useState(getState(element, 'parameters'))
   const {
     set: setParameters,
+    replace: replaceParameters,
     reset: resetParameters,
     undo: undoParameters,
     redo: redoParameters,
@@ -178,6 +180,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({
     setCommonData,
     true,
     resetCommon,
+    replaceCommon,
     setIsDirty
   )
 
@@ -414,6 +417,7 @@ const ElementConfig: React.FC<ElementConfigProps> = ({
             fullStructure={structure}
             parameters={parameters}
             setParameters={(params) => setParameters(params)}
+            replace={replaceParameters}
             setIsDirty={setIsDirty}
             reset={(expression, key) => {
               if (key) {

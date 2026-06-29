@@ -19,6 +19,7 @@ type ParametersProps = {
   parameters: ParametersType
   currentElementCode: string
   setParameters: (parameters: ParametersType) => void
+  replace: (parameters: ParametersType) => void
   reset: (expression: EvaluatorNode, key?: string) => void
   setIsDirty: (isDirty: boolean) => void
   canEdit: boolean
@@ -33,6 +34,7 @@ type ParametersProps = {
 export const Parameters: React.FC<ParametersProps> = ({
   parameters,
   setParameters,
+  replace,
   setIsDirty,
   canEdit,
   currentElementCode,
@@ -56,6 +58,7 @@ export const Parameters: React.FC<ParametersProps> = ({
     setParameters,
     isActive,
     reset,
+    replace,
     setIsDirty
   )
 

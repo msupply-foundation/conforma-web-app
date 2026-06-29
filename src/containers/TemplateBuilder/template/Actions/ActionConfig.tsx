@@ -51,6 +51,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const [mainData, setMainDataState] = useState(getState(templateAction))
   const {
     set: setMainData,
+    replace: replaceMain,
     reset: resetMain,
     undo: undoMain,
     redo: redoMain,
@@ -61,6 +62,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
   const [parameters, setParametersState] = useState(templateAction?.parameterQueries || {})
   const {
     set: setParameters,
+    replace: replaceParameters,
     reset: resetParameters,
     undo: undoParameters,
     redo: redoParameters,
@@ -73,6 +75,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
     setMainData as (data: Record<string, EvaluatorNode>) => void,
     true,
     resetMain as (data: EvaluatorNode, key?: string) => void,
+    replaceMain as (data: Record<string, EvaluatorNode>) => void,
     setIsDirty
   )
 
@@ -218,6 +221,7 @@ const ActionConfig: React.FC<ActionConfigProps> = ({ templateAction, onClose }) 
             currentElementCode={''}
             parameters={parameters}
             setParameters={(parameterQueries) => setParameters(parameterQueries)}
+            replace={replaceParameters}
             reset={(expression, key) => {
               if (key) {
                 const newParameters = { ...parameters }

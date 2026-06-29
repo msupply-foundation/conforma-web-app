@@ -35,7 +35,7 @@ export const useFragmentConfig = () => {
   const [isDirty, setIsDirty] = useState(false)
 
   const [draft, setDraftState] = useState<FragmentRow | null>(null)
-  const { set: setDraft, reset, undo, redo, canUndo, canRedo } = useUndo<FragmentRow | null>(
+  const { set: setDraft, replace, reset, undo, redo, canUndo, canRedo } = useUndo<FragmentRow | null>(
     draft,
     setDraftState
   )
@@ -124,7 +124,9 @@ export const useFragmentConfig = () => {
     const isLooselyEqual = dequal(newDraft, draft)
 
     if (isLooselyEqual && !isStrictlyEqual) {
-      reset(newDraft)
+      // A cosmetic re-serialization (same data, different key order): sync the
+      // value but leave the undo/redo history untouched
+      replace(newDraft)
       return
     }
 
