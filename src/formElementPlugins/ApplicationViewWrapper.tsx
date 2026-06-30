@@ -13,7 +13,6 @@ import Markdown from '../utils/helpers/semanticReactMarkdown'
 import { useFormElementUpdateTracker } from '../contexts/FormElementUpdateTrackerState'
 import { useLanguageProvider } from '../contexts/Localisation'
 import { SemanticICONS } from 'semantic-ui-react'
-import { containsFigTreeNode } from 'fig-tree-editor-react'
 import { EvaluatorNode, FigTreeOptions } from 'fig-tree-evaluator'
 import { useRouter } from '../utils/hooks/useRouter'
 import ListBuilderEditHelper from './listBuilder/src/TemplateEditHelper'
@@ -302,7 +301,7 @@ export const buildParameters = (
   const parameterExpressions: any = {}
   for (const [key, value] of Object.entries(parameters)) {
     if (internalParameters.includes(key)) simpleParameters[key] = value
-    else if (containsFigTreeNode(value)) {
+    else if (FigTree.isFigTreeExpression(value)) {
       parameterExpressions[key] = value
       simpleParameters[key] = parameterLoadingValues?.[key] ?? DEFAULT_LOADING_VALUE
     } else simpleParameters[key] = value

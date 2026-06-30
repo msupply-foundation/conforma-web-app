@@ -3485,19 +3485,19 @@ fbjs@^3.0.0:
     setimmediate "^1.0.5"
     ua-parser-js "^1.0.35"
 
-fig-tree-editor-react@1.0.0-beta.5:
-  version "1.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-1.0.0-beta.5.tgz#eef19405b04f268271431b595a1094af3d882a73"
-  integrity sha512-xOwPC78ZeasmC7LnRCG7jV+aYoE9FwB23ji6o67ZY+VyHg29LF67KbKmqj5rpMnur1aZD4zjP2pMoksaAI84MQ==
+fig-tree-editor-react@1.0.0-beta.6:
+  version "1.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-1.0.0-beta.6.tgz#ec647c9d2e6dc0e75c8fa3ef0d36b9456708d60e"
+  integrity sha512-41Lz3buNbvXXOwDy8ficp301T/9pYHsfGAEWcRUaLB9jtEvglvhoIM7VSxX8bHNa0RBMokH1myvaRAqHqIo90w==
   dependencies:
     "@json-edit-react/utils" "^0.9.0-beta.2"
-    fig-tree-evaluator "^2.22.1"
+    fig-tree-evaluator "^2.23.0"
     json-edit-react "^2.0.0-beta.8"
 
-fig-tree-evaluator@^2.22.1:
-  version "2.22.1"
-  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.22.1.tgz#34402f627999a128a71bf976ba30387f76a480e0"
-  integrity sha512-ieyJ1KWK/bhuXOmd5lYNBsHxZCk4NPyPJy+FKkalX1CKIAYXgTTqa5NS590WmWyLoH8y7CjX8qNz5OmDinQCbQ==
+fig-tree-evaluator@^2.23.0:
+  version "2.23.0"
+  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.23.0.tgz#14d9ce69d7bed4c031381151e8f2990960ce3c83"
+  integrity sha512-YrxqUgSb3ZCGe0fDGYZXHF2rHdyumxP+gVFKs3Jy88aQF4iSb5+PMqD17Kb/DqAAXCXdwRLuy1MFu4uf42sR0g==
   dependencies:
     dequal "^2.0.3"
     object-property-extractor "^1.0.14"
