@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Checkbox } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
-import config from '../../../config'
 import { useUserState } from '../../../contexts/UserState'
 import { useLanguageProvider } from '../../../contexts/Localisation'
 import { postRequest } from '../../../utils/helpers/fetchMethods'
@@ -60,12 +59,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       // Don't show error state on change if element is being use for checking existing password
       const shouldShowValidation = requireConfirmation ? currentResponse?.text === '' : false
       if (shouldShowValidation) {
-        const JWT = localStorage.getItem(config.localStorageJWTKey)
         const customValidation = await validate(validationInternal, validationMessageInternal, {
-          objects: { responses, currentUser, applicationData },
-          APIfetch: fetch,
-          graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
-          headers: { Authorization: 'Bearer ' + JWT },
+          data: { responses, currentUser, applicationData },
         })
         setInternalValidation(customValidation)
       }
@@ -78,12 +73,8 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   async function handleLoseFocus(e: any) {
     if (e.target.name === 'passwordConfirm') setConfirmationIsActive(false)
     const responses = { thisResponse: password || '', ...allResponses }
-    const JWT = localStorage.getItem(config.localStorageJWTKey)
     const customValidation = await validate(validationInternal, validationMessageInternal, {
-      objects: { responses, currentUser, applicationData },
-      APIfetch: fetch,
-      graphQLConnection: { fetch: fetch.bind(window), endpoint: getServerUrl('graphQL') },
-      headers: { Authorization: 'Bearer ' + JWT },
+      data: { responses, currentUser, applicationData },
     })
     setInternalValidation(customValidation)
     const passwordsMatch = password === passwordConfirm

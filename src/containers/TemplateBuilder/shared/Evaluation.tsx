@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Icon } from 'semantic-ui-react'
+import { IconSvg, defaultTheme, IconDefinition } from 'json-edit-react'
 import { FigTreeEvaluator } from 'fig-tree-editor-react'
 import { ReactJsonView } from '../../../components/Admin/JsonEditor'
 import TextIO from './TextIO'
@@ -18,6 +18,16 @@ type EvaluationProps = {
   canEdit: boolean
   resetExpression?: (expression: EvaluatorNode) => void
 }
+
+// Renders one of json-edit-react's SVG icon definitions (from its defaultTheme)
+// via the exported IconSvg component, the same way json-edit-react renders its
+// own icons internally.
+const ThemeIcon: React.FC<{ icon?: IconDefinition; color: string }> = ({ icon, color }) =>
+  icon ? (
+    <IconSvg viewBox={icon.viewBox} {...icon.svgProps} scale={icon.scale} style={{ color }}>
+      {icon.content}
+    </IconSvg>
+  ) : null
 
 type EvaluationHeaderProps = { evaluation: EvaluatorNode }
 
@@ -77,15 +87,12 @@ const Evaluation: React.FC<EvaluationProps> = ({
       >
         {deleteKey && (
           <span onClick={deleteKey}>
-            <Icon
-              name="trash alternate"
-              style={{ color: 'rgb(203, 75, 22)', fontSize: '1.2em', margin: 0 }}
-            />
+            <ThemeIcon icon={defaultTheme.icons?.delete} color="rgb(203, 75, 22)" />
           </span>
         )}
         {updateKey && (
           <span onClick={() => setIsEditingKey(true)} title="Edit Key">
-            <Icon name="pencil" style={{ color: 'grey', fontSize: '1.2em', margin: 0 }} />
+            <ThemeIcon icon={defaultTheme.icons?.edit} color="grey" />
           </span>
         )}
       </div>
