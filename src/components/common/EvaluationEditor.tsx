@@ -6,6 +6,7 @@ import { useLanguageProvider } from '../../contexts/Localisation'
 import { handleCopyToClipboard } from '../Admin/JsonEditor'
 import { onEvaluateErrorNotify, onEvaluateNotify } from './evaluatorHelpers'
 import { usePrefs } from '../../contexts/SystemPrefs'
+import { defaultNewOperatorExpression } from '../../FigTreeEvaluator'
 
 interface EvaluatorProps extends Omit<FigTreeEditorProps, 'onEvaluate'> {
   toastPosition?: Position
@@ -56,6 +57,7 @@ export const EvaluationEditor: React.FC<EvaluatorProps> = ({
         onCopy={(input) => handleCopyToClipboard(input, t, showToast)}
         jsonParse={JSON5.parse}
         addTopLevelFallback={null}
+        defaultNewOperatorExpression={defaultNewOperatorExpression}
         {...preferences?.figTreeDefaults}
       />
     </div>

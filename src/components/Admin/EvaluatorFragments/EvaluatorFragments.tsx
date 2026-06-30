@@ -14,7 +14,7 @@ import {
   defaultValue,
 } from '../JsonEditor'
 import { FigTreeEditor, FigTreeEvaluator, Fragment } from 'fig-tree-editor-react'
-import { FigTree } from '../../../FigTreeEvaluator'
+import { defaultNewOperatorExpression, FigTree } from '../../../FigTreeEvaluator'
 import { onEvaluateErrorNotify, onEvaluateNotify } from '../../common/evaluatorHelpers'
 import { Position, useToast } from '../../../contexts/Toast'
 import { FragmentTester } from './FragmentTester'
@@ -183,6 +183,7 @@ const EvaluatorFragments = () => {
                   },
                 }}
                 jsonParse={JSON5.parse}
+                defaultNewOperatorExpression={defaultNewOperatorExpression}
               />
               <ReactJson
                 data={fragmentData}

@@ -30,6 +30,12 @@ export const FigTree = new FigTreeEvaluator({
   // supportDeprecatedValueNodes: true,
 })
 
+export const defaultNewOperatorExpression = {
+  operator: 'getData',
+  property: 'path.to.value',
+  fallback: null,
+}
+
 // Called by "UserState" context whenever a user logs in
 export const loadFragments = async () => {
   getRequest(getServerUrl('figTreeFragments', { frontOrBack: 'frontEnd' })).then((fragments) => {
