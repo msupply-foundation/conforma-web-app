@@ -1,5 +1,5 @@
 import { EvaluatorNode } from 'fig-tree-evaluator'
-import { FigTree, isFigTreeExpression } from '../../FigTreeEvaluator'
+import { FigTree } from '../../FigTreeEvaluator'
 import {
   EvaluatedElement,
   ResponsesByCode,
@@ -64,9 +64,10 @@ const evaluateSingleElement: EvaluateElement = async (
     elementResultKey: keyof EvaluatedElement
   ) => {
     try {
-      evaluatedElement[elementResultKey] = isFigTreeExpression(expressionOrValue)
-        ? await FigTree.evaluate(expressionOrValue, evaluationParameters)
-        : expressionOrValue
+      evaluatedElement[elementResultKey] = await FigTree.evaluate(
+        expressionOrValue,
+        evaluationParameters
+      )
     } catch (e) {
       // console.log(e, expressionOrValue)
     }
