@@ -34,6 +34,8 @@ export const substituteValues = (
   data: { [key: string]: any | string },
   index?: number
 ): string => {
+  if (parameterisedString === undefined) return ''
+
   // Custom replacement function for regex replace
   const getObjectProperty = (_: string, __: string, property: string) => {
     if (property === '0' && index !== undefined) return String(index + 1)
