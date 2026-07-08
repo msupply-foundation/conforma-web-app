@@ -60,7 +60,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       const shouldShowValidation = requireConfirmation ? currentResponse?.text === '' : false
       if (shouldShowValidation) {
         const customValidation = await validate(validationInternal, validationMessageInternal, {
-          data: { responses, currentUser, applicationData },
+          data: {
+            responses,
+            currentUser,
+            applicationData,
+          },
         })
         setInternalValidation(customValidation)
       }
@@ -74,7 +78,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     if (e.target.name === 'passwordConfirm') setConfirmationIsActive(false)
     const responses = { thisResponse: password || '', ...allResponses }
     const customValidation = await validate(validationInternal, validationMessageInternal, {
-      data: { responses, currentUser, applicationData },
+      data: {
+        responses,
+        currentUser,
+        applicationData,
+      },
     })
     setInternalValidation(customValidation)
     const passwordsMatch = password === passwordConfirm
@@ -151,15 +159,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 export default ApplicationView
 
 const createHash = async (password: string) => {
-  try {
-    const output = await postRequest({
-      jsonBody: { password },
-      url: getServerUrl('createHash'),
-      headers: { 'Content-Type': 'application/json' },
-    })
+  const output = await postRequest({
+    jsonBody: { password },
+    url: getServerUrl('createHash'),
+    headers: { 'Content-Type': 'application/json' },
+  })
 
-    return output.hash
-  } catch (err) {
-    throw err
-  }
+  return output.hash
 }
