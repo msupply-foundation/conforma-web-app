@@ -7,7 +7,7 @@
     "description": "",
     "inputFields": []
   },
-  "internalParameters": ["dataFormat"],
+  "internalParameters": ["dataFormat", "inputFields"],
   "//": "categories types: 'Input'|'Informative'",
   "category": "Input"
 }

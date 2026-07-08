@@ -78,7 +78,11 @@ const ApplicationViewWrapper: React.FC<ApplicationViewWrapperProps> = (props) =>
 
     const result = Object.entries(parameterExpressions).map(([field, expression]) => {
       return FigTree.evaluate(expression as EvaluatorNode, {
-        data: { responses: allResponses, currentUser, applicationData },
+        data: {
+          responses: { ...allResponses, thisResponse: currentResponse?.text },
+          currentUser,
+          applicationData,
+        },
       })
         .then((result: any) => {
           // Need to do our own equality check since React treats 'result' as
