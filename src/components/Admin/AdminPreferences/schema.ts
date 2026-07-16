@@ -52,7 +52,9 @@ export const PreferencesSchema = {
         archiveFileAgeMinimum: { type: 'number' },
         archiveMinSize: { type: 'number' },
         emailTestMode: { type: 'boolean' },
-        testingEmail: { type: 'string' },
+        testingEmail: {
+          anyOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+        },
         locale: { type: 'string' },
         timezone: { type: 'string' },
         envVars: {
@@ -373,7 +375,7 @@ export interface Preferences {
     archiveFileAgeMinimum?: number
     archiveMinSize?: number // MB
     emailTestMode?: boolean
-    testingEmail?: string
+    testingEmail?: string | string[]
     locale?: string
     timezone?: string
     externalApiConfigs?: {
