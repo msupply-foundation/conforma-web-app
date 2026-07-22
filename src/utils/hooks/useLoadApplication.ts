@@ -224,7 +224,9 @@ const useLoadApplication = ({ serialNumber }: UseGetApplicationProps) => {
           submissionMessage: application.template?.submissionMessage,
           startMessage: startMessage as string,
         },
-        stages: templateStages.map((stage) => getStageAndLevels(stage)),
+        stages: templateStages
+          .map((stage) => getStageAndLevels(stage))
+          .sort((a, b) => a.stage.number - b.stage.number),
         sections: buildSectionsStructure({ sectionDetails, baseElements, page: t('PAGE') }),
         reviewSections: buildSectionsStructure({
           sectionDetails: reviewerSectionDetails,
