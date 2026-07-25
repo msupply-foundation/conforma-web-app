@@ -185,24 +185,26 @@ export const functions: Record<string, FunctionDefinition> = {
     },
     description: 'Minimum of multiple numbers',
   },
-
-  // The following can now be performed by native operators. Please remove once
-  // all templates have been migrated to use them:
-  multiply: {
-    function: (num1: number, num2: number, decimals: number) => {
-      const product = num1 * num2
-      const roundingMultiplier = 10 ** decimals
-      return isNaN(roundingMultiplier)
-        ? product
-        : Math.round(product * roundingMultiplier) / roundingMultiplier
+  // Collapses multi-line text into a single line by joining the lines with a
+  // separator (default: a single space). Pass `{ separator: ", " }` to join
+  // with something else. If a line already ends with the separator's
+  // non-whitespace part (e.g. "," for ", "), it isn't repeated -- only the
+  // trailing whitespace is added -- so "multi-line," + "string" becomes
+  // "multi-line, string" rather than "multi-line,, string".
+  flattenLines: {
+    function: (text: string, { separator = ' ' }: { separator?: string } = {}) => {
+      // The non-whitespace part of the separator (e.g. "," for ", ") -- if a
+      // line already ends with it, we don't repeat it, only add the trailing
+      // whitespace part.
+      const delimiter = separator.trimEnd()
+      const whitespace = separator.slice(delimiter.length)
+      return text.split('\n').reduce((acc, line, index) => {
+        if (index === 0) return line
+        const sep = delimiter && acc.endsWith(delimiter) ? whitespace : separator
+        return acc + sep + line
+      }, '')
     },
-    description: 'Multiple two numbers -- PLEASE UPGRADE TO NATIVE OPERATOR',
-  },
-  split: {
-    function: (text: string, delimiter: string = ',') => {
-      const values = text.split(delimiter)
-      return values.map((v) => v.trim())
-    },
-    description: 'Split string into array using a delimiter -- PLEASE UPGRADE TO NATIVE OPERATOR',
+    description: 'Flatten multiple lines of text into a single line, with optional separator',
+    argsDefault: ['This is a\nmulti-line\nstring.', { separator: ' ' }], // => "This is a multi-line string."
   },
 }
