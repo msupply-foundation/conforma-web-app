@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, Header, Icon, List } from 'semantic-ui-react'
+import React, { useRef, useState } from 'react'
+import { Button, Header, Icon, List, Message } from 'semantic-ui-react'
 import {
   ChangeRequestsProgress,
   FullStructure,
@@ -7,6 +7,7 @@ import {
   SectionAndPage,
 } from '../../utils/types'
 import { ApplicationProgressBar } from '../'
+import { LoadingSmall } from '../common'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useRouter } from '../../utils/hooks/useRouter'
 import useRestartApplication from '../../utils/hooks/useRestartApplication'
@@ -32,9 +33,33 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
 
   const restartApplication = useRestartApplication(serial)
 
+  // A restart re-creates application_responses for the WHOLE application, so
+  // running it twice duplicates the entire response set. Every section with
+  // outstanding change requests renders its own button, so the guard has to be
+  // shared across all of them, not held per-button. The ref is the real gate --
+  // it's written synchronously, so two clicks in the same tick can't both pass
+  // the check before React re-renders. The state only drives the UI.
+  const restartInFlight = useRef(false)
+  const [restartingSection, setRestartingSection] = useState<string | null>(null)
+  const [errorSection, setErrorSection] = useState<string | null>(null)
+
   const handleRestartClick = async ({ sectionCode, pageNumber }: SectionAndPage) => {
-    await restartApplication(fullStructure)
-    push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)
+    if (restartInFlight.current) return
+    restartInFlight.current = true
+    setRestartingSection(sectionCode)
+    setErrorSection(null)
+    try {
+      await restartApplication(fullStructure)
+      // The guard is deliberately NOT released on success: push() unmounts this
+      // component, and releasing it would re-enable the buttons for the frame
+      // between the mutation resolving and the route changing.
+      push(`/application/${serial}/${sectionCode}/Page${pageNumber}`)
+    } catch (e) {
+      console.log(e)
+      restartInFlight.current = false
+      setRestartingSection(null)
+      setErrorSection(sectionCode)
+    }
   }
 
   const handleResumeClick = ({ sectionCode, pageNumber }: SectionAndPage) => {
@@ -88,6 +113,9 @@ const ApplicationSections: React.FC<ApplicationSectionsProps> = ({ fullStructure
                       {...sectionActionProps}
                       isDraftStatus={isDraftStatus}
                       restartApplication={handleRestartClick}
+                      isRestarting={restartingSection !== null}
+                      isThisSectionRestarting={restartingSection === sectionCode}
+                      hasRestartError={errorSection === sectionCode}
                     />
                   ) : isDraftStatus ? (
                     <ActionGeneral
@@ -133,6 +161,10 @@ interface ActionProps {
 type ActionisChangesRequestProps = ActionProps & {
   isDraftStatus: boolean
   restartApplication: (location: SectionAndPage) => void
+  // True while ANY section's restart is running -- see handleRestartClick
+  isRestarting: boolean
+  isThisSectionRestarting: boolean
+  hasRestartError: boolean
 }
 
 const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => {
@@ -144,14 +176,21 @@ const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => 
     isDraftStatus,
     restartApplication,
     resumeApplication,
+    isRestarting,
+    isThisSectionRestarting,
+    hasRestartError,
   } = props
   if (!changeRequestsProgress) return null
   const { totalChangeRequests, doneChangeRequests } = changeRequestsProgress
   const totalRemainingUpdate = totalChangeRequests - doneChangeRequests || 0
-  if (totalRemainingUpdate > 0)
+  if (totalRemainingUpdate > 0) {
+    if (hasRestartError) return <Message error title={t('ERROR_GENERIC')} />
+    // Replaced rather than disabled, so a queued click can't land on it
+    if (isThisSectionRestarting) return <LoadingSmall />
     return (
       <Button
         color="blue"
+        disabled={isRestarting}
         content={`${t('LABEL_RESPONSE_UPDATE')} (${totalRemainingUpdate})`}
         onClick={() =>
           isDraftStatus
@@ -166,7 +205,7 @@ const ActionsChangesRequest: React.FC<ActionisChangesRequestProps> = (props) => 
         }
       />
     )
-  else if (isDraftStatus) return <SectionEdit {...props} />
+  } else if (isDraftStatus) return <SectionEdit {...props} />
 
   return null
 }
