@@ -112,6 +112,14 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     ? { maxWidth: 100 }
     : {}
 
+  // Hint to mobile devices which on-screen keyboard to show. Required because
+  // non-"simple" inputs are type="text" (to allow formatted values), which
+  // would otherwise bring up the full alphanumeric keyboard. Note: neither the
+  // "numeric" nor "decimal" keypads offer a minus key, so we must fall back to
+  // the full keyboard when negative values are permitted.
+  const inputMode =
+    minValue < 0 ? 'text' : type === NumberType.INTEGER && step % 1 === 0 ? 'numeric' : 'decimal'
+
   const customValidate = (
     number: number | null | undefined,
     type: NumberType,
@@ -152,6 +160,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
           <Form.Input
             fluid
             type={simple ? 'number' : 'text'}
+            inputMode={inputMode}
             min={minValue}
             max={maxValue}
             step={step}
