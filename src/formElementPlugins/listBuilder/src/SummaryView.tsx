@@ -18,6 +18,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
     displayFormat = getDefaultDisplayFormat(inputFields),
     inlineOpen = false,
     tableExcludeColumns = [],
+    tableWidth,
     // These affect viewing tables on Mobile only
     hideFromMobileTableIfEmpty,
     minMobileTableLabelWidth,
@@ -37,6 +38,7 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, Markdown, respons
       <ListTableLayout
         {...listDisplayProps}
         excludeColumns={tableExcludeColumns}
+        tableWidth={tableWidth}
         hideFromMobileIfEmpty={hideFromMobileTableIfEmpty}
         minMobileLabelWidth={minMobileTableLabelWidth}
         maxMobileLabelWidth={maxMobileTableLabelWidth}
