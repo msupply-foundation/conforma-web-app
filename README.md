@@ -20,7 +20,7 @@ Apollo client for data fetching from a GraphQL server [conforma-server](https://
 
 ## Usage
 
-Requires Node 20 (see `.nvmrc`).
+Requires Node 20 or later (`.nvmrc` has the baseline version).
 
 - Install dependencies:
 

@@ -15,7 +15,7 @@ Long-form docs live in `docs/` (a Zola site; `docs/_wiki` is the wiki submodule)
 
 ## Commands
 
-Run with **yarn** (Node 20 — `.nvmrc`).
+Run with **yarn** (Node 20 or later — `.nvmrc` has the baseline version).
 
 | Command | What it does |
 | --- | --- |
