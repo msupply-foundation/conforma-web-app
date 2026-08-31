@@ -5,7 +5,8 @@ import { useLanguageProvider } from '../../../contexts/Localisation'
 interface AssigneeLabelProps {
   assignee: string
   isCompleted: boolean
-  isSelfAssigned: boolean
+  canReassign: boolean
+  canUnassign: boolean
   isReassignment: boolean
   setIsReassignment: React.Dispatch<React.SetStateAction<boolean>>
   setIsUnassignment: () => void
@@ -14,7 +15,8 @@ interface AssigneeLabelProps {
 const AssigneeLabel: React.FC<AssigneeLabelProps> = ({
   assignee,
   isCompleted,
-  isSelfAssigned,
+  canReassign,
+  canUnassign,
   isReassignment,
   setIsReassignment,
   setIsUnassignment,
@@ -28,15 +30,19 @@ const AssigneeLabel: React.FC<AssigneeLabelProps> = ({
       </Label>
       {isCompleted ? null : (
         <>
-          {!isReassignment && !isSelfAssigned && (
+          {!isReassignment && (
             <>
-              <a className="user-action clickable" onClick={() => setIsReassignment(true)}>
-                {t('ACTION_RE_ASSIGN')}
-              </a>
-              <span>{' | '}</span>
-              <a className="user-action clickable" onClick={setIsUnassignment}>
-                {t('ACTION_UNASSIGN')}
-              </a>
+              {canReassign && (
+                <a className="user-action clickable" onClick={() => setIsReassignment(true)}>
+                  {t('ACTION_RE_ASSIGN')}
+                </a>
+              )}
+              {canReassign && canUnassign && <span>{' | '}</span>}
+              {canUnassign && (
+                <a className="user-action clickable" onClick={setIsUnassignment}>
+                  {t('ACTION_UNASSIGN')}
+                </a>
+              )}
             </>
           )}
         </>

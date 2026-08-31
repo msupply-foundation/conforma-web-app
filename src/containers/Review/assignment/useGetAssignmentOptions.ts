@@ -60,6 +60,10 @@ const useGetAssignmentOptions = () => {
         selected: currentlyAssigned.reviewer.id,
         isSubmitted: true,
         isCompleted: currentlyAssigned.review?.current.reviewStatus === ReviewStatus.Submitted,
+        // A reviewer on a self-assignable assignment can always unassign
+        // themselves, even without an explicit ASSIGN permission
+        canUnassignSelf:
+          currentlyAssigned.isSelfAssignable && currentlyAssigned.isCurrentUserReviewer,
         options: [
           ...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment)),
         ],
@@ -69,6 +73,7 @@ const useGetAssignmentOptions = () => {
       selected: previousAssignee || NOT_ASSIGNED,
       isSubmitted: false,
       isCompleted: false,
+      canUnassignSelf: false,
       options: [...currentUserAssignable.map((assignment) => getOptionFromAssignment(assignment))],
     }
 

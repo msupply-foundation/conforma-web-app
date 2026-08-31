@@ -168,6 +168,7 @@ interface AssignmentOptions {
   selected: number
   isSubmitted: boolean
   isCompleted: boolean
+  canUnassignSelf: boolean
   options: AssignmentOption[]
 }
 
