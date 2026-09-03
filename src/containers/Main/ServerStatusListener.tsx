@@ -35,6 +35,7 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
   const {
     userState: { currentUser },
     onLogin,
+    endSession,
   } = useUserState()
   const { maintenanceMode } = usePrefs()
   const [redirectStatus, setRedirectStatus] = useState<RedirectStatus>({
@@ -73,8 +74,19 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
       const data = JSON.parse(message.data)
       console.log('Message', data)
       if (typeof data !== 'object') return
+
+      // The server sweeps expired sessions once a minute and tells whichever
+      // sockets belonged to them. An idle client makes no requests, so this is
+      // the only thing that would tell it promptly; without it the session is
+      // discovered on the next request, which 401s.
+      if (data.type === 'session-expired') {
+        console.log('Session expired on server, logging out...')
+        endSession()
+        return
+      }
+
       // Version check -- force reload if different to server version:
-      if (data.version && data.version !== frontendVersion) {
+      if (productionBehaviour && data.version && data.version !== frontendVersion) {
         console.log('New version:', data.version)
         console.log('Reloading...')
         showToast({

@@ -84,11 +84,13 @@ const initialUserContext: {
   setUserState: React.Dispatch<UserActions>
   onLogin: OnLogin
   logout: () => void
+  endSession: () => void
 } = {
   userState: initialState,
   setUserState: () => {},
   onLogin: () => {},
   logout: () => {},
+  endSession: () => {},
 }
 
 const UserContext = createContext(initialUserContext)
@@ -103,7 +105,8 @@ export function UserProvider({ children }: UserProviderProps) {
   const { showToast, clearAllToasts } = useToast()
 
   // Ends the session and explains why, for the cases the user didn't ask for --
-  // the session lapsing, or another tab logging out
+  // the session lapsing (noticed locally, or reported by the server over the
+  // websocket), or another tab logging out
   const endSession = () => {
     logout()
     showToast({
@@ -186,7 +189,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   // Return the state and reducer to the context (wrap around the children)
   return (
-    <UserContext.Provider value={{ userState, setUserState, onLogin, logout }}>
+    <UserContext.Provider value={{ userState, setUserState, onLogin, logout, endSession }}>
       {children}
     </UserContext.Provider>
   )
