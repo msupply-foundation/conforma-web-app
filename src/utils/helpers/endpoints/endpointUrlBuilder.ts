@@ -28,6 +28,7 @@ const {
   devServerGraphQLAbsolute,
   productionPathREST,
   productionPathGraphQL,
+  productionPathWebSocket,
 } = config
 const { port, hostname, protocol } = window.location
 const getProductionUrl = (path: string) => {
@@ -58,18 +59,23 @@ export const serverGraphQL = isProductionBuild
     ? devServerGraphQLAbsolute
     : getProductionUrl(productionPathGraphQL)
   : getProductionUrl(devServerGraphQL)
-// Websocket URL is computed from an absolute REST URL because the vite
-// dev-server proxy only handles HTTP — websockets connect directly to the
-// backend.
-const restForWebSocket = isProductionBuild
+// The websocket is same-origin, like every other endpoint: a deployment serves
+// it under `/websocket`, and in dev the vite proxy forwards it (see
+// vite.config.ts). That matters beyond consistency — the auth cookies are
+// Secure and SameSite=Strict, so a cross-origin `ws://` handshake arrives
+// without them and the server can't tell which session the socket belongs to,
+// which is how it addresses "session-expired" notifications.
+//
+// `VITE_USE_DEV_SERVER` is the exception, as it is above: a production build
+// pointed at a dev backend has no proxy in front of it, so it has to reach the
+// backend's own origin directly.
+const wsProtocol = protocol === 'https:' ? 'wss:' : 'ws:'
+const sameOriginWebSocket = `${wsProtocol}//${hostname}${port ? `:${port}` : ''}`
+const serverWebSocket = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerRestAbsolute
-    : getProductionUrl(productionPathREST)
-  : devServerRestAbsolute
-const serverWebSocket = restForWebSocket
-  .replace('http', 'ws')
-  .replace('api', '')
-  .replace('server', 'websocket')
+    ? `${devServerRestAbsolute.replace(/^http/, 'ws').replace(/api\/?$/, '')}`
+    : `${sameOriginWebSocket}${productionPathWebSocket}`
+  : `${sameOriginWebSocket}/`
 
 const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) => {
   if (endpointKey === 'graphQL') return serverGraphQL

@@ -13,12 +13,10 @@ const remoteGraphQLServer = remoteServer ? `${remoteServer}/server/graphql` : nu
 // backend traffic for both local and remote targets, so HTTP URLs are
 // always relative — same-origin behaviour matching production.
 //
-// The absolute URLs to the actual backend are still useful for the things
-// that DON'T go through the dev-server proxy:
-//   - `serverWebSocket` (the websocket connection isn't proxied; it
-//     connects directly to the backend).
-//   - The `VITE_USE_DEV_SERVER` mode (a production build pointed at a dev
-//     backend, where the dev-server proxy isn't in play at all).
+// The absolute URLs to the actual backend are still needed for the one mode
+// that DOESN'T go through the dev-server proxy: `VITE_USE_DEV_SERVER` (a
+// production build pointed at a dev backend, where the dev-server proxy isn't
+// in play at all).
 const devServerRestAbsolute = remoteRestServer ?? 'http://localhost:8080/api'
 const devServerGraphQLAbsolute = remoteGraphQLServer ?? 'http://localhost:8080/graphql'
 
@@ -29,6 +27,8 @@ const config = {
   devServerGraphQLAbsolute,
   productionPathREST: '/server/api',
   productionPathGraphQL: '/server/graphql',
+  // A deployment serves the websocket under its own path rather than /server
+  productionPathWebSocket: '/websocket/',
   restEndpoints: {
     // Public
     public: '/public',

@@ -40,6 +40,23 @@ export default defineConfig(({ mode }) => {
       }
     : 'http://localhost:8080'
 
+  // The websocket is proxied too, so it stays same-origin like everything else.
+  // That is load-bearing rather than tidiness: the auth cookies are Secure and
+  // SameSite=Strict, and a cross-origin `ws://` handshake arrives without them,
+  // leaving the server unable to tell which session the socket belongs to (so
+  // it can't send that client a "session-expired" notification).
+  //
+  // Remote deployments serve it under `/websocket` rather than `/server`, which
+  // is the one path that differs from the REST proxy above.
+  const websocketProxy = remoteServer
+    ? {
+        target: remoteServer,
+        changeOrigin: true,
+        ws: true,
+        rewrite: (path: string) => `/websocket${path}`,
+      }
+    : { target: 'http://localhost:8080', ws: true }
+
   return {
     plugins: [react(), pluginPurgeCss()],
     css: {
@@ -59,6 +76,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/api': apiProxy,
         '/graphql': apiProxy,
+        '/server-status': websocketProxy,
       },
     },
     preview: { port: 5101 },
