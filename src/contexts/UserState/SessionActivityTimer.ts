@@ -64,7 +64,7 @@
 import IdleTracker from 'idle-tracker'
 import config from '../../config'
 
-const DEBUG_LOGGING = true
+const DEBUG_LOGGING = false
 
 // How long user needs to have been inactive before being considered "idle"
 const IDLE_DETECT_TIME = 5000 // ms
