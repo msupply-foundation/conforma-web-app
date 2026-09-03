@@ -40,6 +40,7 @@ const config = {
     figTreeFragments: '/public/fragments',
     // Auth required
     loginOrg: '/login-org',
+    logout: '/logout',
     userInfo: '/user-info',
     userPermissions: '/user-permissions',
     createHash: '/create-hash',
@@ -69,7 +70,10 @@ const config = {
   version,
   pluginsFolder: 'formElementPlugins',
   nonRegisteredUser: 'nonRegistered',
-  localStorageJWTKey: 'persistJWT',
+  // The auth tokens are HttpOnly cookies, so the front-end never sees them.
+  // This flag is only a local record that we believe a session exists, so the
+  // app knows to restore it on load rather than redirect to login.
+  localStorageLoginKey: 'isLoggedIn',
   applicantDeadlineCode: 'applicantDeadline',
   isProductionBuild,
   debounceTimeout: 350, // milliseconds,

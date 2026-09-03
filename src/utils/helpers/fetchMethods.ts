@@ -1,5 +1,11 @@
 // Generic GET/POST methods for re-use throughout app
-import config from '../../config'
+//
+// Authentication is handled entirely by the "access" cookie, which the browser
+// attaches by itself -- every endpoint URL is built same-origin (see
+// endpointUrlBuilder), and fetch sends cookies on same-origin requests by
+// default. Deliberately no "Authorization" header: the server prefers a
+// presented header over the cookie, so sending one would override the token the
+// server renews for us.
 
 export async function postRequest({
   jsonBody = {},
@@ -14,8 +20,6 @@ export async function postRequest({
   headers?: object
   timeout?: number // seconds
 }) {
-  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
-  const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
   const body = otherBody || JSON.stringify(jsonBody)
 
   try {
@@ -24,7 +28,6 @@ export async function postRequest({
       cache: 'no-cache',
       headers: {
         // 'Content-Type': 'application/json'
-        ...authHeader,
         ...headers,
       },
       body,
@@ -40,16 +43,12 @@ export async function postRequest({
 }
 
 export async function getRequest(endpointUrl: string, headers: object = {}) {
-  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
-  const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
-
   try {
     const response = await fetch(endpointUrl, {
       method: 'GET',
       // cache: 'no-cache',
       headers: {
         'Content-Type': 'application/json',
-        ...authHeader,
         ...headers,
       },
     })

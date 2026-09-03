@@ -80,6 +80,7 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     case 'prefs':
     case 'login':
     case 'loginOrg':
+    case 'logout':
     case 'userInfo':
     case 'createHash':
     case 'generatePDF':

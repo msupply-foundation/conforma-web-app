@@ -11,7 +11,6 @@ import {
   Message,
 } from 'semantic-ui-react'
 import { LookUpTableImportCsvContext } from '../contexts'
-import config from '../../config'
 import axios from 'axios'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
@@ -66,9 +65,6 @@ const ImportCsvModal: React.FC<any> = ({
     const formData: any = new FormData()
     formData.append('file', file)
 
-    const JWT = localStorage.getItem(config.localStorageJWTKey || '')
-    const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
-
     await axios
       .post(
         tableStructureID
@@ -78,7 +74,6 @@ const ImportCsvModal: React.FC<any> = ({
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            ...authHeader,
           },
         }
       )

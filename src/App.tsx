@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ApolloClient, ApolloProvider, createHttpLink, NormalizedCacheObject } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import { persistCache } from 'apollo3-cache-persist'
 import '../semantic/src/semantic.less'
@@ -15,22 +14,9 @@ import { AdminLogin } from './containers/User/Login'
 import { AppWrapper } from './containers/Main'
 import { Loading } from './components'
 
-// Adds authorisation header with token from local storage (to be used on every
-// request) see
-// https://www.apollographql.com/docs/react/networking/authentication/#header
-const authLink = setContext((_, { headers }) => {
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-  return {
-    headers: {
-      ...headers,
-      authorization: JWT ? `Bearer ${JWT}` : '',
-    },
-  }
-})
-
-// Needed to link or 'chain' commands in Apollo Clients (so that headers can be
-// added to every apollo request) see
-// https://www.apollographql.com/docs/react/networking/authentication/#header
+// Requests are authenticated by the "access" cookie, which the browser attaches
+// itself -- the GraphQL endpoint is same-origin, and fetch sends cookies on
+// same-origin requests by default
 const httpLink = createHttpLink({
   uri: ({ operationName }) => {
     // return `http://localhost:8080/graphql?dev=${operationName}`
@@ -64,7 +50,7 @@ function App() {
 
   useEffect(() => {
     const client = new ApolloClient({
-      link: authLink.concat(errorLink).concat(httpLink),
+      link: errorLink.concat(httpLink),
       cache,
     })
     setClient(client)

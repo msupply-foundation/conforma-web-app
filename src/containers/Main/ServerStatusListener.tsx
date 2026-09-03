@@ -57,9 +57,9 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
           text: t('SERVER_RECONNECTED_TEXT'),
           style: 'success',
         })
-        // This will force logout if the server's private key has changed
-        const JWT = localStorage.getItem(config.localStorageJWTKey) ?? ''
-        onLogin(JWT)
+        // This will force logout if the session is no longer valid on the
+        // server (e.g. its private key has changed)
+        onLogin()
       }
     },
     onClose: (event) => {

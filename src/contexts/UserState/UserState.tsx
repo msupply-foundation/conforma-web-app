@@ -8,7 +8,10 @@ import { usePrefs } from '../SystemPrefs'
 import { useLanguageProvider } from '../Localisation'
 import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
 import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
-import { FigTree, loadFragments } from '../../FigTreeEvaluator'
+import { loadFragments } from '../../FigTreeEvaluator'
+import { postRequest } from '../../utils/helpers/fetchMethods'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
+import isLoggedIn from '../../utils/helpers/loginCheck'
 
 type UserState = {
   currentUser: User | null
@@ -18,8 +21,10 @@ type UserState = {
   isNonRegistered: boolean | null
 }
 
+// The access and refresh tokens are HttpOnly cookies, set by the server on the
+// login response, so there is no credential for the caller to pass in here --
+// see kdd/auth-token-lifecycle §3
 type OnLogin = (
-  JWT: string,
   user?: User,
   templatePermissions?: TemplatePermissions,
   orgList?: OrganisationSimple[]
@@ -121,7 +126,7 @@ export function UserProvider({ children }: UserProviderProps) {
     []
   )
 
-  const logout = () => {
+  const logout = async () => {
     clearInterval(refreshTokenTimer.current)
     refreshTokenTimer.current = 0
     clearLocalStorageExcept([
@@ -133,20 +138,27 @@ export function UserProvider({ children }: UserProviderProps) {
     client.clearStore()
     setUserState({ type: 'resetCurrentUser' })
     loginTimer.end()
+    // The auth cookies are HttpOnly, so only the server can clear them, and the
+    // session record has to be deleted or the cookies keep working
+    try {
+      await postRequest({
+        url: getServerUrl('logout'),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    } catch (err) {
+      console.error('Problem ending session:', err)
+    }
     // Forcing a refresh makes the app reload, which is useful if the app has
     // been upgraded but still using locally cached javascript
     location.reload()
   }
 
-  const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
-    // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
+  const onLogin: OnLogin = (user, templatePermissions, orgList) => {
     clearAllToasts()
-    if (JWT == 'undefined' || JWT == undefined) {
-      logout()
-      return
-    }
     dispatch({ type: 'setLoading', isLoading: true })
-    localStorage.setItem(config.localStorageJWTKey, JWT)
+    localStorage.setItem(config.localStorageLoginKey, 'true')
+    // Refresh the FigTree fragments available to the global evaluator
+    loadFragments()
     if (!user || !templatePermissions || !user.permissionNames) {
       fetchUserInfo({ dispatch: setUserState }, logout)
     } else {
@@ -157,7 +169,6 @@ export function UserProvider({ children }: UserProviderProps) {
         newOrgList: orgList || [],
       })
       dispatch({ type: 'setLoading', isLoading: false })
-      updateFigTree(JWT)
     }
 
     if (!disableAutoLogout) {
@@ -178,12 +189,12 @@ export function UserProvider({ children }: UserProviderProps) {
     fetchUserInfo({ dispatch: setUserState }, logout)
   }
 
-  // Initial check for persisted user in local storage
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-  // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
-  if (JWT === 'undefined') logout()
-  if (JWT && !userState.currentUser && !userState.isLoading) {
-    onLogin(JWT)
+  // Restore the session recorded in local storage. Its cookies are sent
+  // automatically, so onLogin only needs to re-fetch the user's details -- and
+  // if the session has since been revoked or expired, that request fails and
+  // takes us to the login screen
+  if (isLoggedIn() && !userState.currentUser && !userState.isLoading) {
+    onLogin()
   }
 
   // Return the state and reducer to the context (wrap around the children)
@@ -199,14 +210,3 @@ export function UserProvider({ children }: UserProviderProps) {
  * - @returns an object with a reducer function `setUserState` and the `userState`
  */
 export const useUserState = () => useContext(UserContext)
-
-// Updates the global FigTree object with user token and refreshes available
-// Fragments
-export const updateFigTree = async (JWT: string) => {
-  FigTree.updateOptions({
-    headers: {
-      Authorization: `Bearer ${JWT}`,
-    },
-  })
-  loadFragments()
-}

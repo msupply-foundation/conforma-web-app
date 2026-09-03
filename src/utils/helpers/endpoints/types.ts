@@ -7,6 +7,7 @@ export type BasicEndpoint =
   | 'prefs'
   | 'login'
   | 'loginOrg'
+  | 'logout'
   | 'userInfo'
   | 'createHash'
   | 'generatePDF'

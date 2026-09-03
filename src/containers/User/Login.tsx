@@ -51,7 +51,6 @@ const Login: React.FC = () => {
   }, [])
 
   const onLoginSuccess = (loginResult: LoginPayload) => {
-    localStorage.setItem(config.localStorageJWTKey, loginResult.JWT)
     setIsError(false)
     setLoginPayload({
       ...loginResult,
@@ -73,9 +72,8 @@ const Login: React.FC = () => {
   }
 
   const finishLogin = async (loginPayload: LoginPayload) => {
-    const { JWT, user, templatePermissions, orgList } = loginPayload
-    await onLogin(JWT, user, templatePermissions, orgList)
-    localStorage.setItem(config.localStorageJWTKey, JWT)
+    const { user, templatePermissions, orgList } = loginPayload
+    await onLogin(user, templatePermissions, orgList)
     if (history.location?.state?.from) push(history.location.state.from)
     else push('/')
   }
@@ -251,7 +249,7 @@ export const AdminLogin: React.FC = () => {
     push('/')
     return null
   }
-  localStorage.removeItem(config.localStorageJWTKey)
+  localStorage.removeItem(config.localStorageLoginKey)
   return <Login />
 }
 

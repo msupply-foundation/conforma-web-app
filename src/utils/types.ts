@@ -671,7 +671,6 @@ interface Organisation extends OrganisationSimple {
 interface LoginPayload {
   success?: boolean
   user: User
-  JWT: string
   templatePermissions: TemplatePermissions
   orgList?: OrganisationSimple[]
 }

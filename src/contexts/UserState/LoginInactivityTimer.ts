@@ -1,4 +1,8 @@
 /**
+ * TO-DO: the server holds the authoritative session expiry, so this timer's job
+ * should be to keep that session alive while the user is active, rather than
+ * deciding on its own when to log out -- see kdd/auth-token-lifecycle §5
+ *
  * A module to handle auto-logout after a certain amount of user idle time. In
  * addition to basic idle detection and timer, additional complexity is involved
  * due to the fact that we need this to work across multiple tabs -- if a user
@@ -34,7 +38,7 @@ const IDLE_DETECT_TIME = 5000 // ms
 const EXPIRY_CHECK_INTERVAL = 2500 // ms
 
 export const LOCAL_STORAGE_EXPIRY_KEY = 'expiryTime'
-const LOCAL_STORAGE_JWT_KEY = config.localStorageJWTKey
+const LOCAL_STORAGE_LOGIN_KEY = config.localStorageLoginKey
 
 const log = (text: any) => {
   if (DEBUG_LOGGING) {
@@ -64,10 +68,10 @@ export class LoginInactivityTimer {
   private checkIdleState = () => {
     log('Checking idle state')
 
-    if (!localStorage.getItem(LOCAL_STORAGE_JWT_KEY)) {
+    if (!localStorage.getItem(LOCAL_STORAGE_LOGIN_KEY)) {
       // This means another tab must have already logged out since the last
       // check
-      log('No JWT -- logging out!')
+      log('Not logged in -- logging out!')
       this.onLogout()
       return
     }
