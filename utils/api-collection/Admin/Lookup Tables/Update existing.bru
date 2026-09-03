@@ -1,0 +1,15 @@
+meta {
+  name: Update existing
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/admin/lookup-table/import/2
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  files: @file()
+}

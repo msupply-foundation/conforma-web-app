@@ -1,0 +1,19 @@
+meta {
+  name: Logout
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{base_url}}/logout
+  body: none
+  auth: inherit
+}
+
+docs {
+  Ends EVERY session for the logged-in user (logging in elsewhere revokes nothing, but an explicit logout ends everything) and expires both auth cookies.
+  
+  On the shared public account (nonRegistered) it only ends the calling session, since every public applicant shares that user.
+  
+  Other browsers keep working until their access token expires -- it is stateless, so revocation is not instant.
+}

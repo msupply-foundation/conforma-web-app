@@ -1,0 +1,17 @@
+meta {
+  name: Create hash
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{base_url}}/create-hash
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "password": "{{password}}"
+  }
+}

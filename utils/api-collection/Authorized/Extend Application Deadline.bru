@@ -1,0 +1,47 @@
+meta {
+  name: Extend Application Deadline
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{base_url}}/extend-application?applicationId=1&eventCode=applicantDeadline
+  body: json
+  auth: inherit
+}
+
+params:query {
+  applicationId: 1
+  eventCode: applicantDeadline
+}
+
+body:json {
+  {
+      "extensionTime": {
+          "days": 5
+      },
+      "data": {}
+  }
+}
+
+docs {
+  Options for body json object:
+  
+  ``` typescript
+    
+   {
+    fileId: string
+    data: object
+    options?: RenderOptions
+    userId?: number
+    templateId?: number
+    applicationSerial?: string
+    applicationResponseId?: number
+    subFolder?: string
+    description?: string
+    isOutputDoc?: boolean
+    toBeDeleted?: boolean
+  }
+  
+  ```
+}
