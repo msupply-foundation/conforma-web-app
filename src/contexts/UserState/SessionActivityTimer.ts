@@ -67,10 +67,21 @@ import config from '../../config'
 const DEBUG_LOGGING = false
 
 // How long user needs to have been inactive before being considered "idle"
-const IDLE_DETECT_TIME = 5000 // ms
+const IDLE_DETECT_TIME = 10_000 // ms
 
-// How often to re-check both deadlines and act accordingly
-const ACTIVITY_CHECK_INTERVAL = 5000 // ms
+/*
+How often to re-check both deadlines and act accordingly.
+
+Must not exceed IDLE_DETECT_TIME. "Idle" is a flag the tracker raises once
+that long has passed without an interaction, so a check only sees activity
+from the window immediately behind it -- and consecutive checks have to cover
+contiguous windows, or interaction that happens in the gap is never observed
+and the idle deadline stops being pushed forward. Checking every 10s while
+treating 5s of quiet as idle logs out a user who interacts every 10s, because
+the two periods resonate and no check ever lands soon enough after an
+interaction to notice it.
+*/
+const ACTIVITY_CHECK_INTERVAL = 10_000 // ms
 
 // How far ahead of the session deadline to keep it alive. Wide enough that a
 // ping failing for a reason unrelated to auth (network blip, server restart)
