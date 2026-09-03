@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useReducer, useRef, useMemo } from 'react'
+import React, { createContext, useContext, useReducer, useMemo } from 'react'
 import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../../utils/helpers/fetchUserInfo'
 import { Position, useToast } from '../Toast'
-import { OrganisationSimple, TemplatePermissions, User } from '../../utils/types'
+import { LoginPayload, OrganisationSimple, TemplatePermissions, User } from '../../utils/types'
 import config from '../../config'
 import { usePrefs } from '../SystemPrefs'
 import { useLanguageProvider } from '../Localisation'
-import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
+import { SessionActivityTimer, setSessionExpiry } from './SessionActivityTimer'
 import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
 import { loadFragments } from '../../FigTreeEvaluator'
 import { postRequest } from '../../utils/helpers/fetchMethods'
@@ -23,12 +23,10 @@ type UserState = {
 
 // The access and refresh tokens are HttpOnly cookies, set by the server on the
 // login response, so there is no credential for the caller to pass in here --
-// see kdd/auth-token-lifecycle §3
-type OnLogin = (
-  user?: User,
-  templatePermissions?: TemplatePermissions,
-  orgList?: OrganisationSimple[]
-) => void
+// see kdd/auth-token-lifecycle §3. Called with no payload to restore a session
+// the browser still holds cookies for, in which case the user's details are
+// re-fetched from "/user-info".
+type OnLogin = (loginPayload?: Partial<LoginPayload>) => void
 
 export type UserActions =
   | {
@@ -104,40 +102,39 @@ export function UserProvider({ children }: UserProviderProps) {
   const { preferences } = usePrefs()
   const { showToast, clearAllToasts } = useToast()
 
-  const refreshTokenTimer = useRef(0)
+  // Ends the session and explains why, for the cases the user didn't ask for --
+  // the session lapsing, or another tab logging out
+  const endSession = () => {
+    logout()
+    showToast({
+      title: t('MENU_LOGOUT'),
+      text: t('LOGOUT_INACTIVITY_ALERT'),
+      style: 'negative',
+      position: Position.topMiddle,
+      timeout: 0,
+    })
+  }
 
-  const disableAutoLogout = preferences.logoutAfterInactivity === 0
-  const loginTimer = useMemo(
+  const sessionTimer = useMemo(
     () =>
       // Using useMemo to ensure only one instance created
-      new LoginInactivityTimer({
-        idleTimeout: preferences.logoutAfterInactivity,
-        onLogout: () => {
-          logout()
-          showToast({
-            title: t('MENU_LOGOUT'),
-            text: t('LOGOUT_INACTIVITY_ALERT'),
-            style: 'negative',
-            position: Position.topMiddle,
-            timeout: 0,
-          })
-        },
+      new SessionActivityTimer({
+        sessionTimeout: preferences.logoutAfterInactivity,
+        // Hitting "/user-info" is what extends the session on the server
+        onKeepAlive: () =>
+          fetchUserInfo({ dispatch: setUserState }, endSession, {
+            logoutOnRequestFailure: false,
+          }),
+        onSessionEnded: endSession,
       }),
     []
   )
 
   const logout = async () => {
-    clearInterval(refreshTokenTimer.current)
-    refreshTokenTimer.current = 0
-    clearLocalStorageExcept([
-      'language',
-      LOCAL_STORAGE_EXPIRY_KEY,
-      'redirectLocation',
-      'maintenanceMode',
-    ])
+    clearLocalStorageExcept(['language', 'redirectLocation', 'maintenanceMode'])
     client.clearStore()
     setUserState({ type: 'resetCurrentUser' })
-    loginTimer.end()
+    sessionTimer.end()
     // The auth cookies are HttpOnly, so only the server can clear them, and the
     // session record has to be deleted or the cookies keep working
     try {
@@ -153,7 +150,8 @@ export function UserProvider({ children }: UserProviderProps) {
     location.reload()
   }
 
-  const onLogin: OnLogin = (user, templatePermissions, orgList) => {
+  const onLogin: OnLogin = (loginPayload) => {
+    const { user, templatePermissions, orgList, sessionExpiry } = loginPayload ?? {}
     clearAllToasts()
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageLoginKey, 'true')
@@ -162,6 +160,7 @@ export function UserProvider({ children }: UserProviderProps) {
     if (!user || !templatePermissions || !user.permissionNames) {
       fetchUserInfo({ dispatch: setUserState }, logout)
     } else {
+      if (sessionExpiry) setSessionExpiry(sessionExpiry)
       dispatch({
         type: 'setCurrentUser',
         newUser: user,
@@ -171,22 +170,10 @@ export function UserProvider({ children }: UserProviderProps) {
       dispatch({ type: 'setLoading', isLoading: false })
     }
 
-    if (!disableAutoLogout) {
-      if (refreshTokenTimer.current === 0) loginTimer.start()
-
-      if (refreshTokenTimer.current === 0) {
-        refreshTokenTimer.current = window.setInterval(
-          refreshJWT,
-          // Max prevents timer starting with negative or 0 value
-          Math.max((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
-        )
-      }
-    }
-  }
-
-  const refreshJWT = () => {
-    console.log(new Date(), 'Refreshing auth token...')
-    fetchUserInfo({ dispatch: setUserState }, logout)
+    // Started unconditionally: when auto-logout is disabled the session's
+    // deadline is set decades out, so the timer simply never needs to keep it
+    // alive, and it still notices another tab logging out
+    sessionTimer.start()
   }
 
   // Restore the session recorded in local storage. Its cookies are sent

@@ -72,8 +72,7 @@ const Login: React.FC = () => {
   }
 
   const finishLogin = async (loginPayload: LoginPayload) => {
-    const { user, templatePermissions, orgList } = loginPayload
-    await onLogin(user, templatePermissions, orgList)
+    await onLogin(loginPayload)
     if (history.location?.state?.from) push(history.location.state.from)
     else push('/')
   }

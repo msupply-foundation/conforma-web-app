@@ -7,6 +7,22 @@
 // presented header over the cookie, so sending one would override the token the
 // server renews for us.
 
+// Carries the HTTP status alongside the server's message, so callers can tell a
+// 401 (no valid session -- the user must log in again) from a request that
+// never arrived, and from a 403 (authenticated, but not permitted this
+// resource) which says nothing about the session.
+export class RequestError extends Error {
+  status: number
+  constructor(status: number, message?: string) {
+    super(message)
+    this.name = 'RequestError'
+    this.status = status
+  }
+}
+
+export const isUnauthenticated = (error: unknown) =>
+  error instanceof RequestError && error.status === 401
+
 export async function postRequest({
   jsonBody = {},
   otherBody,
@@ -34,7 +50,7 @@ export async function postRequest({
       signal: timeout ? AbortSignal.timeout(timeout * 1000) : undefined,
     })
     const responseJSON = await response.json()
-    if (response.status !== 200) throw new Error(responseJSON.message)
+    if (response.status !== 200) throw new RequestError(response.status, responseJSON.message)
     return responseJSON
   } catch (err) {
     console.log(err)
@@ -53,7 +69,7 @@ export async function getRequest(endpointUrl: string, headers: object = {}) {
       },
     })
     const responseJSON = await response.json()
-    if (response.status !== 200) throw new Error(responseJSON.message)
+    if (response.status !== 200) throw new RequestError(response.status, responseJSON.message)
     return responseJSON
   } catch (err) {
     console.log(err)
