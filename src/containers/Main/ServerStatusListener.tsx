@@ -48,7 +48,26 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
 
   const productionBehaviour = isProductionBuild || TESTING_MODE
 
+  // The handshake is the only point at which the server can read the auth
+  // cookies, so it identifies a socket's session once, at connect. A socket
+  // opened before login is therefore anonymous to it for as long as it stays
+  // open, and gets no "session-expired" notification -- so logging in has to
+  // establish a new one. Bumping a query parameter is what re-triggers the
+  // hook's connection effect.
+  //
+  // Skipped when the page loaded already logged in, because that first
+  // handshake carried the cookies itself.
+  const [connectionGeneration, setConnectionGeneration] = useState(0)
+  const socketHasSession = useRef(isLoggedIn())
+
+  useEffect(() => {
+    if (!currentUser || socketHasSession.current) return
+    socketHasSession.current = true
+    setConnectionGeneration((generation) => generation + 1)
+  }, [currentUser])
+
   useWebSocket(getServerUrl('serverStatus'), {
+    queryParams: { connection: connectionGeneration },
     onOpen: () => {
       if (serverDisconnected && productionBehaviour) {
         setServerDisconnected(false)
