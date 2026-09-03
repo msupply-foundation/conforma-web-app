@@ -24,9 +24,9 @@
  * out to roughly one request per session window.
  *
  * Note the ping is NOT conditional on the user interacting at that instant.
- * Someone reading the page for two minutes is "idle" by the 5-second threshold
- * but nowhere near their inactivity deadline, and their session must not be
- * allowed to lapse.
+ * Someone reading the page for two minutes counts as idle by the short
+ * threshold below, but is nowhere near their inactivity deadline, and their
+ * session must not be allowed to lapse.
  *
  * The user is never left holding a dead session whose requests return nothing,
  * because deadline 2 is only ever *reached* after deadline 1 has already logged
@@ -45,9 +45,10 @@
  * HttpOnly cookie.
  *
  * The basic operation is:
- * - The "idleTracker" records the current "idle" state -- "idle" meaning user
- *   has had no interaction (keyboard, mouse, etc) with the app for 5 seconds.
- * - A "checkActivity" timer runs every 5 seconds:
+ * - The "idleTracker" records the current "idle" state -- "idle" meaning the
+ *   user has had no interaction (keyboard, mouse, etc) with the app for one
+ *   check interval.
+ * - A "checkActivity" timer runs on that same interval:
  *   - If the login flag has gone from local storage, another tab has logged
  *     out, so this one follows it.
  *   - If the user is currently *active*, push the idle deadline forward. Any
@@ -66,20 +67,23 @@ import config from '../../config'
 
 const DEBUG_LOGGING = false
 
-// How long user needs to have been inactive before being considered "idle"
-const IDLE_DETECT_TIME = 10_000 // ms
-
 /*
-How often to re-check both deadlines and act accordingly.
+How often the user's activity is looked at, and equally the quiet period that
+counts as "idle" -- deliberately one value, because the two must not diverge.
 
-Must not exceed IDLE_DETECT_TIME. "Idle" is a flag the tracker raises once
-that long has passed without an interaction, so a check only sees activity
-from the window immediately behind it -- and consecutive checks have to cover
-contiguous windows, or interaction that happens in the gap is never observed
-and the idle deadline stops being pushed forward. Checking every 10s while
-treating 5s of quiet as idle logs out a user who interacts every 10s, because
-the two periods resonate and no check ever lands soon enough after an
-interaction to notice it.
+"Idle" is a flag the tracker raises once this long has passed without an
+interaction, and drops the moment one arrives, so each check can only observe
+the window immediately behind it. Consecutive checks therefore have to cover
+contiguous windows: check less often than the threshold and interaction
+falling in the gaps is never seen, so the idle deadline stops being pushed
+forward and an active user is logged out. Checking every 10s while treating 5s
+of quiet as idle does exactly that to a user who interacts every 10s -- the
+periods resonate, and no check ever lands soon enough after an interaction to
+notice one.
+
+Checking more often than the threshold would be safe, but buys nothing beyond
+slightly prompter cross-tab logout, so there is no reason to keep two values
+that could drift apart.
 */
 const ACTIVITY_CHECK_INTERVAL = 10_000 // ms
 
@@ -92,7 +96,7 @@ const LOCAL_STORAGE_IDLE_EXPIRY_KEY = 'idleExpiry'
 const LOCAL_STORAGE_SESSION_EXPIRY_KEY = 'sessionExpiry'
 const LOCAL_STORAGE_LOGIN_KEY = config.localStorageLoginKey
 
-const log = (text: any) => {
+const log = (text: string) => {
   if (DEBUG_LOGGING) {
     const d = new Date()
     console.log(`${d.toLocaleTimeString()}: ${text}`)
@@ -129,7 +133,7 @@ export class SessionActivityTimer {
     this.margin = Math.min(KEEP_ALIVE_MARGIN, (sessionTimeout * 60_000) / 2)
     this.onKeepAlive = onKeepAlive
     this.onSessionEnded = onSessionEnded
-    this.idleTracker = new IdleTracker({ timeout: IDLE_DETECT_TIME })
+    this.idleTracker = new IdleTracker({ timeout: ACTIVITY_CHECK_INTERVAL })
     this.activityCheckTimer = 0
     this.keepAliveInFlight = false
   }
