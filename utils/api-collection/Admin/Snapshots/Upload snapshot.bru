@@ -1,0 +1,19 @@
+meta {
+  name: Upload snapshot
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/admin/snapshot/upload?name=testing
+  body: multipartForm
+  auth: inherit
+}
+
+params:query {
+  name: testing
+}
+
+body:multipart-form {
+  files: @file()
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Enable language
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/admin/enable-language?code=en_nz
+  body: none
+  auth: inherit
+}
+
+params:query {
+  code: en_nz
+}

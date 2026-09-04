@@ -1,0 +1,16 @@
+meta {
+  name: Check unique
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/check-unique?type=username&value=Manager
+  body: none
+  auth: inherit
+}
+
+params:query {
+  type: username
+  value: Manager
+}

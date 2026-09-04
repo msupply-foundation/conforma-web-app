@@ -1,0 +1,27 @@
+meta {
+  name: Angola company lookup
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/external-api/AngolaIMA/company?test=Test Value&something=Not allowed&numeroDocumento=5410002830
+  body: json
+  auth: inherit
+}
+
+params:query {
+  test: Test Value
+  something: Not allowed
+  numeroDocumento: 5410002830
+}
+
+body:json {
+  {
+      "myNewProperty": 99,
+      "anotherOne": {
+          "One": 1,
+          "Two": 2
+      }
+  }
+}

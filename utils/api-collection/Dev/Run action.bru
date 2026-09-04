@@ -1,0 +1,30 @@
+meta {
+  name: Run action
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/admin/run-action
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "actionCode": "modifyRecord",
+      "parameters": {
+          "tableName": "testInfo",
+          "shouldCreateJoinTable": false,
+          "matchValue": 1,
+          "textField": "CHANGE",
+          "delete": true
+          // "anotherField": 100,
+          // "trueOrFalse": false
+          // "additionalData": {
+          //     "one": 1,
+          //     "two": 2
+          // }
+      }
+  }
+}

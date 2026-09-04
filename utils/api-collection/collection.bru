@@ -1,0 +1,13 @@
+auth {
+  mode: none
+}
+
+docs {
+  Conforma API.
+  
+  AUTH: both tokens are HttpOnly cookies, set by Set-Cookie and never returned in a response body. Bruno stores and resends them per domain automatically, so run Public > Login once and every other request is authenticated -- there is no token to copy anywhere.
+  
+  The access token is short-lived and renewed silently by the server whenever it lapses, so a collection left open keeps working. Run Authorized > Logout to end the session.
+  
+  Select the Local environment for base_url and the seeded admin credentials.
+}
