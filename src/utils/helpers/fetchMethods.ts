@@ -23,6 +23,22 @@ export class RequestError extends Error {
 export const isUnauthenticated = (error: unknown) =>
   error instanceof RequestError && error.status === 401
 
+// An error response is only JSON when it came from the app server -- a proxy or
+// gateway in front of it answers with its own page, or with nothing at all. So
+// the status is checked first and the body treated as optional: parsing it up
+// front throws a SyntaxError, which loses the status that tells callers whether
+// the session is gone (401) or the request merely failed.
+const errorFromResponse = async (response: Response) => {
+  const body = await response.text().catch(() => '')
+  try {
+    const { message } = JSON.parse(body)
+    if (message) return new RequestError(response.status, message)
+  } catch {
+    // Not JSON, so the status line is the only thing worth reporting
+  }
+  return new RequestError(response.status, `${response.status} ${response.statusText}`.trim())
+}
+
 export async function postRequest({
   jsonBody = {},
   otherBody,
@@ -49,9 +65,8 @@ export async function postRequest({
       body,
       signal: timeout ? AbortSignal.timeout(timeout * 1000) : undefined,
     })
-    const responseJSON = await response.json()
-    if (response.status !== 200) throw new RequestError(response.status, responseJSON.message)
-    return responseJSON
+    if (!response.ok) throw await errorFromResponse(response)
+    return await response.json()
   } catch (err) {
     console.log(err)
     throw err
@@ -68,9 +83,8 @@ export async function getRequest(endpointUrl: string, headers: object = {}) {
         ...headers,
       },
     })
-    const responseJSON = await response.json()
-    if (response.status !== 200) throw new RequestError(response.status, responseJSON.message)
-    return responseJSON
+    if (!response.ok) throw await errorFromResponse(response)
+    return await response.json()
   } catch (err) {
     console.log(err)
     throw err
