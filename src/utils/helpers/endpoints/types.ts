@@ -8,7 +8,6 @@ export type BasicEndpoint =
   | 'login'
   | 'loginOrg'
   | 'logout'
-  | 'userInfo'
   | 'createHash'
   | 'generatePDF'
   | 'previewActions'
@@ -41,6 +40,12 @@ export type GetApplicationDataOptions = { applicationId: number; reviewId?: numb
 
 export type UserPermissionsKey = 'userPermissions'
 export type UserPermissionsOptions = { username?: string; orgId?: number | null }
+
+export type UserInfoKey = 'userInfo'
+// The deadline (unix seconds) after which the user counts as inactive. Only the
+// browser can measure it, and reporting it is what stops the session outliving
+// it -- see SessionActivityTimer. Omitted when there is no deadline to report.
+export type UserInfoOptions = { idleDeadline?: number }
 
 export type CheckUniqueKey = 'checkUnique'
 export type CheckUniqueOptions = (
@@ -166,6 +171,7 @@ export type GetServerUrlFunction = ((endpointKey: BasicEndpoint) => string) &
   ((endpointKey: FileKey, options: FileOptions) => string) &
   ((endpointKey: FilesKey, options: FilesOptions) => string) &
   ((endpointKey: UserPermissionsKey, options: UserPermissionsOptions) => string) &
+  ((endpointKey: UserInfoKey, options?: UserInfoOptions) => string) &
   ((endpointKey: CheckUniqueKey, options: CheckUniqueOptions) => string) &
   ((endpointKey: CheckTriggersKey, options: CheckTriggersOptions) => string) &
   ((endpointKey: UploadKey, options: UploadOptions) => string) &

@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useReducer, useMemo } from 'react'
+import React, { createContext, useContext, useEffect, useReducer, useMemo } from 'react'
 import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../../utils/helpers/fetchUserInfo'
 import { Position, useToast } from '../Toast'
 import { LoginPayload, OrganisationSimple, TemplatePermissions, User } from '../../utils/types'
 import config from '../../config'
 import { usePrefs } from '../SystemPrefs'
-import { useLanguageProvider } from '../Localisation'
+import { LanguageStrings, useLanguageProvider } from '../Localisation'
 import { SessionActivityTimer, setSessionExpiry } from './SessionActivityTimer'
 import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
 import { loadFragments } from '../../FigTreeEvaluator'
@@ -95,6 +95,18 @@ const initialUserContext: {
 
 const UserContext = createContext(initialUserContext)
 
+/*
+Ending a session reloads the page, and a toast is React state, so an explanation
+shown before the reload would never be read. The reason is left in local storage
+instead and picked up by the next mount, on the login screen it lands on.
+
+It is a localisation key rather than a message, so it is translated when it's
+shown -- the language provider may not have the user's language loaded at the
+moment the session ends.
+*/
+const LOGOUT_REASON_KEY = 'logoutReason'
+type LogoutReason = keyof LanguageStrings
+
 export function UserProvider({ children }: UserProviderProps) {
   const { t } = useLanguageProvider()
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -104,42 +116,62 @@ export function UserProvider({ children }: UserProviderProps) {
   const { preferences } = usePrefs()
   const { showToast, clearAllToasts } = useToast()
 
-  // Ends the session and explains why, for the cases the user didn't ask for --
-  // the session lapsing (noticed locally, or reported by the server over the
-  // websocket), or another tab logging out
-  const endSession = () => {
-    logout()
+  // The reason for a logout the user didn't ask for is shown once, on the login
+  // screen the reload lands on
+  useEffect(() => {
+    const reason = localStorage.getItem(LOGOUT_REASON_KEY) as LogoutReason | null
+    if (!reason) return
+    localStorage.removeItem(LOGOUT_REASON_KEY)
     showToast({
       title: t('MENU_LOGOUT'),
-      text: t('LOGOUT_INACTIVITY_ALERT'),
+      text: t(reason),
       style: 'negative',
       position: Position.topMiddle,
       timeout: 0,
     })
+  }, [])
+
+  // Everything a logout does in this browser. Whether the session also ends on
+  // the server is a separate question -- see logout and endSession.
+  const clearSession = (logoutReason?: LogoutReason) => {
+    clearLocalStorageExcept(['language', 'redirectLocation', 'maintenanceMode'])
+    // Written after the clear, and read back after the reload below
+    if (logoutReason) localStorage.setItem(LOGOUT_REASON_KEY, logoutReason)
+    client.clearStore()
+    setUserState({ type: 'resetCurrentUser' })
+    sessionTimer.end()
+    // Forcing a refresh makes the app reload, which is useful if the app has
+    // been upgraded but still using locally cached javascript
+    location.reload()
   }
+
+  // The session has already ended on the server -- it reached its deadline, or
+  // was revoked, or another tab logged out -- so there is nothing to tell it,
+  // only local state to discard and a reason to explain it with
+  const endSession = () => clearSession('LOGOUT_INACTIVITY_ALERT')
 
   const sessionTimer = useMemo(
     () =>
       // Using useMemo to ensure only one instance created
       new SessionActivityTimer({
         sessionTimeout: preferences.logoutAfterInactivity,
-        // Hitting "/user-info" is what extends the session on the server
-        onKeepAlive: () =>
+        // Hitting "/user-info" is what extends the session on the server, and
+        // the deadline it carries is what stops the session outliving it
+        onKeepAlive: (idleDeadline) =>
           fetchUserInfo({ dispatch: setUserState }, endSession, {
             logoutOnRequestFailure: false,
+            idleDeadline,
           }),
         onSessionEnded: endSession,
       }),
     []
   )
 
+  // The user asked to log out, so the session is ended on the server as well --
+  // which is also the only way to expire the HttpOnly cookies. Note this ends
+  // the user's sessions on every device: there is one Logout action in the UI
+  // and it means all of them.
   const logout = async () => {
-    clearLocalStorageExcept(['language', 'redirectLocation', 'maintenanceMode'])
-    client.clearStore()
-    setUserState({ type: 'resetCurrentUser' })
-    sessionTimer.end()
-    // The auth cookies are HttpOnly, so only the server can clear them, and the
-    // session record has to be deleted or the cookies keep working
     try {
       await postRequest({
         url: getServerUrl('logout'),
@@ -148,9 +180,7 @@ export function UserProvider({ children }: UserProviderProps) {
     } catch (err) {
       console.error('Problem ending session:', err)
     }
-    // Forcing a refresh makes the app reload, which is useful if the app has
-    // been upgraded but still using locally cached javascript
-    location.reload()
+    clearSession()
   }
 
   const onLogin: OnLogin = (loginPayload) => {
@@ -161,7 +191,10 @@ export function UserProvider({ children }: UserProviderProps) {
     // Refresh the FigTree fragments available to the global evaluator
     loadFragments()
     if (!user || !templatePermissions || !user.permissionNames) {
-      fetchUserInfo({ dispatch: setUserState }, logout)
+      // Failure here means the session couldn't be restored, so there is
+      // nothing to end on the server -- and if it turns out to have been a
+      // network blip, the session is still good and must not be touched
+      fetchUserInfo({ dispatch: setUserState }, clearSession)
     } else {
       if (sessionExpiry) setSessionExpiry(sessionExpiry)
       dispatch({

@@ -14,6 +14,11 @@ interface FetchUserInfoOptions {
   // check. On first load there is nothing to try again with, so any failure has
   // to send the user to the login screen.
   logoutOnRequestFailure?: boolean
+  // When the user will have been inactive long enough to be logged out (unix
+  // seconds). The server holds the session to it rather than extending by a
+  // full window, so the session ends when the user actually went idle. Only the
+  // session timer knows it; every other caller omits it.
+  idleDeadline?: number
 }
 
 // Authenticated by the access cookie, which the browser sends automatically.
@@ -23,9 +28,9 @@ interface FetchUserInfoOptions {
 const fetchUserInfo = (
   { dispatch }: SetUserInfoProps,
   logout: Function,
-  { logoutOnRequestFailure = true }: FetchUserInfoOptions = {}
+  { logoutOnRequestFailure = true, idleDeadline }: FetchUserInfoOptions = {}
 ) =>
-  getRequest(getServerUrl('userInfo'))
+  getRequest(getServerUrl('userInfo', { idleDeadline }))
     .then(({ templatePermissions, user, success, orgList, sessionExpiry }) => {
       if (!success) {
         logout()
