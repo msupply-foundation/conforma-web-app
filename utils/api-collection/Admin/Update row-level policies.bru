@@ -1,0 +1,17 @@
+meta {
+  name: Update row-level policies
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/admin/updateRowPolicies
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "password": "{{password}}"
+  }
+}

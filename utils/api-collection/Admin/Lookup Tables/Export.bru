@@ -1,0 +1,15 @@
+meta {
+  name: Export
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/admin/lookup-table/export/{{lookupTableId}}
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  files: @file()
+}

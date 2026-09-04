@@ -1,0 +1,15 @@
+meta {
+  name: Use snapshot
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/admin/snapshot/use?name=testing
+  body: none
+  auth: inherit
+}
+
+params:query {
+  name: testing
+}

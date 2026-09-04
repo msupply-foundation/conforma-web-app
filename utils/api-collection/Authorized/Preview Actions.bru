@@ -1,0 +1,50 @@
+meta {
+  name: Preview Actions
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}/preview-actions?applicationId=1
+  body: json
+  auth: inherit
+}
+
+params:query {
+  applicationId: 1
+}
+
+body:json {
+  {
+      "applicationDataOverride": {
+          "reviewData": {
+              "latestDecision": {
+                  "decision": "CONFORM",
+                  "comment": "Very good"
+              }
+          }
+      }
+  }
+}
+
+docs {
+  Options for body json object:
+  
+  ``` typescript
+    
+   {
+    fileId: string
+    data: object
+    options?: RenderOptions
+    userId?: number
+    templateId?: number
+    applicationSerial?: string
+    applicationResponseId?: number
+    subFolder?: string
+    description?: string
+    isOutputDoc?: boolean
+    toBeDeleted?: boolean
+  }
+  
+  ```
+}

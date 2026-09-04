@@ -1,0 +1,18 @@
+meta {
+  name: Test trigger
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/admin/test-trigger
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "templateCode": "PR3",
+      "trigger": "reviewsubmit"
+  }
+}
