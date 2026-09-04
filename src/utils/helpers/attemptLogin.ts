@@ -14,14 +14,14 @@ interface loginParameters {
   username: string
   password: string
   sessionId?: string
-  onLoginSuccess: Function
-  onLoginFailure?: Function
+  onLoginSuccess: (loginResult: LoginPayload) => void
+  onLoginFailure?: () => void
 }
 interface loginOrgParameters {
   orgId: number
   sessionId?: string
-  onLoginOrgSuccess: Function
-  onLoginOrgFailure?: Function
+  onLoginOrgSuccess: (loginResult: LoginPayload) => void
+  onLoginOrgFailure?: () => void
 }
 
 export const attemptLogin = async ({
@@ -31,21 +31,17 @@ export const attemptLogin = async ({
   onLoginSuccess,
   onLoginFailure = () => {},
 }: loginParameters) => {
-  try {
-    const loginResult: LoginPayload = await postRequest({
-      jsonBody: { username, password, sessionId },
-      url: getServerUrl('login'),
-      headers: { 'Content-Type': 'application/json' },
-    })
+  const loginResult: LoginPayload = await postRequest({
+    jsonBody: { username, password, sessionId },
+    url: getServerUrl('login'),
+    headers: { 'Content-Type': 'application/json' },
+  })
 
-    if (!loginResult.success) {
-      onLoginFailure()
-    } else {
-      recordSessionStarted()
-      onLoginSuccess(loginResult)
-    }
-  } catch (err) {
-    throw err
+  if (!loginResult.success) {
+    onLoginFailure()
+  } else {
+    recordSessionStarted()
+    onLoginSuccess(loginResult)
   }
 }
 
@@ -55,20 +51,16 @@ export const attemptLoginOrg = async ({
   onLoginOrgSuccess,
   onLoginOrgFailure = () => {},
 }: loginOrgParameters) => {
-  try {
-    const loginResult: LoginPayload = await postRequest({
-      jsonBody: { orgId, sessionId },
-      url: getServerUrl('loginOrg'),
-      headers: { 'Content-Type': 'application/json' },
-    })
+  const loginResult: LoginPayload = await postRequest({
+    jsonBody: { orgId, sessionId },
+    url: getServerUrl('loginOrg'),
+    headers: { 'Content-Type': 'application/json' },
+  })
 
-    if (!loginResult.success) {
-      onLoginOrgFailure()
-    } else {
-      recordSessionStarted()
-      onLoginOrgSuccess(loginResult)
-    }
-  } catch (err) {
-    throw err
+  if (!loginResult.success) {
+    onLoginOrgFailure()
+  } else {
+    recordSessionStarted()
+    onLoginOrgSuccess(loginResult)
   }
 }
