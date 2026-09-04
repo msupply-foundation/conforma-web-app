@@ -84,13 +84,13 @@ const initialUserContext: {
   setUserState: React.Dispatch<UserActions>
   onLogin: OnLogin
   logout: () => void
-  endSession: () => void
+  checkSession: () => void
 } = {
   userState: initialState,
   setUserState: () => {},
   onLogin: () => {},
   logout: () => {},
-  endSession: () => {},
+  checkSession: () => {},
 }
 
 const UserContext = createContext(initialUserContext)
@@ -145,10 +145,29 @@ export function UserProvider({ children }: UserProviderProps) {
     location.reload()
   }
 
-  // The session has already ended on the server -- it reached its deadline, or
-  // was revoked, or another tab logged out -- so there is nothing to tell it,
-  // only local state to discard and a reason to explain it with
+  // The session has ended on the server -- it reached its deadline, or was
+  // revoked, or another tab logged out -- so there is nothing to tell it, only
+  // local state to discard and a reason to explain it with
   const endSession = () => clearSession('LOGOUT_INACTIVITY_ALERT')
+
+  /*
+  Asks the server whether the session is still there, and ends it here if the
+  answer is no. Every logout the user didn't ask for goes through this, so the
+  server's 401 is what ends a session rather than anything the app worked out
+  for itself -- and that 401 is also the only thing that can expire the auth
+  cookies, since they are HttpOnly and no script can discard them.
+
+  A request that fails for some other reason says nothing about the session, so
+  it leaves the user logged in and is tried again later.
+
+  "idleDeadline" is passed by the activity timer, whose calls double as the
+  keep-alive; a caller with no deadline to report is only checking.
+  */
+  const checkSession = (idleDeadline?: number) =>
+    fetchUserInfo({ dispatch: setUserState }, endSession, {
+      logoutOnRequestFailure: false,
+      idleDeadline,
+    })
 
   const sessionTimer = useMemo(
     () =>
@@ -157,11 +176,7 @@ export function UserProvider({ children }: UserProviderProps) {
         sessionTimeout: preferences.logoutAfterInactivity,
         // Hitting "/user-info" is what extends the session on the server, and
         // the deadline it carries is what stops the session outliving it
-        onKeepAlive: (idleDeadline) =>
-          fetchUserInfo({ dispatch: setUserState }, endSession, {
-            logoutOnRequestFailure: false,
-            idleDeadline,
-          }),
+        onKeepAlive: checkSession,
         onSessionEnded: endSession,
       }),
     []
@@ -222,7 +237,7 @@ export function UserProvider({ children }: UserProviderProps) {
 
   // Return the state and reducer to the context (wrap around the children)
   return (
-    <UserContext.Provider value={{ userState, setUserState, onLogin, logout, endSession }}>
+    <UserContext.Provider value={{ userState, setUserState, onLogin, logout, checkSession }}>
       {children}
     </UserContext.Provider>
   )

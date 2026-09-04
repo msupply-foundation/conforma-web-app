@@ -35,7 +35,7 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
   const {
     userState: { currentUser },
     onLogin,
-    endSession,
+    checkSession,
   } = useUserState()
   const { maintenanceMode } = usePrefs()
   const [redirectStatus, setRedirectStatus] = useState<RedirectStatus>({
@@ -98,15 +98,19 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
       // sockets belonged to them. An idle client makes no requests, so this is
       // the only thing that would tell it promptly; without it the session is
       // discovered on the next request, which 401s.
+      //
+      // Deliberately a prompt to go and look rather than an instruction to log
+      // out. Making the request is what gets the 401 that ends the session here
+      // -- and that response is also the only thing that can expire the auth
+      // cookies, which are HttpOnly and beyond the reach of script. It also
+      // means a message that turns out to be wrong costs a request rather than
+      // the user's session.
       if (data.type === 'session-expired') {
-        // Nothing to end, and ending it would reload the login screen the user
-        // is already looking at. The auth cookies are HttpOnly, so a browser
-        // that still holds one for a session that has gone can go on being told
-        // about it -- and each reload would bring back a socket presenting the
-        // same cookie.
+        // Nothing left to check, and a 401 here would only reload the login
+        // screen the user is already looking at
         if (!isLoggedIn()) return
-        console.log('Session expired on server, logging out...')
-        endSession()
+        console.log('Server reports the session has ended, checking...')
+        checkSession()
         return
       }
 
