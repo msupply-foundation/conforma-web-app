@@ -99,6 +99,12 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
       // the only thing that would tell it promptly; without it the session is
       // discovered on the next request, which 401s.
       if (data.type === 'session-expired') {
+        // Nothing to end, and ending it would reload the login screen the user
+        // is already looking at. The auth cookies are HttpOnly, so a browser
+        // that still holds one for a session that has gone can go on being told
+        // about it -- and each reload would bring back a socket presenting the
+        // same cookie.
+        if (!isLoggedIn()) return
         console.log('Session expired on server, logging out...')
         endSession()
         return
