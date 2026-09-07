@@ -34,9 +34,9 @@ export type ErrorResponse = {
 }
 
 export const useDataViewsList = () => {
-  // Note: we don't *need* templatePermissions, we only use it so that the
-  // hook can react to changes, since JWT (what we *actually* need) is not in
-  // State (perhaps it should be?)
+  // Note: we don't *need* templatePermissions, we only use it so that the hook
+  // re-runs when the user's permissions change -- the request itself is
+  // authorised by the access cookie, which isn't visible to React state
   const [error, setError] = useState<ErrorResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [dataViewsList, setDataViewsList] = useState<DataViewsResponse>([])
