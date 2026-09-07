@@ -6,7 +6,8 @@ import { LoginPayload, OrganisationSimple, TemplatePermissions, User } from '../
 import config from '../../config'
 import { usePrefs } from '../SystemPrefs'
 import { LanguageStrings, useLanguageProvider } from '../Localisation'
-import { SessionActivityTimer, setSessionExpiry } from './SessionActivityTimer'
+import { SessionActivityTimer } from './SessionActivityTimer'
+import sendHeartbeat from '../../utils/helpers/sendHeartbeat'
 import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
 import { loadFragments } from '../../FigTreeEvaluator'
 import { postRequest } from '../../utils/helpers/fetchMethods'
@@ -150,43 +151,31 @@ export function UserProvider({ children }: UserProviderProps) {
   // local state to discard and a reason to explain it with
   const endSession = () => clearSession('LOGOUT_INACTIVITY_ALERT')
 
-  /*
-  Asks the server whether the session is still there, and ends it here if the
-  answer is no. Every logout the user didn't ask for goes through this, so the
-  server's 401 is what ends a session rather than anything the app worked out
-  for itself -- and that 401 is also the only thing that can expire the auth
-  cookies, since they are HttpOnly and no script can discard them.
-
-  A request that fails for some other reason says nothing about the session, so
-  it leaves the user logged in and is tried again later.
-
-  "idleDeadline" is passed by the activity timer, whose calls double as the
-  keep-alive; a caller with no deadline to report is only checking.
-  */
-  const checkSession = (idleDeadline?: number) =>
-    fetchUserInfo({ dispatch: setUserState }, endSession, {
-      logoutOnRequestFailure: false,
-      idleDeadline,
-    })
-
   const sessionTimer = useMemo(
     () =>
       // Using useMemo to ensure only one instance created
       new SessionActivityTimer({
         sessionTimeout: preferences.logoutAfterInactivity,
-        // Hitting "/user-info" is what extends the session on the server, and
-        // the deadline it carries is what stops the session outliving it
-        onKeepAlive: checkSession,
+        onHeartbeat: sendHeartbeat,
         onSessionEnded: endSession,
       }),
     []
   )
+
+  // Asks the server whether the session is still there, and ends it here if the
+  // answer is no. The websocket uses this when the server reports a session has
+  // ended: the 401 it produces is what ends the session here, and is also the
+  // only thing that can expire the auth cookies.
+  const checkSession = () => sessionTimer.heartbeat()
 
   // The user asked to log out, so the session is ended on the server as well --
   // which is also the only way to expire the HttpOnly cookies. Note this ends
   // the user's sessions on every device: there is one Logout action in the UI
   // and it means all of them.
   const logout = async () => {
+    // Stops a heartbeat racing this and reporting the resulting 401 back as an
+    // inactivity logout
+    sessionTimer.beginLogout()
     try {
       await postRequest({
         url: getServerUrl('logout'),
@@ -199,7 +188,7 @@ export function UserProvider({ children }: UserProviderProps) {
   }
 
   const onLogin: OnLogin = (loginPayload) => {
-    const { user, templatePermissions, orgList, sessionExpiry } = loginPayload ?? {}
+    const { user, templatePermissions, orgList } = loginPayload ?? {}
     clearAllToasts()
     dispatch({ type: 'setLoading', isLoading: true })
     localStorage.setItem(config.localStorageLoginKey, 'true')
@@ -211,7 +200,6 @@ export function UserProvider({ children }: UserProviderProps) {
       // network blip, the session is still good and must not be touched
       fetchUserInfo({ dispatch: setUserState }, clearSession)
     } else {
-      if (sessionExpiry) setSessionExpiry(sessionExpiry)
       dispatch({
         type: 'setCurrentUser',
         newUser: user,
@@ -221,9 +209,9 @@ export function UserProvider({ children }: UserProviderProps) {
       dispatch({ type: 'setLoading', isLoading: false })
     }
 
-    // Started unconditionally: when auto-logout is disabled the session's
-    // deadline is set decades out, so the timer simply never needs to keep it
-    // alive, and it still notices another tab logging out
+    // Started unconditionally: when auto-logout is disabled there is nothing to
+    // keep alive, but the timer still notices another tab logging out and still
+    // discovers a session revoked some other way. Calling it again is harmless.
     sessionTimer.start()
   }
 

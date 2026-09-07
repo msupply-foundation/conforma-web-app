@@ -1,6 +1,6 @@
 import { Dispatch } from 'react'
 import { UserActions } from '../../contexts/UserState'
-import { setSessionExpiry } from '../../contexts/UserState/SessionActivityTimer'
+import { setSessionEnd } from '../../contexts/UserState/SessionActivityTimer'
 import { getRequest, isUnauthenticated } from './fetchMethods'
 import getServerUrl from './endpoints/endpointUrlBuilder'
 
@@ -14,29 +14,25 @@ interface FetchUserInfoOptions {
   // check. On first load there is nothing to try again with, so any failure has
   // to send the user to the login screen.
   logoutOnRequestFailure?: boolean
-  // When the user will have been inactive long enough to be logged out (unix
-  // seconds). The server holds the session to it rather than extending by a
-  // full window, so the session ends when the user actually went idle. Only the
-  // session timer knows it; every other caller omits it.
-  idleDeadline?: number
 }
 
 // Authenticated by the access cookie, which the browser sends automatically.
-// This is also the designated "still here" call: the server extends the
-// session's deadline whenever it is hit, and replaces the access cookie if it
-// has run out. The deadline it reports is what the session timer watches.
+// Fetches the current user's details, and replaces the access cookie if it has
+// run out. Keeping the session alive is the heartbeat's job, not this one's.
 const fetchUserInfo = (
   { dispatch }: SetUserInfoProps,
   logout: Function,
-  { logoutOnRequestFailure = true, idleDeadline }: FetchUserInfoOptions = {}
+  { logoutOnRequestFailure = true }: FetchUserInfoOptions = {}
 ) =>
-  getRequest(getServerUrl('userInfo', { idleDeadline }))
+  getRequest(getServerUrl('userInfo'))
     .then(({ templatePermissions, user, success, orgList, sessionExpiry }) => {
       if (!success) {
         logout()
         return
       }
-      if (sessionExpiry) setSessionExpiry(sessionExpiry)
+      // Gives the session timer a deadline to watch on a tab that is restored
+      // and then never touched, which would otherwise have nothing to work from
+      if (sessionExpiry) setSessionEnd(sessionExpiry)
       // Set userinfo to context after receiving it from endpoint
       if (user && templatePermissions) {
         dispatch({

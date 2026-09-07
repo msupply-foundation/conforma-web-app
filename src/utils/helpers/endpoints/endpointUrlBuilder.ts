@@ -4,7 +4,6 @@ import {
   LanguageOptions,
   FilesOptions,
   UserPermissionsOptions,
-  UserInfoOptions,
   VerifyOptions,
   CheckTriggersOptions,
   FileOptions,
@@ -88,6 +87,8 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     case 'login':
     case 'loginOrg':
     case 'logout':
+    case 'heartbeat':
+    case 'userInfo':
     case 'createHash':
     case 'generatePDF':
     case 'admin':
@@ -102,9 +103,6 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     case 'checkUnique':
     case 'upload':
       return `${serverREST}${endpointPath}${buildQueryString(options as UserPermissionsOptions)}`
-
-    case 'userInfo':
-      return `${serverREST}${endpointPath}${buildQueryString(options as UserInfoOptions)}`
 
     case 'language': {
       const { code } = options as LanguageOptions

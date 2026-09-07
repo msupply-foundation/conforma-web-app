@@ -41,6 +41,7 @@ const config = {
     // Auth required
     loginOrg: '/login-org',
     logout: '/logout',
+    heartbeat: '/heartbeat',
     userInfo: '/user-info',
     userPermissions: '/user-permissions',
     createHash: '/create-hash',
