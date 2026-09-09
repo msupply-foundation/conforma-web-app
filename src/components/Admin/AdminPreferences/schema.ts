@@ -89,6 +89,47 @@ export const PreferencesSchema = {
                       token: { type: 'string' },
                     },
                   },
+                  {
+                    type: 'object',
+                    required: ['type', 'token', 'cookieName'],
+                    properties: {
+                      type: { const: 'CookieToken' },
+                      token: { type: 'string' },
+                      cookieName: { type: 'string' },
+                    },
+                  },
+                  {
+                    type: 'object',
+                    required: ['type', 'login'],
+                    properties: {
+                      type: { const: 'CookieLogin' },
+                      login: {
+                        type: 'object',
+                        required: ['url'],
+                        properties: {
+                          url: { type: 'string' },
+                          method: { enum: ['post', 'get'] },
+                          body: {
+                            type: 'object',
+                            additionalProperties: { type: 'string' },
+                          },
+                        },
+                      },
+                      // A status or a list of them; numbers are accepted since
+                      // a JSON author will naturally leave them unquoted
+                      reloginOn: {
+                        anyOf: [
+                          { type: 'string' },
+                          { type: 'number' },
+                          {
+                            type: 'array',
+                            items: { anyOf: [{ type: 'string' }, { type: 'number' }] },
+                          },
+                        ],
+                      },
+                      loginFailTimeout: { type: 'number' },
+                    },
+                  },
                 ],
               },
               routes: {
@@ -384,6 +425,17 @@ export interface Preferences {
         authentication:
           | { type: 'Basic'; username: string; password: string }
           | { type: 'Bearer'; token: string }
+          | { type: 'CookieToken'; token: string; cookieName: string }
+          | {
+              type: 'CookieLogin'
+              login: {
+                url: string
+                method?: 'post' | 'get'
+                body?: { [key: string]: string }
+              }
+              reloginOn?: string | number | (string | number)[]
+              loginFailTimeout?: number
+            }
         routes: {
           [key: string]:
             | {
