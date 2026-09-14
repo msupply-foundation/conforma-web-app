@@ -1,0 +1,15 @@
+meta {
+  name: Delete snapshot
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{base_url}}/admin/snapshot/delete?name=testing
+  body: none
+  auth: inherit
+}
+
+params:query {
+  name: testing
+}

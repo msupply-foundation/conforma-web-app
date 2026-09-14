@@ -1,0 +1,20 @@
+meta {
+  name: Tonga mSupply API Item search
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/external-api/mSupply/itemSearch?search=abc
+  body: none
+  auth: inherit
+}
+
+params:query {
+  search: abc
+}
+
+body:json {
+  {
+  }
+}

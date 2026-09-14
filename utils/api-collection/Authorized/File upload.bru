@@ -1,0 +1,19 @@
+meta {
+  name: File upload
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/upload?subfolder=carbone_templates
+  body: multipartForm
+  auth: inherit
+}
+
+params:query {
+  subfolder: carbone_templates
+}
+
+body:multipart-form {
+  file: @file()
+}

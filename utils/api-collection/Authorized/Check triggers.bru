@@ -1,0 +1,15 @@
+meta {
+  name: Check triggers
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{base_url}}/check-triggers?serial=UE-CJD-0100
+  body: none
+  auth: inherit
+}
+
+params:query {
+  serial: UE-CJD-0100
+}

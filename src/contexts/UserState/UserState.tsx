@@ -1,14 +1,18 @@
-import React, { createContext, useContext, useReducer, useRef, useMemo } from 'react'
+import React, { createContext, useContext, useEffect, useReducer, useMemo } from 'react'
 import { useApolloClient } from '@apollo/client'
 import fetchUserInfo from '../../utils/helpers/fetchUserInfo'
 import { Position, useToast } from '../Toast'
-import { OrganisationSimple, TemplatePermissions, User } from '../../utils/types'
+import { LoginPayload, OrganisationSimple, TemplatePermissions, User } from '../../utils/types'
 import config from '../../config'
 import { usePrefs } from '../SystemPrefs'
-import { useLanguageProvider } from '../Localisation'
-import { LOCAL_STORAGE_EXPIRY_KEY, LoginInactivityTimer } from './LoginInactivityTimer'
+import { LanguageStrings, useLanguageProvider } from '../Localisation'
+import { SessionActivityTimer } from './SessionActivityTimer'
+import sendHeartbeat from '../../utils/helpers/sendHeartbeat'
 import { clearLocalStorageExcept } from '../../utils/helpers/utilityFunctions'
-import { FigTree, loadFragments } from '../../FigTreeEvaluator'
+import { loadFragments } from '../../FigTreeEvaluator'
+import { postRequest } from '../../utils/helpers/fetchMethods'
+import getServerUrl from '../../utils/helpers/endpoints/endpointUrlBuilder'
+import isLoggedIn from '../../utils/helpers/loginCheck'
 
 type UserState = {
   currentUser: User | null
@@ -18,12 +22,12 @@ type UserState = {
   isNonRegistered: boolean | null
 }
 
-type OnLogin = (
-  JWT: string,
-  user?: User,
-  templatePermissions?: TemplatePermissions,
-  orgList?: OrganisationSimple[]
-) => void
+// The access and refresh tokens are HttpOnly cookies, set by the server on the
+// login response, so there is no credential for the caller to pass in here --
+// see kdd/auth-token-lifecycle §3. Called with no payload to restore a session
+// the browser still holds cookies for, in which case the user's details are
+// re-fetched from "/user-info".
+type OnLogin = (loginPayload?: Partial<LoginPayload>) => void
 
 export type UserActions =
   | {
@@ -81,14 +85,28 @@ const initialUserContext: {
   setUserState: React.Dispatch<UserActions>
   onLogin: OnLogin
   logout: () => void
+  checkSession: () => void
 } = {
   userState: initialState,
   setUserState: () => {},
   onLogin: () => {},
   logout: () => {},
+  checkSession: () => {},
 }
 
 const UserContext = createContext(initialUserContext)
+
+/*
+Ending a session reloads the page, and a toast is React state, so an explanation
+shown before the reload would never be read. The reason is left in local storage
+instead and picked up by the next mount, on the login screen it lands on.
+
+It is a localisation key rather than a message, so it is translated when it's
+shown -- the language provider may not have the user's language loaded at the
+moment the session ends.
+*/
+const LOGOUT_REASON_KEY = 'logoutReason'
+type LogoutReason = keyof LanguageStrings
 
 export function UserProvider({ children }: UserProviderProps) {
   const { t } = useLanguageProvider()
@@ -99,56 +117,88 @@ export function UserProvider({ children }: UserProviderProps) {
   const { preferences } = usePrefs()
   const { showToast, clearAllToasts } = useToast()
 
-  const refreshTokenTimer = useRef(0)
+  // The reason for a logout the user didn't ask for is shown once, on the login
+  // screen the reload lands on
+  useEffect(() => {
+    const reason = localStorage.getItem(LOGOUT_REASON_KEY) as LogoutReason | null
+    if (!reason) return
+    localStorage.removeItem(LOGOUT_REASON_KEY)
+    showToast({
+      title: t('MENU_LOGOUT'),
+      text: t(reason),
+      style: 'negative',
+      position: Position.topMiddle,
+      timeout: 0,
+    })
+  }, [])
 
-  const disableAutoLogout = preferences.logoutAfterInactivity === 0
-  const loginTimer = useMemo(
-    () =>
-      // Using useMemo to ensure only one instance created
-      new LoginInactivityTimer({
-        idleTimeout: preferences.logoutAfterInactivity,
-        onLogout: () => {
-          logout()
-          showToast({
-            title: t('MENU_LOGOUT'),
-            text: t('LOGOUT_INACTIVITY_ALERT'),
-            style: 'negative',
-            position: Position.topMiddle,
-            timeout: 0,
-          })
-        },
-      }),
-    []
-  )
-
-  const logout = () => {
-    clearInterval(refreshTokenTimer.current)
-    refreshTokenTimer.current = 0
-    clearLocalStorageExcept([
-      'language',
-      LOCAL_STORAGE_EXPIRY_KEY,
-      'redirectLocation',
-      'maintenanceMode',
-    ])
+  // Everything a logout does in this browser. Whether the session also ends on
+  // the server is a separate question -- see logout and endSession.
+  const clearSession = (logoutReason?: LogoutReason) => {
+    clearLocalStorageExcept(['language', 'redirectLocation', 'maintenanceMode'])
+    // Written after the clear, and read back after the reload below
+    if (logoutReason) localStorage.setItem(LOGOUT_REASON_KEY, logoutReason)
     client.clearStore()
     setUserState({ type: 'resetCurrentUser' })
-    loginTimer.end()
+    sessionTimer.end()
     // Forcing a refresh makes the app reload, which is useful if the app has
     // been upgraded but still using locally cached javascript
     location.reload()
   }
 
-  const onLogin: OnLogin = (JWT: string, user, templatePermissions, orgList) => {
-    // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
-    clearAllToasts()
-    if (JWT == 'undefined' || JWT == undefined) {
-      logout()
-      return
+  // The session has ended on the server -- it reached its deadline, or was
+  // revoked, or another tab logged out -- so there is nothing to tell it, only
+  // local state to discard and a reason to explain it with
+  const endSession = () => clearSession('LOGOUT_INACTIVITY_ALERT')
+
+  const sessionTimer = useMemo(
+    () =>
+      // Using useMemo to ensure only one instance created
+      new SessionActivityTimer({
+        sessionTimeout: preferences.logoutAfterInactivity,
+        onHeartbeat: sendHeartbeat,
+        onSessionEnded: endSession,
+      }),
+    []
+  )
+
+  // Asks the server whether the session is still there, and ends it here if the
+  // answer is no. The websocket uses this when the server reports a session has
+  // ended: the 401 it produces is what ends the session here, and is also the
+  // only thing that can expire the auth cookies.
+  const checkSession = () => sessionTimer.heartbeat()
+
+  // The user asked to log out, so the session is ended on the server as well --
+  // which is also the only way to expire the HttpOnly cookies. Note this ends
+  // the user's sessions on every device: there is one Logout action in the UI
+  // and it means all of them.
+  const logout = async () => {
+    // Stops a heartbeat racing this and reporting the resulting 401 back as an
+    // inactivity logout
+    sessionTimer.beginLogout()
+    try {
+      await postRequest({
+        url: getServerUrl('logout'),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    } catch (err) {
+      console.error('Problem ending session:', err)
     }
+    clearSession()
+  }
+
+  const onLogin: OnLogin = (loginPayload) => {
+    const { user, templatePermissions, orgList } = loginPayload ?? {}
+    clearAllToasts()
     dispatch({ type: 'setLoading', isLoading: true })
-    localStorage.setItem(config.localStorageJWTKey, JWT)
+    localStorage.setItem(config.localStorageLoginKey, 'true')
+    // Refresh the FigTree fragments available to the global evaluator
+    loadFragments()
     if (!user || !templatePermissions || !user.permissionNames) {
-      fetchUserInfo({ dispatch: setUserState }, logout)
+      // Failure here means the session couldn't be restored, so there is
+      // nothing to end on the server -- and if it turns out to have been a
+      // network blip, the session is still good and must not be touched
+      fetchUserInfo({ dispatch: setUserState }, clearSession)
     } else {
       dispatch({
         type: 'setCurrentUser',
@@ -157,38 +207,25 @@ export function UserProvider({ children }: UserProviderProps) {
         newOrgList: orgList || [],
       })
       dispatch({ type: 'setLoading', isLoading: false })
-      updateFigTree(JWT)
     }
 
-    if (!disableAutoLogout) {
-      if (refreshTokenTimer.current === 0) loginTimer.start()
-
-      if (refreshTokenTimer.current === 0) {
-        refreshTokenTimer.current = window.setInterval(
-          refreshJWT,
-          // Max prevents timer starting with negative or 0 value
-          Math.max((preferences.logoutAfterInactivity - 1) * 60_000, 60_000)
-        )
-      }
-    }
+    // Started unconditionally: when auto-logout is disabled there is nothing to
+    // keep alive, but the timer still notices another tab logging out and still
+    // discovers a session revoked some other way. Calling it again is harmless.
+    sessionTimer.start()
   }
 
-  const refreshJWT = () => {
-    console.log(new Date(), 'Refreshing auth token...')
-    fetchUserInfo({ dispatch: setUserState }, logout)
-  }
-
-  // Initial check for persisted user in local storage
-  const JWT = localStorage.getItem(config.localStorageJWTKey)
-  // NOTE: quotes are required in 'undefined', refer to https://github.com/openmsupply/conforma-web-app/pull/841#discussion_r670822649
-  if (JWT === 'undefined') logout()
-  if (JWT && !userState.currentUser && !userState.isLoading) {
-    onLogin(JWT)
+  // Restore the session recorded in local storage. Its cookies are sent
+  // automatically, so onLogin only needs to re-fetch the user's details -- and
+  // if the session has since been revoked or expired, that request fails and
+  // takes us to the login screen
+  if (isLoggedIn() && !userState.currentUser && !userState.isLoading) {
+    onLogin()
   }
 
   // Return the state and reducer to the context (wrap around the children)
   return (
-    <UserContext.Provider value={{ userState, setUserState, onLogin, logout }}>
+    <UserContext.Provider value={{ userState, setUserState, onLogin, logout, checkSession }}>
       {children}
     </UserContext.Provider>
   )
@@ -199,14 +236,3 @@ export function UserProvider({ children }: UserProviderProps) {
  * - @returns an object with a reducer function `setUserState` and the `userState`
  */
 export const useUserState = () => useContext(UserContext)
-
-// Updates the global FigTree object with user token and refreshes available
-// Fragments
-export const updateFigTree = async (JWT: string) => {
-  FigTree.updateOptions({
-    headers: {
-      Authorization: `Bearer ${JWT}`,
-    },
-  })
-  loadFragments()
-}

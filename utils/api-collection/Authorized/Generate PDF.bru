@@ -1,0 +1,40 @@
+meta {
+  name: Generate PDF
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{base_url}}/upload
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "fileId": "CylhAzxRhSX_QjtArq3bi",
+      "data": {}
+  }
+}
+
+docs {
+  Options for body json object:
+  
+  ``` typescript
+    
+   {
+    fileId: string
+    data: object
+    options?: RenderOptions
+    userId?: number
+    templateId?: number
+    applicationSerial?: string
+    applicationResponseId?: number
+    subFolder?: string
+    description?: string
+    isOutputDoc?: boolean
+    toBeDeleted?: boolean
+  }
+  
+  ```
+}

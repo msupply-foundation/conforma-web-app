@@ -1,0 +1,17 @@
+meta {
+  name: FilterList
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/data-views/organisation/filterList/typeFilterData
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "searchText": "imp"
+  }
+}

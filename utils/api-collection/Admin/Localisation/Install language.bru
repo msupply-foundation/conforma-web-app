@@ -1,0 +1,27 @@
+meta {
+  name: Install language
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/admin/install-language
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "language": {
+          "languageName": "New Made-Up Language",
+          "description": "Just for testing",
+          "code": "en_xx",
+          "flag": "😀",
+          "enabled": true
+      },
+      "strings": {
+          "_APP_NAME": "Conforma",
+          "_APP_NAME_SUBHEADER": "Great app for managing applications"
+      }
+  }
+}

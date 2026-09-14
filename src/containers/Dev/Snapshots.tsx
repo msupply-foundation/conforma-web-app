@@ -65,7 +65,6 @@ const Snapshots: React.FC = () => {
   const { ConfirmModal, showModal } = useConfirmationModal({ type: 'warning', awaitAction: false })
   const { showToast } = useToast({ style: 'success' })
 
-  // const JWT = localStorage.getItem(config.localStorageJWTKey)
   const isProductionBuild = config.isProductionBuild
 
   BrowserNotifications.checkPermission()

@@ -1,0 +1,21 @@
+meta {
+  name: Take snapshot
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/admin/snapshot/take?name=testing
+  body: json
+  auth: inherit
+}
+
+params:query {
+  name: testing
+}
+
+body:json {
+  {
+      
+  }
+}

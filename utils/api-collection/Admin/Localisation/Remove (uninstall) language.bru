@@ -1,0 +1,15 @@
+meta {
+  name: Remove (uninstall) language
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/admin/remove-language?code=en_xx
+  body: none
+  auth: inherit
+}
+
+params:query {
+  code: en_xx
+}

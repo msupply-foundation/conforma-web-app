@@ -1,0 +1,21 @@
+meta {
+  name: Get applicationData
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{base_url}}/admin/get-application-data?applicationId=1
+  body: json
+  auth: inherit
+}
+
+params:query {
+  applicationId: 1
+}
+
+body:json {
+  {
+      "password": "{{password}}"
+  }
+}
