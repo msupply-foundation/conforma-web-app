@@ -8,6 +8,10 @@ import Markdown from '../utils/helpers/semanticReactMarkdown'
 
 const savedLanguageCode = localStorage.getItem('language')
 
+// Not a real language -- selects the strings bundled with the app, for when the
+// server has no language of its own to offer
+const LOCAL_DEFAULT_CODE = 'default'
+
 // For matching {{replacementKey}} in localised strings
 const stringReplacementRegex = /{{([A-z0-9]+)}}/gm
 
@@ -39,7 +43,6 @@ export type LanguageOption = {
 export type LanguageStrings = { [Property in keyof typeof defaultStrings]: string }
 
 interface LanguageState {
-  languageOptions: LanguageOption[]
   selectedLanguage: LanguageOption
   strings: LanguageStrings
   loading: boolean
@@ -116,7 +119,6 @@ export function LanguageProvider({
   refetchPrefs,
 }: LanguageProviderProps) {
   const [languageState, setLanguageState] = useState<LanguageState>({
-    languageOptions,
     selectedLanguage: initSelectedLanguage,
     strings: allDefaultStrings,
     loading: true,
@@ -127,48 +129,47 @@ export function LanguageProvider({
   )
   const [shouldRefetchStrings, setShouldRefetchStrings] = useState(false)
 
-  // Load initial language and fetch options list
+  // Fetch the strings for a language code that has already been checked against
+  // the available options
   const updateLanguageState = async (languageCode: string) => {
-    setLanguageState({ ...languageState, loading: true })
-    const { languageOptions } = languageState
+    setLanguageState((state) => ({ ...state, loading: true }))
     try {
-      const selectedLanguage =
-        languageOptions.find((lang: LanguageOption) => lang.code === languageCode) ??
-        languageOptions[0]
-      // Safety in case stored language code is no longer available on server
-      setSelectedLanguageCode(selectedLanguage.code)
       const strings = (await getLanguageStrings(languageCode)) as LanguageStrings
-      setLanguageState({
-        ...languageState,
-        languageOptions,
-        selectedLanguage,
+      setLanguageState((state) => ({
+        ...state,
+        selectedLanguage:
+          languageOptions.find((lang: LanguageOption) => lang.code === languageCode) ??
+          state.selectedLanguage,
         strings,
         loading: false,
-      })
+        error: null,
+      }))
       localStorage.setItem('language', languageCode)
     } catch (err) {
-      setLanguageState({
-        ...languageState,
+      setLanguageState((state) => ({
+        ...state,
         loading: false,
         error: err,
-      })
+      }))
       localStorage.removeItem('language')
     }
   }
 
-  // If the selected language is no longer valid (either disabled or uninstalled), then try default, or fallback to first available
-  const getValidLanguageCode = () => {
-    if (languageOptions.some((lang) => lang.enabled && lang.code === selectedLanguageCode))
-      return selectedLanguageCode
-    if (languageOptions.some((lang) => lang.enabled && lang.code === defaultLanguageCode))
-      return defaultLanguageCode
-    else {
-      const firstAvailableLanguageCode = languageOptions.filter(({ enabled }) => enabled)[0].code
-      console.log(
-        `Invalid language code, falling back to first available: ${firstAvailableLanguageCode}`
-      )
-      return firstAvailableLanguageCode
-    }
+  // A language code only means something to the server that has that language
+  // installed and enabled, so a code from localStorage or from prefs can name a
+  // language this server doesn't have -- asking for its strings would fail. The
+  // server default is preferred as a fallback, then the first available
+  // language, and finally the strings bundled with the app.
+  const getValidLanguageCode = (code: string) => {
+    const enabledLanguages = languageOptions.filter(({ enabled }) => enabled)
+    if (enabledLanguages.some((lang) => lang.code === code)) return code
+
+    const fallbackCode =
+      enabledLanguages.find((lang) => lang.code === defaultLanguageCode)?.code ??
+      enabledLanguages[0]?.code ??
+      LOCAL_DEFAULT_CODE
+    console.log(`Invalid language code "${code}", falling back to: ${fallbackCode}`)
+    return fallbackCode
   }
 
   // Reload language options from prefs, and (optionally) refresh the current
@@ -200,13 +201,15 @@ export function LanguageProvider({
 
   // Fetch new language when language code changes
   useEffect(() => {
-    updateLanguageState(selectedLanguageCode)
+    const validCode = getValidLanguageCode(selectedLanguageCode)
+    // Correcting the code re-runs this effect, which then does the fetching
+    if (validCode !== selectedLanguageCode) setSelectedLanguageCode(validCode)
+    else updateLanguageState(validCode)
   }, [selectedLanguageCode])
 
   // Update language state whenever Options refetched from Prefs
   useEffect(() => {
-    setLanguageState((state) => ({ ...state, languageOptions }))
-    const validCode = getValidLanguageCode()
+    const validCode = getValidLanguageCode(selectedLanguageCode)
     if (validCode !== selectedLanguageCode) setSelectedLanguageCode(validCode)
     else if (shouldRefetchStrings) updateLanguageState(validCode)
     setShouldRefetchStrings(false)
@@ -216,10 +219,8 @@ export function LanguageProvider({
     <LanguageProviderContext.Provider
       value={{
         selectedLanguage: languageState.selectedLanguage,
-        languageOptions: languageState.languageOptions.filter(
-          (lang: LanguageOption) => lang?.enabled
-        ),
-        languageOptionsFull: languageState.languageOptions,
+        languageOptions: languageOptions.filter((lang: LanguageOption) => lang?.enabled),
+        languageOptionsFull: languageOptions,
         loading: languageState.loading,
         error: languageState.error,
         setLanguage: setSelectedLanguageCode,
