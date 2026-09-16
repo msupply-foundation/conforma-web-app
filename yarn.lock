@@ -1578,10 +1578,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@json-edit-react/components@^0.9.0-beta.3":
-  version "0.9.0-beta.3"
-  resolved "https://registry.yarnpkg.com/@json-edit-react/components/-/components-0.9.0-beta.3.tgz#b09a618ff64cc9b92f1a605a2cd4073b93e7bf10"
-  integrity sha512-aAuNU/srK4hsM5OqPUSXahgSGO42wCMaBYeJTuD6O4O6Xu1sTk8KEaGeky6PA/w1xxpZz3N5s6Rtykw7awuNMA==
+"@json-edit-react/components@^0.9.0-beta.6":
+  version "0.9.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@json-edit-react/components/-/components-0.9.0-beta.6.tgz#40cd488fab346ad0370b7eadcc39b2b4c276049a"
+  integrity sha512-yEP+JVLe6JiUrZkLgpLcxAeBROaG45bIzXm6zSIsbUy2UDaPBXirPEf28xZRnlDYXkeApT6as+Lr+gXVgxyFzw==
   dependencies:
     "@codemirror/lang-json" "^6.0.1"
     "@uiw/codemirror-theme-console" "^4.23.13"
@@ -1599,10 +1599,10 @@
     react-select "^5.10.0"
     use-debounce "^10.0.5"
 
-"@json-edit-react/utils@^0.9.0-beta.2":
-  version "0.9.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@json-edit-react/utils/-/utils-0.9.0-beta.2.tgz#c6812c2b5ea26b3cc5322dbfcbc63dfce6740ca8"
-  integrity sha512-tYADe8NZ326KychobKQNiYss8/LxITd11I+HxTL7PRbBVgbaQKWd8H9lzglSCcX9+d/nYaGYCeIjK8OD/q/VVQ==
+"@json-edit-react/utils@^0.9.0-beta.3":
+  version "0.9.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@json-edit-react/utils/-/utils-0.9.0-beta.3.tgz#d4f071dd16987129a8dac17f4c8998d4c6ee9358"
+  integrity sha512-UCkxxk+5O113LhqH6AaGUnzBOShCMdwGSEF3zfvpFCvz+8NeXm/uQSb8/yqaq/5hzRpTupNjQ9qP8JCcvW3ypg==
 
 "@kamilkisiela/fast-url-parser@^1.1.4":
   version "1.1.4"
@@ -3485,19 +3485,19 @@ fbjs@^3.0.0:
     setimmediate "^1.0.5"
     ua-parser-js "^1.0.35"
 
-fig-tree-editor-react@1.0.0-beta.7:
-  version "1.0.0-beta.7"
-  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-1.0.0-beta.7.tgz#c568218d06aea4f59719c77379a46211ab57be69"
-  integrity sha512-XJatROgENyI+9W5FNBgJoGmlpXjyy4qtYx5zhXlnQ4StFLiXR28EL9eo47g3G6iNiIs1Ldse/6Tb8UDUdavYzg==
+fig-tree-editor-react@1.0.0-beta.8:
+  version "1.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/fig-tree-editor-react/-/fig-tree-editor-react-1.0.0-beta.8.tgz#ae3af8017c65dcc59cd0daf221441690109e8af4"
+  integrity sha512-xhe47CBk3NmYMXjHobFYcx3BbVtPN5uYDikMPm51cPW7AwbT6QYmuDfcTnw7LY23TguJs6xRiTZXrf1y4S5bWQ==
   dependencies:
-    "@json-edit-react/utils" "^0.9.0-beta.2"
-    fig-tree-evaluator "^2.23.1"
-    json-edit-react "^2.0.0-beta.8"
+    "@json-edit-react/utils" "^0.9.0-beta.3"
+    fig-tree-evaluator "^2.23.2"
+    json-edit-react "^2.0.0-beta.10"
 
-fig-tree-evaluator@^2.23.1:
-  version "2.23.1"
-  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.23.1.tgz#7c9742b829d06ddabcfac8921891d57b40a005c8"
-  integrity sha512-1WbML6wNyvIk8KMvY6CjVAjSTf50+2sDkET3Nlh1LgbnClOcAIAQZRHL8DDbA2KAB4eivWNg/9XVJWuFGF3y0Q==
+fig-tree-evaluator@^2.23.2:
+  version "2.23.2"
+  resolved "https://registry.yarnpkg.com/fig-tree-evaluator/-/fig-tree-evaluator-2.23.2.tgz#4cc25fc94b013de9ee0056c07a69225c9962710c"
+  integrity sha512-qTqWtNAkg5wObKmNfMvwP3VT63+cx80eJo6TIRw4UHx5SXrpXk8iCqPdpNxADWT6aQ+1APiH9Fy10bIu6Phk4w==
   dependencies:
     dequal "^2.0.3"
     object-property-extractor "^1.0.14"
@@ -4349,10 +4349,10 @@ json-buffer@3.0.1:
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.1.tgz#9338802a30d3b6605fbe0613e094008ca8c05a13"
   integrity sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==
 
-json-edit-react@^2.0.0-beta.8:
-  version "2.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-2.0.0-beta.8.tgz#0744cda02d8743a20559bd2e0127bf60247bcbd4"
-  integrity sha512-/5mJGYyFQpFstr0LcgJ3UhKIWc9DRlH/7hNhYjqVjIL1OIhrFXg8MT3zmg6A+7+WRPCaec7ps+dCvmzeO1hRfA==
+json-edit-react@^2.0.0-beta.10:
+  version "2.0.0-beta.10"
+  resolved "https://registry.yarnpkg.com/json-edit-react/-/json-edit-react-2.0.0-beta.10.tgz#b4476c101b9f93a16d7885fcd008d13be63e126f"
+  integrity sha512-4DAELJVscjnuIdMfp+JgKaJRGQKVu7hay4dMKCjg8/hYiXL5Cwk53a9m/8hEWgXSfphxgtiFzV7dM77SaybPNA==
 
 json-parse-even-better-errors@^2.3.0:
   version "2.3.1"
