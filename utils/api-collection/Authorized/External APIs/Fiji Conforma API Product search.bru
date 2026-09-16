@@ -1,0 +1,20 @@
+meta {
+  name: Fiji Conforma API Product search
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/external-api/mSupply/itemSearch?search=abc
+  body: none
+  auth: inherit
+}
+
+params:query {
+  search: abc
+}
+
+body:json {
+  {
+  }
+}
