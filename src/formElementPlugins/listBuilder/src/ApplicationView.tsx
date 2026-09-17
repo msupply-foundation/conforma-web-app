@@ -63,6 +63,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     dataFormat = textFormat,
     inlineOpen = false,
     tableExcludeColumns = [],
+    tableWidth,
     maxItems = Infinity,
     // These affect viewing tables on Mobile only
     hideFromMobileTableIfEmpty,
@@ -181,6 +182,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       <ListTableLayout
         {...listDisplayProps}
         excludeColumns={tableExcludeColumns}
+        tableWidth={tableWidth}
         hideFromMobileIfEmpty={hideFromMobileTableIfEmpty}
         minMobileLabelWidth={minMobileTableLabelWidth}
         maxMobileLabelWidth={maxMobileTableLabelWidth}

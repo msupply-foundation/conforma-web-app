@@ -35,6 +35,7 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
   const {
     userState: { currentUser },
     onLogin,
+    checkSession,
   } = useUserState()
   const { maintenanceMode } = usePrefs()
   const [redirectStatus, setRedirectStatus] = useState<RedirectStatus>({
@@ -47,7 +48,26 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
 
   const productionBehaviour = isProductionBuild || TESTING_MODE
 
+  // The handshake is the only point at which the server can read the auth
+  // cookies, so it identifies a socket's session once, at connect. A socket
+  // opened before login is therefore anonymous to it for as long as it stays
+  // open, and gets no "session-expired" notification -- so logging in has to
+  // establish a new one. Bumping a query parameter is what re-triggers the
+  // hook's connection effect.
+  //
+  // Skipped when the page loaded already logged in, because that first
+  // handshake carried the cookies itself.
+  const [connectionGeneration, setConnectionGeneration] = useState(0)
+  const socketHasSession = useRef(isLoggedIn())
+
+  useEffect(() => {
+    if (!currentUser || socketHasSession.current) return
+    socketHasSession.current = true
+    setConnectionGeneration((generation) => generation + 1)
+  }, [currentUser])
+
   useWebSocket(getServerUrl('serverStatus'), {
+    queryParams: { connection: connectionGeneration },
     onOpen: () => {
       if (serverDisconnected && productionBehaviour) {
         setServerDisconnected(false)
@@ -57,9 +77,9 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
           text: t('SERVER_RECONNECTED_TEXT'),
           style: 'success',
         })
-        // This will force logout if the server's private key has changed
-        const JWT = localStorage.getItem(config.localStorageJWTKey) ?? ''
-        onLogin(JWT)
+        // This will force logout if the session is no longer valid on the
+        // server (e.g. its private key has changed)
+        onLogin()
       }
     },
     onClose: (event) => {
@@ -73,8 +93,29 @@ export const ServerStatusListener: React.FC<{ children: React.ReactNode }> = ({ 
       const data = JSON.parse(message.data)
       console.log('Message', data)
       if (typeof data !== 'object') return
+
+      // The server sweeps expired sessions once a minute and tells whichever
+      // sockets belonged to them. An idle client makes no requests, so this is
+      // the only thing that would tell it promptly; without it the session is
+      // discovered on the next request, which 401s.
+      //
+      // Deliberately a prompt to go and look rather than an instruction to log
+      // out. Making the request is what gets the 401 that ends the session here
+      // -- and that response is also the only thing that can expire the auth
+      // cookies, which are HttpOnly and beyond the reach of script. It also
+      // means a message that turns out to be wrong costs a request rather than
+      // the user's session.
+      if (data.type === 'session-expired') {
+        // Nothing left to check, and a 401 here would only reload the login
+        // screen the user is already looking at
+        if (!isLoggedIn()) return
+        console.log('Server reports the session has ended, checking...')
+        checkSession()
+        return
+      }
+
       // Version check -- force reload if different to server version:
-      if (data.version && data.version !== frontendVersion) {
+      if (productionBehaviour && data.version && data.version !== frontendVersion) {
         console.log('New version:', data.version)
         console.log('Reloading...')
         showToast({

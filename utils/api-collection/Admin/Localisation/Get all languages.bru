@@ -1,0 +1,17 @@
+meta {
+  name: Get all languages
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/admin/all-languages
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "password": "{{password}}"
+  }
+}

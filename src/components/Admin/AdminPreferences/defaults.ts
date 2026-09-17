@@ -50,7 +50,7 @@ export const defaultPrefs: Preferences = {
     archiveFileAgeMinimum: 7,
     archiveMinSize: 100,
     emailTestMode: false,
-    testingEmail: 'test@example.com',
+    testingEmail: ['test@example.com'],
     locale: 'en-NZ',
     timezone: 'Pacific/Auckland',
     externalApiConfigs: {

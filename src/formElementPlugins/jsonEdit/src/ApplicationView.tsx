@@ -7,7 +7,7 @@ import useDefault from '../../useDefault'
 
 const JsonEditor = React.lazy(() => import('../../../components/Admin/JsonEditor/JsonEditor'))
 
-export interface Parameters extends Omit<JsonEditorProps, 'data'> {
+export interface Parameters extends Omit<JsonEditorProps, 'data' | 'setData'> {
   label?: string
   description?: string
   default?: Record<string, any>
@@ -63,20 +63,20 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     onSave({ text: JSON.stringify(data), data })
   }
 
-  const restrictEdit = getRestrictionFunction(isEditable, allowEditDepth, preventEditFields)
-  const restrictAdd = getRestrictionFunction(isEditable, allowAddDepth, preventEditFields)
-  const restrictDelete = getRestrictionFunction(isEditable, allowDeleteDepth, preventEditFields)
-  const restrictTypeSelection = canChangeType
-    ? false
+  const allowEdit = getPermissionFunction(isEditable, allowEditDepth, preventEditFields)
+  const allowAdd = getPermissionFunction(isEditable, allowAddDepth, preventEditFields)
+  const allowDelete = getPermissionFunction(isEditable, allowDeleteDepth, preventEditFields)
+  const allowTypeSelection = canChangeType
+    ? true
     : // If type can't be changed, we still allow changing a null value
-      ({ value }: any) => (value === null ? false : [])
+      ({ value }: any) => (value === null ? true : [])
 
   const jsonEditProps = {
     collapse,
-    restrictEdit,
-    restrictAdd,
-    restrictDelete,
-    restrictTypeSelection,
+    allowEdit,
+    allowAdd,
+    allowDelete,
+    allowTypeSelection,
     ...jsonProps,
   }
 
@@ -106,12 +106,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
 export default ApplicationView
 
-const getRestrictionFunction = (
+const getPermissionFunction = (
   isEditable: boolean,
   depth: number = 0,
   preventFields: (string | number)[] = []
 ): FilterFunction | boolean => {
-  if (!isEditable) return true
+  if (!isEditable) return false
 
-  return ({ key, level }) => preventFields.includes(key) || level < depth
+  return ({ key, level }) => !(preventFields.includes(key) || level < depth)
 }

@@ -1,6 +1,5 @@
 import axios from 'axios'
 import Papa from 'papaparse'
-import config from '../../config'
 import { Fragment, useState } from 'react'
 import { Popup, Button, Icon, Message } from 'semantic-ui-react'
 import { useLanguageProvider } from '../../contexts/Localisation'
@@ -35,16 +34,12 @@ const DownloadButton = ({
     clearTimeout(timeout)
   }
 
-  const JWT = localStorage.getItem(config.localStorageJWTKey || '')
-  const authHeader = JWT ? { Authorization: 'Bearer ' + JWT } : undefined
-
   const downloadItem = async (event: any) => {
     event.stopPropagation()
     await axios
       .get(getServerUrl('lookupTable', { action: 'export', id }), {
         headers: {
           'Content-Type': 'multipart/form-data',
-          ...authHeader,
         },
       })
       .then((response) => {

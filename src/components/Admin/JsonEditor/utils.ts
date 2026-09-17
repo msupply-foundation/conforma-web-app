@@ -1,14 +1,23 @@
-import { CopyFunction, DefaultValueFunction, extract, NewKeyOptionsFunction } from 'json-edit-react'
+import { DefaultValueFunction, extract, NewKeyOptionsFunction } from 'json-edit-react'
 import { truncateString } from 'fig-tree-editor-react'
 import { Position, ToastProps } from '../../../contexts/Toast'
 import { TranslateMethod } from '../../../contexts/Localisation'
+
+// The fields shared by the copy event of both json-edit-react and
+// fig-tree-editor-react, which both call this handler
+interface CopyEventInfo {
+  key: string | number
+  value: unknown
+  type: string
+  stringValue: string
+}
 
 /**
  * Show toast for copy to clipboard actions. Shared between different
  * implementations of JsonEditor
  */
 export const handleCopyToClipboard = (
-  { key, value, type, stringValue }: Parameters<CopyFunction>[0],
+  { key, value, type, stringValue }: CopyEventInfo,
   t: TranslateMethod,
   showToast: (...state: Partial<ToastProps>[]) => void
 ) => {

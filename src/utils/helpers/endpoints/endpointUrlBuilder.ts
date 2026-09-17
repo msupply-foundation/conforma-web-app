@@ -28,40 +28,54 @@ const {
   devServerGraphQLAbsolute,
   productionPathREST,
   productionPathGraphQL,
+  productionPathWebSocket,
 } = config
 const { port, hostname, protocol } = window.location
 const getProductionUrl = (path: string) => {
   return `${protocol}//${hostname}${port ? `:${port}` : ''}${path}`
 }
 
-// In dev (vite dev server), HTTP URLs are relative — the dev-server proxy
-// forwards them to the backend, keeping everything same-origin. In a
-// production build the page is served from the same host as the API, so we
-// build a full URL relative to `window.location`. The `VITE_USE_DEV_SERVER`
-// branch is for the niche case of a production build pointed at a dev
-// backend (no dev-server proxy in play), so it needs the absolute URL.
+// In dev (vite dev server) we build a full, *same-origin* URL from
+// `window.location` (e.g. http://localhost:5100/api). Because it points at
+// the dev server's own origin, the proxy still matches it on path and
+// forwards it to the backend — everything stays same-origin, so there are no
+// CORS preflights, exactly as with a bare `/api` path. The reason we make it
+// absolute rather than relative: fig-tree-evaluator's URL join strips the
+// leading slash off relative paths (turning `/api/...` into a path-relative
+// URL that resolves against the current route, e.g. `/admin/api/...`). An
+// absolute URL trips fig-tree's "already a full URL" guard and is used
+// as-is. In a production build the page is served from the same host as the
+// API, so we likewise build a full URL relative to `window.location`. The
+// `VITE_USE_DEV_SERVER` branch is for the niche case of a production build
+// pointed at a dev backend (no dev-server proxy in play), so it needs the
+// absolute URL to the backend's own (cross-)origin.
 export const serverREST = isProductionBuild
   ? VITE_USE_DEV_SERVER
     ? devServerRestAbsolute
     : getProductionUrl(productionPathREST)
-  : devServerRest
+  : getProductionUrl(devServerRest)
 export const serverGraphQL = isProductionBuild
   ? VITE_USE_DEV_SERVER
     ? devServerGraphQLAbsolute
     : getProductionUrl(productionPathGraphQL)
-  : devServerGraphQL
-// Websocket URL is computed from an absolute REST URL because the vite
-// dev-server proxy only handles HTTP — websockets connect directly to the
-// backend.
-const restForWebSocket = isProductionBuild
+  : getProductionUrl(devServerGraphQL)
+// The websocket is same-origin, like every other endpoint: a deployment serves
+// it under `/websocket`, and in dev the vite proxy forwards it (see
+// vite.config.ts). That matters beyond consistency — the auth cookies are
+// Secure and SameSite=Strict, so a cross-origin `ws://` handshake arrives
+// without them and the server can't tell which session the socket belongs to,
+// which is how it addresses "session-expired" notifications.
+//
+// `VITE_USE_DEV_SERVER` is the exception, as it is above: a production build
+// pointed at a dev backend has no proxy in front of it, so it has to reach the
+// backend's own origin directly.
+const wsProtocol = protocol === 'https:' ? 'wss:' : 'ws:'
+const sameOriginWebSocket = `${wsProtocol}//${hostname}${port ? `:${port}` : ''}`
+const serverWebSocket = isProductionBuild
   ? VITE_USE_DEV_SERVER
-    ? devServerRestAbsolute
-    : getProductionUrl(productionPathREST)
-  : devServerRestAbsolute
-const serverWebSocket = restForWebSocket
-  .replace('http', 'ws')
-  .replace('api', '')
-  .replace('server', 'websocket')
+    ? `${devServerRestAbsolute.replace(/^http/, 'ws').replace(/api\/?$/, '')}`
+    : `${sameOriginWebSocket}${productionPathWebSocket}`
+  : `${sameOriginWebSocket}/`
 
 const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) => {
   if (endpointKey === 'graphQL') return serverGraphQL
@@ -72,6 +86,8 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     case 'prefs':
     case 'login':
     case 'loginOrg':
+    case 'logout':
+    case 'heartbeat':
     case 'userInfo':
     case 'createHash':
     case 'generatePDF':
@@ -286,6 +302,7 @@ const buildQueryString = (query?: Record<string, any>): string => {
   const keyValStrings = Object.entries(query)
     .filter(([_, value]) => !!value)
     .map(([key, value]) => `${key}=${value}`)
+  if (keyValStrings.length === 0) return ''
   return '?' + keyValStrings.join('&')
 }
 

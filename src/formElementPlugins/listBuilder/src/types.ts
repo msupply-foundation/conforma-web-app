@@ -25,6 +25,7 @@ export interface ListBuilderParameters {
   default?: ResponseFull
   inlineOpen?: boolean
   tableExcludeColumns?: string[]
+  tableWidth?: number | string
   maxItems?: number
   // These affect mobile viewing only
   hideFromMobileTableIfEmpty?: true | string[]
@@ -56,6 +57,8 @@ export interface ListLayoutProps {
   updateButtonText?: string
   innerElementUpdate?: (code: string) => void
   updateList?: () => void
+  // These properties optional and affect Table layout only
+  tableWidth?: number | string
   // These properties optional and affect Tables on Mobile
   hideFromMobileIfEmpty?: boolean | string[]
   minMobileLabelWidth?: number | string

@@ -27,7 +27,10 @@ export default defineConfig(({ mode }) => {
   //
   // To switch modes: set/unset `VITE_REMOTE_SERVER` in .env, then restart
   // the dev server (vite reads env vars at startup). No app-code changes —
-  // the client always emits relative `/api` and `/graphql` URLs in dev.
+  // in dev the client emits same-origin `/api` and `/graphql` requests
+  // (built as absolute `http://<dev-host>/api` URLs against window.location,
+  // see endpointUrlBuilder), which this proxy matches on path and forwards
+  // just the same — so it stays same-origin with no CORS either way.
   const remoteServer = env.VITE_REMOTE_SERVER
   const apiProxy = remoteServer
     ? {
@@ -36,6 +39,23 @@ export default defineConfig(({ mode }) => {
         rewrite: (path: string) => `/server${path}`,
       }
     : 'http://localhost:8080'
+
+  // The websocket is proxied too, so it stays same-origin like everything else.
+  // That is load-bearing rather than tidiness: the auth cookies are Secure and
+  // SameSite=Strict, and a cross-origin `ws://` handshake arrives without them,
+  // leaving the server unable to tell which session the socket belongs to (so
+  // it can't send that client a "session-expired" notification).
+  //
+  // Remote deployments serve it under `/websocket` rather than `/server`, which
+  // is the one path that differs from the REST proxy above.
+  const websocketProxy = remoteServer
+    ? {
+        target: remoteServer,
+        changeOrigin: true,
+        ws: true,
+        rewrite: (path: string) => `/websocket${path}`,
+      }
+    : { target: 'http://localhost:8080', ws: true }
 
   return {
     plugins: [react(), pluginPurgeCss()],
@@ -56,6 +76,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/api': apiProxy,
         '/graphql': apiProxy,
+        '/server-status': websocketProxy,
       },
     },
     preview: { port: 5101 },

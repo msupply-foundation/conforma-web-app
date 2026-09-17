@@ -46,8 +46,7 @@ const NonRegisteredLogin: React.FC<NonRegisteredLoginProps> = ({
   }, [])
 
   const onLoginSuccess = async (loginResult: LoginPayload) => {
-    const { JWT, user, templatePermissions, orgList } = loginResult
-    await onLogin(JWT, user, templatePermissions, orgList)
+    await onLogin(loginResult)
 
     // Make sure any custom query properties are included in the subsequent
     // re-direct

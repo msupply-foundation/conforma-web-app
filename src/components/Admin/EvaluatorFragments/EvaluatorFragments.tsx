@@ -14,14 +14,14 @@ import {
   defaultValue,
 } from '../JsonEditor'
 import { FigTreeEditor, FigTreeEvaluator, Fragment } from 'fig-tree-editor-react'
-import { FigTree } from '../../../FigTreeEvaluator'
+import { defaultNewOperatorExpression, FigTree } from '../../../FigTreeEvaluator'
 import { onEvaluateErrorNotify, onEvaluateNotify } from '../../common/evaluatorHelpers'
 import { Position, useToast } from '../../../contexts/Toast'
 import { FragmentTester } from './FragmentTester'
 import { FragmentDataSchema } from './schema'
 import { DataContainer } from './DataContainer'
 import { defaultNewFragment } from './default'
-import { ColorPickerNodeDefinition } from '../JsonEditor/custom-components/ColorPicker'
+import { colorPickerDefinition } from '@json-edit-react/components'
 
 const { fragments: _, ...originalFigTreeOptions } = FigTree.getOptions()
 
@@ -168,10 +168,10 @@ const EvaluatorFragments = () => {
                 figTree={FigTreeFragments}
                 onEvaluate={(result, e) => onEvaluateNotify(result, e, showToast)}
                 onEvaluateError={(err) => onEvaluateErrorNotify(err, showToast)}
-                enableClipboard={(input) => handleCopyToClipboard(input, t, showToast)}
+                onCopy={(input) => handleCopyToClipboard(input, t, showToast)}
                 rootName={'Fragment'}
                 collapse={2}
-                showArrayIndices={false}
+                showArrayIndexes={false}
                 maxWidth={'100%'}
                 styles={{
                   container: {
@@ -183,6 +183,7 @@ const EvaluatorFragments = () => {
                   },
                 }}
                 jsonParse={JSON5.parse}
+                defaultNewOperatorExpression={defaultNewOperatorExpression}
               />
               <ReactJson
                 data={fragmentData}
@@ -214,8 +215,8 @@ const EvaluatorFragments = () => {
                 rootName="Properties"
                 collapse={4}
                 maxWidth={'100%'}
-                restrictAdd={({ level }) => level === 0}
-                restrictDelete={({ level }) => level === 1}
+                allowAdd={({ level }) => level !== 0}
+                allowDelete={({ level }) => level !== 1}
                 theme={{
                   container: {
                     backgroundColor: '#fefefe',
@@ -242,20 +243,19 @@ const EvaluatorFragments = () => {
                       maxWidth: 650,
                       position: Position.topMiddle,
                     })
-                    // This string returned to and displayed in json-edit-react UI
-                    return 'JSON Schema error'
+                    // Displayed in the json-edit-react UI
+                    return { error: 'JSON Schema error' }
                   }
                 }}
                 newKeyOptions={(input) => newKeyOptions(input, defaultNewFragment)}
                 defaultValue={(input, key) => defaultValue(input, key, defaultNewFragment)}
                 customNodeDefinitions={[
-                  {
-                    ...ColorPickerNodeDefinition,
+                  colorPickerDefinition({
                     condition: ({ key }) => key === 'backgroundColor' || key === 'textColor',
-                  },
+                  }),
                   {
                     condition: ({ key, level }) => key === 'name' && level === 1,
-                    element: () => (
+                    component: () => (
                       <div
                         className="fragment-name-display"
                         style={{

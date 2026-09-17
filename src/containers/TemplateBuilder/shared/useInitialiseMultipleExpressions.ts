@@ -23,13 +23,14 @@
 const INITIALISATION_PHASE_DURATION = 500 //ms
 
 import { useEffect, useRef } from 'react'
-import { EvaluatorNode } from 'fig-tree-editor-react'
+import { dequal, EvaluatorNode } from 'fig-tree-editor-react'
 
 export const useInitialiseMultipleExpressions = (
   expressionGroup: Record<string, EvaluatorNode>,
   setExpressionGroup: (parameters: Record<string, EvaluatorNode>) => void,
   isActive: boolean,
   reset: (expression: EvaluatorNode, key?: string) => void,
+  replace: (expression: Record<string, EvaluatorNode>) => void,
   setIsDirty: (isDirty: boolean) => void
 ) => {
   const isInitializing = useRef(true)
@@ -49,10 +50,26 @@ export const useInitialiseMultipleExpressions = (
   const updateExpression = (key: string, value: EvaluatorNode) => {
     if (isInitializing.current) {
       expressionsRef.current[key] = value
-    } else {
-      setExpressionGroup({ ...expressionGroup, [key]: value })
-      setIsDirty(true)
+      return
     }
+
+    const newGroup = { ...expressionGroup, [key]: value }
+
+    // FigTree re-emits the expression on re-render (e.g. after a commit, undo,
+    // or expand). An identical emit is a no-op; an emit with the same data in a
+    // different key order (its "validate" reorders keys) is cosmetic — apply it
+    // without recording an undo step (which would also clear the redo stack) or
+    // marking the form dirty. Only a genuine change records a step.
+    const isStrictlyEqual = JSON.stringify(newGroup) === JSON.stringify(expressionGroup)
+    if (isStrictlyEqual) return
+
+    if (dequal(newGroup, expressionGroup)) {
+      replace(newGroup)
+      return
+    }
+
+    setExpressionGroup(newGroup)
+    setIsDirty(true)
   }
 
   return { updateExpression }

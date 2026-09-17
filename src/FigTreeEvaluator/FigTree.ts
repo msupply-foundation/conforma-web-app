@@ -2,7 +2,7 @@ import {
   EvaluatorNode,
   FigTreeEvaluator,
   FragmentNode,
-  isAliasString,
+  isFigTreeExpression,
   isFragmentNode,
   isObject,
   isOperatorNode,
@@ -30,20 +30,17 @@ export const FigTree = new FigTreeEvaluator({
   // supportDeprecatedValueNodes: true,
 })
 
+export const defaultNewOperatorExpression = {
+  operator: 'getData',
+  property: 'path.to.value',
+  fallback: null,
+}
+
 // Called by "UserState" context whenever a user logs in
 export const loadFragments = async () => {
   getRequest(getServerUrl('figTreeFragments', { frontOrBack: 'frontEnd' })).then((fragments) => {
     FigTree.updateOptions({ fragments })
   })
-}
-
-export const isFigTreeExpression = (input: EvaluatorNode) => {
-  if (isOperatorNode(input) || isFragmentNode(input)) return true
-  if (typeof input === 'string' && isAliasString(input)) return true
-  if (isObject(input) && Object.keys(input).length === 1 && isAliasString(Object.keys(input)[0]))
-    return true
-
-  return false
 }
 
 // Text summary of the type of node for parameters UI

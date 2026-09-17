@@ -114,6 +114,9 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
     ({ text }) => text != t('ASSIGNMENT_YOURSELF')
   )
 
+  const canReassign = !isSelfAssignment
+  const canUnassign = canReassign || assignmentOptions.canUnassignSelf
+
   const levelName =
     structure.stages
       .find(({ stage: { number } }) => number === structure.info.current.stage.number)
@@ -132,7 +135,8 @@ const AssignmentSectionRow: React.FC<AssignmentSectionRowProps> = ({
             <AssigneeLabel
               assignee={originalAssignee}
               isCompleted={assignmentOptions.isCompleted}
-              isSelfAssigned={isSelfAssignment}
+              canReassign={canReassign}
+              canUnassign={canUnassign}
               isReassignment={isReassignment}
               setIsReassignment={setIsReassignment}
               setIsUnassignment={() => showModal({ onConfirm: () => unassignAssignee() })}

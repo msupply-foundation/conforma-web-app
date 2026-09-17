@@ -1,0 +1,11 @@
+meta {
+  name: List snapshots
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/admin/snapshot/list
+  body: none
+  auth: inherit
+}

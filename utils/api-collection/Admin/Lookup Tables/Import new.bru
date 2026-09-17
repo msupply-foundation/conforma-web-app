@@ -1,0 +1,19 @@
+meta {
+  name: Import new
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/admin/lookup-table/import?name=new table
+  body: multipartForm
+  auth: inherit
+}
+
+params:query {
+  name: new table
+}
+
+body:multipart-form {
+  files: @file()
+}

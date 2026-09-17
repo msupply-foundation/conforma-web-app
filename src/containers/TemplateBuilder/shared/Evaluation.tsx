@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { IconDelete, IconEdit } from 'json-edit-react'
+import { IconSvg, defaultTheme, IconDefinition } from 'json-edit-react'
 import { FigTreeEvaluator } from 'fig-tree-editor-react'
-import { ReactJson } from '../../../components/Admin/JsonEditor'
+import { ReactJsonView } from '../../../components/Admin/JsonEditor'
 import TextIO from './TextIO'
 import { EvaluatorNode } from 'fig-tree-evaluator'
 import { getFigTreeSummary } from '../../../FigTreeEvaluator/FigTree'
@@ -18,6 +18,16 @@ type EvaluationProps = {
   canEdit: boolean
   resetExpression?: (expression: EvaluatorNode) => void
 }
+
+// Renders one of json-edit-react's SVG icon definitions (from its defaultTheme)
+// via the exported IconSvg component, the same way json-edit-react renders its
+// own icons internally.
+const ThemeIcon: React.FC<{ icon?: IconDefinition; color: string }> = ({ icon, color }) =>
+  icon ? (
+    <IconSvg viewBox={icon.viewBox} {...icon.svgProps} scale={icon.scale} style={{ color }}>
+      {icon.content}
+    </IconSvg>
+  ) : null
 
 type EvaluationHeaderProps = { evaluation: EvaluatorNode }
 
@@ -77,12 +87,12 @@ const Evaluation: React.FC<EvaluationProps> = ({
       >
         {deleteKey && (
           <span onClick={deleteKey}>
-            <IconDelete size="1.4em" style={{ color: 'rgb(203, 75, 22)' }} />
+            <ThemeIcon icon={defaultTheme.icons?.delete} color="rgb(203, 75, 22)" />
           </span>
         )}
         {updateKey && (
           <span onClick={() => setIsEditingKey(true)} title="Edit Key">
-            <IconEdit size="1.4em" style={{ color: 'grey' }} />
+            <ThemeIcon icon={defaultTheme.icons?.edit} color="grey" />
           </span>
         )}
       </div>
@@ -144,15 +154,12 @@ export const ObjectDataDisplay: React.FC<ObjectDataDisplayProps> = ({ objectData
 
   return (
     <div className="object-properties-container">
-      <ReactJson
+      <ReactJsonView
         data={objectData}
         rootName="data"
         collapse={1}
         indent={2}
         maxWidth={450}
-        restrictEdit={true}
-        restrictDelete={true}
-        restrictAdd={true}
         theme={{ container: ['transparent', { fontSize: '13px', padding: 0 }] }}
       />
     </div>

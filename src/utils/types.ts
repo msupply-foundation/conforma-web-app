@@ -168,6 +168,7 @@ interface AssignmentOptions {
   selected: number
   isSubmitted: boolean
   isCompleted: boolean
+  canUnassignSelf: boolean
   options: AssignmentOption[]
 }
 
@@ -670,9 +671,11 @@ interface Organisation extends OrganisationSimple {
 interface LoginPayload {
   success?: boolean
   user: User
-  JWT: string
   templatePermissions: TemplatePermissions
   orgList?: OrganisationSimple[]
+  // When the server-side session lapses, as unix seconds. Not the access
+  // token's expiry, which is shorter and renewed silently.
+  sessionExpiry?: number
 }
 
 interface UseGetReviewStructureForSectionProps {

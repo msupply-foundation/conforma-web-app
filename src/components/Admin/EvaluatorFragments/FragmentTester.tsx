@@ -66,7 +66,7 @@ export const FragmentTester = ({
         data={parameters}
         setData={setParameters as (data: unknown) => void}
         rootName="parameters"
-        rootFontSize={'1em'}
+        baseFontSize={'1em'}
         theme={{
           container: {
             backgroundColor: 'transparent',
@@ -78,7 +78,7 @@ export const FragmentTester = ({
           },
         }}
         collapse={1}
-        restrictEdit={({ level }) => level === 0}
+        allowEdit={({ level }) => level !== 0}
       />
     </div>
   )

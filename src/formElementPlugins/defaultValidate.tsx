@@ -12,9 +12,15 @@ const defaultValidate = async (
     (evaluatorParameters?.data as any)?.responses.thisResponse === undefined
   )
     return { isValid: true }
-  const isValid = (await FigTree.evaluate(validationExpress, evaluatorParameters)) as boolean
-  if (isValid) return { isValid }
-  return { isValid, validationMessage }
+  try {
+    const isValid = (await FigTree.evaluate(validationExpress, evaluatorParameters)) as boolean
+    if (isValid) return { isValid }
+    return { isValid, validationMessage }
+  } catch (err) {
+    console.warn('Error evaluating validation expression:', err)
+    console.warn('Expression:', validationExpress)
+    return { isValid: false, validationMessage }
+  }
 }
 
 export default defaultValidate

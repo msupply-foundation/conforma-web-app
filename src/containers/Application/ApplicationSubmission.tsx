@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Header, Icon, List, Segment, Container, Loader } from 'semantic-ui-react'
 import Markdown from '../../utils/helpers/semanticReactMarkdown'
 import { ApplicationProps } from '../../utils/types'
@@ -34,6 +34,28 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
   const { fullStructure } = useGetApplicationStructure({
     structure,
   })
+
+  // For non-registered users, log out when the user leaves this page —
+  // either by closing/refreshing the tab or by navigating away within the app.
+  // The unmount logout is delayed so StrictMode's dev-mode remount can cancel
+  // it before it fires; a real unmount lets the timer run.
+  const unmountLogoutTimer = useRef<number | null>(null)
+  useEffect(() => {
+    if (!isNonRegistered) return
+    if (unmountLogoutTimer.current) {
+      clearTimeout(unmountLogoutTimer.current)
+      unmountLogoutTimer.current = null
+    }
+    const handleBeforeUnload = () => logout()
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      unmountLogoutTimer.current = window.setTimeout(() => {
+        unmountLogoutTimer.current = null
+        logout()
+      }, 100)
+    }
+  }, [isNonRegistered])
 
   // Evaluate submission message
   useEffect(() => {
@@ -100,13 +122,6 @@ const ApplicationSubmission: React.FC<ApplicationProps> = ({ structure }) => {
             </p>
           </Segment>
         </>
-      )}
-      {isNonRegistered && (
-        <Segment basic textAlign="center" id="submission-nav">
-          <Button primary onClick={() => logout()}>
-            {t('ACTION_CONTINUE')}
-          </Button>
-        </Segment>
       )}
     </Container>
   )

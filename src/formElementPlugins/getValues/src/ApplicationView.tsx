@@ -4,7 +4,11 @@ import useDefault from '../../useDefault'
 import { JsonData } from 'json-edit-react'
 import { useRouter } from '../../../utils/hooks/useRouter'
 
-const ReactJson = React.lazy(() => import('../../../components/Admin/JsonEditor/ReactJson'))
+const ReactJsonView = React.lazy(() =>
+  import('../../../components/Admin/JsonEditor/ReactJson').then((m) => ({
+    default: m.ReactJsonView,
+  }))
+)
 
 const ApplicationView: React.FC<ApplicationViewProps> = ({
   element,
@@ -32,12 +36,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
-      <ReactJson
+      <ReactJsonView
         data={value as JsonData}
-        viewOnly
         rootName={element.code}
         collapse={0}
-        rootFontSize={14}
+        baseFontSize={14}
         theme={{
           container: {
             marginTop: 0,

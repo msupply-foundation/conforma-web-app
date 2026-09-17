@@ -11,6 +11,7 @@ const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> 
   editItem = () => {},
   isEditable = true,
   excludeColumns,
+  tableWidth,
   hideFromMobileIfEmpty,
   minMobileLabelWidth,
   maxMobileLabelWidth,
@@ -27,14 +28,16 @@ const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> 
     return hideFromMobileIfEmpty
   })()
 
-  // Estimate the minimum table width based on column content. If the
-  // estimated width exceeds 450px, apply it directly (up to 550px) so the
+  // An explicitly configured "tableWidth" parameter takes precedence.
+  // Otherwise, estimate the minimum table width based on column content. If
+  // the estimated width exceeds 450px, apply it directly (up to 550px) so the
   // table can overflow its container rather than squeezing columns.
   const CHAR_WIDTH = 8
   const CELL_PADDING = 24
   const DEFAULT_COL_MIN = 80
 
-  const tableWidth = useMemo(() => {
+  const width = useMemo(() => {
+    if (tableWidth !== undefined) return tableWidth
     const totalMinWidth = displayFields.reduce((total, { code, title }) => {
       const headerWidth = (title?.length ?? 0) * CHAR_WIDTH + CELL_PADDING
       const maxCellWidth = listItems.reduce((max, item) => {
@@ -47,14 +50,14 @@ const ListTableLayout: React.FC<ListLayoutProps & { excludeColumns: string[] }> 
     }, 0)
     if (totalMinWidth <= 450) return undefined
     return Math.min(totalMinWidth, 550)
-  }, [displayFields, listItems])
+  }, [tableWidth, displayFields, listItems])
 
   return (
     <Table
       celled={!isMobile}
       stackable
       selectable={isEditable}
-      style={tableWidth ? { width: tableWidth } : undefined}
+      style={width !== undefined ? { width } : undefined}
     >
       {!isMobile && (
         <Table.Header>

@@ -359,13 +359,18 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
             key={entityKey ?? 'none'}
             data={data}
             onSave={onSave}
-            onUpdate={({ newData, newValue, currentValue, path }) => {
+            onUpdate={(updateProps) => {
+              const { value, path } = updateProps
+              const newValue = 'newValue' in updateProps ? updateProps.newValue : undefined
+              let newData = updateProps.newData
+              let modified = false
               // By default, when a value is turned to an array, it puts current
               // value inside it, so `null` => `[null]`. This would be illegal
               // under the current schema, so we modify it in place before
               // validating.
-              if (Array.isArray(newValue) && currentValue === null) {
-                newData = assign(newData as { [key: string]: string }, path, [])
+              if (Array.isArray(newValue) && value === null) {
+                newData = assign(newData as { [key: string]: string }, path, []) as JsonData
+                modified = true
               }
 
               const valid = validator(newData)
@@ -382,18 +387,19 @@ const DataViewDisplay: React.FC<DataViewDisplayProps> = ({
                   text: errorMessage,
                   style: 'error',
                 })
-                return "Can't do that!"
+                return { error: "Can't do that!" }
               }
-              // We shouldn't need to return anything, but this is just for the
-              // case when a value has been switched to an Array, as above
-              return ['value', newData]
+              // Only override the committed data when we actually changed it (the
+              // null→array fix); a redundant override would add a duplicate undo
+              // entry
+              return modified ? { data: newData } : undefined
             }}
             isSaving={isSaving}
             rootName={dataName}
             collapse={1}
             maxWidth={650}
-            restrictAdd={({ level }) => level === 0}
-            restrictDelete={({ level }) => level === 1}
+            allowAdd={({ level }) => level !== 0}
+            allowDelete={({ level }) => level !== 1}
           />
         </Suspense>
       )}

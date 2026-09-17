@@ -1,0 +1,18 @@
+meta {
+  name: Login Org
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/login-org
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "userId": 2,
+      "orgId": 1
+  }
+}

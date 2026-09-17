@@ -20,9 +20,9 @@ const SummaryView: React.FC<SummaryViewProps> = ({ parameters, response, Markdow
 
   const jsonEditProps = {
     collapse,
-    restrictEdit: true,
-    restrictAdd: true,
-    restrictDelete: true,
+    allowEdit: false,
+    allowAdd: false,
+    allowDelete: false,
     ...jsonProps,
   }
 
