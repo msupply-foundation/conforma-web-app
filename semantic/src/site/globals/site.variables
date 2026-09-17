@@ -4,6 +4,13 @@
 @fontName: 'Open Sans';
 @alternativeFont: 'Roboto'; // TO-DO: Check with Deb what to use for this
 
+// Flags-only emoji font, loaded on browsers that can't render country flag
+// emojis natively (Chromium on Windows) -- see src/main.tsx. It contains no
+// other glyphs, so listing it first is harmless everywhere else.
+@flagEmojiFont: 'Twemoji Country Flags';
+@headerFont: @flagEmojiFont, @fontName, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+@pageFont: @flagEmojiFont, @fontName, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+
 @red: @error;
 @orange: #f2711c;
 @yellow: #fbbd08;
@@ -159,7 +166,7 @@
 }
 
 .alt-font {
-  font-family: @alternativeFont;
+  font-family: @flagEmojiFont, @alternativeFont;
 }
 
 // Link behaviour
