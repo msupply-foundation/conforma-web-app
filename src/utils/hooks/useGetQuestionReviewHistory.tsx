@@ -56,7 +56,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
         if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = []
 
         allResponsesByStage[stageNumber].push({
-          author: firstName || '' + ' ' + lastName || '',
+          author: [firstName, lastName].filter(Boolean).join(' '),
           title: t('TITLE_HISTORY_SUBMITTED_BY_APPLICANT'),
           // TODO translated message, that nothing is entered
           message: value?.text,
@@ -79,7 +79,7 @@ const useGetQuestionReviewHistory = ({ isApplicant, ...variables }: UseGetQuesti
       if (stageNumber) {
         if (!allResponsesByStage[stageNumber]) allResponsesByStage[stageNumber] = []
         allResponsesByStage[stageNumber].push({
-          author: reviewer ? reviewer?.firstName || '' + ' ' + reviewer?.lastName || '' : '',
+          author: [reviewer?.firstName, reviewer?.lastName].filter(Boolean).join(' '),
           title:
             (levelNumber || 1) > 1 ? t('TITLE_HISTORY_CONSOLIDATION') : t('TITLE_HISTORY_REVIEW'),
           message: !!decision ? ReviewResponse[decision] : '',

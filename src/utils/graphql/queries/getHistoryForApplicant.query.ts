@@ -13,7 +13,14 @@ export default gql`
       templateVersion: $templateVersionId
     ) {
       ...elementFragment
-      reviewResponses(filter: { isVisibleToApplicant: { equalTo: true } }) {
+      # Filtered via applicationResponse rather than review, as RLS hides the
+      # review row from applicants
+      reviewResponses(
+        filter: {
+          isVisibleToApplicant: { equalTo: true }
+          applicationResponse: { application: { serial: { equalTo: $serial } } }
+        }
+      ) {
         nodes {
           ...reviewResponseFragment
           review {

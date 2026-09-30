@@ -54489,7 +54489,9 @@ export const GetHistoryForApplicantDocument = gql`
     templateVersion: $templateVersionId
   ) {
     ...elementFragment
-    reviewResponses(filter: {isVisibleToApplicant: {equalTo: true}}) {
+    reviewResponses(
+      filter: {isVisibleToApplicant: {equalTo: true}, applicationResponse: {application: {serial: {equalTo: $serial}}}}
+    ) {
       nodes {
         ...reviewResponseFragment
         review {
