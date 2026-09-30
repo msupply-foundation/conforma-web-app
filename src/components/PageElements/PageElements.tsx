@@ -24,6 +24,7 @@ import ConsolidateReviewDecision from './Elements/ConsolidateReviewDecision'
 import ReviewApplicantResponse from './Elements/ReviewApplicantResponse'
 import { useRouter } from '../../utils/hooks/useRouter'
 import { useLanguageProvider } from '../../contexts/Localisation'
+import { useUserState } from '../../contexts/UserState'
 
 interface PageElementProps {
   elements: PageElement[]
@@ -63,6 +64,9 @@ const PageElements: React.FC<PageElementProps> = ({
     query: { showHistory },
     currentPageType,
   } = useRouter()
+  const {
+    userState: { currentUser },
+  } = useUserState()
 
   const visibleElements = elements.filter(({ element }) => element.isVisible)
   const isReview = !!reviewInfo
@@ -132,6 +136,12 @@ const PageElements: React.FC<PageElementProps> = ({
   // Summary Page
   if (isSummary) {
     const { sectionCode, pageNumber } = sectionAndPage as SectionAndPage
+    // Reviewers can also reach the summary view, and should see the same
+    // history as on their review
+    const { user, org } = applicationData
+    const isApplicant =
+      (!!user && user.id === currentUser?.userId) ||
+      (!!org && org.id === currentUser?.organisation?.orgId)
     return (
       <div>
         <Form>
@@ -194,7 +204,11 @@ const PageElements: React.FC<PageElementProps> = ({
           })}
         </Form>
         {showHistory && (
-          <HistoryPanel template={applicationData.template} stages={stages} isApplicant={true} />
+          <HistoryPanel
+            template={applicationData.template}
+            stages={stages}
+            isApplicant={isApplicant}
+          />
         )}
       </div>
     )
