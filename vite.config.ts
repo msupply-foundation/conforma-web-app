@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import pluginPurgeCss from '@mojojoejo/vite-plugin-purgecss'
+import { compression } from 'vite-plugin-compression2'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -58,7 +59,15 @@ export default defineConfig(({ mode }) => {
     : { target: 'http://localhost:8080', ws: true }
 
   return {
-    plugins: [react(), pluginPurgeCss()],
+    plugins: [
+      react(),
+      pluginPurgeCss(),
+      compression({
+        algorithms: ['brotliCompress'],
+        exclude: [/\.(br)$/, /\.(gz)$/],
+        deleteOriginalAssets: false, // Keep original files as a fallback
+      }),
+    ],
     css: {
       preprocessorOptions: {
         less: {
