@@ -34,6 +34,7 @@ export default gql`
         assignerAction
         assigners
         reviewers
+        hasBeenSubmitted
       }
       totalCount
     }

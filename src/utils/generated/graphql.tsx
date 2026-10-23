@@ -225,6 +225,8 @@ export type ActionQueueApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -819,6 +821,8 @@ export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -1140,6 +1144,10 @@ export type Application = Node & {
   assignerList?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   /** Reads and enables pagination through a set of `DataChangelog`. */
   dataChangelogs: DataChangelogsConnection;
+  /** Reads and enables pagination through a set of `DataTableFmpClaimApplicationJoin`. */
+  dataTableFmpClaimApplicationJoins: DataTableFmpClaimApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `DataTableFmpClaimLineApplicationJoin`. */
+  dataTableFmpClaimLineApplicationJoins: DataTableFmpClaimLineApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `DataTableManufacturerApplicationJoin`. */
   dataTableManufacturerApplicationJoins: DataTableManufacturerApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `DataTableManufacturerRepresentativeApplicationJoin`. */
@@ -1281,6 +1289,30 @@ export type ApplicationDataChangelogsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<DataChangelogsOrderBy>>;
+};
+
+
+export type ApplicationDataTableFmpClaimApplicationJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableFmpClaimApplicationJoinCondition>;
+  filter?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableFmpClaimApplicationJoinsOrderBy>>;
+};
+
+
+export type ApplicationDataTableFmpClaimLineApplicationJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableFmpClaimLineApplicationJoinCondition>;
+  filter?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinsOrderBy>>;
 };
 
 
@@ -1576,6 +1608,14 @@ export type ApplicationFilter = {
   dataChangelogs?: InputMaybe<ApplicationToManyDataChangelogFilter>;
   /** Some related `dataChangelogs` exist. */
   dataChangelogsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `dataTableFmpClaimApplicationJoins` relation. */
+  dataTableFmpClaimApplicationJoins?: InputMaybe<ApplicationToManyDataTableFmpClaimApplicationJoinFilter>;
+  /** Some related `dataTableFmpClaimApplicationJoins` exist. */
+  dataTableFmpClaimApplicationJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `dataTableFmpClaimLineApplicationJoins` relation. */
+  dataTableFmpClaimLineApplicationJoins?: InputMaybe<ApplicationToManyDataTableFmpClaimLineApplicationJoinFilter>;
+  /** Some related `dataTableFmpClaimLineApplicationJoins` exist. */
+  dataTableFmpClaimLineApplicationJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `dataTableManufacturerApplicationJoins` relation. */
   dataTableManufacturerApplicationJoins?: InputMaybe<ApplicationToManyDataTableManufacturerApplicationJoinFilter>;
   /** Some related `dataTableManufacturerApplicationJoins` exist. */
@@ -1700,6 +1740,8 @@ export type ApplicationInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -1841,6 +1883,7 @@ export type ApplicationListShape = {
   applicantDeadline?: Maybe<Scalars['Datetime']['output']>;
   assignerAction?: Maybe<AssignerAction>;
   assigners?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  hasBeenSubmitted?: Maybe<Scalars['Boolean']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   lastActiveDate?: Maybe<Scalars['Datetime']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -1869,6 +1912,8 @@ export type ApplicationListShapeCondition = {
   assignerAction?: InputMaybe<AssignerAction>;
   /** Checks for equality with the object’s `assigners` field. */
   assigners?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Checks for equality with the object’s `hasBeenSubmitted` field. */
+  hasBeenSubmitted?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
@@ -1909,6 +1954,8 @@ export type ApplicationListShapeFilter = {
   assignerAction?: InputMaybe<AssignerActionFilter>;
   /** Filter by the object’s `assigners` field. */
   assigners?: InputMaybe<StringListFilter>;
+  /** Filter by the object’s `hasBeenSubmitted` field. */
+  hasBeenSubmitted?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
@@ -1947,6 +1994,7 @@ export type ApplicationListShapeInput = {
   applicantDeadline?: InputMaybe<Scalars['Datetime']['input']>;
   assignerAction?: InputMaybe<AssignerAction>;
   assigners?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  hasBeenSubmitted?: InputMaybe<Scalars['Boolean']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   lastActiveDate?: InputMaybe<Scalars['Datetime']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1994,6 +2042,8 @@ export enum ApplicationListShapesOrderBy {
   AssignersDesc = 'ASSIGNERS_DESC',
   AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
   AssignerActionDesc = 'ASSIGNER_ACTION_DESC',
+  HasBeenSubmittedAsc = 'HAS_BEEN_SUBMITTED_ASC',
+  HasBeenSubmittedDesc = 'HAS_BEEN_SUBMITTED_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
@@ -2089,6 +2139,8 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -2399,15 +2451,19 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -2418,9 +2474,11 @@ export type ApplicationNoteOrgIdFkeyOrganisationCreateInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -2776,6 +2834,64 @@ export type ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingAppl
 export type ApplicationOnDataChangelogForDataChangelogApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPatch;
+  serial: Scalars['String']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimApplicationJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimApplicationJoin` being updated. */
+  patch: DataTableFmpClaimApplicationJoinPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
+  outcomeRegistration: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyPatch;
+  serial: Scalars['String']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimLineApplicationJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimLineApplicationJoin` being updated. */
+  patch: DataTableFmpClaimLineApplicationJoinPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate = {
+  outcomeRegistration: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyPatch;
   serial: Scalars['String']['input'];
 };
 
@@ -3253,6 +3369,8 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -3359,15 +3477,19 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -3378,9 +3500,11 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -3436,6 +3560,8 @@ export type ApplicationPatch = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -3530,6 +3656,8 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -4039,6 +4167,8 @@ export type ApplicationReviewerActionApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -4372,6 +4502,8 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -5342,6 +5474,8 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -5538,6 +5672,26 @@ export type ApplicationToManyDataChangelogFilter = {
   none?: InputMaybe<DataChangelogFilter>;
   /** Some related `DataChangelog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<DataChangelogFilter>;
+};
+
+/** A filter to be used against many `DataTableFmpClaimApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyDataTableFmpClaimApplicationJoinFilter = {
+  /** Every related `DataTableFmpClaimApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+  /** No related `DataTableFmpClaimApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+  /** Some related `DataTableFmpClaimApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+};
+
+/** A filter to be used against many `DataTableFmpClaimLineApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyDataTableFmpClaimLineApplicationJoinFilter = {
+  /** Every related `DataTableFmpClaimLineApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
+  /** No related `DataTableFmpClaimLineApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
+  /** Some related `DataTableFmpClaimLineApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
 };
 
 /** A filter to be used against many `DataTableManufacturerApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -7047,6 +7201,179 @@ export type CreateDataTableDosageFormPayload = {
 /** The output of our create `DataTableDosageForm` mutation. */
 export type CreateDataTableDosageFormPayloadDataTableDosageFormEdgeArgs = {
   orderBy?: InputMaybe<Array<DataTableDosageFormsOrderBy>>;
+};
+
+/** All input for the create `DataTableFmpClaimApplicationJoin` mutation. */
+export type CreateDataTableFmpClaimApplicationJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `DataTableFmpClaimApplicationJoin` to be created by this mutation. */
+  dataTableFmpClaimApplicationJoin: DataTableFmpClaimApplicationJoinInput;
+};
+
+/** The output of our create `DataTableFmpClaimApplicationJoin` mutation. */
+export type CreateDataTableFmpClaimApplicationJoinPayload = {
+  __typename?: 'CreateDataTableFmpClaimApplicationJoinPayload';
+  /** Reads a single `Application` that is related to this `DataTableFmpClaimApplicationJoin`. */
+  application?: Maybe<Application>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `DataTableFmpClaim` that is related to this `DataTableFmpClaimApplicationJoin`. */
+  dataTableFmpClaim?: Maybe<DataTableFmpClaim>;
+  /** The `DataTableFmpClaimApplicationJoin` that was created by this mutation. */
+  dataTableFmpClaimApplicationJoin?: Maybe<DataTableFmpClaimApplicationJoin>;
+  /** An edge for our `DataTableFmpClaimApplicationJoin`. May be used by Relay 1. */
+  dataTableFmpClaimApplicationJoinEdge?: Maybe<DataTableFmpClaimApplicationJoinsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `DataTableFmpClaimApplicationJoin` mutation. */
+export type CreateDataTableFmpClaimApplicationJoinPayloadDataTableFmpClaimApplicationJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimApplicationJoinsOrderBy>>;
+};
+
+/** All input for the create `DataTableFmpClaim` mutation. */
+export type CreateDataTableFmpClaimInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `DataTableFmpClaim` to be created by this mutation. */
+  dataTableFmpClaim: DataTableFmpClaimInput;
+};
+
+/** All input for the create `DataTableFmpClaimLineApplicationJoin` mutation. */
+export type CreateDataTableFmpClaimLineApplicationJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `DataTableFmpClaimLineApplicationJoin` to be created by this mutation. */
+  dataTableFmpClaimLineApplicationJoin: DataTableFmpClaimLineApplicationJoinInput;
+};
+
+/** The output of our create `DataTableFmpClaimLineApplicationJoin` mutation. */
+export type CreateDataTableFmpClaimLineApplicationJoinPayload = {
+  __typename?: 'CreateDataTableFmpClaimLineApplicationJoinPayload';
+  /** Reads a single `Application` that is related to this `DataTableFmpClaimLineApplicationJoin`. */
+  application?: Maybe<Application>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `DataTableFmpClaimLine` that is related to this `DataTableFmpClaimLineApplicationJoin`. */
+  dataTableFmpClaimLine?: Maybe<DataTableFmpClaimLine>;
+  /** The `DataTableFmpClaimLineApplicationJoin` that was created by this mutation. */
+  dataTableFmpClaimLineApplicationJoin?: Maybe<DataTableFmpClaimLineApplicationJoin>;
+  /** An edge for our `DataTableFmpClaimLineApplicationJoin`. May be used by Relay 1. */
+  dataTableFmpClaimLineApplicationJoinEdge?: Maybe<DataTableFmpClaimLineApplicationJoinsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `DataTableFmpClaimLineApplicationJoin` mutation. */
+export type CreateDataTableFmpClaimLineApplicationJoinPayloadDataTableFmpClaimLineApplicationJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinsOrderBy>>;
+};
+
+/** All input for the create `DataTableFmpClaimLine` mutation. */
+export type CreateDataTableFmpClaimLineInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `DataTableFmpClaimLine` to be created by this mutation. */
+  dataTableFmpClaimLine: DataTableFmpClaimLineInput;
+};
+
+/** The output of our create `DataTableFmpClaimLine` mutation. */
+export type CreateDataTableFmpClaimLinePayload = {
+  __typename?: 'CreateDataTableFmpClaimLinePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableFmpClaimLine` that was created by this mutation. */
+  dataTableFmpClaimLine?: Maybe<DataTableFmpClaimLine>;
+  /** An edge for our `DataTableFmpClaimLine`. May be used by Relay 1. */
+  dataTableFmpClaimLineEdge?: Maybe<DataTableFmpClaimLinesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `DataTableFmpClaimLine` mutation. */
+export type CreateDataTableFmpClaimLinePayloadDataTableFmpClaimLineEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLinesOrderBy>>;
+};
+
+/** The output of our create `DataTableFmpClaim` mutation. */
+export type CreateDataTableFmpClaimPayload = {
+  __typename?: 'CreateDataTableFmpClaimPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableFmpClaim` that was created by this mutation. */
+  dataTableFmpClaim?: Maybe<DataTableFmpClaim>;
+  /** An edge for our `DataTableFmpClaim`. May be used by Relay 1. */
+  dataTableFmpClaimEdge?: Maybe<DataTableFmpClaimsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `DataTableFmpClaim` mutation. */
+export type CreateDataTableFmpClaimPayloadDataTableFmpClaimEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimsOrderBy>>;
+};
+
+/** All input for the create `DataTableFreeMedicinesPriceList` mutation. */
+export type CreateDataTableFreeMedicinesPriceListInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `DataTableFreeMedicinesPriceList` to be created by this mutation. */
+  dataTableFreeMedicinesPriceList: DataTableFreeMedicinesPriceListInput;
+};
+
+/** The output of our create `DataTableFreeMedicinesPriceList` mutation. */
+export type CreateDataTableFreeMedicinesPriceListPayload = {
+  __typename?: 'CreateDataTableFreeMedicinesPriceListPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableFreeMedicinesPriceList` that was created by this mutation. */
+  dataTableFreeMedicinesPriceList?: Maybe<DataTableFreeMedicinesPriceList>;
+  /** An edge for our `DataTableFreeMedicinesPriceList`. May be used by Relay 1. */
+  dataTableFreeMedicinesPriceListEdge?: Maybe<DataTableFreeMedicinesPriceListsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `DataTableFreeMedicinesPriceList` mutation. */
+export type CreateDataTableFreeMedicinesPriceListPayloadDataTableFreeMedicinesPriceListEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFreeMedicinesPriceListsOrderBy>>;
 };
 
 /** All input for the create `DataTableGenericIngredient` mutation. */
@@ -9330,6 +9657,8 @@ export type DataChangelogApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -9652,15 +9981,19 @@ export type DataChangelogOrgIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -9671,9 +10004,11 @@ export type DataChangelogOrgIdFkeyOrganisationCreateInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -10482,6 +10817,1480 @@ export type DataTableFilter = {
   tableName?: InputMaybe<StringFilter>;
 };
 
+export type DataTableFmpClaim = Node & {
+  __typename?: 'DataTableFmpClaim';
+  cardType?: Maybe<Scalars['String']['output']>;
+  claimNumber?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `DataTableFmpClaimApplicationJoin`. */
+  dataTableFmpClaimApplicationJoins: DataTableFmpClaimApplicationJoinsConnection;
+  dateClaimed?: Maybe<Scalars['Date']['output']>;
+  dateDispensed?: Maybe<Scalars['Date']['output']>;
+  dispensingFeeReimbursement?: Maybe<Scalars['Float']['output']>;
+  id: Scalars['Int']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+  patientName?: Maybe<Scalars['String']['output']>;
+  paymentProcessed?: Maybe<Scalars['Boolean']['output']>;
+  paymentVoucher?: Maybe<Scalars['JSON']['output']>;
+  pharmacyEmail?: Maybe<Scalars['String']['output']>;
+  pharmacyId?: Maybe<Scalars['Int']['output']>;
+  pharmacyName?: Maybe<Scalars['String']['output']>;
+  prescriptionData?: Maybe<Scalars['JSON']['output']>;
+  prescriptionSource?: Maybe<Scalars['String']['output']>;
+  reportCode?: Maybe<Scalars['String']['output']>;
+  sentToAccounts?: Maybe<Scalars['Boolean']['output']>;
+  totalChargedByPharmacy?: Maybe<Scalars['Float']['output']>;
+  totalClaimReimbursement?: Maybe<Scalars['Float']['output']>;
+  totalItemReimbursement?: Maybe<Scalars['Float']['output']>;
+};
+
+
+export type DataTableFmpClaimDataTableFmpClaimApplicationJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableFmpClaimApplicationJoinCondition>;
+  filter?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableFmpClaimApplicationJoinsOrderBy>>;
+};
+
+/** The `dataTableFmpClaimApplicationJoin` to be created by this mutation. */
+export type DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyDataTableFmpClaimApplicationJoinCreateInput = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimToDataTableFmpClaimId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The `dataTableFmpClaim` to be created by this mutation. */
+export type DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyDataTableFmpClaimCreateInput = {
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInverseInput>;
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  dispensingFeeReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  paymentVoucher?: InputMaybe<Scalars['JSON']['input']>;
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  prescriptionData?: InputMaybe<Scalars['JSON']['input']>;
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  reportCode?: InputMaybe<Scalars['String']['input']>;
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  totalChargedByPharmacy?: InputMaybe<Scalars['Float']['input']>;
+  totalClaimReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+};
+
+/** Input for the nested mutation of `dataTableFmpClaim` in the `DataTableFmpClaimApplicationJoinInput` mutation. */
+export type DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInput = {
+  /** The primary key(s) for `dataTableFmpClaim` for the far side of the relationship. */
+  connectById?: InputMaybe<DataTableFmpClaimDataTableFmpClaimPkeyConnect>;
+  /** The primary key(s) for `dataTableFmpClaim` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<DataTableFmpClaimNodeIdConnect>;
+  /** A `DataTableFmpClaimInput` object that will be created and connected to this object. */
+  create?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyDataTableFmpClaimCreateInput>;
+  /** The primary key(s) for `dataTableFmpClaim` for the far side of the relationship. */
+  deleteById?: InputMaybe<DataTableFmpClaimDataTableFmpClaimPkeyDelete>;
+  /** The primary key(s) for `dataTableFmpClaim` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<DataTableFmpClaimNodeIdDelete>;
+  /** The primary key(s) and patch data for `dataTableFmpClaim` for the far side of the relationship. */
+  updateById?: InputMaybe<DataTableFmpClaimOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyUsingDataTableFmpClaimPkeyUpdate>;
+  /** The primary key(s) and patch data for `dataTableFmpClaim` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<DataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyNodeIdUpdate>;
+};
+
+/** Input for the nested mutation of `dataTableFmpClaimApplicationJoin` in the `DataTableFmpClaimInput` mutation. */
+export type DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInverseInput = {
+  /** The primary key(s) for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<DataTableFmpClaimApplicationJoinDataTableFmpClaimApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<Array<DataTableFmpClaimApplicationJoinNodeIdConnect>>;
+  /** A `DataTableFmpClaimApplicationJoinInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyDataTableFmpClaimApplicationJoinCreateInput>>;
+  /** The primary key(s) for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<DataTableFmpClaimApplicationJoinDataTableFmpClaimApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<Array<DataTableFmpClaimApplicationJoinNodeIdDelete>>;
+  /** Flag indicating whether all other `dataTableFmpClaimApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<DataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyUsingDataTableFmpClaimApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<Array<DataTableFmpClaimOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyNodeIdUpdate>>;
+};
+
+export type DataTableFmpClaimApplicationJoin = Node & {
+  __typename?: 'DataTableFmpClaimApplicationJoin';
+  /** Reads a single `Application` that is related to this `DataTableFmpClaimApplicationJoin`. */
+  application?: Maybe<Application>;
+  applicationId: Scalars['Int']['output'];
+  /** Reads a single `DataTableFmpClaim` that is related to this `DataTableFmpClaimApplicationJoin`. */
+  dataTableFmpClaim?: Maybe<DataTableFmpClaim>;
+  dataTableFmpClaimId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+};
+
+/** The `application` to be created by this mutation. */
+export type DataTableFmpClaimApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+  actionQueuesUsingId?: InputMaybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: InputMaybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: InputMaybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: InputMaybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: InputMaybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: InputMaybe<FileApplicationSerialFkeyInverseInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  isConfig?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  notificationsUsingId?: InputMaybe<NotificationApplicationIdFkeyInverseInput>;
+  orgId?: InputMaybe<Scalars['Int']['input']>;
+  organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationToOrgId?: InputMaybe<ApplicationOrgIdFkeyInput>;
+  outcome?: InputMaybe<ApplicationOutcome>;
+  outcomeRegistration?: InputMaybe<Scalars['String']['input']>;
+  reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  reviewsUsingId?: InputMaybe<ReviewApplicationIdFkeyInverseInput>;
+  serial?: InputMaybe<Scalars['String']['input']>;
+  sessionId?: InputMaybe<Scalars['String']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<ApplicationTemplateIdFkeyInput>;
+  trigger?: InputMaybe<Trigger>;
+  triggerQueuesUsingId?: InputMaybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: InputMaybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  urlProperties?: InputMaybe<Scalars['JSON']['input']>;
+  userApplicationJoinsUsingId?: InputMaybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
+  userListToUserId?: InputMaybe<FakePublicApplicationForeignKey0Input>;
+  verificationsUsingId?: InputMaybe<VerificationApplicationIdFkeyInverseInput>;
+};
+
+/** The `dataTableFmpClaimApplicationJoin` to be created by this mutation. */
+export type DataTableFmpClaimApplicationJoinApplicationIdFkeyDataTableFmpClaimApplicationJoinCreateInput = {
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  dataTableFmpClaimToDataTableFmpClaimId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Input for the nested mutation of `application` in the `DataTableFmpClaimApplicationJoinInput` mutation. */
+export type DataTableFmpClaimApplicationJoinApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: InputMaybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByOutcomeRegistration?: InputMaybe<ApplicationApplicationOutcomeRegistrationKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: InputMaybe<ApplicationApplicationSerialKeyConnect>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyApplicationCreateInput>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: InputMaybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByOutcomeRegistration?: InputMaybe<ApplicationApplicationOutcomeRegistrationKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: InputMaybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: InputMaybe<ApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<DataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByOutcomeRegistration?: InputMaybe<ApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: InputMaybe<ApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+};
+
+/** Input for the nested mutation of `dataTableFmpClaimApplicationJoin` in the `ApplicationInput` mutation. */
+export type DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput = {
+  /** The primary key(s) for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<DataTableFmpClaimApplicationJoinDataTableFmpClaimApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<Array<DataTableFmpClaimApplicationJoinNodeIdConnect>>;
+  /** A `DataTableFmpClaimApplicationJoinInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<DataTableFmpClaimApplicationJoinApplicationIdFkeyDataTableFmpClaimApplicationJoinCreateInput>>;
+  /** The primary key(s) for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<DataTableFmpClaimApplicationJoinDataTableFmpClaimApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<Array<DataTableFmpClaimApplicationJoinNodeIdDelete>>;
+  /** Flag indicating whether all other `dataTableFmpClaimApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<DataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyUsingDataTableFmpClaimApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<Array<ApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+};
+
+/**
+ * A condition to be used against `DataTableFmpClaimApplicationJoin` object types.
+ * All fields are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTableFmpClaimApplicationJoinCondition = {
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `dataTableFmpClaimId` field. */
+  dataTableFmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The fields on `dataTableFmpClaimApplicationJoin` to look up the row to connect. */
+export type DataTableFmpClaimApplicationJoinDataTableFmpClaimApplicationJoinPkeyConnect = {
+  id: Scalars['Int']['input'];
+};
+
+/** The fields on `dataTableFmpClaimApplicationJoin` to look up the row to delete. */
+export type DataTableFmpClaimApplicationJoinDataTableFmpClaimApplicationJoinPkeyDelete = {
+  id: Scalars['Int']['input'];
+};
+
+/** A filter to be used against `DataTableFmpClaimApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableFmpClaimApplicationJoinFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DataTableFmpClaimApplicationJoinFilter>>;
+  /** Filter by the object’s `application` relation. */
+  application?: InputMaybe<ApplicationFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `dataTableFmpClaim` relation. */
+  dataTableFmpClaim?: InputMaybe<DataTableFmpClaimFilter>;
+  /** Filter by the object’s `dataTableFmpClaimId` field. */
+  dataTableFmpClaimId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DataTableFmpClaimApplicationJoinFilter>>;
+};
+
+/** An input for mutations affecting `DataTableFmpClaimApplicationJoin` */
+export type DataTableFmpClaimApplicationJoinInput = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  dataTableFmpClaimToDataTableFmpClaimId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type DataTableFmpClaimApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimApplicationJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type DataTableFmpClaimApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaim` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaim` being updated. */
+  patch: DataTableFmpClaimPatch;
+};
+
+/** The fields on `dataTableFmpClaimApplicationJoin` to look up the row to update. */
+export type DataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyUsingDataTableFmpClaimApplicationJoinPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimApplicationJoin` being updated. */
+  patch: UpdateDataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyPatch;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `dataTableFmpClaimApplicationJoin` to look up the row to update. */
+export type DataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyUsingDataTableFmpClaimApplicationJoinPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimApplicationJoin` being updated. */
+  patch: UpdateDataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyPatch;
+};
+
+/** Represents an update to a `DataTableFmpClaimApplicationJoin`. Fields that are set will be updated. */
+export type DataTableFmpClaimApplicationJoinPatch = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  dataTableFmpClaimToDataTableFmpClaimId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `DataTableFmpClaimApplicationJoin` values. */
+export type DataTableFmpClaimApplicationJoinsConnection = {
+  __typename?: 'DataTableFmpClaimApplicationJoinsConnection';
+  /** A list of edges which contains the `DataTableFmpClaimApplicationJoin` and cursor to aid in pagination. */
+  edges: Array<DataTableFmpClaimApplicationJoinsEdge>;
+  /** A list of `DataTableFmpClaimApplicationJoin` objects. */
+  nodes: Array<Maybe<DataTableFmpClaimApplicationJoin>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableFmpClaimApplicationJoin` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `DataTableFmpClaimApplicationJoin` edge in the connection. */
+export type DataTableFmpClaimApplicationJoinsEdge = {
+  __typename?: 'DataTableFmpClaimApplicationJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DataTableFmpClaimApplicationJoin` at the end of the edge. */
+  node?: Maybe<DataTableFmpClaimApplicationJoin>;
+};
+
+/** Methods to use when ordering `DataTableFmpClaimApplicationJoin`. */
+export enum DataTableFmpClaimApplicationJoinsOrderBy {
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  DataTableFmpClaimIdAsc = 'DATA_TABLE_FMP_CLAIM_ID_ASC',
+  DataTableFmpClaimIdDesc = 'DATA_TABLE_FMP_CLAIM_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `DataTableFmpClaim` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type DataTableFmpClaimCondition = {
+  /** Checks for equality with the object’s `cardType` field. */
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `claimNumber` field. */
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dateClaimed` field. */
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `dateDispensed` field. */
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `dispensingFeeReimbursement` field. */
+  dispensingFeeReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `patientName` field. */
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `paymentProcessed` field. */
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `paymentVoucher` field. */
+  paymentVoucher?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `pharmacyEmail` field. */
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `pharmacyId` field. */
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `pharmacyName` field. */
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `prescriptionData` field. */
+  prescriptionData?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `prescriptionSource` field. */
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `reportCode` field. */
+  reportCode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `sentToAccounts` field. */
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `totalChargedByPharmacy` field. */
+  totalChargedByPharmacy?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `totalClaimReimbursement` field. */
+  totalClaimReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `totalItemReimbursement` field. */
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+};
+
+/** The fields on `dataTableFmpClaim` to look up the row to connect. */
+export type DataTableFmpClaimDataTableFmpClaimPkeyConnect = {
+  id: Scalars['Int']['input'];
+};
+
+/** The fields on `dataTableFmpClaim` to look up the row to delete. */
+export type DataTableFmpClaimDataTableFmpClaimPkeyDelete = {
+  id: Scalars['Int']['input'];
+};
+
+/** A filter to be used against `DataTableFmpClaim` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableFmpClaimFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DataTableFmpClaimFilter>>;
+  /** Filter by the object’s `cardType` field. */
+  cardType?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `claimNumber` field. */
+  claimNumber?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dataTableFmpClaimApplicationJoins` relation. */
+  dataTableFmpClaimApplicationJoins?: InputMaybe<DataTableFmpClaimToManyDataTableFmpClaimApplicationJoinFilter>;
+  /** Some related `dataTableFmpClaimApplicationJoins` exist. */
+  dataTableFmpClaimApplicationJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `dateClaimed` field. */
+  dateClaimed?: InputMaybe<DateFilter>;
+  /** Filter by the object’s `dateDispensed` field. */
+  dateDispensed?: InputMaybe<DateFilter>;
+  /** Filter by the object’s `dispensingFeeReimbursement` field. */
+  dispensingFeeReimbursement?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DataTableFmpClaimFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DataTableFmpClaimFilter>>;
+  /** Filter by the object’s `patientName` field. */
+  patientName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `paymentProcessed` field. */
+  paymentProcessed?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `paymentVoucher` field. */
+  paymentVoucher?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `pharmacyEmail` field. */
+  pharmacyEmail?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `pharmacyId` field. */
+  pharmacyId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `pharmacyName` field. */
+  pharmacyName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `prescriptionData` field. */
+  prescriptionData?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `prescriptionSource` field. */
+  prescriptionSource?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `reportCode` field. */
+  reportCode?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `sentToAccounts` field. */
+  sentToAccounts?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `totalChargedByPharmacy` field. */
+  totalChargedByPharmacy?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `totalClaimReimbursement` field. */
+  totalClaimReimbursement?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `totalItemReimbursement` field. */
+  totalItemReimbursement?: InputMaybe<FloatFilter>;
+};
+
+/** An input for mutations affecting `DataTableFmpClaim` */
+export type DataTableFmpClaimInput = {
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInverseInput>;
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  dispensingFeeReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  paymentVoucher?: InputMaybe<Scalars['JSON']['input']>;
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  prescriptionData?: InputMaybe<Scalars['JSON']['input']>;
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  reportCode?: InputMaybe<Scalars['String']['input']>;
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  totalChargedByPharmacy?: InputMaybe<Scalars['Float']['input']>;
+  totalClaimReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type DataTableFmpClaimLine = Node & {
+  __typename?: 'DataTableFmpClaimLine';
+  cardType?: Maybe<Scalars['String']['output']>;
+  ceilingPricePerUnit?: Maybe<Scalars['Float']['output']>;
+  claimNumber?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `DataTableFmpClaimLineApplicationJoin`. */
+  dataTableFmpClaimLineApplicationJoins: DataTableFmpClaimLineApplicationJoinsConnection;
+  dateClaimed?: Maybe<Scalars['Date']['output']>;
+  dateDispensed?: Maybe<Scalars['Date']['output']>;
+  dispensingFee?: Maybe<Scalars['Float']['output']>;
+  excessPaid?: Maybe<Scalars['Float']['output']>;
+  fmpClaimId?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
+  medicine?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+  packSize?: Maybe<Scalars['String']['output']>;
+  patientName?: Maybe<Scalars['String']['output']>;
+  paymentProcessed?: Maybe<Scalars['Boolean']['output']>;
+  pharmacyEmail?: Maybe<Scalars['String']['output']>;
+  pharmacyId?: Maybe<Scalars['Int']['output']>;
+  pharmacyName?: Maybe<Scalars['String']['output']>;
+  prescriptionSource?: Maybe<Scalars['String']['output']>;
+  quantity?: Maybe<Scalars['Int']['output']>;
+  sentToAccounts?: Maybe<Scalars['Boolean']['output']>;
+  totalItemPrice?: Maybe<Scalars['Float']['output']>;
+  totalItemReimbursement?: Maybe<Scalars['Float']['output']>;
+  unit?: Maybe<Scalars['String']['output']>;
+  verified?: Maybe<Scalars['Boolean']['output']>;
+};
+
+
+export type DataTableFmpClaimLineDataTableFmpClaimLineApplicationJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableFmpClaimLineApplicationJoinCondition>;
+  filter?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinsOrderBy>>;
+};
+
+/** The `dataTableFmpClaimLineApplicationJoin` to be created by this mutation. */
+export type DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyDataTableFmpClaimLineApplicationJoinCreateInput = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimLineToDataTableFmpClaimLineId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The `dataTableFmpClaimLine` to be created by this mutation. */
+export type DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyDataTableFmpClaimLineCreateInput = {
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  ceilingPricePerUnit?: InputMaybe<Scalars['Float']['input']>;
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInverseInput>;
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  dispensingFee?: InputMaybe<Scalars['Float']['input']>;
+  excessPaid?: InputMaybe<Scalars['Float']['input']>;
+  fmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  medicine?: InputMaybe<Scalars['String']['input']>;
+  packSize?: InputMaybe<Scalars['String']['input']>;
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  totalItemPrice?: InputMaybe<Scalars['Float']['input']>;
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Input for the nested mutation of `dataTableFmpClaimLine` in the `DataTableFmpClaimLineApplicationJoinInput` mutation. */
+export type DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInput = {
+  /** The primary key(s) for `dataTableFmpClaimLine` for the far side of the relationship. */
+  connectById?: InputMaybe<DataTableFmpClaimLineDataTableFmpClaimLinePkeyConnect>;
+  /** The primary key(s) for `dataTableFmpClaimLine` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<DataTableFmpClaimLineNodeIdConnect>;
+  /** A `DataTableFmpClaimLineInput` object that will be created and connected to this object. */
+  create?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyDataTableFmpClaimLineCreateInput>;
+  /** The primary key(s) for `dataTableFmpClaimLine` for the far side of the relationship. */
+  deleteById?: InputMaybe<DataTableFmpClaimLineDataTableFmpClaimLinePkeyDelete>;
+  /** The primary key(s) for `dataTableFmpClaimLine` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<DataTableFmpClaimLineNodeIdDelete>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimLine` for the far side of the relationship. */
+  updateById?: InputMaybe<DataTableFmpClaimLineOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyUsingDataTableFmpClaimLinePkeyUpdate>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimLine` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<DataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyNodeIdUpdate>;
+};
+
+/** Input for the nested mutation of `dataTableFmpClaimLineApplicationJoin` in the `DataTableFmpClaimLineInput` mutation. */
+export type DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInverseInput = {
+  /** The primary key(s) for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinDataTableFmpClaimLineApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinNodeIdConnect>>;
+  /** A `DataTableFmpClaimLineApplicationJoinInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyDataTableFmpClaimLineApplicationJoinCreateInput>>;
+  /** The primary key(s) for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinDataTableFmpClaimLineApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinNodeIdDelete>>;
+  /** Flag indicating whether all other `dataTableFmpClaimLineApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyUsingDataTableFmpClaimLineApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<Array<DataTableFmpClaimLineOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyNodeIdUpdate>>;
+};
+
+export type DataTableFmpClaimLineApplicationJoin = Node & {
+  __typename?: 'DataTableFmpClaimLineApplicationJoin';
+  /** Reads a single `Application` that is related to this `DataTableFmpClaimLineApplicationJoin`. */
+  application?: Maybe<Application>;
+  applicationId: Scalars['Int']['output'];
+  /** Reads a single `DataTableFmpClaimLine` that is related to this `DataTableFmpClaimLineApplicationJoin`. */
+  dataTableFmpClaimLine?: Maybe<DataTableFmpClaimLine>;
+  dataTableFmpClaimLineId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+};
+
+/** The `application` to be created by this mutation. */
+export type DataTableFmpClaimLineApplicationJoinApplicationIdFkeyApplicationCreateInput = {
+  actionQueuesUsingId?: InputMaybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: InputMaybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: InputMaybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: InputMaybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: InputMaybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: InputMaybe<FileApplicationSerialFkeyInverseInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  isConfig?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  notificationsUsingId?: InputMaybe<NotificationApplicationIdFkeyInverseInput>;
+  orgId?: InputMaybe<Scalars['Int']['input']>;
+  organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationToOrgId?: InputMaybe<ApplicationOrgIdFkeyInput>;
+  outcome?: InputMaybe<ApplicationOutcome>;
+  outcomeRegistration?: InputMaybe<Scalars['String']['input']>;
+  reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  reviewsUsingId?: InputMaybe<ReviewApplicationIdFkeyInverseInput>;
+  serial?: InputMaybe<Scalars['String']['input']>;
+  sessionId?: InputMaybe<Scalars['String']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<ApplicationTemplateIdFkeyInput>;
+  trigger?: InputMaybe<Trigger>;
+  triggerQueuesUsingId?: InputMaybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: InputMaybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  urlProperties?: InputMaybe<Scalars['JSON']['input']>;
+  userApplicationJoinsUsingId?: InputMaybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
+  userListToUserId?: InputMaybe<FakePublicApplicationForeignKey0Input>;
+  verificationsUsingId?: InputMaybe<VerificationApplicationIdFkeyInverseInput>;
+};
+
+/** The `dataTableFmpClaimLineApplicationJoin` to be created by this mutation. */
+export type DataTableFmpClaimLineApplicationJoinApplicationIdFkeyDataTableFmpClaimLineApplicationJoinCreateInput = {
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimLineId?: InputMaybe<Scalars['Int']['input']>;
+  dataTableFmpClaimLineToDataTableFmpClaimLineId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** Input for the nested mutation of `application` in the `DataTableFmpClaimLineApplicationJoinInput` mutation. */
+export type DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: InputMaybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByOutcomeRegistration?: InputMaybe<ApplicationApplicationOutcomeRegistrationKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: InputMaybe<ApplicationApplicationSerialKeyConnect>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyApplicationCreateInput>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: InputMaybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByOutcomeRegistration?: InputMaybe<ApplicationApplicationOutcomeRegistrationKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: InputMaybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: InputMaybe<ApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<DataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyNodeIdUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByOutcomeRegistration?: InputMaybe<ApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyUsingApplicationOutcomeRegistrationKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: InputMaybe<ApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+};
+
+/** Input for the nested mutation of `dataTableFmpClaimLineApplicationJoin` in the `ApplicationInput` mutation. */
+export type DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput = {
+  /** The primary key(s) for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  connectById?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinDataTableFmpClaimLineApplicationJoinPkeyConnect>>;
+  /** The primary key(s) for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  connectByNodeId?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinNodeIdConnect>>;
+  /** A `DataTableFmpClaimLineApplicationJoinInput` object that will be created and connected to this object. */
+  create?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyDataTableFmpClaimLineApplicationJoinCreateInput>>;
+  /** The primary key(s) for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  deleteById?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinDataTableFmpClaimLineApplicationJoinPkeyDelete>>;
+  /** The primary key(s) for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  deleteByNodeId?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinNodeIdDelete>>;
+  /** Flag indicating whether all other `dataTableFmpClaimLineApplicationJoin` records that match this relationship should be removed. */
+  deleteOthers?: InputMaybe<Scalars['Boolean']['input']>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  updateById?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyUsingDataTableFmpClaimLineApplicationJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `dataTableFmpClaimLineApplicationJoin` for the far side of the relationship. */
+  updateByNodeId?: InputMaybe<Array<ApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyNodeIdUpdate>>;
+};
+
+/**
+ * A condition to be used against `DataTableFmpClaimLineApplicationJoin` object
+ * types. All fields are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTableFmpClaimLineApplicationJoinCondition = {
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `dataTableFmpClaimLineId` field. */
+  dataTableFmpClaimLineId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The fields on `dataTableFmpClaimLineApplicationJoin` to look up the row to connect. */
+export type DataTableFmpClaimLineApplicationJoinDataTableFmpClaimLineApplicationJoinPkeyConnect = {
+  id: Scalars['Int']['input'];
+};
+
+/** The fields on `dataTableFmpClaimLineApplicationJoin` to look up the row to delete. */
+export type DataTableFmpClaimLineApplicationJoinDataTableFmpClaimLineApplicationJoinPkeyDelete = {
+  id: Scalars['Int']['input'];
+};
+
+/** A filter to be used against `DataTableFmpClaimLineApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableFmpClaimLineApplicationJoinFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinFilter>>;
+  /** Filter by the object’s `application` relation. */
+  application?: InputMaybe<ApplicationFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `dataTableFmpClaimLine` relation. */
+  dataTableFmpClaimLine?: InputMaybe<DataTableFmpClaimLineFilter>;
+  /** Filter by the object’s `dataTableFmpClaimLineId` field. */
+  dataTableFmpClaimLineId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinFilter>>;
+};
+
+/** An input for mutations affecting `DataTableFmpClaimLineApplicationJoin` */
+export type DataTableFmpClaimLineApplicationJoinInput = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimLineId?: InputMaybe<Scalars['Int']['input']>;
+  dataTableFmpClaimLineToDataTableFmpClaimLineId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type DataTableFmpClaimLineApplicationJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimLineApplicationJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type DataTableFmpClaimLineApplicationJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimLineApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimLine` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimLine` being updated. */
+  patch: DataTableFmpClaimLinePatch;
+};
+
+/** The fields on `dataTableFmpClaimLineApplicationJoin` to look up the row to update. */
+export type DataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyUsingDataTableFmpClaimLineApplicationJoinPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimLineApplicationJoin` being updated. */
+  patch: UpdateDataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyPatch;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `dataTableFmpClaimLineApplicationJoin` to look up the row to update. */
+export type DataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyUsingDataTableFmpClaimLineApplicationJoinPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimLineApplicationJoin` being updated. */
+  patch: UpdateDataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyPatch;
+};
+
+/** Represents an update to a `DataTableFmpClaimLineApplicationJoin`. Fields that are set will be updated. */
+export type DataTableFmpClaimLineApplicationJoinPatch = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimLineId?: InputMaybe<Scalars['Int']['input']>;
+  dataTableFmpClaimLineToDataTableFmpClaimLineId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `DataTableFmpClaimLineApplicationJoin` values. */
+export type DataTableFmpClaimLineApplicationJoinsConnection = {
+  __typename?: 'DataTableFmpClaimLineApplicationJoinsConnection';
+  /** A list of edges which contains the `DataTableFmpClaimLineApplicationJoin` and cursor to aid in pagination. */
+  edges: Array<DataTableFmpClaimLineApplicationJoinsEdge>;
+  /** A list of `DataTableFmpClaimLineApplicationJoin` objects. */
+  nodes: Array<Maybe<DataTableFmpClaimLineApplicationJoin>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableFmpClaimLineApplicationJoin` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `DataTableFmpClaimLineApplicationJoin` edge in the connection. */
+export type DataTableFmpClaimLineApplicationJoinsEdge = {
+  __typename?: 'DataTableFmpClaimLineApplicationJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DataTableFmpClaimLineApplicationJoin` at the end of the edge. */
+  node?: Maybe<DataTableFmpClaimLineApplicationJoin>;
+};
+
+/** Methods to use when ordering `DataTableFmpClaimLineApplicationJoin`. */
+export enum DataTableFmpClaimLineApplicationJoinsOrderBy {
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  DataTableFmpClaimLineIdAsc = 'DATA_TABLE_FMP_CLAIM_LINE_ID_ASC',
+  DataTableFmpClaimLineIdDesc = 'DATA_TABLE_FMP_CLAIM_LINE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `DataTableFmpClaimLine` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTableFmpClaimLineCondition = {
+  /** Checks for equality with the object’s `cardType` field. */
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `ceilingPricePerUnit` field. */
+  ceilingPricePerUnit?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `claimNumber` field. */
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dateClaimed` field. */
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `dateDispensed` field. */
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `dispensingFee` field. */
+  dispensingFee?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `excessPaid` field. */
+  excessPaid?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `fmpClaimId` field. */
+  fmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `medicine` field. */
+  medicine?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `packSize` field. */
+  packSize?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `patientName` field. */
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `paymentProcessed` field. */
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `pharmacyEmail` field. */
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `pharmacyId` field. */
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `pharmacyName` field. */
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `prescriptionSource` field. */
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `quantity` field. */
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `sentToAccounts` field. */
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `totalItemPrice` field. */
+  totalItemPrice?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `totalItemReimbursement` field. */
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `unit` field. */
+  unit?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `verified` field. */
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** The fields on `dataTableFmpClaimLine` to look up the row to connect. */
+export type DataTableFmpClaimLineDataTableFmpClaimLinePkeyConnect = {
+  id: Scalars['Int']['input'];
+};
+
+/** The fields on `dataTableFmpClaimLine` to look up the row to delete. */
+export type DataTableFmpClaimLineDataTableFmpClaimLinePkeyDelete = {
+  id: Scalars['Int']['input'];
+};
+
+/** A filter to be used against `DataTableFmpClaimLine` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableFmpClaimLineFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DataTableFmpClaimLineFilter>>;
+  /** Filter by the object’s `cardType` field. */
+  cardType?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `ceilingPricePerUnit` field. */
+  ceilingPricePerUnit?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `claimNumber` field. */
+  claimNumber?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dataTableFmpClaimLineApplicationJoins` relation. */
+  dataTableFmpClaimLineApplicationJoins?: InputMaybe<DataTableFmpClaimLineToManyDataTableFmpClaimLineApplicationJoinFilter>;
+  /** Some related `dataTableFmpClaimLineApplicationJoins` exist. */
+  dataTableFmpClaimLineApplicationJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `dateClaimed` field. */
+  dateClaimed?: InputMaybe<DateFilter>;
+  /** Filter by the object’s `dateDispensed` field. */
+  dateDispensed?: InputMaybe<DateFilter>;
+  /** Filter by the object’s `dispensingFee` field. */
+  dispensingFee?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `excessPaid` field. */
+  excessPaid?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `fmpClaimId` field. */
+  fmpClaimId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `medicine` field. */
+  medicine?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DataTableFmpClaimLineFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DataTableFmpClaimLineFilter>>;
+  /** Filter by the object’s `packSize` field. */
+  packSize?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `patientName` field. */
+  patientName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `paymentProcessed` field. */
+  paymentProcessed?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `pharmacyEmail` field. */
+  pharmacyEmail?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `pharmacyId` field. */
+  pharmacyId?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `pharmacyName` field. */
+  pharmacyName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `prescriptionSource` field. */
+  prescriptionSource?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `quantity` field. */
+  quantity?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `sentToAccounts` field. */
+  sentToAccounts?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `totalItemPrice` field. */
+  totalItemPrice?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `totalItemReimbursement` field. */
+  totalItemReimbursement?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `unit` field. */
+  unit?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `verified` field. */
+  verified?: InputMaybe<BooleanFilter>;
+};
+
+/** An input for mutations affecting `DataTableFmpClaimLine` */
+export type DataTableFmpClaimLineInput = {
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  ceilingPricePerUnit?: InputMaybe<Scalars['Float']['input']>;
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInverseInput>;
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  dispensingFee?: InputMaybe<Scalars['Float']['input']>;
+  excessPaid?: InputMaybe<Scalars['Float']['input']>;
+  fmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  medicine?: InputMaybe<Scalars['String']['input']>;
+  packSize?: InputMaybe<Scalars['String']['input']>;
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  totalItemPrice?: InputMaybe<Scalars['Float']['input']>;
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type DataTableFmpClaimLineNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimLine` to be connected. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type DataTableFmpClaimLineNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimLine` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataTableFmpClaimLineOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimLineApplicationJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimLineApplicationJoin` being updated. */
+  patch: DataTableFmpClaimLineApplicationJoinPatch;
+};
+
+/** The fields on `dataTableFmpClaimLine` to look up the row to update. */
+export type DataTableFmpClaimLineOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyUsingDataTableFmpClaimLinePkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimLine` being updated. */
+  patch: UpdateDataTableFmpClaimLineOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyPatch;
+};
+
+/** Represents an update to a `DataTableFmpClaimLine`. Fields that are set will be updated. */
+export type DataTableFmpClaimLinePatch = {
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  ceilingPricePerUnit?: InputMaybe<Scalars['Float']['input']>;
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInverseInput>;
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  dispensingFee?: InputMaybe<Scalars['Float']['input']>;
+  excessPaid?: InputMaybe<Scalars['Float']['input']>;
+  fmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  medicine?: InputMaybe<Scalars['String']['input']>;
+  packSize?: InputMaybe<Scalars['String']['input']>;
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  totalItemPrice?: InputMaybe<Scalars['Float']['input']>;
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** A filter to be used against many `DataTableFmpClaimLineApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableFmpClaimLineToManyDataTableFmpClaimLineApplicationJoinFilter = {
+  /** Every related `DataTableFmpClaimLineApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
+  /** No related `DataTableFmpClaimLineApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
+  /** Some related `DataTableFmpClaimLineApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
+};
+
+/** A connection to a list of `DataTableFmpClaimLine` values. */
+export type DataTableFmpClaimLinesConnection = {
+  __typename?: 'DataTableFmpClaimLinesConnection';
+  /** A list of edges which contains the `DataTableFmpClaimLine` and cursor to aid in pagination. */
+  edges: Array<DataTableFmpClaimLinesEdge>;
+  /** A list of `DataTableFmpClaimLine` objects. */
+  nodes: Array<Maybe<DataTableFmpClaimLine>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableFmpClaimLine` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `DataTableFmpClaimLine` edge in the connection. */
+export type DataTableFmpClaimLinesEdge = {
+  __typename?: 'DataTableFmpClaimLinesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DataTableFmpClaimLine` at the end of the edge. */
+  node?: Maybe<DataTableFmpClaimLine>;
+};
+
+/** Methods to use when ordering `DataTableFmpClaimLine`. */
+export enum DataTableFmpClaimLinesOrderBy {
+  CardTypeAsc = 'CARD_TYPE_ASC',
+  CardTypeDesc = 'CARD_TYPE_DESC',
+  CeilingPricePerUnitAsc = 'CEILING_PRICE_PER_UNIT_ASC',
+  CeilingPricePerUnitDesc = 'CEILING_PRICE_PER_UNIT_DESC',
+  ClaimNumberAsc = 'CLAIM_NUMBER_ASC',
+  ClaimNumberDesc = 'CLAIM_NUMBER_DESC',
+  DateClaimedAsc = 'DATE_CLAIMED_ASC',
+  DateClaimedDesc = 'DATE_CLAIMED_DESC',
+  DateDispensedAsc = 'DATE_DISPENSED_ASC',
+  DateDispensedDesc = 'DATE_DISPENSED_DESC',
+  DispensingFeeAsc = 'DISPENSING_FEE_ASC',
+  DispensingFeeDesc = 'DISPENSING_FEE_DESC',
+  ExcessPaidAsc = 'EXCESS_PAID_ASC',
+  ExcessPaidDesc = 'EXCESS_PAID_DESC',
+  FmpClaimIdAsc = 'FMP_CLAIM_ID_ASC',
+  FmpClaimIdDesc = 'FMP_CLAIM_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  MedicineAsc = 'MEDICINE_ASC',
+  MedicineDesc = 'MEDICINE_DESC',
+  Natural = 'NATURAL',
+  PackSizeAsc = 'PACK_SIZE_ASC',
+  PackSizeDesc = 'PACK_SIZE_DESC',
+  PatientNameAsc = 'PATIENT_NAME_ASC',
+  PatientNameDesc = 'PATIENT_NAME_DESC',
+  PaymentProcessedAsc = 'PAYMENT_PROCESSED_ASC',
+  PaymentProcessedDesc = 'PAYMENT_PROCESSED_DESC',
+  PharmacyEmailAsc = 'PHARMACY_EMAIL_ASC',
+  PharmacyEmailDesc = 'PHARMACY_EMAIL_DESC',
+  PharmacyIdAsc = 'PHARMACY_ID_ASC',
+  PharmacyIdDesc = 'PHARMACY_ID_DESC',
+  PharmacyNameAsc = 'PHARMACY_NAME_ASC',
+  PharmacyNameDesc = 'PHARMACY_NAME_DESC',
+  PrescriptionSourceAsc = 'PRESCRIPTION_SOURCE_ASC',
+  PrescriptionSourceDesc = 'PRESCRIPTION_SOURCE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  QuantityAsc = 'QUANTITY_ASC',
+  QuantityDesc = 'QUANTITY_DESC',
+  SentToAccountsAsc = 'SENT_TO_ACCOUNTS_ASC',
+  SentToAccountsDesc = 'SENT_TO_ACCOUNTS_DESC',
+  TotalItemPriceAsc = 'TOTAL_ITEM_PRICE_ASC',
+  TotalItemPriceDesc = 'TOTAL_ITEM_PRICE_DESC',
+  TotalItemReimbursementAsc = 'TOTAL_ITEM_REIMBURSEMENT_ASC',
+  TotalItemReimbursementDesc = 'TOTAL_ITEM_REIMBURSEMENT_DESC',
+  UnitAsc = 'UNIT_ASC',
+  UnitDesc = 'UNIT_DESC',
+  VerifiedAsc = 'VERIFIED_ASC',
+  VerifiedDesc = 'VERIFIED_DESC'
+}
+
+/** The globally unique `ID` look up for the row to connect. */
+export type DataTableFmpClaimNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaim` to be connected. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type DataTableFmpClaimNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaim` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type DataTableFmpClaimOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `dataTableFmpClaimApplicationJoin` to be connected. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaimApplicationJoin` being updated. */
+  patch: DataTableFmpClaimApplicationJoinPatch;
+};
+
+/** The fields on `dataTableFmpClaim` to look up the row to update. */
+export type DataTableFmpClaimOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyUsingDataTableFmpClaimPkeyUpdate = {
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `dataTableFmpClaim` being updated. */
+  patch: UpdateDataTableFmpClaimOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyPatch;
+};
+
+/** Represents an update to a `DataTableFmpClaim`. Fields that are set will be updated. */
+export type DataTableFmpClaimPatch = {
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInverseInput>;
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  dispensingFeeReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  paymentVoucher?: InputMaybe<Scalars['JSON']['input']>;
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  prescriptionData?: InputMaybe<Scalars['JSON']['input']>;
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  reportCode?: InputMaybe<Scalars['String']['input']>;
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  totalChargedByPharmacy?: InputMaybe<Scalars['Float']['input']>;
+  totalClaimReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+};
+
+/** A filter to be used against many `DataTableFmpClaimApplicationJoin` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableFmpClaimToManyDataTableFmpClaimApplicationJoinFilter = {
+  /** Every related `DataTableFmpClaimApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+  /** No related `DataTableFmpClaimApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+  /** Some related `DataTableFmpClaimApplicationJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+};
+
+/** A connection to a list of `DataTableFmpClaim` values. */
+export type DataTableFmpClaimsConnection = {
+  __typename?: 'DataTableFmpClaimsConnection';
+  /** A list of edges which contains the `DataTableFmpClaim` and cursor to aid in pagination. */
+  edges: Array<DataTableFmpClaimsEdge>;
+  /** A list of `DataTableFmpClaim` objects. */
+  nodes: Array<Maybe<DataTableFmpClaim>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableFmpClaim` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `DataTableFmpClaim` edge in the connection. */
+export type DataTableFmpClaimsEdge = {
+  __typename?: 'DataTableFmpClaimsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DataTableFmpClaim` at the end of the edge. */
+  node?: Maybe<DataTableFmpClaim>;
+};
+
+/** Methods to use when ordering `DataTableFmpClaim`. */
+export enum DataTableFmpClaimsOrderBy {
+  CardTypeAsc = 'CARD_TYPE_ASC',
+  CardTypeDesc = 'CARD_TYPE_DESC',
+  ClaimNumberAsc = 'CLAIM_NUMBER_ASC',
+  ClaimNumberDesc = 'CLAIM_NUMBER_DESC',
+  DateClaimedAsc = 'DATE_CLAIMED_ASC',
+  DateClaimedDesc = 'DATE_CLAIMED_DESC',
+  DateDispensedAsc = 'DATE_DISPENSED_ASC',
+  DateDispensedDesc = 'DATE_DISPENSED_DESC',
+  DispensingFeeReimbursementAsc = 'DISPENSING_FEE_REIMBURSEMENT_ASC',
+  DispensingFeeReimbursementDesc = 'DISPENSING_FEE_REIMBURSEMENT_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PatientNameAsc = 'PATIENT_NAME_ASC',
+  PatientNameDesc = 'PATIENT_NAME_DESC',
+  PaymentProcessedAsc = 'PAYMENT_PROCESSED_ASC',
+  PaymentProcessedDesc = 'PAYMENT_PROCESSED_DESC',
+  PaymentVoucherAsc = 'PAYMENT_VOUCHER_ASC',
+  PaymentVoucherDesc = 'PAYMENT_VOUCHER_DESC',
+  PharmacyEmailAsc = 'PHARMACY_EMAIL_ASC',
+  PharmacyEmailDesc = 'PHARMACY_EMAIL_DESC',
+  PharmacyIdAsc = 'PHARMACY_ID_ASC',
+  PharmacyIdDesc = 'PHARMACY_ID_DESC',
+  PharmacyNameAsc = 'PHARMACY_NAME_ASC',
+  PharmacyNameDesc = 'PHARMACY_NAME_DESC',
+  PrescriptionDataAsc = 'PRESCRIPTION_DATA_ASC',
+  PrescriptionDataDesc = 'PRESCRIPTION_DATA_DESC',
+  PrescriptionSourceAsc = 'PRESCRIPTION_SOURCE_ASC',
+  PrescriptionSourceDesc = 'PRESCRIPTION_SOURCE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ReportCodeAsc = 'REPORT_CODE_ASC',
+  ReportCodeDesc = 'REPORT_CODE_DESC',
+  SentToAccountsAsc = 'SENT_TO_ACCOUNTS_ASC',
+  SentToAccountsDesc = 'SENT_TO_ACCOUNTS_DESC',
+  TotalChargedByPharmacyAsc = 'TOTAL_CHARGED_BY_PHARMACY_ASC',
+  TotalChargedByPharmacyDesc = 'TOTAL_CHARGED_BY_PHARMACY_DESC',
+  TotalClaimReimbursementAsc = 'TOTAL_CLAIM_REIMBURSEMENT_ASC',
+  TotalClaimReimbursementDesc = 'TOTAL_CLAIM_REIMBURSEMENT_DESC',
+  TotalItemReimbursementAsc = 'TOTAL_ITEM_REIMBURSEMENT_ASC',
+  TotalItemReimbursementDesc = 'TOTAL_ITEM_REIMBURSEMENT_DESC'
+}
+
+export type DataTableFreeMedicinesPriceList = Node & {
+  __typename?: 'DataTableFreeMedicinesPriceList';
+  endDate?: Maybe<Scalars['Date']['output']>;
+  id: Scalars['Int']['output'];
+  itemDescription?: Maybe<Scalars['String']['output']>;
+  itemNumber?: Maybe<Scalars['Int']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID']['output'];
+  packSize?: Maybe<Scalars['String']['output']>;
+  period?: Maybe<Scalars['String']['output']>;
+  retailPriceCeilingVanualevu?: Maybe<Scalars['Float']['output']>;
+  retailPriceCeilingVitilevu?: Maybe<Scalars['Float']['output']>;
+  startDate?: Maybe<Scalars['Date']['output']>;
+  strength?: Maybe<Scalars['String']['output']>;
+  unit?: Maybe<Scalars['String']['output']>;
+  unitSellingPriceCelingVanualevu?: Maybe<Scalars['Float']['output']>;
+  unitSellingPriceCelingVitilevu?: Maybe<Scalars['Float']['output']>;
+  wholesalePrice?: Maybe<Scalars['Float']['output']>;
+};
+
+/**
+ * A condition to be used against `DataTableFreeMedicinesPriceList` object types.
+ * All fields are tested for equality and combined with a logical ‘and.’
+ */
+export type DataTableFreeMedicinesPriceListCondition = {
+  /** Checks for equality with the object’s `endDate` field. */
+  endDate?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `itemDescription` field. */
+  itemDescription?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `itemNumber` field. */
+  itemNumber?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `packSize` field. */
+  packSize?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `period` field. */
+  period?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `retailPriceCeilingVanualevu` field. */
+  retailPriceCeilingVanualevu?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `retailPriceCeilingVitilevu` field. */
+  retailPriceCeilingVitilevu?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `startDate` field. */
+  startDate?: InputMaybe<Scalars['Date']['input']>;
+  /** Checks for equality with the object’s `strength` field. */
+  strength?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `unit` field. */
+  unit?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `unitSellingPriceCelingVanualevu` field. */
+  unitSellingPriceCelingVanualevu?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `unitSellingPriceCelingVitilevu` field. */
+  unitSellingPriceCelingVitilevu?: InputMaybe<Scalars['Float']['input']>;
+  /** Checks for equality with the object’s `wholesalePrice` field. */
+  wholesalePrice?: InputMaybe<Scalars['Float']['input']>;
+};
+
+/** A filter to be used against `DataTableFreeMedicinesPriceList` object types. All fields are combined with a logical ‘and.’ */
+export type DataTableFreeMedicinesPriceListFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DataTableFreeMedicinesPriceListFilter>>;
+  /** Filter by the object’s `endDate` field. */
+  endDate?: InputMaybe<DateFilter>;
+  /** Filter by the object’s `id` field. */
+  id?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `itemDescription` field. */
+  itemDescription?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `itemNumber` field. */
+  itemNumber?: InputMaybe<IntFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DataTableFreeMedicinesPriceListFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DataTableFreeMedicinesPriceListFilter>>;
+  /** Filter by the object’s `packSize` field. */
+  packSize?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `period` field. */
+  period?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `retailPriceCeilingVanualevu` field. */
+  retailPriceCeilingVanualevu?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `retailPriceCeilingVitilevu` field. */
+  retailPriceCeilingVitilevu?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `startDate` field. */
+  startDate?: InputMaybe<DateFilter>;
+  /** Filter by the object’s `strength` field. */
+  strength?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `unit` field. */
+  unit?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `unitSellingPriceCelingVanualevu` field. */
+  unitSellingPriceCelingVanualevu?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `unitSellingPriceCelingVitilevu` field. */
+  unitSellingPriceCelingVitilevu?: InputMaybe<FloatFilter>;
+  /** Filter by the object’s `wholesalePrice` field. */
+  wholesalePrice?: InputMaybe<FloatFilter>;
+};
+
+/** An input for mutations affecting `DataTableFreeMedicinesPriceList` */
+export type DataTableFreeMedicinesPriceListInput = {
+  endDate?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  itemDescription?: InputMaybe<Scalars['String']['input']>;
+  itemNumber?: InputMaybe<Scalars['Int']['input']>;
+  packSize?: InputMaybe<Scalars['String']['input']>;
+  period?: InputMaybe<Scalars['String']['input']>;
+  retailPriceCeilingVanualevu?: InputMaybe<Scalars['Float']['input']>;
+  retailPriceCeilingVitilevu?: InputMaybe<Scalars['Float']['input']>;
+  startDate?: InputMaybe<Scalars['Date']['input']>;
+  strength?: InputMaybe<Scalars['String']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+  unitSellingPriceCelingVanualevu?: InputMaybe<Scalars['Float']['input']>;
+  unitSellingPriceCelingVitilevu?: InputMaybe<Scalars['Float']['input']>;
+  wholesalePrice?: InputMaybe<Scalars['Float']['input']>;
+};
+
+/** Represents an update to a `DataTableFreeMedicinesPriceList`. Fields that are set will be updated. */
+export type DataTableFreeMedicinesPriceListPatch = {
+  endDate?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  itemDescription?: InputMaybe<Scalars['String']['input']>;
+  itemNumber?: InputMaybe<Scalars['Int']['input']>;
+  packSize?: InputMaybe<Scalars['String']['input']>;
+  period?: InputMaybe<Scalars['String']['input']>;
+  retailPriceCeilingVanualevu?: InputMaybe<Scalars['Float']['input']>;
+  retailPriceCeilingVitilevu?: InputMaybe<Scalars['Float']['input']>;
+  startDate?: InputMaybe<Scalars['Date']['input']>;
+  strength?: InputMaybe<Scalars['String']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+  unitSellingPriceCelingVanualevu?: InputMaybe<Scalars['Float']['input']>;
+  unitSellingPriceCelingVitilevu?: InputMaybe<Scalars['Float']['input']>;
+  wholesalePrice?: InputMaybe<Scalars['Float']['input']>;
+};
+
+/** A connection to a list of `DataTableFreeMedicinesPriceList` values. */
+export type DataTableFreeMedicinesPriceListsConnection = {
+  __typename?: 'DataTableFreeMedicinesPriceListsConnection';
+  /** A list of edges which contains the `DataTableFreeMedicinesPriceList` and cursor to aid in pagination. */
+  edges: Array<DataTableFreeMedicinesPriceListsEdge>;
+  /** A list of `DataTableFreeMedicinesPriceList` objects. */
+  nodes: Array<Maybe<DataTableFreeMedicinesPriceList>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DataTableFreeMedicinesPriceList` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `DataTableFreeMedicinesPriceList` edge in the connection. */
+export type DataTableFreeMedicinesPriceListsEdge = {
+  __typename?: 'DataTableFreeMedicinesPriceListsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DataTableFreeMedicinesPriceList` at the end of the edge. */
+  node?: Maybe<DataTableFreeMedicinesPriceList>;
+};
+
+/** Methods to use when ordering `DataTableFreeMedicinesPriceList`. */
+export enum DataTableFreeMedicinesPriceListsOrderBy {
+  EndDateAsc = 'END_DATE_ASC',
+  EndDateDesc = 'END_DATE_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ItemDescriptionAsc = 'ITEM_DESCRIPTION_ASC',
+  ItemDescriptionDesc = 'ITEM_DESCRIPTION_DESC',
+  ItemNumberAsc = 'ITEM_NUMBER_ASC',
+  ItemNumberDesc = 'ITEM_NUMBER_DESC',
+  Natural = 'NATURAL',
+  PackSizeAsc = 'PACK_SIZE_ASC',
+  PackSizeDesc = 'PACK_SIZE_DESC',
+  PeriodAsc = 'PERIOD_ASC',
+  PeriodDesc = 'PERIOD_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RetailPriceCeilingVanualevuAsc = 'RETAIL_PRICE_CEILING_VANUALEVU_ASC',
+  RetailPriceCeilingVanualevuDesc = 'RETAIL_PRICE_CEILING_VANUALEVU_DESC',
+  RetailPriceCeilingVitilevuAsc = 'RETAIL_PRICE_CEILING_VITILEVU_ASC',
+  RetailPriceCeilingVitilevuDesc = 'RETAIL_PRICE_CEILING_VITILEVU_DESC',
+  StartDateAsc = 'START_DATE_ASC',
+  StartDateDesc = 'START_DATE_DESC',
+  StrengthAsc = 'STRENGTH_ASC',
+  StrengthDesc = 'STRENGTH_DESC',
+  UnitAsc = 'UNIT_ASC',
+  UnitDesc = 'UNIT_DESC',
+  UnitSellingPriceCelingVanualevuAsc = 'UNIT_SELLING_PRICE_CELING_VANUALEVU_ASC',
+  UnitSellingPriceCelingVanualevuDesc = 'UNIT_SELLING_PRICE_CELING_VANUALEVU_DESC',
+  UnitSellingPriceCelingVitilevuAsc = 'UNIT_SELLING_PRICE_CELING_VITILEVU_ASC',
+  UnitSellingPriceCelingVitilevuDesc = 'UNIT_SELLING_PRICE_CELING_VITILEVU_DESC',
+  WholesalePriceAsc = 'WHOLESALE_PRICE_ASC',
+  WholesalePriceDesc = 'WHOLESALE_PRICE_DESC'
+}
+
 export type DataTableGenericIngredient = Node & {
   __typename?: 'DataTableGenericIngredient';
   atcCode?: Maybe<Scalars['String']['output']>;
@@ -10721,6 +12530,8 @@ export type DataTableManufacturerApplicationJoinApplicationIdFkeyApplicationCrea
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -11183,6 +12994,8 @@ export type DataTableManufacturerRepresentativeApplApplicationIdFkeyApplicationC
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -11915,6 +13728,8 @@ export type DataTablePermitChemicalApplicationJoinApplicationIdFkeyApplicationCr
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -12314,8 +14129,6 @@ export type DataTablePermitMedical = Node & {
   billLadingNumber?: Maybe<Scalars['String']['output']>;
   companyId?: Maybe<Scalars['Int']['output']>;
   companyName?: Maybe<Scalars['String']['output']>;
-  consignorAddress?: Maybe<Scalars['String']['output']>;
-  consignorName?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `DataTablePermitMedicalApplicationJoin`. */
   dataTablePermitMedicalApplicationJoins: DataTablePermitMedicalApplicationJoinsConnection;
   exportCountry?: Maybe<Scalars['String']['output']>;
@@ -12323,9 +14136,7 @@ export type DataTablePermitMedical = Node & {
   modeOfTransport?: Maybe<Scalars['String']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID']['output'];
-  nonRegisteredProducts?: Maybe<Scalars['JSON']['output']>;
   nonRegisteredProductsFilterData?: Maybe<Scalars['String']['output']>;
-  nonRegisteredReason?: Maybe<Scalars['String']['output']>;
   permitNo?: Maybe<Scalars['String']['output']>;
   portOfEntry?: Maybe<Scalars['String']['output']>;
   provisionalProducts?: Maybe<Scalars['JSON']['output']>;
@@ -12358,15 +14169,11 @@ export type DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyDataTablePermit
   billLadingNumber?: InputMaybe<Scalars['String']['input']>;
   companyId?: InputMaybe<Scalars['Int']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
-  consignorAddress?: InputMaybe<Scalars['String']['input']>;
-  consignorName?: InputMaybe<Scalars['String']['input']>;
   dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   modeOfTransport?: InputMaybe<Scalars['String']['input']>;
-  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
   nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
-  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   permitNo?: InputMaybe<Scalars['String']['input']>;
   portOfEntry?: InputMaybe<Scalars['String']['input']>;
   provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
@@ -12435,6 +14242,8 @@ export type DataTablePermitMedicalApplicationJoinApplicationIdFkeyApplicationCre
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -12677,22 +14486,14 @@ export type DataTablePermitMedicalCondition = {
   companyId?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `companyName` field. */
   companyName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `consignorAddress` field. */
-  consignorAddress?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `consignorName` field. */
-  consignorName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `exportCountry` field. */
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `modeOfTransport` field. */
   modeOfTransport?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `nonRegisteredProducts` field. */
-  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `nonRegisteredProductsFilterData` field. */
   nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `nonRegisteredReason` field. */
-  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `permitNo` field. */
   permitNo?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `portOfEntry` field. */
@@ -12725,10 +14526,6 @@ export type DataTablePermitMedicalFilter = {
   companyId?: InputMaybe<IntFilter>;
   /** Filter by the object’s `companyName` field. */
   companyName?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `consignorAddress` field. */
-  consignorAddress?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `consignorName` field. */
-  consignorName?: InputMaybe<StringFilter>;
   /** Filter by the object’s `dataTablePermitMedicalApplicationJoins` relation. */
   dataTablePermitMedicalApplicationJoins?: InputMaybe<DataTablePermitMedicalToManyDataTablePermitMedicalApplicationJoinFilter>;
   /** Some related `dataTablePermitMedicalApplicationJoins` exist. */
@@ -12739,12 +14536,8 @@ export type DataTablePermitMedicalFilter = {
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `modeOfTransport` field. */
   modeOfTransport?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `nonRegisteredProducts` field. */
-  nonRegisteredProducts?: InputMaybe<JsonFilter>;
   /** Filter by the object’s `nonRegisteredProductsFilterData` field. */
   nonRegisteredProductsFilterData?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `nonRegisteredReason` field. */
-  nonRegisteredReason?: InputMaybe<StringFilter>;
   /** Negates the expression. */
   not?: InputMaybe<DataTablePermitMedicalFilter>;
   /** Checks for any expressions in this list. */
@@ -12766,15 +14559,11 @@ export type DataTablePermitMedicalInput = {
   billLadingNumber?: InputMaybe<Scalars['String']['input']>;
   companyId?: InputMaybe<Scalars['Int']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
-  consignorAddress?: InputMaybe<Scalars['String']['input']>;
-  consignorName?: InputMaybe<Scalars['String']['input']>;
   dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   modeOfTransport?: InputMaybe<Scalars['String']['input']>;
-  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
   nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
-  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   permitNo?: InputMaybe<Scalars['String']['input']>;
   portOfEntry?: InputMaybe<Scalars['String']['input']>;
   provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
@@ -12814,15 +14603,11 @@ export type DataTablePermitMedicalPatch = {
   billLadingNumber?: InputMaybe<Scalars['String']['input']>;
   companyId?: InputMaybe<Scalars['Int']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
-  consignorAddress?: InputMaybe<Scalars['String']['input']>;
-  consignorName?: InputMaybe<Scalars['String']['input']>;
   dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   modeOfTransport?: InputMaybe<Scalars['String']['input']>;
-  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
   nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
-  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   permitNo?: InputMaybe<Scalars['String']['input']>;
   portOfEntry?: InputMaybe<Scalars['String']['input']>;
   provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
@@ -12870,10 +14655,6 @@ export enum DataTablePermitMedicalsOrderBy {
   CompanyIdDesc = 'COMPANY_ID_DESC',
   CompanyNameAsc = 'COMPANY_NAME_ASC',
   CompanyNameDesc = 'COMPANY_NAME_DESC',
-  ConsignorAddressAsc = 'CONSIGNOR_ADDRESS_ASC',
-  ConsignorAddressDesc = 'CONSIGNOR_ADDRESS_DESC',
-  ConsignorNameAsc = 'CONSIGNOR_NAME_ASC',
-  ConsignorNameDesc = 'CONSIGNOR_NAME_DESC',
   ExportCountryAsc = 'EXPORT_COUNTRY_ASC',
   ExportCountryDesc = 'EXPORT_COUNTRY_DESC',
   IdAsc = 'ID_ASC',
@@ -12881,12 +14662,8 @@ export enum DataTablePermitMedicalsOrderBy {
   ModeOfTransportAsc = 'MODE_OF_TRANSPORT_ASC',
   ModeOfTransportDesc = 'MODE_OF_TRANSPORT_DESC',
   Natural = 'NATURAL',
-  NonRegisteredProductsAsc = 'NON_REGISTERED_PRODUCTS_ASC',
-  NonRegisteredProductsDesc = 'NON_REGISTERED_PRODUCTS_DESC',
   NonRegisteredProductsFilterDataAsc = 'NON_REGISTERED_PRODUCTS_FILTER_DATA_ASC',
   NonRegisteredProductsFilterDataDesc = 'NON_REGISTERED_PRODUCTS_FILTER_DATA_DESC',
-  NonRegisteredReasonAsc = 'NON_REGISTERED_REASON_ASC',
-  NonRegisteredReasonDesc = 'NON_REGISTERED_REASON_DESC',
   PermitNoAsc = 'PERMIT_NO_ASC',
   PermitNoDesc = 'PERMIT_NO_DESC',
   PortOfEntryAsc = 'PORT_OF_ENTRY_ASC',
@@ -13275,6 +15052,8 @@ export type DataTablePrequalManufacturerApplicationApplicationIdFkeyApplicationC
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -13865,6 +15644,8 @@ export type DataTableProductApplicationJoinApplicationIdFkeyApplicationCreateInp
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -14531,6 +16312,8 @@ export type DataTableProvisionalProductApplicationApplicationIdFkeyApplicationCr
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -17407,6 +19190,234 @@ export type DeleteDataTableDosageFormPayload = {
 /** The output of our delete `DataTableDosageForm` mutation. */
 export type DeleteDataTableDosageFormPayloadDataTableDosageFormEdgeArgs = {
   orderBy?: InputMaybe<Array<DataTableDosageFormsOrderBy>>;
+};
+
+/** All input for the `deleteDataTableFmpClaimApplicationJoinByNodeId` mutation. */
+export type DeleteDataTableFmpClaimApplicationJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFmpClaimApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDataTableFmpClaimApplicationJoin` mutation. */
+export type DeleteDataTableFmpClaimApplicationJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `DataTableFmpClaimApplicationJoin` mutation. */
+export type DeleteDataTableFmpClaimApplicationJoinPayload = {
+  __typename?: 'DeleteDataTableFmpClaimApplicationJoinPayload';
+  /** Reads a single `Application` that is related to this `DataTableFmpClaimApplicationJoin`. */
+  application?: Maybe<Application>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `DataTableFmpClaim` that is related to this `DataTableFmpClaimApplicationJoin`. */
+  dataTableFmpClaim?: Maybe<DataTableFmpClaim>;
+  /** The `DataTableFmpClaimApplicationJoin` that was deleted by this mutation. */
+  dataTableFmpClaimApplicationJoin?: Maybe<DataTableFmpClaimApplicationJoin>;
+  /** An edge for our `DataTableFmpClaimApplicationJoin`. May be used by Relay 1. */
+  dataTableFmpClaimApplicationJoinEdge?: Maybe<DataTableFmpClaimApplicationJoinsEdge>;
+  deletedDataTableFmpClaimApplicationJoinNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `DataTableFmpClaimApplicationJoin` mutation. */
+export type DeleteDataTableFmpClaimApplicationJoinPayloadDataTableFmpClaimApplicationJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `deleteDataTableFmpClaimByNodeId` mutation. */
+export type DeleteDataTableFmpClaimByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFmpClaim` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDataTableFmpClaim` mutation. */
+export type DeleteDataTableFmpClaimInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** All input for the `deleteDataTableFmpClaimLineApplicationJoinByNodeId` mutation. */
+export type DeleteDataTableFmpClaimLineApplicationJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFmpClaimLineApplicationJoin` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDataTableFmpClaimLineApplicationJoin` mutation. */
+export type DeleteDataTableFmpClaimLineApplicationJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `DataTableFmpClaimLineApplicationJoin` mutation. */
+export type DeleteDataTableFmpClaimLineApplicationJoinPayload = {
+  __typename?: 'DeleteDataTableFmpClaimLineApplicationJoinPayload';
+  /** Reads a single `Application` that is related to this `DataTableFmpClaimLineApplicationJoin`. */
+  application?: Maybe<Application>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `DataTableFmpClaimLine` that is related to this `DataTableFmpClaimLineApplicationJoin`. */
+  dataTableFmpClaimLine?: Maybe<DataTableFmpClaimLine>;
+  /** The `DataTableFmpClaimLineApplicationJoin` that was deleted by this mutation. */
+  dataTableFmpClaimLineApplicationJoin?: Maybe<DataTableFmpClaimLineApplicationJoin>;
+  /** An edge for our `DataTableFmpClaimLineApplicationJoin`. May be used by Relay 1. */
+  dataTableFmpClaimLineApplicationJoinEdge?: Maybe<DataTableFmpClaimLineApplicationJoinsEdge>;
+  deletedDataTableFmpClaimLineApplicationJoinNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `DataTableFmpClaimLineApplicationJoin` mutation. */
+export type DeleteDataTableFmpClaimLineApplicationJoinPayloadDataTableFmpClaimLineApplicationJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `deleteDataTableFmpClaimLineByNodeId` mutation. */
+export type DeleteDataTableFmpClaimLineByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFmpClaimLine` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDataTableFmpClaimLine` mutation. */
+export type DeleteDataTableFmpClaimLineInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `DataTableFmpClaimLine` mutation. */
+export type DeleteDataTableFmpClaimLinePayload = {
+  __typename?: 'DeleteDataTableFmpClaimLinePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableFmpClaimLine` that was deleted by this mutation. */
+  dataTableFmpClaimLine?: Maybe<DataTableFmpClaimLine>;
+  /** An edge for our `DataTableFmpClaimLine`. May be used by Relay 1. */
+  dataTableFmpClaimLineEdge?: Maybe<DataTableFmpClaimLinesEdge>;
+  deletedDataTableFmpClaimLineNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `DataTableFmpClaimLine` mutation. */
+export type DeleteDataTableFmpClaimLinePayloadDataTableFmpClaimLineEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLinesOrderBy>>;
+};
+
+/** The output of our delete `DataTableFmpClaim` mutation. */
+export type DeleteDataTableFmpClaimPayload = {
+  __typename?: 'DeleteDataTableFmpClaimPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableFmpClaim` that was deleted by this mutation. */
+  dataTableFmpClaim?: Maybe<DataTableFmpClaim>;
+  /** An edge for our `DataTableFmpClaim`. May be used by Relay 1. */
+  dataTableFmpClaimEdge?: Maybe<DataTableFmpClaimsEdge>;
+  deletedDataTableFmpClaimNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `DataTableFmpClaim` mutation. */
+export type DeleteDataTableFmpClaimPayloadDataTableFmpClaimEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimsOrderBy>>;
+};
+
+/** All input for the `deleteDataTableFreeMedicinesPriceListByNodeId` mutation. */
+export type DeleteDataTableFreeMedicinesPriceListByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFreeMedicinesPriceList` to be deleted. */
+  nodeId: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDataTableFreeMedicinesPriceList` mutation. */
+export type DeleteDataTableFreeMedicinesPriceListInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+/** The output of our delete `DataTableFreeMedicinesPriceList` mutation. */
+export type DeleteDataTableFreeMedicinesPriceListPayload = {
+  __typename?: 'DeleteDataTableFreeMedicinesPriceListPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableFreeMedicinesPriceList` that was deleted by this mutation. */
+  dataTableFreeMedicinesPriceList?: Maybe<DataTableFreeMedicinesPriceList>;
+  /** An edge for our `DataTableFreeMedicinesPriceList`. May be used by Relay 1. */
+  dataTableFreeMedicinesPriceListEdge?: Maybe<DataTableFreeMedicinesPriceListsEdge>;
+  deletedDataTableFreeMedicinesPriceListNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `DataTableFreeMedicinesPriceList` mutation. */
+export type DeleteDataTableFreeMedicinesPriceListPayloadDataTableFreeMedicinesPriceListEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFreeMedicinesPriceListsOrderBy>>;
 };
 
 /** All input for the `deleteDataTableGenericIngredientByNodeId` mutation. */
@@ -20835,6 +22846,8 @@ export type FakePublicApplicationForeignKey0ApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -21371,6 +23384,7 @@ export type File = Node & {
   isExternalReferenceDoc: Scalars['Boolean']['output'];
   isInternalReferenceDoc: Scalars['Boolean']['output'];
   isOutputDoc: Scalars['Boolean']['output'];
+  isProtected: Scalars['Boolean']['output'];
   lastModified?: Maybe<Scalars['Datetime']['output']>;
   mimetype?: Maybe<Scalars['String']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -21428,6 +23442,7 @@ export type FileApplicationNoteIdFkeyFileCreateInput = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename: Scalars['String']['input'];
@@ -21519,6 +23534,7 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename: Scalars['String']['input'];
@@ -21585,6 +23601,8 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -21636,6 +23654,7 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename: Scalars['String']['input'];
@@ -21730,6 +23749,8 @@ export type FileCondition = {
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isOutputDoc` field. */
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isProtected` field. */
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `lastModified` field. */
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `mimetype` field. */
@@ -21810,6 +23831,8 @@ export type FileFilter = {
   isInternalReferenceDoc?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isOutputDoc` field. */
   isOutputDoc?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isProtected` field. */
+  isProtected?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `lastModified` field. */
   lastModified?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `mimetype` field. */
@@ -21855,6 +23878,7 @@ export type FileInput = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename: Scalars['String']['input'];
@@ -21984,6 +24008,7 @@ export type FilePatch = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename?: InputMaybe<Scalars['String']['input']>;
@@ -22054,6 +24079,8 @@ export enum FilesOrderBy {
   IsInternalReferenceDocDesc = 'IS_INTERNAL_REFERENCE_DOC_DESC',
   IsOutputDocAsc = 'IS_OUTPUT_DOC_ASC',
   IsOutputDocDesc = 'IS_OUTPUT_DOC_DESC',
+  IsProtectedAsc = 'IS_PROTECTED_ASC',
+  IsProtectedDesc = 'IS_PROTECTED_DESC',
   LastModifiedAsc = 'LAST_MODIFIED_ASC',
   LastModifiedDesc = 'LAST_MODIFIED_DESC',
   MimetypeAsc = 'MIMETYPE_ASC',
@@ -22281,6 +24308,32 @@ export enum FiltersOrderBy {
   UserRoleDesc = 'USER_ROLE_DESC'
 }
 
+/** A filter to be used against Float fields. All fields are combined with a logical ‘and.’ */
+export type FloatFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['Float']['input']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['Float']['input']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['Float']['input']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Float']['input']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['Float']['input']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['Float']['input']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['Float']['input']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['Float']['input']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['Float']['input']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
+};
+
 export type GrafanaDashboardImage = Node & {
   __typename?: 'GrafanaDashboardImage';
   data?: Maybe<Scalars['String']['output']>;
@@ -22491,6 +24544,16 @@ export type Mutation = {
   createDataTableDosageForm?: Maybe<CreateDataTableDosageFormPayload>;
   /** Creates a single `DataTableDosageFormGroup`. */
   createDataTableDosageFormGroup?: Maybe<CreateDataTableDosageFormGroupPayload>;
+  /** Creates a single `DataTableFmpClaim`. */
+  createDataTableFmpClaim?: Maybe<CreateDataTableFmpClaimPayload>;
+  /** Creates a single `DataTableFmpClaimApplicationJoin`. */
+  createDataTableFmpClaimApplicationJoin?: Maybe<CreateDataTableFmpClaimApplicationJoinPayload>;
+  /** Creates a single `DataTableFmpClaimLine`. */
+  createDataTableFmpClaimLine?: Maybe<CreateDataTableFmpClaimLinePayload>;
+  /** Creates a single `DataTableFmpClaimLineApplicationJoin`. */
+  createDataTableFmpClaimLineApplicationJoin?: Maybe<CreateDataTableFmpClaimLineApplicationJoinPayload>;
+  /** Creates a single `DataTableFreeMedicinesPriceList`. */
+  createDataTableFreeMedicinesPriceList?: Maybe<CreateDataTableFreeMedicinesPriceListPayload>;
   /** Creates a single `DataTableGenericIngredient`. */
   createDataTableGenericIngredient?: Maybe<CreateDataTableGenericIngredientPayload>;
   /** Creates a single `DataTableManufacturer`. */
@@ -22705,6 +24768,26 @@ export type Mutation = {
   deleteDataTableDosageFormGroup?: Maybe<DeleteDataTableDosageFormGroupPayload>;
   /** Deletes a single `DataTableDosageFormGroup` using its globally unique id. */
   deleteDataTableDosageFormGroupByNodeId?: Maybe<DeleteDataTableDosageFormGroupPayload>;
+  /** Deletes a single `DataTableFmpClaim` using a unique key. */
+  deleteDataTableFmpClaim?: Maybe<DeleteDataTableFmpClaimPayload>;
+  /** Deletes a single `DataTableFmpClaimApplicationJoin` using a unique key. */
+  deleteDataTableFmpClaimApplicationJoin?: Maybe<DeleteDataTableFmpClaimApplicationJoinPayload>;
+  /** Deletes a single `DataTableFmpClaimApplicationJoin` using its globally unique id. */
+  deleteDataTableFmpClaimApplicationJoinByNodeId?: Maybe<DeleteDataTableFmpClaimApplicationJoinPayload>;
+  /** Deletes a single `DataTableFmpClaim` using its globally unique id. */
+  deleteDataTableFmpClaimByNodeId?: Maybe<DeleteDataTableFmpClaimPayload>;
+  /** Deletes a single `DataTableFmpClaimLine` using a unique key. */
+  deleteDataTableFmpClaimLine?: Maybe<DeleteDataTableFmpClaimLinePayload>;
+  /** Deletes a single `DataTableFmpClaimLineApplicationJoin` using a unique key. */
+  deleteDataTableFmpClaimLineApplicationJoin?: Maybe<DeleteDataTableFmpClaimLineApplicationJoinPayload>;
+  /** Deletes a single `DataTableFmpClaimLineApplicationJoin` using its globally unique id. */
+  deleteDataTableFmpClaimLineApplicationJoinByNodeId?: Maybe<DeleteDataTableFmpClaimLineApplicationJoinPayload>;
+  /** Deletes a single `DataTableFmpClaimLine` using its globally unique id. */
+  deleteDataTableFmpClaimLineByNodeId?: Maybe<DeleteDataTableFmpClaimLinePayload>;
+  /** Deletes a single `DataTableFreeMedicinesPriceList` using a unique key. */
+  deleteDataTableFreeMedicinesPriceList?: Maybe<DeleteDataTableFreeMedicinesPriceListPayload>;
+  /** Deletes a single `DataTableFreeMedicinesPriceList` using its globally unique id. */
+  deleteDataTableFreeMedicinesPriceListByNodeId?: Maybe<DeleteDataTableFreeMedicinesPriceListPayload>;
   /** Deletes a single `DataTableGenericIngredient` using a unique key. */
   deleteDataTableGenericIngredient?: Maybe<DeleteDataTableGenericIngredientPayload>;
   /** Deletes a single `DataTableGenericIngredient` using its globally unique id. */
@@ -23070,6 +25153,26 @@ export type Mutation = {
   updateDataTableDosageFormGroup?: Maybe<UpdateDataTableDosageFormGroupPayload>;
   /** Updates a single `DataTableDosageFormGroup` using its globally unique id and a patch. */
   updateDataTableDosageFormGroupByNodeId?: Maybe<UpdateDataTableDosageFormGroupPayload>;
+  /** Updates a single `DataTableFmpClaim` using a unique key and a patch. */
+  updateDataTableFmpClaim?: Maybe<UpdateDataTableFmpClaimPayload>;
+  /** Updates a single `DataTableFmpClaimApplicationJoin` using a unique key and a patch. */
+  updateDataTableFmpClaimApplicationJoin?: Maybe<UpdateDataTableFmpClaimApplicationJoinPayload>;
+  /** Updates a single `DataTableFmpClaimApplicationJoin` using its globally unique id and a patch. */
+  updateDataTableFmpClaimApplicationJoinByNodeId?: Maybe<UpdateDataTableFmpClaimApplicationJoinPayload>;
+  /** Updates a single `DataTableFmpClaim` using its globally unique id and a patch. */
+  updateDataTableFmpClaimByNodeId?: Maybe<UpdateDataTableFmpClaimPayload>;
+  /** Updates a single `DataTableFmpClaimLine` using a unique key and a patch. */
+  updateDataTableFmpClaimLine?: Maybe<UpdateDataTableFmpClaimLinePayload>;
+  /** Updates a single `DataTableFmpClaimLineApplicationJoin` using a unique key and a patch. */
+  updateDataTableFmpClaimLineApplicationJoin?: Maybe<UpdateDataTableFmpClaimLineApplicationJoinPayload>;
+  /** Updates a single `DataTableFmpClaimLineApplicationJoin` using its globally unique id and a patch. */
+  updateDataTableFmpClaimLineApplicationJoinByNodeId?: Maybe<UpdateDataTableFmpClaimLineApplicationJoinPayload>;
+  /** Updates a single `DataTableFmpClaimLine` using its globally unique id and a patch. */
+  updateDataTableFmpClaimLineByNodeId?: Maybe<UpdateDataTableFmpClaimLinePayload>;
+  /** Updates a single `DataTableFreeMedicinesPriceList` using a unique key and a patch. */
+  updateDataTableFreeMedicinesPriceList?: Maybe<UpdateDataTableFreeMedicinesPriceListPayload>;
+  /** Updates a single `DataTableFreeMedicinesPriceList` using its globally unique id and a patch. */
+  updateDataTableFreeMedicinesPriceListByNodeId?: Maybe<UpdateDataTableFreeMedicinesPriceListPayload>;
   /** Updates a single `DataTableGenericIngredient` using a unique key and a patch. */
   updateDataTableGenericIngredient?: Maybe<UpdateDataTableGenericIngredientPayload>;
   /** Updates a single `DataTableGenericIngredient` using its globally unique id and a patch. */
@@ -23472,6 +25575,36 @@ export type MutationCreateDataTableDosageFormArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDataTableDosageFormGroupArgs = {
   input: CreateDataTableDosageFormGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableFmpClaimArgs = {
+  input: CreateDataTableFmpClaimInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableFmpClaimApplicationJoinArgs = {
+  input: CreateDataTableFmpClaimApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableFmpClaimLineArgs = {
+  input: CreateDataTableFmpClaimLineInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableFmpClaimLineApplicationJoinArgs = {
+  input: CreateDataTableFmpClaimLineApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDataTableFreeMedicinesPriceListArgs = {
+  input: CreateDataTableFreeMedicinesPriceListInput;
 };
 
 
@@ -24114,6 +26247,66 @@ export type MutationDeleteDataTableDosageFormGroupArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDataTableDosageFormGroupByNodeIdArgs = {
   input: DeleteDataTableDosageFormGroupByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFmpClaimArgs = {
+  input: DeleteDataTableFmpClaimInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFmpClaimApplicationJoinArgs = {
+  input: DeleteDataTableFmpClaimApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFmpClaimApplicationJoinByNodeIdArgs = {
+  input: DeleteDataTableFmpClaimApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFmpClaimByNodeIdArgs = {
+  input: DeleteDataTableFmpClaimByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFmpClaimLineArgs = {
+  input: DeleteDataTableFmpClaimLineInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFmpClaimLineApplicationJoinArgs = {
+  input: DeleteDataTableFmpClaimLineApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFmpClaimLineApplicationJoinByNodeIdArgs = {
+  input: DeleteDataTableFmpClaimLineApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFmpClaimLineByNodeIdArgs = {
+  input: DeleteDataTableFmpClaimLineByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFreeMedicinesPriceListArgs = {
+  input: DeleteDataTableFreeMedicinesPriceListInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDataTableFreeMedicinesPriceListByNodeIdArgs = {
+  input: DeleteDataTableFreeMedicinesPriceListByNodeIdInput;
 };
 
 
@@ -25216,6 +27409,66 @@ export type MutationUpdateDataTableDosageFormGroupByNodeIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFmpClaimArgs = {
+  input: UpdateDataTableFmpClaimInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFmpClaimApplicationJoinArgs = {
+  input: UpdateDataTableFmpClaimApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFmpClaimApplicationJoinByNodeIdArgs = {
+  input: UpdateDataTableFmpClaimApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFmpClaimByNodeIdArgs = {
+  input: UpdateDataTableFmpClaimByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFmpClaimLineArgs = {
+  input: UpdateDataTableFmpClaimLineInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFmpClaimLineApplicationJoinArgs = {
+  input: UpdateDataTableFmpClaimLineApplicationJoinInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFmpClaimLineApplicationJoinByNodeIdArgs = {
+  input: UpdateDataTableFmpClaimLineApplicationJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFmpClaimLineByNodeIdArgs = {
+  input: UpdateDataTableFmpClaimLineByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFreeMedicinesPriceListArgs = {
+  input: UpdateDataTableFreeMedicinesPriceListInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDataTableFreeMedicinesPriceListByNodeIdArgs = {
+  input: UpdateDataTableFreeMedicinesPriceListByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDataTableGenericIngredientArgs = {
   input: UpdateDataTableGenericIngredientInput;
 };
@@ -26080,6 +28333,8 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -26492,15 +28747,19 @@ export type Organisation = Node & {
   country?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `DataChangelog`. */
   dataChangelogsByOrgId: DataChangelogsConnection;
+  division?: Maybe<Scalars['String']['output']>;
   establishmentLicence?: Maybe<Scalars['JSON']['output']>;
   id: Scalars['Int']['output'];
   isChemicalImporter?: Maybe<Scalars['Boolean']['output']>;
+  isFmpRegistered?: Maybe<Scalars['Boolean']['output']>;
   isFreeMedProgram?: Maybe<Scalars['Boolean']['output']>;
   isMedImporter?: Maybe<Scalars['Boolean']['output']>;
   isMedPrequalifier?: Maybe<Scalars['Boolean']['output']>;
   isMedProvRegister?: Maybe<Scalars['Boolean']['output']>;
+  isOldFmpPaymentModel?: Maybe<Scalars['Boolean']['output']>;
   isSponsorCompany?: Maybe<Scalars['Boolean']['output']>;
   isSystemOrg?: Maybe<Scalars['Boolean']['output']>;
+  island?: Maybe<Scalars['String']['output']>;
   licenceExpiry?: Maybe<Scalars['Date']['output']>;
   license?: Maybe<Scalars['JSON']['output']>;
   localAgentBusinessAddress?: Maybe<Scalars['String']['output']>;
@@ -26514,10 +28773,12 @@ export type Organisation = Node & {
   /** Reads and enables pagination through a set of `OrganisationApplicationJoin`. */
   organisationApplicationJoins: OrganisationApplicationJoinsConnection;
   otherDocuments?: Maybe<Scalars['JSON']['output']>;
+  ownerName?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
   permissionJoins: PermissionJoinsConnection;
   postalAddress?: Maybe<Scalars['String']['output']>;
   province?: Maybe<Scalars['String']['output']>;
+  reformAgreement?: Maybe<Scalars['JSON']['output']>;
   registration?: Maybe<Scalars['String']['output']>;
   registrationDocumentation?: Maybe<Scalars['JSON']['output']>;
   /** Reads and enables pagination through a set of `ReviewAssignmentAssignerJoin`. */
@@ -26651,6 +28912,8 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -26906,15 +29169,19 @@ export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -26925,9 +29192,11 @@ export type OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -26998,12 +29267,16 @@ export type OrganisationCondition = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `country` field. */
   country?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `division` field. */
+  division?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `establishmentLicence` field. */
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `isChemicalImporter` field. */
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isFmpRegistered` field. */
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isFreeMedProgram` field. */
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isMedImporter` field. */
@@ -27012,10 +29285,14 @@ export type OrganisationCondition = {
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isMedProvRegister` field. */
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isOldFmpPaymentModel` field. */
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isSponsorCompany` field. */
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isSystemOrg` field. */
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `island` field. */
+  island?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `licenceExpiry` field. */
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   /** Checks for equality with the object’s `license` field. */
@@ -27034,10 +29311,14 @@ export type OrganisationCondition = {
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `otherDocuments` field. */
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  /** Checks for equality with the object’s `ownerName` field. */
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `postalAddress` field. */
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `province` field. */
   province?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `reformAgreement` field. */
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   /** Checks for equality with the object’s `registration` field. */
   registration?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `registrationDocumentation` field. */
@@ -27078,12 +29359,16 @@ export type OrganisationFilter = {
   dataChangelogsByOrgId?: InputMaybe<OrganisationToManyDataChangelogFilter>;
   /** Some related `dataChangelogsByOrgId` exist. */
   dataChangelogsByOrgIdExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `division` field. */
+  division?: InputMaybe<StringFilter>;
   /** Filter by the object’s `establishmentLicence` field. */
   establishmentLicence?: InputMaybe<JsonFilter>;
   /** Filter by the object’s `id` field. */
   id?: InputMaybe<IntFilter>;
   /** Filter by the object’s `isChemicalImporter` field. */
   isChemicalImporter?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isFmpRegistered` field. */
+  isFmpRegistered?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isFreeMedProgram` field. */
   isFreeMedProgram?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isMedImporter` field. */
@@ -27092,10 +29377,14 @@ export type OrganisationFilter = {
   isMedPrequalifier?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isMedProvRegister` field. */
   isMedProvRegister?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isOldFmpPaymentModel` field. */
+  isOldFmpPaymentModel?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isSponsorCompany` field. */
   isSponsorCompany?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isSystemOrg` field. */
   isSystemOrg?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `island` field. */
+  island?: InputMaybe<StringFilter>;
   /** Filter by the object’s `licenceExpiry` field. */
   licenceExpiry?: InputMaybe<DateFilter>;
   /** Filter by the object’s `license` field. */
@@ -27122,6 +29411,8 @@ export type OrganisationFilter = {
   organisationApplicationJoinsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `otherDocuments` field. */
   otherDocuments?: InputMaybe<JsonFilter>;
+  /** Filter by the object’s `ownerName` field. */
+  ownerName?: InputMaybe<StringFilter>;
   /** Filter by the object’s `permissionJoins` relation. */
   permissionJoins?: InputMaybe<OrganisationToManyPermissionJoinFilter>;
   /** Some related `permissionJoins` exist. */
@@ -27130,6 +29421,8 @@ export type OrganisationFilter = {
   postalAddress?: InputMaybe<StringFilter>;
   /** Filter by the object’s `province` field. */
   province?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `reformAgreement` field. */
+  reformAgreement?: InputMaybe<JsonFilter>;
   /** Filter by the object’s `registration` field. */
   registration?: InputMaybe<StringFilter>;
   /** Filter by the object’s `registrationDocumentation` field. */
@@ -27166,15 +29459,19 @@ export type OrganisationInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -27185,9 +29482,11 @@ export type OrganisationInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -27483,15 +29782,19 @@ export type OrganisationPatch = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -27502,9 +29805,11 @@ export type OrganisationPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -27630,12 +29935,18 @@ export enum OrganisationsOrderBy {
   ContactPhoneDesc = 'CONTACT_PHONE_DESC',
   CountryAsc = 'COUNTRY_ASC',
   CountryDesc = 'COUNTRY_DESC',
+  DivisionAsc = 'DIVISION_ASC',
+  DivisionDesc = 'DIVISION_DESC',
   EstablishmentLicenceAsc = 'ESTABLISHMENT_LICENCE_ASC',
   EstablishmentLicenceDesc = 'ESTABLISHMENT_LICENCE_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  IslandAsc = 'ISLAND_ASC',
+  IslandDesc = 'ISLAND_DESC',
   IsChemicalImporterAsc = 'IS_CHEMICAL_IMPORTER_ASC',
   IsChemicalImporterDesc = 'IS_CHEMICAL_IMPORTER_DESC',
+  IsFmpRegisteredAsc = 'IS_FMP_REGISTERED_ASC',
+  IsFmpRegisteredDesc = 'IS_FMP_REGISTERED_DESC',
   IsFreeMedProgramAsc = 'IS_FREE_MED_PROGRAM_ASC',
   IsFreeMedProgramDesc = 'IS_FREE_MED_PROGRAM_DESC',
   IsMedImporterAsc = 'IS_MED_IMPORTER_ASC',
@@ -27644,6 +29955,8 @@ export enum OrganisationsOrderBy {
   IsMedPrequalifierDesc = 'IS_MED_PREQUALIFIER_DESC',
   IsMedProvRegisterAsc = 'IS_MED_PROV_REGISTER_ASC',
   IsMedProvRegisterDesc = 'IS_MED_PROV_REGISTER_DESC',
+  IsOldFmpPaymentModelAsc = 'IS_OLD_FMP_PAYMENT_MODEL_ASC',
+  IsOldFmpPaymentModelDesc = 'IS_OLD_FMP_PAYMENT_MODEL_DESC',
   IsSponsorCompanyAsc = 'IS_SPONSOR_COMPANY_ASC',
   IsSponsorCompanyDesc = 'IS_SPONSOR_COMPANY_DESC',
   IsSystemOrgAsc = 'IS_SYSTEM_ORG_ASC',
@@ -27667,12 +29980,16 @@ export enum OrganisationsOrderBy {
   Natural = 'NATURAL',
   OtherDocumentsAsc = 'OTHER_DOCUMENTS_ASC',
   OtherDocumentsDesc = 'OTHER_DOCUMENTS_DESC',
+  OwnerNameAsc = 'OWNER_NAME_ASC',
+  OwnerNameDesc = 'OWNER_NAME_DESC',
   PostalAddressAsc = 'POSTAL_ADDRESS_ASC',
   PostalAddressDesc = 'POSTAL_ADDRESS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   ProvinceAsc = 'PROVINCE_ASC',
   ProvinceDesc = 'PROVINCE_DESC',
+  ReformAgreementAsc = 'REFORM_AGREEMENT_ASC',
+  ReformAgreementDesc = 'REFORM_AGREEMENT_DESC',
   RegistrationAsc = 'REGISTRATION_ASC',
   RegistrationDesc = 'REGISTRATION_DESC',
   RegistrationDocumentationAsc = 'REGISTRATION_DOCUMENTATION_ASC',
@@ -27961,15 +30278,19 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -27980,9 +30301,11 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -29194,6 +31517,31 @@ export type Query = Node & {
   dataTableDosageFormGroups?: Maybe<DataTableDosageFormGroupsConnection>;
   /** Reads and enables pagination through a set of `DataTableDosageForm`. */
   dataTableDosageForms?: Maybe<DataTableDosageFormsConnection>;
+  dataTableFmpClaim?: Maybe<DataTableFmpClaim>;
+  dataTableFmpClaimApplicationJoin?: Maybe<DataTableFmpClaimApplicationJoin>;
+  /** Reads a single `DataTableFmpClaimApplicationJoin` using its globally unique `ID`. */
+  dataTableFmpClaimApplicationJoinByNodeId?: Maybe<DataTableFmpClaimApplicationJoin>;
+  /** Reads and enables pagination through a set of `DataTableFmpClaimApplicationJoin`. */
+  dataTableFmpClaimApplicationJoins?: Maybe<DataTableFmpClaimApplicationJoinsConnection>;
+  /** Reads a single `DataTableFmpClaim` using its globally unique `ID`. */
+  dataTableFmpClaimByNodeId?: Maybe<DataTableFmpClaim>;
+  dataTableFmpClaimLine?: Maybe<DataTableFmpClaimLine>;
+  dataTableFmpClaimLineApplicationJoin?: Maybe<DataTableFmpClaimLineApplicationJoin>;
+  /** Reads a single `DataTableFmpClaimLineApplicationJoin` using its globally unique `ID`. */
+  dataTableFmpClaimLineApplicationJoinByNodeId?: Maybe<DataTableFmpClaimLineApplicationJoin>;
+  /** Reads and enables pagination through a set of `DataTableFmpClaimLineApplicationJoin`. */
+  dataTableFmpClaimLineApplicationJoins?: Maybe<DataTableFmpClaimLineApplicationJoinsConnection>;
+  /** Reads a single `DataTableFmpClaimLine` using its globally unique `ID`. */
+  dataTableFmpClaimLineByNodeId?: Maybe<DataTableFmpClaimLine>;
+  /** Reads and enables pagination through a set of `DataTableFmpClaimLine`. */
+  dataTableFmpClaimLines?: Maybe<DataTableFmpClaimLinesConnection>;
+  /** Reads and enables pagination through a set of `DataTableFmpClaim`. */
+  dataTableFmpClaims?: Maybe<DataTableFmpClaimsConnection>;
+  dataTableFreeMedicinesPriceList?: Maybe<DataTableFreeMedicinesPriceList>;
+  /** Reads a single `DataTableFreeMedicinesPriceList` using its globally unique `ID`. */
+  dataTableFreeMedicinesPriceListByNodeId?: Maybe<DataTableFreeMedicinesPriceList>;
+  /** Reads and enables pagination through a set of `DataTableFreeMedicinesPriceList`. */
+  dataTableFreeMedicinesPriceLists?: Maybe<DataTableFreeMedicinesPriceListsConnection>;
   dataTableGenericIngredient?: Maybe<DataTableGenericIngredient>;
   /** Reads a single `DataTableGenericIngredient` using its globally unique `ID`. */
   dataTableGenericIngredientByNodeId?: Maybe<DataTableGenericIngredient>;
@@ -30270,6 +32618,131 @@ export type QueryDataTableDosageFormsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<DataTableDosageFormsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimApplicationJoinArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimApplicationJoinByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimApplicationJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableFmpClaimApplicationJoinCondition>;
+  filter?: InputMaybe<DataTableFmpClaimApplicationJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableFmpClaimApplicationJoinsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimLineArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimLineApplicationJoinArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimLineApplicationJoinByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimLineApplicationJoinsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableFmpClaimLineApplicationJoinCondition>;
+  filter?: InputMaybe<DataTableFmpClaimLineApplicationJoinFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimLineByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimLinesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableFmpClaimLineCondition>;
+  filter?: InputMaybe<DataTableFmpClaimLineFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLinesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFmpClaimsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableFmpClaimCondition>;
+  filter?: InputMaybe<DataTableFmpClaimFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableFmpClaimsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFreeMedicinesPriceListArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFreeMedicinesPriceListByNodeIdArgs = {
+  nodeId: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDataTableFreeMedicinesPriceListsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DataTableFreeMedicinesPriceListCondition>;
+  filter?: InputMaybe<DataTableFreeMedicinesPriceListFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DataTableFreeMedicinesPriceListsOrderBy>>;
 };
 
 
@@ -32201,6 +34674,8 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -32397,6 +34872,8 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -32761,15 +35238,19 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -32780,9 +35261,11 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -33376,15 +35859,19 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -33395,9 +35882,11 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -36259,7 +38748,7 @@ export type Template = Node & {
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   serialPattern?: Maybe<Scalars['String']['output']>;
-  staleDraftRetentionDays: Scalars['Int']['output'];
+  staleDraftRetentionDays?: Maybe<Scalars['Int']['output']>;
   startMessage?: Maybe<Scalars['JSON']['output']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']['output']>;
@@ -38270,6 +40759,7 @@ export type TemplateFileJoinFileIdFkeyFileCreateInput = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename: Scalars['String']['input'];
@@ -41174,6 +43664,8 @@ export type TriggerQueueApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -41544,6 +44036,8 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -43003,6 +45497,249 @@ export type UpdateDataTableDosageFormPayload = {
 /** The output of our update `DataTableDosageForm` mutation. */
 export type UpdateDataTableDosageFormPayloadDataTableDosageFormEdgeArgs = {
   orderBy?: InputMaybe<Array<DataTableDosageFormsOrderBy>>;
+};
+
+/** All input for the `updateDataTableFmpClaimApplicationJoinByNodeId` mutation. */
+export type UpdateDataTableFmpClaimApplicationJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFmpClaimApplicationJoin` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `DataTableFmpClaimApplicationJoin` being updated. */
+  patch: DataTableFmpClaimApplicationJoinPatch;
+};
+
+/** All input for the `updateDataTableFmpClaimApplicationJoin` mutation. */
+export type UpdateDataTableFmpClaimApplicationJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `DataTableFmpClaimApplicationJoin` being updated. */
+  patch: DataTableFmpClaimApplicationJoinPatch;
+};
+
+/** The output of our update `DataTableFmpClaimApplicationJoin` mutation. */
+export type UpdateDataTableFmpClaimApplicationJoinPayload = {
+  __typename?: 'UpdateDataTableFmpClaimApplicationJoinPayload';
+  /** Reads a single `Application` that is related to this `DataTableFmpClaimApplicationJoin`. */
+  application?: Maybe<Application>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `DataTableFmpClaim` that is related to this `DataTableFmpClaimApplicationJoin`. */
+  dataTableFmpClaim?: Maybe<DataTableFmpClaim>;
+  /** The `DataTableFmpClaimApplicationJoin` that was updated by this mutation. */
+  dataTableFmpClaimApplicationJoin?: Maybe<DataTableFmpClaimApplicationJoin>;
+  /** An edge for our `DataTableFmpClaimApplicationJoin`. May be used by Relay 1. */
+  dataTableFmpClaimApplicationJoinEdge?: Maybe<DataTableFmpClaimApplicationJoinsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `DataTableFmpClaimApplicationJoin` mutation. */
+export type UpdateDataTableFmpClaimApplicationJoinPayloadDataTableFmpClaimApplicationJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `updateDataTableFmpClaimByNodeId` mutation. */
+export type UpdateDataTableFmpClaimByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFmpClaim` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `DataTableFmpClaim` being updated. */
+  patch: DataTableFmpClaimPatch;
+};
+
+/** All input for the `updateDataTableFmpClaim` mutation. */
+export type UpdateDataTableFmpClaimInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `DataTableFmpClaim` being updated. */
+  patch: DataTableFmpClaimPatch;
+};
+
+/** All input for the `updateDataTableFmpClaimLineApplicationJoinByNodeId` mutation. */
+export type UpdateDataTableFmpClaimLineApplicationJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFmpClaimLineApplicationJoin` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `DataTableFmpClaimLineApplicationJoin` being updated. */
+  patch: DataTableFmpClaimLineApplicationJoinPatch;
+};
+
+/** All input for the `updateDataTableFmpClaimLineApplicationJoin` mutation. */
+export type UpdateDataTableFmpClaimLineApplicationJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `DataTableFmpClaimLineApplicationJoin` being updated. */
+  patch: DataTableFmpClaimLineApplicationJoinPatch;
+};
+
+/** The output of our update `DataTableFmpClaimLineApplicationJoin` mutation. */
+export type UpdateDataTableFmpClaimLineApplicationJoinPayload = {
+  __typename?: 'UpdateDataTableFmpClaimLineApplicationJoinPayload';
+  /** Reads a single `Application` that is related to this `DataTableFmpClaimLineApplicationJoin`. */
+  application?: Maybe<Application>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `DataTableFmpClaimLine` that is related to this `DataTableFmpClaimLineApplicationJoin`. */
+  dataTableFmpClaimLine?: Maybe<DataTableFmpClaimLine>;
+  /** The `DataTableFmpClaimLineApplicationJoin` that was updated by this mutation. */
+  dataTableFmpClaimLineApplicationJoin?: Maybe<DataTableFmpClaimLineApplicationJoin>;
+  /** An edge for our `DataTableFmpClaimLineApplicationJoin`. May be used by Relay 1. */
+  dataTableFmpClaimLineApplicationJoinEdge?: Maybe<DataTableFmpClaimLineApplicationJoinsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `DataTableFmpClaimLineApplicationJoin` mutation. */
+export type UpdateDataTableFmpClaimLineApplicationJoinPayloadDataTableFmpClaimLineApplicationJoinEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLineApplicationJoinsOrderBy>>;
+};
+
+/** All input for the `updateDataTableFmpClaimLineByNodeId` mutation. */
+export type UpdateDataTableFmpClaimLineByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFmpClaimLine` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `DataTableFmpClaimLine` being updated. */
+  patch: DataTableFmpClaimLinePatch;
+};
+
+/** All input for the `updateDataTableFmpClaimLine` mutation. */
+export type UpdateDataTableFmpClaimLineInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `DataTableFmpClaimLine` being updated. */
+  patch: DataTableFmpClaimLinePatch;
+};
+
+/** The output of our update `DataTableFmpClaimLine` mutation. */
+export type UpdateDataTableFmpClaimLinePayload = {
+  __typename?: 'UpdateDataTableFmpClaimLinePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableFmpClaimLine` that was updated by this mutation. */
+  dataTableFmpClaimLine?: Maybe<DataTableFmpClaimLine>;
+  /** An edge for our `DataTableFmpClaimLine`. May be used by Relay 1. */
+  dataTableFmpClaimLineEdge?: Maybe<DataTableFmpClaimLinesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `DataTableFmpClaimLine` mutation. */
+export type UpdateDataTableFmpClaimLinePayloadDataTableFmpClaimLineEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimLinesOrderBy>>;
+};
+
+/** The output of our update `DataTableFmpClaim` mutation. */
+export type UpdateDataTableFmpClaimPayload = {
+  __typename?: 'UpdateDataTableFmpClaimPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableFmpClaim` that was updated by this mutation. */
+  dataTableFmpClaim?: Maybe<DataTableFmpClaim>;
+  /** An edge for our `DataTableFmpClaim`. May be used by Relay 1. */
+  dataTableFmpClaimEdge?: Maybe<DataTableFmpClaimsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `DataTableFmpClaim` mutation. */
+export type UpdateDataTableFmpClaimPayloadDataTableFmpClaimEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFmpClaimsOrderBy>>;
+};
+
+/** All input for the `updateDataTableFreeMedicinesPriceListByNodeId` mutation. */
+export type UpdateDataTableFreeMedicinesPriceListByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `DataTableFreeMedicinesPriceList` to be updated. */
+  nodeId: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `DataTableFreeMedicinesPriceList` being updated. */
+  patch: DataTableFreeMedicinesPriceListPatch;
+};
+
+/** All input for the `updateDataTableFreeMedicinesPriceList` mutation. */
+export type UpdateDataTableFreeMedicinesPriceListInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  /** An object where the defined keys will be set on the `DataTableFreeMedicinesPriceList` being updated. */
+  patch: DataTableFreeMedicinesPriceListPatch;
+};
+
+/** The output of our update `DataTableFreeMedicinesPriceList` mutation. */
+export type UpdateDataTableFreeMedicinesPriceListPayload = {
+  __typename?: 'UpdateDataTableFreeMedicinesPriceListPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `DataTableFreeMedicinesPriceList` that was updated by this mutation. */
+  dataTableFreeMedicinesPriceList?: Maybe<DataTableFreeMedicinesPriceList>;
+  /** An edge for our `DataTableFreeMedicinesPriceList`. May be used by Relay 1. */
+  dataTableFreeMedicinesPriceListEdge?: Maybe<DataTableFreeMedicinesPriceListsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `DataTableFreeMedicinesPriceList` mutation. */
+export type UpdateDataTableFreeMedicinesPriceListPayloadDataTableFreeMedicinesPriceListEdgeArgs = {
+  orderBy?: InputMaybe<Array<DataTableFreeMedicinesPriceListsOrderBy>>;
 };
 
 /** All input for the `updateDataTableGenericIngredientByNodeId` mutation. */
@@ -46271,6 +49008,8 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -47210,15 +49949,19 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -47229,9 +49972,11 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -47396,6 +50141,8 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -47909,6 +50656,8 @@ export type UpdateApplicationOnActionQueueForActionQueueApplicationIdFkeyPatch =
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -47954,6 +50703,8 @@ export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch =
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -47999,6 +50750,8 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48043,6 +50796,8 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48087,6 +50842,8 @@ export type UpdateApplicationOnApplicationForFakePublicApplicationForeignKey0Pat
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48131,6 +50888,8 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48176,6 +50935,8 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48221,6 +50982,8 @@ export type UpdateApplicationOnApplicationReviewerActionForApplicationReviewerAc
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48266,6 +51029,8 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48311,6 +51076,102 @@ export type UpdateApplicationOnDataChangelogForDataChangelogApplicationIdFkeyPat
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: InputMaybe<FileApplicationSerialFkeyInverseInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  isConfig?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  notificationsUsingId?: InputMaybe<NotificationApplicationIdFkeyInverseInput>;
+  orgId?: InputMaybe<Scalars['Int']['input']>;
+  organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationToOrgId?: InputMaybe<ApplicationOrgIdFkeyInput>;
+  outcome?: InputMaybe<ApplicationOutcome>;
+  outcomeRegistration?: InputMaybe<Scalars['String']['input']>;
+  reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  reviewsUsingId?: InputMaybe<ReviewApplicationIdFkeyInverseInput>;
+  serial?: InputMaybe<Scalars['String']['input']>;
+  sessionId?: InputMaybe<Scalars['String']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<ApplicationTemplateIdFkeyInput>;
+  trigger?: InputMaybe<Trigger>;
+  triggerQueuesUsingId?: InputMaybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: InputMaybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  urlProperties?: InputMaybe<Scalars['JSON']['input']>;
+  userApplicationJoinsUsingId?: InputMaybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
+  userListToUserId?: InputMaybe<FakePublicApplicationForeignKey0Input>;
+  verificationsUsingId?: InputMaybe<VerificationApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyPatch = {
+  actionQueuesUsingId?: InputMaybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: InputMaybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: InputMaybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: InputMaybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: InputMaybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
+  dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTablePrequalManufacturerApplicationJoinsUsingId?: InputMaybe<DataTablePrequalManufacturerApplicationApplicationIdFkeyInverseInput>;
+  dataTableProductApplicationJoinsUsingId?: InputMaybe<DataTableProductApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableProvisionalProductApplicationJoinsUsingId?: InputMaybe<DataTableProvisionalProductApplicationApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: InputMaybe<FileApplicationSerialFkeyInverseInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  isConfig?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  notificationsUsingId?: InputMaybe<NotificationApplicationIdFkeyInverseInput>;
+  orgId?: InputMaybe<Scalars['Int']['input']>;
+  organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationToOrgId?: InputMaybe<ApplicationOrgIdFkeyInput>;
+  outcome?: InputMaybe<ApplicationOutcome>;
+  outcomeRegistration?: InputMaybe<Scalars['String']['input']>;
+  reviewAssignmentsUsingId?: InputMaybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  reviewsUsingId?: InputMaybe<ReviewApplicationIdFkeyInverseInput>;
+  serial?: InputMaybe<Scalars['String']['input']>;
+  sessionId?: InputMaybe<Scalars['String']['input']>;
+  templateId?: InputMaybe<Scalars['Int']['input']>;
+  templateToTemplateId?: InputMaybe<ApplicationTemplateIdFkeyInput>;
+  trigger?: InputMaybe<Trigger>;
+  triggerQueuesUsingId?: InputMaybe<TriggerQueueApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: InputMaybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  urlProperties?: InputMaybe<Scalars['JSON']['input']>;
+  userApplicationJoinsUsingId?: InputMaybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
+  userListToUserId?: InputMaybe<FakePublicApplicationForeignKey0Input>;
+  verificationsUsingId?: InputMaybe<VerificationApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyPatch = {
+  actionQueuesUsingId?: InputMaybe<ActionQueueApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: InputMaybe<ActivityLogApplicationIdFkeyInverseInput>;
+  applicationNotesUsingId?: InputMaybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: InputMaybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  applicationReviewerActionsUsingId?: InputMaybe<ApplicationReviewerActionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48356,6 +51217,8 @@ export type UpdateApplicationOnDataTableManufacturerApplicationJoinForDataTableM
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48401,6 +51264,8 @@ export type UpdateApplicationOnDataTableManufacturerRepresentativeApplicationJoi
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48446,6 +51311,8 @@ export type UpdateApplicationOnDataTablePermitChemicalApplicationJoinForDataTabl
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48491,6 +51358,8 @@ export type UpdateApplicationOnDataTablePermitMedicalApplicationJoinForDataTable
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48536,6 +51405,8 @@ export type UpdateApplicationOnDataTablePrequalManufacturerApplicationJoinForDat
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48581,6 +51452,8 @@ export type UpdateApplicationOnDataTableProductApplicationJoinForDataTableProduc
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48626,6 +51499,8 @@ export type UpdateApplicationOnDataTableProvisionalProductApplicationJoinForData
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48671,6 +51546,8 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48716,6 +51593,8 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48761,6 +51640,8 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48806,6 +51687,8 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48851,6 +51734,8 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48896,6 +51781,8 @@ export type UpdateApplicationOnTriggerQueueForTriggerQueueApplicationIdFkeyPatch
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48941,6 +51828,8 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -48986,6 +51875,8 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -49031,6 +51922,8 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   applicationStageHistoriesUsingId?: InputMaybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   assignerList?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInverseInput>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerApplicationJoinApplicationIdFkeyInverseInput>;
   dataTableManufacturerRepresentativeApplicationJoinsUsingId?: InputMaybe<DataTableManufacturerRepresentativeApplApplicationIdFkeyInverseInput>;
   dataTablePermitChemicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitChemicalApplicationJoinApplicationIdFkeyInverseInput>;
@@ -49227,6 +52120,90 @@ export type UpdateDataChangelogOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** An object where the defined keys will be set on the `dataTableFmpClaimApplicationJoin` being updated. */
+export type UpdateDataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyPatch = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimToDataTableFmpClaimId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** An object where the defined keys will be set on the `dataTableFmpClaimApplicationJoin` being updated. */
+export type UpdateDataTableFmpClaimApplicationJoinOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJoinApplicationIdFkeyPatch = {
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  dataTableFmpClaimToDataTableFmpClaimId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** An object where the defined keys will be set on the `dataTableFmpClaimLineApplicationJoin` being updated. */
+export type UpdateDataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyPatch = {
+  applicationId?: InputMaybe<Scalars['Int']['input']>;
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimLineToDataTableFmpClaimLineId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** An object where the defined keys will be set on the `dataTableFmpClaimLineApplicationJoin` being updated. */
+export type UpdateDataTableFmpClaimLineApplicationJoinOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineApplicationJoinApplicationIdFkeyPatch = {
+  applicationToApplicationId?: InputMaybe<DataTableFmpClaimLineApplicationJoinApplicationIdFkeyInput>;
+  dataTableFmpClaimLineId?: InputMaybe<Scalars['Int']['input']>;
+  dataTableFmpClaimLineToDataTableFmpClaimLineId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInput>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** An object where the defined keys will be set on the `dataTableFmpClaimLine` being updated. */
+export type UpdateDataTableFmpClaimLineOnDataTableFmpClaimLineApplicationJoinForDataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyPatch = {
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  ceilingPricePerUnit?: InputMaybe<Scalars['Float']['input']>;
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  dataTableFmpClaimLineApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimLineAppDataTableFmpClaimLineIdFkeyInverseInput>;
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  dispensingFee?: InputMaybe<Scalars['Float']['input']>;
+  excessPaid?: InputMaybe<Scalars['Float']['input']>;
+  fmpClaimId?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  medicine?: InputMaybe<Scalars['String']['input']>;
+  packSize?: InputMaybe<Scalars['String']['input']>;
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  totalItemPrice?: InputMaybe<Scalars['Float']['input']>;
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** An object where the defined keys will be set on the `dataTableFmpClaim` being updated. */
+export type UpdateDataTableFmpClaimOnDataTableFmpClaimApplicationJoinForDataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyPatch = {
+  cardType?: InputMaybe<Scalars['String']['input']>;
+  claimNumber?: InputMaybe<Scalars['String']['input']>;
+  dataTableFmpClaimApplicationJoinsUsingId?: InputMaybe<DataTableFmpClaimApplicationJDataTableFmpClaimIdFkeyInverseInput>;
+  dateClaimed?: InputMaybe<Scalars['Date']['input']>;
+  dateDispensed?: InputMaybe<Scalars['Date']['input']>;
+  dispensingFeeReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  patientName?: InputMaybe<Scalars['String']['input']>;
+  paymentProcessed?: InputMaybe<Scalars['Boolean']['input']>;
+  paymentVoucher?: InputMaybe<Scalars['JSON']['input']>;
+  pharmacyEmail?: InputMaybe<Scalars['String']['input']>;
+  pharmacyId?: InputMaybe<Scalars['Int']['input']>;
+  pharmacyName?: InputMaybe<Scalars['String']['input']>;
+  prescriptionData?: InputMaybe<Scalars['JSON']['input']>;
+  prescriptionSource?: InputMaybe<Scalars['String']['input']>;
+  reportCode?: InputMaybe<Scalars['String']['input']>;
+  sentToAccounts?: InputMaybe<Scalars['Boolean']['input']>;
+  totalChargedByPharmacy?: InputMaybe<Scalars['Float']['input']>;
+  totalClaimReimbursement?: InputMaybe<Scalars['Float']['input']>;
+  totalItemReimbursement?: InputMaybe<Scalars['Float']['input']>;
+};
+
 /** An object where the defined keys will be set on the `dataTableManufacturerApplicationJoin` being updated. */
 export type UpdateDataTableManufacturerApplicationJoinOnDataTableManufacturerApplicationJoinForDataTableManufacturerApplicaDataTableManufacturerIdFkeyPatch = {
   applicationId?: InputMaybe<Scalars['Int']['input']>;
@@ -49349,15 +52326,11 @@ export type UpdateDataTablePermitMedicalOnDataTablePermitMedicalApplicationJoinF
   billLadingNumber?: InputMaybe<Scalars['String']['input']>;
   companyId?: InputMaybe<Scalars['Int']['input']>;
   companyName?: InputMaybe<Scalars['String']['input']>;
-  consignorAddress?: InputMaybe<Scalars['String']['input']>;
-  consignorName?: InputMaybe<Scalars['String']['input']>;
   dataTablePermitMedicalApplicationJoinsUsingId?: InputMaybe<DataTablePermitMedicalAppDataTablePermitMedicalIdFkeyInverseInput>;
   exportCountry?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   modeOfTransport?: InputMaybe<Scalars['String']['input']>;
-  nonRegisteredProducts?: InputMaybe<Scalars['JSON']['input']>;
   nonRegisteredProductsFilterData?: InputMaybe<Scalars['String']['input']>;
-  nonRegisteredReason?: InputMaybe<Scalars['String']['input']>;
   permitNo?: InputMaybe<Scalars['String']['input']>;
   portOfEntry?: InputMaybe<Scalars['String']['input']>;
   provisionalProducts?: InputMaybe<Scalars['JSON']['input']>;
@@ -49528,6 +52501,7 @@ export type UpdateFileOnFileForFileApplicationNoteIdFkeyPatch = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename?: InputMaybe<Scalars['String']['input']>;
@@ -49556,6 +52530,7 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename?: InputMaybe<Scalars['String']['input']>;
@@ -49584,6 +52559,7 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename?: InputMaybe<Scalars['String']['input']>;
@@ -49613,6 +52589,7 @@ export type UpdateFileOnTemplateFileJoinForTemplateFileJoinFileIdFkeyPatch = {
   isExternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isInternalReferenceDoc?: InputMaybe<Scalars['Boolean']['input']>;
   isOutputDoc?: InputMaybe<Scalars['Boolean']['input']>;
+  isProtected?: InputMaybe<Scalars['Boolean']['input']>;
   lastModified?: InputMaybe<Scalars['Datetime']['input']>;
   mimetype?: InputMaybe<Scalars['String']['input']>;
   originalFilename?: InputMaybe<Scalars['String']['input']>;
@@ -49697,15 +52674,19 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -49716,9 +52697,11 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -49740,15 +52723,19 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -49759,9 +52746,11 @@ export type UpdateOrganisationOnApplicationNoteForApplicationNoteOrgIdFkeyPatch 
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -49783,15 +52772,19 @@ export type UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -49802,9 +52795,11 @@ export type UpdateOrganisationOnDataChangelogForDataChangelogOrgIdFkeyPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -49826,15 +52821,19 @@ export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplic
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -49845,9 +52844,11 @@ export type UpdateOrganisationOnOrganisationApplicationJoinForOrganisationApplic
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -49869,15 +52870,19 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -49888,9 +52893,11 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -49912,15 +52919,19 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -49931,9 +52942,11 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -49955,15 +52968,19 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -49974,9 +52991,11 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -49998,15 +53017,19 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   country?: InputMaybe<Scalars['String']['input']>;
   dataChangelogsUsingId?: InputMaybe<DataChangelogOrgIdFkeyInverseInput>;
+  division?: InputMaybe<Scalars['String']['input']>;
   establishmentLicence?: InputMaybe<Scalars['JSON']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
   isChemicalImporter?: InputMaybe<Scalars['Boolean']['input']>;
+  isFmpRegistered?: InputMaybe<Scalars['Boolean']['input']>;
   isFreeMedProgram?: InputMaybe<Scalars['Boolean']['input']>;
   isMedImporter?: InputMaybe<Scalars['Boolean']['input']>;
   isMedPrequalifier?: InputMaybe<Scalars['Boolean']['input']>;
   isMedProvRegister?: InputMaybe<Scalars['Boolean']['input']>;
+  isOldFmpPaymentModel?: InputMaybe<Scalars['Boolean']['input']>;
   isSponsorCompany?: InputMaybe<Scalars['Boolean']['input']>;
   isSystemOrg?: InputMaybe<Scalars['Boolean']['input']>;
+  island?: InputMaybe<Scalars['String']['input']>;
   licenceExpiry?: InputMaybe<Scalars['Date']['input']>;
   license?: InputMaybe<Scalars['JSON']['input']>;
   localAgentBusinessAddress?: InputMaybe<Scalars['String']['input']>;
@@ -50017,9 +53040,11 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   name?: InputMaybe<Scalars['String']['input']>;
   organisationApplicationJoinsUsingId?: InputMaybe<OrganisationApplicationJoinOrganisationIdFkeyInverseInput>;
   otherDocuments?: InputMaybe<Scalars['JSON']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
   permissionJoinsUsingId?: InputMaybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   postalAddress?: InputMaybe<Scalars['String']['input']>;
   province?: InputMaybe<Scalars['String']['input']>;
+  reformAgreement?: InputMaybe<Scalars['JSON']['input']>;
   registration?: InputMaybe<Scalars['String']['input']>;
   registrationDocumentation?: InputMaybe<Scalars['JSON']['input']>;
   reviewAssignmentAssignerJoinsUsingId?: InputMaybe<ReviewAssignmentAssignerJoinOrganisationIdFkeyInverseInput>;
@@ -51631,7 +54656,7 @@ export type ElementFragmentFragment = { __typename?: 'TemplateElement', id: numb
 
 export type EvaluatorFragmentFragment = { __typename?: 'EvaluatorFragment', id: number, name: string, expression: any, metadata?: any | null, permissionNames?: Array<string | null> | null, backEnd: boolean, frontEnd: boolean };
 
-export type FullTemplateFragment = { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, staleDraftRetentionDays: number, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, isReviewSection: boolean, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateEvaluatorFragmentJoins: { __typename?: 'TemplateEvaluatorFragmentJoinsConnection', nodes: Array<{ __typename?: 'TemplateEvaluatorFragmentJoin', id: number, evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number, name: string, metadata?: any | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } };
+export type FullTemplateFragment = { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, staleDraftRetentionDays?: number | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, isReviewSection: boolean, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateEvaluatorFragmentJoins: { __typename?: 'TemplateEvaluatorFragmentJoinsConnection', nodes: Array<{ __typename?: 'TemplateEvaluatorFragmentJoin', id: number, evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number, name: string, metadata?: any | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } };
 
 export type OrganisationFragment = { __typename?: 'Organisation', id: number, name?: string | null, address?: string | null, registration?: string | null, logoUrl?: string | null };
 
@@ -51822,7 +54847,7 @@ export type UpdateTemplateMutationVariables = Exact<{
 }>;
 
 
-export type UpdateTemplateMutation = { __typename?: 'Mutation', updateTemplate?: { __typename?: 'UpdateTemplatePayload', template?: { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, staleDraftRetentionDays: number, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, isReviewSection: boolean, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateEvaluatorFragmentJoins: { __typename?: 'TemplateEvaluatorFragmentJoinsConnection', nodes: Array<{ __typename?: 'TemplateEvaluatorFragmentJoin', id: number, evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number, name: string, metadata?: any | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } } | null } | null };
+export type UpdateTemplateMutation = { __typename?: 'Mutation', updateTemplate?: { __typename?: 'UpdateTemplatePayload', template?: { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, staleDraftRetentionDays?: number | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, isReviewSection: boolean, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateEvaluatorFragmentJoins: { __typename?: 'TemplateEvaluatorFragmentJoinsConnection', nodes: Array<{ __typename?: 'TemplateEvaluatorFragmentJoin', id: number, evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number, name: string, metadata?: any | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } } | null } | null };
 
 export type UpdateTemplateFilterJoinMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -52005,7 +55030,7 @@ export type GetApplicationListQueryVariables = Exact<{
 }>;
 
 
-export type GetApplicationListQuery = { __typename?: 'Query', applicationList?: { __typename?: 'ApplicationListShapesConnection', totalCount: number, nodes: Array<{ __typename?: 'ApplicationListShape', id?: number | null, serial?: string | null, name?: string | null, templateCode?: string | null, templateName?: string | null, applicant?: string | null, orgName?: string | null, stage?: string | null, stageColour?: string | null, status?: ApplicationStatus | null, outcome?: ApplicationOutcome | null, lastActiveDate?: any | null, applicantDeadline?: any | null, reviewerAction?: ReviewerAction | null, assignerAction?: AssignerAction | null, assigners?: Array<string | null> | null, reviewers?: Array<string | null> | null } | null> } | null, templates?: { __typename?: 'TemplatesConnection', nodes: Array<{ __typename?: 'Template', code: string, name?: string | null, namePlural?: string | null } | null> } | null };
+export type GetApplicationListQuery = { __typename?: 'Query', applicationList?: { __typename?: 'ApplicationListShapesConnection', totalCount: number, nodes: Array<{ __typename?: 'ApplicationListShape', id?: number | null, serial?: string | null, name?: string | null, templateCode?: string | null, templateName?: string | null, applicant?: string | null, orgName?: string | null, stage?: string | null, stageColour?: string | null, status?: ApplicationStatus | null, outcome?: ApplicationOutcome | null, lastActiveDate?: any | null, applicantDeadline?: any | null, reviewerAction?: ReviewerAction | null, assignerAction?: AssignerAction | null, assigners?: Array<string | null> | null, reviewers?: Array<string | null> | null, hasBeenSubmitted?: boolean | null } | null> } | null, templates?: { __typename?: 'TemplatesConnection', nodes: Array<{ __typename?: 'Template', code: string, name?: string | null, namePlural?: string | null } | null> } | null };
 
 export type GetEvaluatorFragmentsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -52149,7 +55174,7 @@ export type GetFullTemplateInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetFullTemplateInfoQuery = { __typename?: 'Query', template?: { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, staleDraftRetentionDays: number, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, isReviewSection: boolean, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateEvaluatorFragmentJoins: { __typename?: 'TemplateEvaluatorFragmentJoinsConnection', nodes: Array<{ __typename?: 'TemplateEvaluatorFragmentJoin', id: number, evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number, name: string, metadata?: any | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } } | null };
+export type GetFullTemplateInfoQuery = { __typename?: 'Query', template?: { __typename?: 'Template', nodeId: string, versionId: string, versionTimestamp?: any | null, parentVersionId?: string | null, versionComment?: string | null, versionHistory?: any | null, staleDraftRetentionDays?: number | null, code: string, id: number, name?: string | null, status?: TemplateStatus | null, namePlural?: string | null, isLinear?: boolean | null, canApplicantMakeChanges?: boolean | null, startMessage?: any | null, submissionMessage?: any | null, serialPattern?: string | null, icon?: string | null, dashboardRestrictions?: Array<string | null> | null, priority?: number | null, configApplications: { __typename?: 'ApplicationsConnection', nodes: Array<{ __typename?: 'Application', serial?: string | null, id: number } | null> }, templateSections: { __typename?: 'TemplateSectionsConnection', nodes: Array<{ __typename?: 'TemplateSection', id: number, title?: string | null, index?: number | null, code?: string | null, isReviewSection: boolean, templateElementsBySectionId: { __typename?: 'TemplateElementsConnection', nodes: Array<{ __typename?: 'TemplateElement', id: number, code: string, index?: number | null, title?: string | null, elementTypePluginCode?: string | null, category?: TemplateElementCategory | null, visibilityCondition?: any | null, isRequired?: any | null, isEditable?: any | null, validation?: any | null, validationMessage?: string | null, helpText?: string | null, initialValue?: any | null, parameters?: any | null, reviewability: Reviewability } | null> } } | null> }, templateActions: { __typename?: 'TemplateActionsConnection', nodes: Array<{ __typename?: 'TemplateAction', code?: string | null, actionCode?: string | null, condition?: any | null, eventCode?: string | null, id: number, parameterQueries?: any | null, sequence?: number | null, trigger?: Trigger | null, description?: string | null, templateId: number } | null> }, templatePermissions: { __typename?: 'TemplatePermissionsConnection', nodes: Array<{ __typename?: 'TemplatePermission', allowedSections?: Array<string | null> | null, canMakeFinalDecision: boolean, canSelfAssign: boolean, id: number, levelNumber?: number | null, restrictions?: any | null, stageNumber?: number | null, permissionNameId: number, permissionName?: { __typename?: 'PermissionName', id: number, name?: string | null, permissionPolicyId?: number | null, permissionPolicy?: { __typename?: 'PermissionPolicy', defaultRestrictions?: any | null, description?: string | null, name?: string | null, id: number, rules?: any | null, type?: PermissionPolicyType | null } | null } | null } | null> }, templateStages: { __typename?: 'TemplateStagesConnection', nodes: Array<{ __typename?: 'TemplateStage', id: number, number?: number | null, colour?: string | null, title?: string | null, description?: string | null, templateStageReviewLevelsByStageId: { __typename?: 'TemplateStageReviewLevelsConnection', nodes: Array<{ __typename?: 'TemplateStageReviewLevel', description?: string | null, id: number, name: string, number: number, singleReviewerAllSections: boolean } | null> } } | null> }, templateDataViewJoins: { __typename?: 'TemplateDataViewJoinsConnection', nodes: Array<{ __typename?: 'TemplateDataViewJoin', id: number, dataView?: { __typename?: 'DataView', identifier: string, code: string, id: number, tableName: string, title?: string | null, permissionNames?: Array<string | null> | null, priority?: number | null } | null } | null> }, templateEvaluatorFragmentJoins: { __typename?: 'TemplateEvaluatorFragmentJoinsConnection', nodes: Array<{ __typename?: 'TemplateEvaluatorFragmentJoin', id: number, evaluatorFragment?: { __typename?: 'EvaluatorFragment', id: number, name: string, metadata?: any | null } | null } | null> }, templateCategory?: { __typename?: 'TemplateCategory', id: number, code: string, title?: string | null, icon?: string | null, uiLocation?: Array<UiLocation | null> | null, isSubmenu?: boolean | null, priority?: number | null } | null, templateFilterJoins: { __typename?: 'TemplateFilterJoinsConnection', nodes: Array<{ __typename?: 'TemplateFilterJoin', id: number, filter?: { __typename?: 'Filter', id: number, code: string, query?: any | null, title?: string | null, userRole?: PermissionPolicyType | null } | null } | null> }, applications: { __typename?: 'ApplicationsConnection', totalCount: number } } | null };
 
 export type GetPermissionStatisticsQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -54384,6 +57409,7 @@ export const GetApplicationListDocument = gql`
       assignerAction
       assigners
       reviewers
+      hasBeenSubmitted
     }
     totalCount
   }

@@ -19,7 +19,7 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
     onConfirm: () => deleteApplication(),
   })
 
-  const { serial, status } = application
+  const { serial, status, hasBeenSubmitted } = application
   const linkTo = { pathname: `/application/${serial}`, state: { prevQuery: location.search } }
 
   switch (status) {
@@ -37,13 +37,19 @@ const StatusCell: React.FC<CellProps> = ({ application, loading, deleteApplicati
           <Link to={linkTo} className="user-action">
             {t('ACTION_EDIT_DRAFT')}
           </Link>
-          <Icon
-            className="delete-icon"
-            name="trash alternate outline"
-            loading={loading}
-            onClick={() => showModal()}
-          />
-          <ConfirmModal />
+          {/* Submission triggers actions that change the system, so an application
+              that has ever been submitted can't be deleted, even if returned to Draft */}
+          {!hasBeenSubmitted && (
+            <>
+              <Icon
+                className="delete-icon"
+                name="trash alternate outline"
+                loading={loading}
+                onClick={() => showModal()}
+              />
+              <ConfirmModal />
+            </>
+          )}
         </>
       )
     case ApplicationStatus.Completed:
