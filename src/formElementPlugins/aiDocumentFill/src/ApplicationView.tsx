@@ -3,7 +3,10 @@ import { Icon, Message, Segment, Transition } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
 import { TranslatePluginMethod, useLanguageProvider } from '../../../contexts/Localisation'
 import { usePrefs } from '../../../contexts/SystemPrefs'
+import { useUserState } from '../../../contexts/UserState'
+import { useApplicationStructure } from '../../../contexts/ApplicationStructure'
 import { UploadButton } from '../../../components/common'
+import { buildElements } from './buildElements'
 
 // Limits of the server's /api/ai/extract endpoint, checked here so the
 // applicant hears about them before anything is sent
@@ -22,8 +25,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const { getPluginTranslator } = useLanguageProvider()
   const t = getPluginTranslator('aiDocumentFill')
   const { aiEnabled } = usePrefs()
+  const {
+    userState: { currentUser },
+  } = useUserState()
+  const applicationStructure = useApplicationStructure()
   const { isEditable } = element
-  const { label, description, notice = t('DEFAULT_NOTICE') } = parameters
+  const { label, description, notice = t('DEFAULT_NOTICE'), scope } = parameters
 
   const [error, setError] = useState<string>()
   const [errorVisible, setErrorVisible] = useState(false)
@@ -37,20 +44,23 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setTimeout(() => setErrorVisible(false), 3000)
   }
 
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? [])
     // Lets the same files be chosen again, e.g. after an error
     e.target.value = ''
-    if (files.length === 0) return
+    if (files.length === 0 || !applicationStructure) return
 
     const error = getFilesError(files, t)
     if (error) {
       showError(error)
       return
     }
+
+    const elements = await buildElements(applicationStructure.structure, currentUser, scope)
     // TO-DO: send the documents and element definitions to /api/ai/extract,
     // show the proposed answers for review, and when the applicant applies
     // them, save { text, documents, filledAt, answerCount } as this response
+    console.log('AI document fill: elements', elements)
   }
 
   return (
@@ -69,7 +79,12 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       </Message>
       <Segment.Group>
         <Segment basic textAlign="center">
-          <UploadButton primary multiple disabled={!isEditable} handleFiles={handleFiles}>
+          <UploadButton
+            primary
+            multiple
+            disabled={!isEditable || !applicationStructure}
+            handleFiles={handleFiles}
+          >
             <Icon name="upload" />
             {t('BUTTON_CHOOSE_DOCUMENTS')}
           </UploadButton>

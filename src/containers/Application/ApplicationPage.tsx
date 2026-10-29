@@ -14,6 +14,7 @@ import usePageTitle from '../../utils/hooks/usePageTitle'
 import { useLanguageProvider } from '../../contexts/Localisation'
 import { useFormElementUpdateTracker } from '../../contexts/FormElementUpdateTrackerState'
 import { useViewport } from '../../contexts/ViewportState'
+import { ApplicationStructureProvider } from '../../contexts/ApplicationStructure'
 
 const ApplicationPage: React.FC<ApplicationProps> = ({
   structure: fullStructure,
@@ -89,18 +90,20 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
               <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
               {isMobile && <p className="xx-small">{`${t('PAGE')} ${pageNumber}`}</p>}
             </div>
-            <PageElements
-              canEdit={status === ApplicationStatus.Draft}
-              isUpdating={isChangeRequest}
-              elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
-              responsesByCode={fullStructure.responsesByCode}
-              stages={fullStructure.stages.map(({ stage }) => stage)}
-              applicationData={fullStructure.info}
-              isStrictPage={
-                sectionCode === strictSectionPage?.sectionCode &&
-                pageNumber === strictSectionPage?.pageNumber
-              }
-            />
+            <ApplicationStructureProvider value={{ structure: fullStructure }}>
+              <PageElements
+                canEdit={status === ApplicationStatus.Draft}
+                isUpdating={isChangeRequest}
+                elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}
+                responsesByCode={fullStructure.responsesByCode}
+                stages={fullStructure.stages.map(({ stage }) => stage)}
+                applicationData={fullStructure.info}
+                isStrictPage={
+                  sectionCode === strictSectionPage?.sectionCode &&
+                  pageNumber === strictSectionPage?.pageNumber
+                }
+              />
+            </ApplicationStructureProvider>
           </Segment>
           <Navigation
             current={{ sectionCode, pageNumber }}

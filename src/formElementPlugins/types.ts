@@ -88,12 +88,28 @@ interface PluginManifest {
   [key: string]: PluginConfig
 }
 
+// The choices a choice element offers, as aiDocumentFill describes them to the
+// AI service
+interface AiFillChoices {
+  options: string[] // display labels, in option order
+  multiSelect?: boolean
+}
+
+// What a plugin provides so aiDocumentFill can fill its elements. Kept out of
+// the lazy-loaded components, as most target elements aren't mounted.
+interface AiFillMethods {
+  // From the element's evaluated parameters; undefined if the options can't
+  // all be shown as text
+  getChoices?: (parameters: Record<string, unknown>) => AiFillChoices | undefined
+}
+
 interface PluginComponents {
   ApplicationView: React.FunctionComponent<ApplicationViewProps>
   SummaryView: React.FunctionComponent<SummaryViewProps>
   // TemplateView: React.FunctionComponent<TemplateViewProps>
   config: PluginConfig
   localisation?: Record<string, string>
+  aiFill?: AiFillMethods
 }
 
 interface Plugins {
@@ -115,4 +131,6 @@ export {
   type PluginManifest,
   type PluginComponents,
   type Plugins,
+  type AiFillChoices,
+  type AiFillMethods,
 }

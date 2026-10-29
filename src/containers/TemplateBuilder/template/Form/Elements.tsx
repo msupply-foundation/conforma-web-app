@@ -7,6 +7,7 @@ import {
   TemplateElementCategory,
 } from '../../../../utils/generated/graphql'
 import { ElementState } from '../../../../utils/types'
+import { ApplicationStructureProvider } from '../../../../contexts/ApplicationStructure'
 import ButtonWithFallback from '../../shared/ButtonWidthFallback'
 import { IconButton } from '../../shared/IconButton'
 import { useOperationState } from '../../shared/OperationContext'
@@ -120,24 +121,28 @@ const Elements: React.FC = () => {
       key={`${selectedSectionId}_${selectedPageNumber}`}
       className="builder-page-elements-wrapper config-container-outline"
     >
-      <PageElements
-        canEdit={true}
-        stages={[]}
-        renderConfigElement={(element: ElementState) => (
-          <ElementConfigOptions
-            elementId={element.id}
-            isVisible={element.isVisible}
-            setElementUpdateState={setElementUpdateState}
-            duplicateElement={duplicateElement}
-            showCheckbox={!!selectionRequestingElement && selectionRequestingElement !== element.id}
-            isSelected={selectedElementIds.includes(element.id)}
-            toggleSelectedElement={toggleSelectedElement}
-          />
-        )}
-        elements={selectedPage.state}
-        responsesByCode={structure.responsesByCode || {}}
-        applicationData={structure.info}
-      />
+      <ApplicationStructureProvider value={{ structure }}>
+        <PageElements
+          canEdit={true}
+          stages={[]}
+          renderConfigElement={(element: ElementState) => (
+            <ElementConfigOptions
+              elementId={element.id}
+              isVisible={element.isVisible}
+              setElementUpdateState={setElementUpdateState}
+              duplicateElement={duplicateElement}
+              showCheckbox={
+                !!selectionRequestingElement && selectionRequestingElement !== element.id
+              }
+              isSelected={selectedElementIds.includes(element.id)}
+              toggleSelectedElement={toggleSelectedElement}
+            />
+          )}
+          elements={selectedPage.state}
+          responsesByCode={structure.responsesByCode || {}}
+          applicationData={structure.info}
+        />
+      </ApplicationStructureProvider>
       <ButtonWithFallback
         disabled={!canEdit}
         disabledMessage={disabledMessage}

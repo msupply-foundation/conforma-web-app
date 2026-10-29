@@ -31,6 +31,9 @@ import textInfoConfig from './textInfo/pluginConfig.json'
 import getValuesConfig from './getValues/pluginConfig.json'
 import previewActionConfig from './previewAction/pluginConfig.json'
 import previewActionLocalisation from './previewAction/localisation.json'
+import { aiFill as checkboxAiFill } from './checkbox/src/aiFill'
+import { aiFill as dropdownChoiceAiFill } from './dropdownChoice/src/aiFill'
+import { aiFill as radioChoiceAiFill } from './radioChoice/src/aiFill'
 import { PluginComponents, PluginConfig } from './types'
 
 export const PluginProvider: Record<string, PluginComponents> = {
@@ -43,6 +46,7 @@ export const PluginProvider: Record<string, PluginComponents> = {
   checkbox: {
     localisation: checkboxLocalisation,
     config: checkboxConfig as PluginConfig,
+    aiFill: checkboxAiFill,
     ApplicationView: React.lazy(() => import('./checkbox/src/ApplicationView')),
     SummaryView: React.lazy(() => import('./checkbox/src/SummaryView')),
   },
@@ -55,6 +59,7 @@ export const PluginProvider: Record<string, PluginComponents> = {
   dropdownChoice: {
     localisation: dropdownChoiceLocalisation,
     config: dropdownChoiceConfig as PluginConfig,
+    aiFill: dropdownChoiceAiFill,
     ApplicationView: React.lazy(() => import('./dropdownChoice/src/ApplicationView')),
     SummaryView: React.lazy(() => import('./dropdownChoice/src/SummaryView')),
   },
@@ -103,6 +108,7 @@ export const PluginProvider: Record<string, PluginComponents> = {
   radioChoice: {
     localisation: radioChoiceLocalisation,
     config: radioChoiceConfig as PluginConfig,
+    aiFill: radioChoiceAiFill,
     ApplicationView: React.lazy(() => import('./radioChoice/src/ApplicationView')),
     SummaryView: React.lazy(() => import('./radioChoice/src/SummaryView')),
   },
