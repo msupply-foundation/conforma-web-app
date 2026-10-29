@@ -1,28 +1,28 @@
 meta {
-  name: AI document prefill
+  name: AI document extraction
   type: http
   seq: 13
 }
 
 post {
-  url: {{base_url}}/ai/prefill
+  url: {{base_url}}/ai/extract
   body: multipartForm
   auth: inherit
 }
 
 body:multipart-form {
-  file: @file(../../../conforma-server/ai-prefill-tests/contact-info.pdf)
+  file: @file(../../../conforma-server/ai-extraction-tests/contact-info.pdf)
   elements: [{"code":"Q1FirstName","pluginCode":"shortText","title":"First Name","helpText":"### User Registration\n\nPlease provide accurate details to **register** for a user account on our system.","isRequired":true},{"code":"Q2LastName","pluginCode":"shortText","title":"Last Name","isRequired":true},{"code":"Q3Username","pluginCode":"shortText","title":"Select a username","helpText":"Usernames must be longer than 3 characters\n\nUsernames are not case sensitive and can include numbers, or the following characters: - . _ @","isRequired":true},{"code":"Q4Email","pluginCode":"shortText","title":"Email","isRequired":true},{"code":"phone","pluginCode":"shortText","title":"Phone number","isRequired":true},{"code":"Q5Address","pluginCode":"longText","title":"Residential Address","isRequired":true},{"code":"Q6Country","pluginCode":"dropdownChoice","title":"Country of Residence","isRequired":true,"options":["Afghanistan","Åland Islands","Albania","Algeria","American Samoa","Andorra","Angola","Anguilla","Antarctica","Antigua and Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Bouvet Island","Brazil","British Indian Ocean Territory","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Caribbean Netherlands","Cayman Islands","Central African Republic","Chad","Chile","China","Christmas Island","Cocos (Keeling) Islands","Colombia","Comoros","Cook Islands","Costa Rica","Croatia","Cuba","Curaçao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","DR Congo","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Guiana","French Polynesia","French Southern and Antarctic Lands","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guadeloupe","Guam","Guatemala","Guernsey","Guinea","Guinea-Bissau","Guyana","Haiti","Heard Island and McDonald Islands","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Ivory Coast","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Martinique","Mauritania","Mauritius","Mayotte","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Niue","Norfolk Island","North Korea","North Macedonia","Northern Mariana Islands","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Pitcairn Islands","Poland","Portugal","Puerto Rico","Qatar","Republic of the Congo","Réunion","Romania","Russia","Rwanda","Saint Barthélemy","Saint Helena, Ascension and Tristan da Cunha","Saint Kitts and Nevis","Saint Lucia","Saint Martin","Saint Pierre and Miquelon","Saint Vincent and the Grenadines","Samoa","San Marino","São Tomé and Príncipe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Sint Maarten","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Georgia","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Svalbard and Jan Mayen","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tokelau","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Turks and Caicos Islands","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","United States Minor Outlying Islands","United States Virgin Islands","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Wallis and Futuna","Western Sahara","Yemen","Zambia","Zimbabwe"]},{"code":"ID_document","pluginCode":"fileUpload","title":"Official identification document","helpText":"File must be  of type .png, .jpg, or .pdf, and no larger than 10MB\n\nExample: Passport, Voter registration card, Driver licence.","isRequired":true},{"code":"Q5Password","pluginCode":"password","title":"Password","isRequired":true}]
   applicationSerial: {{applicationSerial}}
   ~instructions: The document is a contact details form.
 }
 
 docs {
-  Reads the uploaded documents and answers as many of the form's questions as it can, returning { answers, skipped, usage }. See conforma-server/src/components/ai/DOCUMENT_PREFILL_SPEC.md.
+  Reads the uploaded documents and answers as many of the form's questions as it can, returning { answers, skipped, usage }. See conforma-server/src/components/ai/AI_DOCUMENT_FILL_SPEC.md.
 
   Each call is a paid request to the Claude API (a few cents). Needs ANTHROPIC_API_KEY in the server's .env, otherwise it returns 404.
 
-  Preloaded from conforma-server/ai-prefill-tests/: the UserRegistration template's questions as "elements", and contact-info.pdf. The file path is relative to this collection, so it assumes conforma-server and conforma-web-app are checked out side by side. To use another template's questions, run "yarn ai_prefill elements <templateCode>" in conforma-server and paste the file's contents into "elements" on one line.
+  Preloaded from conforma-server/ai-extraction-tests/: the UserRegistration template's questions as "elements", and contact-info.pdf. The file path is relative to this collection, so it assumes conforma-server and conforma-web-app are checked out side by side. To use another template's questions, run "yarn ai_extract elements <templateCode>" in conforma-server and paste the file's contents into "elements" on one line.
 
   Fields:
   - file: one or more documents (PDF, JPEG, PNG, GIF or WebP); add more "file" fields for several
