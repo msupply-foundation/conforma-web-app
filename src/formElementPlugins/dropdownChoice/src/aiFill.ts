@@ -31,7 +31,7 @@ const fromPlainValue: AiFillMethods['fromPlainValue'] = (value, parameters) => {
   if (!labels || !Array.isArray(options)) return undefined
 
   if (parameters.multiSelect === true) {
-    const chosen = Array.isArray(value) ? value : [String(value)]
+    const chosen: unknown[] = Array.isArray(value) ? value : [String(value)]
     const indexes = labels.flatMap((label, index) => (chosen.includes(label) ? [index] : []))
     if (indexes.length === 0) return undefined
     return {

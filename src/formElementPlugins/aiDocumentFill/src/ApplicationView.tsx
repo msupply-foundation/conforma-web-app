@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useApolloClient } from '@apollo/client'
 import { Icon, Message, Segment, Transition } from 'semantic-ui-react'
-import { ApplicationViewProps } from '../../types'
+import { AiFillValue, ApplicationViewProps } from '../../types'
 import { PluginProvider } from '../../pluginProvider'
 import { TranslatePluginMethod, useLanguageProvider } from '../../../contexts/Localisation'
 import { usePrefs } from '../../../contexts/SystemPrefs'
@@ -10,7 +10,7 @@ import { useApplicationStructure } from '../../../contexts/ApplicationStructure'
 import { UploadButton } from '../../../components/common'
 import { RequestError } from '../../../utils/helpers/fetchMethods'
 import { FullStructure } from '../../../utils/types'
-import { buildElements, FillTarget } from './buildElements'
+import { buildElements, FillField, FillTarget } from './buildElements'
 import { extractAnswers } from './extractAnswers'
 import { FillModal, FillState, Proposal } from './FillModal'
 import { previewFill } from './previewFill'
@@ -117,7 +117,7 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         applicationSerial: structure.info.serial,
         instructions,
       })
-      const proposals = getProposals(targets, answers)
+      const proposals = await getProposals(targets, answers, structure)
       // Existing answers are only replaced if the applicant chooses to
       const selected = proposals.filter(({ target }) => !target.definition.currentValue)
       const codes = proposals.map(({ target }) => target.definition.code)
@@ -136,21 +136,49 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   // Answers the elements can't take (not an option, outside their limits) are
   // left out
-  const getProposals = (targets: FillTarget[], answers: Record<string, ExtractionAnswer>) =>
-    targets.flatMap((target): Proposal[] => {
-      const { definition, pluginCode, parameters } = target
-      const answer = answers[definition.code]
-      if (!answer) return []
-      const response = PluginProvider[pluginCode].aiFill?.fromPlainValue(answer.value, parameters, {
-        locale: selectedLanguage.locale,
+  const getProposals = async (
+    targets: FillTarget[],
+    answers: Record<string, ExtractionAnswer>,
+    structure: FullStructure
+  ) => {
+    const locale = selectedLanguage.locale
+    const fill = ({ pluginCode, parameters }: FillTarget | FillField, value: AiFillValue) =>
+      PluginProvider[pluginCode].aiFill?.fromPlainValue(value, parameters, {
+        locale,
         t: getPluginTranslator(pluginCode),
       })
-      if (!response) {
-        console.log(`AI document fill: answer doesn't fit ${definition.code}`, answer.value)
-        return []
-      }
-      return [{ target, response, confidence: answer.confidence, evidence: answer.evidence }]
-    })
+
+    const proposals = await Promise.all(
+      targets.map(async (target): Promise<Proposal[]> => {
+        const { definition, pluginCode, parameters, fields } = target
+        const answer = answers[definition.code]
+        if (!answer) return []
+        const response = await PluginProvider[pluginCode].aiFill?.fromPlainValue(
+          answer.value,
+          parameters,
+          {
+            locale,
+            t: getPluginTranslator(pluginCode),
+            fields: fields?.map((field) => ({
+              code: field.code,
+              fill: (value) => fill(field, value),
+            })),
+            evaluationData: {
+              responses: structure.responsesByCode,
+              currentUser,
+              applicationData: structure.info,
+            },
+          }
+        )
+        if (!response) {
+          console.log(`AI document fill: answer doesn't fit ${definition.code}`, answer.value)
+          return []
+        }
+        return [{ target, response, confidence: answer.confidence, evidence: answer.evidence }]
+      })
+    )
+    return proposals.flat()
+  }
 
   const handleApply = async (chosen: Proposal[]) => {
     if (!applicationStructure || fillState?.status !== 'review') return

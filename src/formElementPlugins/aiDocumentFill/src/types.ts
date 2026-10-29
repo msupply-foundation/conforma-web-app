@@ -10,11 +10,15 @@ export interface ExtractionElement {
   options?: string[] // display labels, for choice elements
   multiSelect?: boolean // dropdownChoice
   currentValue?: string | null // the response's `text`
+  fields?: ExtractionElement[] // listBuilder: its fields that can be filled
+  maxItems?: number // listBuilder
 }
 
 // A plain value: string for text and single choices, number, ISO date
-// (YYYY-MM-DD), or the labels of the chosen options for multiple choice
-export type ExtractionValue = string | number | string[]
+// (YYYY-MM-DD), the labels of the chosen options for multiple choice, or a
+// list's items, each its fields' values by code
+export type ExtractionValue =
+  string | number | string[] | Record<string, string | number | string[]>[]
 
 export interface ExtractionAnswer {
   value: ExtractionValue

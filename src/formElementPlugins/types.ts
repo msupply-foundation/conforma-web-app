@@ -91,17 +91,30 @@ interface PluginManifest {
 
 // An answer from the AI service: text, a number, an ISO date (YYYY-MM-DD), the
 // label of the chosen option, or the labels of the chosen options
-type AiFillValue = string | number | string[]
+// A list item's answers, keyed by field code
+type AiFillRow = Record<string, string | number | string[]>
+
+type AiFillValue = string | number | string[] | AiFillRow[]
 
 // What aiDocumentFill tells the AI service about a question beyond its label
 interface AiFillDescription {
   options?: string[] // display labels, in option order
   multiSelect?: boolean
+  maxItems?: number // lists
+}
+
+// One of a list's fields, with its answer converted by its own plugin
+interface AiFillField {
+  code: string
+  fill: (value: AiFillValue) => Promise<AiFillResponse | undefined> | AiFillResponse | undefined
 }
 
 interface AiFillContext {
   locale: string // the selected language's
   t: TranslatePluginMethod // the plugin's own strings
+  fields?: AiFillField[] // a list's fields that can be filled (see getFields)
+  // For expressions in the element's parameters, as the element evaluates them
+  evaluationData?: Record<string, unknown>
 }
 
 // A response value as the plugin itself saves it
@@ -115,13 +128,17 @@ interface AiFillMethods {
   // From the element's evaluated parameters; undefined if the element can't be
   // filled as it's configured (e.g. options that can't all be shown as text)
   describe?: (parameters: AiFillParameters) => AiFillDescription | undefined
+  // A list's fields, from its evaluated parameters. aiDocumentFill fills
+  // those whose plugins provide aiFill, and only sends the list if every
+  // required field is one of them.
+  getFields?: (parameters: AiFillParameters) => TemplateElement[]
   // The response for an answer; undefined if the answer doesn't fit the
   // element (e.g. not one of its options, or outside its limits)
   fromPlainValue: (
     value: AiFillValue,
     parameters: AiFillParameters,
     context: AiFillContext
-  ) => AiFillResponse | undefined
+  ) => Promise<AiFillResponse | undefined> | AiFillResponse | undefined
 }
 
 interface PluginComponents {
@@ -152,8 +169,10 @@ export {
   type PluginManifest,
   type PluginComponents,
   type Plugins,
+  type AiFillRow,
   type AiFillValue,
   type AiFillDescription,
+  type AiFillField,
   type AiFillContext,
   type AiFillResponse,
   type AiFillParameters,

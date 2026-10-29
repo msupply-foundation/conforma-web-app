@@ -3,9 +3,16 @@ import { FigTree } from '../../../FigTreeEvaluator'
 import { buildParameters } from '../../ApplicationViewWrapper'
 import { PluginProvider } from '../../pluginProvider'
 import { AiFillParameters } from '../../types'
-import { TemplateElementCategory } from '../../../utils/generated/graphql'
+import { TemplateElement, TemplateElementCategory } from '../../../utils/generated/graphql'
 import { ElementState, FullStructure, ResponseFull, User } from '../../../utils/types'
 import { ExtractionElement } from './types'
+
+// A list's field that can be filled
+export interface FillField {
+  code: string
+  pluginCode: string
+  parameters: AiFillParameters // evaluated
+}
 
 // A question that can be filled, with what's needed to save its answer
 export interface FillTarget {
@@ -13,6 +20,7 @@ export interface FillTarget {
   pluginCode: string
   parameters: AiFillParameters // evaluated, saved with the response
   responseId: number
+  fields?: FillField[] // a list's
 }
 
 export interface EvaluationData {
@@ -60,7 +68,8 @@ export const buildElements = async (
 }
 
 // Undefined for an element that can't be filled: its parameters didn't
-// evaluate, or its plugin can't fill it as it's configured
+// evaluate, its plugin can't fill it as it's configured, or it's a list with
+// a required field that can't be filled
 const buildTarget = async (
   element: ElementState,
   response: ResponseFull,
@@ -76,34 +85,110 @@ const buildTarget = async (
     return undefined
   }
 
-  const describe = PluginProvider[pluginCode].aiFill?.describe
+  const { describe, getFields } = PluginProvider[pluginCode].aiFill ?? {}
   const description = describe ? describe(parameters) : {}
   if (!description) return undefined
 
-  const label = typeof parameters.label === 'string' ? stripMarkdown(parameters.label) : ''
-  const elementDescription =
-    typeof parameters.description === 'string' ? parameters.description : ''
-  const fullHelpText = [elementDescription, helpText].filter(Boolean).join('\n\n')
+  let fields: { field: FillField; definition: ExtractionElement }[] | undefined
+  if (getFields) {
+    fields = await buildFields(getFields(parameters), response, data)
+    if (!fields?.length) return undefined
+  }
 
   return {
     definition: {
-      code,
-      pluginCode,
-      title: label || title,
-      isRequired,
-      ...(fullHelpText ? { helpText: fullHelpText } : {}),
+      ...describeQuestion(code, pluginCode, title, isRequired, helpText, parameters),
       ...(response.text ? { currentValue: response.text } : {}),
       ...description,
+      ...(fields ? { fields: fields.map(({ definition }) => definition) } : {}),
     },
     pluginCode,
     parameters,
     responseId: response.id,
+    ...(fields ? { fields: fields.map(({ field }) => field) } : {}),
+  }
+}
+
+const describeQuestion = (
+  code: string,
+  pluginCode: string,
+  title: string,
+  isRequired: boolean,
+  helpText: string | null,
+  parameters: AiFillParameters
+): ExtractionElement => {
+  const label = typeof parameters.label === 'string' ? stripMarkdown(parameters.label) : ''
+  const elementDescription =
+    typeof parameters.description === 'string' ? parameters.description : ''
+  const fullHelpText = [elementDescription, helpText].filter(Boolean).join('\n\n')
+  return {
+    code,
+    pluginCode,
+    title: label || title,
+    isRequired,
+    ...(fullHelpText ? { helpText: fullHelpText } : {}),
+  }
+}
+
+// A list's fields that can be filled; undefined if a required one can't. A
+// field is required unless it says otherwise, as in the list builder. Hidden
+// fields are left out.
+const buildFields = async (
+  templateFields: TemplateElement[],
+  response: ResponseFull,
+  data: EvaluationData
+) => {
+  const fields: { field: FillField; definition: ExtractionElement }[] = []
+  for (const templateField of templateFields) {
+    const { isRequired, visibilityCondition } = templateField
+    const isHidden =
+      visibilityCondition === false ||
+      (templateField as { isVisible?: unknown }).isVisible === false
+    if (isHidden) continue
+
+    const pluginCode = templateField.elementTypePluginCode as string
+    const field = await buildField(templateField, pluginCode, response, data)
+    if (field) fields.push(field)
+    else if (isRequired !== false) return undefined
+  }
+  return fields
+}
+
+const buildField = async (
+  templateField: TemplateElement,
+  pluginCode: string,
+  response: ResponseFull,
+  data: EvaluationData
+) => {
+  const aiFill = PluginProvider[pluginCode]?.aiFill
+  if (!aiFill || aiFill.getFields) return undefined
+  let parameters: AiFillParameters
+  try {
+    parameters = await evaluateParameters(
+      { pluginCode, parameters: templateField.parameters ?? {} },
+      response,
+      data
+    )
+  } catch (err) {
+    console.log(`AI document fill: can't evaluate parameters of ${templateField.code}`, err)
+    return undefined
+  }
+  const description = aiFill.describe ? aiFill.describe(parameters) : {}
+  if (!description) return undefined
+
+  const { code, title, isRequired } = templateField
+  return {
+    field: { code, pluginCode, parameters },
+    definition: {
+      ...describeQuestion(code, pluginCode, title ?? code, isRequired !== false, null, parameters),
+      ...description,
+    },
   }
 }
 
 // As ApplicationViewWrapper evaluates them for a mounted element
 export const evaluateParameters = async (
-  element: ElementState,
+  element: Pick<ElementState, 'pluginCode' | 'parameters'>,
   response: ResponseFull | undefined,
   { responses, currentUser, applicationData }: EvaluationData
 ): Promise<AiFillParameters> => {

@@ -34,6 +34,7 @@ import previewActionLocalisation from './previewAction/localisation.json'
 import { aiFill as checkboxAiFill } from './checkbox/src/aiFill'
 import { aiFill as datePickerAiFill } from './datePicker/src/aiFill'
 import { aiFill as dropdownChoiceAiFill } from './dropdownChoice/src/aiFill'
+import { aiFill as listBuilderAiFill } from './listBuilder/src/aiFill'
 import { aiFill as longTextAiFill } from './longText/src/aiFill'
 import { aiFill as numberAiFill } from './number/src/aiFill'
 import { aiFill as radioChoiceAiFill } from './radioChoice/src/aiFill'
@@ -91,6 +92,7 @@ export const PluginProvider: Record<string, PluginComponents> = {
     config: listBuilderConfig as PluginConfig,
     ApplicationView: React.lazy(() => import('./listBuilder/src/ApplicationView')),
     SummaryView: React.lazy(() => import('./listBuilder/src/SummaryView')),
+    aiFill: listBuilderAiFill,
   },
   longText: {
     localisation: {},

@@ -186,8 +186,9 @@ const ReviewAnswers: React.FC<{
                       </p>
                     )}
                   </Table.Cell>
-                  <Table.Cell>{currentValue}</Table.Cell>
-                  <Table.Cell>
+                  {/* A list's text has a line per item */}
+                  <Table.Cell style={{ whiteSpace: 'pre-line' }}>{currentValue}</Table.Cell>
+                  <Table.Cell style={{ whiteSpace: 'pre-line' }}>
                     {response.text}
                     {evidence && (
                       <p className="smaller-text" style={{ marginTop: 4 }}>
