@@ -11,6 +11,7 @@
   "FILLED_FROM_1": "Filled 1 answer from {{documents}}",
   "READING_DOCUMENTS": "Reading your documents...",
   "READING_TAKES_TIME": "This can take a minute or two.",
+  "APPLYING_ANSWERS": "Saving answers...",
   "REVIEW_HEADER": "Answers from your documents",
   "REVIEW_INTRO": "Tick the answers you want to use. Questions you've already answered are unticked, so your answer stays unless you tick it.",
   "NO_ANSWERS_FOUND": "None of the questions could be answered from these documents.",
@@ -29,5 +30,6 @@
   "ERROR_NOT_AVAILABLE": "Filling from documents isn't available for this application.",
   "ERROR_NOT_EDITABLE": "This application can't be changed at the moment.",
   "ERROR_BUSY": "The AI service is busy. Please try again in a few minutes.",
-  "ERROR_READING_FAILED": "Something went wrong reading the documents. Please try again later."
+  "ERROR_READING_FAILED": "Something went wrong reading the documents. Please try again later.",
+  "ERROR_SAVING_FAILED": "Something went wrong saving the answers. Please reload the page to see what was saved."
 }

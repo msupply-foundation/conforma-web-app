@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Container, Grid, Header, Ref, Segment } from 'semantic-ui-react'
 import {
   FullStructure,
@@ -34,6 +34,7 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
   usePageTitle(t('PAGE_TITLE_APPLICATION', serialNumber))
 
   const contextRef = useRef<HTMLDivElement>(null)
+  const [elementsMountCount, setElementsMountCount] = useState(0)
 
   const pageNumber = Number(page)
 
@@ -90,8 +91,15 @@ const ApplicationPage: React.FC<ApplicationProps> = ({
               <Header as="h4" content={fullStructure.sections[sectionCode].details.title} />
               {isMobile && <p className="xx-small">{`${t('PAGE')} ${pageNumber}`}</p>}
             </div>
-            <ApplicationStructureProvider value={{ structure: fullStructure }}>
+            <ApplicationStructureProvider
+              value={{
+                structure: fullStructure,
+                remountElements: () => setElementsMountCount((count) => count + 1),
+                requestRevalidation: () => requestRevalidation?.(() => {}),
+              }}
+            >
               <PageElements
+                key={elementsMountCount}
                 canEdit={status === ApplicationStatus.Draft}
                 isUpdating={isChangeRequest}
                 elements={getCurrentPageElements(fullStructure, sectionCode, pageNumber)}

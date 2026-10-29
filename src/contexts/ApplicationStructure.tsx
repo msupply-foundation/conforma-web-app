@@ -7,6 +7,13 @@ import { FullStructure } from '../utils/types'
 // on the template's config application.
 interface ApplicationStructureState {
   structure: FullStructure
+  // Remounts the page's elements. Elements copy their response into local
+  // state when they mount, so one whose response is written from outside only
+  // shows it after a remount.
+  remountElements: () => void
+  // Re-checks the whole application's validity, e.g. after responses are
+  // saved without it. Not provided where nothing shows validity.
+  requestRevalidation?: () => void
 }
 
 const ApplicationStructureContext = createContext<ApplicationStructureState | undefined>(undefined)

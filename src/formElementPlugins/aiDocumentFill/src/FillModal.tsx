@@ -1,27 +1,32 @@
 import React, { useState } from 'react'
 import { Button, Checkbox, Label, Loader, Modal, SemanticCOLORS, Table } from 'semantic-ui-react'
 import { TranslatePluginMethod } from '../../../contexts/Localisation'
-import { ExtractionAnswer, ExtractionElement, ExtractionValue } from './types'
+import { AiFillResponse } from '../../types'
+import { FillTarget } from './buildElements'
+
+// An answer from the documents, converted to the response its element saves
+export interface Proposal {
+  target: FillTarget
+  response: AiFillResponse
+  confidence: number
+  evidence: string
+}
 
 export type FillState =
   | { status: 'reading' }
   | { status: 'error'; message: string }
-  | {
-      status: 'review'
-      documents: string[]
-      elements: ExtractionElement[]
-      answers: Record<string, ExtractionAnswer>
-    }
+  | { status: 'review'; documents: string[]; proposals: Proposal[] }
+  | { status: 'applying' }
 
 interface FillModalProps {
   state: FillState | null
   t: TranslatePluginMethod
-  onApply: (codes: string[]) => void
+  onApply: (proposals: Proposal[]) => void
   onClose: () => void
 }
 
-// Blocks the form while the documents are read, so no field changes before
-// the answers are written, then shows the answers for the applicant to choose
+// Blocks the form while the documents are read and the answers saved, so no
+// field changes in between, and shows the answers for the applicant to choose
 export const FillModal: React.FC<FillModalProps> = ({ state, t, onApply, onClose }) => {
   if (!state) return null
 
@@ -31,6 +36,11 @@ export const FillModal: React.FC<FillModalProps> = ({ state, t, onApply, onClose
         <Modal.Content>
           <Loader active inline="centered" size="large" content={t('READING_DOCUMENTS')} />
           <p style={{ textAlign: 'center', marginTop: 10 }}>{t('READING_TAKES_TIME')}</p>
+        </Modal.Content>
+      )}
+      {state.status === 'applying' && (
+        <Modal.Content>
+          <Loader active inline="centered" size="large" content={t('APPLYING_ANSWERS')} />
         </Modal.Content>
       )}
       {state.status === 'error' && (
@@ -44,42 +54,32 @@ export const FillModal: React.FC<FillModalProps> = ({ state, t, onApply, onClose
         </>
       )}
       {state.status === 'review' && (
-        <ReviewAnswers
-          elements={state.elements}
-          answers={state.answers}
-          t={t}
-          onApply={onApply}
-          onClose={onClose}
-        />
+        <ReviewAnswers proposals={state.proposals} t={t} onApply={onApply} onClose={onClose} />
       )}
     </Modal>
   )
 }
 
 const ReviewAnswers: React.FC<{
-  elements: ExtractionElement[]
-  answers: Record<string, ExtractionAnswer>
+  proposals: Proposal[]
   t: TranslatePluginMethod
-  onApply: (codes: string[]) => void
+  onApply: (proposals: Proposal[]) => void
   onClose: () => void
-}> = ({ elements, answers, t, onApply, onClose }) => {
-  // In form order
-  const answered = elements.filter(({ code }) => answers[code])
-
+}> = ({ proposals, t, onApply, onClose }) => {
   // Existing answers are only replaced if the applicant chooses to
   const [selected, setSelected] = useState(
-    () => new Set(answered.filter(({ currentValue }) => !currentValue).map(({ code }) => code))
+    () => new Set(proposals.filter(({ target }) => !target.definition.currentValue))
   )
 
-  const toggle = (code: string) =>
+  const toggle = (proposal: Proposal) =>
     setSelected((previous) => {
       const next = new Set(previous)
-      if (next.has(code)) next.delete(code)
-      else next.add(code)
+      if (next.has(proposal)) next.delete(proposal)
+      else next.add(proposal)
       return next
     })
 
-  if (answered.length === 0)
+  if (proposals.length === 0)
     return (
       <>
         <Modal.Header>{t('REVIEW_HEADER')}</Modal.Header>
@@ -108,18 +108,19 @@ const ReviewAnswers: React.FC<{
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {answered.map(({ code, title, currentValue }) => {
-              const { value, confidence, evidence } = answers[code]
+            {proposals.map((proposal) => {
+              const { target, response, confidence, evidence } = proposal
+              const { code, title, currentValue } = target.definition
               const [confidenceKey, colour] = getConfidenceLevel(confidence)
               return (
                 <Table.Row key={code}>
                   <Table.Cell collapsing>
-                    <Checkbox checked={selected.has(code)} onChange={() => toggle(code)} />
+                    <Checkbox checked={selected.has(proposal)} onChange={() => toggle(proposal)} />
                   </Table.Cell>
                   <Table.Cell>{title}</Table.Cell>
                   <Table.Cell>{currentValue}</Table.Cell>
                   <Table.Cell>
-                    {formatValue(value)}
+                    {response.text}
                     {evidence && (
                       <p className="smaller-text" style={{ marginTop: 4 }}>
                         <em>{evidence}</em>
@@ -139,7 +140,12 @@ const ReviewAnswers: React.FC<{
       </Modal.Content>
       <Modal.Actions>
         <Button onClick={onClose}>{t('BUTTON_CANCEL')}</Button>
-        <Button primary disabled={selected.size === 0} onClick={() => onApply([...selected])}>
+        <Button
+          primary
+          disabled={selected.size === 0}
+          // In form order
+          onClick={() => onApply(proposals.filter((proposal) => selected.has(proposal)))}
+        >
           {t('BUTTON_APPLY', { count: selected.size })}
         </Button>
       </Modal.Actions>
@@ -152,6 +158,3 @@ const getConfidenceLevel = (confidence: number): [string, SemanticCOLORS] => {
   if (confidence >= 0.5) return ['CONFIDENCE_MEDIUM', 'yellow']
   return ['CONFIDENCE_LOW', 'orange']
 }
-
-const formatValue = (value: ExtractionValue) =>
-  Array.isArray(value) ? value.join(', ') : String(value)

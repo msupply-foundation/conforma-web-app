@@ -1,5 +1,6 @@
 import { ReviewResponse, TemplateElement } from '../utils/generated/graphql'
 import { ApplicationDetails, ElementState, ResponseFull, ResponsesByCode } from '../utils/types'
+import type { TranslatePluginMethod } from '../contexts/Localisation'
 
 interface OnUpdateApplicationView {
   (updateObject: { value?: any; isValid: boolean | undefined }): void
@@ -88,19 +89,39 @@ interface PluginManifest {
   [key: string]: PluginConfig
 }
 
-// The choices a choice element offers, as aiDocumentFill describes them to the
-// AI service
-interface AiFillChoices {
-  options: string[] // display labels, in option order
+// An answer from the AI service: text, a number, an ISO date (YYYY-MM-DD), the
+// label of the chosen option, or the labels of the chosen options
+type AiFillValue = string | number | string[]
+
+// What aiDocumentFill tells the AI service about a question beyond its label
+interface AiFillDescription {
+  options?: string[] // display labels, in option order
   multiSelect?: boolean
 }
+
+interface AiFillContext {
+  locale: string // the selected language's
+  t: TranslatePluginMethod // the plugin's own strings
+}
+
+// A response value as the plugin itself saves it
+type AiFillResponse = { text: string } & Record<string, unknown>
+
+type AiFillParameters = Record<string, unknown>
 
 // What a plugin provides so aiDocumentFill can fill its elements. Kept out of
 // the lazy-loaded components, as most target elements aren't mounted.
 interface AiFillMethods {
-  // From the element's evaluated parameters; undefined if the options can't
-  // all be shown as text
-  getChoices?: (parameters: Record<string, unknown>) => AiFillChoices | undefined
+  // From the element's evaluated parameters; undefined if the element can't be
+  // filled as it's configured (e.g. options that can't all be shown as text)
+  describe?: (parameters: AiFillParameters) => AiFillDescription | undefined
+  // The response for an answer; undefined if the answer doesn't fit the
+  // element (e.g. not one of its options, or outside its limits)
+  fromPlainValue: (
+    value: AiFillValue,
+    parameters: AiFillParameters,
+    context: AiFillContext
+  ) => AiFillResponse | undefined
 }
 
 interface PluginComponents {
@@ -131,6 +152,10 @@ export {
   type PluginManifest,
   type PluginComponents,
   type Plugins,
-  type AiFillChoices,
+  type AiFillValue,
+  type AiFillDescription,
+  type AiFillContext,
+  type AiFillResponse,
+  type AiFillParameters,
   type AiFillMethods,
 }

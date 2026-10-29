@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form } from 'semantic-ui-react'
-import { getCheckboxStructure, CheckboxDisplay } from './ApplicationView'
+import { CheckboxDisplay } from './ApplicationView'
+import { getCheckboxStructure } from './helpers'
 import { SummaryViewProps } from '../../types'
 
 enum DisplayFormat {

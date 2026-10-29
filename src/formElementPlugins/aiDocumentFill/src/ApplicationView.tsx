@@ -1,15 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useApolloClient } from '@apollo/client'
 import { Icon, Message, Segment, Transition } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
+import { PluginProvider } from '../../pluginProvider'
 import { TranslatePluginMethod, useLanguageProvider } from '../../../contexts/Localisation'
 import { usePrefs } from '../../../contexts/SystemPrefs'
 import { useUserState } from '../../../contexts/UserState'
 import { useApplicationStructure } from '../../../contexts/ApplicationStructure'
 import { UploadButton } from '../../../components/common'
 import { RequestError } from '../../../utils/helpers/fetchMethods'
-import { buildElements } from './buildElements'
+import { buildElements, FillTarget } from './buildElements'
 import { extractAnswers } from './extractAnswers'
-import { FillModal, FillState } from './FillModal'
+import { FillModal, FillState, Proposal } from './FillModal'
+import { ResponseUpdate, writeResponses } from './writeResponses'
+import { ExtractionAnswer } from './types'
 
 // Limits of the server's /api/ai/extract endpoint, checked here so the
 // applicant hears about them before anything is sent
@@ -25,8 +29,9 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   currentResponse,
   Markdown,
 }) => {
-  const { getPluginTranslator } = useLanguageProvider()
+  const { getPluginTranslator, selectedLanguage } = useLanguageProvider()
   const t = getPluginTranslator('aiDocumentFill')
+  const apolloClient = useApolloClient()
   const { aiEnabled } = usePrefs()
   const {
     userState: { currentUser },
@@ -38,6 +43,21 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   const [error, setError] = useState<string>()
   const [errorVisible, setErrorVisible] = useState(false)
   const [fillState, setFillState] = useState<FillState | null>(null)
+  // Response texts just saved, by element code, until the structure has them
+  const awaitedTexts = useRef<Record<string, string> | null>(null)
+
+  // Elements on the page only show their new responses once remounted, which
+  // has to wait for the rebuilt structure: remounting earlier shows the old
+  // values. That remounts this element too, closing the modal.
+  useEffect(() => {
+    const expected = awaitedTexts.current
+    if (!expected || !applicationStructure) return
+    const responses = applicationStructure.structure.responsesByCode ?? {}
+    if (!Object.entries(expected).every(([code, text]) => responses[code]?.text === text)) return
+    awaitedTexts.current = null
+    applicationStructure.requestRevalidation?.()
+    applicationStructure.remountElements()
+  }, [applicationStructure])
 
   // The server has no API key, so the template's opt-in can't be used here
   if (!aiEnabled) return null
@@ -63,33 +83,85 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     setFillState({ status: 'reading' })
     try {
       const { structure } = applicationStructure
-      const elements = await buildElements(structure, currentUser, scope)
-      if (elements.length === 0) {
+      const targets = await buildElements(structure, currentUser, scope)
+      if (targets.length === 0) {
         setFillState({ status: 'error', message: t('ERROR_NO_QUESTIONS') })
         return
       }
       const { answers } = await extractAnswers({
         files,
-        elements,
+        elements: targets.map(({ definition }) => definition),
         applicationSerial: structure.info.serial,
         instructions,
       })
       setFillState({
         status: 'review',
         documents: files.map(({ name }) => name),
-        elements,
-        answers,
+        proposals: getProposals(targets, answers),
       })
     } catch (err) {
       setFillState({ status: 'error', message: getRequestErrorMessage(err, t) })
     }
   }
 
-  const handleApply = (codes: string[]) => {
-    // TO-DO: write the chosen answers to their responses, then save
-    // { text, documents, filledAt, answerCount } as this element's response
-    console.log('AI document fill: apply', codes)
-    setFillState(null)
+  // Answers the elements can't take (not an option, outside their limits) are
+  // left out
+  const getProposals = (targets: FillTarget[], answers: Record<string, ExtractionAnswer>) =>
+    targets.flatMap((target): Proposal[] => {
+      const { definition, pluginCode, parameters } = target
+      const answer = answers[definition.code]
+      if (!answer) return []
+      const response = PluginProvider[pluginCode].aiFill?.fromPlainValue(answer.value, parameters, {
+        locale: selectedLanguage.locale,
+        t: getPluginTranslator(pluginCode),
+      })
+      if (!response) {
+        console.log(`AI document fill: answer doesn't fit ${definition.code}`, answer.value)
+        return []
+      }
+      return [{ target, response, confidence: answer.confidence, evidence: answer.evidence }]
+    })
+
+  const handleApply = async (chosen: Proposal[]) => {
+    if (!applicationStructure || fillState?.status !== 'review') return
+    const { documents } = fillState
+    const { structure } = applicationStructure
+
+    const fillRecord = {
+      text: documents.join(', '),
+      documents,
+      filledAt: new Date().toISOString(),
+      answerCount: chosen.length,
+    }
+    const updates: ResponseUpdate[] = chosen.map(({ target, response }) => ({
+      id: target.responseId,
+      value: response,
+      // Revalidated below, once the structure has the new values
+      isValid: null,
+      evaluatedParameters: target.parameters,
+    }))
+    const expectedTexts: Record<string, string> = Object.fromEntries(
+      chosen.map(({ target, response }) => [target.definition.code, response.text])
+    )
+    if (currentResponse?.id) {
+      updates.push({
+        id: currentResponse.id,
+        value: fillRecord,
+        isValid: true,
+        evaluatedParameters: parameters,
+      })
+      expectedTexts[element.code] = fillRecord.text
+    }
+
+    setFillState({ status: 'applying' })
+    awaitedTexts.current = expectedTexts
+    try {
+      await writeResponses(apolloClient, updates, structure.info.current.stage.number)
+    } catch (err) {
+      console.log('AI document fill: saving answers failed', err)
+      awaitedTexts.current = null
+      setFillState({ status: 'error', message: t('ERROR_SAVING_FAILED') })
+    }
   }
 
   return (

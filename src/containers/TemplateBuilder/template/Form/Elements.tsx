@@ -36,6 +36,7 @@ const Elements: React.FC = () => {
     toggleSelectedElement,
   } = useOperationState()
   const [elementUpdateState, setElementUpdateState] = useState<TemplateElement | null>(null)
+  const [elementsMountCount, setElementsMountCount] = useState(0)
 
   const allSections = Object.values({ ...structure.sections, ...structure.reviewSections })
 
@@ -118,10 +119,15 @@ const Elements: React.FC = () => {
 
   return (
     <div
-      key={`${selectedSectionId}_${selectedPageNumber}`}
+      key={`${selectedSectionId}_${selectedPageNumber}_${elementsMountCount}`}
       className="builder-page-elements-wrapper config-container-outline"
     >
-      <ApplicationStructureProvider value={{ structure }}>
+      <ApplicationStructureProvider
+        value={{
+          structure,
+          remountElements: () => setElementsMountCount((count) => count + 1),
+        }}
+      >
         <PageElements
           canEdit={true}
           stages={[]}

@@ -32,8 +32,12 @@ import getValuesConfig from './getValues/pluginConfig.json'
 import previewActionConfig from './previewAction/pluginConfig.json'
 import previewActionLocalisation from './previewAction/localisation.json'
 import { aiFill as checkboxAiFill } from './checkbox/src/aiFill'
+import { aiFill as datePickerAiFill } from './datePicker/src/aiFill'
 import { aiFill as dropdownChoiceAiFill } from './dropdownChoice/src/aiFill'
+import { aiFill as longTextAiFill } from './longText/src/aiFill'
+import { aiFill as numberAiFill } from './number/src/aiFill'
 import { aiFill as radioChoiceAiFill } from './radioChoice/src/aiFill'
+import { aiFill as shortTextAiFill } from './shortText/src/aiFill'
 import { PluginComponents, PluginConfig } from './types'
 
 export const PluginProvider: Record<string, PluginComponents> = {
@@ -53,6 +57,7 @@ export const PluginProvider: Record<string, PluginComponents> = {
   datePicker: {
     localisation: {},
     config: datePickerConfig as PluginConfig,
+    aiFill: datePickerAiFill,
     ApplicationView: React.lazy(() => import('./datePicker/src/ApplicationView')),
     SummaryView: React.lazy(() => import('./datePicker/src/SummaryView')),
   },
@@ -90,12 +95,14 @@ export const PluginProvider: Record<string, PluginComponents> = {
   longText: {
     localisation: {},
     config: longTextConfig as PluginConfig,
+    aiFill: longTextAiFill,
     ApplicationView: React.lazy(() => import('./longText/src/ApplicationView')),
     SummaryView: React.lazy(() => import('./longText/src/SummaryView')),
   },
   number: {
     localisation: numberLocalisation,
     config: numberConfig as PluginConfig,
+    aiFill: numberAiFill,
     ApplicationView: React.lazy(() => import('./number/src/ApplicationView')),
     SummaryView: React.lazy(() => import('./number/src/SummaryView')),
   },
@@ -122,6 +129,7 @@ export const PluginProvider: Record<string, PluginComponents> = {
   shortText: {
     localisation: {},
     config: shortTextConfig as PluginConfig,
+    aiFill: shortTextAiFill,
     ApplicationView: React.lazy(() => import('./shortText/src/ApplicationView')),
     SummaryView: React.lazy(() => import('./shortText/src/SummaryView')),
   },
