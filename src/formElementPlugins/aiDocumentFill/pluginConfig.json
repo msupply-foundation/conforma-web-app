@@ -1,0 +1,11 @@
+{
+  "isCore": true,
+  "code": "aiDocumentFill",
+  "displayName": "AI document fill",
+  "parameterLoadingValues": {
+    "label": "Loading...",
+    "description": ""
+  },
+  "//": "categories types: 'Input'|'Informative'",
+  "category": "Input"
+}

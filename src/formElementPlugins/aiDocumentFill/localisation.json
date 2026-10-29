@@ -1,0 +1,12 @@
+{
+  "DEFAULT_NOTICE": "Your documents will be sent to an external AI service to read them. Check every answer before you submit.",
+  "BUTTON_CHOOSE_DOCUMENTS": "Choose documents",
+  "ERROR_FILE_TYPE_NOT_PERMITTED": "File type not permitted",
+  "ERROR_HEIC_NOT_SUPPORTED": "HEIC photos can't be read. Please save the photo as a JPEG and try again.",
+  "ERROR_TOO_MANY_FILES": "Too many files",
+  "ERROR_FILES_TOO_BIG": "The documents are too large in total",
+  "ALLOWED_FORMATS": "Allowed file formats:",
+  "LIMITS": "Up to {{maxFiles}} files, {{maxSize}} MB in total",
+  "FILLED_FROM": "Filled {{count}} answers from {{documents}}",
+  "FILLED_FROM_1": "Filled 1 answer from {{documents}}"
+}

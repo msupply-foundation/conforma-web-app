@@ -1,4 +1,6 @@
 import React from 'react'
+import aiDocumentFillConfig from './aiDocumentFill/pluginConfig.json'
+import aiDocumentFillLocalisation from './aiDocumentFill/localisation.json'
 import checkboxLocalisation from './checkbox/localisation.json'
 import checkboxConfig from './checkbox/pluginConfig.json'
 // import datePickerLocalisation from './datePicker/localisation.json'
@@ -32,6 +34,12 @@ import previewActionLocalisation from './previewAction/localisation.json'
 import { PluginComponents, PluginConfig } from './types'
 
 export const PluginProvider: Record<string, PluginComponents> = {
+  aiDocumentFill: {
+    localisation: aiDocumentFillLocalisation,
+    config: aiDocumentFillConfig as PluginConfig,
+    ApplicationView: React.lazy(() => import('./aiDocumentFill/src/ApplicationView')),
+    SummaryView: React.lazy(() => import('./aiDocumentFill/src/SummaryView')),
+  },
   checkbox: {
     localisation: checkboxLocalisation,
     config: checkboxConfig as PluginConfig,

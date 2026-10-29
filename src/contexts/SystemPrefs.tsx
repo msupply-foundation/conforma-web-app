@@ -38,6 +38,9 @@ interface PrefsState {
   latestSnapshot?: string
   loading: boolean
   maintenanceMode: { enabled: boolean; redirect?: string }
+  // Whether the server has an AI API key. Not a preference: it's sent with them
+  // so the web-app gets it at startup.
+  aiEnabled?: boolean
   error?: Error
 }
 
@@ -72,12 +75,13 @@ export const SystemPrefsProvider = ({ children }: { children: React.ReactNode })
   const fetchPrefs = async () => {
     getRequest(getServerUrl('prefs'))
       .then((result) => {
-        const { languageOptions, preferences, latestSnapshot, maintenanceMode } = result
+        const { languageOptions, preferences, latestSnapshot, maintenanceMode, aiEnabled } = result
         setPrefsState({
           languageOptions,
           preferences: { ...defaultPrefs, ...preferences },
           latestSnapshot,
           maintenanceMode,
+          aiEnabled,
           loading: false,
         })
 
