@@ -22,6 +22,7 @@ _Ongoing authoritative reference of Template Question/Element types, including i
   - [JSON Editor](#json-editor)
   - [Get Values](#get-values)
   - [Preview Action](#preview-action)
+  - [AI Document Fill](#ai-document-fill)
   - [Page Break](#page-break)
 
 <!-- tocstop -->
@@ -878,6 +879,61 @@ Behaves similarly to the "Preview Decision" button & modal for Reviewers when su
 - **previewText**: `string` -- Text to display on the "Content" region of the Preview modal (above the Action outputs) (default: "Action output:")
 - **preventDownload**: `boolean` -- If previewing a document, and you have `showDocumentModal` enabled in [Preferences](https://github.com/msupply-foundation/conforma-server/wiki/Preferences), this will determine if there is a "Download" icon button available on the document preview modal (default: `true`)
 - **applicationDataOverride**: `object` -- As with the Review decision preview, we can overwrite some `applicationData` values if required (for example, to simulate a different stage than the one we're actually on)
+
+---
+
+<a name="ai-document-fill"/>
+
+### AI Document Fill
+
+- **type/code**: `aiDocumentFill`
+- **category**: `Question`
+
+_Fills in the application's answers from documents the applicant uploads, using an AI service_
+
+> [!NOTE]  
+> This element is in development (branch `rnd/ai-form-fill`). This section describes the intended behaviour; the design is in the server's [AI_DOCUMENT_FILL_SPEC.md](https://github.com/msupply-foundation/conforma-server/blob/rnd/ai-form-fill/src/components/ai/AI_DOCUMENT_FILL_SPEC.md).
+
+The applicant chooses one or more documents (a typed PDF, a scan, a photo of a paper form), and the server sends them to an AI service along with a description of the form's questions. The service reports which questions the documents answer. The applicant then reviews the proposed answers in a modal before any are written to the application:
+
+- each row shows the question, its current answer (if any), the proposed answer, how confident the AI is, and the text in the document it was taken from
+- questions without an answer are ticked by default, and questions that already have one are unticked, so the applicant decides, answer by answer, whether to replace an existing response
+- "Apply" saves the ticked answers as normal responses (validated like any other edit); "Cancel" discards them all
+
+The applicant can run it again with other documents. The documents themselves are never stored: the server holds them in memory only for the duration of the request.
+
+Placing this element in a template is what enables the feature for that form. It also needs the server to have an AI API key (`ANTHROPIC_API_KEY` in the server's `.env`); without one, the element doesn't display at all, so a template containing it can still be used on a deployment without AI. The element shows the applicant a notice that their documents will be sent to an external AI service.
+
+It works the same way in the Template Builder's form view (filling the template's config application), so designers can test it while building the template. Each run is a paid request to the AI service, in the Template Builder as well as for applicants.
+
+**Template setup**: add the element as a **Question**, with **is_required** set to `false` (it only saves a response after a fill, so a required one would prevent submission) and reviewability `NEVER` (it isn't something a reviewer needs to assess).
+
+**Questions it can fill**: visible, editable questions of these types: [Short Text](#short-text-input), [Long Text](#long-text-multi-line-input), [Number](#number), [Date Picker](#date-picker), [Drop-down](#drop-down-selector), [Radio Buttons](#radio-buttons) and [Checkboxes](#checkboxes). Questions on all pages are included, not just the current one. For choice questions, the AI picks only from the defined options; "Other" free-text options aren't offered. All other element types (e.g. File Upload, List Builder, Search, Password) are left alone.
+
+**Documents**: up to 5 files, 20 MB in total, of type PDF, JPEG, PNG, WebP or GIF. HEIC photos (the iPhone default) aren't accepted; the applicant is asked to save them as JPEG. On mobile devices, the upload button also offers the camera, as for [File Upload](#file-upload).
+
+#### Input parameters
+
+- **label**: `string` -- as above [Optional]
+- **description**: `string` -- as above [Optional]
+- **notice**: `string` -- Markdown text telling the applicant that their documents are sent to an external AI service, shown above the upload button. Use this to provide a deployment's own wording, e.g. to reference a privacy policy (default: "Your documents will be sent to an external AI service to read them. Check every answer before you submit.")
+- **instructions**: `string` -- extra guidance for the AI about the documents or the form, e.g. `"The document is a GMP certificate. The 'Site' questions refer to the manufacturing site, not the applicant's office."` [Optional]
+- **scope**: `string | string[]` -- section codes and/or element codes that limit which questions are filled. If omitted, all questions of supported types (above) are included. [Optional]
+
+#### Response type
+
+Saved only when the applicant applies answers from the review modal, as a record of the last fill:
+
+```
+{
+  text: <string> -- comma separated list of the documents' file names
+  documents: [<string>, ...] -- the documents' file names
+  filledAt: <ISO timestamp>
+  answerCount: <number> -- how many answers the applicant applied
+}
+```
+
+The element shows this to the applicant (e.g. "Filled 8 answers from contact-info.pdf"). Being a normal response, it can also be referenced from other elements' expressions, e.g. to show a note to applicants who have used it.
 
 ---
 
