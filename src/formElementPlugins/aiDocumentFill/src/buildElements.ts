@@ -15,16 +15,17 @@ export interface FillTarget {
   responseId: number
 }
 
-interface EvaluationData {
+export interface EvaluationData {
   responses: FullStructure['responsesByCode']
   currentUser: User | null
   applicationData: FullStructure['info']
 }
 
 /**
- * The application's questions that can be filled: visible, editable questions
- * whose plugin provides `aiFill`, limited to `scope` (section or element codes)
- * if given.
+ * The application's questions that can be filled: editable questions whose
+ * plugin provides `aiFill`, limited to `scope` (section or element codes) if
+ * given. Hidden questions are included, as the answers may reveal them (see
+ * previewFill), unless their visibility is fixed at false.
  */
 export const buildElements = async (
   structure: FullStructure,
@@ -44,7 +45,7 @@ export const buildElements = async (
       ({ element, response }) =>
         element.category === TemplateElementCategory.Question &&
         PluginProvider[element.pluginCode]?.aiFill &&
-        element.isVisible &&
+        (element.isVisible || element.isVisibleExpression !== false) &&
         element.isEditable &&
         response?.id &&
         (!scopeCodes ||
@@ -101,9 +102,9 @@ const buildTarget = async (
 }
 
 // As ApplicationViewWrapper evaluates them for a mounted element
-const evaluateParameters = async (
+export const evaluateParameters = async (
   element: ElementState,
-  response: ResponseFull,
+  response: ResponseFull | undefined,
   { responses, currentUser, applicationData }: EvaluationData
 ): Promise<AiFillParameters> => {
   const { config } = PluginProvider[element.pluginCode]
@@ -117,7 +118,7 @@ const evaluateParameters = async (
       field,
       await FigTree.evaluate(expression as EvaluatorNode, {
         data: {
-          responses: { ...responses, thisResponse: response.text },
+          responses: { ...responses, thisResponse: response?.text },
           currentUser,
           applicationData,
         },

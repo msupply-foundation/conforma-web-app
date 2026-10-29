@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useApolloClient } from '@apollo/client'
 import { Icon, Message, Segment, Transition } from 'semantic-ui-react'
 import { ApplicationViewProps } from '../../types'
@@ -9,9 +9,11 @@ import { useUserState } from '../../../contexts/UserState'
 import { useApplicationStructure } from '../../../contexts/ApplicationStructure'
 import { UploadButton } from '../../../components/common'
 import { RequestError } from '../../../utils/helpers/fetchMethods'
+import { FullStructure } from '../../../utils/types'
 import { buildElements, FillTarget } from './buildElements'
 import { extractAnswers } from './extractAnswers'
 import { FillModal, FillState, Proposal } from './FillModal'
+import { previewFill } from './previewFill'
 import { ResponseUpdate, writeResponses } from './writeResponses'
 import { ExtractionAnswer } from './types'
 
@@ -59,6 +61,27 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     applicationStructure.remountElements()
   }, [applicationStructure])
 
+  // How the application would be with these proposals applied
+  const preview = useCallback(
+    (proposals: Proposal[], codes: string[] = []) =>
+      previewFill(
+        applicationStructure?.structure as FullStructure,
+        currentUser,
+        proposals.map(({ target, response }) => ({ code: target.definition.code, response })),
+        codes
+      ),
+    [applicationStructure, currentUser]
+  )
+
+  const getVisibleCodes = useCallback(
+    async (selected: Proposal[]) => {
+      if (fillState?.status !== 'review') return new Set<string>()
+      const codes = fillState.proposals.map(({ target }) => target.definition.code)
+      return (await preview(selected, codes)).visibleCodes
+    },
+    [fillState, preview]
+  )
+
   // The server has no API key, so the template's opt-in can't be used here
   if (!aiEnabled) return null
 
@@ -94,10 +117,17 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
         applicationSerial: structure.info.serial,
         instructions,
       })
+      const proposals = getProposals(targets, answers)
+      // Existing answers are only replaced if the applicant chooses to
+      const selected = proposals.filter(({ target }) => !target.definition.currentValue)
+      const codes = proposals.map(({ target }) => target.definition.code)
+      const { visibleCodes } = await preview(selected, codes)
       setFillState({
         status: 'review',
         documents: files.map(({ name }) => name),
-        proposals: getProposals(targets, answers),
+        proposals,
+        selected,
+        visibleCodes,
       })
     } catch (err) {
       setFillState({ status: 'error', message: getRequestErrorMessage(err, t) })
@@ -143,6 +173,27 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
     const expectedTexts: Record<string, string> = Object.fromEntries(
       chosen.map(({ target, response }) => [target.definition.code, response.text])
     )
+
+    setFillState({ status: 'applying' })
+    // Saved as the getValues elements would save them when next shown, so the
+    // form shows the questions the answers reveal straight away
+    let computedValues
+    try {
+      computedValues = (await preview(chosen)).computedValues
+    } catch (err) {
+      console.log('AI document fill: computing values failed', err)
+      setFillState({ status: 'error', message: t('ERROR_SAVING_FAILED') })
+      return
+    }
+    for (const { code, responseId, response, parameters } of computedValues) {
+      updates.push({
+        id: responseId,
+        value: response,
+        isValid: null,
+        evaluatedParameters: parameters,
+      })
+      expectedTexts[code] = response.text
+    }
     if (currentResponse?.id) {
       updates.push({
         id: currentResponse.id,
@@ -153,7 +204,6 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       expectedTexts[element.code] = fillRecord.text
     }
 
-    setFillState({ status: 'applying' })
     awaitedTexts.current = expectedTexts
     try {
       await writeResponses(apolloClient, updates, structure.info.current.stage.number)
@@ -166,7 +216,13 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
 
   return (
     <>
-      <FillModal state={fillState} t={t} onApply={handleApply} onClose={() => setFillState(null)} />
+      <FillModal
+        state={fillState}
+        t={t}
+        getVisibleCodes={getVisibleCodes}
+        onApply={handleApply}
+        onClose={() => setFillState(null)}
+      />
       {label && (
         <label>
           <Markdown text={label} semanticComponent="noParagraph" />

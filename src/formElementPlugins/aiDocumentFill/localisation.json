@@ -15,6 +15,7 @@
   "REVIEW_HEADER": "Answers from your documents",
   "REVIEW_INTRO": "Tick the answers you want to use. Questions you've already answered are unticked, so your answer stays unless you tick it.",
   "NO_ANSWERS_FOUND": "None of the questions could be answered from these documents.",
+  "NOT_APPLICABLE": "Doesn't apply with the answers ticked",
   "COLUMN_QUESTION": "Question",
   "COLUMN_CURRENT": "Your answer",
   "COLUMN_PROPOSED": "From the documents",
