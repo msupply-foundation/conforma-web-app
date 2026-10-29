@@ -14,6 +14,7 @@ export type BasicEndpoint =
   | 'generatePDF'
   | 'previewActions'
   | 'extendApplication'
+  | 'aiExtract'
   | 'admin'
   | 'getAllPrefs'
   | 'setPrefs'

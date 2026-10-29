@@ -6,7 +6,10 @@ import { usePrefs } from '../../../contexts/SystemPrefs'
 import { useUserState } from '../../../contexts/UserState'
 import { useApplicationStructure } from '../../../contexts/ApplicationStructure'
 import { UploadButton } from '../../../components/common'
+import { RequestError } from '../../../utils/helpers/fetchMethods'
 import { buildElements } from './buildElements'
+import { extractAnswers } from './extractAnswers'
+import { FillModal, FillState } from './FillModal'
 
 // Limits of the server's /api/ai/extract endpoint, checked here so the
 // applicant hears about them before anything is sent
@@ -30,10 +33,11 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
   } = useUserState()
   const applicationStructure = useApplicationStructure()
   const { isEditable } = element
-  const { label, description, notice = t('DEFAULT_NOTICE'), scope } = parameters
+  const { label, description, notice = t('DEFAULT_NOTICE'), instructions, scope } = parameters
 
   const [error, setError] = useState<string>()
   const [errorVisible, setErrorVisible] = useState(false)
+  const [fillState, setFillState] = useState<FillState | null>(null)
 
   // The server has no API key, so the template's opt-in can't be used here
   if (!aiEnabled) return null
@@ -56,15 +60,41 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       return
     }
 
-    const elements = await buildElements(applicationStructure.structure, currentUser, scope)
-    // TO-DO: send the documents and element definitions to /api/ai/extract,
-    // show the proposed answers for review, and when the applicant applies
-    // them, save { text, documents, filledAt, answerCount } as this response
-    console.log('AI document fill: elements', elements)
+    setFillState({ status: 'reading' })
+    try {
+      const { structure } = applicationStructure
+      const elements = await buildElements(structure, currentUser, scope)
+      if (elements.length === 0) {
+        setFillState({ status: 'error', message: t('ERROR_NO_QUESTIONS') })
+        return
+      }
+      const { answers } = await extractAnswers({
+        files,
+        elements,
+        applicationSerial: structure.info.serial,
+        instructions,
+      })
+      setFillState({
+        status: 'review',
+        documents: files.map(({ name }) => name),
+        elements,
+        answers,
+      })
+    } catch (err) {
+      setFillState({ status: 'error', message: getRequestErrorMessage(err, t) })
+    }
+  }
+
+  const handleApply = (codes: string[]) => {
+    // TO-DO: write the chosen answers to their responses, then save
+    // { text, documents, filledAt, answerCount } as this element's response
+    console.log('AI document fill: apply', codes)
+    setFillState(null)
   }
 
   return (
     <>
+      <FillModal state={fillState} t={t} onApply={handleApply} onClose={() => setFillState(null)} />
       {label && (
         <label>
           <Markdown text={label} semanticComponent="noParagraph" />
@@ -114,6 +144,22 @@ const ApplicationView: React.FC<ApplicationViewProps> = ({
       </p>
     </>
   )
+}
+
+// The server's messages are for developers; the applicant gets one by status
+const getRequestErrorMessage = (err: unknown, t: TranslatePluginMethod) => {
+  switch (err instanceof RequestError ? err.status : undefined) {
+    case 404:
+      return t('ERROR_NOT_AVAILABLE')
+    case 409:
+      return t('ERROR_NOT_EDITABLE')
+    case 413:
+      return t('ERROR_FILES_TOO_BIG')
+    case 429:
+      return t('ERROR_BUSY')
+    default:
+      return t('ERROR_READING_FAILED')
+  }
 }
 
 // The files are sent together, so any problem with one rejects them all

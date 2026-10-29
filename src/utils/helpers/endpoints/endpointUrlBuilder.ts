@@ -94,6 +94,7 @@ const getServerUrl: GetServerUrlFunction = (endpointKey, options = undefined) =>
     case 'admin':
     case 'previewActions':
     case 'extendApplication':
+    case 'aiExtract':
     case 'getAllPrefs':
     case 'setPrefs':
     case 'setMaintenanceMode':

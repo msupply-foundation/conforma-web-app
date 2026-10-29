@@ -52,6 +52,7 @@ const config = {
     dataViews: '/data-views',
     previewActions: '/preview-actions',
     extendApplication: '/extend-application',
+    aiExtract: '/ai/extract',
     lookupTable: '/lookup-table',
     localisation: '/localisation',
     files: '/files',
