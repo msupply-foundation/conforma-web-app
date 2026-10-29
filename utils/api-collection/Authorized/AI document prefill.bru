@@ -20,7 +20,7 @@ body:multipart-form {
 docs {
   Reads the uploaded documents and answers as many of the form's questions as it can, returning { answers, skipped, usage }. See conforma-server/src/components/ai/DOCUMENT_PREFILL_SPEC.md.
 
-  Each call is a paid request to the Claude API (a few cents). Needs ANTHROPIC_API_KEY in the server's .env and the server preference aiPrefill.enabled: true, otherwise it returns 404.
+  Each call is a paid request to the Claude API (a few cents). Needs ANTHROPIC_API_KEY in the server's .env, otherwise it returns 404.
 
   Preloaded from conforma-server/ai-prefill-tests/: the UserRegistration template's questions as "elements", and contact-info.pdf. The file path is relative to this collection, so it assumes conforma-server and conforma-web-app are checked out side by side. To use another template's questions, run "yarn ai_prefill elements <templateCode>" in conforma-server and paste the file's contents into "elements" on one line.
 
